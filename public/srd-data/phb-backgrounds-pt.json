@@ -1,0 +1,599 @@
+[
+  {
+    "index": "acolito",
+    "name": "Acólito",
+    "description": "Você viveu a serviço de um templo de algum deus especifico ou de um panteão de deuses. Você age como um intermediário entre o reino divino e o reino dos mortais, realizando rituais e ofertando sacrifícios para conduzir cada vez mais pessoas a adorarem a divindade. Você não é necessariamente um clérigo – realizar ritos sagrados não é a mesma coisa que canalizar poder divino. Escolha um deus, um panteão de deuses ou outro ser quase divino entre aqueles descritos no apêndice B ou outro especificado pelo seu Mestre para detalhar a natureza do seu serviço religioso. Você foi um serviçal menor no templo, criado desde a infância para auxiliar os sacerdotes em ritos sagrados? Ou você foi um alto sacerdote que repentinamente sentiu o chamado para servir seu deus de uma maneira diferente? Talvez você foi o líder de um pequeno culto não associado a templo algum, ou mesmo uma seita secreta que servia a uma entidade demoníaca que agora você nega.",
+    "skill_proficiencies": [
+      "Intuição",
+      "Religião"
+    ],
+    "tool_proficiencies": [],
+    "languages": "Dois à sua escolha",
+    "equipment": "Um símbolo sagrado (um presente dado quando você entrou no templo), um livro de preces ou uma conta de orações, 5 varetas de incenso, vestimentas, um conjunto de roupas comuns e uma algibeira contendo 15 po",
+    "feature": {
+      "name": "ABRIGO DOS FIÉIS",
+      "desc": "Como um acólito, você detém o respeito daqueles que compartilham de sua fé, e você pode realizar cerimônias de sua divindade. Você e seus companheiros de aventura podem até receber cura e caridade de um templo, santuário ou outro posto de sua fé, embora devam fornecer quaisquer componentes materiais necessários para as magias. Aqueles que compartilham de sua religião vão garantir a você (mas apenas você), custeando um estilo de vida modesto. Você também pode possuir laços com um templo específico devotado à sua divindade ou panteão, e fixar residência nele. Pode ser o templo que você está acostumado a servir, se ainda tiver boas relações com ele, ou um templo no qual você encontrou um novo lar. Enquanto frequentar as redondezas desse templo, você pode solicitar os sacerdotes para assisti-lo, desde que essa assistência não seja de alguma forma perigosa e que você sempre esteja em uma boa relação com seu templo."
+    },
+    "personality_traits": [
+      "Eu idolatro um herói particular da minha fé, e constantemente me refiro a seus feitos e exemplos.",
+      "Eu consigo encontrar semelhanças mesmo entre os inimigos mais violentos, com empatia e sempre trabalhando pela paz.",
+      "Eu vejo presságios em cada evento e ação. Os deuses estão falando conosco, nós apenas temos de ouvi-los.",
+      "Nada pode abalar minha atitude otimista.",
+      "Eu cito (corretamente ou não) textos sagrados e provérbios em quase qualquer situação.",
+      "Eu sou tolerante (ou intolerante) a qualquer outra fé, e respeito (ou condeno) a adoração a outros deuses.",
+      "Eu aprecio comida requintada, bebidas e a elite entre o alto escalão de meu templo. Uma vida dura me irrita.",
+      "Eu passei tanto tempo no templo que possuo pouca prática em lidar com as pessoas mundo a fora."
+    ],
+    "ideals": [
+      "Tradição. As tradições ancestrais de adoração e sacrifício devem ser preservadas e perpetradas. (Leal)",
+      "Caridade. Eu sempre tento ajudar aqueles em necessidade, não importando o custo pessoal. (Bom)",
+      "Mudança. Nós devemos ajudar a conduzir as mudanças que os deuses estão constantemente trabalhando para o mundo. (Caótico)",
+      "Poder. Eu espero que um dia eu consiga chegar ao topo na hierarquia da minha religião. (Leal)",
+      "Fé. Eu acredito que minha divindade guia minhas ações. Eu tenho fé que, se eu trabalhar duro, coisas boas acontecerão. (Leal)",
+      "Aspiração. Eu busco ser digno da graça do meu deus ao corresponder minhas ações aos seus ensinamentos. (Qualquer)"
+    ],
+    "bonds": [],
+    "flaws": [
+      "Eu julgo os outros severamente, e a mim mesmo mais ainda.",
+      "Eu deposito muita confiança naqueles que detêm o poder na hierarquia de meu templo.",
+      "Minha devoção é muitas vezes me cega perante aqueles que professam a fé do meu deus.",
+      "Meu pensamento é inflexível.",
+      "Eu suspeito de estranhos e sempre espero o pior deles.",
+      "Depois de escolher um objetivo, eu fico obcecado em cumpri-lo, até mesmo em detrimento de qualquer outra coisa em minha vida."
+    ]
+  },
+  {
+    "index": "artesao-de-guilda",
+    "name": "Artesão de Guilda",
+    "description": "Você é membro de uma guilda de artesãos, perito em um campo especifico e intimamente associado a outros artesãos. Você é uma parte bem estabelecida do mundo mercantil, livre, graças aos seus talentos e riqueza, das restrições de uma ordem social feudal. Você aprendeu suas perícias como aprendiz de um mestre artesão, com o patrocínio da sua guilda, até se tornar um mestre por seus próprios méritos.",
+    "skill_proficiencies": [
+      "Intuição",
+      "Persuasão"
+    ],
+    "tool_proficiencies": [
+      "Um tipo de ferramenta"
+    ],
+    "languages": "Uma, à sua escolha",
+    "equipment": "Um conjunto de ferramentas de artesão (à sua escolha), uma carta de apresentação da sua guilda, um conjunto de roupas de viajante e uma algibeira com 15 po NEGÓCIOS DA GUILDA Guildas são encontradas, geralmente, em cidades grandes o suficiente para suportar inúmeros artesãos praticando o mesmo negócio. No entanto, sua guilda, ao invés disso, pode ser uma rede de artesãos, cada um trabalhando em uma vila diferente dentro de um reino maior. Converse com o Mestre para determinar a natureza da sua guilda. Você pode escolher seu negócio da guilda da tabela Negócios da Guilda ou rolar aleatoriamente. Como um membro da sua guilda, você conhece as perícias necessárias para criar itens completos a partir de matéria-prima (refletido na sua proficiência em um certo tipo de ferramenta de artesão), assim como, os princípios de comércio e boas práticas comerciais. A questão agora é se você abandona seu comércio para se aventurar ou faz um esforço extra para tentar manter aventuras e comércio juntos.",
+    "feature": {
+      "name": "",
+      "desc": ""
+    },
+    "personality_traits": [
+      "Eu acredito que tudo que valha a pena fazer, vale a pena ser feito direito. Eu não posso evitar – Eu sou perfeccionista.",
+      "Eu sou um esnobe que olha de cima a baixo aqueles que não sabem apreciar artes requintadas.",
+      "Eu sempre quero aprender como as coisas funcionam e o que deixa as pessoas motivadas.",
+      "Eu sou cheio de aforismos espirituosos e tenho um proverbio para cada ocasião.",
+      "Eu sou grosso com as pessoas que não tem o mesmo comprometimento que eu com o trabalho duro e honesto.",
+      "Eu gosto de falar longamente sobre minha profissão.",
+      "Eu não gasto meu dinheiro facilmente e vou barganhar incansavelmente para conseguir o melhor acordo possível.",
+      "Eu sou bem conhecido pelo meu trabalho e quero ter certeza que todos o apreciam. Eu sempre fico surpreso quando conheço pessoas que não ouviram falar de mim."
+    ],
+    "ideals": [
+      "Comunidade. É dever de todo cidadão civilizado fortalecer os elos da comunidade e a segurança da civilização. (Leal)",
+      "Generosidade. Meus talentos me foram dados para que eu pudesse usá-los para beneficiar o mundo. (Bom)",
+      "Liberdade. Todos deveriam ser livres para perseguir seus próprios meios de vida. (Caótico)",
+      "Ganância. Eu só estou aqui pelo dinheiro. (Mau)",
+      "Povo. Eu sou cometido com o povo com quem me importo, não com ideias. (Neutro)",
+      "Aspiração. Eu trabalho duro para ser o melhor no meu ofício. (Qualquer)"
+    ],
+    "bonds": [],
+    "flaws": [
+      "Eu farei de tudo para pôr minha mãos em algo raro ou inestimável.",
+      "Eu rapidamente presumo que alguém está tentando me trapacear.",
+      "Ninguém nunca poderá saber que eu, certa vez, roubei dinheiro dos cofres da guilda.",
+      "Eu nunca estou satisfeito com o que tenho – eu sempre quero mais.",
+      "Eu mataria para adquirir um título de nobreza.",
+      "Eu sou terrivelmente invejoso com qualquer um que possa ofuscar meu ofício. Todo lugar que eu vou, estou cercado de rivais. VARIAÇÃO DE ARTESÃO DE GUILDA: MERCADOR DE GUILDA Ao invés de um artesão de guilda, você pertence a uma guilda de mercadores, mestres de caravana ou comerciantes. Você não constrói itens, mas ganhou a vida comprando e vendendo os trabalhos dos outros (ou a matéria-prima que os artesãos precisam para praticar seus ofícios). Sua guilda deve ser um grande consorcio (ou família) de mercadores com interesses por toda a região. Talvez você transporte bens de um lugar para outro, de barco, carroça ou em caravana, ou compra esses bens de comerciantes que viajam e os vende na sua própria pequena loja. De certas formas, a vida de comerciante viajante por si, tende a levar a aventuras, muito mais que a vida de artesão. Ao invés de proficiência com ferramentas de artesão, você deveria ter proficiência com ferramentas de navegador ou um idioma adicional. E, ao invés de ferramentas de artesão, você poderia começar com uma mula ou carroça."
+    ]
+  },
+  {
+    "index": "artista",
+    "name": "Artista",
+    "description": "Você cresce em frente a uma audiência. Você sabe como fasciná-los, entretê-los e, até mesmo, inspirá-los. Suas poesias podem avivar o coração daqueles que te ouvem, despertando tristeza ou alegria, risadas ou ira. Sua música ergue seus espíritos ou captura suas aflições. Seus passos de dança cativam, seu humor os extasia rapidamente. Qualquer que sejam as técnicas que você use, sua arte é sua vida.",
+    "skill_proficiencies": [
+      "Acrobacia",
+      "Atuação"
+    ],
+    "tool_proficiencies": [
+      "Kit de disfarce",
+      "um tipo"
+    ],
+    "languages": "",
+    "equipment": "Um instrumento musical (à sua escolha), um presente de um admirador (carta de amor, mecha de cabelo ou uma bijuteria), um traje e uma algibeira contendo 15 po ROTINAS DE ARTISTA Um bom artista é versátil, apimentando cada atuação com uma variedade de rotinas diferentes. Escolha de uma a três rotinas, ou role na tabela abaixo, para definir suas especialidades artísticas.",
+    "feature": {
+      "name": "",
+      "desc": ""
+    },
+    "personality_traits": [
+      "Eu conheço uma história relevante de praticamente todas as situações.",
+      "Sempre que eu chego em um lugar novo, eu coleto os rumores locais e espalho fofocas.",
+      "Eu sou um romântico incorrigível, sempre em busca daquele “alguém especial.”",
+      "Ninguém fica com raiva de mim ou perto de mim por muito tempo, já que eu posso acabar com qualquer tipo de tensão.",
+      "Eu amo um bom insulto, até os direcionados a mim.",
+      "Eu fico sentido se eu não for o centro das atenções.",
+      "Eu não vou me contentar com nada menos que a perfeição.",
+      "Eu mudo de ânimo ou de pensamento tão rápido quando mudo eu mudo de nota em uma canção."
+    ],
+    "ideals": [
+      "Beleza. Quando eu atuo, eu torno o mundo um lugar melhor. (Bom)",
+      "Tradição. As histórias, lendas e canções do passado nunca devem ser esquecidas, pois elas nos ensinam quem nós somos. (Leal)",
+      "Criatividade. O mundo precisa de novas ideias e ações ousadas. (Caótico)",
+      "Ganância. Eu só estou aqui pelo dinheiro e pela fama. (Mau)",
+      "Povo. Eu gosto de ver os sorrisos nos rostos das pessoas quando eu atuo. Isso é tudo que importa. (Neutro)",
+      "Honestidade. A arte deve refletir a alma; ela deve vir de dentro e revelar quem realmente somos. (Qualquer)"
+    ],
+    "bonds": [],
+    "flaws": [
+      "Eu farei de tudo para ganhar fama e renome.",
+      "Eu viro um idiota quando vejo um rosto bonito.",
+      "Um escândalo me impede de voltar para casa novamente. Esse tipo de problema parece me perseguir por ai.",
+      "Eu, certa vez, satirizei um nobre que ainda quer minha cabeça. Foi um erro que eu adoraria repetir.",
+      "Eu tenho problemas em esconder meus verdadeiros sentimentos. Minha língua afiada me mete em confusão.",
+      "Apesar dos meus melhores esforços, meus amigos não me consideram confiável. VARIAÇÃO DE ARTISTA: GLADIADOR Um gladiador é tanto um artista quanto qualquer menestrel ou artista circense, treinado para tornar as artes do combate em um espetáculo para a multidão poder se divertir. Esse tipo de combate chamativo é sua rotina de artista, apesar de você também dever ter alguma perícia como acrobata ou ator. Usando sua característica Pela Demanda Popular, você pode encontrar um lugar para atuar em qualquer lugar que considere o combate uma forma de entretenimento – talvez uma arena gladiatória ou um clube de luta secreto no subúrbio. Você pode trocar o instrumento musical do seu pacote de equipamentos por uma arma barata, porem incomum, como um tridente ou uma rede."
+    ]
+  },
+  {
+    "index": "charlatao",
+    "name": "Charlatão",
+    "description": "Você sempre teve jeito com as pessoas. Você sabe o que os deixa extasiados, você pode destrinchar os desejos em seus corações após alguns minutos de conversa e, com algumas perguntas capciosas, você pode lê-los como se eles fossem livros infantis. É um talento útil e que você está perfeitamente disposto a usar em sua vantagem. Você sabe o que as pessoas querem e você as entrega ou, pelo menos, promete que irá entregar. O bom senso deveria manter as pessoas longe de coisas que parecem muito boas pra serem verdade, mas o bom senso parece desaparecer quando você está por perto. A garrafa de liquido cor de rosa irá, sem dúvida, curar essa brotoeja horrenda, essa pomada – nada mais é que um pouco de banha com uma pitada de sal de prata – pode restaurar a juventude e vigor e existe uma ponte na cidade que acabar de ficar a venda. Essas maravilhas soam improváveis, mas você as faz soar como barganhas reais.",
+    "skill_proficiencies": [
+      "Enganação",
+      "Prestidigitação"
+    ],
+    "tool_proficiencies": [
+      "Kit de disfarce",
+      "kit de"
+    ],
+    "languages": "",
+    "equipment": "Um conjunto de roupas finas, um kit de disfarce, ferramentas de trapaça, à sua escolha (dez garrafas tampadas preenchidas com líquidos coloridos, um conjunto de dados viciados, um baralho de cartas marcadas ou um anel de sinete de um duque imaginário), e uma algibeira contendo 15po ESQUEMAS PREDILETOS Cada charlatão tem um tipo de esquema que ele prefere usar em detrimento de outros. Escolha sua tramoia predileta ou role na tabela abaixo.",
+    "feature": {
+      "name": "",
+      "desc": ""
+    },
+    "personality_traits": [
+      "Eu me apaixono e desapaixono facilmente, e estou sempre em busca de alguém.",
+      "Eu tenho uma piada para cada ocasião, especialmente ocasiões em que o humor é inapropriado.",
+      "Bajulação é meu truque predileto para conseguir o que eu quero.",
+      "Eu sou um jogador nato que não consegue resistir a se arriscar por uma possível recompensa.",
+      "Eu minto sobre quase tudo, mesmo quando não existe qualquer boa razão.",
+      "Sarcasmo e insultos são minhas armas prediletas.",
+      "Eu tenho vários símbolos sagrados comigo, e invoco a divindade que seja mais útil em cada dado momento.",
+      "Eu furto qualquer coisa que eu vejo que possa ter algum valor."
+    ],
+    "ideals": [
+      "Independência. Sou um espirito livre – ninguém me diz o que fazer. (Caótico)",
+      "Justiça. Eu nunca roubo de pessoas que não podem perder algumas moedas. (Leal)",
+      "Caridade. Eu distribuo o dinheiro que adquiro com as pessoas que realmente precisam. (Bom)",
+      "Criatividade. Eu nunca faço a mesma trapaça duas vezes. (Caótico)",
+      "Amizade. Bens materiais vem e vão. Os laços de amizade duram pra sempre. (Bom)",
+      "Aspiração. Eu estou determinado a fazer algo por mim mesmo. (Qualquer)"
+    ],
+    "bonds": [],
+    "flaws": [
+      "Não resisto um rostinho bonito.",
+      "Estou sempre com dividas. Eu gasto meus lucros ilícitos com luxurias decadentes mais rápido do que os ganho...",
+      "Estou convencido que ninguém pode me enganar da forma que eu engano os outros.",
+      "Eu sou ganancioso demais pra meu próprio bem. Eu não consigo resistir a me arriscar se tiver dinheiro envolvido.",
+      "Eu não resisto a enganar pessoas que são mais poderosas que eu.",
+      "Eu odeio admitir e vou me odiar por isso, mas, eu vou correr e salvar minha própria pele se as coisas engrossarem."
+    ]
+  },
+  {
+    "index": "criminoso",
+    "name": "Criminoso",
+    "description": "Você é um criminoso experiente com um histórico de contravenções. Você gastou um bom tempo entre outros criminosos e ainda mantém contato com eles e com o submundo do crime. Você está mais perto do que a maioria do submundo do assassinato, roubo e violência que prevalece no ventre da sociedade, e você sobreviveu até esse ponto desprezando a lei e os regulamentos da sociedade.",
+    "skill_proficiencies": [
+      "Enganação",
+      "Furtividade"
+    ],
+    "tool_proficiencies": [
+      "Um tipo de kit de jogo",
+      "ferramentas de ladrão"
+    ],
+    "languages": "",
+    "equipment": "Um pé de cabra, um conjunto de roupas escuras comuns com capuz e uma algibeira contendo 15 po ESPECIALIDADE CRIMINOSA Existem vários tipos de criminosos, e dentro de uma guilda de ladrões ou outra organização criminosa, cada membro possui sua especialidade. Mesmo os criminosos que operam fora de tais organizações têm fortes preferências por certos tipos de crimes sobre os outros. Escolha um papel que você assumiu durante sua vida como criminoso, ou role na tabela abaixo.",
+    "feature": {
+      "name": "",
+      "desc": ""
+    },
+    "personality_traits": [
+      "Eu sempre tenho um plano para quando as coisas dão errado.",
+      "Eu estou sempre calmo, não importa a situação. Eu nunca levanto minha voz ou deixo minhas emoções me controlarem.",
+      "A primeira coisa que faço ao chegar a um novo local é decorar a localização de coisas valiosas – ou onde essas coisas podem estar escondidas.",
+      "Eu prefiro fazer um novo amigo a um novo inimigo.",
+      "Eu sou incrivelmente receoso em confiar. Aqueles que parecem mais amigáveis geralmente têm mais a esconder.",
+      "Eu não presto atenção aos riscos envolvidos em uma situação, nunca me alerte sobre as probabilidades de fracasso.",
+      "A melhor maneira de me levar a fazer algo é dizendo que eu não posso fazer.",
+      "Eu explodo ao menor insulto."
+    ],
+    "ideals": [
+      "Honra. Eu não roubo de irmãos de profissão. (Leal)",
+      "Liberdade. Correntes foram feitas para serem partidas, assim como aqueles que as forjaram. (Caótico)",
+      "Caridade. Eu roubo dos ricos para dar aos que realmente precisam. (Bom)",
+      "Ganância. Eu farei qualquer coisa para me tornar rico. (Mal)",
+      "Povo. Eu sou leal aos meus amigos, não a qualquer ideal, e todos sabem que posso viajar até o Estige por aqueles que me importo. (Neutro)",
+      "Redenção. Há uma centelha de bondade em todo mundo. (Bom)"
+    ],
+    "bonds": [],
+    "flaws": [
+      "Quando vejo algo valioso, não consigo pensar em mais nada, além de roubá-lo.",
+      "Quando confrontado com uma escolha entre dinheiro e amigo, eu bem que escolho o dinheiro.",
+      "Se há um plano, eu vou esquecê-lo. Se eu não esquecê-lo, vou ignorá-lo.",
+      "Eu tenho um \"tique\" que revela se estou mentindo.",
+      "Eu viro as costas e corro quando as coisas começam a ficar ruins.",
+      "Um inocente foi preso por um crime que eu cometi. Por mim tudo bem. VARIAÇÃO DE CRIMINOSO: ESPIÃO Embora suas habilidades não sejam muito diferentes de ladrões ou contrabandistas, você as aprendeu e as praticou em um contexto bem diferente: um agente de espionagem. Você pode ser um oficial sancionado pela coroa ou talvez seja só alguém que venda os segredos que descobre pela oferta mais alta."
+    ]
+  },
+  {
+    "index": "eremita",
+    "name": "Eremita",
+    "description": "Você viveu em reclusão – ou em uma comunidade isolada como um monastério ou completamente sozinho – por um período importante da sua vida. No tempo em que passou longe do clamor da sociedade, você encontrou quietude, solidão e, talvez, algumas das respostas que procurava.",
+    "skill_proficiencies": [
+      "Medicina",
+      "Religião"
+    ],
+    "tool_proficiencies": [
+      "Kit de herbalismo"
+    ],
+    "languages": "Um à sua escolha",
+    "equipment": "Um estojo de pergaminho cheio de notas dos seus estudos e orações, um cobertor de inverno, um conjunto de roupas comuns, um kit de herbalismo e 5 po. VIDA DE ISOLAMENTO Qual foi o motivo do seu isolamento e o que mudou para permitir que você desse fim a sua solidão? Você pode trabalhar com o Mestre para definir a natureza exata da sua reclusão ou você pode escolher rolar na tabela abaixo para determinar a razão por trás do seu isolamento.",
+    "feature": {
+      "name": "",
+      "desc": ""
+    },
+    "personality_traits": [
+      "Eu fiquei tanto tempo isolado que raramente falo, preferindo gestos e grunhidos ocasionais.",
+      "Eu sou absurdamente sereno, mesmo em face do desespero.",
+      "O líder da minha comunidade tem algo sábio a dizer sobre cada tópico, eu estou ansioso para partilhar dessa sabedoria.",
+      "Eu sinto uma empatia tremenda por todos que sofrem.",
+      "Eu estou alheio a etiqueta e expectativas sociais.",
+      "Eu relaciono tudo que acontece comigo a um grande plano cósmico.",
+      "Eu, muitas vezes, me perco em meus pensamentos e contemplação me tornando alheio ao meu redor.",
+      "Eu estou trabalhando em uma grande teoria filosófica e adoro partilhar minhas ideias."
+    ],
+    "ideals": [
+      "Bem Maior. Meus dons devem ser partilhados com todos, não usados em benefício próprio (Bom)",
+      "Lógica. Emoções não podem obscurecer meus sentidos do que é certo e verdade, ou meu pensamento lógico. (Leal)",
+      "Pensamento Livre. Questionamentos e curiosidade são os pilares do progresso. (Caótico)",
+      "Poder. Isolamento e contemplação são caminhos para poderes místicos e mágicos. (Mau)",
+      "Viva e Deixe Viver. Se intrometer nos assuntos dos outros só traz problemas. (Neutro)",
+      "Autoconhecimento. Se você conhece a si mesmo, não a mais nada para saber. (Qualquer)"
+    ],
+    "bonds": [],
+    "flaws": [
+      "Agora que voltei ao mundo, eu desfruto de seus prazeres um pouco demais.",
+      "Eu escondo nas sombras, pensamentos sanguinários que meu isolamento e meditação não conseguiram apagar.",
+      "Eu sou dogmático em meus pensamentos e filosofia.",
+      "Eu deixo meu desejo de vencer discussões ofuscar amizades e harmonia.",
+      "Eu me arrisco muito para descobrir um pouco de conhecimento perdido.",
+      "Eu gosto de guardar segredos e não os partilho com ninguém. OUTROS EREMITAS O antecedente eremita pressupõem um tipo de isolamento contemplativo que permite espaço para estudo e oração. Se você deseja jogar com um rude recluso selvagem que vive em terras ermas enquanto tenta evitar a companhia de outras pessoas, veja o antecedente forasteiro. Por outro lado, se você deseja ir por um caminho mais voltado à religião, o acolito pode ser o que você procura. Ou você poderia, até mesmo, ser um charlatão, fingindo ser uma pessoa sábia e santa, deixando tolos fervorosos sustentarem você."
+    ]
+  },
+  {
+    "index": "forasteiro",
+    "name": "Forasteiro",
+    "description": "Você cresceu em uma área selvagem, longe da civilização e dos confortos da cidade e tecnologia. Você testemunhou a migração de manadas maiores que florestas, sobreviveu à climas mais extremos que qualquer citadino poderia compreender e é adepto da solidão de ser a única criatura pensante em quilômetros, em qualquer direção. O isolamento está no seu sangue, quer você seja um nômade, um explorador, um recluso, um forrageador ou mesmo um saqueador. Mesmo em lugares que você não conheça as características especificas do terreno, você vai conseguir se virar.",
+    "skill_proficiencies": [
+      "Atletismo",
+      "Sobrevivência"
+    ],
+    "tool_proficiencies": [
+      "Um tipo de"
+    ],
+    "languages": "Um à sua escolha",
+    "equipment": "Um bordão, uma armadilha de caça, um fetiche de um animal que você matou, um conjunto de roupas de viajante e uma algibeira contendo 10 po ORIGEM Você esteve em locais estranhos e viu coisas que os outros não conseguiriam entender. Considere algumas das terras distantes que você visitou e qual impacto elas causaram em você. Você pode rolar na tabela a seguir ou determinar sua ocupação durante seu período no ermo, ou escolher o que melhor se encaixa ao seu personagem.",
+    "feature": {
+      "name": "",
+      "desc": ""
+    },
+    "personality_traits": [
+      "Eu fui guiado por uma sede de viagens que me levou a abandonas meu lar.",
+      "Eu cuido dos meus amigos como se eles fossem filhotes recém-nascidos.",
+      "Certa vez, eu corri quarenta quilômetros sem parar alertar meu clã da aproximação de uma horda orc. Eu faria de novo se fosse necessário.",
+      "Eu tenho uma lição pra cada situação, aprendida observando a natureza.",
+      "Eu não vejo lugar para o povo rico e educado. Dinheiro e modos não vão salvá-lo de um urso-coruja faminto.",
+      "Estou sempre pegando coisas, distraidamente brincando com elas e, às vezes, quebrando-as.",
+      "Eu me sinto muito mais confortável entre animais que entre pessoas.",
+      "Eu fui, de fato, criado por lobos. CARACTERÍSTICAS SUGERIDAS Geralmente considerados rudes e grosseiros dentre o povo civilizado, forasteiros tem pouco respeito pelas sutilezas da vida urbana. Os laços de tribo, clã, família e mundo natural de que fazem parte são os vínculos mais importantes para os forasteiros. d6 Ideal",
+      "Mudança. A vida é como as estações, em constante mudança, e nós devemos mudar com ela. (Caótico)",
+      "Bem maior. É responsabilidade de todos trazer a maior felicidade para toda a tribo. (Bom)",
+      "Honra. Se eu me desonrar, eu desonrarei todo o meu clã. (Leal)",
+      "Força. O mais forte deve governar. (Mau)",
+      "Natureza. O mundo natural é mais importante que todas as construções da civilização. (Neutro)",
+      "Gloria. Eu devo adquirir gloria em batalha, para mim e para meu clã. (Qualquer)"
+    ],
+    "ideals": [],
+    "bonds": [],
+    "flaws": [
+      "Sou muito apaixonado por cerveja, vinho e outras bebidas.",
+      "Não existe lugar para precaução em uma vida vivida ao máximo.",
+      "Eu lembro de cada insulto que sofri e nutro um ressentimento silencioso contra qualquer um que já tenha me insultado",
+      "Eu tenho dificuldade em confiar em membros de outras raças, tribos ou sociedades.",
+      "A violência é minha resposta para quase todos os obstáculos.",
+      "Não espere que eu salve aqueles que não conseguem se virar sozinhos. É a lei da natureza que os fortes prosperem e os fracos pereçam."
+    ]
+  },
+  {
+    "index": "heroi-do-povo",
+    "name": "Herói do Povo",
+    "description": "Você veio de uma parcela humilde da sociedade, mas está destinado a muito mais. O povo de sua vila já o reconhece como campeão, e seu destino o conduz a batalhas contra tiranos e monstros que ameaçam o povo aonde quer que você vá.",
+    "skill_proficiencies": [
+      "Adestrar Animais",
+      "Sobrevivência"
+    ],
+    "tool_proficiencies": [
+      "Um tipo de ferramenta"
+    ],
+    "languages": "",
+    "equipment": "Um conjunto de ferramentas de artesão (à sua escolha), uma pá, um pote de ferro, um conjunto de roupas comuns e uma algibeira contendo 10 po EVENTO DEFINIDOR Você possuía uma simples profissão entre os camponeses, talvez um fazendeiro, mineiro, serviçal, pastor, lenhador ou até mesmo coveiro. Mas algo aconteceu e o colocou em um caminho diferente, marcando-o para grandes feitos. Escolha aleatoriamente o evento que definiu você como o herói do povo.",
+    "feature": {
+      "name": "",
+      "desc": ""
+    },
+    "personality_traits": [
+      "Eu julgo as pessoas por suas ações, não por suas palavras.",
+      "Se alguém está em apuros, eu estou sempre pronto para ajudar.",
+      "Quando eu fixo minha mente em algo, eu sigo esse caminho, não importa o que fique no caminho.",
+      "Eu possuo um forte senso de justiça e sempre tento encontrar a solução mais equilibrada para as discussões.",
+      "Eu confio em minhas habilidades e farei o que for necessário para que os outros confiem também.",
+      "Pensar é para os outros, eu prefiro agir.",
+      "Eu abuso de palavras longas na tentativa de soar inteligente.",
+      "Eu me entedio fácil. Para onde devo ir para me encontrar com meu destino?"
+    ],
+    "ideals": [
+      "Respeito. As pessoas merecem ser tratadas com dignidade e respeito. (Bom)",
+      "Justiça. Ninguém merece tratamento diferenciado perante a lei, muito menos estar acima dela. (Leal)",
+      "Liberdade. Não pode haver permissão para tiranos oprimirem o povo. (Caótico)",
+      "Força. Se eu ficar forte, eu posso pegar tudo o que eu quiser – o que eu desejar. (Mal)",
+      "Sinceridade. Não há nada de bom em fingir ser algo que não sou. (Neutro)",
+      "Destino. Nada, nem ninguém, pode me manter longe do meu chamado. (Qualquer)"
+    ],
+    "bonds": [],
+    "flaws": [
+      "O tirano que comanda minha terra não vai parar até ver meu cadáver.",
+      "Eu estou convencido sobre o significado do meu destino, e cego aos riscos e falhas.",
+      "As pessoas que me conhecem desde criança sabem de um vergonhoso segredo meu, eu não poderei voltar para casa nunca.",
+      "Eu tenho uma fraqueza pelos vícios da cidade, especialmente a bebedeira.",
+      "Secretamente, eu acredito que as coisas estariam melhores se algum tirano comandasse a região.",
+      "Eu tenho dificuldades em confiar em meus aliados."
+    ]
+  },
+  {
+    "index": "marinheiro",
+    "name": "Marinheiro",
+    "description": "Você navegou em um navio pelo mar por anos. Nesse período, você enfrentou poderosas tormentas, monstros das profundezas e aqueles que queriam afundar o seu ganha-pão para as profundezas insondáveis. Seu primeiro amor é a distante linha do horizonte, mas chegou a hora de você por suas mãos em algo novo. Converse sobre a natureza do navio que você navegou anteriormente com seu Mestre. Era um navio mercante, uma embarcação naval, um navio de exploração ou um navio pirata? O quão famoso (ou infame) ele é? Ele era muito viajado? Ele continua navegando, ou está desaparecido e, provavelmente, perdido com seus tripulantes? Quais eram seus deveres a bordo – contramestre, capitão, navegador, cozinheiro ou outra posição? Quem eram o capitão e primeiro marinheiro? Você deixou o navio de bem com seus companheiros ou fugiu?",
+    "skill_proficiencies": [
+      "Atletismo",
+      "Percepção"
+    ],
+    "tool_proficiencies": [
+      "Ferramentas de"
+    ],
+    "languages": "",
+    "equipment": "Uma malagueta (clava), 15 metros de corda de seda, uma amuleto da sorte como um pé de coelho ou uma pequena pedra com um furo no centro (ou você pode rolar uma bugiganga da tabela Bugigangas no capítulo 5), um conjunto de trajes comuns e uma algibeira contendo 10 po",
+    "feature": {
+      "name": "PASSAGEM DE NAVIO",
+      "desc": "Quando você precisar, você pode conseguir passagem de graça em um navio para você e seus companheiros de aventura. Você precisa viajar no navio em que você trabalhou ou em outro navio com o qual você teve boas relações (talvez um comandado por um ex-companheiro de tripulação). Por ser um favor, você não pode solicitar uma programação ou rota que atenda à todas as suas necessidades. Seu Mestre determina quanto tempo levará pra chegar aonde você quer ir. Em troca da passagem grátis, espera-se que você e seus companheiros ajudem a tripulação durante a viagem."
+    },
+    "personality_traits": [
+      "Meus amigos sabem que podem contar comigo pro que der e vier.",
+      "Eu trabalho duro para que possa me divertir muito quando o trabalho estiver pronto.",
+      "Eu gosto de navegar para novos portos e fazer novas amizades acompanhado de uma jarra de cerveja.",
+      "Eu modifico alguns fatos para o bem de uma boa história.",
+      "Pra mim, uma briga de taverna é uma ótima forma de conhecer uma nova cidade.",
+      "Eu nunca deixo passar uma aposta amigável.",
+      "Meu vocabulário é tão sujo quanto o covil de um otyugh.",
+      "Eu gosto de trabalhos bem feitos, especialmente se eu puder convencer alguém a fazê-los."
+    ],
+    "ideals": [
+      "Respeito. A coisa que mantem um navio unido é o respeito mútuo entre o capitão e a tripulação. (Bem)",
+      "Justiça. Todos nós fazemos o trabalho, portanto, todos partilhamos os espólios. (Leal)",
+      "Liberdade. O mar é liberdade – a liberdade de ir aonde quiser. (Caótico)",
+      "Domínio. Eu sou um predador e os outros navios no mar são minhas presas. (Mau)",
+      "Povo. Eu sou apegado aos meus companheiros de tripulação, não a ideais. (Neutro)",
+      "Aspiração. Algum dia eu serei dono do meu próprio navio e traçarei meu próprio destino. (Qualquer) d6 Vínculo",
+      "Eu sou leal ao meu capitão, primeiramente, o resto vem em segundo.",
+      "O navio é o mais importante – tripulantes e capitães vem e vão.",
+      "Eu sempre me lembrarei do meu primeiro navio.",
+      "Em uma cidade portuária, eu tenho uma amante que quase me roubou do mar.",
+      "Eu fui enganado na divisão dos espólios e eu quero o que me é devido.",
+      "Cruéis piratas mataram meu capitão e companheiros de tripulação, saquearam nosso navio e me deixaram para morrer. A vingança será minha."
+    ],
+    "bonds": [],
+    "flaws": [
+      "Eu sigo ordens, mesmo que eu ache que estão erradas.",
+      "Eu direi qualquer coisa para evitar trabalho extra.",
+      "Certa vez, alguém duvidou da minha coragem, eu nunca recuo, não importa o quão perigosa seja a situação.",
+      "Quando começo a beber, é difícil pra mim parar.",
+      "Eu não resisto a uma sacolinha de moedas dando sopa ou outras bugigangas que encontro.",
+      "Meu orgulho provavelmente levará a minha destruição. VARIAÇÃO DE MARINHEIRO: PIRATA Você passou sua juventude sobre o domínio de um pirata infame, um degolador cruel que te ensinou a sobreviver em um mundo de tubarões e selvageria. Você participou de saques em alto-mar e enviou mais de uma alma merecedora para uma sepultura salgada. Medo e derramamento de sangue não são estranhos para você, e você já adquiriu uma reputação um tanto desagradável em várias cidades portuárias. Se você decidir que sua carreira como marinheiro envolve pirataria, você pode escolher a característica Má Reputação (veja a nota) ao invés da característica Passagens de Navio. VARIAÇÃO DE CARACTERÍSTICA: MÁ REPUTAÇÃO Se o seu personagem tiver o antecedente marinheiro, você pode escolher essa característica de antecedente ao invés de Passagens de Navio. Não importa aonde você vá, as pessoas tem medo de você devido a sua reputação. Quando você está em locais civilizados, você pode cometer pequenos delitos, como se negar a pagar por comida em uma taverna ou por a baixo portas de lojas locais, já que a maioria das pessoas não vão denunciar suas atividades às autoridades."
+    ]
+  },
+  {
+    "index": "nobre",
+    "name": "Nobre",
+    "description": "Você entende de riqueza, poder e privilégios. Você carrega um título de nobreza, sua família possui terras, coleta impostos e exerce uma influência política significativa. Você pode ser um aristocrata mimado pouco familiarizado com o trabalho ou com o desconforto, um ex-comerciante elevado à nobreza ou um malandro deserdado com um sentido desproporcional de direitos. Ou pode ser um dono de terra honesto e trabalhador que se preocupa com as pessoas que vivem e trabalham em sua terra, sutilmente ciente da sua responsabilidade para com eles. Converse com seu Mestre para chegar a um título adequado e determinar a quantidade de autoridade esse título carrega. Um título de nobreza não fica com você – é conectado a uma família inteira, e qualquer título que você possuir passará para seus filhos. Você não precisa determinar seu título de nobreza sozinho, você também deve conversar com seu Mestre para descrever sua família e a influência dela sobre você. Sua família é antiga e estabelecida ou só recentemente você foi agraciado com seu título? Qual a influência que sua família exerce e sobre qual área? Que tipo de reputação sua família tem entre os outros aristocratas da região? Como as pessoas comuns consideram sua família? Qual é sua posição na família? Um herdeiro ou chefe da família? Você já herdou o título? Como você se sente sobre essa responsabilidade? Você está tão abaixo da linha de herança que ninguém se importa com o que você faz, contanto que não envergonhe a família? Como é que o chefe da família se sente sobre a sua carreira de aventuras? Você está de bem com a família ou anda afastado dela? Sua família tem um brasão de armas? Uma insígnia que você pode usar em um anel de sinete? Cores específicas que você usa o tempo todo? Um animal que você considera como um símbolo de sua linhagem ou um membro espiritual da família? Esses detalhes ajudam a estabelecer sua família e seu título como características do mundo de campanha.",
+    "skill_proficiencies": [
+      "História",
+      "Persuasão"
+    ],
+    "tool_proficiencies": [
+      "Um tipo de kit de jogos"
+    ],
+    "languages": "Um à sua escolha",
+    "equipment": "Um conjunto de trajes finos, um anel de sinete, um pergaminho de linhagem e uma algibeira contendo 25 po",
+    "feature": {
+      "name": "POSIÇÃO PRIVILEGIADA",
+      "desc": "Graças a sua origem nobre, as pessoas tendem a pensar o melhor de você. Você é bem-vindo na alta sociedade e as pessoas assumem que você tem o direito de estar onde está. As pessoas comuns fazem todos os esforços para acomodá-lo e evitar seu desprazer, e outros nobres o tratam como um membro da mesma classe social. Você pode conseguir uma audiência com um nobre local se precisar."
+    },
+    "personality_traits": [
+      "Minha bajulação eloquente faz com que todos com quem eu converse se sintam a pessoa mais maravilhosa e importante do mundo.",
+      "As pessoas comuns me amam por minha bondade e generosidade.",
+      "Ninguém pode duvidar, olhando para o meu porte real, que estou acima das massas plebeias.",
+      "Eu tenho grande cuidado de sempre estar no meu melhor e seguir as últimas modas.",
+      "Eu não gosto de sujar minhas mãos, e eu não vou ser pego em acomodações inadequadas.",
+      "Apesar da minha origem nobre, eu não estou acima dos outros. O sangue é um só.",
+      "Meu apoio, uma vez perdido, não volta.",
+      "Se você me ferir, eu irei esmagá-lo, arruinar seu nome, e salgar seus campos."
+    ],
+    "ideals": [
+      "Respeito. O respeito a mim é devido por causa da minha posição, mas todas as pessoas, independentemente da posição merecem ser tratados com dignidade. (Bom)",
+      "Responsabilidade. É o meu dever respeitar a autoridade daqueles acima de mim, assim como aqueles abaixo de mim devem me respeitar. (Leal)",
+      "Independência. Devo provar que posso me cuidar sem os mimos da minha família. (Caótico)",
+      "Poder. Se eu puder alcançar mais poder, ninguém vai me dizer o que fazer. (Mau)",
+      "Família. O sangue corre mais grosso que a água. (Qualquer)",
+      "Obrigação Nobre. É o meu dever proteger e cuidar das pessoas abaixo de mim. (Bom)"
+    ],
+    "bonds": [],
+    "flaws": [
+      "Eu secretamente acredito que todos estão abaixo de mim.",
+      "Eu escondo um segredo verdadeiramente escandaloso que poderia arruinar minha família para sempre.",
+      "Muitas vezes eu ouço insultos e ameaças veladas em cada palavra dirigida a mim, e me irrito muito rápido.",
+      "Eu tenho um desejo insaciável por prazeres carnais.",
+      "Na verdade, o mundo gira ao meu redor.",
+      "Pelas minhas palavras e ações, muitas vezes, envergonho minha família. VARIAÇÃO DE NOBRE: CAVALEIRO A fidalguia, está entre os títulos de nobreza mais baixos na maioria das sociedades, mas ele pode ser o caminho para posições maiores. Se você deseja ser um cavaleiro, escolha a característica Retentores (veja a caixa de texto abaixo) ao invés da característica Posição Privilegiada. Um dos seus plebeus retentores é substituído por um nobre que serve como seu escudeiro, ajudando você em troca de treinamento no próprio caminho dele para a cavalaria. Seus dois retentores restantes podem ser um cavalariço, para cuidar do seu cavalo, e um servo que poli sua armadura (e até mesmo ajuda você a vesti-la). Como um emblema de cavalaria e os ideias de amor cortês, você deveria incluir entre seus equipamentos um estandarte ou outro símbolo de um nobre lorde ou lady a quem você deu seu coração – em uma espécie de voto de castidade. (Essa pessoa pode ser seu vínculo.) VARIAÇÃO DE CARACTERÍSTICA: RETENTORES Se o seu personagem tiver o antecedente nobre, você pode escolher essa característica de antecedente no lugar da Posição Privilegiada. Você tem o serviço de três retentores leais a sua família. Esses retentores podem ser atendentes ou mensageiros, e um pode ser um mordomo. Seus retentores são camponeses que podem realizar tarefas comuns para você, mas eles não irão lutar por você, não irão segui-lo para área obviamente perigosas (como masmorras) e irão embora se forem frequentemente expostos ao perigo ou abuso."
+    ]
+  },
+  {
+    "index": "orfao",
+    "name": "Órfão",
+    "description": "Você cresceu nas ruas, sozinho, órfão e pobre. Você não tinha ninguém para cuidar de você ou te alimentar, então, aprendeu a se virar sozinho. Você lutou ferozmente por comida e se manteve constantemente atendo a outras almas desesperadas que pudessem te roubar. Você dormiu em telhados e becos, exposto aos elementos e suportou doenças sem ajuda da medicina ou um lugar para se recuperar. Você sobreviveu a despeito de tudo e, conseguiu isso através de astucia, força, agilidade ou uma combinação de cada. Você começa sua carreira de aventureiro com dinheiro o suficiente para viver modestamente, mas em segurança, por pelo menos dez dias. Como você conseguiu esse dinheiro? O que aconteceu para que você conseguisse se libertar das circunstancias desesperadoras e embarcasse em uma vida melhor?",
+    "skill_proficiencies": [
+      "Furtividade",
+      "Prestidigitação"
+    ],
+    "tool_proficiencies": [
+      "Kit de disfarce",
+      "ferramentas de ladrão"
+    ],
+    "languages": "",
+    "equipment": "Uma faca pequena, um mapa da cidade em que você cresceu, um rato de estimação, um pequeno objeto para lembrar dos seus pais, um conjunto de roupas comuns e uma algibeira contendo 10 po",
+    "feature": {
+      "name": "SEGREDOS DA CIDADE",
+      "desc": "Você conhece os padrões secretos e o fluxo das cidades e pode encontrar passagens através da expansão urbana que os outros deixariam passar. Quando você não estiver em combate, você (e os companheiros que você guiar) podem viajar entre dois locais quaisquer na cidade com o dobro da velocidade normalmente permitida."
+    },
+    "personality_traits": [
+      "Eu escondo pedaços de comida e bugigangas em meus bolsos.",
+      "Eu pergunto um monte e coisas.",
+      "Eu gosto de me espremer em locais pequenos onde ninguém possa me alcançar.",
+      "Eu durmo encostado em um muro ou árvore, abraçado com todas as minhas posses.",
+      "Eu como feito um porco e tenho maus modos.",
+      "Eu acho que todos que são gentis comigo tem segundas intenções.",
+      "Eu não gosto de tomar banho.",
+      "Eu digo na cara o que as outras pessoas insinuam ou escondem."
+    ],
+    "ideals": [
+      "Respeito. Todas as pessoas, ricas ou pobres, merecem respeito. (Bom)",
+      "Comunidade. Nós temos que tomar conta uns dos outros, porque ninguém mais o fará. (Leal)",
+      "Mudança. Os baixos se erguerão e os altos irão tombar. A mudança é a natureza das coisas. (Caótico)",
+      "Retribuição. Os ricos precisam ver como a vida e morte é nas sarjetas. (Mau)",
+      "Povo. Eu ajudo as pessoas que me ajudam – é isso que nos mantem vivos. (Neutro)",
+      "Aspiração. Eu vou provar que sou merecedor de uma vida melhor. (Qualquer) d6 Vínculo",
+      "Minha cidade ou vila é meu lar, e eu vou lutar para defendê- lo.",
+      "Eu patrocino um orfanato para que outros não passem pelo que fui forçado a passar.",
+      "Eu devo minha sobrevivência a outros órfão que me ensinou a vida nas ruas.",
+      "Eu tenho uma dívida que nunca poderei pagar com uma pessoa que teve pena de mim.",
+      "Eu sai da minha vida de pobreza roubando uma pessoa importante, eu sou procurado por isso.",
+      "Ninguém deveria ter suportar as dificuldades pelas quais passei."
+    ],
+    "bonds": [],
+    "flaws": [
+      "Se eu estiver em desvantagem, eu vou fugir de uma briga.",
+      "Ouro parece ser muito dinheiro pra mim, e eu faria praticamente qualquer coisa por mais dele.",
+      "Eu nunca vou confiar em ninguém plenamente, além de mim mesmo.",
+      "Eu prefiro matar alguém enquanto dorme que uma luta justa.",
+      "Não é roubo se eu preciso mais que outra pessoa.",
+      "As pessoas que não podem se virar sozinhas, tem o que merecem."
+    ]
+  },
+  {
+    "index": "sabio",
+    "name": "Sábio",
+    "description": "Você ficou anos aprendendo sobre o conhecimento do multiverso. Você decorou manuscritos, estudou pergaminhos e escutou os grandes especialistas nos temas que o interessam. Seus esforços fizeram de você um mestre no seu campo de estudo.",
+    "skill_proficiencies": [
+      "Arcanismo",
+      "História"
+    ],
+    "tool_proficiencies": [],
+    "languages": "Dois à sua escolha",
+    "equipment": "Um vidro de tinta escura, uma pena, uma faca pequena, uma carta de um falecido colega perguntando a você algo que você nunca terá a chance de responder, um conjunto de roupas comuns e uma algibeira contendo 10 po ESPECIALIDADE Para determinar a natureza de seus estudos, role um d8 ou escolha na tabela abaixo.",
+    "feature": {
+      "name": "",
+      "desc": ""
+    },
+    "personality_traits": [
+      "Eu uso palavras polissilábicas para endossar minha impressão de grande erudição.",
+      "Eu já li todos os livros das grandes bibliotecas – ou gosto de me vangloriar e dizer que li.",
+      "Eu costumo ajudar os outros que não são tão inteligentes quanto eu, e pacientemente explico tudo quantas vezes forem necessárias.",
+      "Nada para mim é melhor que um bom mistério.",
+      "Eu voluntariamente escuto cada lado, e seus argumentos, antes de tomar uma decisão final.",
+      "Eu...falo...lentamente...ao...conversar...com idiotas...que tentam...se comparar...comigo.",
+      "E sou horrível e estranho em situações sociais.",
+      "Estou convencido de que todos tentam roubar os meus segredos de mim."
+    ],
+    "ideals": [
+      "Conhecimento. O caminho para o poder e o auto aperfeiçoamento é através do conhecimento. (Neutro)",
+      "Beleza. O que é belo nos mostra o que está além disso perto do que é verdadeiro. (Bom)",
+      "Logica. Emoções não devem nublar seu pensamento lógico. (Leal)",
+      "Sem Limites. Nada pode apaziguar a possibilidade infinita de toda a existência. (Caótico)",
+      "Poder. Conhecimento é o caminho para o poder e a dominação. (Mau)",
+      "Auto Aperfeiçoamento. O objetivo de uma vida de estudos é a melhoria de si mesmo. (Qualquer)"
+    ],
+    "bonds": [],
+    "flaws": [
+      "Eu me distraio facilmente com a promessa de informação.",
+      "Muitas pessoas gritam e correm quando veem um corruptor. Eu paro e tomo notas de sua anatomia.",
+      "Desvendar um mistério ancestral pode muito bem valer o preço e uma civilização.",
+      "E prefiro soluções óbvias a complicadas.",
+      "Eu falo sem antes pensar em minhas palavras, invariavelmente insultando outros.",
+      "Eu não consigo guardar um segredo para salvar minha vida. Ou a vida de qualquer outra pessoa."
+    ]
+  },
+  {
+    "index": "soldado",
+    "name": "Soldado",
+    "description": "A guerra esteve na sua vida desde que você se recorda. Você foi treinado desde jovem, estudou o uso das armas e armaduras, aprendeu técnicas básicas de sobrevivência, incluindo como permanecer vivo no campo de batalha. Você pode ter feito parte de uma armada nacional, ou uma companhia de mercenários, talvez até mesmo uma milícia local, que cresceu proeminentemente durante uma guerra recente. Quando você escolher esse antecedente, converse com seu Mestre para determinar de qual organização militar você fez parte, quão longe você progrediu na hierarquia e que tipos de experiência você teve na sua carreira militar? Foi um exército de guarda, uma patrulha de cidade ou a milícia de uma pequena vila? Ou talvez você tenha participado da defesa pessoal de um nobre, ou mercador, ou de um cartel de mercenários.",
+    "skill_proficiencies": [
+      "Atletismo",
+      "Intimidação"
+    ],
+    "tool_proficiencies": [
+      "Um tipo de kit de jogo",
+      "veículo (terrestre)"
+    ],
+    "languages": "",
+    "equipment": "Uma insígnia de patente, um fetiche obtido de um inimigo caído (uma adaga, lâmina partida ou tira de estandarte), um conjunto de dados de osso ou baralho, um conjunto de roupas comuns e uma algibeira contendo 10 po ESPECIALIDADE Durante sua experiência como soldado, você desempenhou um papel específico em uma unidade ou exército. Jogue o d8 ou escolha entre as opções na tabela abaixo.",
+    "feature": {
+      "name": "",
+      "desc": ""
+    },
+    "personality_traits": [
+      "Eu sou sempre polido e respeitoso.",
+      "Eu sou assombrado pelas memórias da guerra. Não consigo tirar aquelas imagens da minha cabeça.",
+      "Eu perdi muitos amigos, e sou muito devagar para fazer novos.",
+      "Eu tenho muitas histórias de inspiração e cautela da época de minha experiência militar que são relevantes em todas as situações de combate.",
+      "Eu não consigo encarar um cão infernal sem vacilar.",
+      "Eu gosto de ser forte e de quebrar coisas.",
+      "Eu tenho um senso de humor grosseiro.",
+      "Eu enfrento os problemas de frente. Uma solução direta é o melhor caminho para o sucesso."
+    ],
+    "ideals": [
+      "Bem Maior. Nosso destino é dar nossas vidas em defesa de terceiros. (Bom)",
+      "Responsabilidade. Eu faço o que tenho que fazer e obedeço apenas a autoridade. (Leal)",
+      "Independência. Quando pessoas seguem ordens cegas elas apoiam um tipo de tirania. (Caótico)",
+      "Força. A vida é como uma guerra, o mais forte vence. (Mau)",
+      "Viva e Deixa Viver. Ideais não valem a pena se você matar, ou for à guerra por eles. (Neutro)",
+      "Aspiração. Minha cidade, nação ou meu povo, são tudo o que importa para mim. (Qualquer)"
+    ],
+    "bonds": [],
+    "flaws": [
+      "O inimigo monstruoso que enfrentei em uma batalha ainda me deixa tremendo de medo.",
+      "Eu tenho pouco respeito por aqueles que não se provam bons combatentes.",
+      "Eu cometi um terrível erro em batalha, o que custou muitas vidas – eu farei de tudo para manter esse erro em segredo.",
+      "Meu ódio por meus inimigos é cego e irracional.",
+      "Eu obedeço a lei, mesmo se a lei trouxer a angústia.",
+      "Eu prefiro comer minha armadura a admitir que estou errado."
+    ]
+  }
+]

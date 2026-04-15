@@ -51,9 +51,15 @@ export function CharacterSheet({ characterId, onBack }) {
   } = useCharacter(initialCharacter)
 
   useEffect(() => {
-    fetch('/srd-data/5e-SRD-Races.json').then(r => r.json()).then(setRaces).catch(() => {})
-    fetch('/srd-data/5e-SRD-Classes.json').then(r => r.json()).then(setClasses).catch(() => {})
-    fetch('/srd-data/5e-SRD-Backgrounds.json').then(r => r.json()).then(setBackgrounds).catch(() => {})
+    fetch('/srd-data/phb-races-pt.json')
+      .then(r => r.json()).then(setRaces)
+      .catch(() => fetch('/srd-data/5e-SRD-Races.json').then(r => r.json()).then(setRaces).catch(() => {}))
+    fetch('/srd-data/phb-classes-pt.json')
+      .then(r => r.json()).then(setClasses)
+      .catch(() => fetch('/srd-data/5e-SRD-Classes.json').then(r => r.json()).then(setClasses).catch(() => {}))
+    fetch('/srd-data/phb-backgrounds-pt.json')
+      .then(r => r.json()).then(setBackgrounds)
+      .catch(() => fetch('/srd-data/5e-SRD-Backgrounds.json').then(r => r.json()).then(setBackgrounds).catch(() => {}))
   }, [])
 
   // Auto-save
