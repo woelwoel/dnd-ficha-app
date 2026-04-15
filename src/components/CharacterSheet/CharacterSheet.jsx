@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo, useRef } from 'react'
 import { useCharacter } from '../../hooks/useCharacter'
 import { useCharacterCalculations } from '../../hooks/useCharacterCalculations'
+import { useTabValidation } from '../../hooks/useTabValidation'
 import { AttributeBox } from './AttributeBox'
 import { CharacterInfo } from './CharacterInfo'
 import { CombatStats } from './CombatStats'
@@ -29,6 +30,8 @@ export function CharacterSheet({ characterId, onBack }) {
   const [backgrounds, setBackgrounds] = useState([])
   const [saved, setSaved] = useState(false)
   const [activeTab, setActiveTab] = useState('ficha')
+  // Controla se o banner de "erros bloqueando avanço" está visível
+  const [navBlocked, setNavBlocked] = useState(false)
   const importRef = useRef(null)
 
   const initialCharacter = useMemo(() => {
@@ -61,6 +64,7 @@ export function CharacterSheet({ characterId, onBack }) {
     [classes, character.info.class]
   )
   const calc = useCharacterCalculations(character, classData)
+  const { validateTab, getTabErrors, markTouched, hasErrors, focusFirstError } = useTabValidation(character)
 
   useEffect(() => {
     fetch('/srd-data/phb-races-pt.json')
@@ -86,6 +90,23 @@ export function CharacterSheet({ characterId, onBack }) {
     const timer = setTimeout(() => setSaved(false), 1500)
     return () => clearTimeout(timer)
   }, [character])
+
+  // Navega entre abas — valida a aba atual se for avanço
+  function handleTabChange(newTabId) {
+    const currentIdx = TABS.findIndex(t => t.id === activeTab)
+    const newIdx     = TABS.findIndex(t => t.id === newTabId)
+    const isForward  = newIdx > currentIdx
+
+    if (isForward && hasErrors(activeTab)) {
+      // Marca como tocada para exibir erros inline
+      markTouched(activeTab)
+      setNavBlocked(true)
+      return
+    }
+
+    setNavBlocked(false)
+    setActiveTab(newTabId)
+  }
 
   // Export character as JSON
   function handleExport() {
@@ -162,7 +183,7 @@ export function CharacterSheet({ characterId, onBack }) {
         {TABS.map(tab => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => handleTabChange(tab.id)}
             className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
               activeTab === tab.id
                 ? 'text-amber-400 border-b-2 border-amber-400 -mb-px'
@@ -174,8 +195,32 @@ export function CharacterSheet({ characterId, onBack }) {
         ))}
       </div>
 
+      {/* Banner de erros — aparece quando a navegação é bloqueada */}
+      {navBlocked && (
+        <div
+          role="alert"
+          className="flex items-center justify-between gap-3 bg-red-900/40 border border-red-700 rounded-lg px-4 py-3 text-sm"
+        >
+          <div className="flex items-center gap-2 text-red-300">
+            <svg aria-hidden="true" className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            Corrija os erros antes de avançar para a próxima aba.
+          </div>
+          <button
+            onClick={() => focusFirstError(activeTab)}
+            className="text-xs text-red-300 hover:text-white underline whitespace-nowrap"
+          >
+            Revisar erros
+          </button>
+        </div>
+      )}
+
       {/* Tab: Ficha principal */}
-      {activeTab === 'ficha' && (
+      {activeTab === 'ficha' && (() => {
+        // Erros visíveis só após o usuário tentar sair da aba
+        const fichaErrors = getTabErrors('ficha')
+        return (
         <div className="space-y-6">
           <section>
             <CharacterInfo
@@ -184,6 +229,7 @@ export function CharacterSheet({ characterId, onBack }) {
               races={races}
               classes={classes}
               backgrounds={backgrounds}
+              errors={fichaErrors}
             />
           </section>
 
@@ -197,6 +243,7 @@ export function CharacterSheet({ characterId, onBack }) {
                   name={name}
                   value={character.attributes[key]}
                   onChange={value => updateAttribute(key, value)}
+                  error={fichaErrors[`attr_${key}`]}
                 />
               ))}
             </div>
@@ -210,6 +257,7 @@ export function CharacterSheet({ characterId, onBack }) {
               onUpdateCombat={updateCombat}
               suggestedAC={calc.suggestedAC}
               suggestedMaxHp={calc.suggestedMaxHp}
+              errors={fichaErrors}
             />
             <SavingThrows
               attributes={character.attributes}
@@ -219,7 +267,8 @@ export function CharacterSheet({ characterId, onBack }) {
             />
           </section>
         </div>
-      )}
+        )
+      })()}
 
       {/* Tab: Perícias */}
       {activeTab === 'percias' && (

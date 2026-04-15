@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { DetailsModal } from '../DetailsModal'
+import { FormFieldError } from '../FormFieldError'
 
 const ALIGNMENTS = [
   'Leal e Bom', 'Neutro e Bom', 'Caótico e Bom',
@@ -232,34 +233,47 @@ function TableSection({ title, items }) {
 }
 
 /* ── Componente principal ── */
-export function CharacterInfo({ info, onUpdate, races, classes, backgrounds }) {
+export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, errors = {} }) {
   const [modal, setModal] = useState(null) // 'race' | 'class' | 'background' | null
 
   const selectedRace = races.find(r => r.index === info.race)
   const selectedClass = classes.find(c => c.index === info.class)
   const selectedBg = backgrounds.find(b => b.index === info.background)
 
+  // Classe base dos campos — vermelha quando há erro
+  const fieldCls = (hasErr) =>
+    `w-full bg-gray-800 border rounded px-3 py-2 text-white focus:outline-none focus:ring-1 ${
+      hasErr
+        ? 'border-red-500 focus:border-red-400 focus:ring-red-400'
+        : 'border-gray-600 focus:border-amber-400 focus:ring-amber-400'
+    }`
+
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
       <div className="col-span-2 sm:col-span-3">
-        <label className="block text-xs text-gray-400 mb-1">Nome do Personagem</label>
+        <label htmlFor="field-name" className="block text-xs text-gray-400 mb-1">Nome do Personagem</label>
         <input
+          id="field-name"
           type="text"
           value={info.name}
           onChange={e => onUpdate('name', e.target.value)}
           placeholder="Ex: Thorin Ironforge"
-          className="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white text-lg font-semibold focus:outline-none focus:border-amber-400"
+          aria-describedby={errors.name ? 'err-name' : undefined}
+          className={`${fieldCls(!!errors.name)} text-lg font-semibold`}
         />
+        <FormFieldError id="err-name" message={errors.name} />
       </div>
 
       {/* Raça */}
       <div>
-        <label className="block text-xs text-gray-400 mb-1">Raça</label>
+        <label htmlFor="field-race" className="block text-xs text-gray-400 mb-1">Raça</label>
         <div className="flex gap-1">
           <select
+            id="field-race"
             value={info.race}
             onChange={e => onUpdate('race', e.target.value)}
-            className="flex-1 bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-400"
+            aria-describedby={errors.race ? 'err-race' : undefined}
+            className={fieldCls(!!errors.race)}
           >
             <option value="">Escolher...</option>
             {races.map(r => (
@@ -276,16 +290,19 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds }) {
             </button>
           )}
         </div>
+        <FormFieldError id="err-race" message={errors.race} />
       </div>
 
       {/* Classe */}
       <div>
-        <label className="block text-xs text-gray-400 mb-1">Classe</label>
+        <label htmlFor="field-class" className="block text-xs text-gray-400 mb-1">Classe</label>
         <div className="flex gap-1">
           <select
+            id="field-class"
             value={info.class}
             onChange={e => onUpdate('class', e.target.value)}
-            className="flex-1 bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-400"
+            aria-describedby={errors.class ? 'err-class' : undefined}
+            className={fieldCls(!!errors.class)}
           >
             <option value="">Escolher...</option>
             {classes.map(c => (
@@ -302,19 +319,23 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds }) {
             </button>
           )}
         </div>
+        <FormFieldError id="err-class" message={errors.class} />
       </div>
 
       {/* Nível */}
       <div>
-        <label className="block text-xs text-gray-400 mb-1">Nível</label>
+        <label htmlFor="field-level" className="block text-xs text-gray-400 mb-1">Nível</label>
         <input
+          id="field-level"
           type="number"
           min={1}
           max={20}
           value={info.level}
           onChange={e => onUpdate('level', Math.min(20, Math.max(1, parseInt(e.target.value) || 1)))}
-          className="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          aria-describedby={errors.level ? 'err-level' : undefined}
+          className={`${fieldCls(!!errors.level)} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
         />
+        <FormFieldError id="err-level" message={errors.level} />
       </div>
 
       {/* Antecedente */}

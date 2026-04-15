@@ -1,6 +1,7 @@
 import { formatModifier, getProficiencyBonus, calculateInitiative, getModifier } from '../../utils/calculations'
+import { FormFieldError } from '../FormFieldError'
 
-export function CombatStats({ combat, attributes, level, onUpdateCombat, suggestedAC, suggestedMaxHp }) {
+export function CombatStats({ combat, attributes, level, onUpdateCombat, suggestedAC, suggestedMaxHp, errors = {} }) {
   const profBonus = getProficiencyBonus(level)
   const initiative = calculateInitiative(attributes.dex)
 
@@ -15,6 +16,9 @@ export function CombatStats({ combat, attributes, level, onUpdateCombat, suggest
 
       <div className="grid grid-cols-3 gap-3 mb-4">
         <StatBox label="Classe de Armadura" value={combat.armorClass} editable
+          fieldId="field-armorClass"
+          errId="err-armorClass"
+          error={errors.armorClass}
           onChange={v => onUpdateCombat('armorClass', Math.max(0, parseInt(v) || 0))}
           hint={suggestedAC !== undefined && suggestedAC !== combat.armorClass
             ? { label: `Sugerida: ${suggestedAC}`, onApply: () => onUpdateCombat('armorClass', suggestedAC) }
@@ -43,16 +47,23 @@ export function CombatStats({ combat, attributes, level, onUpdateCombat, suggest
               className="w-8 h-8 rounded bg-red-900 hover:bg-red-700 text-white font-bold text-lg flex items-center justify-center"
             >−</button>
             <input
+              id="field-currentHp"
               type="number"
               value={combat.currentHp}
               onChange={e => handleHpChange('currentHp', e.target.value)}
-              className="flex-1 text-center bg-gray-700 border border-gray-500 rounded px-2 py-1 text-white font-bold text-xl focus:outline-none focus:border-amber-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              aria-describedby={errors.currentHp ? 'err-currentHp' : undefined}
+              className={`flex-1 text-center bg-gray-700 border rounded px-2 py-1 text-white font-bold text-xl focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                errors.currentHp
+                  ? 'border-red-500 focus:border-red-400'
+                  : 'border-gray-500 focus:border-amber-400'
+              }`}
             />
             <button
               onClick={() => handleHpChange('currentHp', combat.currentHp + 1)}
               className="w-8 h-8 rounded bg-green-900 hover:bg-green-700 text-white font-bold text-lg flex items-center justify-center"
             >+</button>
           </div>
+          <FormFieldError id="err-currentHp" message={errors.currentHp} />
           {/* HP Bar */}
           <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
             <div
@@ -102,16 +113,20 @@ export function CombatStats({ combat, attributes, level, onUpdateCombat, suggest
   )
 }
 
-function StatBox({ label, value, editable, onChange, hint }) {
+function StatBox({ label, value, editable, onChange, hint, fieldId, errId, error }) {
   return (
     <div className="flex flex-col items-center bg-gray-900 rounded p-2">
       <span className="text-xs text-gray-400 text-center mb-1 leading-tight">{label}</span>
       {editable ? (
         <input
+          id={fieldId}
           type="number"
           value={typeof value === 'string' ? parseInt(value) || 0 : value}
           onChange={e => onChange(e.target.value)}
-          className="w-full text-center text-xl font-bold bg-transparent text-white focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          aria-describedby={error ? errId : undefined}
+          className={`w-full text-center text-xl font-bold bg-transparent focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+            error ? 'text-red-300' : 'text-white'
+          }`}
         />
       ) : (
         <span className="text-xl font-bold text-white">{value}</span>
@@ -123,6 +138,11 @@ function StatBox({ label, value, editable, onChange, hint }) {
         >
           {hint.label}
         </button>
+      )}
+      {error && (
+        <p id={errId} role="alert" className="text-[9px] text-red-400 mt-0.5 text-center leading-none">
+          {error}
+        </p>
       )}
     </div>
   )
