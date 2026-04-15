@@ -142,6 +142,40 @@ export function useCharacter(initialCharacter = null) {
     })
   }, [])
 
+  const updateCurrency = useCallback((key, value) => {
+    const num = Math.max(0, parseInt(value, 10) || 0)
+    setCharacter(prev => ({
+      ...prev,
+      inventory: {
+        ...prev.inventory,
+        currency: { ...prev.inventory.currency, [key]: num },
+      },
+      meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+    }))
+  }, [])
+
+  const addItem = useCallback((item) => {
+    setCharacter(prev => ({
+      ...prev,
+      inventory: {
+        ...prev.inventory,
+        items: [...prev.inventory.items, { ...item, id: Date.now().toString(36) }],
+      },
+      meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+    }))
+  }, [])
+
+  const removeItem = useCallback((itemId) => {
+    setCharacter(prev => ({
+      ...prev,
+      inventory: {
+        ...prev.inventory,
+        items: prev.inventory.items.filter(i => i.id !== itemId),
+      },
+      meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+    }))
+  }, [])
+
   return {
     character,
     setCharacter,
@@ -151,6 +185,9 @@ export function useCharacter(initialCharacter = null) {
     updateTraits,
     toggleSkillProficiency,
     toggleSaveProficiency,
+    updateCurrency,
+    addItem,
+    removeItem,
   }
 }
 

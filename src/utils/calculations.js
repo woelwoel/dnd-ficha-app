@@ -71,3 +71,25 @@ export const ABILITY_SCORES = [
   { key: 'wis', name: 'Sabedoria', abbr: 'SAB' },
   { key: 'cha', name: 'Carisma', abbr: 'CAR' },
 ]
+
+// 18 D&D 5e skills
+export const SKILLS = [
+  { key: 'acrobatics',     name: 'Acrobacia',       ability: 'dex', abbr: 'DES' },
+  { key: 'animal-handling',name: 'Adestramento',     ability: 'wis', abbr: 'SAB' },
+  { key: 'arcana',         name: 'Arcanismo',        ability: 'int', abbr: 'INT' },
+  { key: 'athletics',      name: 'Atletismo',        ability: 'str', abbr: 'FOR' },
+  { key: 'deception',      name: 'Enganação',        ability: 'cha', abbr: 'CAR' },
+  { key: 'history',        name: 'História',         ability: 'int', abbr: 'INT' },
+  { key: 'insight',        name: 'Intuição',         ability: 'wis', abbr: 'SAB' },
+  { key: 'intimidation',   name: 'Intimidação',      ability: 'cha', abbr: 'CAR' },
+  { key: 'investigation',  name: 'Investigação',     ability: 'int', abbr: 'INT' },
+  { key: 'medicine',       name: 'Medicina',         ability: 'wis', abbr: 'SAB' },
+  { key: 'nature',         name: 'Natureza',         ability: 'int', abbr: 'INT' },
+  { key: 'perception',     name: 'Percepção',        ability: 'wis', abbr: 'SAB' },
+  { key: 'performance',    name: 'Atuação',          ability: 'cha', abbr: 'CAR' },
+  { key: 'persuasion',     name: 'Persuasão',        ability: 'cha', abbr: 'CAR' },
+  { key: 'religion',       name: 'Religião',         ability: 'int', abbr: 'INT' },
+  { key: 'sleight-of-hand',name: 'Prestidigitação',  ability: 'dex', abbr: 'DES' },
+  { key: 'stealth',        name: 'Furtividade',      ability: 'dex', abbr: 'DES' },
+  { key: 'survival',       name: 'Sobrevivência',    ability: 'wis', abbr: 'SAB' },
+]
