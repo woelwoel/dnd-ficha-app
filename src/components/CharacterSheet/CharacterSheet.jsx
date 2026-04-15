@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useRef } from 'react'
 import { useCharacter } from '../../hooks/useCharacter'
 import { AttributeBox } from './AttributeBox'
 import { CharacterInfo } from './CharacterInfo'
@@ -6,12 +6,16 @@ import { CombatStats } from './CombatStats'
 import { SavingThrows } from './SavingThrows'
 import { SkillsList } from './SkillsList'
 import { Inventory } from './Inventory'
+import { Spells } from './Spells'
+import { Notes } from './Notes'
 import { ABILITY_SCORES } from '../../utils/calculations'
 
 const TABS = [
-  { id: 'ficha',      label: 'Ficha'      },
-  { id: 'percias',    label: 'Perícias'   },
-  { id: 'inventario', label: 'Inventário' },
+  { id: 'ficha',      label: 'Ficha'       },
+  { id: 'percias',    label: 'Perícias'    },
+  { id: 'magias',     label: 'Magias'      },
+  { id: 'inventario', label: 'Inventário'  },
+  { id: 'notas',      label: 'Notas'       },
 ]
 
 export function CharacterSheet({ characterId, onBack }) {
@@ -20,8 +24,8 @@ export function CharacterSheet({ characterId, onBack }) {
   const [backgrounds, setBackgrounds] = useState([])
   const [saved, setSaved] = useState(false)
   const [activeTab, setActiveTab] = useState('ficha')
+  const importRef = useRef(null)
 
-  // Load existing character from localStorage if an ID was provided
   const initialCharacter = useMemo(() => {
     if (!characterId || characterId === 'new') return null
     const stored = JSON.parse(localStorage.getItem('dnd-app-characters') || '[]')
@@ -30,6 +34,7 @@ export function CharacterSheet({ characterId, onBack }) {
 
   const {
     character,
+    setCharacter,
     updateInfo,
     updateTraits,
     updateAttribute,
@@ -39,16 +44,19 @@ export function CharacterSheet({ characterId, onBack }) {
     updateCurrency,
     addItem,
     removeItem,
+    updateSpellcasting,
+    addSpell,
+    removeSpell,
+    toggleSlot,
   } = useCharacter(initialCharacter)
 
-  // Load SRD data
   useEffect(() => {
     fetch('/srd-data/5e-SRD-Races.json').then(r => r.json()).then(setRaces).catch(() => {})
     fetch('/srd-data/5e-SRD-Classes.json').then(r => r.json()).then(setClasses).catch(() => {})
     fetch('/srd-data/5e-SRD-Backgrounds.json').then(r => r.json()).then(setBackgrounds).catch(() => {})
   }, [])
 
-  // Auto-save to localStorage on every change
+  // Auto-save
   useEffect(() => {
     if (!character.id) return
     const stored = JSON.parse(localStorage.getItem('dnd-app-characters') || '[]')
@@ -61,10 +69,40 @@ export function CharacterSheet({ characterId, onBack }) {
     return () => clearTimeout(timer)
   }, [character])
 
+  // Export character as JSON
+  function handleExport() {
+    const json = JSON.stringify(character, null, 2)
+    const blob = new Blob([json], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${character.info.name || 'personagem'}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  // Import character from JSON file
+  function handleImport(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      try {
+        const imported = JSON.parse(ev.target.result)
+        if (!imported.id || !imported.info) throw new Error('Formato inválido')
+        setCharacter(imported)
+        e.target.value = ''
+      } catch {
+        alert('Arquivo inválido. Certifique-se de importar uma ficha exportada pelo app.')
+      }
+    }
+    reader.readAsText(file)
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="flex items-center gap-3">
           {onBack && (
             <button
@@ -74,20 +112,40 @@ export function CharacterSheet({ characterId, onBack }) {
               ← Personagens
             </button>
           )}
-          <h1 className="text-2xl font-bold text-amber-400">Ficha de Personagem</h1>
+          <h1 className="text-xl font-bold text-amber-400 truncate max-w-[200px] sm:max-w-none">
+            {character.info.name || 'Ficha de Personagem'}
+          </h1>
         </div>
-        <span className={`text-xs transition-opacity ${saved ? 'opacity-100 text-green-400' : 'opacity-0'}`}>
-          ✓ Salvo
-        </span>
+
+        <div className="flex items-center gap-2">
+          <span className={`text-xs transition-opacity mr-1 ${saved ? 'opacity-100 text-green-400' : 'opacity-0'}`}>
+            ✓ Salvo
+          </span>
+          <button
+            onClick={handleExport}
+            className="text-xs px-3 py-1.5 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium"
+            title="Exportar como JSON"
+          >
+            Exportar
+          </button>
+          <button
+            onClick={() => importRef.current?.click()}
+            className="text-xs px-3 py-1.5 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium"
+            title="Importar de JSON"
+          >
+            Importar
+          </button>
+          <input ref={importRef} type="file" accept=".json" onChange={handleImport} className="hidden" />
+        </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 border-b border-gray-700">
+      <div className="flex gap-1 border-b border-gray-700 overflow-x-auto">
         {TABS.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 text-sm font-medium transition-colors ${
+            className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
               activeTab === tab.id
                 ? 'text-amber-400 border-b-2 border-amber-400 -mb-px'
                 : 'text-gray-400 hover:text-gray-200'
@@ -140,28 +198,6 @@ export function CharacterSheet({ characterId, onBack }) {
               onToggle={toggleSaveProficiency}
             />
           </section>
-
-          <section className="bg-gray-800 border border-gray-600 rounded-lg p-4">
-            <h3 className="text-sm font-bold text-amber-400 uppercase tracking-widest mb-3">Traços & Notas</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {[
-                { field: 'personalityTraits', label: 'Traços de Personalidade' },
-                { field: 'ideals',            label: 'Ideais'                  },
-                { field: 'bonds',             label: 'Vínculos'                },
-                { field: 'flaws',             label: 'Defeitos'                },
-              ].map(({ field, label }) => (
-                <div key={field}>
-                  <label className="block text-xs text-gray-400 mb-1">{label}</label>
-                  <textarea
-                    value={character.traits[field]}
-                    onChange={e => updateTraits(field, e.target.value)}
-                    rows={3}
-                    className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-sm text-white resize-none focus:outline-none focus:border-amber-400"
-                  />
-                </div>
-              ))}
-            </div>
-          </section>
         </div>
       )}
 
@@ -175,6 +211,19 @@ export function CharacterSheet({ characterId, onBack }) {
         />
       )}
 
+      {/* Tab: Magias */}
+      {activeTab === 'magias' && (
+        <Spells
+          character={character}
+          attributes={character.attributes}
+          level={character.info.level}
+          onUpdateSpellcasting={updateSpellcasting}
+          onAddSpell={addSpell}
+          onRemoveSpell={removeSpell}
+          onToggleSlot={toggleSlot}
+        />
+      )}
+
       {/* Tab: Inventário */}
       {activeTab === 'inventario' && (
         <Inventory
@@ -182,6 +231,14 @@ export function CharacterSheet({ characterId, onBack }) {
           onUpdateCurrency={updateCurrency}
           onAddItem={addItem}
           onRemoveItem={removeItem}
+        />
+      )}
+
+      {/* Tab: Notas */}
+      {activeTab === 'notas' && (
+        <Notes
+          traits={character.traits}
+          onUpdate={updateTraits}
         />
       )}
     </div>

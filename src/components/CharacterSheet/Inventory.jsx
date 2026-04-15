@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { SrdSearchModal } from '../SrdSearchModal'
 
 const CURRENCY_CONFIG = [
   { key: 'pp', label: 'PPl', title: 'Platina',  color: 'text-purple-300' },
@@ -13,6 +14,15 @@ const EMPTY_ITEM = { name: '', qty: 1, weight: '', notes: '' }
 export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem }) {
   const [newItem, setNewItem] = useState(EMPTY_ITEM)
   const [showForm, setShowForm] = useState(false)
+  const [srdEquipment, setSrdEquipment] = useState([])
+  const [searchOpen, setSearchOpen] = useState(false)
+
+  useEffect(() => {
+    fetch('/srd-data/5e-SRD-Equipment.json')
+      .then(r => r.json())
+      .then(setSrdEquipment)
+      .catch(() => {})
+  }, [])
 
   function handleAdd() {
     if (!newItem.name.trim()) return
@@ -57,12 +67,20 @@ export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem
               {inventory.items.length} item{inventory.items.length !== 1 ? 's' : ''}
             </span>
           </h3>
-          <button
-            onClick={() => setShowForm(v => !v)}
-            className="text-xs px-3 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white font-semibold"
-          >
-            {showForm ? 'Cancelar' : '+ Adicionar'}
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="text-xs px-3 py-1 rounded bg-gray-600 hover:bg-gray-500 text-white font-semibold"
+            >
+              Buscar SRD
+            </button>
+            <button
+              onClick={() => setShowForm(v => !v)}
+              className="text-xs px-3 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white font-semibold"
+            >
+              {showForm ? 'Cancelar' : '+ Manual'}
+            </button>
+          </div>
         </div>
 
         {/* Add item form */}
@@ -117,6 +135,44 @@ export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem
             </button>
           </div>
         )}
+
+        {/* SRD equipment search */}
+        <SrdSearchModal
+          isOpen={searchOpen}
+          onClose={() => setSearchOpen(false)}
+          title="Buscar Equipamento (SRD)"
+          items={srdEquipment}
+          onSelect={eq => onAddItem({
+            name: eq.name,
+            qty: 1,
+            weight: eq.weight ? `${eq.weight}lb` : '',
+            notes: [
+              eq.damage?.damage_dice ? `Dano: ${eq.damage.damage_dice}` : null,
+              eq.armor_class ? `CA: ${eq.armor_class.base}` : null,
+              eq.cost ? `Custo: ${eq.cost.quantity}${eq.cost.unit}` : null,
+            ].filter(Boolean).join(' · '),
+          })}
+          renderItem={eq => (
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-white">{eq.name}</span>
+                {eq.damage?.damage_dice && (
+                  <span className="text-xs text-amber-400">{eq.damage.damage_dice}</span>
+                )}
+                {eq.armor_class && (
+                  <span className="text-xs text-blue-400">CA {eq.armor_class.base}</span>
+                )}
+              </div>
+              <div className="text-xs text-gray-400 mt-0.5">
+                {[
+                  eq.equipment_category?.name,
+                  eq.weight ? `${eq.weight} lb` : null,
+                  eq.cost ? `${eq.cost.quantity}${eq.cost.unit}` : null,
+                ].filter(Boolean).join(' · ')}
+              </div>
+            </div>
+          )}
+        />
 
         {/* Items list */}
         {inventory.items.length === 0 ? (

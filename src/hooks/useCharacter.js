@@ -44,7 +44,7 @@ const DEFAULT_CHARACTER = {
   },
   spellcasting: {
     ability: null,
-    slots: {},
+    usedSlots: {},
     spells: [],
   },
   inventory: {
@@ -176,6 +176,51 @@ export function useCharacter(initialCharacter = null) {
     }))
   }, [])
 
+  const updateSpellcasting = useCallback((field, value) => {
+    setCharacter(prev => ({
+      ...prev,
+      spellcasting: { ...prev.spellcasting, [field]: value },
+      meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+    }))
+  }, [])
+
+  const addSpell = useCallback((spell) => {
+    setCharacter(prev => {
+      const already = prev.spellcasting.spells.some(s => s.index === spell.index)
+      if (already) return prev
+      return {
+        ...prev,
+        spellcasting: {
+          ...prev.spellcasting,
+          spells: [...prev.spellcasting.spells, { ...spell, id: generateId() }],
+        },
+        meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+      }
+    })
+  }, [])
+
+  const removeSpell = useCallback((spellId) => {
+    setCharacter(prev => ({
+      ...prev,
+      spellcasting: {
+        ...prev.spellcasting,
+        spells: prev.spellcasting.spells.filter(s => s.id !== spellId),
+      },
+      meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+    }))
+  }, [])
+
+  const toggleSlot = useCallback((level, newUsed) => {
+    setCharacter(prev => ({
+      ...prev,
+      spellcasting: {
+        ...prev.spellcasting,
+        usedSlots: { ...(prev.spellcasting.usedSlots || {}), [level]: Math.max(0, newUsed) },
+      },
+      meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+    }))
+  }, [])
+
   return {
     character,
     setCharacter,
@@ -188,6 +233,10 @@ export function useCharacter(initialCharacter = null) {
     updateCurrency,
     addItem,
     removeItem,
+    updateSpellcasting,
+    addSpell,
+    removeSpell,
+    toggleSlot,
   }
 }
 
