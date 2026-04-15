@@ -1,219 +1,379 @@
-import { ABILITY_SCORES, getModifier, getProficiencyBonus } from '../../utils/calculations'
-import { SKILLS } from '../../utils/calculations'
+import { ABILITY_SCORES, SKILLS, getModifier, getProficiencyBonus } from '../../utils/calculations'
 
-function Stat({ label, value, sub }) {
-  return (
-    <div className="text-center bg-gray-800 border border-gray-600 rounded-lg p-2">
-      <div className="text-xs text-gray-400 mb-1">{label}</div>
-      <div className="text-lg font-bold text-amber-400">{value}</div>
-      {sub !== undefined && <div className="text-xs text-gray-500">{sub}</div>}
-    </div>
-  )
+/* ── Paleta de cores da ficha impressa ── */
+// Usamos classes Tailwind com valores customizados via style quando necessário.
+const P = {
+  bg:       'bg-[#f2e8c8]',
+  border:   'border-[#7a5c2a]',
+  text:     'text-[#3a2108]',
+  header:   'bg-[#c8a45a] border-[#7a5c2a]',
+  section:  'bg-[#ede0ba] border-[#7a5c2a]',
+  circle:   'bg-[#f2e8c8] border-[#7a5c2a]',
+  dot:      { filled: '#3a2108', empty: '#c8b89a' },
 }
 
-function Section({ title, children }) {
+/* ── Helpers ── */
+function fmt(n) { return n >= 0 ? `+${n}` : `${n}` }
+
+function SectionHeader({ children }) {
   return (
-    <div>
-      <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-2 pb-1 border-b border-gray-700">
-        {title}
-      </h3>
+    <div className={`text-center text-[9px] font-black tracking-widest uppercase py-0.5 ${P.header} ${P.border} border-t border-x rounded-t`}>
       {children}
     </div>
   )
 }
+function Box({ label, children, className = '' }) {
+  return (
+    <div className={`${P.border} border rounded ${className}`}>
+      {label && <SectionHeader>{label}</SectionHeader>}
+      <div className={`${P.section} ${P.border} border-b border-x rounded-b p-1`}>
+        {children}
+      </div>
+    </div>
+  )
+}
 
+function Dot({ filled }) {
+  return (
+    <span
+      className="inline-block w-3 h-3 rounded-full border border-[#7a5c2a] shrink-0"
+      style={{ background: filled ? P.dot.filled : P.dot.empty }}
+    />
+  )
+}
+
+function InfoField({ label, value }) {
+  return (
+    <div className={`border-b-2 ${P.border} text-center`}>
+      <div className={`text-[9px] font-black uppercase tracking-wide ${P.text} mt-0.5`}>{label}</div>
+      <div className={`text-xs font-semibold ${P.text} min-h-[18px] leading-tight py-0.5`}>{value || ''}</div>
+    </div>
+  )
+}
+
+/* ── Caixa de atributo (círculo grande + score + nome) ── */
+function AttributeBox({ name, abbr, score }) {
+  const mod = getModifier(score)
+  return (
+    <div className="flex flex-col items-center">
+      {/* Círculo do modificador */}
+      <div className={`w-10 h-10 rounded-full border-2 ${P.border} ${P.circle} flex items-center justify-center`}>
+        <span className={`text-base font-black ${P.text} leading-none`}>{fmt(mod)}</span>
+      </div>
+      {/* Score */}
+      <div className={`-mt-1 w-8 h-6 border-2 ${P.border} ${P.section} rounded flex items-center justify-center`}>
+        <span className={`text-xs font-bold ${P.text}`}>{score}</span>
+      </div>
+      {/* Label */}
+      <span className={`text-[8px] font-black uppercase tracking-wide ${P.text} mt-0.5 text-center leading-tight`}>
+        {name}
+      </span>
+    </div>
+  )
+}
+
+/* ── Linha de Salvaguarda / Perícia ── */
+function CheckRow({ proficient, label, value, subLabel }) {
+  return (
+    <div className="flex items-center gap-1 py-0.5">
+      <Dot filled={proficient} />
+      <span className={`text-[10px] font-bold ${P.text} w-5 text-right shrink-0`}>{fmt(value)}</span>
+      <span className={`text-[9px] ${P.text} leading-tight`}>
+        {label}
+        {subLabel && <span className="text-[8px] opacity-60 ml-0.5">({subLabel})</span>}
+      </span>
+    </div>
+  )
+}
+
+/* ── Linha de ataque ── */
+function AttackRow({ name, bonus, damage, type }) {
+  return (
+    <div className={`grid gap-1 text-[9px] border-b ${P.border} py-0.5`}
+         style={{ gridTemplateColumns: '2fr 1fr 2fr' }}>
+      <span className={P.text}>{name}</span>
+      <span className={`text-center font-bold ${P.text}`}>{bonus}</span>
+      <span className={P.text}>{damage}{type ? ` ${type}` : ''}</span>
+    </div>
+  )
+}
+
+/* ── Moedas ── */
+function Coins({ currency }) {
+  const coins = [
+    { key: 'pp', label: 'PP' }, { key: 'gp', label: 'PO' },
+    { key: 'ep', label: 'PE' }, { key: 'sp', label: 'PP' }, { key: 'cp', label: 'PC' },
+  ]
+  return (
+    <div className="flex flex-col gap-0.5">
+      {coins.map(c => (
+        <div key={c.key} className={`flex items-center gap-0.5 border ${P.border} rounded px-1 py-0.5 ${P.section}`}>
+          <span className={`text-[8px] font-black ${P.text} w-4`}>{c.label}</span>
+          <span className={`text-[9px] font-bold ${P.text}`}>{currency?.[c.key] ?? 0}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+/* ════════════════════════════════════════════════════════════
+   Componente principal
+   ════════════════════════════════════════════════════════════ */
 export function CharacterView({ character, races, classes, backgrounds }) {
   const { info, attributes, combat, proficiencies, spellcasting, inventory, traits } = character
   const prof = getProficiencyBonus(info.level)
 
-  const selectedRace = races.find(r => r.index === info.race)
+  const selectedRace  = races.find(r => r.index === info.race)
   const selectedClass = classes.find(c => c.index === info.class)
-  const selectedBg = backgrounds.find(b => b.index === info.background)
+  const selectedBg    = backgrounds.find(b => b.index === info.background)
+
+  // Perícias ordenadas alfabeticamente
+  const sortedSkills = [...SKILLS].sort((a, b) => a.name.localeCompare(b.name, 'pt'))
+
+  // Salvaguardas como CheckRows
+  const saves = ABILITY_SCORES.map(({ key, name }) => ({
+    key, name,
+    isProficient: proficiencies.savingThrows?.includes(key),
+    value: getModifier(attributes[key]) + (proficiencies.savingThrows?.includes(key) ? prof : 0),
+  }))
+
+  // Percepção passiva
+  const wisMod = getModifier(attributes.wis)
+  const percProf = proficiencies.skills?.includes('perception')
+  const passivePerception = 10 + wisMod + (percProf ? prof : 0)
+
+  // Ataques: usar magias + itens como armas
+  const weaponItems = inventory.items?.filter(i => i.weight || i.damage || i.damage_dice) || []
+  const attackSpells = spellcasting.spells?.filter(s => s.attack_type) || []
 
   return (
-    <div className="space-y-5 print:text-black print:bg-white">
-
-      {/* ── Cabeçalho ── */}
-      <div className="bg-gray-800 border border-amber-700 rounded-xl p-4">
-        <div className="text-2xl font-bold text-amber-400 mb-1">
-          {info.name || 'Personagem sem nome'}
-        </div>
-        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-300">
-          {selectedRace && <span>{selectedRace.name}</span>}
-          {selectedClass && <span>{selectedClass.name}</span>}
-          <span>Nível {info.level}</span>
-          {selectedBg && <span>{selectedBg.name}</span>}
-          {info.alignment && <span>{info.alignment}</span>}
-          {info.xp > 0 && <span className="text-gray-400">{info.xp.toLocaleString()} XP</span>}
-        </div>
-      </div>
-
-      {/* ── Atributos e Combate ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-        {/* Atributos */}
-        <Section title="Atributos">
-          <div className="grid grid-cols-3 gap-2">
-            {ABILITY_SCORES.map(({ key, abbr, name }) => {
-              const val = attributes[key]
-              const mod = getModifier(val)
-              return (
-                <div key={key} className="bg-gray-800 border border-gray-600 rounded-lg p-2 text-center">
-                  <div className="text-xs text-gray-400">{abbr}</div>
-                  <div className="text-xl font-bold text-white">{val}</div>
-                  <div className="text-sm text-amber-400">{mod >= 0 ? '+' : ''}{mod}</div>
-                </div>
-              )
-            })}
+    <div
+      className={`${P.bg} ${P.text} text-[10px] font-serif p-2 rounded-lg`}
+      style={{ fontFamily: "'Georgia', 'Times New Roman', serif" }}
+    >
+      {/* ── CABEÇALHO ── */}
+      <div className="grid gap-1 mb-2" style={{ gridTemplateColumns: '90px 1fr' }}>
+        {/* Logo D&D */}
+        <div className="flex flex-col items-center justify-center">
+          <span
+            className="font-black text-[11px] leading-none text-center"
+            style={{ color: '#8b1a1a', fontFamily: 'Georgia, serif', letterSpacing: '-0.5px' }}
+          >
+            DUNGEONS<br />
+            <span style={{ fontSize: '14px' }}>&amp;</span><br />
+            DRAGONS
+          </span>
+          <div className={`mt-1 w-full text-center text-[8px] font-bold border ${P.border} ${P.section} rounded px-1`}>
+            {info.name || 'Personagem'}
           </div>
-        </Section>
+        </div>
 
-        {/* Combate */}
-        <Section title="Combate">
-          <div className="grid grid-cols-2 gap-2">
-            <Stat label="PV Máx" value={combat.maxHp} />
-            <Stat label="PV Atual" value={combat.currentHp} />
-            <Stat label="CA" value={combat.armorClass} />
-            <Stat label="Deslocamento" value={`${combat.speed}ft`} />
-            <Stat label="Dado de Vida" value={combat.hitDice} />
-            <Stat label="Bônus Prof." value={`+${prof}`} />
-          </div>
-          {combat.tempHp > 0 && (
-            <div className="mt-2 text-sm text-gray-400">
-              PV Temporários: <span className="text-blue-400">{combat.tempHp}</span>
+        {/* Campos de info */}
+        <div className="grid gap-x-2 gap-y-1" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
+          <InfoField label="Classe" value={selectedClass?.name} />
+          <InfoField label="Antecedente" value={selectedBg?.name} />
+          <InfoField label="Nome Jogador" value="" />
+          <InfoField label="Raça" value={selectedRace?.name} />
+          <InfoField label="Tendência" value={info.alignment} />
+          <div className="flex gap-1">
+            <InfoField label="Experiência" value={info.xp?.toLocaleString('pt-BR')} />
+            <div className={`flex flex-col items-center justify-center border-2 ${P.border} rounded px-2 ${P.header} shrink-0`}>
+              <span className="text-[8px] font-black uppercase">Nível</span>
+              <span className="text-xl font-black leading-none">{info.level}</span>
             </div>
-          )}
-        </Section>
+          </div>
+        </div>
       </div>
 
-      {/* ── Salvaguardas ── */}
-      <Section title="Testes de Resistência">
-        <div className="grid grid-cols-3 gap-1">
-          {ABILITY_SCORES.map(({ key, abbr }) => {
-            const isProficient = proficiencies.savingThrows?.includes(key)
-            const mod = getModifier(attributes[key]) + (isProficient ? prof : 0)
-            return (
-              <div key={key} className="flex items-center gap-1 text-sm">
-                <span className={`w-2 h-2 rounded-full ${isProficient ? 'bg-amber-400' : 'bg-gray-600'}`} />
-                <span className="text-gray-400 w-8 shrink-0">{abbr}</span>
-                <span className="text-white font-medium">{mod >= 0 ? '+' : ''}{mod}</span>
-              </div>
-            )
-          })}
-        </div>
-      </Section>
+      {/* ── CORPO PRINCIPAL: 3 colunas ── */}
+      <div className="grid gap-1" style={{ gridTemplateColumns: '80px 1fr 1fr' }}>
 
-      {/* ── Perícias ── */}
-      <Section title="Perícias">
-        <div className="grid grid-cols-2 gap-1">
-          {SKILLS.map(skill => {
-            const isProficient = proficiencies.skills?.includes(skill.key)
-            const abilityMod = getModifier(attributes[skill.ability])
-            const total = abilityMod + (isProficient ? prof : 0)
-            return (
-              <div key={skill.key} className="flex items-center gap-1 text-xs">
-                <span className={`w-2 h-2 rounded-full shrink-0 ${isProficient ? 'bg-amber-400' : 'bg-gray-600'}`} />
-                <span className={isProficient ? 'text-white' : 'text-gray-400'}>{skill.name}</span>
-                <span className={`ml-auto font-medium ${isProficient ? 'text-amber-400' : 'text-gray-300'}`}>
-                  {total >= 0 ? '+' : ''}{total}
-                </span>
+        {/* ═══ COL 1: Atributos ═══ */}
+        <div className="flex flex-col gap-1">
+          {/* Inspiração + Bônus Prof */}
+          <div className={`border ${P.border} rounded ${P.section} p-1 space-y-1`}>
+            <div className="flex items-center gap-1">
+              <Dot filled={false} />
+              <span className="text-[8px] font-black uppercase">Inspiração</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className={`w-5 h-5 rounded-full border-2 ${P.border} ${P.circle} flex items-center justify-center`}>
+                <span className="text-[9px] font-black">+{prof}</span>
               </div>
-            )
-          })}
-        </div>
-      </Section>
+              <span className="text-[8px] font-black uppercase leading-tight">Bônus de Proficiência</span>
+            </div>
+          </div>
 
-      {/* ── Magias (se tiver) ── */}
-      {spellcasting.spells?.length > 0 && (
-        <Section title="Magias">
-          {spellcasting.ability && (
-            <p className="text-xs text-gray-400 mb-2">
-              Habilidade: {spellcasting.ability}
-            </p>
-          )}
-          <div className="space-y-1">
-            {[0,1,2,3,4,5,6,7,8,9].map(lvl => {
-              const spells = spellcasting.spells.filter(s => (s.level ?? 0) === lvl)
-              if (!spells.length) return null
+          {/* 6 atributos */}
+          {ABILITY_SCORES.map(({ key, name }) => (
+            <AttributeBox key={key} name={name} abbr={key} score={attributes[key]} />
+          ))}
+
+          {/* Percepção Passiva */}
+          <div className={`border ${P.border} rounded ${P.section} p-1 text-center`}>
+            <div className={`w-8 h-8 rounded-full border-2 ${P.border} ${P.circle} mx-auto flex items-center justify-center`}>
+              <span className="text-sm font-black">{passivePerception}</span>
+            </div>
+            <div className="text-[7px] font-black uppercase leading-tight mt-0.5">Sabedoria Passiva (Percepção)</div>
+          </div>
+
+          {/* Idiomas e proficiências */}
+          <Box label="Idiomas e Outras Proficiências" className="flex-1">
+            <div className="min-h-[60px] text-[8px] leading-tight space-y-0.5">
+              {proficiencies.armor?.length > 0 && <div><b>Armaduras:</b> {proficiencies.armor.join(', ')}</div>}
+              {proficiencies.weapons?.length > 0 && <div><b>Armas:</b> {proficiencies.weapons.join(', ')}</div>}
+              {proficiencies.tools?.length > 0 && <div><b>Ferramentas:</b> {proficiencies.tools.join(', ')}</div>}
+              {proficiencies.languages?.length > 0 && <div><b>Idiomas:</b> {proficiencies.languages.join(', ')}</div>}
+              {selectedBg?.skill_proficiencies?.length > 0 && (
+                <div><b>Perícias:</b> {selectedBg.skill_proficiencies.join(', ')}</div>
+              )}
+            </div>
+          </Box>
+        </div>
+
+        {/* ═══ COL 2: Saves + Skills + Combate ═══ */}
+        <div className="flex flex-col gap-1">
+
+          {/* Testes de Resistência */}
+          <Box label="Testes de Resistência">
+            {saves.map(s => (
+              <CheckRow key={s.key} proficient={s.isProficient} label={s.name} value={s.value} />
+            ))}
+          </Box>
+
+          {/* Perícias */}
+          <Box label="Perícias" className="flex-1">
+            {sortedSkills.map(skill => {
+              const isProficient = proficiencies.skills?.includes(skill.key)
+              const val = getModifier(attributes[skill.ability]) + (isProficient ? prof : 0)
               return (
-                <div key={lvl}>
-                  <span className="text-xs text-amber-600 font-semibold">
-                    {lvl === 0 ? 'Truques' : `Nível ${lvl}`}:
-                  </span>
-                  <span className="text-xs text-gray-300 ml-1">
-                    {spells.map(s => s.name).join(', ')}
-                  </span>
-                </div>
+                <CheckRow key={skill.key} proficient={isProficient}
+                  label={skill.name} value={val} subLabel={skill.abbr} />
               )
             })}
-          </div>
-        </Section>
-      )}
+          </Box>
+        </div>
 
-      {/* ── Inventário ── */}
-      {inventory.items?.length > 0 && (
-        <Section title="Inventário">
-          <div className="flex flex-wrap gap-2 text-xs text-gray-400 mb-2">
-            {inventory.currency.pp > 0 && <span>{inventory.currency.pp} PP</span>}
-            {inventory.currency.gp > 0 && <span>{inventory.currency.gp} PO</span>}
-            {inventory.currency.ep > 0 && <span>{inventory.currency.ep} PE</span>}
-            {inventory.currency.sp > 0 && <span>{inventory.currency.sp} PP</span>}
-            {inventory.currency.cp > 0 && <span>{inventory.currency.cp} PC</span>}
-          </div>
-          <div className="grid grid-cols-2 gap-1">
-            {inventory.items.map(item => (
-              <div key={item.id} className="text-xs text-gray-300 flex justify-between">
-                <span>{item.name}</span>
-                {item.quantity > 1 && <span className="text-gray-500">×{item.quantity}</span>}
+        {/* ═══ COL 3: Combate + HP + Ataques + Equipamento + Personalidade ═══ */}
+        <div className="flex flex-col gap-1">
+
+          {/* CA / Iniciativa / Deslocamento */}
+          <div className="grid grid-cols-3 gap-1">
+            {[
+              { label: 'Classe Armadura', value: combat.armorClass },
+              { label: 'Iniciativa', value: fmt(getModifier(attributes.dex)) },
+              { label: 'Deslocamento', value: `${combat.speed}ft` },
+            ].map(({ label, value }) => (
+              <div key={label} className={`border-2 ${P.border} rounded text-center ${P.section} py-1`}>
+                <div className="text-base font-black leading-none">{value}</div>
+                <div className="text-[7px] font-black uppercase leading-tight mt-0.5">{label}</div>
               </div>
             ))}
           </div>
-        </Section>
-      )}
 
-      {/* ── Personalidade & Traços ── */}
-      {(traits.personalityTraits || traits.ideals || traits.bonds || traits.flaws) && (
-        <Section title="Personalidade">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-            {traits.personalityTraits && (
-              <div>
-                <p className="text-xs text-amber-600 mb-0.5">Traços de Personalidade</p>
-                <p className="text-gray-300">{traits.personalityTraits}</p>
+          {/* Pontos de Vida */}
+          <Box label="Pontos de Vida Atuais">
+            <div className="flex justify-between items-end">
+              <span className="text-xl font-black">{combat.currentHp}</span>
+              <span className="text-[8px] text-right">
+                <span className="font-bold">PV Totais: </span>{combat.maxHp}
+              </span>
+            </div>
+          </Box>
+
+          {/* PV Temporários */}
+          <Box label="Pontos de Vida Temporários">
+            <div className="text-xl font-black">{combat.tempHp || '—'}</div>
+          </Box>
+
+          {/* Dados de Vida + Testes contra a Morte */}
+          <div className="grid grid-cols-2 gap-1">
+            <Box label="Dados de Vida">
+              <div className="font-bold">{combat.hitDice}</div>
+            </Box>
+            <Box label="Testes contra a Morte">
+              <div className="space-y-1">
+                <div className="flex items-center gap-1">
+                  <span className="text-[8px] font-bold w-12">Sucessos</span>
+                  <div className="flex gap-0.5">
+                    {[0,1,2].map(i => <Dot key={i} filled={combat.deathSaves?.successes > i} />)}
+                  </div>
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="text-[8px] font-bold w-12">Fracassos</span>
+                  <div className="flex gap-0.5">
+                    {[0,1,2].map(i => <Dot key={i} filled={combat.deathSaves?.failures > i} />)}
+                  </div>
+                </div>
               </div>
-            )}
-            {traits.ideals && (
-              <div>
-                <p className="text-xs text-amber-600 mb-0.5">Ideais</p>
-                <p className="text-gray-300">{traits.ideals}</p>
-              </div>
-            )}
-            {traits.bonds && (
-              <div>
-                <p className="text-xs text-amber-600 mb-0.5">Vínculos</p>
-                <p className="text-gray-300">{traits.bonds}</p>
-              </div>
-            )}
-            {traits.flaws && (
-              <div>
-                <p className="text-xs text-amber-600 mb-0.5">Defeitos</p>
-                <p className="text-gray-300">{traits.flaws}</p>
-              </div>
-            )}
+            </Box>
           </div>
-        </Section>
-      )}
 
-      {/* ── Características & Notas ── */}
-      {traits.featuresAndTraits && (
-        <Section title="Características e Traços">
-          <p className="text-sm text-gray-300 whitespace-pre-wrap">{traits.featuresAndTraits}</p>
-        </Section>
-      )}
+          {/* Ataques e Magias */}
+          <Box label="Ataques e Magias">
+            <div className={`grid gap-1 text-[8px] font-black border-b ${P.border} pb-0.5 mb-0.5`}
+                 style={{ gridTemplateColumns: '2fr 1fr 2fr' }}>
+              <span>NOME</span><span className="text-center">BÔNUS</span><span>DANO/TIPO</span>
+            </div>
+            {weaponItems.slice(0,3).map((item, i) => (
+              <AttackRow key={i} name={item.name} bonus="+" damage={item.damage_dice || item.damage || '—'} />
+            ))}
+            {attackSpells.slice(0, Math.max(0, 5 - weaponItems.length)).map((sp, i) => (
+              <AttackRow key={`sp-${i}`} name={sp.name}
+                bonus={`+${getModifier(attributes[spellcasting.ability === 'INT' ? 'int' : spellcasting.ability === 'SAB' ? 'wis' : 'cha']) + prof}`}
+                damage="Veja desc." />
+            ))}
+            {/* Linhas em branco */}
+            {Array.from({ length: Math.max(0, 5 - weaponItems.length - attackSpells.length) }).map((_, i) => (
+              <AttackRow key={`blank-${i}`} name="" bonus="" damage="" />
+            ))}
+          </Box>
 
+          {/* Equipamentos */}
+          <div className="flex gap-1 flex-1">
+            <Box label="Equipamentos" className="flex-1">
+              <div className="min-h-[80px] space-y-0.5">
+                {inventory.items?.slice(0, 12).map(item => (
+                  <div key={item.id} className="flex justify-between text-[9px]">
+                    <span>{item.name}</span>
+                    {item.quantity > 1 && <span className="text-[8px] opacity-60">×{item.quantity}</span>}
+                  </div>
+                ))}
+                {(inventory.items?.length || 0) > 12 && (
+                  <div className="text-[8px] opacity-60">+{inventory.items.length - 12} itens...</div>
+                )}
+              </div>
+            </Box>
+            {/* Moedas */}
+            <Coins currency={inventory.currency} />
+          </div>
+
+          {/* ── Personalidade (direita-baixo) ── */}
+          <Box label="Traços de Personalidade">
+            <p className="min-h-[36px] text-[9px] leading-tight whitespace-pre-wrap">{traits.personalityTraits || ''}</p>
+          </Box>
+          <Box label="Ideais">
+            <p className="min-h-[28px] text-[9px] leading-tight whitespace-pre-wrap">{traits.ideals || ''}</p>
+          </Box>
+          <Box label="Ligações">
+            <p className="min-h-[28px] text-[9px] leading-tight whitespace-pre-wrap">{traits.bonds || ''}</p>
+          </Box>
+          <Box label="Defeitos">
+            <p className="min-h-[28px] text-[9px] leading-tight whitespace-pre-wrap">{traits.flaws || ''}</p>
+          </Box>
+          <Box label="Características e Habilidades" className="flex-1">
+            <p className="min-h-[60px] text-[9px] leading-tight whitespace-pre-wrap">{traits.featuresAndTraits || ''}</p>
+          </Box>
+        </div>
+      </div>
+
+      {/* ── Notas de campanha (linha inferior, se existir) ── */}
       {traits.notes && (
-        <Section title="Notas de Campanha">
-          <p className="text-sm text-gray-300 whitespace-pre-wrap">{traits.notes}</p>
-        </Section>
+        <div className="mt-1">
+          <Box label="Notas de Campanha">
+            <p className="text-[9px] leading-tight whitespace-pre-wrap">{traits.notes}</p>
+          </Box>
+        </div>
       )}
     </div>
   )
