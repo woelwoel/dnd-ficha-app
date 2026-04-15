@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { DetailsModal } from '../DetailsModal'
 import { FormFieldError } from '../FormFieldError'
+import { TopicList, FullDescriptionToggle } from '../TopicList'
 
 const ALIGNMENTS = [
   'Leal e Bom', 'Neutro e Bom', 'Caótico e Bom',
@@ -10,12 +11,22 @@ const ALIGNMENTS = [
 
 /* ── Conteúdo do modal de Raça ── */
 function RaceModalContent({ race }) {
+  // Suporta tanto o formato novo (topics/summary/fullDescription)
+  // quanto o fallback do SRD inglês (traits/description)
+  const topics = race.topics
+    ?? race.traits?.map(t => ({ title: t.name, desc: t.desc }))
+    ?? []
+  const summary         = race.summary || ''
+  const fullDescription = race.fullDescription || race.description || ''
+
   return (
     <>
-      {race.description && (
-        <p className="text-sm text-gray-300 leading-relaxed">{race.description}</p>
+      {/* Resumo curto */}
+      {summary && (
+        <p className="text-sm text-gray-200 leading-relaxed font-medium">{summary}</p>
       )}
 
+      {/* Chips de stats */}
       <div className="flex flex-wrap gap-2 text-xs">
         {race.size && (
           <span className="bg-gray-800 border border-gray-600 px-3 py-1 rounded-full">
@@ -34,56 +45,64 @@ function RaceModalContent({ race }) {
         ))}
       </div>
 
-      {race.traits?.length > 0 && (
+      {/* Traços como tópicos estruturados */}
+      {topics.length > 0 && (
         <div>
           <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-3">Traços Raciais</h3>
-          <div className="space-y-3">
-            {race.traits.map((t, i) => (
-              <div key={i}>
-                <p className="text-sm font-semibold text-amber-300">{t.name}</p>
-                <p className="text-sm text-gray-400 leading-relaxed mt-0.5">{t.desc}</p>
-              </div>
-            ))}
-          </div>
+          <TopicList items={topics} initialLimit={5} emptyMessage="Sem traços disponíveis." />
         </div>
       )}
 
+      {/* Sub-raças */}
       {race.subraces?.length > 0 && (
         <div>
           <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-3">Sub-raças</h3>
           <div className="space-y-4">
-            {race.subraces.map((sr, i) => (
-              <div key={i} className="bg-gray-800 rounded-lg p-3">
-                <p className="font-semibold text-amber-300 mb-1">{sr.name}</p>
-                {sr.description && <p className="text-xs text-gray-400 mb-2">{sr.description}</p>}
-                {sr.ability_bonuses?.length > 0 && (
-                  <p className="text-xs text-gray-400 mb-2">
-                    Bônus: {sr.ability_bonuses.map(b => `+${b.bonus} ${b.ability}`).join(', ')}
-                  </p>
-                )}
-                {sr.traits?.map((t, j) => (
-                  <div key={j} className="mt-2">
-                    <span className="text-xs font-semibold text-amber-300">{t.name}. </span>
-                    <span className="text-xs text-gray-400">{t.desc}</span>
-                  </div>
-                ))}
-              </div>
-            ))}
+            {race.subraces.map((sr, i) => {
+              const srTopics = sr.topics
+                ?? sr.traits?.map(t => ({ title: t.name, desc: t.desc }))
+                ?? []
+              return (
+                <div key={i} className="bg-gray-800 rounded-lg p-3">
+                  <p className="font-semibold text-amber-300 mb-1">{sr.name}</p>
+                  {(sr.fullDescription || sr.description) && (
+                    <p className="text-xs text-gray-400 mb-2">{sr.fullDescription || sr.description}</p>
+                  )}
+                  {sr.ability_bonuses?.length > 0 && (
+                    <p className="text-xs text-gray-400 mb-2">
+                      Bônus: {sr.ability_bonuses.map(b => `+${b.bonus} ${b.ability}`).join(', ')}
+                    </p>
+                  )}
+                  <TopicList items={srTopics} emptyMessage="" />
+                </div>
+              )
+            })}
           </div>
         </div>
       )}
+
+      {/* Lore completo colapsável */}
+      <FullDescriptionToggle text={fullDescription} />
     </>
   )
 }
 
 /* ── Conteúdo do modal de Classe ── */
 function ClassModalContent({ cls }) {
+  const topics = cls.topics
+    ?? cls.level1_features?.map(f => ({ title: f.name, desc: f.desc }))
+    ?? []
+  const summary         = cls.summary || ''
+  const fullDescription = cls.fullDescription || cls.description || ''
+
   return (
     <>
-      {cls.description && (
-        <p className="text-sm text-gray-300 leading-relaxed">{cls.description}</p>
+      {/* Resumo curto */}
+      {summary && (
+        <p className="text-sm text-gray-200 leading-relaxed font-medium">{summary}</p>
       )}
 
+      {/* Stats principais */}
       <div className="grid grid-cols-2 gap-2 text-xs">
         <div className="bg-gray-800 border border-gray-600 rounded-lg p-3">
           <p className="text-gray-400 mb-1">Dado de Vida</p>
@@ -95,30 +114,32 @@ function ClassModalContent({ cls }) {
         </div>
       </div>
 
+      {/* Chips de proficiências */}
       {cls.saving_throws?.length > 0 && (
         <div>
           <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-2">Testes de Resistência</h3>
           <div className="flex flex-wrap gap-2">
             {cls.saving_throws.map((s, i) => (
-              <span key={i} className="bg-gray-800 border border-gray-600 px-3 py-1 rounded-full text-xs text-amber-300">
-                {s}
-              </span>
+              <span key={i} className="bg-gray-800 border border-gray-600 px-3 py-1 rounded-full text-xs text-amber-300">{s}</span>
             ))}
           </div>
         </div>
       )}
 
-      {cls.armor_proficiencies?.length > 0 && (
-        <div>
-          <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-2">Proficiências em Armaduras</h3>
-          <p className="text-sm text-gray-400">{cls.armor_proficiencies.join(', ')}</p>
-        </div>
-      )}
-
-      {cls.weapon_proficiencies?.length > 0 && (
-        <div>
-          <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-2">Proficiências em Armas</h3>
-          <p className="text-sm text-gray-400">{cls.weapon_proficiencies.join(', ')}</p>
+      {(cls.armor_proficiencies?.length > 0 || cls.weapon_proficiencies?.length > 0) && (
+        <div className="space-y-1">
+          {cls.armor_proficiencies?.length > 0 && (
+            <p className="text-xs text-gray-400">
+              <span className="text-amber-400 font-semibold">Armaduras: </span>
+              {cls.armor_proficiencies.join(', ')}
+            </p>
+          )}
+          {cls.weapon_proficiencies?.length > 0 && (
+            <p className="text-xs text-gray-400">
+              <span className="text-amber-400 font-semibold">Armas: </span>
+              {cls.weapon_proficiencies.join(', ')}
+            </p>
+          )}
         </div>
       )}
 
@@ -129,29 +150,24 @@ function ClassModalContent({ cls }) {
           </h3>
           <div className="flex flex-wrap gap-1">
             {cls.skill_choices.from.map((s, i) => (
-              <span key={i} className="bg-gray-800 border border-gray-600 px-2 py-0.5 rounded text-xs text-gray-300">
-                {s}
-              </span>
+              <span key={i} className="bg-gray-800 border border-gray-600 px-2 py-0.5 rounded text-xs text-gray-300">{s}</span>
             ))}
           </div>
         </div>
       )}
 
-      {cls.level1_features?.length > 0 && (
+      {/* Características como tópicos estruturados */}
+      {topics.length > 0 && (
         <div>
           <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-3">
             Características de Nível 1
           </h3>
-          <div className="space-y-3">
-            {cls.level1_features.map((f, i) => (
-              <div key={i}>
-                <p className="text-sm font-semibold text-amber-300">{f.name}</p>
-                <p className="text-sm text-gray-400 leading-relaxed mt-0.5">{f.desc}</p>
-              </div>
-            ))}
-          </div>
+          <TopicList items={topics} initialLimit={4} emptyMessage="Sem características disponíveis." />
         </div>
       )}
+
+      {/* Lore completo colapsável */}
+      <FullDescriptionToggle text={fullDescription} />
     </>
   )
 }
