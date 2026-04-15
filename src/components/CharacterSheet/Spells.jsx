@@ -9,9 +9,24 @@ const SPELLCASTER_ABILITIES = {
 }
 
 const SCHOOL_ABBR = {
+  // inglês (SRD)
   abjuration: 'Abj', conjuration: 'Con', divination: 'Div',
   enchantment: 'Enc', evocation: 'Evo', illusion: 'Ilu',
   necromancy: 'Nec', transmutation: 'Tra',
+  // português (PHB-PT)
+  abjuração: 'Abj', conjuração: 'Con', adivinhação: 'Adv',
+  encantamento: 'Enc', evocação: 'Evo', ilusão: 'Ilu',
+  necromancia: 'Nec', transmutação: 'Tra',
+}
+
+function normalizeSpell(s) {
+  return {
+    ...s,
+    desc: Array.isArray(s.desc) ? s.desc.join(' ') : (s.desc || ''),
+    higher_level: Array.isArray(s.higher_level) ? s.higher_level.join(' ') : (s.higher_level || ''),
+    casting_time: s.casting_time || s.castingTime || '',
+    concentration: s.concentration || (typeof s.duration === 'string' && s.duration.toLowerCase().includes('concentra')),
+  }
 }
 
 export function Spells({ character, attributes, level, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onToggleSlot }) {
@@ -30,12 +45,18 @@ export function Spells({ character, attributes, level, onUpdateSpellcasting, onA
   const spellSaveDC = calculateSpellSaveDC(abilityScore, profBonus)
   const spellAttack = calculateSpellAttackBonus(abilityScore, profBonus)
 
-  // Load SRD spells
+  // Carregar magias PHB-PT (primário) com fallback para SRD inglês
   useEffect(() => {
-    fetch('/srd-data/5e-SRD-Spells.json')
+    fetch('/srd-data/phb-spells-pt.json')
       .then(r => r.json())
-      .then(setSrdSpells)
-      .catch(() => {})
+      .then(data => setSrdSpells(data.map(normalizeSpell)))
+      .catch(() => {
+        // fallback para SRD em inglês
+        fetch('/srd-data/5e-SRD-Spells.json')
+          .then(r => r.json())
+          .then(data => setSrdSpells(data.map(normalizeSpell)))
+          .catch(() => {})
+      })
   }, [])
 
   // Load spell slots for this class+level from SRD
@@ -178,28 +199,32 @@ export function Spells({ character, attributes, level, onUpdateSpellcasting, onA
           index: spell.index,
           name: spell.name,
           level: spell.level,
-          school: spell.school?.name || '',
+          school: spell.school?.name || spell.school || '',
           castingTime: spell.casting_time,
           range: spell.range,
           duration: spell.duration,
           concentration: spell.concentration,
-          components: spell.components?.join(', ') || '',
-          desc: spell.desc?.join(' ') || '',
-          higherLevel: spell.higher_level?.join(' ') || '',
+          components: Array.isArray(spell.components) ? spell.components.join(', ') : (spell.components || ''),
+          desc: spell.desc,
+          higherLevel: spell.higher_level,
+          ritual: spell.ritual || false,
+          source: spell.source || 'SRD',
         })}
         renderItem={spell => (
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="text-sm font-medium text-white">{spell.name}</span>
               <span className="text-xs text-gray-500">
                 {spell.level === 0 ? 'Truque' : `Nível ${spell.level}`}
               </span>
-              {spell.concentration && (
-                <span className="text-xs text-blue-400">Conc.</span>
+              {spell.ritual && <span className="text-xs text-green-400">Ritual</span>}
+              {spell.concentration && <span className="text-xs text-blue-400">Conc.</span>}
+              {spell.source === 'PHB-PT' && (
+                <span className="text-xs text-amber-600">PHB</span>
               )}
             </div>
             <div className="text-xs text-gray-400 mt-0.5">
-              {spell.school?.name} · {spell.casting_time} · {spell.range}
+              {spell.school?.name || spell.school} · {spell.casting_time} · {spell.range}
             </div>
           </div>
         )}
