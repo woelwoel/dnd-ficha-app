@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { DetailsModal } from '../DetailsModal'
 
 const ALIGNMENTS = [
   'Leal e Bom', 'Neutro e Bom', 'Caótico e Bom',
@@ -6,122 +7,233 @@ const ALIGNMENTS = [
   'Leal e Mau', 'Neutro e Mau', 'Caótico e Mau',
 ]
 
-function RacePanel({ race }) {
-  if (!race) return null
+/* ── Conteúdo do modal de Raça ── */
+function RaceModalContent({ race }) {
   return (
-    <div className="mt-2 p-3 bg-gray-900 border border-amber-700 rounded text-sm text-gray-300 space-y-2">
-      <p className="text-amber-400 font-semibold">{race.name}</p>
-      {race.description && <p className="text-xs leading-relaxed line-clamp-3">{race.description}</p>}
+    <>
+      {race.description && (
+        <p className="text-sm text-gray-300 leading-relaxed">{race.description}</p>
+      )}
+
       <div className="flex flex-wrap gap-2 text-xs">
-        {race.size && <span className="bg-gray-800 px-2 py-0.5 rounded">Tamanho: {race.size}</span>}
-        {race.speed && <span className="bg-gray-800 px-2 py-0.5 rounded">Deslocamento: {race.speed}m</span>}
-        {race.ability_bonuses?.length > 0 && (
-          <span className="bg-gray-800 px-2 py-0.5 rounded">
-            Bônus: {race.ability_bonuses.map(b => `+${b.bonus} ${b.ability}`).join(', ')}
+        {race.size && (
+          <span className="bg-gray-800 border border-gray-600 px-3 py-1 rounded-full">
+            Tamanho: <span className="text-amber-300">{race.size}</span>
           </span>
         )}
+        {race.speed && (
+          <span className="bg-gray-800 border border-gray-600 px-3 py-1 rounded-full">
+            Deslocamento: <span className="text-amber-300">{race.speed}m</span>
+          </span>
+        )}
+        {race.ability_bonuses?.map((b, i) => (
+          <span key={i} className="bg-gray-800 border border-gray-600 px-3 py-1 rounded-full">
+            <span className="text-amber-300">+{b.bonus}</span> {b.ability}
+          </span>
+        ))}
       </div>
+
       {race.traits?.length > 0 && (
         <div>
-          <p className="text-xs text-gray-400 font-semibold mb-1">Traços Raciais:</p>
-          <ul className="space-y-1">
-            {race.traits.slice(0, 5).map((t, i) => (
-              <li key={i} className="text-xs">
-                <span className="text-amber-300">{t.name}.</span>{' '}
-                <span className="text-gray-400 line-clamp-1">{t.desc}</span>
-              </li>
+          <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-3">Traços Raciais</h3>
+          <div className="space-y-3">
+            {race.traits.map((t, i) => (
+              <div key={i}>
+                <p className="text-sm font-semibold text-amber-300">{t.name}</p>
+                <p className="text-sm text-gray-400 leading-relaxed mt-0.5">{t.desc}</p>
+              </div>
             ))}
-            {race.traits.length > 5 && (
-              <li className="text-xs text-gray-500">+ {race.traits.length - 5} mais traços...</li>
-            )}
-          </ul>
+          </div>
         </div>
       )}
+
       {race.subraces?.length > 0 && (
-        <p className="text-xs text-gray-400">
-          Sub-raças: {race.subraces.map(s => s.name).join(', ')}
-        </p>
+        <div>
+          <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-3">Sub-raças</h3>
+          <div className="space-y-4">
+            {race.subraces.map((sr, i) => (
+              <div key={i} className="bg-gray-800 rounded-lg p-3">
+                <p className="font-semibold text-amber-300 mb-1">{sr.name}</p>
+                {sr.description && <p className="text-xs text-gray-400 mb-2">{sr.description}</p>}
+                {sr.ability_bonuses?.length > 0 && (
+                  <p className="text-xs text-gray-400 mb-2">
+                    Bônus: {sr.ability_bonuses.map(b => `+${b.bonus} ${b.ability}`).join(', ')}
+                  </p>
+                )}
+                {sr.traits?.map((t, j) => (
+                  <div key={j} className="mt-2">
+                    <span className="text-xs font-semibold text-amber-300">{t.name}. </span>
+                    <span className="text-xs text-gray-400">{t.desc}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
       )}
-    </div>
+    </>
   )
 }
 
-function ClassPanel({ cls }) {
-  if (!cls) return null
+/* ── Conteúdo do modal de Classe ── */
+function ClassModalContent({ cls }) {
   return (
-    <div className="mt-2 p-3 bg-gray-900 border border-amber-700 rounded text-sm text-gray-300 space-y-2">
-      <p className="text-amber-400 font-semibold">{cls.name}</p>
-      {cls.description && <p className="text-xs leading-relaxed line-clamp-3">{cls.description}</p>}
-      <div className="flex flex-wrap gap-2 text-xs">
-        <span className="bg-gray-800 px-2 py-0.5 rounded">Dado de Vida: d{cls.hit_die}</span>
-        {cls.spellcasting_ability && (
-          <span className="bg-gray-800 px-2 py-0.5 rounded">Magia: {cls.spellcasting_ability}</span>
-        )}
+    <>
+      {cls.description && (
+        <p className="text-sm text-gray-300 leading-relaxed">{cls.description}</p>
+      )}
+
+      <div className="grid grid-cols-2 gap-2 text-xs">
+        <div className="bg-gray-800 border border-gray-600 rounded-lg p-3">
+          <p className="text-gray-400 mb-1">Dado de Vida</p>
+          <p className="text-2xl font-bold text-amber-400">d{cls.hit_die}</p>
+        </div>
+        <div className="bg-gray-800 border border-gray-600 rounded-lg p-3">
+          <p className="text-gray-400 mb-1">Habilidade de Magia</p>
+          <p className="text-base font-bold text-amber-400">{cls.spellcasting_ability || '—'}</p>
+        </div>
       </div>
+
       {cls.saving_throws?.length > 0 && (
-        <p className="text-xs text-gray-400">
-          Resistências: {cls.saving_throws.join(', ')}
-        </p>
+        <div>
+          <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-2">Testes de Resistência</h3>
+          <div className="flex flex-wrap gap-2">
+            {cls.saving_throws.map((s, i) => (
+              <span key={i} className="bg-gray-800 border border-gray-600 px-3 py-1 rounded-full text-xs text-amber-300">
+                {s}
+              </span>
+            ))}
+          </div>
+        </div>
       )}
+
+      {cls.armor_proficiencies?.length > 0 && (
+        <div>
+          <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-2">Proficiências em Armaduras</h3>
+          <p className="text-sm text-gray-400">{cls.armor_proficiencies.join(', ')}</p>
+        </div>
+      )}
+
+      {cls.weapon_proficiencies?.length > 0 && (
+        <div>
+          <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-2">Proficiências em Armas</h3>
+          <p className="text-sm text-gray-400">{cls.weapon_proficiencies.join(', ')}</p>
+        </div>
+      )}
+
       {cls.skill_choices?.from?.length > 0 && (
-        <p className="text-xs text-gray-400">
-          Perícias: escolha {cls.skill_choices.count} dentre {cls.skill_choices.from.slice(0, 4).join(', ')}
-          {cls.skill_choices.from.length > 4 ? '...' : ''}
-        </p>
+        <div>
+          <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-2">
+            Perícias (escolha {cls.skill_choices.count})
+          </h3>
+          <div className="flex flex-wrap gap-1">
+            {cls.skill_choices.from.map((s, i) => (
+              <span key={i} className="bg-gray-800 border border-gray-600 px-2 py-0.5 rounded text-xs text-gray-300">
+                {s}
+              </span>
+            ))}
+          </div>
+        </div>
       )}
+
       {cls.level1_features?.length > 0 && (
         <div>
-          <p className="text-xs text-gray-400 font-semibold mb-1">Características (Nível 1):</p>
-          <ul className="space-y-1">
-            {cls.level1_features.slice(0, 4).map((f, i) => (
-              <li key={i} className="text-xs">
-                <span className="text-amber-300">{f.name}.</span>{' '}
-                <span className="text-gray-400 line-clamp-1">{f.desc}</span>
-              </li>
+          <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-3">
+            Características de Nível 1
+          </h3>
+          <div className="space-y-3">
+            {cls.level1_features.map((f, i) => (
+              <div key={i}>
+                <p className="text-sm font-semibold text-amber-300">{f.name}</p>
+                <p className="text-sm text-gray-400 leading-relaxed mt-0.5">{f.desc}</p>
+              </div>
             ))}
-            {cls.level1_features.length > 4 && (
-              <li className="text-xs text-gray-500">+ {cls.level1_features.length - 4} mais...</li>
-            )}
-          </ul>
+          </div>
         </div>
       )}
-    </div>
+    </>
   )
 }
 
-function BackgroundPanel({ bg }) {
-  if (!bg) return null
+/* ── Conteúdo do modal de Antecedente ── */
+function BackgroundModalContent({ bg }) {
   return (
-    <div className="mt-2 p-3 bg-gray-900 border border-amber-700 rounded text-sm text-gray-300 space-y-2">
-      <p className="text-amber-400 font-semibold">{bg.name}</p>
-      {bg.description && <p className="text-xs leading-relaxed line-clamp-3">{bg.description}</p>}
-      {bg.skill_proficiencies?.length > 0 && (
-        <p className="text-xs text-gray-400">
-          Perícias: {bg.skill_proficiencies.join(', ')}
-        </p>
+    <>
+      {bg.description && (
+        <p className="text-sm text-gray-300 leading-relaxed">{bg.description}</p>
       )}
-      {bg.tool_proficiencies?.length > 0 && (
-        <p className="text-xs text-gray-400">
-          Ferramentas: {bg.tool_proficiencies.join(', ')}
-        </p>
-      )}
-      {bg.languages && (
-        <p className="text-xs text-gray-400">Idiomas: {bg.languages}</p>
-      )}
+
+      <div className="grid grid-cols-1 gap-2 text-sm">
+        {bg.skill_proficiencies?.length > 0 && (
+          <div className="bg-gray-800 rounded-lg p-3">
+            <p className="text-xs text-gray-400 mb-1">Proficiência em Perícias</p>
+            <p className="text-amber-300">{bg.skill_proficiencies.join(', ')}</p>
+          </div>
+        )}
+        {bg.tool_proficiencies?.length > 0 && (
+          <div className="bg-gray-800 rounded-lg p-3">
+            <p className="text-xs text-gray-400 mb-1">Proficiência em Ferramentas</p>
+            <p className="text-amber-300">{bg.tool_proficiencies.join(', ')}</p>
+          </div>
+        )}
+        {bg.languages && (
+          <div className="bg-gray-800 rounded-lg p-3">
+            <p className="text-xs text-gray-400 mb-1">Idiomas</p>
+            <p className="text-amber-300">{bg.languages}</p>
+          </div>
+        )}
+        {bg.equipment && (
+          <div className="bg-gray-800 rounded-lg p-3">
+            <p className="text-xs text-gray-400 mb-1">Equipamento</p>
+            <p className="text-gray-300 text-xs leading-relaxed">{bg.equipment}</p>
+          </div>
+        )}
+      </div>
+
       {bg.feature?.name && (
         <div>
-          <p className="text-xs text-amber-300 font-semibold">{bg.feature.name}</p>
-          <p className="text-xs text-gray-400 line-clamp-2">{bg.feature.desc}</p>
+          <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-2">
+            Característica: {bg.feature.name}
+          </h3>
+          <p className="text-sm text-gray-400 leading-relaxed">{bg.feature.desc}</p>
         </div>
       )}
+
+      {bg.personality_traits?.length > 0 && (
+        <TableSection title="Traços de Personalidade" items={bg.personality_traits} />
+      )}
+      {bg.ideals?.length > 0 && (
+        <TableSection title="Ideais" items={bg.ideals} />
+      )}
+      {bg.bonds?.length > 0 && (
+        <TableSection title="Vínculos" items={bg.bonds} />
+      )}
+      {bg.flaws?.length > 0 && (
+        <TableSection title="Defeitos" items={bg.flaws} />
+      )}
+    </>
+  )
+}
+
+function TableSection({ title, items }) {
+  return (
+    <div>
+      <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-2">{title}</h3>
+      <div className="space-y-1">
+        {items.map((item, i) => (
+          <div key={i} className="flex gap-2 text-xs bg-gray-800 rounded px-3 py-2">
+            <span className="text-amber-600 font-bold shrink-0 w-4">{i + 1}</span>
+            <span className="text-gray-300">{item}</span>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
 
+/* ── Componente principal ── */
 export function CharacterInfo({ info, onUpdate, races, classes, backgrounds }) {
-  const [showRace, setShowRace] = useState(false)
-  const [showClass, setShowClass] = useState(false)
-  const [showBg, setShowBg] = useState(false)
+  const [modal, setModal] = useState(null) // 'race' | 'class' | 'background' | null
 
   const selectedRace = races.find(r => r.index === info.race)
   const selectedClass = classes.find(c => c.index === info.class)
@@ -140,52 +252,59 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds }) {
         />
       </div>
 
+      {/* Raça */}
       <div>
         <label className="block text-xs text-gray-400 mb-1">Raça</label>
-        <select
-          value={info.race}
-          onChange={e => { onUpdate('race', e.target.value); setShowRace(!!e.target.value) }}
-          className="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-400"
-        >
-          <option value="">Escolher...</option>
-          {races.map(r => (
-            <option key={r.index} value={r.index}>{r.name}</option>
-          ))}
-        </select>
-        {selectedRace && (
-          <button
-            onClick={() => setShowRace(v => !v)}
-            className="mt-1 text-xs text-amber-500 hover:text-amber-300"
+        <div className="flex gap-1">
+          <select
+            value={info.race}
+            onChange={e => onUpdate('race', e.target.value)}
+            className="flex-1 bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-400"
           >
-            {showRace ? '▲ Ocultar detalhes' : '▼ Ver detalhes'}
-          </button>
-        )}
-        {showRace && <RacePanel race={selectedRace} />}
+            <option value="">Escolher...</option>
+            {races.map(r => (
+              <option key={r.index} value={r.index}>{r.name}</option>
+            ))}
+          </select>
+          {selectedRace && (
+            <button
+              onClick={() => setModal('race')}
+              title="Ver detalhes"
+              className="px-2 py-1 bg-gray-700 hover:bg-amber-700 text-amber-400 hover:text-white rounded transition-colors text-sm"
+            >
+              ?
+            </button>
+          )}
+        </div>
       </div>
 
+      {/* Classe */}
       <div>
         <label className="block text-xs text-gray-400 mb-1">Classe</label>
-        <select
-          value={info.class}
-          onChange={e => { onUpdate('class', e.target.value); setShowClass(!!e.target.value) }}
-          className="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-400"
-        >
-          <option value="">Escolher...</option>
-          {classes.map(c => (
-            <option key={c.index} value={c.index}>{c.name}</option>
-          ))}
-        </select>
-        {selectedClass && (
-          <button
-            onClick={() => setShowClass(v => !v)}
-            className="mt-1 text-xs text-amber-500 hover:text-amber-300"
+        <div className="flex gap-1">
+          <select
+            value={info.class}
+            onChange={e => onUpdate('class', e.target.value)}
+            className="flex-1 bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-400"
           >
-            {showClass ? '▲ Ocultar detalhes' : '▼ Ver detalhes'}
-          </button>
-        )}
-        {showClass && <ClassPanel cls={selectedClass} />}
+            <option value="">Escolher...</option>
+            {classes.map(c => (
+              <option key={c.index} value={c.index}>{c.name}</option>
+            ))}
+          </select>
+          {selectedClass && (
+            <button
+              onClick={() => setModal('class')}
+              title="Ver detalhes"
+              className="px-2 py-1 bg-gray-700 hover:bg-amber-700 text-amber-400 hover:text-white rounded transition-colors text-sm"
+            >
+              ?
+            </button>
+          )}
+        </div>
       </div>
 
+      {/* Nível */}
       <div>
         <label className="block text-xs text-gray-400 mb-1">Nível</label>
         <input
@@ -198,29 +317,33 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds }) {
         />
       </div>
 
+      {/* Antecedente */}
       <div>
         <label className="block text-xs text-gray-400 mb-1">Antecedente</label>
-        <select
-          value={info.background}
-          onChange={e => { onUpdate('background', e.target.value); setShowBg(!!e.target.value) }}
-          className="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-400"
-        >
-          <option value="">Escolher...</option>
-          {backgrounds.map(b => (
-            <option key={b.index} value={b.index}>{b.name}</option>
-          ))}
-        </select>
-        {selectedBg && (
-          <button
-            onClick={() => setShowBg(v => !v)}
-            className="mt-1 text-xs text-amber-500 hover:text-amber-300"
+        <div className="flex gap-1">
+          <select
+            value={info.background}
+            onChange={e => onUpdate('background', e.target.value)}
+            className="flex-1 bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-400"
           >
-            {showBg ? '▲ Ocultar detalhes' : '▼ Ver detalhes'}
-          </button>
-        )}
-        {showBg && <BackgroundPanel bg={selectedBg} />}
+            <option value="">Escolher...</option>
+            {backgrounds.map(b => (
+              <option key={b.index} value={b.index}>{b.name}</option>
+            ))}
+          </select>
+          {selectedBg && (
+            <button
+              onClick={() => setModal('background')}
+              title="Ver detalhes"
+              className="px-2 py-1 bg-gray-700 hover:bg-amber-700 text-amber-400 hover:text-white rounded transition-colors text-sm"
+            >
+              ?
+            </button>
+          )}
+        </div>
       </div>
 
+      {/* Alinhamento */}
       <div>
         <label className="block text-xs text-gray-400 mb-1">Alinhamento</label>
         <select
@@ -235,6 +358,7 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds }) {
         </select>
       </div>
 
+      {/* XP */}
       <div>
         <label className="block text-xs text-gray-400 mb-1">Experiência (XP)</label>
         <input
@@ -245,6 +369,31 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds }) {
           className="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         />
       </div>
+
+      {/* Modais */}
+      <DetailsModal
+        isOpen={modal === 'race'}
+        onClose={() => setModal(null)}
+        title={selectedRace?.name || ''}
+      >
+        {selectedRace && <RaceModalContent race={selectedRace} />}
+      </DetailsModal>
+
+      <DetailsModal
+        isOpen={modal === 'class'}
+        onClose={() => setModal(null)}
+        title={selectedClass?.name || ''}
+      >
+        {selectedClass && <ClassModalContent cls={selectedClass} />}
+      </DetailsModal>
+
+      <DetailsModal
+        isOpen={modal === 'background'}
+        onClose={() => setModal(null)}
+        title={selectedBg?.name || ''}
+      >
+        {selectedBg && <BackgroundModalContent bg={selectedBg} />}
+      </DetailsModal>
     </div>
   )
 }

@@ -8,14 +8,18 @@ import { SkillsList } from './SkillsList'
 import { Inventory } from './Inventory'
 import { Spells } from './Spells'
 import { Notes } from './Notes'
+import { CharacterView } from './CharacterView'
+import { LevelProgression } from './LevelProgression'
 import { ABILITY_SCORES } from '../../utils/calculations'
 
 const TABS = [
-  { id: 'ficha',      label: 'Ficha'       },
-  { id: 'percias',    label: 'Perícias'    },
-  { id: 'magias',     label: 'Magias'      },
-  { id: 'inventario', label: 'Inventário'  },
-  { id: 'notas',      label: 'Notas'       },
+  { id: 'ficha',       label: 'Ficha'       },
+  { id: 'percias',     label: 'Perícias'    },
+  { id: 'magias',      label: 'Magias'      },
+  { id: 'inventario',  label: 'Inventário'  },
+  { id: 'notas',       label: 'Notas'       },
+  { id: 'progressao',  label: 'Progressão'  },
+  { id: 'visualizar',  label: 'Visualizar'  },
 ]
 
 export function CharacterSheet({ characterId, onBack }) {
@@ -245,6 +249,25 @@ export function CharacterSheet({ characterId, onBack }) {
         <Notes
           traits={character.traits}
           onUpdate={updateTraits}
+        />
+      )}
+
+      {/* Tab: Progressão de Nível */}
+      {activeTab === 'progressao' && (
+        <LevelProgression
+          character={character}
+          classes={classes}
+          onLevelChange={lvl => updateInfo('level', lvl)}
+        />
+      )}
+
+      {/* Tab: Visualizar ficha */}
+      {activeTab === 'visualizar' && (
+        <CharacterView
+          character={character}
+          races={races}
+          classes={classes}
+          backgrounds={backgrounds}
         />
       )}
     </div>

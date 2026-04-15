@@ -1,0 +1,5224 @@
+{
+  "barbaro": {
+    "index": "barbaro",
+    "name": "Campeão Primitivo",
+    "levels": [
+      {
+        "level": 1,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Fúria",
+            "desc": "Ação Bônus; não pode estar usando armadura pesada. • Vantagem testes de Força e Testes de Resistência de Força. • Ataque corpo a corpo com Força ganha dano conforme tabela. • Resistência à dano de concussão, cortante e perfurante. Não pode soltar magias nem se concentrar nelas. Dura 1 minuto. Termina se ficar inconsciente, se não atacar um inimigo no seu turno ou não sofrer dano desde seu ultimo turno. Recupera todos os usos com descanso longo."
+          },
+          {
+            "name": "Defesa sem Armadura",
+            "desc": "Quando não estiver usando armadura sua CA = 10 + mod Destreza + mod Constituição. Pode usar escudo."
+          }
+        ],
+        "class_specific": {
+          "rage_count": 2,
+          "rage_damage_bonus": 2,
+          "brutal_critical_dice": 0
+        }
+      },
+      {
+        "level": 2,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Ataque Descuidado",
+            "desc": "No primeiro ataque corpo a corpo do turno pode faze-lo com vantagem, mas concede vantagem aos inimigos até seu próximo turno."
+          },
+          {
+            "name": "Senso de Perigo",
+            "desc": "Ganha vantagem nos Testes de Resistência de Destreza para efeitos que possa ver, como armadilhas e magias. Não pode estar cego, surdo ou incapacitado."
+          }
+        ],
+        "class_specific": {
+          "rage_count": 2,
+          "rage_damage_bonus": 2,
+          "brutal_critical_dice": 0
+        }
+      },
+      {
+        "level": 3,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Caminho Primitivo",
+            "desc": "Escolha entre o caminho do Berserker ou do Guerreiro Totêmico."
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma habilidade em dois ou duas em um (Máximo 20)."
+          }
+        ],
+        "class_specific": {
+          "rage_count": 3,
+          "rage_damage_bonus": 2,
+          "brutal_critical_dice": 0
+        }
+      },
+      {
+        "level": 5,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Ataque Extra",
+            "desc": "Quando usar ação Atacar, pode atacar duas vezes."
+          },
+          {
+            "name": "Movimentação Veloz",
+            "desc": "Seu deslocamento aumenta em 3 metros se não estiver usando armadura."
+          }
+        ],
+        "class_specific": {
+          "rage_count": 3,
+          "rage_damage_bonus": 2,
+          "brutal_critical_dice": 0
+        }
+      },
+      {
+        "level": 6,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Característica de Caminho Crítico Brutal",
+            "desc": "Pode rolar 3 dados"
+          }
+        ]
+      },
+      {
+        "level": 7,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Instinto Selvagem",
+            "desc": "Vantagem rolagens de"
+          }
+        ],
+        "class_specific": {
+          "rage_count": 4,
+          "rage_damage_bonus": 2,
+          "brutal_critical_dice": 0
+        }
+      },
+      {
+        "level": 8,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "class_specific": {
+          "rage_count": 4,
+          "rage_damage_bonus": 2,
+          "brutal_critical_dice": 0
+        }
+      },
+      {
+        "level": 9,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Campeão Primitivo",
+            "desc": "Sua Força e Constituição aumentam em 4. Seu valor máximo nestas habilidade agora é 24. adicional da arma ao determinar dano crítico de um ataque corpo a corpo."
+          },
+          {
+            "name": "Crítico Brutal",
+            "desc": "Pode rolar 1 dado"
+          }
+        ],
+        "class_specific": {
+          "rage_count": 4,
+          "rage_damage_bonus": 3,
+          "brutal_critical_dice": 1
+        }
+      },
+      {
+        "level": 10,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Característica de Caminho",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 11,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Fúria Implacável",
+            "desc": "Enquanto estiver em Pode entrar em Frenezi quando em fúria e fazer um ataque corpo a corpo como ação bônus. Quando terminar a fúria sofre um nível de exaustão. 6º Nível – Fúria Inabalável Fúria, se chegar a 0 PV mas não morrer, pode fazer Teste de Resistência de Constituição (CD 10), se passar fica com 1 PV. Cada vez que usar isso após a primeira a CD aumenta em 5. Se terminar um descanso curto ou longo, a CD volta a 10. Não pode ser amedrontado ou encantado quando em fúria. Se estiver amedrontado ou encantado quando entrar em fúria o efeito é suspenso pela duração da fúria. 10º Nível - Presença Intimidadora"
+          }
+        ],
+        "class_specific": {
+          "rage_count": 4,
+          "rage_damage_bonus": 3,
+          "brutal_critical_dice": 1
+        }
+      },
+      {
+        "level": 12,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "habilidade em dois ou duas em um (Máximo 20). Escolha uma cr",
+            "desc": ""
+          }
+        ],
+        "class_specific": {
+          "rage_count": 5,
+          "rage_damage_bonus": 3,
+          "brutal_critical_dice": 1
+        }
+      },
+      {
+        "level": 13,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Crítico Brutal",
+            "desc": "Pode rolar 2 dados"
+          }
+        ],
+        "class_specific": {
+          "rage_count": 5,
+          "rage_damage_bonus": 3,
+          "brutal_critical_dice": 2
+        }
+      },
+      {
+        "level": 14,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Característica de Caminho",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 15,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Fúria Persistente",
+            "desc": "Fúria só acaba se ficar Quando sofrer dano de uma criatura à 1,5 m de você, pode usar sua reação para fazer um ataque corpo a corpo contra aquela criatura."
+          }
+        ],
+        "class_specific": {
+          "rage_count": 5,
+          "rage_damage_bonus": 3,
+          "brutal_critical_dice": 2
+        }
+      },
+      {
+        "level": 16,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "class_specific": {
+          "rage_count": 5,
+          "rage_damage_bonus": 4,
+          "brutal_critical_dice": 2
+        }
+      },
+      {
+        "level": 17,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Característica de Caminho Crítico Brutal",
+            "desc": "Pode rolar 3 dados"
+          }
+        ],
+        "class_specific": {
+          "rage_count": 6,
+          "rage_damage_bonus": 4,
+          "brutal_critical_dice": 3
+        }
+      },
+      {
+        "level": 18,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Força Invencível",
+            "desc": "Se o resultado em um teste de Força for menor que o valor na habilidade Força, pode usar seu valor de habilidade no lugar."
+          }
+        ],
+        "class_specific": {
+          "rage_count": 6,
+          "rage_damage_bonus": 4,
+          "brutal_critical_dice": 3
+        }
+      },
+      {
+        "level": 19,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "class_specific": {
+          "rage_count": 6,
+          "rage_damage_bonus": 4,
+          "brutal_critical_dice": 3
+        }
+      },
+      {
+        "level": 20,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Campeão Primitivo",
+            "desc": "Sua Força e Constituição aumentam em 4. Seu valor máximo nestas habilidade agora é 24."
+          }
+        ],
+        "class_specific": {
+          "rage_count": 9999,
+          "rage_damage_bonus": 4,
+          "brutal_critical_dice": 3
+        }
+      }
+    ]
+  },
+  "bardo": {
+    "index": "bardo",
+    "name": "Inspiração Superior",
+    "levels": [
+      {
+        "level": 1,
+        "proficiency_bonus": 2,
+        "features": [],
+        "spell_slots": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "bardic_inspiration_die": 6,
+          "song_of_rest_die": 0,
+          "magical_secrets_max_5": 0,
+          "magical_secrets_max_7": 0,
+          "magical_secrets_max_9": 0
+        }
+      },
+      {
+        "level": 2,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Pau pra Toda Obra",
+            "desc": "Pode adicionar metade do seu bônus de proficiência, arredondado para baixo, em qualquer teste de habilidade que faça onde não inclua ainda o seu bônus de proficiência."
+          },
+          {
+            "name": "Canção do Descanso (d6)",
+            "desc": "Durante um"
+          }
+        ],
+        "spell_slots": [
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "bardic_inspiration_die": 6,
+          "song_of_rest_die": 6,
+          "magical_secrets_max_5": 0,
+          "magical_secrets_max_7": 0,
+          "magical_secrets_max_9": 0
+        }
+      },
+      {
+        "level": 3,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Colégio de Bardo",
+            "desc": "Escolha entre o Colégio da Bravura e Colégio do Saber."
+          },
+          {
+            "name": "Especialista",
+            "desc": "Escolha duas pericias que seja proficiente. Seu bônus de proficiência é dobrado em qualquer teste de resistência usando uma delas."
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma Aumento de Habilidade: Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "bardic_inspiration_die": 6,
+          "song_of_rest_die": 6,
+          "magical_secrets_max_5": 0,
+          "magical_secrets_max_7": 0,
+          "magical_secrets_max_9": 0
+        }
+      },
+      {
+        "level": 5,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "aumenta para um d10. Canção do Descanso (d10): O dado Inspir",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "bardic_inspiration_die": 8,
+          "song_of_rest_die": 6,
+          "magical_secrets_max_5": 0,
+          "magical_secrets_max_7": 0,
+          "magical_secrets_max_9": 0
+        }
+      },
+      {
+        "level": 6,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Desencantador",
+            "desc": "Com uma ação pode como ritual se elas tiverem esta opção e precisa ter ela preparada."
+          },
+          {
+            "name": "Foco de Conjuração",
+            "desc": "Você pode usar um iniciar uma atuação que dura até o fim do seu próximo turno. Por este tempo, você e criaturas aliadas até 9 m de você tem vantagem em testes de resistência contra se amedrontado ou encantado. A criatura deve ser capaz de ouvi-lo para ganhar este beneficio. A atuação termina antes se você ficar incapacitado, for silenciado ou resolver terminá-la (não gasta ação). Característica de Colégio de Bardo instrumento musical como foco."
+          },
+          {
+            "name": "Inspiração do Bardo (d6)",
+            "desc": "Com uma ação"
+          }
+        ]
+      },
+      {
+        "level": 7,
+        "proficiency_bonus": 3,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "bardic_inspiration_die": 8,
+          "song_of_rest_die": 6,
+          "magical_secrets_max_5": 0,
+          "magical_secrets_max_7": 0,
+          "magical_secrets_max_9": 0
+        }
+      },
+      {
+        "level": 8,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "bardic_inspiration_die": 8,
+          "song_of_rest_die": 6,
+          "magical_secrets_max_5": 0,
+          "magical_secrets_max_7": 0,
+          "magical_secrets_max_9": 0
+        }
+      },
+      {
+        "level": 9,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Canção do Descanso (d8)",
+            "desc": "O dado"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "bardic_inspiration_die": 8,
+          "song_of_rest_die": 8,
+          "magical_secrets_max_5": 0,
+          "magical_secrets_max_7": 0,
+          "magical_secrets_max_9": 0
+        }
+      },
+      {
+        "level": 10,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Especialista",
+            "desc": "Escolha mais duas pericias que seja proficiente. Seu bônus de proficiência é dobrado em qualquer teste de resistência usando uma delas."
+          },
+          {
+            "name": "Segredos Mágicos",
+            "desc": "Escolha duas magias descanso curto, faz uma canção. Você e qualquer criatura que possa lhe ouvir recupera 1d6 pontos de vida ao final do descanso. de qualquer classe, incluindo esta, e adicione às conhecidas. Devem ser de um nível você possa conjurar. Contam como magias de bardo e são incluídas no numero de agias Conhecidas."
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "bardic_inspiration_die": 10,
+          "song_of_rest_die": 8,
+          "magical_secrets_max_5": 2,
+          "magical_secrets_max_7": 0,
+          "magical_secrets_max_9": 0
+        }
+      },
+      {
+        "level": 11,
+        "proficiency_bonus": 4,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "bardic_inspiration_die": 10,
+          "song_of_rest_die": 8,
+          "magical_secrets_max_5": 2,
+          "magical_secrets_max_7": 0,
+          "magical_secrets_max_9": 0
+        }
+      },
+      {
+        "level": 12,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "bardic_inspiration_die": 10,
+          "song_of_rest_die": 8,
+          "magical_secrets_max_5": 2,
+          "magical_secrets_max_7": 0,
+          "magical_secrets_max_9": 0
+        }
+      },
+      {
+        "level": 13,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "aumenta para um d10. Canção do Descanso (d10): O dado usos d",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          0,
+          0
+        ],
+        "class_specific": {
+          "bardic_inspiration_die": 10,
+          "song_of_rest_die": 10,
+          "magical_secrets_max_5": 2,
+          "magical_secrets_max_7": 0,
+          "magical_secrets_max_9": 0
+        }
+      },
+      {
+        "level": 14,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "COLÉGIO DA",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 15,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "aumenta para um d12. Inspiração do Bardo (d12): O dado",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1,
+          0
+        ],
+        "class_specific": {
+          "bardic_inspiration_die": 12,
+          "song_of_rest_die": 10,
+          "magical_secrets_max_5": 2,
+          "magical_secrets_max_7": 2,
+          "magical_secrets_max_9": 0
+        }
+      },
+      {
+        "level": 16,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma Quando usar ação Atacar, pode atacar duas vezes. 14º Nível – Combatente Mágico"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1,
+          0
+        ],
+        "class_specific": {
+          "bardic_inspiration_die": 12,
+          "song_of_rest_die": 10,
+          "magical_secrets_max_5": 2,
+          "magical_secrets_max_7": 2,
+          "magical_secrets_max_9": 0
+        }
+      },
+      {
+        "level": 17,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Ao conjurar uma magia de bardo, pode fazer um ataque com sua",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1,
+          1
+        ],
+        "class_specific": {
+          "bardic_inspiration_die": 12,
+          "song_of_rest_die": 12,
+          "magical_secrets_max_5": 2,
+          "magical_secrets_max_7": 2,
+          "magical_secrets_max_9": 0
+        }
+      },
+      {
+        "level": 18,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Segredos Mágicos",
+            "desc": "Escolha duas magias de qualquer classe, incluindo esta, e adicione às conhecidas. Devem ser de um nível você possa conjurar. Contam como magias de bardo e são incluídas no numero de agias Conhecidas. COLÉGIO DO SABER 3º Nível – Proficiência Bônus e Palavras Cortantes Você ganha proficiência em três perícias a sua escolha."
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          3,
+          1,
+          1,
+          1,
+          1
+        ],
+        "class_specific": {
+          "bardic_inspiration_die": 12,
+          "song_of_rest_die": 12,
+          "magical_secrets_max_5": 2,
+          "magical_secrets_max_7": 2,
+          "magical_secrets_max_9": 2
+        }
+      },
+      {
+        "level": 19,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "habilidade em dois ou duas em um (Máximo 20). Quando uma cri",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1
+        ],
+        "class_specific": {
+          "bardic_inspiration_die": 12,
+          "song_of_rest_die": 12,
+          "magical_secrets_max_5": 2,
+          "magical_secrets_max_7": 2,
+          "magical_secrets_max_9": 2
+        }
+      },
+      {
+        "level": 20,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Inspiração Superior",
+            "desc": "Quando você rolar iniciativa e não tiver usos de Inspiração de Bardo sobrando, você recupera um uso. Escolha duas magias de qualquer classe, incluindo esta, e adicione às conhecidas. Devem ser de um nível você possa conjurar. Contam como magias de bardo e são incluídas no numero de magias conhecidas. 14º Nível – Habilidade Inigualável Quando fizer um teste de habilidade, pode gastar um uso de Inspiração de Bardo. Role o dado e adicione o valor ao seu teste. Pode optar fazer isso depois da rolagem, mas antes de saber se a rolagem obteve sucesso ou não."
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1
+        ],
+        "class_specific": {
+          "bardic_inspiration_die": 12,
+          "song_of_rest_die": 12,
+          "magical_secrets_max_5": 2,
+          "magical_secrets_max_7": 2,
+          "magical_secrets_max_9": 2
+        }
+      }
+    ]
+  },
+  "bruxo": {
+    "index": "bruxo",
+    "name": "Mestre Místico",
+    "levels": [
+      {
+        "level": 1,
+        "proficiency_bonus": 2,
+        "features": []
+      },
+      {
+        "level": 2,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Invocação Mística",
+            "desc": "Você ganha duas"
+          }
+        ],
+        "spell_slots": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "invocations_known": 2,
+          "mystic_arcanum_level_6": 0,
+          "mystic_arcanum_level_7": 0,
+          "mystic_arcanum_level_8": 0,
+          "mystic_arcanum_level_9": 0
+        }
+      },
+      {
+        "level": 3,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Dádiva de Pacto",
+            "desc": "Escolha uma entre: Pacto da Corrente: Aprende a magia Aumento de Habilidade: Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "invocations_known": 2,
+          "mystic_arcanum_level_6": 0,
+          "mystic_arcanum_level_7": 0,
+          "mystic_arcanum_level_8": 0,
+          "mystic_arcanum_level_9": 0
+        }
+      },
+      {
+        "level": 4,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "invocations_known": 3,
+          "mystic_arcanum_level_6": 0,
+          "mystic_arcanum_level_7": 0,
+          "mystic_arcanum_level_8": 0,
+          "mystic_arcanum_level_9": 0
+        }
+      },
+      {
+        "level": 5,
+        "proficiency_bonus": 3,
+        "features": [],
+        "spell_slots": [
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "invocations_known": 3,
+          "mystic_arcanum_level_6": 0,
+          "mystic_arcanum_level_7": 0,
+          "mystic_arcanum_level_8": 0,
+          "mystic_arcanum_level_9": 0
+        }
+      },
+      {
+        "level": 6,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Característica de Patrono Extraplanar",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 7,
+        "proficiency_bonus": 3,
+        "features": [],
+        "spell_slots": [
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "invocations_known": 4,
+          "mystic_arcanum_level_6": 0,
+          "mystic_arcanum_level_7": 0,
+          "mystic_arcanum_level_8": 0,
+          "mystic_arcanum_level_9": 0
+        }
+      },
+      {
+        "level": 8,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Dádiva de Pacto",
+            "desc": "Escolha uma entre: Pacto da Corrente: Aprende a magia Aumento de Habilidade: Aumente uma encontrar familiar. Pode escolher familiares normais ou diabrete, pseudodragão, quasit, duende. Quando fizer ação Ataque, pode renunciar um de seus ataques para permitir que seu familiar faça um dele."
+          },
+          {
+            "name": "Pacto da Lâmina",
+            "desc": "Usa ação para criar"
+          }
+        ],
+        "spell_slots": [
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "invocations_known": 4,
+          "mystic_arcanum_level_6": 0,
+          "mystic_arcanum_level_7": 0,
+          "mystic_arcanum_level_8": 0,
+          "mystic_arcanum_level_9": 0
+        }
+      },
+      {
+        "level": 9,
+        "proficiency_bonus": 4,
+        "features": [],
+        "spell_slots": [
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "invocations_known": 5,
+          "mystic_arcanum_level_6": 0,
+          "mystic_arcanum_level_7": 0,
+          "mystic_arcanum_level_8": 0,
+          "mystic_arcanum_level_9": 0
+        }
+      },
+      {
+        "level": 10,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Pacto do Tomo",
+            "desc": "Ganha um grimório"
+          }
+        ]
+      },
+      {
+        "level": 11,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Arcanum Místico",
+            "desc": "Escolha uma magia de 6º nível. Pode conjurá-la uma vez sem gastar espaço de magia. Deve fazer um descanso longo para fazer isso de novo."
+          }
+        ],
+        "spell_slots": [
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "invocations_known": 5,
+          "mystic_arcanum_level_6": 1,
+          "mystic_arcanum_level_7": 0,
+          "mystic_arcanum_level_8": 0,
+          "mystic_arcanum_level_9": 0
+        }
+      },
+      {
+        "level": 12,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "invocations_known": 6,
+          "mystic_arcanum_level_6": 1,
+          "mystic_arcanum_level_7": 0,
+          "mystic_arcanum_level_8": 0,
+          "mystic_arcanum_level_9": 0
+        }
+      },
+      {
+        "level": 13,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Arcanum Místico",
+            "desc": "Escolha uma magia de 7º nível. Pode conjurá-la uma vez sem gastar espaço de magia. Deve fazer um descanso longo para fazer isso de novo."
+          }
+        ],
+        "spell_slots": [
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "invocations_known": 6,
+          "mystic_arcanum_level_6": 1,
+          "mystic_arcanum_level_7": 1,
+          "mystic_arcanum_level_8": 0,
+          "mystic_arcanum_level_9": 0
+        }
+      },
+      {
+        "level": 14,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Característica de Patrono Extraplanar",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 15,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Arcanum Místico",
+            "desc": "Escolha uma magia de 8º nível. Pode conjurá-la uma vez sem gastar espaço de magia. Deve fazer um descanso longo para fazer isso de novo."
+          }
+        ],
+        "spell_slots": [
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "invocations_known": 7,
+          "mystic_arcanum_level_6": 1,
+          "mystic_arcanum_level_7": 1,
+          "mystic_arcanum_level_8": 1,
+          "mystic_arcanum_level_9": 0
+        }
+      },
+      {
+        "level": 16,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Com uma ação, escolha uma criatura que possa ver até 18 metr",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "invocations_known": 7,
+          "mystic_arcanum_level_6": 1,
+          "mystic_arcanum_level_7": 1,
+          "mystic_arcanum_level_8": 1,
+          "mystic_arcanum_level_9": 0
+        }
+      },
+      {
+        "level": 17,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Arcanum Místico",
+            "desc": "Escolha uma magia de 9º nível. Pode conjurá-la uma vez sem gastar espaço de magia. Deve fazer um descanso longo para fazer isso de novo."
+          }
+        ],
+        "spell_slots": [
+          0,
+          0,
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "invocations_known": 7,
+          "mystic_arcanum_level_6": 1,
+          "mystic_arcanum_level_7": 1,
+          "mystic_arcanum_level_8": 1,
+          "mystic_arcanum_level_9": 1
+        }
+      },
+      {
+        "level": 18,
+        "proficiency_bonus": 6,
+        "features": [],
+        "spell_slots": [
+          0,
+          0,
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "invocations_known": 8,
+          "mystic_arcanum_level_6": 1,
+          "mystic_arcanum_level_7": 1,
+          "mystic_arcanum_level_8": 1,
+          "mystic_arcanum_level_9": 1
+        }
+      },
+      {
+        "level": 19,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma Magias Expandidas do Feérico Nível Magias 1º fogo feérico, sono 2º acalmar emoções, força fantasmagórica 3º ampliar plantas, piscar 4º dominar animais, invisibilidade maior 5º dominar pessoa, similaridade"
+          }
+        ],
+        "spell_slots": [
+          0,
+          0,
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "invocations_known": 8,
+          "mystic_arcanum_level_6": 1,
+          "mystic_arcanum_level_7": 1,
+          "mystic_arcanum_level_8": 1,
+          "mystic_arcanum_level_9": 1
+        }
+      },
+      {
+        "level": 20,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Mestre Místico",
+            "desc": "Pode suplicar por 1 minuto ao seu patrono para recuperar todos os espaços de magia gastos. Só pode usar isso uma vez por descanso longo. O FEÉRICO Você pode escolher magias da lista de magias expandidas do feérico. 1º Nível – Presença Feérica Uma ação, criaturas em um cubo de 3 metros originando de você fazem teste de resistência de Sabedoria. Se falharem estão amedrontados ou encantadas (você escolhe) até o final do seu próximo turno. Pode usar uma vez por descanso curto ou longo. 6º Nível – Fuga Nebulosa Ao levar dano, pode usar sua reação para ficar invisível e se teleportar até 18 metros em um espaço não ocupado que possa ver. Fica invisível até seu próximo turno ou atacar ou conjurar magia. Pode usar uma vez por descanso curto ou longo. 10º Nível – Defesa Sedutora Fica imune a ser encantado. Se tentarem tentar encantar você, pode usar sua reação para retornar o encantamento nesta criatura. Ela faz um teste de resistência. Se falhar fica amedrontada ou encantada (você escolhe) por 1 minuto ou até sua concentração ser quebrada (como se estivesse concentrando uma magia). O efeito termina antes se ela sofrer dano. Pode usar uma vez por descanso curto ou longo."
+          }
+        ],
+        "spell_slots": [
+          0,
+          0,
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "invocations_known": 8,
+          "mystic_arcanum_level_6": 1,
+          "mystic_arcanum_level_7": 1,
+          "mystic_arcanum_level_8": 1,
+          "mystic_arcanum_level_9": 1
+        }
+      }
+    ]
+  },
+  "clerigo": {
+    "index": "clerigo",
+    "name": "Ler Área",
+    "levels": [
+      {
+        "level": 1,
+        "proficiency_bonus": 2,
+        "features": []
+      },
+      {
+        "level": 2,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Canalizar Divindade",
+            "desc": "Você pode usar um 17º 4 ou menor Canalizar Divindade por descanso curto ou longo. Se houver alguma CD, é igual a das suas magias."
+          },
+          {
+            "name": "Você tem um efeito de domínio (ver Domínio Divino) e",
+            "desc": "Expulsar Mortos-vivos: Uma ação, levante"
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "proficiency_bonus": 2,
+        "features": [],
+        "spell_slots": [
+          4,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "channel_divinity_charges": 1,
+          "destroy_undead_cr": 0
+        }
+      },
+      {
+        "level": 4,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "channel_divinity_charges": 1,
+          "destroy_undead_cr": 0
+        }
+      },
+      {
+        "level": 5,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Destruir Mortos-Vivos (ND ½)",
+            "desc": "Se um habilidade de conjuração. CD de resistência a magia = 8 + bônus de morto-vivo falhar no testes de resistência contra sua habilidade de Expulsar Mortos-Vivos, ele é instantaneamente destruído se seu Nível de Desafio for igual ou menor que os valores conforme a tabela abaixo. + mod de Sabedoria Foco de Conjuração: Você pode usar uma símbolo sagrado como foco."
+          },
+          {
+            "name": "Ritual",
+            "desc": "Pode conjurar magias de clérigo Destruir Mortos-Vivos como ritual se elas tiverem esta opção e precisa ter ela preparada."
+          },
+          {
+            "name": "Domínio Divino",
+            "desc": "Escolha um domínio 5º ½ ou menor relacionado à sua divindade: Conhecimento, Enganação, Guerra, Luz, Natureza, Tempestade ou Vida. 8º 1 ou menor 11º 2 ou menor 14º 3 ou menor"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "channel_divinity_charges": 1,
+          "destroy_undead_cr": 0.5
+        }
+      },
+      {
+        "level": 6,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Característica de Domínio Divino Canalizar Divindade",
+            "desc": "Dois usos por seu símbolo sagrado e murmura uma prece. Cada morto-vivo que puder ver ou ouvir você em um raio de 9 metros faz um teste de resistência de Sabedoria. Se falhar, fica expulsa por 1 minuto ou até levar dano. Uma criatura expulsada deve gastar seus turno tentar se mover para longe de você, e não pode entrar voluntariamente em um espaço a 9 metros de você. Não pode fazer reações. Em suas ações só pode usar a ação Correr ou tentar escapar de um efeito que impeça o movimento. Se não houver local para se mover, a criatura usa a ação Esquivar."
+          }
+        ]
+      },
+      {
+        "level": 7,
+        "proficiency_bonus": 3,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "channel_divinity_charges": 2,
+          "destroy_undead_cr": 0.5
+        }
+      },
+      {
+        "level": 8,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma habilidade em dois ou duas em um (Máximo 20). Destruir Mortos-Vivos (ND 1) Característica de Domínio Divino"
+          }
+        ]
+      },
+      {
+        "level": 9,
+        "proficiency_bonus": 4,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "channel_divinity_charges": 2,
+          "destroy_undead_cr": 1
+        }
+      },
+      {
+        "level": 10,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Intervenção Divina",
+            "desc": "Uma ação. Descreve o que precisa e role um dado de porcentagem. Se o resultado for igual ou menor que seu nível de clérigo, sua divindade intervém. O Mestre escolhe como ocorre a intervenção; o efeito de uma magia de clérigo ou de domínio é apropriado como resultado. Se sua divindade intervir, você fica impedido de usar esta habilidade novamente por 7 dias. Senão, pode usar ela novamente depois de um descanso longo."
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "channel_divinity_charges": 2,
+          "destroy_undead_cr": 1
+        }
+      },
+      {
+        "level": 11,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "DOMÍNIO DO CONHECIMENTO Ganha magias de domínio ao ganhar ní",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "channel_divinity_charges": 2,
+          "destroy_undead_cr": 2
+        }
+      },
+      {
+        "level": 12,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma Aprende dois idiomas à sua escolha."
+          },
+          {
+            "name": "Torna-se proficiente em duas das seguintes perícias",
+            "desc": "Arcanismo, História, Natureza ou Religião. Seu bônus de proficiência é dobrado em testes que usem essas perícias. 2º Nível – Canalizar Divindade: Conhecimento das Eras"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "channel_divinity_charges": 2,
+          "destroy_undead_cr": 2
+        }
+      },
+      {
+        "level": 13,
+        "proficiency_bonus": 5,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          0,
+          0
+        ],
+        "class_specific": {
+          "channel_divinity_charges": 2,
+          "destroy_undead_cr": 2
+        }
+      },
+      {
+        "level": 14,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Uma ação, escolha uma perícia ou ferramenta. Por 10 minutos",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          0,
+          0
+        ],
+        "class_specific": {
+          "channel_divinity_charges": 2,
+          "destroy_undead_cr": 3
+        }
+      },
+      {
+        "level": 15,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Uma ação, escolha uma criatura que possa ver até 18 metros.",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1,
+          0
+        ],
+        "class_specific": {
+          "channel_divinity_charges": 2,
+          "destroy_undead_cr": 3
+        }
+      },
+      {
+        "level": 16,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1,
+          0
+        ],
+        "class_specific": {
+          "channel_divinity_charges": 2,
+          "destroy_undead_cr": 3
+        }
+      },
+      {
+        "level": 17,
+        "proficiency_bonus": 6,
+        "features": []
+      },
+      {
+        "level": 18,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Canalizar Divindade",
+            "desc": "Três usos por Adicione seu mod de Sabedoria em rolagens de dano de truques de clérigo. 17º Nível – Visões do Passado"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          3,
+          1,
+          1,
+          1,
+          1
+        ],
+        "class_specific": {
+          "channel_divinity_charges": 3,
+          "destroy_undead_cr": 4
+        }
+      },
+      {
+        "level": 19,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma Recebe vislumbres de ventos recentes. Pode meditar um numero de minutos igual seu mod de Sabedoria. Pode usar uma vez por descanso curto ou longo."
+          },
+          {
+            "name": "Ler Objeto",
+            "desc": "Segurando o objeto, depois de 1"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1
+        ],
+        "class_specific": {
+          "channel_divinity_charges": 3,
+          "destroy_undead_cr": 4
+        }
+      },
+      {
+        "level": 20,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Ler Área",
+            "desc": "Eventos recentes nos arredor (até 15 m Magias do Domínio do Conhecimento 1º comando, identificar cúbicos)., volta um numero de dias igual seu mod de Sabedoria. Cada minuto meditando, descobre um evento significativo, a partir do mais recente. Eventos significativos são tipicamente emoções poderosas, como batalhas e trações, casamentos e assassinatos, nascimentos e funerais. Podem incluir eventos mundanos relevantes para sua situação atual. 3º augúrio, sugestão 5º dificultar detecção, falar com os mortos 7º olho arcano, confusão 9º lendas e histórias, vidência"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1
+        ],
+        "class_specific": {
+          "channel_divinity_charges": 3,
+          "destroy_undead_cr": 4
+        }
+      }
+    ]
+  },
+  "druida": {
+    "index": "druida",
+    "name": "Arquidruida",
+    "levels": [
+      {
+        "level": 1,
+        "proficiency_bonus": 2,
+        "features": [],
+        "spell_slots": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "wild_shape_max_cr": 0,
+          "wild_shape_swim": false,
+          "wild_shape_fly": false
+        }
+      },
+      {
+        "level": 2,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Forma Selvagem",
+            "desc": "Usando uma ação pode magicamente assumir a forma de uma besta que já viu. Pode usar esta característica duas vezes, por descanso curto ou longo. Seu nível de druida determina a besta que você pode se transformar, conforme a tabela. Pode ficar na forma de besta por uma numero de horas igual metade do seu nível de druida (arredondado para baixo). Pode reverter para forma normal antes gastando uma ação bônus. Reverte automaticamente se ficar inconsciente, ficar com 0 pontos de vida ou morrer."
+          },
+          {
+            "name": "Quando transformado, siga estas regras",
+            "desc": "• Suas estatísticas são trocadas pelas da besta, mas mantém sua tendência, personalidade, Inteligência, Sabedoria, Carisma. Mantém também suas perícias e testes de resistência em adição aos da criatura. Se a proficiência da criatura for maior que a sua, use a dela. Se ela tiver ações legendárias ou de covil, você não pode usar. Formas Selvagens 2º 1/4 Não voa nem nada 4º 1/2 Não voa"
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "proficiency_bonus": 2,
+        "features": [],
+        "spell_slots": [
+          4,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "wild_shape_max_cr": 0.25,
+          "wild_shape_swim": false,
+          "wild_shape_fly": false
+        }
+      },
+      {
+        "level": 4,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "wild_shape_max_cr": 0.5,
+          "wild_shape_swim": true,
+          "wild_shape_fly": false
+        }
+      },
+      {
+        "level": 5,
+        "proficiency_bonus": 3,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "wild_shape_max_cr": 0.5,
+          "wild_shape_swim": true,
+          "wild_shape_fly": false
+        }
+      },
+      {
+        "level": 6,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Característica de Círculo Druídico",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 7,
+        "proficiency_bonus": 3,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "wild_shape_max_cr": 1,
+          "wild_shape_swim": true,
+          "wild_shape_fly": false
+        }
+      },
+      {
+        "level": 8,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma habilidade em dois ou duas em um (Máximo 20). Melhora na Forma Selvagem (ND 1)"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "wild_shape_max_cr": 1,
+          "wild_shape_swim": true,
+          "wild_shape_fly": true
+        }
+      },
+      {
+        "level": 9,
+        "proficiency_bonus": 4,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "wild_shape_max_cr": 1,
+          "wild_shape_swim": true,
+          "wild_shape_fly": true
+        }
+      },
+      {
+        "level": 10,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Pode usar Forma Selvagem no seu turno como uma ação bônus. Q",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 11,
+        "proficiency_bonus": 4,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "wild_shape_max_cr": 1,
+          "wild_shape_swim": true,
+          "wild_shape_fly": true
+        }
+      },
+      {
+        "level": 12,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "wild_shape_max_cr": 1,
+          "wild_shape_swim": true,
+          "wild_shape_fly": true
+        }
+      },
+      {
+        "level": 13,
+        "proficiency_bonus": 5,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          0,
+          0
+        ],
+        "class_specific": {
+          "wild_shape_max_cr": 1,
+          "wild_shape_swim": true,
+          "wild_shape_fly": true
+        }
+      },
+      {
+        "level": 14,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Característica de Círculo Druídico Pode gastas dois usos de",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 15,
+        "proficiency_bonus": 5,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1,
+          0
+        ],
+        "class_specific": {
+          "wild_shape_max_cr": 1,
+          "wild_shape_swim": true,
+          "wild_shape_fly": true
+        }
+      },
+      {
+        "level": 16,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1,
+          0
+        ],
+        "class_specific": {
+          "wild_shape_max_cr": 1,
+          "wild_shape_swim": true,
+          "wild_shape_fly": true
+        }
+      },
+      {
+        "level": 17,
+        "proficiency_bonus": 6,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1,
+          1
+        ],
+        "class_specific": {
+          "wild_shape_max_cr": 1,
+          "wild_shape_swim": true,
+          "wild_shape_fly": true
+        }
+      },
+      {
+        "level": 18,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Corpo Atemporal",
+            "desc": "Você envelhece devagar. Cada 10 anos, seu corpo envelhece somente 1 ano."
+          },
+          {
+            "name": "Magia Bestial",
+            "desc": "Pode conjurar qualquer"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          3,
+          1,
+          1,
+          1,
+          1
+        ],
+        "class_specific": {
+          "wild_shape_max_cr": 1,
+          "wild_shape_swim": true,
+          "wild_shape_fly": true
+        }
+      },
+      {
+        "level": 19,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1
+        ],
+        "class_specific": {
+          "wild_shape_max_cr": 1,
+          "wild_shape_swim": true,
+          "wild_shape_fly": true
+        }
+      },
+      {
+        "level": 20,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Arquidruida",
+            "desc": "Pode usar Forma Selvagem"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1
+        ],
+        "class_specific": {
+          "wild_shape_max_cr": 1,
+          "wild_shape_swim": true,
+          "wild_shape_fly": true
+        }
+      }
+    ]
+  },
+  "feiticeiro": {
+    "index": "feiticeiro",
+    "name": "Ancestral Dracônico Dragão Tipo e Dano Azul Elétrico Branco",
+    "levels": [
+      {
+        "level": 1,
+        "proficiency_bonus": 2,
+        "features": []
+      },
+      {
+        "level": 2,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Magia Cuidadosa",
+            "desc": "Ao conjurar uma magia Fonte de Magia: Você tem um fonte de magia que é representada por seus Pontos de Feitiçaria."
+          },
+          {
+            "name": "Pontos de Feitiçaria",
+            "desc": "Ganha conforme a que force criaturas a fazer um teste de resistência, pode gastar 1 ponto de feitiçaria e escolher um numero de criaturas igual seu mod de Carisma (mínimo 1) para passarem automaticamente no teste."
+          },
+          {
+            "name": "Magia Distante",
+            "desc": "Ao conjurar uma magia de tabela. Nunca pode ter mais do que os mostrados na tabela. Recuperar todos os pontos gasto com um descanso longo."
+          },
+          {
+            "name": "Conjuração Flexível",
+            "desc": "Pode gastar Pontos alcance de 1,5 m ou maior, pode gastar 1 ponto de feitiçaria para dobrar o alcance. Quando conjurar uma magia de alcance de toque pode gastar 1 pontos de feitiçaria e aumentar o alcance para 9 m."
+          },
+          {
+            "name": "Magia Sutil",
+            "desc": "Ao conjurar uma magia, pode de Feitiçaria para ganhar espaços de magias adicionais conforme a tabela. Pode ganhar pontos de feitiçaria sacrificando um espaço de magia, sendo os pontos ganhos iguais ao nível do espaço. Faz um desses usando uma ação bônus. gastar 1 ponto de feitiçaria para conjurá-la sem nenhum componente somático ou verbal Potencializar Magia: Ao rolar o dano de uma Espaços ganhos por Pontos de Feitiçaria Nível Pontos de Feitiçaria 1º 2 2º 3 3º 5 4º 6 5º 7 magia, pode gastar 1 ponto de feitiçaria para rolar novamente um numero de dados até no máximo o seu mod de Carisma (mínimo 1). Deve usar a nova rolagem. Pode usar potencializar magia mesmo se já tiver usado outro poder metmágico diferente."
+          }
+        ],
+        "spell_slots": [
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "sorcery_points": 2,
+          "metamagic_known": 0,
+          "creating_spell_slots": [
+            {
+              "spell_slot_level": 1,
+              "sorcery_point_cost": 2
+            },
+            {
+              "spell_slot_level": 2,
+              "sorcery_point_cost": 3
+            },
+            {
+              "spell_slot_level": 3,
+              "sorcery_point_cost": 5
+            },
+            {
+              "spell_slot_level": 4,
+              "sorcery_point_cost": 6
+            },
+            {
+              "spell_slot_level": 5,
+              "sorcery_point_cost": 7
+            }
+          ]
+        }
+      },
+      {
+        "level": 3,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Metamagia",
+            "desc": "Você ganha duas das seguintes opções, sendo que só pode usar uma opção metamagica em uma magia quando a conjura desta forma, exceto quando descrito o contrário."
+          },
+          {
+            "name": "Acelerar Magia",
+            "desc": "Ao conjurar uma magia"
+          }
+        ],
+        "spell_slots": [
+          4,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "sorcery_points": 3,
+          "metamagic_known": 2,
+          "creating_spell_slots": [
+            {
+              "spell_slot_level": 1,
+              "sorcery_point_cost": 2
+            },
+            {
+              "spell_slot_level": 2,
+              "sorcery_point_cost": 3
+            },
+            {
+              "spell_slot_level": 3,
+              "sorcery_point_cost": 5
+            },
+            {
+              "spell_slot_level": 4,
+              "sorcery_point_cost": 6
+            },
+            {
+              "spell_slot_level": 5,
+              "sorcery_point_cost": 7
+            }
+          ]
+        }
+      },
+      {
+        "level": 4,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "sorcery_points": 4,
+          "metamagic_known": 2,
+          "creating_spell_slots": [
+            {
+              "spell_slot_level": 1,
+              "sorcery_point_cost": 2
+            },
+            {
+              "spell_slot_level": 2,
+              "sorcery_point_cost": 3
+            },
+            {
+              "spell_slot_level": 3,
+              "sorcery_point_cost": 5
+            },
+            {
+              "spell_slot_level": 4,
+              "sorcery_point_cost": 6
+            },
+            {
+              "spell_slot_level": 5,
+              "sorcery_point_cost": 7
+            }
+          ]
+        }
+      },
+      {
+        "level": 5,
+        "proficiency_bonus": 3,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "sorcery_points": 5,
+          "metamagic_known": 2,
+          "creating_spell_slots": [
+            {
+              "spell_slot_level": 1,
+              "sorcery_point_cost": 2
+            },
+            {
+              "spell_slot_level": 2,
+              "sorcery_point_cost": 3
+            },
+            {
+              "spell_slot_level": 3,
+              "sorcery_point_cost": 5
+            },
+            {
+              "spell_slot_level": 4,
+              "sorcery_point_cost": 6
+            },
+            {
+              "spell_slot_level": 5,
+              "sorcery_point_cost": 7
+            }
+          ]
+        }
+      },
+      {
+        "level": 6,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Característica de Origem de Feiticeiro",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 7,
+        "proficiency_bonus": 3,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "sorcery_points": 7,
+          "metamagic_known": 2,
+          "creating_spell_slots": [
+            {
+              "spell_slot_level": 1,
+              "sorcery_point_cost": 2
+            },
+            {
+              "spell_slot_level": 2,
+              "sorcery_point_cost": 3
+            },
+            {
+              "spell_slot_level": 3,
+              "sorcery_point_cost": 5
+            },
+            {
+              "spell_slot_level": 4,
+              "sorcery_point_cost": 6
+            },
+            {
+              "spell_slot_level": 5,
+              "sorcery_point_cost": 7
+            }
+          ]
+        }
+      },
+      {
+        "level": 8,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "sorcery_points": 8,
+          "metamagic_known": 2,
+          "creating_spell_slots": [
+            {
+              "spell_slot_level": 1,
+              "sorcery_point_cost": 2
+            },
+            {
+              "spell_slot_level": 2,
+              "sorcery_point_cost": 3
+            },
+            {
+              "spell_slot_level": 3,
+              "sorcery_point_cost": 5
+            },
+            {
+              "spell_slot_level": 4,
+              "sorcery_point_cost": 6
+            },
+            {
+              "spell_slot_level": 5,
+              "sorcery_point_cost": 7
+            }
+          ]
+        }
+      },
+      {
+        "level": 9,
+        "proficiency_bonus": 4,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "sorcery_points": 9,
+          "metamagic_known": 2,
+          "creating_spell_slots": [
+            {
+              "spell_slot_level": 1,
+              "sorcery_point_cost": 2
+            },
+            {
+              "spell_slot_level": 2,
+              "sorcery_point_cost": 3
+            },
+            {
+              "spell_slot_level": 3,
+              "sorcery_point_cost": 5
+            },
+            {
+              "spell_slot_level": 4,
+              "sorcery_point_cost": 6
+            },
+            {
+              "spell_slot_level": 5,
+              "sorcery_point_cost": 7
+            }
+          ]
+        }
+      },
+      {
+        "level": 10,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "LINHAGEM",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "sorcery_points": 10,
+          "metamagic_known": 3,
+          "creating_spell_slots": [
+            {
+              "spell_slot_level": 1,
+              "sorcery_point_cost": 2
+            },
+            {
+              "spell_slot_level": 2,
+              "sorcery_point_cost": 3
+            },
+            {
+              "spell_slot_level": 3,
+              "sorcery_point_cost": 5
+            },
+            {
+              "spell_slot_level": 4,
+              "sorcery_point_cost": 6
+            },
+            {
+              "spell_slot_level": 5,
+              "sorcery_point_cost": 7
+            }
+          ]
+        }
+      },
+      {
+        "level": 11,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Escolha um ancestral dragão conforme a tabela. Pode falar, l",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "sorcery_points": 11,
+          "metamagic_known": 3,
+          "creating_spell_slots": [
+            {
+              "spell_slot_level": 1,
+              "sorcery_point_cost": 2
+            },
+            {
+              "spell_slot_level": 2,
+              "sorcery_point_cost": 3
+            },
+            {
+              "spell_slot_level": 3,
+              "sorcery_point_cost": 5
+            },
+            {
+              "spell_slot_level": 4,
+              "sorcery_point_cost": 6
+            },
+            {
+              "spell_slot_level": 5,
+              "sorcery_point_cost": 7
+            }
+          ]
+        }
+      },
+      {
+        "level": 12,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Seus pontos de vida aumentam em 1 e você ganha 1 a mais semp",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "sorcery_points": 12,
+          "metamagic_known": 3,
+          "creating_spell_slots": [
+            {
+              "spell_slot_level": 1,
+              "sorcery_point_cost": 2
+            },
+            {
+              "spell_slot_level": 2,
+              "sorcery_point_cost": 3
+            },
+            {
+              "spell_slot_level": 3,
+              "sorcery_point_cost": 5
+            },
+            {
+              "spell_slot_level": 4,
+              "sorcery_point_cost": 6
+            },
+            {
+              "spell_slot_level": 5,
+              "sorcery_point_cost": 7
+            }
+          ]
+        }
+      },
+      {
+        "level": 13,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Ao conjurar uma magia que cause dano associado ao seu ancest",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          0,
+          0
+        ],
+        "class_specific": {
+          "sorcery_points": 13,
+          "metamagic_known": 3,
+          "creating_spell_slots": [
+            {
+              "spell_slot_level": 1,
+              "sorcery_point_cost": 2
+            },
+            {
+              "spell_slot_level": 2,
+              "sorcery_point_cost": 3
+            },
+            {
+              "spell_slot_level": 3,
+              "sorcery_point_cost": 5
+            },
+            {
+              "spell_slot_level": 4,
+              "sorcery_point_cost": 6
+            },
+            {
+              "spell_slot_level": 5,
+              "sorcery_point_cost": 7
+            }
+          ]
+        }
+      },
+      {
+        "level": 14,
+        "proficiency_bonus": 5,
+        "features": []
+      },
+      {
+        "level": 15,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Pode criar asas de dragão das suas costas, ganhando deslocam",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1,
+          0
+        ],
+        "class_specific": {
+          "sorcery_points": 15,
+          "metamagic_known": 3,
+          "creating_spell_slots": [
+            {
+              "spell_slot_level": 1,
+              "sorcery_point_cost": 2
+            },
+            {
+              "spell_slot_level": 2,
+              "sorcery_point_cost": 3
+            },
+            {
+              "spell_slot_level": 3,
+              "sorcery_point_cost": 5
+            },
+            {
+              "spell_slot_level": 4,
+              "sorcery_point_cost": 6
+            },
+            {
+              "spell_slot_level": 5,
+              "sorcery_point_cost": 7
+            }
+          ]
+        }
+      },
+      {
+        "level": 16,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1,
+          0
+        ],
+        "class_specific": {
+          "sorcery_points": 16,
+          "metamagic_known": 4,
+          "creating_spell_slots": [
+            {
+              "spell_slot_level": 1,
+              "sorcery_point_cost": 2
+            },
+            {
+              "spell_slot_level": 2,
+              "sorcery_point_cost": 3
+            },
+            {
+              "spell_slot_level": 3,
+              "sorcery_point_cost": 5
+            },
+            {
+              "spell_slot_level": 4,
+              "sorcery_point_cost": 6
+            },
+            {
+              "spell_slot_level": 5,
+              "sorcery_point_cost": 7
+            }
+          ]
+        }
+      },
+      {
+        "level": 17,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Com uma ação, pode gastar 5 pontos de feitiçaria para exalar",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1,
+          1
+        ],
+        "class_specific": {
+          "sorcery_points": 17,
+          "metamagic_known": 4,
+          "creating_spell_slots": [
+            {
+              "spell_slot_level": 1,
+              "sorcery_point_cost": 2
+            },
+            {
+              "spell_slot_level": 2,
+              "sorcery_point_cost": 3
+            },
+            {
+              "spell_slot_level": 3,
+              "sorcery_point_cost": 5
+            },
+            {
+              "spell_slot_level": 4,
+              "sorcery_point_cost": 6
+            },
+            {
+              "spell_slot_level": 5,
+              "sorcery_point_cost": 7
+            }
+          ]
+        }
+      },
+      {
+        "level": 18,
+        "proficiency_bonus": 6,
+        "features": []
+      },
+      {
+        "level": 19,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1
+        ],
+        "class_specific": {
+          "sorcery_points": 19,
+          "metamagic_known": 4,
+          "creating_spell_slots": [
+            {
+              "spell_slot_level": 1,
+              "sorcery_point_cost": 2
+            },
+            {
+              "spell_slot_level": 2,
+              "sorcery_point_cost": 3
+            },
+            {
+              "spell_slot_level": 3,
+              "sorcery_point_cost": 5
+            },
+            {
+              "spell_slot_level": 4,
+              "sorcery_point_cost": 6
+            },
+            {
+              "spell_slot_level": 5,
+              "sorcery_point_cost": 7
+            }
+          ]
+        }
+      },
+      {
+        "level": 20,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Ancestral Dracônico Dragão Tipo e Dano Azul Elétrico Branco",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1
+        ],
+        "class_specific": {
+          "sorcery_points": 20,
+          "metamagic_known": 4,
+          "creating_spell_slots": [
+            {
+              "spell_slot_level": 1,
+              "sorcery_point_cost": 2
+            },
+            {
+              "spell_slot_level": 2,
+              "sorcery_point_cost": 3
+            },
+            {
+              "spell_slot_level": 3,
+              "sorcery_point_cost": 5
+            },
+            {
+              "spell_slot_level": 4,
+              "sorcery_point_cost": 6
+            },
+            {
+              "spell_slot_level": 5,
+              "sorcery_point_cost": 7
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "guerreiro": {
+    "index": "guerreiro",
+    "name": "Ataque Extra",
+    "levels": [
+      {
+        "level": 1,
+        "proficiency_bonus": 2,
+        "features": [],
+        "class_specific": {
+          "action_surges": 0,
+          "indomitable_uses": 0,
+          "extra_attacks": 0
+        }
+      },
+      {
+        "level": 2,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Pulso de Ação",
+            "desc": "Pode realizar uma ação"
+          }
+        ],
+        "class_specific": {
+          "action_surges": 1,
+          "indomitable_uses": 0,
+          "extra_attacks": 0
+        }
+      },
+      {
+        "level": 3,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Arquétipo Marcial",
+            "desc": "Escolha entre o"
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "class_specific": {
+          "action_surges": 1,
+          "indomitable_uses": 0,
+          "extra_attacks": 0
+        }
+      },
+      {
+        "level": 5,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Ataque Extra",
+            "desc": "Quando usar ação Atacar,"
+          }
+        ],
+        "class_specific": {
+          "action_surges": 1,
+          "indomitable_uses": 0,
+          "extra_attacks": 1
+        }
+      },
+      {
+        "level": 6,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Imparável",
+            "desc": "Pode rolar novamente três habilidade em dois ou duas em um (Máximo 20)."
+          },
+          {
+            "name": "Pulso de Ação",
+            "desc": "Pode realizar duas ações Aumento de Habilidade: Aumente uma"
+          }
+        ],
+        "class_specific": {
+          "action_surges": 1,
+          "indomitable_uses": 0,
+          "extra_attacks": 1
+        }
+      },
+      {
+        "level": 7,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Testes de Resistência que falhou. Deve usar o novo valor. Re",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 8,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "class_specific": {
+          "action_surges": 1,
+          "indomitable_uses": 0,
+          "extra_attacks": 1
+        }
+      },
+      {
+        "level": 9,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Imparável",
+            "desc": "Pode rolar novamente um Aumento de Habilidade: Aumente uma"
+          }
+        ],
+        "class_specific": {
+          "action_surges": 1,
+          "indomitable_uses": 1,
+          "extra_attacks": 1
+        }
+      },
+      {
+        "level": 10,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Característica de Arquétipo Marcial",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 11,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Ataque Extra",
+            "desc": "Quando usar ação Atacar, Seus ataques com arma tem sucesso crítico com rolagens de 19 e 20. 7º Nível - Atleta Renomado"
+          }
+        ],
+        "class_specific": {
+          "action_surges": 1,
+          "indomitable_uses": 1,
+          "extra_attacks": 2
+        }
+      },
+      {
+        "level": 12,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "habilidade em dois ou duas em um (Máximo 20). Pode adicionar",
+            "desc": ""
+          }
+        ],
+        "class_specific": {
+          "action_surges": 1,
+          "indomitable_uses": 1,
+          "extra_attacks": 2
+        }
+      },
+      {
+        "level": 13,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Imparável",
+            "desc": "Pode rolar novamente dois Testes de Resistência que falhou. Deve usar o novo valor. Recupera os usos desta habilidade com um descanso longo. Pode escolher uma segunda opção da característica de classe Estilo de Luta. Não pode ser a mesma que escolheu no nível 1. 15º Nível - Crítico Superior"
+          }
+        ],
+        "class_specific": {
+          "action_surges": 1,
+          "indomitable_uses": 2,
+          "extra_attacks": 2
+        }
+      },
+      {
+        "level": 14,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "class_specific": {
+          "action_surges": 1,
+          "indomitable_uses": 2,
+          "extra_attacks": 2
+        }
+      },
+      {
+        "level": 15,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Característica de Arquétipo Marcial No começo do seu turno,",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 16,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma Manobra de Desarme. Ao acertar criatura com uma arma, pode gastar um dado de superioridade para tentar desarmá-la, faz largar um item à sua escolha que estiver segurando. Adiciona o dado no dano e o alvo faz um TR de Força. Se falhar larga o objeto de sua escolha. O objeto cai nos seus pés. Manobra de Distração. Ao acertar uma criatura com uma arma, pode gastar um dado de superioridade para distrair a criatura. O próximo ataque contra o alvo feito por outro que não seja você, tem vantagem nas jogadas de ataques até o início do seu próximo turno. Manobra de Empurrão. Ao acertar uma criatura com uma arma, pode gastar um dado de superioridade para empurrar o alvo para trás. Adiciona o dado no dano e se o alvo for de tamanho Grande ou menor, deverá fazer um TR de Força. Se falhar, empurre o alvo 4,5 metros. Manobra de Evasão. Ao se mover, pode gastar um dado de superioridade e adicionar o valor na sua CA até parar seu movimento. Manobra de Finta. Pode gastar um dado de superioridade e usar uma ação bônus no seu turno para fintar, escolhendo uma criatura a 1,5 metros. Tem vantagem no próximo ataque contra ela. Se acertar, adicione o dado no dano. Manobra de Interrupção. Quando uma criatura causar dano a você com um ataque corpo-a-corpo, pode usar sua reação e gastar um dado de superioridade para reduzir o dano em valor igual ao dado + seu modificador de Destreza. Manobra de Liderança. No seu turno, pode usar sua ação bônus para gastar um dado de superioridade, escolha um aliado que possa ver ou ouvir. Ele ganha PV temporários igual a jogada do dado + o seu modificador de Carisma. Manobra de Movimentação. Ao acertar uma criatura com uma arma, pode gastar um dado de superioridade, adicione o dado no dano e escolha um aliado que possa ver ou ouvir. Ele pode usar sua reação para mover até metade de seu deslocamento sem provocar ataques de oportunidade do seu alvo. Manobra de Precisão. Ao fazer um ataque com uma arma, pode gastar um dado de superioridade e adicionar o resultado na jogada de ataque. Pode usar esta manobra antes ou depois de fazer o ataque, mas somente antes de qualquer efeito ser aplicado. Manobra de Provocação. Ao acertar uma criatura com uma arma, pode gastar um dado de superioridade. Adiciona o dado no dano e o alvo deve fazer um TR de Sabedoria. Se falhar, o alvo tem desvantagem em todos os ataques, exceto em você, até o final do seu próximo turno. Manobra de Trespassar. Ao acertar uma criatura com uma arma de ataque corpo-a-corpo, pode gastar um dado de superioridade. Escolha uma criatura a 1,5metros da criatura original e ao seu alcance. Se o ataque original acertaria a outra criatura, ela sofrerá dano igual ao dado de superioridade. O dano é do mesmo tipo do ataque original. MESTRE DE BATALHA 3º Nível - Estudante de Guerra e Superioridade em Combate Você ganha proficiência em uma ferramenta de artesão a sua escolha."
+          },
+          {
+            "name": "Manobras",
+            "desc": "Aprenda 3 a sua escolha. Nos níveis 7, 10 e 15 aprende duas manobras e pode substituir uma se quiser."
+          },
+          {
+            "name": "Dado de Superioridade",
+            "desc": "Possui 4 dados, que são d8. Recupera todos quando completa um descanso curto ou longo."
+          },
+          {
+            "name": "Teste de Resistência",
+            "desc": "A CD nos TR das manobras que pedirem são: CD = 8 + bônus proficiência + mod Força ou Destreza (sua escolha). 7º Nível – Conheça seu Inimigo e +2 manobras Se gastar 1 minuto observando ou interagindo com uma criatura pode descobrir: • Valor de Força, Destreza ou Constituição; CA; • PVs atuais; • Níveis totais de Classe (se tiver) • Níveis de Guerreiro (se tiver) 10º Nível – Superioridade em Combate Aprimorada e +2 manobras Dado de superioridade vira 1d10. No 18º nível vira 1d12. 15º Nível – Implacável e +2 manobras Quando for rolar iniciativa e não tiver dados de superioridade, recupere 1 dado de superioridade. Manobra de Ameaça. Ao acertar uma criatura com uma arma pode gastar 1 DS, adicionando-o no dano. Alvo faz TR de Sabedoria. Se falha fica amedrontado até final do seu próximo turno. Manobra de Bote. Ao atacar com arma corpo a corpo no seu turno, pode gastar dado de superioridade aumentar o alcance em 1,5 m, adicionando o dado no dano se acertar. Manobra de Comandante. Ao usar Ação Atacar, pode desistir de um dos ataques e usar uma ação bônus para dar um ataque a um de seus aliados, que você possa vez ou ouvir e gaste 1 dado de superioridade. Ele pode atacar com uma arma usando sua reação e adiciona o dado de superioridade no dano. Manobra de Contra-Ataque. Quando uma criatura errar um ataque corpo-a-corpo em você pode usar sua reação para gastar um dado de superioridade e fazer um ataque com uma arma corpo-a-corpo contra ela. Se acertar adicione o dado de superioridade no dano. Manobra de Derrubada. Ao acertar uma criatura com uma arma, pode adicionar um dado de superioridade para derrubar o alvo. Adicione o dado no dano e se o alvo for Grande ou menor, deve fazer um TR de Força. Se falhar, o alvo está derrubado."
+          }
+        ],
+        "class_specific": {
+          "action_surges": 1,
+          "indomitable_uses": 2,
+          "extra_attacks": 2
+        }
+      },
+      {
+        "level": 17,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Pulso de Ação",
+            "desc": "Pode realizar duas ações"
+          }
+        ],
+        "class_specific": {
+          "action_surges": 2,
+          "indomitable_uses": 3,
+          "extra_attacks": 2
+        }
+      },
+      {
+        "level": 18,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Característica de Arquétipo Marcial",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 19,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma Teste de Resistência que falhou. Deve usar o novo valor. Recupera o uso desta habilidade com um descanso longo."
+          }
+        ],
+        "class_specific": {
+          "action_surges": 2,
+          "indomitable_uses": 3,
+          "extra_attacks": 2
+        }
+      },
+      {
+        "level": 20,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Ataque Extra",
+            "desc": "Quando usar ação Atacar,"
+          }
+        ],
+        "class_specific": {
+          "action_surges": 2,
+          "indomitable_uses": 3,
+          "extra_attacks": 3
+        }
+      }
+    ]
+  },
+  "ladino": {
+    "index": "ladino",
+    "name": "Golpe de Sorte",
+    "levels": [
+      {
+        "level": 1,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Especialização",
+            "desc": "Escolha duas perícias que seja proficiente ou uma perícia e as ferramentas de ladino. Seu bônus de proficiência é dobrado para elas."
+          },
+          {
+            "name": "Ataque Furtivo (1d6)",
+            "desc": "Uma vez por turno, quando acertar alguém que tenha vantagem no ataque pode adicionar o dano do ataque furtivo. A arma tem de ter a propriedade acuidade ou à distância. Não precisa ter vantagem se houver outra criatura inimiga do alvo (como um aliado) a 1,5 m de distância do alvo, desde que este inimigo não esteja incapacitado e você não tenha desvantagem no ataque. O dano aumenta conforme a tabela."
+          },
+          {
+            "name": "Gíria de Ladrão",
+            "desc": "A gíria é um misto de dialeto, jargão e códigos secretos que permitem passar mensagens secretas durante uma conversa aparentemente normal. Somente outra criatura que conheça a gíria de ladrão entende as mensagens. Leva-se 4 vezes mais tempo para transmitir a mensagem do que falar a ideia claramente. Você também entende um conjunto de sinais secretos e símbolos usados para transmitir mensagens curtas e simples, como uma área perigosa, um território de uma guilda de ladrões ou até mesmo indica lugares seguros para ladinos se esconderem."
+          }
+        ],
+        "class_specific": {
+          "sneak_attack": {
+            "dice_count": 1,
+            "dice_value": 6
+          }
+        }
+      },
+      {
+        "level": 2,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Ação Astuta",
+            "desc": "Pode usar uma ação bônus no seu turno para Correr, Desengajar ou Esconder-se."
+          }
+        ],
+        "class_specific": {
+          "sneak_attack": {
+            "dice_count": 1,
+            "dice_value": 6
+          }
+        }
+      },
+      {
+        "level": 3,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Arquétipo de Ladino",
+            "desc": "Escolha entre Assassino, Ladrão ou Trapaceiro Arcano. Ataque Furtivo (2d6)"
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "habilidade em dois ou duas em um (Máximo 20). Característica",
+            "desc": ""
+          }
+        ],
+        "class_specific": {
+          "sneak_attack": {
+            "dice_count": 2,
+            "dice_value": 6
+          }
+        }
+      },
+      {
+        "level": 5,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Esquiva Sobrenatural",
+            "desc": "Quando um inimigo que você possa ver lhe acertar um ataque, pode usar sua reação para reduzir o dano sofrido pela metade. Ataque Furtivo (3d6)"
+          }
+        ],
+        "class_specific": {
+          "sneak_attack": {
+            "dice_count": 3,
+            "dice_value": 6
+          }
+        }
+      },
+      {
+        "level": 6,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Especialização",
+            "desc": "Escolha duas perícias que seja proficiente ou um perícia e as ferramentas de ladino. Seu bônus de proficiência é dobrado para elas."
+          }
+        ],
+        "class_specific": {
+          "sneak_attack": {
+            "dice_count": 3,
+            "dice_value": 6
+          }
+        }
+      },
+      {
+        "level": 7,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Evasão",
+            "desc": "Quando for alvo de um efeito que exija um teste de resistência de Destreza para sofrer metade do dano, não sofre dano se passar e somente metade se falhar. Ataque Furtivo (4d6)"
+          }
+        ],
+        "class_specific": {
+          "sneak_attack": {
+            "dice_count": 4,
+            "dice_value": 6
+          }
+        }
+      },
+      {
+        "level": 8,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "class_specific": {
+          "sneak_attack": {
+            "dice_count": 4,
+            "dice_value": 6
+          }
+        }
+      },
+      {
+        "level": 9,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Característica do Arquétipo de Ladino Ataque Furtivo (5d6)",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 10,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma Golpe de Sorte: Se falhar em um ataque"
+          }
+        ],
+        "class_specific": {
+          "sneak_attack": {
+            "dice_count": 5,
+            "dice_value": 6
+          }
+        }
+      },
+      {
+        "level": 11,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Talento Confiável",
+            "desc": "Toda vez que fizer um teste que possa adicionar seu bônus de proficiência, você trata um resultado no d20 de 9 ou menos como sendo sempre um 10. Ataque Furtivo (6d6)"
+          }
+        ],
+        "class_specific": {
+          "sneak_attack": {
+            "dice_count": 6,
+            "dice_value": 6
+          }
+        }
+      },
+      {
+        "level": 12,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma ASSASSINO 3º Nível – Proficiência Bônus e Assassinato LADRÃO 3º Nível – Proficiência Bônus e Assassinato Ganha proficiência com kit de disfarce e kit do envenenador. Pode usar a ação bônus concedida pela Ação Astuta para fazer um teste de Destreza (Prestidigitação) usando as ferramentas de ladino para desarmar armadilhas, abrir uma fechadura ou a ação Usar Objeto. Tem vantagem em ataques contra criaturas que não tiveram seu turno no combate ainda. Além disso, qualquer acerto contra uma criatura surpresa é um acerto crítico. 9º Nível – Especialista em Infiltração Escalar não custa movimento adicional. Além disso, quando fizer um salto longo, o alcance que pode saltar aumentar um numero de metros iguais a 1,5 vezes seu mod de Destreza. 9º Nível – Furtividade Suprema Pode criar identidades falsas para você sem chance de falha. Deve gastar 7 dias e 25 po para estabelecer uma história, profissão e afiliações para esta identidade. Não pode usar uma identidade de outra pessoa. Por exemplo, pode adquirir roupa apropriada, cartas de recomendação e um certificado claramente oficial para se estabelecer como um membro de uma casa mercante de uma cidade remota, para então se introduzir sutilmente na companhia de outros comerciantes ricos. 13º Nível – Impostor Tem vantagem no teste de Destreza (Furtividade) se não se mover mais do que a metade do seu deslocamento em um turno. 13º Nível – Usar Dispositivo Mágico Você pode ignorar todas as classes, raças e níveis exigidos para o uso de qualquer item mágico. 17º Nível – Reflexos de Ladrão Pode imitar sem erros o modo de falar de outra pessoa, sua escrita e até seu comportamento. Deve gastar 3 horas estudando estes três comportamento da pessoa, ouvindo-a falar, examinado seu modo de escrever e observando seus modismo e peculiaridades. Este ardil não é discernível para o observador casual. Se uma criatura cautelosa suspeita que algo esta errado, você tem vantagem em qualquer teste de Carisma (Enganação) que fizer para evitar detecção. 17º Nível – Ataque Mortal Você pode realizar dois turnos durante a primeira rodada de qualquer combate. Você realiza seu primeiro turno na sua iniciativa e depois realiza o segundo na ordem de sua iniciativa menos 10. Não pode usar esta habilidade se estiver surpreso. Quando acertar uma criatura surpresa, ela faz um teste de resistência de Constituição (CD 8 + seu mod de Destreza + seu bônus de proficiência). Se falhar, ela sofre o dobro de dano do seu ataque."
+          }
+        ],
+        "class_specific": {
+          "sneak_attack": {
+            "dice_count": 6,
+            "dice_value": 6
+          }
+        }
+      },
+      {
+        "level": 13,
+        "proficiency_bonus": 5,
+        "features": []
+      },
+      {
+        "level": 14,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Sentido Cego",
+            "desc": "Se for capaz de ouvir, fica"
+          }
+        ],
+        "class_specific": {
+          "sneak_attack": {
+            "dice_count": 7,
+            "dice_value": 6
+          }
+        }
+      },
+      {
+        "level": 15,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Mente Escorregadia",
+            "desc": "Você adquire proficiência nos testes de resistência de Sabedoria. Ataque Furtivo (8d6)"
+          }
+        ],
+        "class_specific": {
+          "sneak_attack": {
+            "dice_count": 8,
+            "dice_value": 6
+          }
+        }
+      },
+      {
+        "level": 16,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "class_specific": {
+          "sneak_attack": {
+            "dice_count": 8,
+            "dice_value": 6
+          }
+        }
+      },
+      {
+        "level": 17,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Característica do Arquétipo de Ladino Ataque Furtivo (9d6)",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 18,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Sagacidade",
+            "desc": "Nenhum ataque tem vantagem contra você, exceto se você estiver incapacitado."
+          }
+        ],
+        "class_specific": {
+          "sneak_attack": {
+            "dice_count": 9,
+            "dice_value": 6
+          }
+        }
+      },
+      {
+        "level": 19,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma habilidade em dois ou duas em um (Máximo 20). Ataque Furtivo (10d6)"
+          }
+        ],
+        "class_specific": {
+          "sneak_attack": {
+            "dice_count": 10,
+            "dice_value": 6
+          }
+        }
+      },
+      {
+        "level": 20,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Golpe de Sorte",
+            "desc": "Se falhar em um ataque"
+          }
+        ],
+        "class_specific": {
+          "sneak_attack": {
+            "dice_count": 10,
+            "dice_value": 6
+          }
+        }
+      }
+    ]
+  },
+  "mago": {
+    "index": "mago",
+    "name": "Ver o Invisível",
+    "levels": [
+      {
+        "level": 1,
+        "proficiency_bonus": 2,
+        "features": [],
+        "spell_slots": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "arcane_recovery_levels": 1
+        }
+      },
+      {
+        "level": 2,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Tradição Arcana",
+            "desc": "Escolha entre Abjuração, Adivinhação, Conjuração, Encantamento, Evocação, Ilusão, Necromancia e Transmutação."
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "proficiency_bonus": 2,
+        "features": [],
+        "spell_slots": [
+          4,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "arcane_recovery_levels": 2
+        }
+      },
+      {
+        "level": 4,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "arcane_recovery_levels": 2
+        }
+      },
+      {
+        "level": 5,
+        "proficiency_bonus": 3,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "arcane_recovery_levels": 3
+        }
+      },
+      {
+        "level": 6,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Característica de Tradição Arcana habilidade de conjuração.",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 7,
+        "proficiency_bonus": 3,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "arcane_recovery_levels": 4
+        }
+      },
+      {
+        "level": 8,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma griomório como ritual se elas tiverem esta opção e não precisa ter ela preparada."
+          },
+          {
+            "name": "Aprendendo Magias",
+            "desc": "A cada nível de mago"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "arcane_recovery_levels": 4
+        }
+      },
+      {
+        "level": 9,
+        "proficiency_bonus": 4,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "arcane_recovery_levels": 5
+        }
+      },
+      {
+        "level": 10,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Substituindo o Livro",
+            "desc": "Pode fazer uma cópia"
+          }
+        ]
+      },
+      {
+        "level": 11,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Recuperação Arcana",
+            "desc": "Uma vez por dia,"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "arcane_recovery_levels": 6
+        }
+      },
+      {
+        "level": 12,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma durante um descanso curto, pode recuperar espaços de magia. Os espaços de magia podem ter um nível combinado igual ou menor a metade do seu nível de mago (arredondado para cima) e nenhum pode ser de 6º nível ou maior."
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "arcane_recovery_levels": 6
+        }
+      },
+      {
+        "level": 13,
+        "proficiency_bonus": 5,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          0,
+          0
+        ],
+        "class_specific": {
+          "arcane_recovery_levels": 7
+        }
+      },
+      {
+        "level": 14,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Característica de Tradição Arcana",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 15,
+        "proficiency_bonus": 5,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1,
+          0
+        ],
+        "class_specific": {
+          "arcane_recovery_levels": 8
+        }
+      },
+      {
+        "level": 16,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1,
+          0
+        ],
+        "class_specific": {
+          "arcane_recovery_levels": 8
+        }
+      },
+      {
+        "level": 17,
+        "proficiency_bonus": 6,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1,
+          1
+        ],
+        "class_specific": {
+          "arcane_recovery_levels": 9
+        }
+      },
+      {
+        "level": 18,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Maestria em Magia",
+            "desc": "Escolha uma magia de mago de 1º nível e uma de 2º nível do seu grimório. Pode lançar estas magias no seu nível mínimo, sem gastar espaços de magia quando as tiver preparadas. Pode lançar com níveis superiores, mas gasta espaços de magias normalmente."
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          3,
+          1,
+          1,
+          1,
+          1
+        ],
+        "class_specific": {
+          "arcane_recovery_levels": 9
+        }
+      },
+      {
+        "level": 19,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "habilidade em dois ou duas em um (Máximo 20). ESCOLA DA ADVI",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          3,
+          2,
+          1,
+          1,
+          1
+        ],
+        "class_specific": {
+          "arcane_recovery_levels": 10
+        }
+      },
+      {
+        "level": 20,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Visão no Escuro",
+            "desc": "Ganha visão no escuro 18 m."
+          },
+          {
+            "name": "Visão Etérea",
+            "desc": "Pode ver o Plano Etéreo 18m."
+          },
+          {
+            "name": "Compreensão Maior",
+            "desc": "Pode ler qualquer idioma."
+          },
+          {
+            "name": "Ver o Invisível",
+            "desc": "Pode ver criaturas e objetos O dinheiro e tempo gastos para copiar uma magia da escola de abjuração em seu grimório é reduzido pela metade. Quando conjurar uma magia de 1º nível ou maior pode criar uma defesa mágica em você que permanece ativa até terminar um descanso longo. Ela tem pontos de vida iguais a duas vezes seu nível de mago + seu mod de Inteligência. Quando você sofrer dano, a defesa absorve o dano antes. Se ela for reduzida a 0, você sofre o dano remanescente e ela não poderá absorver mais dano. Toda vez que lançar uma magia de abjuração de 1º nível ou superior, a defesa arcana recupera pontos de vida iguais a duas vezes o nível da magia. Não pode criá-la de novamente até terminar um descanso longo. 6º Nível – Defesa Projetada invisíveis até 3 m de você, desde que esteja na sua linha de visão. 14º Nível – Presságio Maior Pode rolar três d20 usando a característica Presságio, ao invés de dois. Quando criatura que você possa ver à 9 m sofrer dano, pode usar sua reação para fazer sua Defesa Arcana absorver o dano. Se a defesa for reduzida a 0 pontos de vida a criatura sofre o dano remanescente. 10º Nível – Abjuração Aprimorada Quando conjurar magia de abjuração que exige que você faça um teste de habilidade (como a contra mágica dissipar magia) você adiciona seu bônus de proficiência ao teste de habilidade. 14º Nível – Resistência à Magia Você tem nos teste de resistência contra magia. Possui também resistência contra dano causados por magias."
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1
+        ],
+        "class_specific": {
+          "arcane_recovery_levels": 10
+        }
+      }
+    ]
+  },
+  "monge": {
+    "index": "monge",
+    "name": "Auto Perfeição",
+    "levels": [
+      {
+        "level": 1,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Defesa Desarmada",
+            "desc": "Se não estiver usando armadura nem escudo, sua Classe de Armadura é igual a 10 + mod de Destreza + mod de Sabedoria."
+          },
+          {
+            "name": "Artes Marciais",
+            "desc": "Ganha os seguintes benefícios enquanto estiver desarmado ou portando apenas armas de monge e sem usar armaduras ou escudos: • Pode usar Destreza ao invés de Força em ataques e danos com seus ataques desarmados ou com armas de monge. • Pode rolar um d4 no lugar do dano normal de ataque desarmado ou da arma de monge. Muda de acordo com seu nível, como visto na tabela. • Quando usar ação Atacar para fazer um ataque desarmado ou com arma de monge no seu turno, pode fazer mas um ataque desarmado como ação bônus."
+          },
+          {
+            "name": "Exemplo",
+            "desc": "Se atacar com um cajado, pode fazer um ataque desarmado como ação bônus."
+          }
+        ],
+        "class_specific": {
+          "martial_arts": {
+            "dice_count": 1,
+            "dice_value": 4
+          },
+          "ki_points": 0,
+          "unarmored_movement": 0
+        }
+      },
+      {
+        "level": 2,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Defesa Serena",
+            "desc": "Pode gastar 1 ponto de Ki para realizar ação Esquiva como uma ação bônus."
+          },
+          {
+            "name": "Passo do Vento",
+            "desc": "Pode gastar 1 ponto de Ki para realizar ação Desengajar ou Correr como ação bônus, e a distância que você pode saltar é dobrada neste turno."
+          }
+        ],
+        "class_specific": {
+          "martial_arts": {
+            "dice_count": 1,
+            "dice_value": 4
+          },
+          "ki_points": 2,
+          "unarmored_movement": 10
+        }
+      },
+      {
+        "level": 3,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Tradição Monástica",
+            "desc": "Escolha entre o encerrar em você um estado de amedrontado ou encantado. Caminho da Palma Aberta, o Caminho das Sombras ou o Caminho dos Quatro elementos."
+          },
+          {
+            "name": "Aparar Projétil",
+            "desc": "Pode usar sua reação para"
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Idiomas do Sol e da Lua",
+            "desc": "Você entende Aumento de Habilidade: Aumente uma"
+          }
+        ],
+        "class_specific": {
+          "martial_arts": {
+            "dice_count": 1,
+            "dice_value": 4
+          },
+          "ki_points": 4,
+          "unarmored_movement": 10
+        }
+      },
+      {
+        "level": 5,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Ataque Extra",
+            "desc": "Quando usar ação Atacar, pode atacar duas vezes."
+          },
+          {
+            "name": "Ataque Atordoante",
+            "desc": "Ao atingir uma criatura com um ataque corpo a corpo, pode gastar 1 ponto de Ki. O alvo deve ser bem sucedido em um teste de resistência de Constituição ou fica atordoado até o final do seu próximo turno."
+          }
+        ],
+        "class_specific": {
+          "martial_arts": {
+            "dice_count": 1,
+            "dice_value": 6
+          },
+          "ki_points": 5,
+          "unarmored_movement": 10
+        }
+      },
+      {
+        "level": 6,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Ataque Imbuído de Ki",
+            "desc": "Seus ataque desarmados contam como mágicos para propósito de superar resistência e imunidades à ataque e dano não-mágicos Característica de Tradição Monástica"
+          }
+        ]
+      },
+      {
+        "level": 7,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Evasão",
+            "desc": "Quando fizer um teste de resistência para tomar metade de um dano, não sofre nenhum dano se for bem sucedido, e metade se falhar."
+          },
+          {
+            "name": "Mente Tranquila",
+            "desc": "Pode usar sua ação para"
+          }
+        ],
+        "class_specific": {
+          "martial_arts": {
+            "dice_count": 1,
+            "dice_value": 6
+          },
+          "ki_points": 7,
+          "unarmored_movement": 15
+        }
+      },
+      {
+        "level": 8,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma aparar ou pegar projéteis quando atingido por uma arma a distância. Quando o fizer, o dano é reduzido em 1d10 + mod de Destreza + seu nível de monge."
+          }
+        ],
+        "class_specific": {
+          "martial_arts": {
+            "dice_count": 1,
+            "dice_value": 6
+          },
+          "ki_points": 8,
+          "unarmored_movement": 15
+        }
+      },
+      {
+        "level": 9,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Movimento Sem Armadura (4,5 m) Se o dano for reduzido a 0, p",
+            "desc": ""
+          }
+        ],
+        "class_specific": {
+          "martial_arts": {
+            "dice_count": 1,
+            "dice_value": 6
+          },
+          "ki_points": 9,
+          "unarmored_movement": 15
+        }
+      },
+      {
+        "level": 10,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Pureza de Corpo",
+            "desc": "Você se torna imune à"
+          }
+        ],
+        "class_specific": {
+          "martial_arts": {
+            "dice_count": 1,
+            "dice_value": 6
+          },
+          "ki_points": 10,
+          "unarmored_movement": 20
+        }
+      },
+      {
+        "level": 11,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Característica de Tradição Monástica",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 12,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "class_specific": {
+          "martial_arts": {
+            "dice_count": 1,
+            "dice_value": 8
+          },
+          "ki_points": 12,
+          "unarmored_movement": 20
+        }
+      },
+      {
+        "level": 13,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Idiomas do Sol e da Lua",
+            "desc": "Você entende todos os idiomas falados. Além disso, qualquer criatura que puder entender um idioma entenderá o que você disser. cair, reduzindo o dano em cinco vezes seu nível de monge."
+          }
+        ],
+        "class_specific": {
+          "martial_arts": {
+            "dice_count": 1,
+            "dice_value": 8
+          },
+          "ki_points": 13,
+          "unarmored_movement": 20
+        }
+      },
+      {
+        "level": 14,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Alma de Diamante",
+            "desc": "Você ganha proficiência em todos os testes de resistência. Além disso, sempre que falhar em um teste de resistência pode gastar 1 ponto de Ki e rolar novamente, ficando com o segundo resultado."
+          }
+        ],
+        "class_specific": {
+          "martial_arts": {
+            "dice_count": 1,
+            "dice_value": 8
+          },
+          "ki_points": 14,
+          "unarmored_movement": 25
+        }
+      },
+      {
+        "level": 15,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Corpo Atemporal",
+            "desc": "Você não sofre nenhuma das fragilidades da velhice nem pode ser envelhecido magicamente. Ainda pode morrer por idade avançada. Não precisa mais de água ou comida."
+          }
+        ],
+        "class_specific": {
+          "martial_arts": {
+            "dice_count": 1,
+            "dice_value": 8
+          },
+          "ki_points": 15,
+          "unarmored_movement": 25
+        }
+      },
+      {
+        "level": 16,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "class_specific": {
+          "martial_arts": {
+            "dice_count": 1,
+            "dice_value": 8
+          },
+          "ki_points": 16,
+          "unarmored_movement": 25
+        }
+      },
+      {
+        "level": 17,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "CAMINHO DA MÃO",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 18,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Corpo Vazio",
+            "desc": "Pode gastar uma ação para ficar invisível por 1 minuto gastando 4 pontos de Ki. Por este tempo tem resistência a todo tipo de dano, exceto dano mágico. Além disso, pode gastar 8 pontos de Ki para conjurar a magia projeção astral sem precisar dos componentes materiais. Ao fazer isso, não pode levar nenhuma criatura com você. Com uma ação, pode recuperar pontos de vida iguais a três vezes seu nível de monge. Só pode fazer isso uma vez por descanso longo. 11º Nível – Tranquilidade"
+          }
+        ],
+        "class_specific": {
+          "martial_arts": {
+            "dice_count": 1,
+            "dice_value": 10
+          },
+          "ki_points": 18,
+          "unarmored_movement": 30
+        }
+      },
+      {
+        "level": 19,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma No final de um descanso longo, ganha o efeito da magia santuário que dura até o inicio do seu próximo descanso longo (a magia pode terminar antes normalmente). A CD para o teste de resistência é igual a 8 + mod de Sabedoria + se bônus de proficiência. 17º Nível – Mão Vibrante"
+          }
+        ],
+        "class_specific": {
+          "martial_arts": {
+            "dice_count": 1,
+            "dice_value": 10
+          },
+          "ki_points": 19,
+          "unarmored_movement": 30
+        }
+      },
+      {
+        "level": 20,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Auto Perfeição",
+            "desc": "Quando rolar iniciativa e Ao acertar uma criatura com um ataque desarmado pode gastar 3 pontos de Ki para desencadear vibrações imperceptíveis, que duram por um numero de dias iguais ao seu nível de monge. São inofensivas até que você use uma ação para finalizá-las. O alvo deve estar no mesmo plano de existência. Ao realizar essa ação, a criatura faz um teste de resistência de Constituição. Se falhar, fica com 0 pontos de vida. Se for bem sucedida, leva 10d10 de dano necrótico. Só pode ter um alvo sob efeito desta característica por ver. Pode cancelar o efeito dessas vibrações de modo inofensivo sem gastar uma ação."
+          }
+        ],
+        "class_specific": {
+          "martial_arts": {
+            "dice_count": 1,
+            "dice_value": 10
+          },
+          "ki_points": 20,
+          "unarmored_movement": 30
+        }
+      }
+    ]
+  },
+  "paladino": {
+    "index": "paladino",
+    "name": "Característica de Juramento Sagrado",
+    "levels": [
+      {
+        "level": 1,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Sentido Divino",
+            "desc": "Com uma ação, pode detectar até o final do seu próximo turno a localização de qualquer celestial, infernal, ou morto-vivo que esteja a 18 metros de raio de você e não esteja com cobertura total. Você sabe o tipo (celestial, infernal ou morto-vivo) mas não a identidade (um conde vampiro, por exemplo). Dentro do mesmo raio, você também detecta a presença de qualquer objeto ou local que foi consagrado ou profanado pela magia consagração. Pode usar um numero de vezes igual a 1 + mod de Carisma. Um descanso longo recupera todos os usos."
+          },
+          {
+            "name": "Cura pelas Mãos",
+            "desc": "Pode curar um numero de pontos de vida igual a seu nível x 5. Um descanso longo recupera tudo. Com uma ação pode tocar uma criatura e curar quantos pontos desejar, contanto que ainda os tenha. Pode gastar 5 pontos para curar uma doença ou veneno, mas somente uma a cada 5 pontos."
+          }
+        ],
+        "spell_slots": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "aura_range": 0
+        }
+      },
+      {
+        "level": 2,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Estilo de Combate",
+            "desc": "Escolha um entre: Defesa: Quando usando armadura, ganha +1 de bônus na Classe de Armadura Duelo: Usando somente uma arma corpo a corpo em uma mão pode adicionar +2 nas rolagens de dano."
+          },
+          {
+            "name": "Luta com Armas Grandes",
+            "desc": "Lutando com armas corpo a corpo empunhada com as pode rolar novamente os dados que saírem 1 ou 2, mas deve ficar com o novo valor. A arma deve ser de duas mãos ou versátil ."
+          },
+          {
+            "name": "Proteção",
+            "desc": "Quando uma criatura atacar um aliado a 1,5 m de você, você pode usar sua reação para impor desvantagem na jogada de ataque, mas você deve estar usando um escudo."
+          }
+        ],
+        "spell_slots": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "aura_range": 0
+        }
+      },
+      {
+        "level": 3,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Saúde Divina",
+            "desc": "Você é imune a doença."
+          },
+          {
+            "name": "Juramento Sagrado",
+            "desc": "Escolha entre o"
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma Aumento de Habilidade: Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "aura_range": 0
+        }
+      },
+      {
+        "level": 5,
+        "proficiency_bonus": 3,
+        "features": [],
+        "spell_slots": [
+          4,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "aura_range": 0
+        }
+      },
+      {
+        "level": 6,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Melhoria de Aura",
+            "desc": "Sua Aura da Proteção, Aura da Proteção: Quando você ou um"
+          }
+        ],
+        "spell_slots": [
+          4,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "aura_range": 10
+        }
+      },
+      {
+        "level": 7,
+        "proficiency_bonus": 3,
+        "features": []
+      },
+      {
+        "level": 8,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma 7º Nível - Aura da Devoção JURAMENTO DA DEVOÇÃO Princípios da Devoção Honestidade: Não mentir ou enganar."
+          },
+          {
+            "name": "Coragem",
+            "desc": "Nunca temer para agir, porém é Você e aliados dentro de 9 metros de você não podem ser encantados enquanto você estiver consciente. No 18º nível esta aura aumenta para 18 metros. 15º Nível – Pureza de Espírito sábio ser cauteloso."
+          },
+          {
+            "name": "Compaixão",
+            "desc": "Ajudar os outros, proteger os Você sempre esta sob efeito da magia proteção contra o bem e o mal. 20º Nível – Auréola Sagrada fracos e punir quem os ameaça. Mostrar misericórdia aos inimigos, mas usando de sabedoria."
+          },
+          {
+            "name": "Honra",
+            "desc": "Tratar os outros com justiça, fazer Com uma ação, por 1 minuto luz brilhante emana de você em um raio de 9 metros e luz fraca emana por outros 9 metros. Sempre que um inimigo iniciar seu turno na luz brilhante, a criatura leva 10 de dano radiante. Além disso, por esta duração você tem vantagem no testes de resistência contra magias conjuradas por infernais ou mortos- vivos. Só por usar uma vez por descanso longo. o máximo de bem com o mínimo de danos."
+          },
+          {
+            "name": "Dever",
+            "desc": "Ser responsável com suas ações e suas consequências, proteger quem lhe foi confiado e obedecer quem tem autoridade sobre você. Magias de Juramento Ganha magias em níveis mostrado na tabela. Elas sempre estão preparadas. Não contam para o numero de magias que você pode preparar por dia 3º Nível - Canalizar Divindade Você ganha as duas seguintes opções de Canalizar Divindade. Só pode usar uma delas por descanso curto ou longo."
+          },
+          {
+            "name": "Arma Sagrada",
+            "desc": "Imbua uma arma com 3º proteção contra o bem e o mal, santuário 5º restauração menor, zona da verdade 9º dissipar magia, farol de esperança energia sagrada. Por 1 minuto, adicione seu mod de Carisma nas rolagens de ataque com aquela arma (mínimo 1). Ela também emite claridade de 6 m de raio e penumbra 6 m após. Se a arma não for mágica, se torna pela duração. Pode terminar este efeito como parte de outra ação. Se não estiver segurando a arma ou ficar inconsciente, o efeito encerra Expulsar o Profano: Com uma ação, 13º guardião da fé, liberdade de movimento 17º coluna de chamas, comunhão mostre seu símbolo sagrado e cada infernal ou morto-vivo que possa lhe ver ou ouvir à 9 metros de você deve fazer um teste de resistência de Sabedoria. Se falhar, fica expulsado por 1 minuto ou até levar dano. Uma criatura expulsada deve gastar seus turno tentar se mover para longe de você, e não pode entrar voluntariamente em um espaço a 9 metros de você. Não pode fazer reações. Em suas ações só pode usar a ação Correr ou tentar escapar de um efeito que impeça o movimento. Se não houver local para se mover, a criatura usa a ação Esquivar."
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "aura_range": 10
+        }
+      },
+      {
+        "level": 9,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Habilidade de Conjuração",
+            "desc": "Carisma é a"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "aura_range": 10
+        }
+      },
+      {
+        "level": 10,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Aura da Coragem",
+            "desc": "Você e aliados até 9"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "aura_range": 10
+        }
+      },
+      {
+        "level": 11,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Punição Divina Aprimorada",
+            "desc": "Sempre que acertar uma criatura com uma arma corpo a corpo da 1d8 de dano radiante extra. Se usar Punição Divina, adicione este dano também. habilidade de conjuração. CD de resistência a magia = 8 + bônus de"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "aura_range": 10
+        }
+      },
+      {
+        "level": 12,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma símbolo sagrado como foco."
+          },
+          {
+            "name": "Punição Divina",
+            "desc": "Quando acertar uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "aura_range": 10
+        }
+      },
+      {
+        "level": 13,
+        "proficiency_bonus": 5,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "aura_range": 10
+        }
+      },
+      {
+        "level": 14,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Toque Purificador",
+            "desc": "Pode usar sua ação para encerrar uma magia em você ou uma criatura voluntária. Pode usar isso um numero de vezes igual a mod de Carisma (mínimo 1). Recupera todos os usos com um descanso longo."
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "aura_range": 10
+        }
+      },
+      {
+        "level": 15,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Característica de Juramento Sagrado",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 16,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "aura_range": 10
+        }
+      },
+      {
+        "level": 17,
+        "proficiency_bonus": 6,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "aura_range": 10
+        }
+      },
+      {
+        "level": 18,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Melhoria de Aura",
+            "desc": "Sua Aura da Proteção,"
+          }
+        ]
+      },
+      {
+        "level": 19,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "aura_range": 30
+        }
+      },
+      {
+        "level": 20,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Característica de Juramento Sagrado",
+            "desc": ""
+          }
+        ]
+      }
+    ]
+  },
+  "patrulheiro": {
+    "index": "patrulheiro",
+    "name": "Destruidor de Horda",
+    "levels": [
+      {
+        "level": 1,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Inimigo Favorito",
+            "desc": "Escolha um entre: aberrações, bestas, celestiais, constructos, dragões, elementais, fadas, feéricos, infernais, gigantes, limos, monstruosidades, mortos-vivos ou plantas. Alternativamente, pode selecionar duas raças de humanoides (como gnolls ou orcs). Você tem vantagem nos testes de Sabedoria (Sobrevivência) para rastrear e nos testes de Inteligência para recordar informações sobre eles. Ao ganhar essa característica, aprender um idioma à sua escolha que seja falado pelos inimigos favoritos (se falarem)."
+          },
+          {
+            "name": "Explorador Natural",
+            "desc": "Escolha um terreno Prof. favorito entre: árticos, desertos, florestas, litorais, montanhas, pântanos , planícies ou o Subterrâneo. Em testes de Inteligência ou Sabedoria relacionados a este terro, dobre seu bônus de proficiência na perícia se for proficiente."
+          },
+          {
+            "name": "Quando viajar no terreno por 1 hora ganha",
+            "desc": "• Terreno difícil não reduz tempo de viagem do grupo. • Seu grupo não fica perdido, exceto por meios mágicos. • Mesmo engajado em outra atividade ao viajar (vasculhando, rastreando), você continua alerta ao perigo. • Se viajar sozinho, pode se mover furtivamente com deslocamento normal • Quando vasculho, acha o dobro de comida do que normalmente acharia. • Quando rastreando uma criatura, descobre exatamente quantas são, tamanho e há quanto tempo passaram pela área."
+          }
+        ],
+        "spell_slots": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "favored_enemies": 1,
+          "favored_terrain": 1
+        }
+      },
+      {
+        "level": 2,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Defesa",
+            "desc": "quando usando armadura, ganha"
+          }
+        ],
+        "spell_slots": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "favored_enemies": 1,
+          "favored_terrain": 1
+        }
+      },
+      {
+        "level": 3,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Arquétipo de Ranger",
+            "desc": "Escolha entre: Caçador ou Mestre das Feras."
+          },
+          {
+            "name": "Consciência Primitiva",
+            "desc": "Use uma ação e gaste um dos seus espaços de magia. Por 1 minuto por nível de espaço de magia gasto, pode sentir os seguintes tipos de criatura até 1 milha (1,6 km) de você (ou até 6 milhas, 9,6 km, se for no terreno favorito): aberrações, celestiais, dragões, elementais, feéricos, infernais e mortos vivos. Não revela a localização ou quantidade de criaturas."
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "proficiency_bonus": 2,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "favored_enemies": 1,
+          "favored_terrain": 1
+        }
+      },
+      {
+        "level": 5,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Inimigo Favorito",
+            "desc": "Escolha mais um Ataque Extra: Quando usar ação Atacar,"
+          }
+        ],
+        "spell_slots": [
+          4,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "favored_enemies": 1,
+          "favored_terrain": 1
+        }
+      },
+      {
+        "level": 6,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Inimigo Favorito",
+            "desc": "Escolha mais um inimigo favorito e um idioma associado a ele."
+          },
+          {
+            "name": "Explorador Natural",
+            "desc": "Escolha mais um ação bônus no seu turno. Não pode ser rastreado por meios não mágicos, a menos que queira. novo terreno favorito."
+          }
+        ],
+        "spell_slots": [
+          4,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "favored_enemies": 2,
+          "favored_terrain": 2
+        }
+      },
+      {
+        "level": 7,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Característica de Arquétipo de Ranger",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 8,
+        "proficiency_bonus": 3,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma habilidade em dois ou duas em um (Máximo 20)."
+          },
+          {
+            "name": "Passo Firme",
+            "desc": "Mover por terreno difícil não corpo em uma mão pode adicionar +2 nas rolagens de dano."
+          },
+          {
+            "name": "Luta com Duas Armas",
+            "desc": "Quando usando mágico não custa deslocamento extra. Pode atravessar plantas não mágicas sem andar mais devagar ou tomar dano se elas causarem. Tem vantagem nos testes de resistência contra plantas criadas ou manipuladas por magia para impedir movimento. duas armas, pode adicionar o mod de habilidade no dano do segundo ataque."
+          },
+          {
+            "name": "Preparando e Conjurando Magias",
+            "desc": "ganha todos os usos com descanso longo. Você conhece um numero de magias igual ao mostrado na tabela. Quando ganhar um nível pode trocar uma magia conhecida por outra, mas deve ser de um nível que você tenha espaços de magia."
+          },
+          {
+            "name": "Habilidade de Conjuração",
+            "desc": "Sabedoria é a"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "favored_enemies": 2,
+          "favored_terrain": 2
+        }
+      },
+      {
+        "level": 9,
+        "proficiency_bonus": 4,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "favored_enemies": 2,
+          "favored_terrain": 2
+        }
+      },
+      {
+        "level": 10,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Explorador Natural",
+            "desc": "Escolha mais um habilidade de conjuração. CD de resistência a magia = 8 + bônus de novo terreno favorito."
+          },
+          {
+            "name": "Esconder-se em Plena Vista",
+            "desc": "Pode gastar 1 minuto criando uma camuflagem para você. Precisa ter lama fresca, sujeira, plantas, fuligem e outros materiais. Pode tentar se esconder posicionando-se contra uma superfície sólida, como uma árvore ou parede, tão alta e larga como você. Ganha +10 no teste de Destreza (Furtividade), contando que não se mova ou faça ações. Caso se mova, faça ação ou reação, precisa se camuflar de novo para ganhar este benefício. + mod de Sabedoria"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "favored_enemies": 2,
+          "favored_terrain": 3
+        }
+      },
+      {
+        "level": 11,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Característica de Arquétipo de Ranger",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 12,
+        "proficiency_bonus": 4,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "favored_enemies": 2,
+          "favored_terrain": 3
+        }
+      },
+      {
+        "level": 13,
+        "proficiency_bonus": 5,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "favored_enemies": 2,
+          "favored_terrain": 3
+        }
+      },
+      {
+        "level": 14,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Inimigo Favorito",
+            "desc": "Escolha mais um inimigo favorito e um idioma associado a ele."
+          },
+          {
+            "name": "Desaparecer",
+            "desc": "Pode usar Esconder-se como"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "favored_enemies": 3,
+          "favored_terrain": 3
+        }
+      },
+      {
+        "level": 15,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "7º Nível – Táticas Defensivas Escolha um entre: Escapar da H",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "level": 16,
+        "proficiency_bonus": 5,
+        "features": [
+          {
+            "name": "Aumento de Habilidade",
+            "desc": "Aumente uma contra você são feitos com desvantagem."
+          },
+          {
+            "name": "Defesa contra Ataques Múltiplos",
+            "desc": "Quando uma criatura acertar você com um ataque, você ganha +4 na CA contra todos os ataques subsequentes feitos por aquela criatura pelo resto do turno."
+          },
+          {
+            "name": "Vontade de Aço",
+            "desc": "Você tem vantagem em"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "favored_enemies": 3,
+          "favored_terrain": 3
+        }
+      },
+      {
+        "level": 17,
+        "proficiency_bonus": 6,
+        "features": [],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "favored_enemies": 3,
+          "favored_terrain": 3
+        }
+      },
+      {
+        "level": 18,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Sentidos Selvagens",
+            "desc": "Você ganha sentidos testes de resistência contra ser amedrontado. 11º Nível – Ataque Múltiplo Escolha um entre: Rajada: Com uma ação, faz um ataque à além dos naturais. Não tem desvantagem em ataques contra criaturas que não pode ver. Também esta consciente da localização de qualquer criatura invisível a até 9 metros, desde que não esteja escondida de você e você não esteja cego ou surdo. distância contra quaisquer número de criaturas dentro de 3 metros de um ponto que possa ver dentro do alcance da sua arma. Deve ter munição para cada alvo e faz uma rolagem de ataque separada para cada um dos alvos."
+          },
+          {
+            "name": "Ataque Redemoinho",
+            "desc": "Pode usar sua ação"
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "favored_enemies": 3,
+          "favored_terrain": 3
+        }
+      },
+      {
+        "level": 19,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "para fazer um ataque corpo a corpo contra qualquer numero de",
+            "desc": ""
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "favored_enemies": 3,
+          "favored_terrain": 3
+        }
+      },
+      {
+        "level": 20,
+        "proficiency_bonus": 6,
+        "features": [
+          {
+            "name": "Exterminador de Inimigos",
+            "desc": "Uma vez em cada um de seus turnos, pode adicionar o mod de Sabedoria nas rolagens de ataque ou dano de um ataque que faça contra um de seus inimigos favoritos. Pode escolher usar essa característica antes ou depois da rolagem, mas antes de quaisquer efeitos serem aplicados. de Destreza para tomar metade do dano, ao invés disso não toma dano se passar no teste e somente metade se falhar."
+          },
+          {
+            "name": "Ficar Contra a Maré",
+            "desc": "Quando um inimigo errar um ataque corpo a corpo contra você, você pode usar sua reação para forçar aquela criatura a repetir o mesmo ataque contra outro alvo (que não seja ela mesma) à sua escolha."
+          },
+          {
+            "name": "Esquiva Sobrenatural",
+            "desc": "Quando um inimigo CAÇADOR 3º Nível – Presa do Caçador Escolha um entre: Matador de Colossos: Ao acertar uma lhe acertar com um ataque, pode usar sua reação para reduzir pela metade o dano. criatura com uma arma, ela leva 1d8 de dano extra se estiver abaixo de seus pontos de vida máximos. Só pode causar este dano extra uma vez por turno."
+          },
+          {
+            "name": "Assassino de Gigantes",
+            "desc": "Quando uma criatura Grande ou maior até 1,5 m de você lhe acertar ou errar um ataque, pode usar sua reação para atacar aquela criatura imediatamente após seu ataque, desde que possa ver a criatura."
+          },
+          {
+            "name": "Destruidor de Horda",
+            "desc": "Um vez por turno, quando fizer um ataque, pode fazer outro com a mesma arma contra uma criatura diferente que esteja a 1,5 m do alvo original e dentro do alcance da sua arma."
+          }
+        ],
+        "spell_slots": [
+          4,
+          3,
+          3,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        "class_specific": {
+          "favored_enemies": 3,
+          "favored_terrain": 3
+        }
+      }
+    ]
+  }
+}
