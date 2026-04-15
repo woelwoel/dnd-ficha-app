@@ -322,19 +322,20 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
         <FormFieldError id="err-class" message={errors.class} />
       </div>
 
-      {/* Nível */}
+      {/* Nível — select fixo 1-20: evita scroll acidental e typos */}
       <div>
         <label htmlFor="field-level" className="block text-xs text-gray-400 mb-1">Nível</label>
-        <input
+        <select
           id="field-level"
-          type="number"
-          min={1}
-          max={20}
           value={info.level}
-          onChange={e => onUpdate('level', Math.min(20, Math.max(1, parseInt(e.target.value) || 1)))}
+          onChange={e => onUpdate('level', Number(e.target.value))}
           aria-describedby={errors.level ? 'err-level' : undefined}
-          className={`${fieldCls(!!errors.level)} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
-        />
+          className={fieldCls(!!errors.level)}
+        >
+          {Array.from({ length: 20 }, (_, i) => i + 1).map(n => (
+            <option key={n} value={n}>Nível {n}</option>
+          ))}
+        </select>
         <FormFieldError id="err-level" message={errors.level} />
       </div>
 
@@ -387,6 +388,7 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
           min={0}
           value={info.xp}
           onChange={e => onUpdate('xp', Math.max(0, parseInt(e.target.value) || 0))}
+          onWheel={e => e.currentTarget.blur()}
           className="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         />
       </div>

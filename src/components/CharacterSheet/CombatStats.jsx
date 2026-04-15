@@ -51,6 +51,7 @@ export function CombatStats({ combat, attributes, level, onUpdateCombat, suggest
               type="number"
               value={combat.currentHp}
               onChange={e => handleHpChange('currentHp', e.target.value)}
+              onWheel={e => e.currentTarget.blur()}
               aria-describedby={errors.currentHp ? 'err-currentHp' : undefined}
               className={`flex-1 text-center bg-gray-700 border rounded px-2 py-1 text-white font-bold text-xl focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                 errors.currentHp
@@ -83,6 +84,7 @@ export function CombatStats({ combat, attributes, level, onUpdateCombat, suggest
             min={0}
             value={combat.tempHp}
             onChange={e => handleHpChange('tempHp', e.target.value)}
+            onWheel={e => e.currentTarget.blur()}
             className="w-full mt-1 text-center bg-gray-700 border border-gray-500 rounded px-2 py-1 text-white focus:outline-none focus:border-amber-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
@@ -105,6 +107,7 @@ export function CombatStats({ combat, attributes, level, onUpdateCombat, suggest
             min={1}
             value={combat.maxHp}
             onChange={e => onUpdateCombat('maxHp', Math.max(1, parseInt(e.target.value) || 1))}
+            onWheel={e => e.currentTarget.blur()}
             className="w-full text-center bg-gray-700 border border-gray-500 rounded px-2 py-1 text-white focus:outline-none focus:border-amber-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
@@ -123,6 +126,7 @@ function StatBox({ label, value, editable, onChange, hint, fieldId, errId, error
           type="number"
           value={typeof value === 'string' ? parseInt(value) || 0 : value}
           onChange={e => onChange(e.target.value)}
+          onWheel={e => e.currentTarget.blur()}
           aria-describedby={error ? errId : undefined}
           className={`w-full text-center text-xl font-bold bg-transparent focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
             error ? 'text-red-300' : 'text-white'

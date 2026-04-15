@@ -50,6 +50,7 @@ export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem
                 min={0}
                 value={inventory.currency[key]}
                 onChange={e => onUpdateCurrency(key, e.target.value)}
+                onWheel={e => e.currentTarget.blur()}
                 title={title}
                 className="w-14 text-center bg-transparent text-white text-base font-bold focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
@@ -102,6 +103,7 @@ export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem
                   min={1}
                   value={newItem.qty}
                   onChange={e => setNewItem(p => ({ ...p, qty: e.target.value }))}
+                  onWheel={e => e.currentTarget.blur()}
                   className="w-full bg-gray-700 border border-gray-600 rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-amber-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
               </div>

@@ -19,6 +19,7 @@ export function AttributeBox({ abbr, name, value, onChange, error }) {
           max={30}
           value={value}
           onChange={e => onChange(e.target.value)}
+          onWheel={e => e.currentTarget.blur()}
           aria-describedby={error ? errId : undefined}
           className={`w-16 text-center text-2xl font-bold bg-gray-700 border rounded text-white focus:outline-none focus:ring-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
             error
