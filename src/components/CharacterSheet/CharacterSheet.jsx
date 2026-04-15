@@ -64,7 +64,9 @@ export function CharacterSheet({ characterId, onBack }) {
     [classes, character.info.class]
   )
   const calc = useCharacterCalculations(character, classData)
-  const { validateTab, getTabErrors, markTouched, hasErrors, focusFirstError } = useTabValidation(character)
+  // deps de validação — races para checar sub-raça obrigatória
+  const validationDeps = useMemo(() => ({ races }), [races])
+  const { validateTab, getTabErrors, markTouched, hasErrors, focusFirstError } = useTabValidation(character, validationDeps)
 
   useEffect(() => {
     fetch('/srd-data/phb-races-pt.json')

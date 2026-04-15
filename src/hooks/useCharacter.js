@@ -10,6 +10,7 @@ const DEFAULT_CHARACTER = {
   info: {
     name: '',
     race: '',
+    subrace: '',
     class: '',
     subclass: '',
     level: 1,

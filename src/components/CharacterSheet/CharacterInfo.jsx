@@ -252,9 +252,16 @@ function TableSection({ title, items }) {
 export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, errors = {} }) {
   const [modal, setModal] = useState(null) // 'race' | 'class' | 'background' | null
 
-  const selectedRace = races.find(r => r.index === info.race)
-  const selectedClass = classes.find(c => c.index === info.class)
-  const selectedBg = backgrounds.find(b => b.index === info.background)
+  const selectedRace    = races.find(r => r.index === info.race)
+  const selectedClass   = classes.find(c => c.index === info.class)
+  const selectedBg      = backgrounds.find(b => b.index === info.background)
+  const selectedSubrace = selectedRace?.subraces?.find(sr => sr.index === info.subrace)
+
+  // Quando a raça muda, limpa a sub-raça
+  function handleRaceChange(value) {
+    onUpdate('race', value)
+    if (value !== info.race) onUpdate('subrace', '')
+  }
 
   // Classe base dos campos — vermelha quando há erro
   const fieldCls = (hasErr) =>
@@ -287,7 +294,7 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
           <select
             id="field-race"
             value={info.race}
-            onChange={e => onUpdate('race', e.target.value)}
+            onChange={e => handleRaceChange(e.target.value)}
             aria-describedby={errors.race ? 'err-race' : undefined}
             className={fieldCls(!!errors.race)}
           >
@@ -308,6 +315,51 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
         </div>
         <FormFieldError id="err-race" message={errors.race} />
       </div>
+
+      {/* Sub-raça — aparece apenas quando a raça selecionada tem sub-raças */}
+      {selectedRace?.subraces?.length > 0 && (
+        <div>
+          <label htmlFor="field-subrace" className="block text-xs text-gray-400 mb-1">
+            Sub-raça
+            <span className="text-red-400 ml-0.5" aria-hidden="true">*</span>
+          </label>
+          <div className="flex gap-1">
+            <select
+              id="field-subrace"
+              value={info.subrace || ''}
+              onChange={e => onUpdate('subrace', e.target.value)}
+              aria-describedby={errors.subrace ? 'err-subrace' : undefined}
+              className={fieldCls(!!errors.subrace)}
+            >
+              <option value="">Escolher sub-raça...</option>
+              {selectedRace.subraces.map(sr => (
+                <option key={sr.index} value={sr.index}>{sr.name}</option>
+              ))}
+            </select>
+            {selectedSubrace && (
+              <button
+                onClick={() => setModal('subrace')}
+                title="Ver traços da sub-raça"
+                className="px-2 py-1 bg-gray-700 hover:bg-amber-700 text-amber-400 hover:text-white rounded transition-colors text-sm"
+              >
+                ?
+              </button>
+            )}
+          </div>
+          <FormFieldError id="err-subrace" message={errors.subrace} />
+          {/* Traços da sub-raça selecionada (prévia inline) */}
+          {selectedSubrace?.topics?.filter(t => t.title && t.desc).length > 0 && (
+            <div className="mt-2 bg-gray-800/60 border border-gray-700 rounded p-2 space-y-1">
+              {selectedSubrace.topics.filter(t => t.title && t.desc).slice(0, 3).map((t, i) => (
+                <p key={i} className="text-xs text-gray-400 leading-snug">
+                  <span className="text-amber-300 font-semibold">{t.title}. </span>
+                  {t.desc.slice(0, 120)}{t.desc.length > 120 ? '…' : ''}
+                </p>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Classe */}
       <div>
@@ -432,6 +484,36 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
         title={selectedBg?.name || ''}
       >
         {selectedBg && <BackgroundModalContent bg={selectedBg} />}
+      </DetailsModal>
+
+      {/* Modal de sub-raça */}
+      <DetailsModal
+        isOpen={modal === 'subrace'}
+        onClose={() => setModal(null)}
+        title={selectedSubrace?.name || ''}
+      >
+        {selectedSubrace && (
+          <>
+            {(selectedSubrace.fullDescription || selectedSubrace.description) && (
+              <p className="text-sm text-gray-300 leading-relaxed">
+                {selectedSubrace.fullDescription || selectedSubrace.description}
+              </p>
+            )}
+            {selectedSubrace.ability_bonuses?.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {selectedSubrace.ability_bonuses.map((b, i) => (
+                  <span key={i} className="bg-gray-800 border border-gray-600 px-3 py-1 rounded-full text-xs">
+                    <span className="text-amber-300">+{b.bonus}</span> {b.ability}
+                  </span>
+                ))}
+              </div>
+            )}
+            <TopicList
+              items={selectedSubrace.topics ?? selectedSubrace.traits?.map(t => ({ title: t.name, desc: t.desc })) ?? []}
+              emptyMessage="Consulte o Livro do Jogador para os traços desta sub-raça."
+            />
+          </>
+        )}
       </DetailsModal>
     </div>
   )

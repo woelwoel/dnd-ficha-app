@@ -8,6 +8,7 @@ import { ABILITY_SCORES } from '../utils/calculations'
 export const ERROR_FIELD_IDS = {
   name:        'field-name',
   race:        'field-race',
+  subrace:     'field-subrace',
   class:       'field-class',
   level:       'field-level',
   attr_str:    'field-attr-str',
@@ -22,7 +23,7 @@ export const ERROR_FIELD_IDS = {
 
 /* ── Validadores por aba ──────────────────────────────────────────── */
 
-function validateFicha(character) {
+function validateFicha(character, races = []) {
   const errors = {}
   const { info, attributes, combat } = character
 
@@ -32,6 +33,13 @@ function validateFicha(character) {
 
   if (!info.race)
     errors.race = 'Raça é obrigatória'
+
+  // Sub-raça obrigatória quando a raça tem sub-raças disponíveis
+  if (info.race && races.length > 0) {
+    const selectedRace = races.find(r => r.index === info.race)
+    if (selectedRace?.subraces?.length > 0 && !info.subrace)
+      errors.subrace = 'Sub-raça é obrigatória para ' + selectedRace.name
+  }
 
   if (!info.class)
     errors.class = 'Classe é obrigatória'
@@ -71,9 +79,10 @@ function validateMagias(character) {
   return errors
 }
 
+// TAB_VALIDATORS é uma função que recebe (character, deps) e retorna erros
 const TAB_VALIDATORS = {
-  ficha:   validateFicha,
-  magias:  validateMagias,
+  ficha:   (character, deps) => validateFicha(character, deps?.races),
+  magias:  (character)       => validateMagias(character),
 }
 
 /* ── Hook ─────────────────────────────────────────────────────────── */
@@ -82,6 +91,7 @@ const TAB_VALIDATORS = {
  * Gerencia validação por aba.
  *
  * @param {object} character - estado completo do personagem
+ * @param {object} deps      - dependências para validação (ex: { races })
  * @returns {object}
  *   - validateTab(tabId)    : valida e retorna objeto de erros (sem mutar estado)
  *   - getTabErrors(tabId)   : retorna erros APENAS se a aba já foi "tocada"
@@ -90,7 +100,7 @@ const TAB_VALIDATORS = {
  *   - hasErrors(tabId)      : booleano — se a aba tem erros (independente de tocada)
  *   - focusFirstError(tabId): foca o primeiro campo inválido da aba no DOM
  */
-export function useTabValidation(character) {
+export function useTabValidation(character, deps = {}) {
   // Abas que o usuário já tentou sair (validação visível)
   const [touchedTabs, setTouchedTabs] = useState(new Set())
 
@@ -98,8 +108,8 @@ export function useTabValidation(character) {
   const validateTab = useCallback((tabId) => {
     const validator = TAB_VALIDATORS[tabId]
     if (!validator) return {}
-    return validator(character)
-  }, [character])
+    return validator(character, deps)
+  }, [character, deps])
 
   /** Retorna erros apenas se a aba já foi tocada */
   const getTabErrors = useCallback((tabId) => {

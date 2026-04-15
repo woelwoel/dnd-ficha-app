@@ -123,9 +123,15 @@ export function CharacterView({ character, races, classes, backgrounds }) {
   const { info, attributes, combat, proficiencies, spellcasting, inventory, traits } = character
   const prof = getProficiencyBonus(info.level)
 
-  const selectedRace  = races.find(r => r.index === info.race)
-  const selectedClass = classes.find(c => c.index === info.class)
-  const selectedBg    = backgrounds.find(b => b.index === info.background)
+  const selectedRace    = races.find(r => r.index === info.race)
+  const selectedSubrace = selectedRace?.subraces?.find(sr => sr.index === info.subrace)
+  const selectedClass   = classes.find(c => c.index === info.class)
+  const selectedBg      = backgrounds.find(b => b.index === info.background)
+
+  // Nome da raça exibido: "Elfo — Alto Elfo" quando há sub-raça
+  const raceName = selectedRace
+    ? (selectedSubrace ? `${selectedRace.name} — ${selectedSubrace.name}` : selectedRace.name)
+    : ''
 
   // Perícias ordenadas alfabeticamente
   const sortedSkills = [...SKILLS].sort((a, b) => a.name.localeCompare(b.name, 'pt'))
@@ -173,7 +179,7 @@ export function CharacterView({ character, races, classes, backgrounds }) {
           <InfoField label="Classe" value={selectedClass?.name} />
           <InfoField label="Antecedente" value={selectedBg?.name} />
           <InfoField label="Nome Jogador" value="" />
-          <InfoField label="Raça" value={selectedRace?.name} />
+          <InfoField label="Raça" value={raceName} />
           <InfoField label="Tendência" value={info.alignment} />
           <div className="flex gap-1">
             <InfoField label="Experiência" value={info.xp?.toLocaleString('pt-BR')} />
