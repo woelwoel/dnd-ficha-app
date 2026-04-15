@@ -1,6 +1,6 @@
 import { formatModifier, getProficiencyBonus, calculateInitiative, getModifier } from '../../utils/calculations'
 
-export function CombatStats({ combat, attributes, level, onUpdateCombat }) {
+export function CombatStats({ combat, attributes, level, onUpdateCombat, suggestedAC, suggestedMaxHp }) {
   const profBonus = getProficiencyBonus(level)
   const initiative = calculateInitiative(attributes.dex)
 
@@ -15,7 +15,11 @@ export function CombatStats({ combat, attributes, level, onUpdateCombat }) {
 
       <div className="grid grid-cols-3 gap-3 mb-4">
         <StatBox label="Classe de Armadura" value={combat.armorClass} editable
-          onChange={v => onUpdateCombat('armorClass', Math.max(0, parseInt(v) || 0))} />
+          onChange={v => onUpdateCombat('armorClass', Math.max(0, parseInt(v) || 0))}
+          hint={suggestedAC !== undefined && suggestedAC !== combat.armorClass
+            ? { label: `Sugerida: ${suggestedAC}`, onApply: () => onUpdateCombat('armorClass', suggestedAC) }
+            : null}
+        />
         <StatBox label="Iniciativa" value={formatModifier(initiative)} />
         <StatBox label="Velocidade" value={`${combat.speed}ft`} editable
           onChange={v => onUpdateCombat('speed', Math.max(0, parseInt(v) || 0))} />
@@ -73,7 +77,18 @@ export function CombatStats({ combat, attributes, level, onUpdateCombat }) {
         </div>
 
         <div>
-          <label className="text-xs text-gray-400 block mb-1">PV Máximo</label>
+          <div className="flex items-center justify-between mb-1">
+            <label className="text-xs text-gray-400">PV Máximo</label>
+            {suggestedMaxHp != null && suggestedMaxHp !== combat.maxHp && (
+              <button
+                onClick={() => onUpdateCombat('maxHp', suggestedMaxHp)}
+                className="text-[10px] text-amber-500 hover:text-amber-300 underline"
+                title="Aplica o PV calculado pela classe e CON"
+              >
+                Sugerido: {suggestedMaxHp}
+              </button>
+            )}
+          </div>
           <input
             type="number"
             min={1}
@@ -87,7 +102,7 @@ export function CombatStats({ combat, attributes, level, onUpdateCombat }) {
   )
 }
 
-function StatBox({ label, value, editable, onChange }) {
+function StatBox({ label, value, editable, onChange, hint }) {
   return (
     <div className="flex flex-col items-center bg-gray-900 rounded p-2">
       <span className="text-xs text-gray-400 text-center mb-1 leading-tight">{label}</span>
@@ -100,6 +115,14 @@ function StatBox({ label, value, editable, onChange }) {
         />
       ) : (
         <span className="text-xl font-bold text-white">{value}</span>
+      )}
+      {hint && (
+        <button
+          onClick={hint.onApply}
+          className="text-[9px] text-amber-500 hover:text-amber-300 underline mt-0.5 leading-none"
+        >
+          {hint.label}
+        </button>
       )}
     </div>
   )

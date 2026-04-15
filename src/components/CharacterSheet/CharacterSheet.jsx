@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo, useRef } from 'react'
 import { useCharacter } from '../../hooks/useCharacter'
+import { useCharacterCalculations } from '../../hooks/useCharacterCalculations'
 import { AttributeBox } from './AttributeBox'
 import { CharacterInfo } from './CharacterInfo'
 import { CombatStats } from './CombatStats'
@@ -53,6 +54,13 @@ export function CharacterSheet({ characterId, onBack }) {
     removeSpell,
     toggleSlot,
   } = useCharacter(initialCharacter)
+
+  // classData é necessário para o cálculo de HP sugerido pelo hook
+  const classData = useMemo(
+    () => classes.find(c => c.index === character.info.class) ?? null,
+    [classes, character.info.class]
+  )
+  const calc = useCharacterCalculations(character, classData)
 
   useEffect(() => {
     fetch('/srd-data/phb-races-pt.json')
@@ -200,6 +208,8 @@ export function CharacterSheet({ characterId, onBack }) {
               attributes={character.attributes}
               level={character.info.level}
               onUpdateCombat={updateCombat}
+              suggestedAC={calc.suggestedAC}
+              suggestedMaxHp={calc.suggestedMaxHp}
             />
             <SavingThrows
               attributes={character.attributes}
