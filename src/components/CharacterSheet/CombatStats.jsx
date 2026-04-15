@@ -1,0 +1,106 @@
+import { formatModifier, getProficiencyBonus, calculateInitiative, getModifier } from '../../utils/calculations'
+
+export function CombatStats({ combat, attributes, level, onUpdateCombat }) {
+  const profBonus = getProficiencyBonus(level)
+  const initiative = calculateInitiative(attributes.dex)
+
+  function handleHpChange(field, value) {
+    const num = parseInt(value, 10)
+    if (!isNaN(num)) onUpdateCombat(field, Math.max(0, num))
+  }
+
+  return (
+    <div className="bg-gray-800 border border-gray-600 rounded-lg p-4">
+      <h3 className="text-sm font-bold text-amber-400 uppercase tracking-widest mb-3">Combate</h3>
+
+      <div className="grid grid-cols-3 gap-3 mb-4">
+        <StatBox label="Classe de Armadura" value={combat.armorClass} editable
+          onChange={v => onUpdateCombat('armorClass', Math.max(0, parseInt(v) || 0))} />
+        <StatBox label="Iniciativa" value={formatModifier(initiative)} />
+        <StatBox label="Velocidade" value={`${combat.speed}ft`} editable
+          onChange={v => onUpdateCombat('speed', Math.max(0, parseInt(v) || 0))} />
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        <StatBox label="Bônus de Proficiência" value={formatModifier(profBonus)} />
+        <StatBox label="Dado de Vida" value={combat.hitDice} />
+      </div>
+
+      {/* HP Tracker */}
+      <div className="space-y-2">
+        <div>
+          <div className="flex justify-between items-center mb-1">
+            <label className="text-xs text-gray-400">Pontos de Vida</label>
+            <span className="text-xs text-gray-500">Máx: {combat.maxHp}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => handleHpChange('currentHp', combat.currentHp - 1)}
+              className="w-8 h-8 rounded bg-red-900 hover:bg-red-700 text-white font-bold text-lg flex items-center justify-center"
+            >−</button>
+            <input
+              type="number"
+              value={combat.currentHp}
+              onChange={e => handleHpChange('currentHp', e.target.value)}
+              className="flex-1 text-center bg-gray-700 border border-gray-500 rounded px-2 py-1 text-white font-bold text-xl focus:outline-none focus:border-amber-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            />
+            <button
+              onClick={() => handleHpChange('currentHp', combat.currentHp + 1)}
+              className="w-8 h-8 rounded bg-green-900 hover:bg-green-700 text-white font-bold text-lg flex items-center justify-center"
+            >+</button>
+          </div>
+          {/* HP Bar */}
+          <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
+            <div
+              className="h-2 rounded-full transition-all"
+              style={{
+                width: `${combat.maxHp > 0 ? Math.min(100, (combat.currentHp / combat.maxHp) * 100) : 0}%`,
+                backgroundColor: combat.currentHp > combat.maxHp * 0.5 ? '#22c55e' : combat.currentHp > combat.maxHp * 0.25 ? '#f59e0b' : '#ef4444'
+              }}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="text-xs text-gray-400">PV Temporários</label>
+          <input
+            type="number"
+            min={0}
+            value={combat.tempHp}
+            onChange={e => handleHpChange('tempHp', e.target.value)}
+            className="w-full mt-1 text-center bg-gray-700 border border-gray-500 rounded px-2 py-1 text-white focus:outline-none focus:border-amber-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          />
+        </div>
+
+        <div>
+          <label className="text-xs text-gray-400 block mb-1">PV Máximo</label>
+          <input
+            type="number"
+            min={1}
+            value={combat.maxHp}
+            onChange={e => onUpdateCombat('maxHp', Math.max(1, parseInt(e.target.value) || 1))}
+            className="w-full text-center bg-gray-700 border border-gray-500 rounded px-2 py-1 text-white focus:outline-none focus:border-amber-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function StatBox({ label, value, editable, onChange }) {
+  return (
+    <div className="flex flex-col items-center bg-gray-900 rounded p-2">
+      <span className="text-xs text-gray-400 text-center mb-1 leading-tight">{label}</span>
+      {editable ? (
+        <input
+          type="number"
+          value={typeof value === 'string' ? parseInt(value) || 0 : value}
+          onChange={e => onChange(e.target.value)}
+          className="w-full text-center text-xl font-bold bg-transparent text-white focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        />
+      ) : (
+        <span className="text-xl font-bold text-white">{value}</span>
+      )}
+    </div>
+  )
+}
