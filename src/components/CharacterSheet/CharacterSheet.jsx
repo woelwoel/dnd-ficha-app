@@ -12,7 +12,7 @@ import { Spells } from './Spells'
 import { Notes } from './Notes'
 import { CharacterView } from './CharacterView'
 import { LevelProgression } from './LevelProgression'
-import { ABILITY_SCORES, SKILLS, ABBR_TO_KEY, ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY } from '../../utils/calculations'
+import { ABILITY_SCORES, SKILLS, ABBR_TO_KEY, ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY, STANDARD_ARRAY, POINT_BUY_COST } from '../../utils/calculations'
 import { generateId } from '../../hooks/useCharacter'
 
 function parseBackgroundEquipment(equipmentStr) {
@@ -391,18 +391,108 @@ export function CharacterSheet({ characterId, onBack }) {
           </section>
 
           <section>
-            <h2 className="text-sm font-bold text-amber-400 uppercase tracking-widest mb-3">Atributos</h2>
+            {/* Cabeçalho + seletor de método */}
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <h2 className="text-sm font-bold text-amber-400 uppercase tracking-widest">Atributos</h2>
+              <div className="flex gap-1 text-xs">
+                {[
+                  { id: 'manual',         label: 'Manual'         },
+                  { id: 'standard-array', label: 'Array Padrão'   },
+                  { id: 'point-buy',      label: 'Compra de Ptos' },
+                ].map(m => (
+                  <button
+                    key={m.id}
+                    onClick={() => updateInfo('scoreMethod', m.id)}
+                    className={`px-2 py-1 rounded border transition-colors ${
+                      (character.info.scoreMethod ?? 'manual') === m.id
+                        ? 'bg-amber-700 border-amber-500 text-white'
+                        : 'bg-gray-800 border-gray-600 text-gray-400 hover:text-white'
+                    }`}
+                  >
+                    {m.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Aviso e info por método */}
+            {(() => {
+              const method = character.info.scoreMethod ?? 'manual'
+              const racialBonuses = character.appliedRacialBonuses ?? {}
+              const appliedList = Object.entries(racialBonuses)
+                .filter(([, v]) => v > 0)
+                .map(([k, v]) => `+${v} ${ABILITY_SCORES.find(a => a.key === k)?.abbr ?? k}`)
+
+              // Point Buy: custo total
+              const pbSpent = ABILITY_SCORES.reduce((sum, { key }) => {
+                const base = character.attributes[key] - (racialBonuses[key] ?? 0)
+                return sum + (POINT_BUY_COST[Math.min(15, Math.max(8, base))] ?? 0)
+              }, 0)
+              const pbRemaining = 27 - pbSpent
+
+              // Standard Array: verificar valores inválidos
+              const saUsed = ABILITY_SCORES.map(({ key }) => character.attributes[key] - (racialBonuses[key] ?? 0))
+              const saValid = STANDARD_ARRAY.every(v => saUsed.includes(v)) && saUsed.every(v => STANDARD_ARRAY.includes(v))
+
+              return (
+                <div className="mb-3 space-y-1">
+                  {appliedList.length > 0 && (
+                    <p className="text-xs text-amber-500/80">
+                      ↑ Bônus racial aplicado automaticamente: {appliedList.join(', ')}
+                    </p>
+                  )}
+                  {method === 'point-buy' && (
+                    <p className={`text-xs font-semibold ${pbRemaining < 0 ? 'text-red-400' : pbRemaining === 0 ? 'text-green-400' : 'text-sky-400'}`}>
+                      Compra de Pontos — {pbRemaining < 0 ? `${Math.abs(pbRemaining)} pts acima do limite` : `${pbRemaining}/27 pts restantes`}
+                    </p>
+                  )}
+                  {method === 'standard-array' && !saValid && (
+                    <p className="text-xs text-amber-400">
+                      Array Padrão: atribua os valores [8, 10, 12, 13, 14, 15] uma vez cada.
+                    </p>
+                  )}
+                  {method === 'standard-array' && saValid && (
+                    <p className="text-xs text-green-400">Array Padrão completo ✓</p>
+                  )}
+                </div>
+              )
+            })()}
+
             <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
-              {ABILITY_SCORES.map(({ key, abbr, name }) => (
-                <AttributeBox
-                  key={key}
-                  abbr={abbr}
-                  name={name}
-                  value={character.attributes[key]}
-                  onChange={value => updateAttribute(key, value)}
-                  error={fichaErrors[`attr_${key}`]}
-                />
-              ))}
+              {ABILITY_SCORES.map(({ key, abbr, name }) => {
+                const method       = character.info.scoreMethod ?? 'manual'
+                const racialBonuses = character.appliedRacialBonuses ?? {}
+                const racialBonus  = racialBonuses[key] ?? 0
+                const baseValue    = character.attributes[key] - racialBonus
+
+                // SA: valores disponíveis = SA não usados por OUTROS atributos
+                const otherBases = ABILITY_SCORES.filter(a => a.key !== key)
+                  .map(a => character.attributes[a.key] - (racialBonuses[a.key] ?? 0))
+                const availableSA = STANDARD_ARRAY.filter(v => !otherBases.includes(v) || v === baseValue)
+
+                // PB: pontos restantes
+                const pbSpent = ABILITY_SCORES.reduce((sum, a) => {
+                  const b = character.attributes[a.key] - (racialBonuses[a.key] ?? 0)
+                  return sum + (POINT_BUY_COST[Math.min(15, Math.max(8, b))] ?? 0)
+                }, 0)
+
+                return (
+                  <AttributeBox
+                    key={key}
+                    abbr={abbr}
+                    name={name}
+                    value={character.attributes[key]}
+                    baseValue={baseValue}
+                    racialBonus={racialBonus}
+                    mode={method}
+                    availableSA={availableSA}
+                    pointsRemaining={27 - pbSpent}
+                    onChange={value => updateAttribute(key, value)}
+                    onChangeBase={newBase => updateAttribute(key, Math.min(30, Math.max(1, newBase)) + racialBonus)}
+                    error={fichaErrors[`attr_${key}`]}
+                  />
+                )
+              })}
             </div>
           </section>
 

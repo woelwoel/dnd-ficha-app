@@ -17,6 +17,7 @@ const DEFAULT_CHARACTER = {
     background: '',
     alignment: '',
     xp: 0,
+    scoreMethod: 'manual', // 'manual' | 'standard-array' | 'point-buy'
   },
   attributes: {
     str: 10,
