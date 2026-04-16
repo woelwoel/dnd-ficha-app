@@ -192,9 +192,14 @@ export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem
             {inventory.items.map(item => (
               <div
                 key={item.id}
-                className="grid grid-cols-[1fr_3rem_4rem_1fr_2rem] gap-2 items-center bg-gray-900 rounded px-2 py-1.5"
+                className={`grid grid-cols-[1fr_3rem_4rem_1fr_2rem] gap-2 items-center rounded px-2 py-1.5 ${
+                  item.source === 'background' ? 'bg-amber-950/30 border border-amber-900/40' : 'bg-gray-900'
+                }`}
               >
-                <span className="text-sm text-white truncate">{item.name}</span>
+                <span className="text-sm text-white truncate flex items-center gap-1">
+                  {item.source === 'background' && <span title="Item do antecedente" className="text-[10px]">🎒</span>}
+                  {item.name}
+                </span>
                 <span className="text-sm text-gray-300 text-center">{item.qty}</span>
                 <span className="text-sm text-gray-400 text-center">{item.weight || '—'}</span>
                 <span className="text-xs text-gray-500 truncate">{item.notes || '—'}</span>

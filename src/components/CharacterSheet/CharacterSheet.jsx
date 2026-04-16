@@ -13,6 +13,32 @@ import { Notes } from './Notes'
 import { CharacterView } from './CharacterView'
 import { LevelProgression } from './LevelProgression'
 import { ABILITY_SCORES, SKILLS, ABBR_TO_KEY, ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY } from '../../utils/calculations'
+import { generateId } from '../../hooks/useCharacter'
+
+function parseBackgroundEquipment(equipmentStr) {
+  if (!equipmentStr) return { items: [], gold: 0 }
+  // Corta texto de lore (palavras em CAPS como "NEGÓCIOS DA GUILDA")
+  const loreIdx = equipmentStr.search(/\s[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ]{5,}/)
+  const clean = loreIdx > 0 ? equipmentStr.slice(0, loreIdx).trim() : equipmentStr.trim()
+  // Divide por vírgula e pelo "e" final
+  const rawParts = clean.split(/,\s*(?:e\s+)?|\s+e\s+(?=[^,]+$)/).map(s => s.trim()).filter(Boolean)
+  const items = []
+  let gold = 0
+  for (const part of rawParts) {
+    const goldMatch = part.match(/(\d+)\s*po/i)
+    if (goldMatch && /algibeira|bolsa|saco/i.test(part)) {
+      gold = parseInt(goldMatch[1])
+      continue
+    }
+    const qtyMatch = part.match(/^(\d+)\s+(.+)/)
+    if (qtyMatch) {
+      items.push({ name: qtyMatch[2], qty: parseInt(qtyMatch[1]), source: 'background' })
+    } else {
+      items.push({ name: part, qty: 1, source: 'background' })
+    }
+  }
+  return { items, gold }
+}
 
 // Alias local para o mapeamento de atributo de magia
 const SPELL_ABILITY_NAME_TO_KEY = SPELL_ABILITY_PT_TO_KEY
@@ -183,18 +209,29 @@ export function CharacterSheet({ characterId, onBack }) {
     })
   }
 
-  // Troca antecedente: mapeia perícias PT-BR para chaves e armazena em backgroundSkills
+  // Troca antecedente: perícias automáticas + itens de equipamento no inventário
   function handleBackgroundChange(newBgIndex) {
     const bg = backgrounds.find(b => b.index === newBgIndex)
     const bgSkillKeys = (bg?.skill_proficiencies ?? [])
       .map(name => SKILLS.find(s => s.name === name)?.key)
       .filter(Boolean)
-    setCharacter(prev => ({
-      ...prev,
-      info: { ...prev.info, background: newBgIndex },
-      proficiencies: { ...prev.proficiencies, backgroundSkills: bgSkillKeys },
-      meta: { ...prev.meta, updatedAt: new Date().toISOString() },
-    }))
+    const { items: bgItems, gold: bgGold } = parseBackgroundEquipment(bg?.equipment)
+    setCharacter(prev => {
+      const keepItems = prev.inventory.items.filter(i => i.source !== 'background')
+      const newItems = [...keepItems, ...bgItems.map(i => ({ ...i, id: generateId() }))]
+      const newGp = prev.inventory.currency.gp + (newBgIndex ? bgGold : 0)
+      return {
+        ...prev,
+        info: { ...prev.info, background: newBgIndex },
+        proficiencies: { ...prev.proficiencies, backgroundSkills: bgSkillKeys },
+        inventory: {
+          ...prev.inventory,
+          items: newItems,
+          currency: { ...prev.inventory.currency, gp: newGp },
+        },
+        meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+      }
+    })
   }
 
   // Navega entre abas — valida a aba atual se for avanço

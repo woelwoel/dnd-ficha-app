@@ -464,23 +464,6 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
         </select>
       </div>
 
-      {/* Equipamento e Ferramentas do Antecedente */}
-      {selectedBg && (selectedBg.equipment || selectedBg.tool_proficiencies?.length > 0) && (
-        <div className="col-span-2 sm:col-span-3 bg-gray-800 border border-gray-600 rounded-lg p-3 space-y-1">
-          <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">Antecedente: {selectedBg.name}</span>
-          {selectedBg.tool_proficiencies?.length > 0 && (
-            <p className="text-xs text-gray-300">
-              <span className="text-amber-500">Ferramentas:</span> {selectedBg.tool_proficiencies.join(', ')}
-            </p>
-          )}
-          {selectedBg.equipment && (
-            <p className="text-xs text-gray-400 leading-relaxed">
-              <span className="text-amber-500">Equipamento:</span> {selectedBg.equipment}
-            </p>
-          )}
-        </div>
-      )}
-
       {/* Seletor de Idiomas */}
       {(info.race || info.background) && (
         <LanguageSelector
