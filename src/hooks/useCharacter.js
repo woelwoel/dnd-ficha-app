@@ -39,11 +39,13 @@ const DEFAULT_CHARACTER = {
     savingThrows: [],
     skills: [],
     expertiseSkills: [],
+    backgroundSkills: [],
     armor: [],
     weapons: [],
     tools: [],
     languages: [],
   },
+  appliedRacialBonuses: {},
   spellcasting: {
     ability: null,
     usedSlots: {},
@@ -133,8 +135,9 @@ export function useCharacter(initialCharacter = null) {
   const toggleExpertiseSkill = useCallback((skillIndex) => {
     setCharacter(prev => {
       const expertise = prev.proficiencies.expertiseSkills ?? []
-      // Só permite expertise se já for proficiente
-      if (!prev.proficiencies.skills.includes(skillIndex)) return prev
+      // Só permite expertise se já for proficiente (por classe ou antecedente)
+      const bgSkills = prev.proficiencies.backgroundSkills ?? []
+      if (!prev.proficiencies.skills.includes(skillIndex) && !bgSkills.includes(skillIndex)) return prev
       const updated = expertise.includes(skillIndex)
         ? expertise.filter(s => s !== skillIndex)
         : [...expertise, skillIndex]

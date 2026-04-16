@@ -2,15 +2,7 @@ import { useState } from 'react'
 import { DetailsModal } from '../DetailsModal'
 import { FormFieldError } from '../FormFieldError'
 import { TopicList, FullDescriptionToggle } from '../TopicList'
-
-// Mapeia abreviação PT-BR dos atributos para a chave usada em character.attributes
-const ABBR_TO_KEY = { FOR: 'str', DES: 'dex', CON: 'con', INT: 'int', SAB: 'wis', CAR: 'cha' }
-
-const ALIGNMENTS = [
-  'Leal e Bom', 'Neutro e Bom', 'Caótico e Bom',
-  'Leal e Neutro', 'Neutro', 'Caótico e Neutro',
-  'Leal e Mau', 'Neutro e Mau', 'Caótico e Mau',
-]
+import { ABBR_TO_KEY, ALIGNMENTS } from '../../utils/calculations'
 
 /* ── Conteúdo do modal de Raça ── */
 function RaceModalContent({ race }) {
@@ -252,7 +244,7 @@ function TableSection({ title, items }) {
 }
 
 /* ── Componente principal ── */
-export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, errors = {}, onApplyRaceBonuses, onClassChange }) {
+export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, errors = {}, onRaceChange, onSubraceChange, onBackgroundChange, onClassChange }) {
   const [modal, setModal] = useState(null) // 'race' | 'class' | 'background' | null
 
   const selectedRace    = races.find(r => r.index === info.race)
@@ -272,10 +264,9 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
     if (key) bonusesByKey[key] = (bonusesByKey[key] ?? 0) + b.bonus
   }
 
-  // Quando a raça muda, limpa a sub-raça
+  // Delega troca de raça ao CharacterSheet (reverte bônus antigos, aplica novos)
   function handleRaceChange(value) {
-    onUpdate('race', value)
-    if (value !== info.race) onUpdate('subrace', '')
+    onRaceChange?.(value) ?? onUpdate('race', value)
   }
 
   // Classe base dos campos — vermelha quando há erro
@@ -342,7 +333,7 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
             <select
               id="field-subrace"
               value={info.subrace || ''}
-              onChange={e => onUpdate('subrace', e.target.value)}
+              onChange={e => onSubraceChange?.(e.target.value) ?? onUpdate('subrace', e.target.value)}
               aria-describedby={errors.subrace ? 'err-subrace' : undefined}
               className={fieldCls(!!errors.subrace)}
             >
@@ -365,24 +356,15 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
         </div>
       )}
 
-      {/* Bônus de raça — aparece quando há bônus para aplicar */}
+      {/* Bônus de raça — exibidos automaticamente quando raça/sub-raça é selecionada */}
       {allBonuses.length > 0 && (
         <div className="col-span-2 sm:col-span-3 flex flex-wrap items-center gap-2">
-          <span className="text-xs text-gray-400 shrink-0">Bônus de raça:</span>
+          <span className="text-xs text-gray-400 shrink-0">Bônus aplicados:</span>
           {allBonuses.map((b, i) => (
             <span key={i} className="text-xs bg-gray-700 border border-gray-600 px-2 py-0.5 rounded-full text-amber-300">
               +{b.bonus} {b.ability}
             </span>
           ))}
-          {onApplyRaceBonuses && (
-            <button
-              onClick={() => onApplyRaceBonuses(bonusesByKey)}
-              className="text-xs text-amber-500 hover:text-amber-300 underline ml-1"
-              title="Soma os bônus da raça aos atributos atuais"
-            >
-              Aplicar nos atributos
-            </button>
-          )}
         </div>
       )}
 
@@ -438,7 +420,7 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
         <div className="flex gap-1">
           <select
             value={info.background}
-            onChange={e => onUpdate('background', e.target.value)}
+            onChange={e => onBackgroundChange?.(e.target.value) ?? onUpdate('background', e.target.value)}
             className="flex-1 bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-400"
           >
             <option value="">Escolher...</option>

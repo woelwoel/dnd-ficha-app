@@ -12,16 +12,10 @@ import { Spells } from './Spells'
 import { Notes } from './Notes'
 import { CharacterView } from './CharacterView'
 import { LevelProgression } from './LevelProgression'
-import { ABILITY_SCORES } from '../../utils/calculations'
+import { ABILITY_SCORES, SKILLS, ABBR_TO_KEY, ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY } from '../../utils/calculations'
 
-// Mapeamentos PT-BR para chaves de atributo e atributo de magia
-const ATTR_NAME_TO_KEY = {
-  'Força': 'str', 'Destreza': 'dex', 'Constituição': 'con',
-  'Inteligência': 'int', 'Sabedoria': 'wis', 'Carisma': 'cha',
-}
-const SPELL_ABILITY_NAME_TO_KEY = {
-  'Inteligência': 'int', 'Sabedoria': 'wis', 'Carisma': 'cha',
-}
+// Alias local para o mapeamento de atributo de magia
+const SPELL_ABILITY_NAME_TO_KEY = SPELL_ABILITY_PT_TO_KEY
 
 const TABS = [
   { id: 'ficha',       label: 'Ficha'       },
@@ -140,11 +134,66 @@ export function CharacterSheet({ characterId, onBack }) {
     }))
   }
 
-  // Aplica bônus de raça/sub-raça nos atributos (soma ao valor atual)
-  function handleApplyRaceBonuses(bonusesByKey) {
-    for (const [key, bonus] of Object.entries(bonusesByKey)) {
-      updateAttribute(key, character.attributes[key] + bonus)
+  // Calcula bônus combinados (raça + sub-raça) retornando { str: N, dex: N, ... }
+  function computeRacialBonuses(raceIndex, subraceIndex) {
+    const race    = races.find(r => r.index === raceIndex)
+    const subrace = race?.subraces?.find(sr => sr.index === subraceIndex)
+    const map = {}
+    for (const b of [...(race?.ability_bonuses ?? []), ...(subrace?.ability_bonuses ?? [])]) {
+      const key = ABBR_TO_KEY[b.ability]
+      if (key) map[key] = (map[key] ?? 0) + b.bonus
     }
+    return map
+  }
+
+  // Troca raça: reverte bônus antigos, aplica novos, reseta sub-raça
+  function handleRaceChange(newRaceIndex) {
+    setCharacter(prev => {
+      const oldApplied = prev.appliedRacialBonuses ?? {}
+      const newBonuses = computeRacialBonuses(newRaceIndex, '')
+      const attrs = { ...prev.attributes }
+      for (const [k, v] of Object.entries(oldApplied)) attrs[k] = Math.max(1, attrs[k] - v)
+      for (const [k, v] of Object.entries(newBonuses)) attrs[k] = Math.min(30, attrs[k] + v)
+      return {
+        ...prev,
+        info: { ...prev.info, race: newRaceIndex, subrace: '' },
+        attributes: attrs,
+        appliedRacialBonuses: newBonuses,
+        meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+      }
+    })
+  }
+
+  // Troca sub-raça: reverte bônus antigos (raça+subrace anterior), aplica raça+nova subrace
+  function handleSubraceChange(newSubraceIndex) {
+    setCharacter(prev => {
+      const oldApplied = prev.appliedRacialBonuses ?? {}
+      const newBonuses = computeRacialBonuses(prev.info.race, newSubraceIndex)
+      const attrs = { ...prev.attributes }
+      for (const [k, v] of Object.entries(oldApplied)) attrs[k] = Math.max(1, attrs[k] - v)
+      for (const [k, v] of Object.entries(newBonuses)) attrs[k] = Math.min(30, attrs[k] + v)
+      return {
+        ...prev,
+        info: { ...prev.info, subrace: newSubraceIndex },
+        attributes: attrs,
+        appliedRacialBonuses: newBonuses,
+        meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+      }
+    })
+  }
+
+  // Troca antecedente: mapeia perícias PT-BR para chaves e armazena em backgroundSkills
+  function handleBackgroundChange(newBgIndex) {
+    const bg = backgrounds.find(b => b.index === newBgIndex)
+    const bgSkillKeys = (bg?.skill_proficiencies ?? [])
+      .map(name => SKILLS.find(s => s.name === name)?.key)
+      .filter(Boolean)
+    setCharacter(prev => ({
+      ...prev,
+      info: { ...prev.info, background: newBgIndex },
+      proficiencies: { ...prev.proficiencies, backgroundSkills: bgSkillKeys },
+      meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+    }))
   }
 
   // Navega entre abas — valida a aba atual se for avanço
@@ -295,7 +344,9 @@ export function CharacterSheet({ characterId, onBack }) {
               classes={classes}
               backgrounds={backgrounds}
               errors={fichaErrors}
-              onApplyRaceBonuses={handleApplyRaceBonuses}
+              onRaceChange={handleRaceChange}
+              onSubraceChange={handleSubraceChange}
+              onBackgroundChange={handleBackgroundChange}
               onClassChange={handleClassChange}
             />
           </section>

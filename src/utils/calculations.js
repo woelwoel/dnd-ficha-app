@@ -62,6 +62,26 @@ export function calculateSpellAttackBonus(abilityScore, profBonus) {
 // Standard Array for ability scores
 export const STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]
 
+// Point Buy cost per score (PHB p.13)
+export const POINT_BUY_COST = { 8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9 }
+export const POINT_BUY_BUDGET = 27
+
+// Attribute key mappings (PT-BR)
+export const ABBR_TO_KEY = { FOR: 'str', DES: 'dex', CON: 'con', INT: 'int', SAB: 'wis', CAR: 'cha' }
+export const ATTR_NAME_TO_KEY = {
+  'Força': 'str', 'Destreza': 'dex', 'Constituição': 'con',
+  'Inteligência': 'int', 'Sabedoria': 'wis', 'Carisma': 'cha',
+}
+export const SPELL_ABILITY_PT_TO_KEY = {
+  'Inteligência': 'int', 'Sabedoria': 'wis', 'Carisma': 'cha',
+}
+
+export const ALIGNMENTS = [
+  'Leal e Bom', 'Neutro e Bom', 'Caótico e Bom',
+  'Leal e Neutro', 'Neutro', 'Caótico e Neutro',
+  'Leal e Mau', 'Neutro e Mau', 'Caótico e Mau',
+]
+
 // Ability score names
 export const ABILITY_SCORES = [
   { key: 'str', name: 'Força', abbr: 'FOR' },
