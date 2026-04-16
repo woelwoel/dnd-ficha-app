@@ -14,6 +14,15 @@ import { CharacterView } from './CharacterView'
 import { LevelProgression } from './LevelProgression'
 import { ABILITY_SCORES } from '../../utils/calculations'
 
+// Mapeamentos PT-BR para chaves de atributo e atributo de magia
+const ATTR_NAME_TO_KEY = {
+  'Força': 'str', 'Destreza': 'dex', 'Constituição': 'con',
+  'Inteligência': 'int', 'Sabedoria': 'wis', 'Carisma': 'cha',
+}
+const SPELL_ABILITY_NAME_TO_KEY = {
+  'Inteligência': 'int', 'Sabedoria': 'wis', 'Carisma': 'cha',
+}
+
 const TABS = [
   { id: 'ficha',       label: 'Ficha'       },
   { id: 'percias',     label: 'Perícias'    },
@@ -93,6 +102,22 @@ export function CharacterSheet({ characterId, onBack }) {
     const timer = setTimeout(() => setSaved(false), 1500)
     return () => clearTimeout(timer)
   }, [character])
+
+  // Muda classe e aplica automaticamente: salvaguardas, atributo de magia e dado de vida
+  function handleClassChange(newClassIndex) {
+    const cls = classes.find(c => c.index === newClassIndex) ?? null
+    const saveKeys    = (cls?.saving_throws ?? []).map(n => ATTR_NAME_TO_KEY[n]).filter(Boolean)
+    const spellKey    = cls?.spellcasting_ability ? (SPELL_ABILITY_NAME_TO_KEY[cls.spellcasting_ability] ?? null) : null
+    const hitDice     = cls?.hit_die ? `1d${cls.hit_die}` : character.combat.hitDice
+    setCharacter(prev => ({
+      ...prev,
+      info:          { ...prev.info, class: newClassIndex },
+      proficiencies: { ...prev.proficiencies, savingThrows: saveKeys },
+      spellcasting:  { ...prev.spellcasting, ability: spellKey },
+      combat:        { ...prev.combat, hitDice },
+      meta:          { ...prev.meta, updatedAt: new Date().toISOString() },
+    }))
+  }
 
   // Aplica bônus de raça/sub-raça nos atributos (soma ao valor atual)
   function handleApplyRaceBonuses(bonusesByKey) {
@@ -250,6 +275,7 @@ export function CharacterSheet({ characterId, onBack }) {
               backgrounds={backgrounds}
               errors={fichaErrors}
               onApplyRaceBonuses={handleApplyRaceBonuses}
+              onClassChange={handleClassChange}
             />
           </section>
 
@@ -285,6 +311,7 @@ export function CharacterSheet({ characterId, onBack }) {
               proficiencies={character.proficiencies}
               level={character.info.level}
               onToggle={toggleSaveProficiency}
+              classData={classData}
             />
           </section>
         </div>
@@ -298,6 +325,7 @@ export function CharacterSheet({ characterId, onBack }) {
           level={character.info.level}
           onToggle={toggleSkillProficiency}
           onToggleExpertise={toggleExpertiseSkill}
+          classData={classData}
         />
       )}
 
@@ -307,6 +335,7 @@ export function CharacterSheet({ characterId, onBack }) {
           character={character}
           attributes={character.attributes}
           level={character.info.level}
+          classData={classData}
           onUpdateSpellcasting={updateSpellcasting}
           onAddSpell={addSpell}
           onRemoveSpell={removeSpell}

@@ -1,18 +1,27 @@
 import { SKILLS, ABILITY_SCORES, formatModifier, calculateSkillModifier, getProficiencyBonus, getModifier } from '../../utils/calculations'
 import { Tooltip } from '../Tooltip'
 
-export function SkillsList({ attributes, proficiencies, level, onToggle, onToggleExpertise }) {
-  const profBonus = getProficiencyBonus(level)
+export function SkillsList({ attributes, proficiencies, level, onToggle, onToggleExpertise, classData }) {
+  const profBonus    = getProficiencyBonus(level)
+  const skillLimit   = classData?.skill_choices?.count ?? null
+  const selectedCount = proficiencies.skills.length
+  const atLimit      = skillLimit !== null && selectedCount >= skillLimit
 
   return (
     <div className="bg-gray-800 border border-gray-600 rounded-lg p-4">
-      <h3 className="text-sm font-bold text-amber-400 uppercase tracking-widest mb-3">
+      <h3 className="text-sm font-bold text-amber-400 uppercase tracking-widest mb-1">
         Perícias
-        <span className="ml-2 text-gray-500 font-normal normal-case text-xs">
-          Bônus de proficiência: {formatModifier(profBonus)}
-          <span className="ml-2 text-gray-600">· ★ = Especialização (×2 Prof)</span>
-        </span>
       </h3>
+      <div className="flex flex-wrap gap-x-4 gap-y-0.5 mb-3 text-xs text-gray-500">
+        <span>Prof: {formatModifier(profBonus)}</span>
+        {skillLimit !== null && (
+          <span className={selectedCount >= skillLimit ? 'text-amber-500' : ''}>
+            {selectedCount}/{skillLimit} selecionadas
+            {selectedCount > skillLimit && <span className="text-red-400 ml-1">(excedido)</span>}
+          </span>
+        )}
+        <span className="text-gray-600">★ = Especialização (×2 Prof)</span>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
         {SKILLS.map(({ key, name, ability, abbr }) => {
           const proficient = proficiencies.skills.includes(key)
@@ -26,13 +35,15 @@ export function SkillsList({ attributes, proficiencies, level, onToggle, onToggl
           tooltipParts.push(`= ${formatModifier(mod)}`)
           const tooltip = tooltipParts.join(' + ').replace('+ =', '=')
 
+          const limitReached = atLimit && !proficient
           return (
-            <div key={key} className="flex items-center gap-1.5 py-0.5">
+            <div key={key} className={`flex items-center gap-1.5 py-0.5 ${limitReached ? 'opacity-50' : ''}`}>
               <input
                 type="checkbox"
                 checked={proficient}
-                onChange={() => onToggle(key)}
-                className="accent-amber-400 cursor-pointer flex-shrink-0"
+                disabled={limitReached}
+                onChange={() => !limitReached && onToggle(key)}
+                className={`flex-shrink-0 ${limitReached ? 'cursor-not-allowed opacity-60' : 'accent-amber-400 cursor-pointer'}`}
               />
               {/* Botão de especialização — invisível quando não proficiente para manter alinhamento */}
               <button

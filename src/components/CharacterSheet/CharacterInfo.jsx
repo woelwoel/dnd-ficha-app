@@ -252,7 +252,7 @@ function TableSection({ title, items }) {
 }
 
 /* ── Componente principal ── */
-export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, errors = {}, onApplyRaceBonuses }) {
+export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, errors = {}, onApplyRaceBonuses, onClassChange }) {
   const [modal, setModal] = useState(null) // 'race' | 'class' | 'background' | null
 
   const selectedRace    = races.find(r => r.index === info.race)
@@ -393,7 +393,7 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
           <select
             id="field-class"
             value={info.class}
-            onChange={e => onUpdate('class', e.target.value)}
+            onChange={e => onClassChange?.(e.target.value) ?? onUpdate('class', e.target.value)}
             aria-describedby={errors.class ? 'err-class' : undefined}
             className={fieldCls(!!errors.class)}
           >
@@ -471,19 +471,6 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
             <option key={a} value={a}>{a}</option>
           ))}
         </select>
-      </div>
-
-      {/* XP */}
-      <div>
-        <label className="block text-xs text-gray-400 mb-1">Experiência (XP)</label>
-        <input
-          type="number"
-          min={0}
-          value={info.xp}
-          onChange={e => onUpdate('xp', Math.max(0, parseInt(e.target.value) || 0))}
-          onWheel={e => e.currentTarget.blur()}
-          className="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-        />
       </div>
 
       {/* Modais */}

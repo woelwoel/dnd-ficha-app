@@ -2,10 +2,17 @@ import { useState, useEffect } from 'react'
 import { SrdSearchModal } from '../SrdSearchModal'
 import { formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus, getProficiencyBonus } from '../../utils/calculations'
 
-const SPELLCASTER_ABILITIES = {
-  bard: 'cha', cleric: 'wis', druid: 'wis',
-  paladin: 'cha', ranger: 'wis', sorcerer: 'cha',
-  warlock: 'cha', wizard: 'int',
+// Mapeia nome completo PT-BR do atributo para a chave usada no estado
+const SPELL_ABILITY_PT_TO_KEY = {
+  'Inteligência': 'int', 'Sabedoria': 'wis', 'Carisma': 'cha',
+}
+// Abreviações PT-BR para exibição
+const KEY_TO_ABBR_PT = { int: 'INT', wis: 'SAB', cha: 'CAR', str: 'FOR', dex: 'DES', con: 'CON' }
+// Mapeia índice PT-BR da classe para o índice inglês usado no 5e-SRD-Levels.json
+const PT_CLASS_TO_EN = {
+  barbaro: 'barbarian', bardo: 'bard', bruxo: 'warlock', clerigo: 'cleric',
+  druida: 'druid', feiticeiro: 'sorcerer', guerreiro: 'fighter', ladino: 'rogue',
+  mago: 'wizard', monge: 'monk', paladino: 'paladin', patrulheiro: 'ranger',
 }
 
 const SCHOOL_ABBR = {
@@ -29,16 +36,19 @@ function normalizeSpell(s) {
   }
 }
 
-export function Spells({ character, attributes, level, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onToggleSlot }) {
+export function Spells({ character, attributes, level, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onToggleSlot }) {
   const [srdSpells, setSrdSpells] = useState([])
   const [levelSlots, setLevelSlots] = useState(null)
   const [searchOpen, setSearchOpen] = useState(false)
   const [expandedSpell, setExpandedSpell] = useState(null)
 
-  const classIndex = character.info?.class?.toLowerCase() || ''
-  const isSpellcaster = classIndex in SPELLCASTER_ABILITIES
-  const defaultAbility = SPELLCASTER_ABILITIES[classIndex] || null
-  const spellAbility = character.spellcasting.ability || defaultAbility
+  const classIndex    = character.info?.class || ''
+  // Atributo de magia vem da classe (via classData) — armazenado no estado pelo handleClassChange
+  const classAbility  = classData?.spellcasting_ability
+    ? (SPELL_ABILITY_PT_TO_KEY[classData.spellcasting_ability] ?? null)
+    : null
+  const isSpellcaster = classAbility !== null
+  const spellAbility  = character.spellcasting.ability ?? classAbility
 
   const profBonus = getProficiencyBonus(level)
   const abilityScore = spellAbility ? attributes[spellAbility] : 10
@@ -59,18 +69,19 @@ export function Spells({ character, attributes, level, onUpdateSpellcasting, onA
       })
   }, [])
 
-  // Load spell slots for this class+level from SRD
+  // Load spell slots for this class+level from SRD (usa índice inglês para busca)
+  const classIndexEn = PT_CLASS_TO_EN[classIndex] ?? classIndex
   useEffect(() => {
-    if (!classIndex) return
+    if (!classIndexEn) return
     fetch('/srd-data/5e-SRD-Levels.json')
       .then(r => r.json())
       .then(data => {
-        const entry = data.find(l => l.class?.index === classIndex && l.level === level)
+        const entry = data.find(l => l.class?.index === classIndexEn && l.level === level)
         if (entry?.spellcasting) setLevelSlots(entry.spellcasting)
         else setLevelSlots(null)
       })
       .catch(() => {})
-  }, [classIndex, level])
+  }, [classIndexEn, level])
 
   const usedSlots = character.spellcasting.usedSlots || {}
   const spells = character.spellcasting.spells || []
@@ -99,16 +110,12 @@ export function Spells({ character, attributes, level, onUpdateSpellcasting, onA
           </div>
           <div className="flex flex-col items-center bg-gray-900 rounded p-2">
             <span className="text-xs text-gray-400 mb-1">Atributo</span>
-            <select
-              value={character.spellcasting.ability || ''}
-              onChange={e => onUpdateSpellcasting('ability', e.target.value || null)}
-              className="bg-transparent text-white font-bold text-sm focus:outline-none text-center"
-            >
-              <option value="">Auto</option>
-              <option value="int">INT</option>
-              <option value="wis">SAB</option>
-              <option value="cha">CAR</option>
-            </select>
+            <span className="text-white font-bold text-xl leading-none mt-0.5">
+              {spellAbility ? KEY_TO_ABBR_PT[spellAbility] : '—'}
+            </span>
+            {classData?.spellcasting_ability && (
+              <span className="text-[10px] text-gray-600 mt-0.5 leading-none">{classData.spellcasting_ability}</span>
+            )}
           </div>
         </div>
 
@@ -156,7 +163,7 @@ export function Spells({ character, attributes, level, onUpdateSpellcasting, onA
           </div>
         ) : classIndex && !isSpellcaster ? (
           <p className="text-xs text-gray-500">
-            {classIndex.charAt(0).toUpperCase() + classIndex.slice(1)} não possui conjuração.
+            {classData?.name ?? classIndex} não possui conjuração.
           </p>
         ) : !classIndex ? (
           <p className="text-xs text-gray-500">Selecione uma classe na aba Ficha para ver os espaços.</p>

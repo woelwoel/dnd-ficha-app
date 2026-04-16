@@ -1,0 +1,670 @@
+=== ANTECEDENTE: ACÓLITO (pág 128-129) ===
+129 
+ACÓLITO 
+Você viveu a serviço de um templo de algum deus 
+especifico ou de um panteão de deuses. Você age como um 
+intermediário entre o reino divino e o reino dos mortais, 
+realizando rituais e ofertando sacrifícios para conduzir 
+cada vez mais pessoas a adorarem a divindade. Você não 
+é necessariamente um clérigo – realizar ritos sagrados 
+não é a mesma coisa que canalizar poder divino. 
+Escolha um deus, um panteão de deuses ou outro ser 
+quase divino entre aqueles descritos no apêndice B ou 
+outro especificado pelo seu Mestre para detalhar a 
+natureza do seu serviço religioso. Você foi um serviçal 
+menor no templo, criado desde a infância para auxiliar os 
+sacerdotes em ritos sagrados? Ou você foi um alto 
+sacerdote que repentinamente sentiu o chamado para 
+servir seu deus de uma maneira diferente? Talvez você foi 
+o líder de um pequeno culto não associado a templo
+algum, ou mesmo uma seita secreta que servia a uma 
+entidade demoníaca que agora você nega. 
+Proficiência em Perícias: Intuição, Religião 
+Idiomas: Dois à sua escolha 
+Equipamento: Um símbolo sagrado (um presente dado 
+quando você entrou no templo), um livro de preces ou 
+uma conta de orações, 5 varetas de incenso, 
+vestimentas, um conjunto de roupas comuns e uma 
+algibeira contendo 15 po 
+CARACTERÍSTICA: ABRIGO DOS FIÉIS
+Como um acólito, você detém o respeito daqueles que 
+compartilham de sua fé, e você pode realizar cerimônias 
+de sua divindade. Você e seus companheiros de aventura 
+podem até receber cura e caridade de um templo, 
+santuário ou outro posto de sua fé, embora devam 
+fornecer quaisquer componentes materiais necessários 
+para as magias. Aqueles que compartilham de sua 
+religião vão garantir a você (mas apenas você), custeando 
+um estilo de vida modesto. 
+Você também pode possuir laços com um templo 
+específico devotado à sua divindade ou panteão, e fixar 
+residência nele. Pode ser o templo que você está 
+acostumado a servir, se ainda tiver boas relações com ele, 
+ou um templo no qual você encontrou um novo lar. 
+Enquanto frequentar as redondezas desse templo, você 
+pode solicitar os sacerdotes para assisti-lo, desde que essa 
+assistência não seja de alguma forma perigosa e que você 
+sempre esteja em uma boa relação com seu templo. 
+CARACTERÍSTICAS SUGERIDAS
+Acólitos são moldados pela sua experiência em templos ou 
+comunidades religiosas. Seu estudo da história e dogmas 
+de sua fé, e sua relação com os templos, santuários ou 
+hierarquias afetam seus maneirismos e ideais. Seus 
+defeitos podem ser uma hipocrisia oculta ou ideias 
+hereges, ou um ideal ou vínculo visto como fanatismo. 
+d8 
+Traço de Personalidade 
+1 
+Eu idolatro um herói particular da minha fé, e 
+constantemente me refiro a seus feitos e exemplos. 
+2 
+Eu consigo encontrar semelhanças mesmo entre os 
+inimigos mais violentos, com empatia e sempre 
+trabalhando pela paz. 
+3 
+Eu vejo presságios em cada evento e ação. Os deuses 
+estão falando conosco, nós apenas temos de ouvi-los. 
+4 
+Nada pode abalar minha atitude otimista. 
+5 
+Eu cito (corretamente ou não) textos sagrados e 
+provérbios em quase qualquer situação. 
+6 
+Eu sou tolerante (ou intolerante) a qualquer outra fé, e 
+respeito (ou condeno) a adoração a outros deuses. 
+7 
+Eu aprecio comida requintada, bebidas e a elite entre o 
+alto escalão de meu templo. Uma vida dura me irrita. 
+8 
+Eu passei tanto tempo no templo que possuo pouca 
+prática em lidar com as pessoas mundo a fora. 
+d6 
+Ideal 
+1 
+Tradição. As tradições ancestrais de adoração e sacrifício 
+devem ser preservadas e perpetradas. (Leal) 
+2 
+Caridade. Eu sempre tento ajudar aqueles em 
+necessidade, não importando o custo pessoal. (Bom) 
+3 
+Mudança. Nós devemos ajudar a conduzir as mudanças 
+que os deuses estão constantemente trabalhando para o 
+mundo. (Caótico) 
+4 
+Poder. Eu espero que um dia eu consiga chegar ao topo 
+na hierarquia da minha religião. (Leal) 
+5 
+Fé. Eu acredito que minha divindade guia minhas ações. 
+Eu tenho fé que, se eu trabalhar duro, coisas boas 
+acontecerão. (Leal) 
+6 
+Aspiração. Eu busco ser digno da graça do meu deus ao 
+corresponder minhas ações aos seus ensinamentos. 
+(Qualquer) 
+d6 
+Vínculo 
+1 
+Eu morreria para recuperar uma relíquia ancestral de 
+minha fé, perdida há muito tempo. 
+2 
+Eu ainda terei minha vingança contra o templo corrupto 
+que me acusou de heresia. 
+3 
+Eu devo minha vida ao sacerdote que me acolheu quando 
+meus pais morreram. 
+4 
+Tudo o que faço, faço pelo povo. 
+5 
+Eu farei qualquer coisa para proteger o templo que sirvo. 
+6 
+Eu busco guardar um texto sagrado que meus inimigos 
+dizem ser herético e tentam destruí-lo. 
+d6 
+Defeito 
+1 
+Eu julgo os outros severamente, e a mim mesmo mais 
+ainda. 
+2 
+Eu deposito muita confiança naqueles que detêm o poder 
+na hierarquia de meu templo. 
+3 
+Minha devoção é muitas vezes me cega perante aqueles 
+que professam a fé do meu deus. 
+4 
+Meu pensamento é inflexível. 
+5 
+Eu suspeito de estranhos e sempre espero o pior deles. 
+6 
+Depois de escolher um objetivo, eu fico obcecado em 
+cumpri-lo, até mesmo em detrimento de qualquer outra 
+coisa em minha vida. 
+
+130 
+ARTESÃO DE GUILDA 
+Você é membro de uma guilda de artesãos, perito em um 
+campo especifico e intimamente associado a outros 
+artesãos. Você é uma parte bem estabelecida do mundo 
+mercantil, livre, graças aos seus talentos e riqueza, das 
+restrições de uma ordem social feudal. Você aprendeu 
+suas perícias como aprendiz de um mestre artesão, com o 
+patrocínio da sua guilda, até se tornar um mestre por 
+seus próprios méritos.  
+Proficiência em Perícias: Intuição, Persuasão 
+Proficiência em Ferramentas: Um tipo de ferramenta 
+de artesão 
+Idiomas: Uma, à sua escolha 
+Equipamento: Um conjunto de ferramentas de artesão 
+(à sua escolha), uma carta de apresentação da sua 
+guilda, um conjunto de roupas de viajante e uma 
+algibeira com 15 po  
+NEGÓCIOS DA GUILDA
+Guildas são encontradas, geralmente, em cidades grandes 
+o suficiente para suportar inúmeros artesãos praticando o
+mesmo negócio. No entanto, sua guilda, ao invés disso, 
+pode ser uma rede de artesãos, cada um trabalhando em 
+uma vila diferente dentro de um reino maior. Converse 
+com o Mestre para determinar a natureza da sua guilda. 
+Você pode escolher seu negócio da guilda da tabela 
+Negócios da Guilda ou rolar aleatoriamente.  
+Como um membro da sua guilda, você conhece as 
+perícias necessárias para criar itens completos a partir de 
+matéria-prima (refletido na sua proficiência em um certo 
+tipo de ferramenta de artesão), assim como, os princípios 
+de comércio e boas práticas comerciais. A questão agora é 
+se você abandona seu comércio para se aventurar ou faz 
+um esforço extra para tentar manter aventuras e 
+comércio juntos. 
+d20 
+Negócios da Guilda 
+1 
+Alquimistas e boticários 
+2 
+Armeiros, chaveiros e ferreiros finos 
+3 
+Cervejeiros, destiladores e viticultores 
+4 
+Calígrafos, escribas e escrivães 
+5 
+Carpinteiros, construtores de telhado e estucadores 
+6 
+Cartógrafos, agrimensores e desenhistas 
+7 
+Remendões e sapateiros 
+8 
+Cozinheiros e padeiros 
+9 
+Vidraceiros e escultores 
+10 
+Joalheiros e lapidários 
+11 
+Coureiros, peleiros e curtidores 
+12 
+Pedreiros e marceneiros 
+13 
+Pintores, iluminadores e construtores de placas 
+14 
+Oleiros e telheiros 
+15 
+Armadores e veleiros 
+16 
+Ferreiros e forjadores 
+17 
+Funileiros, latoeiros e galheteiros 
+18 
+Fabricantes de carroças e fabricantes de rodas 
+19 
+Tecelões e tintureiros 
+20 
+Entalhadores, tanoeiros e construtores de arcos 
+CARACTERÍSTICA: ASSOCIADOS DA GUILDA
+Como um membro cativo e respeitado da guilda, você 
+pode contar com certos benefícios que a sociedade 
+garante. Seus camaradas, membros da guilda, irão provê-
+lo com hospedagem e comida, se necessário, e pagarão 
+pelo seu funeral se preciso for. Em algumas cidades e 
+vilas, um salão da guilda oferece um local central para 
+conhecer outros membros de profissão, podendo ser um 
+bom lugar para se conhecer patrões, aliados e empregados 
+em potencial. 
+Guildas, muitas vezes, detêm tremendos poderes 
+políticos. Se você for acusado de um crime, sua guilda irá 
+ampará-lo se uma boa defesa puder ser apresentada para 
+provar sua inocência ou se o crime for justificável. Você 
+pode, também, ter acesso a figuras políticas poderosas 
+através da guilda, se você for um membro bem 
+posicionado. Tais conexões devem exigir doações de 
+dinheiro ou itens mágicos para os cofres da guilda. 
+Você deve pagar cotas de 5 po por mês a guilda. Se 
+você não pagar, você irá contrair uma dívida para 
+permanecer nas boas graças da guilda. 
+CARACTERÍSTICAS SUGERIDAS
+Artesões de guilda estão dentre as pessoas mais comuns 
+do mundo – até que eles largam suas ferramentas e fazem 
+uma carreira como aventureiros. Eles compreendem o 
+valor do trabalho duro e a importância da comunidade, 
+mas eles são vulneráveis aos pegados da ganância e 
+cobiça. 
+
+
+=== RAÇA: ANÃO (pág 17-19) ===
+18 
+ANÃO
+"ESTÁ ATRASADO, ELFO!", O DROW OUVIU O TOM ÁSPERO DE
+uma voz familiar. Bruenor Martelo de Batalha subiu 
+pelas costas do adversário morto, desconsiderando o fato 
+de que o pesado monstro jazia sobre seu amigo élfico. 
+Apesar desse novo desconforto, o nariz grande, pontudo e 
+várias vezes quebrado do anão – bem como sua barba 
+vermelha, raiada de branco, mas ainda cor de fogo – 
+surgiu como uma visão agradável para Drizzt. "Eu sabia 
+que ia te encontrar encrencado se saísse para te procurar!" 
+– R.A. Salvatore, A Estilha de Cristal
+Reinos ricos de antiga grandeza, salões esculpidos nas 
+raízes das montanhas, o eco de picaretas e martelos nas 
+minas profundas e nas forjas ardentes, um compromisso 
+com o clã e a tradição, e um ódio impetuoso contra goblins 
+e orcs – essas linhas comuns unem todos os anões. 
+BAIXOS E ROBUSTOS 
+Audazes e resistentes, os anões são 
+conhecidos como hábeis guerreiros, 
+mineradores e trabalhadores em pedra e 
+metal. Embora tenham menos de 1,50 metro 
+de altura, os anões são tão largos e 
+compactos que podem pesar tanto quanto 
+um humano 60 centímetros mais alto. Sua 
+coragem e resistência compete facilmente 
+com qualquer povo mais alto. A pele dos 
+anões varia do marrom escuro a um matiz  
+mais pálido, tingido de vermelho, mas os tons mais 
+comuns são o castanho claro ou bronzeado, como certos 
+tons terrosos. O cabelo é longo, mas de estilo simples, 
+geralmente negro, cinzento ou castanho, embora anões 
+mais pálidos frequentemente possuem cabelos ruivos. 
+Anões machos valorizam altamente suas barbas e 
+preparam-nas com cuidado. 
+LONGA MEMORIA, LONGO RANCOR 
+Anões podem viver mais de 400 anos, então os anões mais 
+antigos ainda vivos muitas vezes lembram-se de um 
+mundo muito diferente. Por exemplo, alguns dos anões 
+mais velhos que vivem na Cidadela de Felbarr (nos 
+Reinos Esquecidos) lembram-se do dia, há mais de três 
+séculos, que os orcs conquistaram sua fortaleza, forçando-
+os a um exílio que durou mais de 250 anos. Essa 
+longevidade concede aos anões uma perspectiva sobre o 
+mundo que falta às raças de menor longevidade, como os 
+humanos e os halflings. 
+Anões são sólidos e duradouros como suas amadas 
+montanhas, resistindo à passagem dos séculos com 
+estoica resistência e poucas mudanças. Eles respeitam as 
+tradições de seus clãs, traçando a história de seus 
+ancestrais a partir da fundação de suas mais antigas 
+fortalezas, na juventude do próprio mundo, e não as 
+abandonam facilmente. Uma parte dessas tradições 
+envolve a devoção aos deuses dos anões, aqueles que 
+defendem os ideais anões de ser trabalhador, hábil em 
+combate e devoto à forja. 
+Os anões são determinados e leais, fiéis à sua palavra 
+e decididos quando agem, às vezes a ponto de serem 
+teimosos. Muitos anões têm um forte senso de justiça e 
+demoram a se esquecer de erros cometidos contra eles.  
+
+19 
+Uma injustiça cometida contra um anão é uma ofensa 
+para todo seu clã. O que começa como uma busca por 
+vingança de um único anão, pode se tornar a ambição de 
+todo um clã. 
+CLÃS E REINOS 
+Os reinos anões estendem-se pelas profundezas das 
+montanhas, onde eles mineram gemas e metais preciosos, 
+e forjam itens admiráveis. Eles amam a beleza e a arte 
+dos metais preciosos e das joias finas e, em alguns anões, 
+esse amor transforma-se em avareza. O que não pode ser 
+encontrado em suas montanhas, eles adquirem através do 
+comércio. Eles não gostam de barcos, embora os 
+comerciantes humanos e halflings lidem frequentemente 
+com o comércio de bens anões por rotas marítimas. 
+Membros de confiança de outras raças são bem-vindos em 
+assentamentos anões, embora algumas áreas dessas 
+cidades sejam vetadas até mesmo para eles. 
+A unidade mor de uma sociedade anã é o clã, e os 
+anões valorizam altamente o status social. Mesmo anões 
+que vivem longe de seus próprios reinos valorizam suas 
+identidades e filiações de clãs, reconhecem os anões 
+parentes, e invocam os nomes de seus ancestrais em 
+juramentos e xingamentos. Não possuir um clã é o pior 
+destino de um anão.  
+Anões em outras terras são tipicamente artesãos, 
+geralmente ferreiros, armeiros e joalheiros. Alguns são 
+mercenários ou guarda-costas, procurados pela sua 
+coragem e lealdade, e bem recompensados por seus 
+serviços. 
+DEUSES, OURO E CLÃ 
+Anões que seguem uma vida de aventuras podem ser 
+motivados pelo desejo por tesouros – para uso próprio, 
+para um propósito específico ou mesmo a partir do desejo 
+altruísta de ajudar os outros. Outros anões são guiados 
+pelo comando ou pela inspiração de uma divindade, um 
+chamado direto ou simplesmente o desejo de trazer glória 
+a um dos deuses anões. O clã e os ancestrais de um anão 
+também são motivações importantes. Um anão pode 
+buscar restaurar a honra perdida de um clã, vingar uma 
+antiga ofensa sofrida pelo clã ou reconquistar um lugar no 
+clã depois de ter sido exilado. Ou um anão pode buscar 
+por um machado empunhado por um poderoso ancestral, 
+perdido no campo de batalha há séculos. 
+DIFÍCEIS DE CONFIAR 
+Anões convivem razoavelmente bem com a maioria das outras 
+raças. "A diferença entre um conhecido e um amigo é cerca de 
+cem anos", é um ditado anão que pode ser uma hipérbole, mas 
+certamente demonstra o quanto é difícil ganhar a confiança de 
+um anão para o membro de uma raça de vida curta, como os 
+humanos. 
+Elfos. "Não é sensato depender dos elfos. É difícil prever o 
+que um elfo vai fazer a seguir. Quando o martelo encontra a 
+cabeça do orc, eles podem tanto começar a cantar ou sacar uma 
+espada, ninguém sabe. Eles são volúveis e fúteis. Duas coisas a 
+serem ditas sobre os elfos: eles não têm muitos ferreiros, mas os 
+que têm fazem muito bem o trabalho. E quando orcs ou goblins 
+avançam pelas montanhas, é bom ter um elfo ao seu lado. Talvez 
+não tão bom quanto um anão, mas sem dúvida eles odeiam os 
+orcs tanto quanto nós." 
+Halflings. "Claro, eles são gente boa. Mas me mostre um 
+herói halfling. Um império, um exército triunfante. Até mesmo um 
+tesouro conquistado pelas mãos de um halfling. Nada. Como você 
+pode levá-los a sério?" 
+Humanos. "Você começa a conhecer uma humana, e então 
+ela já está em seu leito de morte. Se você tiver sorte, ela terá 
+descendentes – talvez uma filha ou neta – que têm mãos e 
+coração tão bons quanto o dela. Só assim você pode fazer um 
+amigo humano. E assisti-los partir! Se eles colocam o coração em 
+algo, eles vão atrás, seja o tesouro de um dragão ou o trono de 
+um império. Essa dedicação é digna de admiração, mesmo que ela 
+os ponha em apuros com muita frequência." 
+
+20 
+NOMES ANÕES 
+O nome de um anão é concedido pelo ancião de um clã, de 
+acordo com a tradição. Todos os nomes próprios anões têm 
+sido utilizados e reutilizados através de gerações. O nome 
+de um anão pertence ao clã, não ao indivíduo. Um anão 
+que o usar indevidamente ou trouxer vergonha ao clã tem 
+seu nome retirado e está proibido por lei de usar qualquer 
+outro nome anão em seu lugar.  
+Nomes masculinos: Adrik, Alberich, Baern, Barendd, 
+Brottor, Bruenor, Dain, Darrak, Delg, Eberk, Einkil, 
+Fargrim, Flint, Gardain, Harbek, Kildrak, Morgran, 
+Orsik, Oskar, Rangrim, Rurik, Taklinn, Thoradin, 
+Thorin, Tordek, Traubon, Travok, Ulfgar, Veit, 
+Vondal. 
+Nomes femininos: Amber, Artin, Audhild, Bardryn, 
+Dagnal, Diesa, Eldeth, Falkrunn, Gunnloda, Gurdis, 
+Helja, Hlin, Kathra, Kristryd, Ilde, Liftrasa, Mardred, 
+Riswynn, Sannl, Torbera, Torgga, Vistra. 
+Nomes de Clãs: Balderk, Battlehammer, Brawnanvil, 
+Dankil, Fireforge, Frostbeard, Gorunn, Holderhek, 
+Ironfist, Loderr, Lutgehr, Rumnaheim, Strakeln, 
+Torunn, Ungart. 
+TRAÇOS RACIAIS DOS ANÕES 
+Um personagem anão possui uma variedade de 
+habilidades inatas, parte integrante da natureza dos 
+anões. 
+Aumento no Valor de Habilidade. Seu valor de 
+Constituição aumenta em 2.  
+Idade. Anões tornam-se maduros na mesma 
+proporção que os humanos, mas são considerados jovens 
+até atingirem a idade de 50 anos. Em média, eles vivem 
+350 anos. 
+Tendência. A maioria dos anões é leal, pois acreditam 
+firmemente nos benefícios de uma sociedade bem 
+organizada. Eles tendem para o bem, com um forte senso 
+de honestidade e uma crença de que todos merecem 
+compartilhar os benefícios de uma ordem social justa. 
+Tamanho. Anões estão entre 1,20 e 1,50 metro de 
+altura e pesam cerca de 75 kg. Seu tamanho é Médio. 
+Deslocamento. Seu deslocamento base de caminhada 
+é de 7,5 metros. Seu deslocamento não é reduzido quando 
+estiver usando armadura pesada.  
+Visão no Escuro. Acostumado à vida subterrânea, 
+você tem uma visão superior no escuro e na penumbra. 
+Você enxerga na penumbra a até 18 metros como se fosse 
+luz plena, e no escuro como se fosse na penumbra. Você 
+não pode discernir cores no escuro, apenas tons de cinza. 
+Resiliência Anã. Você possui vantagem em testes de 
+resistência contra venenos e resistência contra dano de 
+veneno (explicado no capítulo 9). 
+Treinamento Anão em Combate. Você tem 
+proficiência com machados de batalha, machadinhas, 
+martelos leves e martelos de guerra. 
+Proficiência com Ferramentas. Você tem 
+proficiência em uma ferramenta de artesão à sua escolha 
+entre: ferramentas de ferreiro, suprimentos de cervejeiro 
+ou ferramentas de pedreiro. 
+Especialização em Rochas. Sempre que você 
+realizar um teste de Inteligência (História) relacionado à 
+origem de um trabalho em pedra, você é considerado 
+proficiente na perícia História e adiciona o dobro do seu 
+bônus de proficiência ao teste, ao invés do seu bônus de 
+proficiência normal. 
+Idiomas. Você pode falar, ler e escrever Comum e 
+Anão. O idioma Anão é repleto de consoantes duras e sons 
+guturais, e essa característica influencia, como um 
+sotaque, qualquer outro idioma que o anão falar. 
+Sub-raça. Existem duas sub-raças principais de 
+anões nos mundos de D&D: anões da colina e anões da 
+montanha. Você deve escolher uma dessas sub-raças. 
+ANÃO DA COLINA 
+Como um anão da colina, você tem sentidos aguçados, 
+maior intuição e notável resiliência. Os anões dourados de 
+Faerûn, que vivem em seu poderoso reino ao sul do 
+continente, são anões da colina, assim como os exilados 
+Neidar e os depreciáveis Klar de Krynn, no cenário de 
+Dragonlance. 
+Aumento no Valor de Habilidade. Seu valor de 
+Sabedoria aumenta em 1. 
+Tenacidade Anã. Seu máximo de pontos de vida 
+aumentam em 1, e cada vez que o anão da colina sobe um 
+nível, ele recebe 1 ponto de vida adicional. 
+ANÃO DA MONTANHA 
+Como um anão da montanha, você é forte e resistente, 
+acostumados a uma vida difícil em terrenos difíceis. Você, 
+provavelmente tem a descendência daqueles mais altos 
+(para um anão) e tende a possuir uma coloração mais 
+clara. Os anões do escudo do norte de Faerûn, bem como o 
+clã governante Hylar e os clãs nobres Daewar de 
+Dragonlance, são anões da montanha. 
+Aumento no Valor de Habilidade. Seu valor de 
+Força aumenta em 2. 
+Treinamento Anão com Armaduras. Você adquire 
+proficiência em armaduras leves e médias. 
+DUERGAR 
+Nas profundas cidades do Subterrâneo vivem os duergar, ou 
+anões cinzentos. Estes perversos e furtivos comerciantes de 
+escravos invadem o mundo da superfície para fazer prisioneiros, 
+então vendem suas presas para outras raças do Subterrâneo. Eles 
+têm habilidades mágicas inatas para tornarem-se invisíveis e 
+crescerem temporariamente até o tamanho de um gigante. 
+
+
+=== CLASSE: BÁRBARO (pág 45-46) ===
+46 
+BÁRBARO
+Um humano alto membro de alguma tribo caminha em 
+meio a uma nevasca, coberto por peles e empunhando seu 
+machado. Ele gargalha à medida que avança em direção 
+do gigante do gelo que ousou caçar os alces que o seu povo 
+arrebanhava. 
+Uma meio-orc rosna para o último que ousou desafiar 
+sua autoridade sobre a tribo selvagem, pronta para 
+quebrar seu pescoço com suas mãos nuas da mesma 
+forma que ela fez com os outros seis rivais anteriores. 
+Espumando pela boca, um anão bate com seu elmo na 
+cara de um inimigo drow, depois dirige seu cotovelo 
+armadurado na direção do estomago de outro. 
+Esses bárbaros, diferentes da forma que conseguem, 
+são definidos por sua fúria: desenfreada, inextinguível e 
+irracional fúria. Mais que uma mera emoção, sua raiva é 
+a ferocidade de um predador acuado, o assalto implacável 
+de uma tempestade, a turbulência agitada do mar. 
+Para alguns, suas fúrias emerge da comunhão com 
+ferozes espíritos animais. Outras provem de um 
+reservatório turvo de raiva de um mundo cheio de dor. 
+Para cada bárbaro, a fúria é um poder que preenche não 
+apenas o frenesi de batalha, mas também reflexos, 
+resiliência e proezas de força incríveis. 
+INSTINTO PRIMITIVO 
+As pessoas das cidades e vilas costumam se vangloriar de 
+como seus meios civilizados os diferencia dos animais, 
+como se renegar sua própria natureza fosse um indicio de 
+superioridade. Para um bárbaro, no entanto, a civilização 
+não é nenhuma virtude, mas um sinal de fraqueza. Os 
+fortes abraçam a sua natureza selvagem – instintos 
+aguçados, fisicalidade primitiva e fúria voraz. Bárbaros 
+ficam desconfortáveis quando estão cercados por 
+muralhas e multidões. Eles crescem na natureza 
+selvagem de suas terras natais: a tundra, selva ou 
+pradarias onde suas tribos vivem e caçam. 
+Os bárbaros se sentem mais vivos em meio ao caos do 
+combate. Eles podem entrar num estado de furor quando 
+sua fúria toma controle, concedendo-lhes força e 
+resiliência sobre-humanas. Um bárbaro pode consumir 
+desse reservatório de fúria apenas algumas vezes antes 
+de descansar, mas essas poucas fúrias geralmente são 
+suficientes para derrotar seja lá o que está ameaçando o 
+seu caminho. 
+UMA VIDA DE PERIGO 
+Nem todos os membros de uma tribo ditos como 
+“bárbaros” por descendentes de sociedades civilizadas 
+pertencem a classe bárbaro. Um bárbaro de verdade 
+dentre essas pessoas é tão incomum quanto um guerreiro 
+bem treinado em uma cidade, e ele possui um papel 
+similar como protetor do povo e líder em tempos de  
+
+47 
+O BÁRBARO 
+Nível 
+Bônus de 
+Proficiência Características 
+Fúrias 
+Dano 
+de Fúria 
+1° 
++2 
+Fúria, Defesa sem 
+Armadura 
+2 
++2 
+2° 
++2 
+Ataque Descuidado,  
+Sentido de Perigo 
+2 
++2 
+3° 
++2 
+Caminho Primitivo 
+3 
++2 
+4° 
++2 
+Incremento no Valor de 
+Habilidade 
+3 
++2 
+5° 
++3 
+Ataque Extra,  
+Movimento Rápido 
+3 
++2 
+6° 
++3 
+Característica de Caminho 
+Primitivo 
+4 
++2 
+7° 
++3 
+Instinto Selvagem 
+4 
++2 
+8° 
++3 
+Incremento no Valor de 
+Habilidade 
+4 
++2 
+9° 
++4 
+Crítico Brutal (+1 dado) 
+4 
++3 
+10° 
++4 
+Característica de Caminho 
+Primitivo 
+4 
++3 
+11° 
++4 
+Fúria Implacável 
+4 
++3 
+12° 
++4 
+Incremento no Valor de 
+Habilidade 
+5 
++3 
+13° 
++5 
+Crítico Brutal (+2 dados) 
+5 
++3 
+14° 
++5 
+Característica de Caminho 
+Primitivo 
+5 
++3 
+15° 
++5 
+Fúria Persistente 
+5 
++3 
+16° 
++5 
+Incremento no Valor de 
+Habilidade 
+5 
++4 
+17° 
++6 
+Crítico Brutal (+3 dados) 
+6 
++4 
+18° 
++6 
+Força Indomável 
+6 
++4 
+19° 
++6 
+Incremento no Valor de 
+Habilidade 
+6 
++4 
+20° 
++6 
+Campeão Primitivo 
+Ilimitado 
++4 
+guerra. A vida na natureza selvagem do mundo é cheia de 
+perigos: tribos rivais, clima mortal e monstros terríveis. 
+Bárbaros investem em direção ao perigo de cabeça para 
+que o seu povo não precise fazê-lo. 
+Sua coragem em frente ao perigo torna os bárbaros 
+perfeitos para se aventurarem. Peregrinar é, muitas 
+vezes, um meio de vida para tribos nativas e a vida 
+desenraizada de um aventureiro é um empecilho pequeno 
+para um bárbaro. Alguns bárbaros sentem falta das 
+estruturas familiares bem forjadas 

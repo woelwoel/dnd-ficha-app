@@ -13,7 +13,12 @@ export function AttributeBox({ abbr, name, value, onChange, error }) {
       error ? 'border-red-500' : 'border-gray-600'
     }`}>
       <span className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-1">{abbr}</span>
-      <div className="relative">
+      <div className="flex items-center gap-1 my-0.5">
+        <button
+          onClick={() => onChange(Math.max(1, value - 1))}
+          className="w-6 h-6 rounded bg-gray-700 hover:bg-gray-600 active:bg-gray-500 text-white font-bold text-sm flex items-center justify-center transition-colors"
+          aria-label={`Diminuir ${name}`}
+        >−</button>
         <input
           id={fieldId}
           type="number"
@@ -23,12 +28,15 @@ export function AttributeBox({ abbr, name, value, onChange, error }) {
           onChange={e => onChange(e.target.value)}
           onWheel={e => e.currentTarget.blur()}
           aria-describedby={error ? errId : undefined}
-          className={`w-16 text-center text-2xl font-bold bg-gray-700 border rounded text-white focus:outline-none focus:ring-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-            error
-              ? 'border-red-500 focus:border-red-400 focus:ring-red-400'
-              : 'border-gray-500 focus:border-amber-400 focus:ring-amber-400'
+          className={`w-10 text-center text-2xl font-bold bg-transparent text-white focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+            error ? 'text-red-300' : 'text-white'
           }`}
         />
+        <button
+          onClick={() => onChange(Math.min(30, value + 1))}
+          className="w-6 h-6 rounded bg-gray-700 hover:bg-gray-600 active:bg-gray-500 text-white font-bold text-sm flex items-center justify-center transition-colors"
+          aria-label={`Aumentar ${name}`}
+        >+</button>
       </div>
       <Tooltip content={tooltipMod} position="bottom">
         <div className={`mt-2 w-10 h-10 flex items-center justify-center rounded-full border-2 bg-gray-900 cursor-help ${

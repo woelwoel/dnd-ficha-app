@@ -144,7 +144,7 @@
       "Armas simples, bestas de mão, espadas longas,"
     ],
     "skill_choices": {
-      "count": 2,
+      "count": 3,
       "from": []
     },
     "spellcasting_ability": "Carisma",
@@ -900,7 +900,7 @@
       "Armas simples, bestas de mão, espadas longas,"
     ],
     "skill_choices": {
-      "count": 2,
+      "count": 4,
       "from": []
     },
     "spellcasting_ability": null,
@@ -1604,7 +1604,7 @@
       "Armas simples, armas marciais"
     ],
     "skill_choices": {
-      "count": 2,
+      "count": 3,
       "from": []
     },
     "spellcasting_ability": "Sabedoria",
