@@ -103,6 +103,27 @@ export function CharacterSheet({ characterId, onBack }) {
     return () => clearTimeout(timer)
   }, [character])
 
+  // Aplica subida de nível atomicamente (PV + atributos + nível)
+  function handleApplyLevelUp({ newLevel, hpIncrease, attrBoosts }) {
+    setCharacter(prev => {
+      const newAttrs = { ...prev.attributes }
+      for (const [key, boost] of Object.entries(attrBoosts)) {
+        if (boost) newAttrs[key] = Math.min(20, newAttrs[key] + boost)
+      }
+      return {
+        ...prev,
+        info:    { ...prev.info, level: newLevel },
+        attributes: newAttrs,
+        combat:  {
+          ...prev.combat,
+          maxHp:     prev.combat.maxHp + hpIncrease,
+          currentHp: prev.combat.currentHp + hpIncrease,
+        },
+        meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+      }
+    })
+  }
+
   // Muda classe e aplica automaticamente: salvaguardas, atributo de magia e dado de vida
   function handleClassChange(newClassIndex) {
     const cls = classes.find(c => c.index === newClassIndex) ?? null
@@ -366,7 +387,9 @@ export function CharacterSheet({ characterId, onBack }) {
         <LevelProgression
           character={character}
           classes={classes}
+          classData={classData}
           onLevelChange={lvl => updateInfo('level', lvl)}
+          onApplyLevelUp={handleApplyLevelUp}
         />
       )}
 
