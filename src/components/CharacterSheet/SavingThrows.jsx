@@ -1,11 +1,5 @@
-import { ABILITY_SCORES, formatModifier, calculateSavingThrow, getProficiencyBonus, getModifier } from '../../utils/calculations'
+import { ABILITY_SCORES, ATTR_NAME_TO_KEY, formatModifier, calculateSavingThrow, getProficiencyBonus, getModifier } from '../../utils/calculations'
 import { Tooltip } from '../Tooltip'
-
-// Mapeia nome completo PT-BR para chave do atributo
-const ATTR_NAME_TO_KEY = {
-  'Força': 'str', 'Destreza': 'dex', 'Constituição': 'con',
-  'Inteligência': 'int', 'Sabedoria': 'wis', 'Carisma': 'cha',
-}
 
 export function SavingThrows({ attributes, proficiencies, level, onToggle, classData }) {
   const profBonus = getProficiencyBonus(level)

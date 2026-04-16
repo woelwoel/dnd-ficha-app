@@ -1,6 +1,6 @@
 // Passo 4 — Antecedente
 import { useState } from 'react'
-import { SKILLS } from '../../../utils/calculations'
+import { SKILLS, parseBackgroundEquipment } from '../../../utils/calculations'
 import { DetailsModal } from '../../DetailsModal'
 
 export function Step4Background({ draft, updateDraft, backgrounds }) {
@@ -12,7 +12,8 @@ export function Step4Background({ draft, updateDraft, backgrounds }) {
     const bgSkillKeys = (bg?.skill_proficiencies ?? [])
       .map(name => SKILLS.find(s => s.name === name)?.key)
       .filter(Boolean)
-    updateDraft({ background: bgIndex, backgroundSkills: bgSkillKeys })
+    const { items, gold } = parseBackgroundEquipment(bg?.equipment)
+    updateDraft({ background: bgIndex, backgroundSkills: bgSkillKeys, backgroundItems: items, backgroundGold: gold })
   }
 
   const fieldCls = 'w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-400'

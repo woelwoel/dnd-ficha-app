@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { generateId } from '../../hooks/useCharacter'
-import { calculateMaxHp, ABBR_TO_KEY, ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY, SKILLS, getModifier } from '../../utils/calculations'
+import { calculateMaxHp, ABBR_TO_KEY, ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY, SKILLS, getModifier, parseBackgroundEquipment } from '../../utils/calculations'
 import { Step0Settings } from './steps/Step0Settings'
 import { Step1Concept } from './steps/Step1Concept'
 import { Step2Race } from './steps/Step2Race'
@@ -35,6 +35,8 @@ const INITIAL_DRAFT = {
   // Antecedente
   background: '',
   backgroundSkills: [],
+  backgroundItems: [],
+  backgroundGold: 0,
   // Atributos (base, sem bônus raciais)
   // standard-array / 4d6drop: inicia 0 (não atribuído); point-buy: inicia 8
   baseAttributes: { str: 0, dex: 0, con: 0, int: 0, wis: 0, cha: 0 },
@@ -296,8 +298,8 @@ function buildCharacter(draft, classData) {
       spells:     draft.spells ?? [],
     },
     inventory: {
-      currency: { cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 },
-      items:    [],
+      currency: { cp: 0, sp: 0, ep: 0, gp: draft.backgroundGold ?? 0, pp: 0 },
+      items: (draft.backgroundItems ?? []).map(i => ({ ...i, id: generateId() })),
     },
     traits: {
       personalityTraits: '',

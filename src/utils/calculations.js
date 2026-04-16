@@ -131,3 +131,26 @@ export const SKILLS = [
   { key: 'stealth',        name: 'Furtividade',      ability: 'dex', abbr: 'DES' },
   { key: 'survival',       name: 'Sobrevivência',    ability: 'wis', abbr: 'SAB' },
 ]
+
+export function parseBackgroundEquipment(equipmentStr) {
+  if (!equipmentStr) return { items: [], gold: 0 }
+  const loreIdx = equipmentStr.search(/\s[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ]{5,}/)
+  const clean = loreIdx > 0 ? equipmentStr.slice(0, loreIdx).trim() : equipmentStr.trim()
+  const rawParts = clean.split(/,\s*(?:e\s+)?|\s+e\s+(?=[^,]+$)/).map(s => s.trim()).filter(Boolean)
+  const items = []
+  let gold = 0
+  for (const part of rawParts) {
+    const goldMatch = part.match(/(\d+)\s*po/i)
+    if (goldMatch && /algibeira|bolsa|saco/i.test(part)) {
+      gold = parseInt(goldMatch[1])
+      continue
+    }
+    const qtyMatch = part.match(/^(\d+)\s+(.+)/)
+    if (qtyMatch) {
+      items.push({ name: qtyMatch[2], qty: parseInt(qtyMatch[1]), source: 'background' })
+    } else {
+      items.push({ name: part, qty: 1, source: 'background' })
+    }
+  }
+  return { items, gold }
+}

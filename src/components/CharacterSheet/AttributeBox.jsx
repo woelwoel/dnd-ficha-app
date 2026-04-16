@@ -1,8 +1,6 @@
-import { getModifier, formatModifier } from '../../utils/calculations'
+import { getModifier, formatModifier, POINT_BUY_COST } from '../../utils/calculations'
 import { FormFieldError } from '../FormFieldError'
 import { Tooltip } from '../Tooltip'
-
-const POINT_BUY_COST = { 8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9 }
 
 function scoreColor(value) {
   if (value <= 8)  return { border: 'border-red-700',   text: 'text-red-300',   ring: 'border-red-600'   }

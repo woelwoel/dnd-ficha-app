@@ -42,7 +42,6 @@ const SPELL_ABILITY_TO_KEY = {
  * - hpPercent       : PV atual como % do máximo (para barra de vida)
  * - spellAbilityKey : chave do atributo de magia ('int', 'wis', etc.) ou null
  * - fmt             : função de formatação de modificador (+2, -1, etc.)
- * - calcMod         : função pura getModifier, para cálculos pontuais em componentes
  */
 export function useCharacterCalculations(character, classData = null) {
   const { attributes, info, spellcasting, proficiencies, combat } = character
@@ -131,9 +130,7 @@ export function useCharacterCalculations(character, classData = null) {
       hpPercent,
       hpColor,
       spellAbilityKey,
-      // Helpers exportados para uso pontual em componentes
-      fmt:     formatModifier,
-      calcMod: getModifier,
+      fmt: formatModifier,
     }
   }, [level, str, dex, con, int, wis, cha, spellAbilityLabel, saves, skills, expertiseSkills, currentHp, maxHp, classData])
 }

@@ -12,36 +12,8 @@ import { Spells } from './Spells'
 import { Notes } from './Notes'
 import { CharacterView } from './CharacterView'
 import { LevelProgression } from './LevelProgression'
-import { ABILITY_SCORES, SKILLS, ABBR_TO_KEY, ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY, STANDARD_ARRAY, POINT_BUY_COST } from '../../utils/calculations'
+import { ABILITY_SCORES, SKILLS, ABBR_TO_KEY, ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY, STANDARD_ARRAY, POINT_BUY_COST, parseBackgroundEquipment } from '../../utils/calculations'
 import { generateId } from '../../hooks/useCharacter'
-
-function parseBackgroundEquipment(equipmentStr) {
-  if (!equipmentStr) return { items: [], gold: 0 }
-  // Corta texto de lore (palavras em CAPS como "NEGÓCIOS DA GUILDA")
-  const loreIdx = equipmentStr.search(/\s[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ]{5,}/)
-  const clean = loreIdx > 0 ? equipmentStr.slice(0, loreIdx).trim() : equipmentStr.trim()
-  // Divide por vírgula e pelo "e" final
-  const rawParts = clean.split(/,\s*(?:e\s+)?|\s+e\s+(?=[^,]+$)/).map(s => s.trim()).filter(Boolean)
-  const items = []
-  let gold = 0
-  for (const part of rawParts) {
-    const goldMatch = part.match(/(\d+)\s*po/i)
-    if (goldMatch && /algibeira|bolsa|saco/i.test(part)) {
-      gold = parseInt(goldMatch[1])
-      continue
-    }
-    const qtyMatch = part.match(/^(\d+)\s+(.+)/)
-    if (qtyMatch) {
-      items.push({ name: qtyMatch[2], qty: parseInt(qtyMatch[1]), source: 'background' })
-    } else {
-      items.push({ name: part, qty: 1, source: 'background' })
-    }
-  }
-  return { items, gold }
-}
-
-// Alias local para o mapeamento de atributo de magia
-const SPELL_ABILITY_NAME_TO_KEY = SPELL_ABILITY_PT_TO_KEY
 
 const TABS = [
   { id: 'ficha',       label: 'Ficha'       },
@@ -149,7 +121,7 @@ export function CharacterSheet({ characterId, onBack }) {
   function handleClassChange(newClassIndex) {
     const cls = classes.find(c => c.index === newClassIndex) ?? null
     const saveKeys    = (cls?.saving_throws ?? []).map(n => ATTR_NAME_TO_KEY[n]).filter(Boolean)
-    const spellKey    = cls?.spellcasting_ability ? (SPELL_ABILITY_NAME_TO_KEY[cls.spellcasting_ability] ?? null) : null
+    const spellKey    = cls?.spellcasting_ability ? (SPELL_ABILITY_PT_TO_KEY[cls.spellcasting_ability] ?? null) : null
     const hitDice     = cls?.hit_die ? `1d${cls.hit_die}` : character.combat.hitDice
     setCharacter(prev => ({
       ...prev,
