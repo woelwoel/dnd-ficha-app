@@ -60,6 +60,7 @@ export function CharacterSheet({ characterId, onBack }) {
     addSpell,
     removeSpell,
     toggleSlot,
+    toggleLanguage,
   } = useCharacter(initialCharacter)
 
   // classData é necessário para o cálculo de HP sugerido pelo hook
@@ -338,7 +339,7 @@ export function CharacterSheet({ characterId, onBack }) {
         <div className="space-y-6">
           <section>
             <CharacterInfo
-              info={character.info}
+              info={{ ...character.info, languages: character.proficiencies.languages ?? [] }}
               onUpdate={updateInfo}
               races={races}
               classes={classes}
@@ -348,6 +349,7 @@ export function CharacterSheet({ characterId, onBack }) {
               onSubraceChange={handleSubraceChange}
               onBackgroundChange={handleBackgroundChange}
               onClassChange={handleClassChange}
+              onToggleLanguage={toggleLanguage}
             />
           </section>
 
@@ -430,6 +432,7 @@ export function CharacterSheet({ characterId, onBack }) {
         <Notes
           traits={character.traits}
           onUpdate={updateTraits}
+          background={backgrounds.find(b => b.index === character.info.background) ?? null}
         />
       )}
 

@@ -231,6 +231,20 @@ export function useCharacter(initialCharacter = null) {
     }))
   }, [])
 
+  const toggleLanguage = useCallback((lang) => {
+    setCharacter(prev => {
+      const langs = prev.proficiencies.languages ?? []
+      const updated = langs.includes(lang)
+        ? langs.filter(l => l !== lang)
+        : [...langs, lang]
+      return {
+        ...prev,
+        proficiencies: { ...prev.proficiencies, languages: updated },
+        meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+      }
+    })
+  }, [])
+
   const toggleSlot = useCallback((level, newUsed) => {
     setCharacter(prev => ({
       ...prev,
@@ -259,6 +273,7 @@ export function useCharacter(initialCharacter = null) {
     addSpell,
     removeSpell,
     toggleSlot,
+    toggleLanguage,
   }
 }
 

@@ -2,12 +2,10 @@ import { useState } from 'react'
 import { DetailsModal } from '../DetailsModal'
 import { FormFieldError } from '../FormFieldError'
 import { TopicList, FullDescriptionToggle } from '../TopicList'
-import { ABBR_TO_KEY, ALIGNMENTS } from '../../utils/calculations'
+import { ABBR_TO_KEY, ALIGNMENTS, DND_LANGUAGES, RACE_LANGUAGES } from '../../utils/calculations'
 
-/* ── Conteúdo do modal de Raça ── */
+/* ── Modal: Raça ── */
 function RaceModalContent({ race }) {
-  // Suporta tanto o formato novo (topics/summary/fullDescription)
-  // quanto o fallback do SRD inglês (traits/description)
   const topics = race.topics
     ?? race.traits?.map(t => ({ title: t.name, desc: t.desc }))
     ?? []
@@ -16,12 +14,9 @@ function RaceModalContent({ race }) {
 
   return (
     <>
-      {/* Resumo curto */}
       {summary && (
         <p className="text-sm text-gray-200 leading-relaxed font-medium">{summary}</p>
       )}
-
-      {/* Chips de stats */}
       <div className="flex flex-wrap gap-2 text-xs">
         {race.size && (
           <span className="bg-gray-800 border border-gray-600 px-3 py-1 rounded-full">
@@ -39,24 +34,18 @@ function RaceModalContent({ race }) {
           </span>
         ))}
       </div>
-
-      {/* Traços como tópicos estruturados */}
       {topics.length > 0 && (
         <div>
           <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-3">Traços Raciais</h3>
           <TopicList items={topics} initialLimit={5} emptyMessage="Sem traços disponíveis." />
         </div>
       )}
-
-      {/* Sub-raças */}
       {race.subraces?.length > 0 && (
         <div>
           <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-3">Sub-raças</h3>
           <div className="space-y-4">
             {race.subraces.map((sr, i) => {
-              const srTopics = sr.topics
-                ?? sr.traits?.map(t => ({ title: t.name, desc: t.desc }))
-                ?? []
+              const srTopics = sr.topics ?? sr.traits?.map(t => ({ title: t.name, desc: t.desc })) ?? []
               return (
                 <div key={i} className="bg-gray-800 rounded-lg p-3">
                   <p className="font-semibold text-amber-300 mb-1">{sr.name}</p>
@@ -75,14 +64,12 @@ function RaceModalContent({ race }) {
           </div>
         </div>
       )}
-
-      {/* Lore completo colapsável */}
       <FullDescriptionToggle text={fullDescription} />
     </>
   )
 }
 
-/* ── Conteúdo do modal de Classe ── */
+/* ── Modal: Classe ── */
 function ClassModalContent({ cls }) {
   const topics = cls.topics
     ?? cls.level1_features?.map(f => ({ title: f.name, desc: f.desc }))
@@ -92,12 +79,9 @@ function ClassModalContent({ cls }) {
 
   return (
     <>
-      {/* Resumo curto */}
       {summary && (
         <p className="text-sm text-gray-200 leading-relaxed font-medium">{summary}</p>
       )}
-
-      {/* Stats principais */}
       <div className="grid grid-cols-2 gap-2 text-xs">
         <div className="bg-gray-800 border border-gray-600 rounded-lg p-3">
           <p className="text-gray-400 mb-1">Dado de Vida</p>
@@ -108,8 +92,6 @@ function ClassModalContent({ cls }) {
           <p className="text-base font-bold text-amber-400">{cls.spellcasting_ability || '—'}</p>
         </div>
       </div>
-
-      {/* Chips de proficiências */}
       {cls.saving_throws?.length > 0 && (
         <div>
           <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-2">Testes de Resistência</h3>
@@ -120,7 +102,6 @@ function ClassModalContent({ cls }) {
           </div>
         </div>
       )}
-
       {(cls.armor_proficiencies?.length > 0 || cls.weapon_proficiencies?.length > 0) && (
         <div className="space-y-1">
           {cls.armor_proficiencies?.length > 0 && (
@@ -137,7 +118,6 @@ function ClassModalContent({ cls }) {
           )}
         </div>
       )}
-
       {cls.skill_choices?.from?.length > 0 && (
         <div>
           <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-2">
@@ -150,31 +130,24 @@ function ClassModalContent({ cls }) {
           </div>
         </div>
       )}
-
-      {/* Características como tópicos estruturados */}
       {topics.length > 0 && (
         <div>
-          <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-3">
-            Características de Nível 1
-          </h3>
+          <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-3">Características de Nível 1</h3>
           <TopicList items={topics} initialLimit={4} emptyMessage="Sem características disponíveis." />
         </div>
       )}
-
-      {/* Lore completo colapsável */}
       <FullDescriptionToggle text={fullDescription} />
     </>
   )
 }
 
-/* ── Conteúdo do modal de Antecedente ── */
+/* ── Modal: Antecedente ── */
 function BackgroundModalContent({ bg }) {
   return (
     <>
       {bg.description && (
         <p className="text-sm text-gray-300 leading-relaxed">{bg.description}</p>
       )}
-
       <div className="grid grid-cols-1 gap-2 text-sm">
         {bg.skill_proficiencies?.length > 0 && (
           <div className="bg-gray-800 rounded-lg p-3">
@@ -201,7 +174,6 @@ function BackgroundModalContent({ bg }) {
           </div>
         )}
       </div>
-
       {bg.feature?.name && (
         <div>
           <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-2">
@@ -210,19 +182,10 @@ function BackgroundModalContent({ bg }) {
           <p className="text-sm text-gray-400 leading-relaxed">{bg.feature.desc}</p>
         </div>
       )}
-
-      {bg.personality_traits?.length > 0 && (
-        <TableSection title="Traços de Personalidade" items={bg.personality_traits} />
-      )}
-      {bg.ideals?.length > 0 && (
-        <TableSection title="Ideais" items={bg.ideals} />
-      )}
-      {bg.bonds?.length > 0 && (
-        <TableSection title="Vínculos" items={bg.bonds} />
-      )}
-      {bg.flaws?.length > 0 && (
-        <TableSection title="Defeitos" items={bg.flaws} />
-      )}
+      {bg.personality_traits?.length > 0 && <TableSection title="Traços de Personalidade" items={bg.personality_traits} />}
+      {bg.ideals?.length > 0 && <TableSection title="Ideais" items={bg.ideals} />}
+      {bg.bonds?.length > 0 && <TableSection title="Vínculos" items={bg.bonds} />}
+      {bg.flaws?.length > 0 && <TableSection title="Defeitos" items={bg.flaws} />}
     </>
   )
 }
@@ -243,33 +206,91 @@ function TableSection({ title, items }) {
   )
 }
 
+/* ── Seletor de Idiomas ── */
+function LanguageSelector({ raceIndex, backgroundLanguages, selectedLanguages, onToggle }) {
+  const [showAll, setShowAll] = useState(false)
+  const raceLangs = RACE_LANGUAGES[raceIndex] ?? []
+
+  return (
+    <div className="col-span-2 sm:col-span-3 bg-gray-800 border border-gray-600 rounded-lg p-3 space-y-2">
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">Idiomas</span>
+        <button
+          onClick={() => setShowAll(v => !v)}
+          className="text-xs text-gray-400 hover:text-amber-400"
+        >
+          {showAll ? 'Recolher' : 'Selecionar idiomas'}
+        </button>
+      </div>
+
+      {/* Idiomas fixos da raça */}
+      {raceLangs.length > 0 && (
+        <div className="flex flex-wrap gap-1">
+          {raceLangs.map(lang => (
+            <span key={lang} className="text-xs bg-gray-700 border border-gray-500 px-2 py-0.5 rounded-full text-amber-300">
+              {lang} <span className="text-gray-500 text-[10px]">(raça)</span>
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Nota de idiomas do antecedente */}
+      {backgroundLanguages && (
+        <p className="text-xs text-gray-400">
+          <span className="text-amber-500">Antecedente:</span> {backgroundLanguages}
+        </p>
+      )}
+
+      {/* Chips dos idiomas escolhidos */}
+      {selectedLanguages.length > 0 && (
+        <div className="flex flex-wrap gap-1">
+          {selectedLanguages.map(lang => (
+            <button
+              key={lang}
+              onClick={() => onToggle(lang)}
+              title="Remover"
+              className="text-xs bg-amber-900/40 border border-amber-700 px-2 py-0.5 rounded-full text-amber-300 hover:bg-red-900/40 hover:border-red-700 hover:text-red-300 transition-colors"
+            >
+              {lang} ×
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Painel de seleção */}
+      {showAll && (
+        <div className="flex flex-wrap gap-1 pt-1 border-t border-gray-700">
+          {DND_LANGUAGES.filter(l => !raceLangs.includes(l)).map(lang => {
+            const selected = selectedLanguages.includes(lang)
+            return (
+              <button
+                key={lang}
+                onClick={() => onToggle(lang)}
+                className={`text-xs px-2 py-0.5 rounded-full border transition-colors ${
+                  selected
+                    ? 'bg-amber-800 border-amber-600 text-amber-200'
+                    : 'bg-gray-700 border-gray-600 text-gray-300 hover:border-amber-500 hover:text-amber-300'
+                }`}
+              >
+                {lang}
+              </button>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
 /* ── Componente principal ── */
-export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, errors = {}, onRaceChange, onSubraceChange, onBackgroundChange, onClassChange }) {
-  const [modal, setModal] = useState(null) // 'race' | 'class' | 'background' | null
+export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, errors = {}, onRaceChange, onSubraceChange, onBackgroundChange, onClassChange, onToggleLanguage }) {
+  const [modal, setModal] = useState(null)
 
   const selectedRace    = races.find(r => r.index === info.race)
   const selectedClass   = classes.find(c => c.index === info.class)
   const selectedBg      = backgrounds.find(b => b.index === info.background)
   const selectedSubrace = selectedRace?.subraces?.find(sr => sr.index === info.subrace)
 
-  // Bônus combinados: raça + sub-raça selecionada
-  const allBonuses = [
-    ...(selectedRace?.ability_bonuses ?? []),
-    ...(selectedSubrace?.ability_bonuses ?? []),
-  ]
-  // Agrupa por chave somando bônus (ex: Humano +1 em todos)
-  const bonusesByKey = {}
-  for (const b of allBonuses) {
-    const key = ABBR_TO_KEY[b.ability]
-    if (key) bonusesByKey[key] = (bonusesByKey[key] ?? 0) + b.bonus
-  }
-
-  // Delega troca de raça ao CharacterSheet (reverte bônus antigos, aplica novos)
-  function handleRaceChange(value) {
-    onRaceChange?.(value) ?? onUpdate('race', value)
-  }
-
-  // Classe base dos campos — vermelha quando há erro
   const fieldCls = (hasErr) =>
     `w-full bg-gray-800 border rounded px-3 py-2 text-white focus:outline-none focus:ring-1 ${
       hasErr
@@ -279,6 +300,7 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      {/* Nome */}
       <div className="col-span-2 sm:col-span-3">
         <label htmlFor="field-name" className="block text-xs text-gray-400 mb-1">Nome do Personagem</label>
         <input
@@ -300,7 +322,7 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
           <select
             id="field-race"
             value={info.race}
-            onChange={e => handleRaceChange(e.target.value)}
+            onChange={e => onRaceChange?.(e.target.value) ?? onUpdate('race', e.target.value)}
             aria-describedby={errors.race ? 'err-race' : undefined}
             className={fieldCls(!!errors.race)}
           >
@@ -322,12 +344,11 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
         <FormFieldError id="err-race" message={errors.race} />
       </div>
 
-      {/* Sub-raça — aparece apenas quando a raça selecionada tem sub-raças */}
+      {/* Sub-raça */}
       {selectedRace?.subraces?.length > 0 && (
         <div>
           <label htmlFor="field-subrace" className="block text-xs text-gray-400 mb-1">
-            Sub-raça
-            <span className="text-red-400 ml-0.5" aria-hidden="true">*</span>
+            Sub-raça <span className="text-red-400 ml-0.5" aria-hidden="true">*</span>
           </label>
           <div className="flex gap-1">
             <select
@@ -353,18 +374,6 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
             )}
           </div>
           <FormFieldError id="err-subrace" message={errors.subrace} />
-        </div>
-      )}
-
-      {/* Bônus de raça — exibidos automaticamente quando raça/sub-raça é selecionada */}
-      {allBonuses.length > 0 && (
-        <div className="col-span-2 sm:col-span-3 flex flex-wrap items-center gap-2">
-          <span className="text-xs text-gray-400 shrink-0">Bônus aplicados:</span>
-          {allBonuses.map((b, i) => (
-            <span key={i} className="text-xs bg-gray-700 border border-gray-600 px-2 py-0.5 rounded-full text-amber-300">
-              +{b.bonus} {b.ability}
-            </span>
-          ))}
         </div>
       )}
 
@@ -397,7 +406,7 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
         <FormFieldError id="err-class" message={errors.class} />
       </div>
 
-      {/* Nível — select fixo 1-20: evita scroll acidental e typos */}
+      {/* Nível */}
       <div>
         <label htmlFor="field-level" className="block text-xs text-gray-400 mb-1">Nível</label>
         <select
@@ -455,37 +464,47 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
         </select>
       </div>
 
+      {/* Equipamento e Ferramentas do Antecedente */}
+      {selectedBg && (selectedBg.equipment || selectedBg.tool_proficiencies?.length > 0) && (
+        <div className="col-span-2 sm:col-span-3 bg-gray-800 border border-gray-600 rounded-lg p-3 space-y-1">
+          <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">Antecedente: {selectedBg.name}</span>
+          {selectedBg.tool_proficiencies?.length > 0 && (
+            <p className="text-xs text-gray-300">
+              <span className="text-amber-500">Ferramentas:</span> {selectedBg.tool_proficiencies.join(', ')}
+            </p>
+          )}
+          {selectedBg.equipment && (
+            <p className="text-xs text-gray-400 leading-relaxed">
+              <span className="text-amber-500">Equipamento:</span> {selectedBg.equipment}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Seletor de Idiomas */}
+      {(info.race || info.background) && (
+        <LanguageSelector
+          raceIndex={info.race}
+          backgroundLanguages={selectedBg?.languages ?? null}
+          selectedLanguages={info.languages ?? []}
+          onToggle={onToggleLanguage}
+        />
+      )}
+
       {/* Modais */}
-      <DetailsModal
-        isOpen={modal === 'race'}
-        onClose={() => setModal(null)}
-        title={selectedRace?.name || ''}
-      >
+      <DetailsModal isOpen={modal === 'race'} onClose={() => setModal(null)} title={selectedRace?.name || ''}>
         {selectedRace && <RaceModalContent race={selectedRace} />}
       </DetailsModal>
 
-      <DetailsModal
-        isOpen={modal === 'class'}
-        onClose={() => setModal(null)}
-        title={selectedClass?.name || ''}
-      >
+      <DetailsModal isOpen={modal === 'class'} onClose={() => setModal(null)} title={selectedClass?.name || ''}>
         {selectedClass && <ClassModalContent cls={selectedClass} />}
       </DetailsModal>
 
-      <DetailsModal
-        isOpen={modal === 'background'}
-        onClose={() => setModal(null)}
-        title={selectedBg?.name || ''}
-      >
+      <DetailsModal isOpen={modal === 'background'} onClose={() => setModal(null)} title={selectedBg?.name || ''}>
         {selectedBg && <BackgroundModalContent bg={selectedBg} />}
       </DetailsModal>
 
-      {/* Modal de sub-raça */}
-      <DetailsModal
-        isOpen={modal === 'subrace'}
-        onClose={() => setModal(null)}
-        title={selectedSubrace?.name || ''}
-      >
+      <DetailsModal isOpen={modal === 'subrace'} onClose={() => setModal(null)} title={selectedSubrace?.name || ''}>
         {selectedSubrace && (
           <>
             {(selectedSubrace.fullDescription || selectedSubrace.description) && (

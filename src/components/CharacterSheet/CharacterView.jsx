@@ -1,4 +1,4 @@
-import { ABILITY_SCORES, SKILLS, getModifier, getProficiencyBonus } from '../../utils/calculations'
+import { ABILITY_SCORES, SKILLS, getModifier, getProficiencyBonus, RACE_LANGUAGES } from '../../utils/calculations'
 
 /* ── Paleta de cores da ficha impressa ── */
 // Usamos classes Tailwind com valores customizados via style quando necessário.
@@ -229,7 +229,11 @@ export function CharacterView({ character, races, classes, backgrounds }) {
               {proficiencies.armor?.length > 0 && <div><b>Armaduras:</b> {proficiencies.armor.join(', ')}</div>}
               {proficiencies.weapons?.length > 0 && <div><b>Armas:</b> {proficiencies.weapons.join(', ')}</div>}
               {proficiencies.tools?.length > 0 && <div><b>Ferramentas:</b> {proficiencies.tools.join(', ')}</div>}
-              {proficiencies.languages?.length > 0 && <div><b>Idiomas:</b> {proficiencies.languages.join(', ')}</div>}
+              {(() => {
+                const raceLangs = RACE_LANGUAGES[character.info?.race] ?? []
+                const allLangs = [...new Set([...raceLangs, ...(proficiencies.languages ?? [])])]
+                return allLangs.length > 0 ? <div><b>Idiomas:</b> {allLangs.join(', ')}</div> : null
+              })()}
               {selectedBg?.skill_proficiencies?.length > 0 && (
                 <div><b>Perícias:</b> {selectedBg.skill_proficiencies.join(', ')}</div>
               )}

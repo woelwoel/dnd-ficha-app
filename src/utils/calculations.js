@@ -76,6 +76,24 @@ export const SPELL_ABILITY_PT_TO_KEY = {
   'Inteligência': 'int', 'Sabedoria': 'wis', 'Carisma': 'cha',
 }
 
+export const DND_LANGUAGES = [
+  'Comum', 'Anão', 'Élfico', 'Gigante', 'Gnômico', 'Goblin', 'Halfling', 'Orc',
+  'Abissal', 'Celestial', 'Dracônico', 'Linguagem das Trevas', 'Infernal',
+  'Primordial', 'Silvano', 'Subterrâneo',
+]
+
+export const RACE_LANGUAGES = {
+  'anao':      ['Comum', 'Anão'],
+  'elfo':      ['Comum', 'Élfico'],
+  'halfling':  ['Comum', 'Halfling'],
+  'humano':    ['Comum'],
+  'draconato': ['Comum', 'Dracônico'],
+  'gnomo':     ['Comum', 'Gnômico'],
+  'meio-elfo': ['Comum', 'Élfico'],
+  'meio-orc':  ['Comum', 'Orc'],
+  'tiefling':  ['Comum', 'Infernal'],
+}
+
 export const ALIGNMENTS = [
   'Leal e Bom', 'Neutro e Bom', 'Caótico e Bom',
   'Leal e Neutro', 'Neutro', 'Caótico e Neutro',
