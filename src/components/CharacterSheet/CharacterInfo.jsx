@@ -3,6 +3,9 @@ import { DetailsModal } from '../DetailsModal'
 import { FormFieldError } from '../FormFieldError'
 import { TopicList, FullDescriptionToggle } from '../TopicList'
 
+// Mapeia abreviação PT-BR dos atributos para a chave usada em character.attributes
+const ABBR_TO_KEY = { FOR: 'str', DES: 'dex', CON: 'con', INT: 'int', SAB: 'wis', CAR: 'cha' }
+
 const ALIGNMENTS = [
   'Leal e Bom', 'Neutro e Bom', 'Caótico e Bom',
   'Leal e Neutro', 'Neutro', 'Caótico e Neutro',
@@ -249,13 +252,25 @@ function TableSection({ title, items }) {
 }
 
 /* ── Componente principal ── */
-export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, errors = {} }) {
+export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, errors = {}, onApplyRaceBonuses }) {
   const [modal, setModal] = useState(null) // 'race' | 'class' | 'background' | null
 
   const selectedRace    = races.find(r => r.index === info.race)
   const selectedClass   = classes.find(c => c.index === info.class)
   const selectedBg      = backgrounds.find(b => b.index === info.background)
   const selectedSubrace = selectedRace?.subraces?.find(sr => sr.index === info.subrace)
+
+  // Bônus combinados: raça + sub-raça selecionada
+  const allBonuses = [
+    ...(selectedRace?.ability_bonuses ?? []),
+    ...(selectedSubrace?.ability_bonuses ?? []),
+  ]
+  // Agrupa por chave somando bônus (ex: Humano +1 em todos)
+  const bonusesByKey = {}
+  for (const b of allBonuses) {
+    const key = ABBR_TO_KEY[b.ability]
+    if (key) bonusesByKey[key] = (bonusesByKey[key] ?? 0) + b.bonus
+  }
 
   // Quando a raça muda, limpa a sub-raça
   function handleRaceChange(value) {
@@ -347,16 +362,26 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
             )}
           </div>
           <FormFieldError id="err-subrace" message={errors.subrace} />
-          {/* Traços da sub-raça selecionada (prévia inline) */}
-          {selectedSubrace?.topics?.filter(t => t.title && t.desc).length > 0 && (
-            <div className="mt-2 bg-gray-800/60 border border-gray-700 rounded p-2 space-y-1">
-              {selectedSubrace.topics.filter(t => t.title && t.desc).slice(0, 3).map((t, i) => (
-                <p key={i} className="text-xs text-gray-400 leading-snug">
-                  <span className="text-amber-300 font-semibold">{t.title}. </span>
-                  {t.desc.slice(0, 120)}{t.desc.length > 120 ? '…' : ''}
-                </p>
-              ))}
-            </div>
+        </div>
+      )}
+
+      {/* Bônus de raça — aparece quando há bônus para aplicar */}
+      {allBonuses.length > 0 && (
+        <div className="col-span-2 sm:col-span-3 flex flex-wrap items-center gap-2">
+          <span className="text-xs text-gray-400 shrink-0">Bônus de raça:</span>
+          {allBonuses.map((b, i) => (
+            <span key={i} className="text-xs bg-gray-700 border border-gray-600 px-2 py-0.5 rounded-full text-amber-300">
+              +{b.bonus} {b.ability}
+            </span>
+          ))}
+          {onApplyRaceBonuses && (
+            <button
+              onClick={() => onApplyRaceBonuses(bonusesByKey)}
+              className="text-xs text-amber-500 hover:text-amber-300 underline ml-1"
+              title="Soma os bônus da raça aos atributos atuais"
+            >
+              Aplicar nos atributos
+            </button>
           )}
         </div>
       )}

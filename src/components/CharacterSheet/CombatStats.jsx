@@ -1,7 +1,7 @@
 import { formatModifier, getProficiencyBonus, calculateInitiative, getModifier } from '../../utils/calculations'
 import { FormFieldError } from '../FormFieldError'
 
-export function CombatStats({ combat, attributes, level, onUpdateCombat, suggestedAC, suggestedMaxHp, errors = {} }) {
+export function CombatStats({ combat, attributes, level, onUpdateCombat, suggestedAC, suggestedMaxHp, passivePerception, errors = {} }) {
   const profBonus = getProficiencyBonus(level)
   const initiative = calculateInitiative(attributes.dex)
 
@@ -29,9 +29,10 @@ export function CombatStats({ combat, attributes, level, onUpdateCombat, suggest
           onChange={v => onUpdateCombat('speed', Math.max(0, parseInt(v) || 0))} />
       </div>
 
-      <div className="grid grid-cols-2 gap-3 mb-4">
-        <StatBox label="Bônus de Proficiência" value={formatModifier(profBonus)} />
+      <div className="grid grid-cols-3 gap-3 mb-4">
+        <StatBox label="Bônus de Prof." value={formatModifier(profBonus)} />
         <StatBox label="Dado de Vida" value={combat.hitDice} />
+        <StatBox label="Percepção Passiva" value={passivePerception ?? '—'} />
       </div>
 
       {/* HP Tracker */}

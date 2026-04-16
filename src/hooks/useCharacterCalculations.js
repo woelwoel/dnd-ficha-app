@@ -52,6 +52,7 @@ export function useCharacterCalculations(character, classData = null) {
   const spellAbilityLabel = spellcasting?.ability ?? null
   const saves        = proficiencies?.savingThrows
   const skills       = proficiencies?.skills
+  const expertiseSkills = proficiencies?.expertiseSkills
   const currentHp    = combat?.currentHp ?? 0
   const maxHp        = combat?.maxHp ?? 0
   const { str = 10, dex = 10, con = 10, int = 10, wis = 10, cha = 10 } = attributes ?? {}
@@ -106,7 +107,8 @@ export function useCharacterCalculations(character, classData = null) {
 
     // ── Percepção passiva ─────────────────────────────────────────
     const isPerceptionProficient = skills?.includes('perception') ?? false
-    const passivePerception = calculatePassivePerception(wis, profBonus, isPerceptionProficient)
+    const isPerceptionExpert = expertiseSkills?.includes('perception') ?? false
+    const passivePerception = calculatePassivePerception(wis, profBonus, isPerceptionProficient, isPerceptionExpert)
 
     // ── Porcentagem de PV atual ───────────────────────────────────
     const hpPercent = maxHp > 0
@@ -133,5 +135,5 @@ export function useCharacterCalculations(character, classData = null) {
       fmt:     formatModifier,
       calcMod: getModifier,
     }
-  }, [level, str, dex, con, int, wis, cha, spellAbilityLabel, saves, skills, currentHp, maxHp, classData])
+  }, [level, str, dex, con, int, wis, cha, spellAbilityLabel, saves, skills, expertiseSkills, currentHp, maxHp, classData])
 }

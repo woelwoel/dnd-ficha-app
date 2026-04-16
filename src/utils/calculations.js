@@ -30,10 +30,10 @@ export function calculateInitiative(dexScore) {
   return getModifier(dexScore)
 }
 
-// Passive Perception = 10 + Perception modifier
-export function calculatePassivePerception(wisScore, profBonus, isProficient) {
+// Passive Perception = 10 + Perception modifier (+ profBonus se especialização)
+export function calculatePassivePerception(wisScore, profBonus, isProficient, isExpert = false) {
   const wisMod = getModifier(wisScore)
-  return 10 + wisMod + (isProficient ? profBonus : 0)
+  return 10 + wisMod + (isProficient ? profBonus : 0) + (isExpert ? profBonus : 0)
 }
 
 // Skill modifier = ability modifier + (proficient ? profBonus : 0) + (expertise ? profBonus : 0)

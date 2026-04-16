@@ -38,6 +38,7 @@ const DEFAULT_CHARACTER = {
   proficiencies: {
     savingThrows: [],
     skills: [],
+    expertiseSkills: [],
     armor: [],
     weapons: [],
     tools: [],
@@ -124,6 +125,22 @@ export function useCharacter(initialCharacter = null) {
       return {
         ...prev,
         proficiencies: { ...prev.proficiencies, skills: updated },
+        meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+      }
+    })
+  }, [])
+
+  const toggleExpertiseSkill = useCallback((skillIndex) => {
+    setCharacter(prev => {
+      const expertise = prev.proficiencies.expertiseSkills ?? []
+      // Só permite expertise se já for proficiente
+      if (!prev.proficiencies.skills.includes(skillIndex)) return prev
+      const updated = expertise.includes(skillIndex)
+        ? expertise.filter(s => s !== skillIndex)
+        : [...expertise, skillIndex]
+      return {
+        ...prev,
+        proficiencies: { ...prev.proficiencies, expertiseSkills: updated },
         meta: { ...prev.meta, updatedAt: new Date().toISOString() },
       }
     })
@@ -230,6 +247,7 @@ export function useCharacter(initialCharacter = null) {
     updateCombat,
     updateTraits,
     toggleSkillProficiency,
+    toggleExpertiseSkill,
     toggleSaveProficiency,
     updateCurrency,
     addItem,

@@ -49,6 +49,7 @@ export function CharacterSheet({ characterId, onBack }) {
     updateCombat,
     toggleSaveProficiency,
     toggleSkillProficiency,
+    toggleExpertiseSkill,
     updateCurrency,
     addItem,
     removeItem,
@@ -92,6 +93,13 @@ export function CharacterSheet({ characterId, onBack }) {
     const timer = setTimeout(() => setSaved(false), 1500)
     return () => clearTimeout(timer)
   }, [character])
+
+  // Aplica bônus de raça/sub-raça nos atributos (soma ao valor atual)
+  function handleApplyRaceBonuses(bonusesByKey) {
+    for (const [key, bonus] of Object.entries(bonusesByKey)) {
+      updateAttribute(key, character.attributes[key] + bonus)
+    }
+  }
 
   // Navega entre abas — valida a aba atual se for avanço
   function handleTabChange(newTabId) {
@@ -241,6 +249,7 @@ export function CharacterSheet({ characterId, onBack }) {
               classes={classes}
               backgrounds={backgrounds}
               errors={fichaErrors}
+              onApplyRaceBonuses={handleApplyRaceBonuses}
             />
           </section>
 
@@ -268,6 +277,7 @@ export function CharacterSheet({ characterId, onBack }) {
               onUpdateCombat={updateCombat}
               suggestedAC={calc.suggestedAC}
               suggestedMaxHp={calc.suggestedMaxHp}
+              passivePerception={calc.passivePerception}
               errors={fichaErrors}
             />
             <SavingThrows
@@ -287,6 +297,7 @@ export function CharacterSheet({ characterId, onBack }) {
           proficiencies={character.proficiencies}
           level={character.info.level}
           onToggle={toggleSkillProficiency}
+          onToggleExpertise={toggleExpertiseSkill}
         />
       )}
 
