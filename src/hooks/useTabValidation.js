@@ -37,7 +37,7 @@ function validateFicha(character, races = []) {
   // Sub-raça obrigatória quando a raça tem sub-raças disponíveis
   if (info.race && races.length > 0) {
     const selectedRace = races.find(r => r.index === info.race)
-    if (selectedRace?.subraces?.length > 0 && !info.subrace)
+    if (selectedRace?.subraces?.length > 0 && info.subrace === '')
       errors.subrace = 'Sub-raça é obrigatória para ' + selectedRace.name
   }
 

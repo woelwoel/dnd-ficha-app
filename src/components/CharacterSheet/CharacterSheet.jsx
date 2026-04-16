@@ -140,6 +140,9 @@ export function CharacterSheet({ characterId, onBack }) {
     reader.readAsText(file)
   }
 
+  // Erros da aba Ficha — visíveis só após o usuário tentar sair da aba
+  const fichaErrors = getTabErrors('ficha')
+
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-4">
       {/* Header */}
@@ -177,6 +180,15 @@ export function CharacterSheet({ characterId, onBack }) {
             Importar
           </button>
           <input ref={importRef} type="file" accept=".json" onChange={handleImport} className="hidden" />
+          {activeTab === 'visualizar' && (
+            <button
+              onClick={() => window.print()}
+              className="text-xs px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-amber-100 font-medium"
+              title="Imprimir / Exportar PDF"
+            >
+              Imprimir
+            </button>
+          )}
         </div>
       </div>
 
@@ -219,10 +231,7 @@ export function CharacterSheet({ characterId, onBack }) {
       )}
 
       {/* Tab: Ficha principal */}
-      {activeTab === 'ficha' && (() => {
-        // Erros visíveis só após o usuário tentar sair da aba
-        const fichaErrors = getTabErrors('ficha')
-        return (
+      {activeTab === 'ficha' && (
         <div className="space-y-6">
           <section>
             <CharacterInfo
@@ -269,8 +278,7 @@ export function CharacterSheet({ characterId, onBack }) {
             />
           </section>
         </div>
-        )
-      })()}
+      )}
 
       {/* Tab: Perícias */}
       {activeTab === 'percias' && (
@@ -324,12 +332,16 @@ export function CharacterSheet({ characterId, onBack }) {
 
       {/* Tab: Visualizar ficha */}
       {activeTab === 'visualizar' && (
-        <CharacterView
-          character={character}
-          races={races}
-          classes={classes}
-          backgrounds={backgrounds}
-        />
+        <div id="print-character-view" className="overflow-x-auto">
+          <div style={{ minWidth: '560px' }}>
+            <CharacterView
+              character={character}
+              races={races}
+              classes={classes}
+              backgrounds={backgrounds}
+            />
+          </div>
+        </div>
       )}
     </div>
   )

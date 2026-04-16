@@ -1,1 +1,18 @@
 @import "tailwindcss";
+
+@media print {
+  /* Oculta tudo exceto a ficha de visualização */
+  body > * { display: none !important; }
+  #root > * { display: none !important; }
+
+  /* Mostra apenas o container da ficha */
+  #print-character-view {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    margin: 0;
+    padding: 8px;
+    background: #f2e8c8;
+    overflow: visible;
+  }
+}

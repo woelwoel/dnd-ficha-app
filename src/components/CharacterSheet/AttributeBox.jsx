@@ -1,8 +1,10 @@
 import { getModifier, formatModifier } from '../../utils/calculations'
 import { FormFieldError } from '../FormFieldError'
+import { Tooltip } from '../Tooltip'
 
 export function AttributeBox({ abbr, name, value, onChange, error }) {
   const mod = getModifier(value)
+  const tooltipMod = `floor((${value} − 10) / 2) = ${formatModifier(mod)}`
   const fieldId = `field-attr-${abbr.toLowerCase()}`
   const errId   = `err-attr-${abbr.toLowerCase()}`
 
@@ -28,13 +30,15 @@ export function AttributeBox({ abbr, name, value, onChange, error }) {
           }`}
         />
       </div>
-      <div className={`mt-2 w-10 h-10 flex items-center justify-center rounded-full border-2 bg-gray-900 ${
-        error ? 'border-red-500' : 'border-amber-400'
-      }`}>
-        <span className={`text-sm font-bold ${error ? 'text-red-300' : 'text-amber-300'}`}>
-          {formatModifier(mod)}
-        </span>
-      </div>
+      <Tooltip content={tooltipMod} position="bottom">
+        <div className={`mt-2 w-10 h-10 flex items-center justify-center rounded-full border-2 bg-gray-900 cursor-help ${
+          error ? 'border-red-500' : 'border-amber-400'
+        }`}>
+          <span className={`text-sm font-bold ${error ? 'text-red-300' : 'text-amber-300'}`}>
+            {formatModifier(mod)}
+          </span>
+        </div>
+      </Tooltip>
       <span className="text-xs text-gray-400 mt-1">{name}</span>
       {/* Mensagem de erro compacta abaixo do atributo */}
       {error && (
