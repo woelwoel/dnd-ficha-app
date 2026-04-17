@@ -83,6 +83,13 @@ export function CharacterSheet({ characterId, onBack }) {
       .catch(() => fetch('/srd-data/5e-SRD-Backgrounds.json').then(r => r.json()).then(setBackgrounds).catch(() => {}))
   }, [])
 
+  // Atualiza título da página com nome do personagem
+  useEffect(() => {
+    const name = character.info.name?.trim()
+    document.title = name ? `${name} — D&D 5e` : 'Grimório de Personagens — D&D 5e'
+    return () => { document.title = 'Grimório de Personagens — D&D 5e' }
+  }, [character.info.name])
+
   // Auto-save
   useEffect(() => {
     if (!character.id) return
@@ -260,16 +267,16 @@ export function CharacterSheet({ characterId, onBack }) {
     <div className="max-w-4xl mx-auto p-4 space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           {onBack && (
             <button
               onClick={onBack}
-              className="text-gray-400 hover:text-amber-400 transition-colors text-sm"
+              className="text-gray-500 hover:text-amber-400 transition-colors text-sm shrink-0"
             >
               ← Personagens
             </button>
           )}
-          <h1 className="text-xl font-bold text-amber-400 truncate max-w-[200px] sm:max-w-none">
+          <h1 className="text-xl font-bold text-amber-400 font-display truncate">
             {character.info.name || 'Ficha de Personagem'}
           </h1>
         </div>
@@ -280,14 +287,14 @@ export function CharacterSheet({ characterId, onBack }) {
           </span>
           <button
             onClick={handleExport}
-            className="text-xs px-3 py-1.5 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium"
+            className="text-xs px-3 py-1.5 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 transition-colors"
             title="Exportar como JSON"
           >
             Exportar
           </button>
           <button
             onClick={() => importRef.current?.click()}
-            className="text-xs px-3 py-1.5 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium"
+            className="text-xs px-3 py-1.5 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 transition-colors"
             title="Importar de JSON"
           >
             Importar
@@ -296,7 +303,7 @@ export function CharacterSheet({ characterId, onBack }) {
           {activeTab === 'visualizar' && (
             <button
               onClick={() => window.print()}
-              className="text-xs px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-amber-100 font-medium"
+              className="text-xs px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-amber-100 transition-colors"
               title="Imprimir / Exportar PDF"
             >
               Imprimir
@@ -306,15 +313,15 @@ export function CharacterSheet({ characterId, onBack }) {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 border-b border-gray-700 overflow-x-auto">
+      <div className="flex gap-0.5 border-b border-gray-700 overflow-x-auto scrollbar-none">
         {TABS.map(tab => (
           <button
             key={tab.id}
             onClick={() => handleTabChange(tab.id)}
-            className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
+            className={`px-3 py-2 text-xs font-display tracking-wide whitespace-nowrap transition-all ${
               activeTab === tab.id
-                ? 'text-amber-400 border-b-2 border-amber-400 -mb-px'
-                : 'text-gray-400 hover:text-gray-200'
+                ? 'text-amber-400 border-b-2 border-amber-500 -mb-px bg-amber-950/30'
+                : 'text-gray-500 hover:text-gray-300 hover:bg-gray-800/50'
             }`}
           >
             {tab.label}

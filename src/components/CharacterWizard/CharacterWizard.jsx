@@ -116,11 +116,11 @@ export function CharacterWizard({ onBack, onComplete }) {
         <div className="flex items-center gap-3 mb-6">
           <button
             onClick={onBack}
-            className="text-gray-400 hover:text-amber-400 text-sm transition-colors"
+            className="text-gray-500 hover:text-amber-400 text-sm transition-colors"
           >
             ← Personagens
           </button>
-          <h1 className="text-xl font-bold text-amber-400">Criar Personagem</h1>
+          <h1 className="text-xl font-bold text-amber-400 font-display tracking-wide">Criar Personagem</h1>
         </div>
 
         {/* Indicador de progresso */}
