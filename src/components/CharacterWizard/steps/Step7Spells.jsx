@@ -1,7 +1,8 @@
 // Passo 7 — Magias: seleção por aba de nível + busca + limites
 import { useState, useMemo } from 'react'
-import { ABILITY_SCORES, PREPARE_CLASSES, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, getProficiencyBonus, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../../utils/calculations'
+import { ABILITY_SCORES, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, getProficiencyBonus, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../../utils/calculations'
 import { useClassSpells } from '../../../hooks/useClassSpells'
+import { getSpellcastingRules } from '../../../utils/spellcasting'
 import { generateId } from '../../../hooks/useCharacter'
 import { SpellDetailModal } from '../../SpellDetailModal'
 
@@ -28,10 +29,11 @@ export function Step7Spells({ draft, updateDraft, classData }) {
   const spellSaveDC      = spellAbilityKey ? calculateSpellSaveDC(spellScore, profBonus) : null
   const spellAttackBonus = spellAbilityKey ? calculateSpellAttackBonus(spellScore, profBonus) : null
 
-  const { classSpells, levelData, slotLevels, availableTabs, cantripsKnown, spellsKnown } =
+  const { classSpells, levelData, slotLevels, availableTabs } =
     useClassSpells(draft.class, draft.level)
 
-  const isPrepare = PREPARE_CLASSES.has(draft.class)
+  const rules = getSpellcastingRules(draft.class, draft.level, finalAttrs, levelData)
+  const { type: castType, spellsLimit, cantripsLimit, spellsLabel } = rules
 
   // Magias escolhidas no draft
   const chosenSpells = draft.spells ?? []
@@ -47,8 +49,8 @@ export function Step7Spells({ draft, updateDraft, classData }) {
     return base.filter(s => s.name.toLowerCase().includes(q) || (s.school || '').toLowerCase().includes(q))
   }, [classSpells, activeTab, search])
 
-  const atCantripLimit = activeTab === 0 && cantripsKnown != null && chosenCantrips.length >= cantripsKnown
-  const atSpellLimit   = activeTab > 0 && !isPrepare && spellsKnown != null && chosenLeveled.length >= spellsKnown
+  const atCantripLimit = activeTab === 0 && cantripsLimit != null && chosenCantrips.length >= cantripsLimit
+  const atSpellLimit   = activeTab > 0 && spellsLimit != null && chosenLeveled.length >= spellsLimit
 
   function addSpell(spell) {
     if (chosenIds.has(spell.index)) return
@@ -103,21 +105,21 @@ export function Step7Spells({ draft, updateDraft, classData }) {
 
       {/* Contadores de limites */}
       <div className="flex flex-wrap gap-4 text-sm">
-        {cantripsKnown != null && (
+        {cantripsLimit != null && (
           <span className="text-gray-400">
-            Truques: <span className={chosenCantrips.length > cantripsKnown ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
-              {chosenCantrips.length}/{cantripsKnown}
+            Truques: <span className={chosenCantrips.length > cantripsLimit ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
+              {chosenCantrips.length}/{cantripsLimit}
             </span>
           </span>
         )}
-        {!isPrepare && spellsKnown != null && (
+        {spellsLimit != null && (
           <span className="text-gray-400">
-            Magias: <span className={chosenLeveled.length > spellsKnown ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
-              {chosenLeveled.length}/{spellsKnown}
+            {spellsLabel}: <span className={chosenLeveled.length > spellsLimit ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
+              {chosenLeveled.length}/{spellsLimit}
             </span>
           </span>
         )}
-        {isPrepare && <span className="text-gray-600 italic text-xs">Prepara magias — adicione o que preferir agora</span>}
+        {castType === 'prepared' && <span className="text-gray-600 italic text-xs">({rules.ability?.toUpperCase()} mod + nível)</span>}
       </div>
 
       {/* Magias escolhidas */}

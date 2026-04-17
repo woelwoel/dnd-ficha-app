@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
-import { ABILITY_SCORES, PREPARE_CLASSES, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus, getProficiencyBonus } from '../../utils/calculations'
+import { ABILITY_SCORES, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus, getProficiencyBonus } from '../../utils/calculations'
+import { getSpellcastingRules } from '../../utils/spellcasting'
 import { useClassSpells } from '../../hooks/useClassSpells'
 import { SpellDetailModal } from '../SpellDetailModal'
 
@@ -22,14 +23,19 @@ export function Spells({ character, attributes, level, classData, onUpdateSpellc
   const spellSaveDC   = calculateSpellSaveDC(abilityScore, profBonus)
   const spellAttack   = calculateSpellAttackBonus(abilityScore, profBonus)
 
-  const { classSpells, levelData, slotLevels, availableTabs, cantripsKnown, spellsKnown } =
+  const { classSpells, levelData, slotLevels, availableTabs } =
     useClassSpells(classIndex, level)
+
+  const rules = useMemo(
+    () => getSpellcastingRules(classIndex, level, attributes, levelData),
+    [classIndex, level, attributes, levelData]
+  )
+  const { type: castType, spellsLimit, cantripsLimit, spellsLabel } = rules
 
   const usedSlots   = character.spellcasting.usedSlots || {}
   const mySpells    = character.spellcasting.spells || []
   const myCantrips  = mySpells.filter(s => s.level === 0)
   const myLeveled   = mySpells.filter(s => s.level > 0)
-  const isPrepare   = PREPARE_CLASSES.has(classIndex)
 
   // Picker filtrado
   const filteredPicker = useMemo(() => {
@@ -84,23 +90,25 @@ export function Spells({ character, attributes, level, classData, onUpdateSpellc
 
         {/* Contadores */}
         {isSpellcaster && (
-          <div className="flex gap-4 text-xs text-gray-400 mb-3">
-            {cantripsKnown != null && (
+          <div className="flex flex-wrap gap-4 text-xs text-gray-400 mb-3">
+            {cantripsLimit != null && (
               <span>
-                Truques: <span className={myCantrips.length > cantripsKnown ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
-                  {myCantrips.length}/{cantripsKnown}
+                Truques: <span className={myCantrips.length > cantripsLimit ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
+                  {myCantrips.length}/{cantripsLimit}
                 </span>
               </span>
             )}
-            {spellsKnown != null && !isPrepare && (
+            {spellsLimit != null && (
               <span>
-                Magias conhecidas: <span className={myLeveled.length > spellsKnown ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
-                  {myLeveled.length}/{spellsKnown}
+                {spellsLabel}: <span className={myLeveled.length > spellsLimit ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
+                  {myLeveled.length}/{spellsLimit}
                 </span>
               </span>
             )}
-            {isPrepare && (
-              <span className="text-gray-600 italic">Prepara magias da lista de classe</span>
+            {castType === 'prepared' && (
+              <span className="text-gray-600 italic">
+                Escolha entre a lista da classe ({rules.ability.toUpperCase()} mod + nível)
+              </span>
             )}
           </div>
         )}
@@ -198,11 +206,11 @@ export function Spells({ character, attributes, level, classData, onUpdateSpellc
           onAdd={addSpell}
           onDetail={setDetailSpell}
           classIndex={classIndex}
-          cantripsKnown={cantripsKnown}
-          spellsKnown={spellsKnown}
+          cantripsLimit={cantripsLimit}
+          spellsLimit={spellsLimit}
+          spellsLabel={spellsLabel}
           myCantripsCount={myCantrips.length}
           myLeveledCount={myLeveled.length}
-          isPrepare={isPrepare}
         />
       )}
 
@@ -245,9 +253,9 @@ function SpellRow({ spell, onDetail, onRemove }) {
   )
 }
 
-function SpellPicker({ tabs, activeTab, onTabChange, search, onSearch, spells, mySpellIds, onAdd, onDetail, cantripsKnown, spellsKnown, myCantripsCount, myLeveledCount, isPrepare }) {
-  const atCantripLimit = cantripsKnown != null && myCantripsCount >= cantripsKnown && activeTab === 0
-  const atSpellLimit   = !isPrepare && spellsKnown != null && myLeveledCount >= spellsKnown && activeTab > 0
+function SpellPicker({ tabs, activeTab, onTabChange, search, onSearch, spells, mySpellIds, onAdd, onDetail, cantripsLimit, spellsLimit, spellsLabel, myCantripsCount, myLeveledCount }) {
+  const atCantripLimit = cantripsLimit != null && myCantripsCount >= cantripsLimit && activeTab === 0
+  const atSpellLimit   = spellsLimit   != null && myLeveledCount >= spellsLimit   && activeTab > 0
 
   return (
     <div className="bg-gray-800 border border-amber-700/40 rounded-lg overflow-hidden">
@@ -279,7 +287,10 @@ function SpellPicker({ tabs, activeTab, onTabChange, search, onSearch, spells, m
         />
         {(atCantripLimit || atSpellLimit) && (
           <p className="text-xs text-amber-500 mt-1.5">
-            ⚠ Limite atingido para este nível ({activeTab === 0 ? `${myCantripsCount}/${cantripsKnown} truques` : `${myLeveledCount}/${spellsKnown} magias`})
+            ⚠ Limite atingido {activeTab === 0
+              ? `(${myCantripsCount}/${cantripsLimit} truques)`
+              : `(${myLeveledCount}/${spellsLimit} ${spellsLabel?.toLowerCase() ?? 'magias'})`}
+            . Remova uma magia para adicionar outra.
           </p>
         )}
       </div>

@@ -44,13 +44,5 @@ export function useClassSpells(classIndex, level) {
     return [0, ...slotLevels].filter(l => lvls.has(l))
   }, [classSpells, slotLevels])
 
-  return {
-    allSpells,
-    classSpells,
-    levelData,
-    slotLevels,
-    availableTabs,
-    cantripsKnown: levelData?.cantrips_known ?? null,
-    spellsKnown:   levelData?.spells_known   ?? null,
-  }
+  return { allSpells, classSpells, levelData, slotLevels, availableTabs }
 }
