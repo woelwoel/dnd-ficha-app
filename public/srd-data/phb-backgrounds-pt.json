@@ -32,7 +32,14 @@
       "Fé. Eu acredito que minha divindade guia minhas ações. Eu tenho fé que, se eu trabalhar duro, coisas boas acontecerão. (Leal)",
       "Aspiração. Eu busco ser digno da graça do meu deus ao corresponder minhas ações aos seus ensinamentos. (Qualquer)"
     ],
-    "bonds": [],
+    "bonds": [
+      "Morreria para recuperar uma relíquia sagrada de minha fé, perdida há muito tempo.",
+      "Algum dia me vingarei da hierarquia corrupta do templo que me marcou como herege.",
+      "Devo minha vida ao sacerdote que me acolheu quando meus pais morreram.",
+      "Tudo que faço é pelo bem do povo comum.",
+      "Farei qualquer coisa para proteger o templo onde servi.",
+      "Busco preservar um texto sagrado que meus inimigos querem destruir."
+    ],
     "flaws": [
       "Eu julgo os outros severamente, e a mim mesmo mais ainda.",
       "Eu deposito muita confiança naqueles que detêm o poder na hierarquia de meu templo.",
@@ -77,14 +84,21 @@
       "Povo. Eu sou cometido com o povo com quem me importo, não com ideias. (Neutro)",
       "Aspiração. Eu trabalho duro para ser o melhor no meu ofício. (Qualquer)"
     ],
-    "bonds": [],
+    "bonds": [
+      "A guilda é minha família. Farei qualquer coisa para protegê-la.",
+      "Devo minha carreira ao mestre que acreditou em mim.",
+      "Perseguirei os ladrões que roubaram minha obra-prima.",
+      "Honrarei meu mestre ensinando o ofício da forma que aprendi.",
+      "Tenho uma dívida com o cofre da guilda que financiou minha jornada.",
+      "Um dia minha obra-prima provará meu valor para todos."
+    ],
     "flaws": [
       "Eu farei de tudo para pôr minha mãos em algo raro ou inestimável.",
       "Eu rapidamente presumo que alguém está tentando me trapacear.",
       "Ninguém nunca poderá saber que eu, certa vez, roubei dinheiro dos cofres da guilda.",
       "Eu nunca estou satisfeito com o que tenho – eu sempre quero mais.",
       "Eu mataria para adquirir um título de nobreza.",
-      "Eu sou terrivelmente invejoso com qualquer um que possa ofuscar meu ofício. Todo lugar que eu vou, estou cercado de rivais. VARIAÇÃO DE ARTESÃO DE GUILDA: MERCADOR DE GUILDA Ao invés de um artesão de guilda, você pertence a uma guilda de mercadores, mestres de caravana ou comerciantes. Você não constrói itens, mas ganhou a vida comprando e vendendo os trabalhos dos outros (ou a matéria-prima que os artesãos precisam para praticar seus ofícios). Sua guilda deve ser um grande consorcio (ou família) de mercadores com interesses por toda a região. Talvez você transporte bens de um lugar para outro, de barco, carroça ou em caravana, ou compra esses bens de comerciantes que viajam e os vende na sua própria pequena loja. De certas formas, a vida de comerciante viajante por si, tende a levar a aventuras, muito mais que a vida de artesão. Ao invés de proficiência com ferramentas de artesão, você deveria ter proficiência com ferramentas de navegador ou um idioma adicional. E, ao invés de ferramentas de artesão, você poderia começar com uma mula ou carroça."
+      "Eu sou terrivelmente invejoso com qualquer um que possa ofuscar meu ofício. Todo lugar que eu vou, estou cercado de rivais."
     ]
   },
   {
@@ -123,14 +137,21 @@
       "Povo. Eu gosto de ver os sorrisos nos rostos das pessoas quando eu atuo. Isso é tudo que importa. (Neutro)",
       "Honestidade. A arte deve refletir a alma; ela deve vir de dentro e revelar quem realmente somos. (Qualquer)"
     ],
-    "bonds": [],
+    "bonds": [
+      "Meu instrumento é minha possessão mais preciosa e me lembra de alguém que amei.",
+      "Alguém destruiu minha reputação e a recuperarei a qualquer custo.",
+      "Devo minha carreira ao mecenas que primeiro me contratou.",
+      "Farei qualquer coisa para proteger os companheiros de minha troupe.",
+      "Tenho um rival que quer me ver fracassar. Provarei que ele está errado.",
+      "Um dia, minhas histórias inspirarão os grandes heróis de amanhã."
+    ],
     "flaws": [
       "Eu farei de tudo para ganhar fama e renome.",
       "Eu viro um idiota quando vejo um rosto bonito.",
       "Um escândalo me impede de voltar para casa novamente. Esse tipo de problema parece me perseguir por ai.",
       "Eu, certa vez, satirizei um nobre que ainda quer minha cabeça. Foi um erro que eu adoraria repetir.",
       "Eu tenho problemas em esconder meus verdadeiros sentimentos. Minha língua afiada me mete em confusão.",
-      "Apesar dos meus melhores esforços, meus amigos não me consideram confiável. VARIAÇÃO DE ARTISTA: GLADIADOR Um gladiador é tanto um artista quanto qualquer menestrel ou artista circense, treinado para tornar as artes do combate em um espetáculo para a multidão poder se divertir. Esse tipo de combate chamativo é sua rotina de artista, apesar de você também dever ter alguma perícia como acrobata ou ator. Usando sua característica Pela Demanda Popular, você pode encontrar um lugar para atuar em qualquer lugar que considere o combate uma forma de entretenimento – talvez uma arena gladiatória ou um clube de luta secreto no subúrbio. Você pode trocar o instrumento musical do seu pacote de equipamentos por uma arma barata, porem incomum, como um tridente ou uma rede."
+      "Apesar dos meus melhores esforços, meus amigos não me consideram confiável."
     ]
   },
   {
@@ -169,7 +190,14 @@
       "Amizade. Bens materiais vem e vão. Os laços de amizade duram pra sempre. (Bom)",
       "Aspiração. Eu estou determinado a fazer algo por mim mesmo. (Qualquer)"
     ],
-    "bonds": [],
+    "bonds": [
+      "Roubei algo precioso de alguém que amava, e isso me assombra.",
+      "Tenho um rival que sempre desvendou meus esquemas. Não desta vez.",
+      "Uma pessoa foi injustamente arruinada por minhas ações e pretendo remediar isso.",
+      "Tenho uma família que não sabe o que faço. Mantenho esse segredo para protegê-la.",
+      "Tenho uma dívida com um parceiro que me salvou. Devo retribuir.",
+      "Minha melhor amizade de infância me deu algo de sorte. Quero reencontrar essa pessoa."
+    ],
     "flaws": [
       "Não resisto um rostinho bonito.",
       "Estou sempre com dividas. Eu gasto meus lucros ilícitos com luxurias decadentes mais rápido do que os ganho...",
@@ -215,14 +243,21 @@
       "Povo. Eu sou leal aos meus amigos, não a qualquer ideal, e todos sabem que posso viajar até o Estige por aqueles que me importo. (Neutro)",
       "Redenção. Há uma centelha de bondade em todo mundo. (Bom)"
     ],
-    "bonds": [],
+    "bonds": [
+      "Sou leal à minha organização acima de tudo.",
+      "Alguém me salvou quando era jovem e faço o que faço para honrá-lo.",
+      "Tenho uma família que não sabe de meu passado. Protejo-a acima de tudo.",
+      "Tenho uma dívida com um antigo parceiro que salvou minha vida.",
+      "Um funcionário corrupto destruiu tudo que eu amava. Vou me vingar.",
+      "Minha gangue é minha família. Não os traí e nunca o farei."
+    ],
     "flaws": [
       "Quando vejo algo valioso, não consigo pensar em mais nada, além de roubá-lo.",
       "Quando confrontado com uma escolha entre dinheiro e amigo, eu bem que escolho o dinheiro.",
       "Se há um plano, eu vou esquecê-lo. Se eu não esquecê-lo, vou ignorá-lo.",
       "Eu tenho um \"tique\" que revela se estou mentindo.",
       "Eu viro as costas e corro quando as coisas começam a ficar ruins.",
-      "Um inocente foi preso por um crime que eu cometi. Por mim tudo bem. VARIAÇÃO DE CRIMINOSO: ESPIÃO Embora suas habilidades não sejam muito diferentes de ladrões ou contrabandistas, você as aprendeu e as praticou em um contexto bem diferente: um agente de espionagem. Você pode ser um oficial sancionado pela coroa ou talvez seja só alguém que venda os segredos que descobre pela oferta mais alta."
+      "Um inocente foi preso por um crime que eu cometi. Por mim tudo bem."
     ]
   },
   {
@@ -260,14 +295,21 @@
       "Viva e Deixe Viver. Se intrometer nos assuntos dos outros só traz problemas. (Neutro)",
       "Autoconhecimento. Se você conhece a si mesmo, não a mais nada para saber. (Qualquer)"
     ],
-    "bonds": [],
+    "bonds": [
+      "Minha meditação revelou uma grande verdade que o mundo precisa conhecer.",
+      "Vou encontrar meu mestre espiritual que desapareceu misteriosamente.",
+      "Devo proteger as terras sagradas onde meditei por anos.",
+      "Saí de meu retiro para cumprir uma missão que meus guias me designaram.",
+      "Um culto maligno vai destruir minha comunidade se eu não agir.",
+      "As pessoas com quem cresci ainda me importam, mesmo que eu os tenha deixado."
+    ],
     "flaws": [
       "Agora que voltei ao mundo, eu desfruto de seus prazeres um pouco demais.",
       "Eu escondo nas sombras, pensamentos sanguinários que meu isolamento e meditação não conseguiram apagar.",
       "Eu sou dogmático em meus pensamentos e filosofia.",
       "Eu deixo meu desejo de vencer discussões ofuscar amizades e harmonia.",
       "Eu me arrisco muito para descobrir um pouco de conhecimento perdido.",
-      "Eu gosto de guardar segredos e não os partilho com ninguém. OUTROS EREMITAS O antecedente eremita pressupõem um tipo de isolamento contemplativo que permite espaço para estudo e oração. Se você deseja jogar com um rude recluso selvagem que vive em terras ermas enquanto tenta evitar a companhia de outras pessoas, veja o antecedente forasteiro. Por outro lado, se você deseja ir por um caminho mais voltado à religião, o acolito pode ser o que você procura. Ou você poderia, até mesmo, ser um charlatão, fingindo ser uma pessoa sábia e santa, deixando tolos fervorosos sustentarem você."
+      "Eu gosto de guardar segredos e não os partilho com ninguém."
     ]
   },
   {
@@ -295,7 +337,7 @@
       "Eu não vejo lugar para o povo rico e educado. Dinheiro e modos não vão salvá-lo de um urso-coruja faminto.",
       "Estou sempre pegando coisas, distraidamente brincando com elas e, às vezes, quebrando-as.",
       "Eu me sinto muito mais confortável entre animais que entre pessoas.",
-      "Eu fui, de fato, criado por lobos. CARACTERÍSTICAS SUGERIDAS Geralmente considerados rudes e grosseiros dentre o povo civilizado, forasteiros tem pouco respeito pelas sutilezas da vida urbana. Os laços de tribo, clã, família e mundo natural de que fazem parte são os vínculos mais importantes para os forasteiros. d6 Ideal",
+      "Eu fui, de fato, criado por lobos.",
       "Mudança. A vida é como as estações, em constante mudança, e nós devemos mudar com ela. (Caótico)",
       "Bem maior. É responsabilidade de todos trazer a maior felicidade para toda a tribo. (Bom)",
       "Honra. Se eu me desonrar, eu desonrarei todo o meu clã. (Leal)",
@@ -304,7 +346,14 @@
       "Gloria. Eu devo adquirir gloria em batalha, para mim e para meu clã. (Qualquer)"
     ],
     "ideals": [],
-    "bonds": [],
+    "bonds": [
+      "Minha família, clã ou tribo é a coisa mais importante para mim.",
+      "Vim ao mundo civilizado para trazer honra ao meu povo.",
+      "Meu lar foi destruído e vou me vingar dos responsáveis.",
+      "A terra que percorro me pertence tanto quanto o sangue em minhas veias.",
+      "Devo tudo ao caçador que me treinou quando era jovem.",
+      "Não esqueço os que ficaram para trás quando saí."
+    ],
     "flaws": [
       "Sou muito apaixonado por cerveja, vinho e outras bebidas.",
       "Não existe lugar para precaução em uma vida vivida ao máximo.",
@@ -349,7 +398,14 @@
       "Sinceridade. Não há nada de bom em fingir ser algo que não sou. (Neutro)",
       "Destino. Nada, nem ninguém, pode me manter longe do meu chamado. (Qualquer)"
     ],
-    "bonds": [],
+    "bonds": [
+      "Tenho uma família a quem preciso proteger e cuidar.",
+      "A tirania deve acabar. Não descansarei até libertar meu povo.",
+      "A comunidade que criei me apoia. Não vou decepcioná-la.",
+      "Um nobre malvado que oprime meu povo ainda terá de me enfrentar.",
+      "Meu mentor me ensinou um código de honra que carrego comigo.",
+      "Farei qualquer coisa para defender minha terra natal."
+    ],
     "flaws": [
       "O tirano que comanda minha terra não vai parar até ver meu cadáver.",
       "Eu estou convencido sobre o significado do meu destino, e cego aos riscos e falhas.",
@@ -400,14 +456,21 @@
       "Eu fui enganado na divisão dos espólios e eu quero o que me é devido.",
       "Cruéis piratas mataram meu capitão e companheiros de tripulação, saquearam nosso navio e me deixaram para morrer. A vingança será minha."
     ],
-    "bonds": [],
+    "bonds": [
+      "Sou fiel à minha tripulação acima de tudo.",
+      "O navio onde servi é meu lar. Defenderei ele de qualquer ameaça.",
+      "Um pirata afundou meu navio e matou meus companheiros. Vou me vingar.",
+      "Meus companheiros de tripulação são minha família.",
+      "Sou culpado por um naufrágio que causou mortes. Carrego esse peso.",
+      "Tenho uma vida secreta em um porto distante que devo proteger."
+    ],
     "flaws": [
       "Eu sigo ordens, mesmo que eu ache que estão erradas.",
       "Eu direi qualquer coisa para evitar trabalho extra.",
       "Certa vez, alguém duvidou da minha coragem, eu nunca recuo, não importa o quão perigosa seja a situação.",
       "Quando começo a beber, é difícil pra mim parar.",
       "Eu não resisto a uma sacolinha de moedas dando sopa ou outras bugigangas que encontro.",
-      "Meu orgulho provavelmente levará a minha destruição. VARIAÇÃO DE MARINHEIRO: PIRATA Você passou sua juventude sobre o domínio de um pirata infame, um degolador cruel que te ensinou a sobreviver em um mundo de tubarões e selvageria. Você participou de saques em alto-mar e enviou mais de uma alma merecedora para uma sepultura salgada. Medo e derramamento de sangue não são estranhos para você, e você já adquiriu uma reputação um tanto desagradável em várias cidades portuárias. Se você decidir que sua carreira como marinheiro envolve pirataria, você pode escolher a característica Má Reputação (veja a nota) ao invés da característica Passagens de Navio. VARIAÇÃO DE CARACTERÍSTICA: MÁ REPUTAÇÃO Se o seu personagem tiver o antecedente marinheiro, você pode escolher essa característica de antecedente ao invés de Passagens de Navio. Não importa aonde você vá, as pessoas tem medo de você devido a sua reputação. Quando você está em locais civilizados, você pode cometer pequenos delitos, como se negar a pagar por comida em uma taverna ou por a baixo portas de lojas locais, já que a maioria das pessoas não vão denunciar suas atividades às autoridades."
+      "Meu orgulho provavelmente levará a minha destruição."
     ]
   },
   {
@@ -445,14 +508,21 @@
       "Família. O sangue corre mais grosso que a água. (Qualquer)",
       "Obrigação Nobre. É o meu dever proteger e cuidar das pessoas abaixo de mim. (Bom)"
     ],
-    "bonds": [],
+    "bonds": [
+      "Farei qualquer coisa para salvar minha família da ruína.",
+      "Minha casa, meu sangue e meu legado são o mais importante para mim.",
+      "Devo minha vida a um servo que morreu me protegendo.",
+      "Um rival político quer destruir minha família. Não deixarei.",
+      "Fui forçado a deixar minha casa cedo. Um dia retornarei em triunfo.",
+      "Protejo o nome de minha família como se fosse a coisa mais sagrada."
+    ],
     "flaws": [
       "Eu secretamente acredito que todos estão abaixo de mim.",
       "Eu escondo um segredo verdadeiramente escandaloso que poderia arruinar minha família para sempre.",
       "Muitas vezes eu ouço insultos e ameaças veladas em cada palavra dirigida a mim, e me irrito muito rápido.",
       "Eu tenho um desejo insaciável por prazeres carnais.",
       "Na verdade, o mundo gira ao meu redor.",
-      "Pelas minhas palavras e ações, muitas vezes, envergonho minha família. VARIAÇÃO DE NOBRE: CAVALEIRO A fidalguia, está entre os títulos de nobreza mais baixos na maioria das sociedades, mas ele pode ser o caminho para posições maiores. Se você deseja ser um cavaleiro, escolha a característica Retentores (veja a caixa de texto abaixo) ao invés da característica Posição Privilegiada. Um dos seus plebeus retentores é substituído por um nobre que serve como seu escudeiro, ajudando você em troca de treinamento no próprio caminho dele para a cavalaria. Seus dois retentores restantes podem ser um cavalariço, para cuidar do seu cavalo, e um servo que poli sua armadura (e até mesmo ajuda você a vesti-la). Como um emblema de cavalaria e os ideias de amor cortês, você deveria incluir entre seus equipamentos um estandarte ou outro símbolo de um nobre lorde ou lady a quem você deu seu coração – em uma espécie de voto de castidade. (Essa pessoa pode ser seu vínculo.) VARIAÇÃO DE CARACTERÍSTICA: RETENTORES Se o seu personagem tiver o antecedente nobre, você pode escolher essa característica de antecedente no lugar da Posição Privilegiada. Você tem o serviço de três retentores leais a sua família. Esses retentores podem ser atendentes ou mensageiros, e um pode ser um mordomo. Seus retentores são camponeses que podem realizar tarefas comuns para você, mas eles não irão lutar por você, não irão segui-lo para área obviamente perigosas (como masmorras) e irão embora se forem frequentemente expostos ao perigo ou abuso."
+      "Pelas minhas palavras e ações, muitas vezes, envergonho minha família."
     ]
   },
   {
@@ -497,7 +567,14 @@
       "Eu sai da minha vida de pobreza roubando uma pessoa importante, eu sou procurado por isso.",
       "Ninguém deveria ter suportar as dificuldades pelas quais passei."
     ],
-    "bonds": [],
+    "bonds": [
+      "Meu bairro é tão importante para mim quanto qualquer reino.",
+      "Devo minha sobrevivência a um velho que me ensinou a viver nas ruas.",
+      "Um guarda corrupto maltratou minha gangue. Provarei que ele pode ser responsabilizado.",
+      "Tenho uma família pequena que cuido com todo meu coração.",
+      "Um criminoso poderoso tem algo que me pertence. Vou recuperá-lo.",
+      "Não esqueço os amigos que perderam tudo quando eu sobrevivi."
+    ],
     "flaws": [
       "Se eu estiver em desvantagem, eu vou fugir de uma briga.",
       "Ouro parece ser muito dinheiro pra mim, e eu faria praticamente qualquer coisa por mais dele.",
@@ -540,7 +617,14 @@
       "Poder. Conhecimento é o caminho para o poder e a dominação. (Mau)",
       "Auto Aperfeiçoamento. O objetivo de uma vida de estudos é a melhoria de si mesmo. (Qualquer)"
     ],
-    "bonds": [],
+    "bonds": [
+      "Devo proteger o acervo de uma biblioteca que foi destruída.",
+      "Um aprendiz sob minha tutela pode ser a chave para uma grande descoberta.",
+      "Devo minha carreira a um mentor que faleceu antes de ver minhas realizações.",
+      "Minha pesquisa é mais importante do que qualquer coisa para mim.",
+      "Descobri uma verdade sombria sobre a história e só eu posso revelá-la.",
+      "Protejo meu aluno que está em perigo por causa do meu trabalho."
+    ],
     "flaws": [
       "Eu me distraio facilmente com a promessa de informação.",
       "Muitas pessoas gritam e correm quando veem um corruptor. Eu paro e tomo notas de sua anatomia.",
@@ -586,7 +670,14 @@
       "Viva e Deixa Viver. Ideais não valem a pena se você matar, ou for à guerra por eles. (Neutro)",
       "Aspiração. Minha cidade, nação ou meu povo, são tudo o que importa para mim. (Qualquer)"
     ],
-    "bonds": [],
+    "bonds": [
+      "A unidade com que servi morreria por mim e eu morreria por eles.",
+      "Alguém me salvou em batalha e vou honrar essa dívida.",
+      "Minha honra é mais importante para mim do que minha própria vida.",
+      "Nunca deixarei um companheiro para trás.",
+      "Minha família que deixei em casa é minha maior motivação.",
+      "O comandante que me traiu um dia prestará contas por isso."
+    ],
     "flaws": [
       "O inimigo monstruoso que enfrentei em uma batalha ainda me deixa tremendo de medo.",
       "Eu tenho pouco respeito por aqueles que não se provam bons combatentes.",

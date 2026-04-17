@@ -15,7 +15,14 @@
     ],
     "skill_choices": {
       "count": 2,
-      "from": []
+      "from": [
+        "Adestramento",
+        "Atletismo",
+        "Intimidação",
+        "Natureza",
+        "Percepção",
+        "Sobrevivência"
+      ]
     },
     "spellcasting_ability": null,
     "summary": "Guerreiros furiosos que entram em fúria primal para causar dano massivo e resistir a qualquer coisa.",
@@ -127,7 +134,8 @@
         "name": "Urso",
         "desc": "Quando estiver em fúria, qualquer criatura a até 1,5 metro de você que for hostil a você terá desvantagem nas jogadas de ataque contra outros alvos além de você ou outro personagem com essa característica. Um inimigo é imune a esse efeito se ele não puder ver ou ouvir você ou caso ele não possa ser amedrontado."
       }
-    ]
+    ],
+    "gold_formula": "2d4 × 10"
   },
   {
     "index": "bardo",
@@ -145,7 +153,26 @@
     ],
     "skill_choices": {
       "count": 3,
-      "from": []
+      "from": [
+        "Acrobacia",
+        "Adestramento",
+        "Arcanismo",
+        "Atletismo",
+        "Enganação",
+        "História",
+        "Intuição",
+        "Intimidação",
+        "Investigação",
+        "Medicina",
+        "Natureza",
+        "Percepção",
+        "Atuação",
+        "Persuasão",
+        "Religião",
+        "Prestidigitação",
+        "Furtividade",
+        "Sobrevivência"
+      ]
     },
     "spellcasting_ability": "Carisma",
     "summary": "Artistas versáteis que combinam magia, perícias e Inspiração Bárdica para apoiar o grupo em qualquer situação.",
@@ -185,7 +212,8 @@
         "name": "Bardo",
         "desc": "Role o dado de Inspiração de Bardo e adicione o número rolado ao seu teste de habilidade. Você pode escolher fazer isso depois de rolar o dado do teste de habilidade, mas antes do Mestre dizer se foi bem ou mal sucedido. COLÉGIO DA BRAVURA Os bardos do Colégio da Bravura são escaldos destemidos de quem os contos mantem viva a memória dos grandes heróis do passado, dessa forma inspirando uma nova geração de heróis. Esses bardos se reúnem em salões de hidromel ou ao redor de fogueiras para cantar os feitos dos grandiosos, tanto do passado quanto do presente. Eles viajam pelos lugares para testemunhar grandes eventos em primeira mão e para garantir que a memória desses eventos não se perca nesse mundo. Com suas canções, eles inspiram outros a alcançar o mesmo patamar de realizações dos antigos heróis. PROFICIÊNCIA ADICIONAL Quando você se junta ao Colégio da Bravura no 3° nível, você adquire proficiência com armadura médias, escudos e armas marciais. INSPIRAÇÃO EM COMBATE Também no 3° nível, você aprende a inspirar os outros em batalha. Uma criatura que possuir um dado de Inspiração de Bardo seu, pode rolar esse dado e adicionar o número rolado a uma jogada de dano que ele tenha acabado de fazer. Alternativamente, quando uma jogada de ataque for realizada contra essa criatura, ela pode usar sua reação para rolar o dado de Inspiração de Bardo e adicionar o número rolado a sua CA contra esse ataque, depois da rolagem ser feita, mas antes de saber se errou ou acertou. ATAQUE EXTRA A partir do 6° nível, você pode atacar duas vezes, ao invés de uma, sempre que você realizar a ação de Ataque no seu turno. MAGIA DE BATALHA No 14° nível, você dominou a arte de tecer a conjuração e usar armas em um ato harmonioso. Quando você usar sua ação para conjurar uma magia de bardo, você pode realizar um ataque com arma com uma ação bônus."
       }
-    ]
+    ],
+    "gold_formula": "5d4 × 10"
   },
   {
     "index": "bruxo",
@@ -203,7 +231,15 @@
     ],
     "skill_choices": {
       "count": 2,
-      "from": []
+      "from": [
+        "Arcanismo",
+        "Enganação",
+        "História",
+        "Intimidação",
+        "Investigação",
+        "Natureza",
+        "Religião"
+      ]
     },
     "spellcasting_ability": "Carisma",
     "summary": "Conjuradores que firmaram pactos com entidades do além, recuperando magia com descansos curtos.",
@@ -275,7 +311,8 @@
         "name": "Persuasão",
         "desc": "LACAIOS DO CAOS Pré-requisito: 9° nível Você pode lançar conjurar elemental, uma vez, usando um espaço de magia de bruxo. Você não pode fazer isso novamente até terminar um descanso longo. LÂMINA SEDENTA Pré-requisito: 5° nível, característica Pacto da Lâmina Você pode atacar com sua arma do pacto duas vezes, ao invés de apenas uma, quando você usa a ação de Ataque no seu turno. LANÇA MÍSTICA Pré-requisito: truque rajada mística Quando você conjura rajada mística, seu alcance será de 90 metros. LARÁPIO DOS CINCO DESTINOS Você pode conjurar perdição, uma vez, usando um espaço de magia de bruxo. Você não pode fazer isso novamente até terminar um descanso longo. LIVRO DE SEGREDOS ANTIGOS Pré-requisito: Característica Pacto do Tomo Você pode agora, registrar rituais mágicos no seu Livro das Sombras. Escolha duas magias de 1° nível que possuam o descritor ritual da lista de magias de qualquer classe. A magia aparece no livro e não conta no número de magias que você conhece. Com o seu Livro das Sombras em mãos, você pode conjurar as magias escolhidas como rituais. Você não pode conjurar essas magias, exceto na forma de rituais, a não ser que você tenha aprendido elas através de outros meios. Você também pode conjurar uma magia de bruxo que você conheça como ritual se ela possuir o descritor ritual. Os rituais não precisam ser da mesma lista de magias. Durante suas aventuras, você pode adicionar outras magias de ritual ao seu Livro das Sombras. Quando você encontrar tais magias, você pode adicioná-la ao livro se o nível da magia for igual ou inferior à metade do seu nível de bruxo (arredondado para baixo) e se você tiver tempo para gastar transcrevendo a magia. Para cada nível da magia, o processo de transcrição levará 2 horas e custará 50 po, devido às tintas raras necessárias para inscrevê-la. MÁSCARA DAS MUITAS FACES Você pode conjurar disfarçar-se, à vontade, sem precisar gastar um espaço de magia. MESTRE DAS INFINDÁVEIS FORMAS Pré-requisito: 15° nível Você pode conjurar alterar-se, à vontade, sem precisar gastar um espaço de magia. OLHAR DE DUAS MENTES Você pode usar sua ação para tocar um humanoide voluntário e perceber através do seus sentidos até o final do seu próximo turno. Conquanto que a criatura esteja no mesmo plano de existência que você, você pode usar sua ação nas rodadas subsequentes para manter a conexão, estendendo a duração até o início do seu próximo turno. Enquanto estiver percebendo através dos sentidos de outra criatura, você aproveita os benefícios de todos os sentidos especiais possuídos pela criatura e você fica cego e surdo ao que está a sua volta. OLHOS DO GUARDIÃO DAS RUNAS"
       }
-    ]
+    ],
+    "gold_formula": "4d4 × 10"
   },
   {
     "index": "clerigo",
@@ -293,7 +330,13 @@
     ],
     "skill_choices": {
       "count": 2,
-      "from": []
+      "from": [
+        "História",
+        "Intuição",
+        "Medicina",
+        "Persuasão",
+        "Religião"
+      ]
     },
     "spellcasting_ability": "Sabedoria",
     "summary": "Campeões divinos que canalizam poder dos deuses para curar aliados, destruir mortos-vivos e invocar milagres.",
@@ -485,7 +528,8 @@
         "name": "Divindade para curar os feridos",
         "desc": "Como uma ação, você usa seu símbolo sagrado para invocar energia que pode recuperar um total de 5 vezes seu nível de clérigo em pontos de vida. Você escolhe quaisquer criaturas a até 9 metros de você e divide esses pontos entre elas. Essa característica só pode curar as criaturas a até metade de seu máximo de pontos de vida. Você não pode usar essa característica em um morto-vivo ou constructo. CURANDEIRO ABENÇOADO A partir do 6º nível, as magias que você conjurar para curar os outros também curam você. Quando conjurar uma magia de cura em outra criatura, você também recupera pontos de vida, em um total de 2 + nível da magia. GOLPE DIVINO No 8º nível, você ganha a habilidade de imbuir seus ataques com poder divino. Uma vez em cada um de seus turnos, quando você acertar uma criatura com um ataque com arma, você pode fazer o ataque causar 1d8 de dano radiante extra ao alvo. Quando alcançar o 14º nível, o dano extra aumenta para 2d8. CURA SUPREMA A partir do 17º nível, quando você jogaria normalmente um ou mais dados para recuperar pontos de vida com uma magia, você usa o maior resultado possível nos dados. Por exemplo, ao invés de recuperar 2d6 pontos de vida, você recupera 12."
       }
-    ]
+    ],
+    "gold_formula": "5d4 × 10"
   },
   {
     "index": "druida",
@@ -503,7 +547,16 @@
     ],
     "skill_choices": {
       "count": 2,
-      "from": []
+      "from": [
+        "Adestramento",
+        "Arcanismo",
+        "Intuição",
+        "Medicina",
+        "Natureza",
+        "Percepção",
+        "Religião",
+        "Sobrevivência"
+      ]
     },
     "spellcasting_ability": "Sabedoria",
     "summary": "Guardiões da natureza que se transformam em animais e controlam forças elementais com magia primordial.",
@@ -583,7 +636,8 @@
         "name": "Sombrios ou de qualquer outra religião do mundo",
         "desc": "Eles acreditam que cada coisa viva e cada fenômeno natural – sol, lua, vento, fogo e o próprio mundo – tem um espirito. Suas magias, portanto, são um meio de se comunicar e de comandar esses espíritos. Diferentes seitas druídicas, no entanto, possuem diferentes filosofias sobre o relacionamento mais adequado com esses espíritos entre si e com as forças da civilização. O Ashbound, por exemplo, acredita que a magia arcana é uma abominação contra a natureza, as Crianças do Inverno veneram as forças da morte e os Guardiões do Portal preservam tradições antigas destinadas a proteger o mundo da incursão de aberrações."
       }
-    ]
+    ],
+    "gold_formula": "2d4 × 10"
   },
   {
     "index": "feiticeiro",
@@ -601,7 +655,14 @@
     ],
     "skill_choices": {
       "count": 2,
-      "from": []
+      "from": [
+        "Arcanismo",
+        "Enganação",
+        "Intuição",
+        "Intimidação",
+        "Persuasão",
+        "Religião"
+      ]
     },
     "spellcasting_ability": "Carisma",
     "summary": "Conjuradores com magia inata no sangue, capaz de manipular e potencializar feitiços com Metamagia.",
@@ -641,7 +702,8 @@
         "name": "Feitiçaria",
         "desc": "Com uma ação bônus, no seu turno, você pode gastar um espaço de magia disponível e ganhar uma quantidade de pontos de feitiçaria igual ao nível do espaço. METAMÁGICA No 3° nível, você adquire a habilidade de distorcer suas magias para se adequarem às suas necessidades. Você ganha duas das seguintes opções de Metamágica, à sua escolha. Você adquire outra no 10° e 17° nível. Você pode usar apenas uma opção de Metamágica em uma magia quando a conjura, a não ser que esteja descrito o contrário. MAGIA ACELERADA Quando você conjurar uma magia que tenha um tempo de conjuração de 1 ação, você pode gastar 2 pontos de feitiçaria para mudar o tempo de conjuração para 1 ação bônus para essa magia. MAGIA AUMENTADA Quando você conjura uma magia que obriga uma criatura a realizar um teste de resistência contra o seu efeito, você pode gastar 3 pontos de feitiçaria para dar desvantagem a um alvo da magia no primeiro teste de resistência feito contra ela. MAGIA CUIDADOSA Quando você conjurar uma magia que obriga outras criaturas a realizarem um teste de resistência, você pode proteger algumas dessas criaturas da força total da magia. Para tanto, você gasta 1 ponto de feitiçaria e escolhe um número dessas criaturas até o seu modificador de Carisma (mínimo de uma criatura). Uma criatura escolhida passa automaticamente no teste de resistência contra a magia. MAGIA DISTANTE Quando você conjurar uma magia que tenha distância de 1,5 metro ou maior, você pode gastar 1 ponto de feitiçaria para dobrar o alcance da magia. Quando você conjura uma magia com alcance de toque, você pode gastar 1 ponto de feitiçaria para mudar o alcance da magia para 9 metros. MAGIA DUPLICADA Quando você conjurar uma magia que seja incapaz de ter mais de uma criatura como alvo no nível atual dela e não possua alcance pessoal, você pode gastar um número de pontos de feitiçaria igual ao nível da magia para ter uma segunda criatura, no alcance da magia, como alvo (1 ponto de feitiçaria se a magia for um truque). MAGIA ESTENDIDA Quando você conjurar uma magia que tenha duração de 1 minuto ou maior, você pode gastar 1 ponto de feitiçaria para dobrar sua duração, até uma duração máxima de 24 horas. MAGIA POTENCIALIZADA Quando você rola o dano de uma magia, você pode gastar 1 ponto de feitiçaria para jogar novamente um número de dados de dano, até seu modificador de Carisma (mínimo de um). Você deve usar a nova rolagem. Você pode usar Magia Potencializada mesmo que você já tenha usado uma opção diferente de Metamágica durante a conjuração da magia. MAGIA SUTIL Quando você conjurar uma magia, você pode gastar 1 ponto de feitiçaria para fazê-lo sem qualquer componente somático ou verbal. INCREMENTO NO VALOR DE HABILIDADE Quando você atinge o 4° nível e novamente no 8°, 12°, 16° e 19° nível, você pode aumentar um valor de habilidade, à sua escolha, em 2 ou você pode aumentar dois valores de habilidade, à sua escolha, em 1. Como padrão, você não pode elevar um valor de habilidade acima de 20 com essa característica. RESTAURAÇÃO MÍSTICA No 20° nível, você recupera 4 pontos de feitiçaria gastos sempre que você terminar um descanso curto. ORIGENS DE FEITIÇARIA Diferentes feiticeiros possuem diferentes origens para sua magia inata. Apesar de muitas variações existirem, a maioria dessas origens caem em duas categorias: uma linhagem dracônica e magia selvagem. LINHAGEM DRACÔNICA Sua magia inata vem de magia dracônica que foi misturada ao seu sangue ou ao sangue dos seus ancestrais. Geralmente, os feiticeiros com essa origem traçam sua descendência de poderosos feiticeiros da antiguidade que fizeram uma barganha com um dragão ou que tenham um dragão como parente. Algumas dessas linhagens estão bem definidas no mundo, mas a maioria é obscura. Qualquer feiticeiro pode ser o primeiro de uma nova linhagem, como resultado de um pacto ou de outra circunstância excepcional. ANCESTRAL DRACÔNICO No 1° nível, você escolhe um tipo de dragão como seu ancestral. O tipo de dano associado a cada dragão será usado por características que você ganhará posteriormente. ANCESTRAL DRACÔNICO Dragão Tipo de Dano Azul Elétrico Branco Frio Bronze Elétrico Cobre Acido Latão Fogo Negro Acido Ouro Fogo Prata Frio Verde Veneno Vermelho Fogo"
       }
-    ]
+    ],
+    "gold_formula": "3d4 × 10"
   },
   {
     "index": "guerreiro",
@@ -659,7 +721,16 @@
     ],
     "skill_choices": {
       "count": 2,
-      "from": []
+      "from": [
+        "Acrobacia",
+        "Adestramento",
+        "Atletismo",
+        "História",
+        "Intuição",
+        "Intimidação",
+        "Percepção",
+        "Sobrevivência"
+      ]
     },
     "spellcasting_ability": null,
     "summary": "Mestres do combate que superam todos no número de ataques, manobras e capacidade de recuperação.",
@@ -883,7 +954,8 @@
         "name": "Passo Evasivo",
         "desc": "Quando você se mover, você pode gastar um dado de superioridade, role o dado e adicione o número rolado a sua CA até você terminar seu deslocamento."
       }
-    ]
+    ],
+    "gold_formula": "5d4 × 10"
   },
   {
     "index": "ladino",
@@ -901,7 +973,17 @@
     ],
     "skill_choices": {
       "count": 4,
-      "from": []
+      "from": [
+        "Acrobacia",
+        "Atletismo",
+        "Enganação",
+        "Furtividade",
+        "Intimidação",
+        "Investigação",
+        "Percepção",
+        "Prestidigitação",
+        "Persuasão"
+      ]
     },
     "spellcasting_ability": null,
     "summary": "Especialistas em furtividade e precisão que aplicam Ataque Furtivo para causar dano explosivo.",
@@ -989,7 +1071,8 @@
         "name": "Sabedoria (Percepção) da criatura",
         "desc": "Além disso, você pode usar a ação bônus concedida por sua Ação Ardilosa para controlar a mão. EMBOSCADA MÁGICA A partir do 9° nível, se você estiver escondido de uma criatura quando conjurar uma magia nela, a criatura terá desvantagem em qualquer teste de resistência que ela fizer contra a magia nesse turno. TRAPACEIRO VERSÁTIL No 13° nível, você ganha a habilidade de distrair alvos com suas mãos mágicas. Com uma ação bônus, no seu turno, você pode designar uma criatura a até 1,5 metro da mão espectral criada por essa magia. Fazer isso, lhe concede vantagem nas jogadas de ataque contra essa criatura até o final do turno. LADRÃO DE MAGIA No 17° nível, você ganha a habilidade de, magicamente, roubar o conhecimento de como conjurar uma magia de outro conjurador. Imediatamente depois de uma criatura conjurar uma magia que tenha você como alvo ou inclua você na sua área de efeito, você pode usar sua reação para forçar a criatura a realizar um teste de resistência com o modificador de habilidade de conjuração dele. A CD é igual a CD das suas magias. Numa falha, você ignora o efeito da magia sobre você e rouba o conhecimento da magia, se ela for de, pelo menos, 1° nível e de um nível que você possa conjurar (não precisa ser uma magia de mago). Pelas próximas 8 horas, você conhece a magia e pode conjurá-la usando seus espaços de magia. A criatura não pode conjurar a magia até que 8 horas tenham se passado. Uma vez que você tenha usado essa característica, você não pode usá-la novamente até ter terminado um descanso longo."
       }
-    ]
+    ],
+    "gold_formula": "4d4 × 10"
   },
   {
     "index": "mago",
@@ -1007,7 +1090,14 @@
     ],
     "skill_choices": {
       "count": 2,
-      "from": []
+      "from": [
+        "Arcanismo",
+        "História",
+        "Intuição",
+        "Investigação",
+        "Medicina",
+        "Religião"
+      ]
     },
     "spellcasting_ability": "Inteligência",
     "summary": "Estudiosos da magia arcana com o maior arsenal de magias e capacidade de preparar qualquer feitiço.",
@@ -1111,7 +1201,8 @@
         "name": "Restaurar Juventude",
         "desc": "Você toca a pedra de transmutador em uma criatura voluntária e a idade aparente da criatura é reduzida em 3d10 anos, para o mínimo de 13 anos. Esse efeito não estende a vida útil da criatura."
       }
-    ]
+    ],
+    "gold_formula": "4d4 × 10"
   },
   {
     "index": "monge",
@@ -1129,7 +1220,14 @@
     ],
     "skill_choices": {
       "count": 2,
-      "from": []
+      "from": [
+        "Acrobacia",
+        "Atletismo",
+        "Furtividade",
+        "História",
+        "Intuição",
+        "Religião"
+      ]
     },
     "spellcasting_ability": null,
     "summary": "Artistas marciais que canalizam ki para golpes devastadores, deflexão de projéteis e mobilidade extrema.",
@@ -1361,7 +1459,8 @@
         "name": "Amarela perto de Damara",
         "desc": "Os monastérios de Eberron combinam os estudos de artes marciais com uma vida de estudos. A maioria é devoto das divindades do Soberano Anfitrião. No mundo de Dragonlance, a maioria dos monges são devotados a Majere, deus da meditação e pensamento. Em Greyhawk, muitos monastérios são dedicados a Xan Yae, a deusa do crepúsculo e da superioridade da mente sobre matéria, ou a Zuoken, deus da maestria mental e física. Os monges malignos da Irmandade Escarlate no mundo de Greyhawk derivam seu fanatismo não de devoção a um deus, mas de dedicação a princípios de sua nação e raça – a crença de que a vertente Suel da humanidade é destinada a dominar o mundo."
       }
-    ]
+    ],
+    "gold_formula": "5d4"
   },
   {
     "index": "paladino",
@@ -1379,7 +1478,14 @@
     ],
     "skill_choices": {
       "count": 2,
-      "from": []
+      "from": [
+        "Atletismo",
+        "Intuição",
+        "Intimidação",
+        "Medicina",
+        "Persuasão",
+        "Religião"
+      ]
     },
     "spellcasting_ability": "Sabedoria",
     "summary": "Guerreiros sagrados que combinam combate marcial com cura, auras protetoras e magias divinas.",
@@ -1587,7 +1693,8 @@
         "name": "Divindade",
         "desc": "Você ganha vantagem nas jogadas de ataque contra a criatura por 1 minuto ou até ela cair a 0 pontos de vida ou cair inconsciente. VINGADOR IMPLACÁVEL No 7° nível, seu foco sobrenatural ajuda você a impedir a fuga de um inimigo. Quando você atinge uma criatura com um ataque de oportunidade, você pode se mover até metade do seu deslocamento, imediatamente depois do ataque e como parte da mesma reação. Esse movimento não provoca ataques de oportunidade. ALMA DE VINGANÇA A partir do 15° nível, a autoridade com a qual você fala seu Voto de Inimizade lhe dá maior poder sobre seu inimigo. Quando uma criatura sob efeito do seu Voto de Inimizade realizar um ataque, você pode usar sua reação para realizar um ataque corpo-a-corpo com arma contra essa criatura, se ela estiver ao seu alcance. ANJO VINGADOR No 20° nível, você pode assumir a forma de um anjo vingador. Usando sua ação, você sofre uma transformação. Por 1 hora, você ganha os seguintes benefícios:  Asas crescem nas suas costas e lhe concedem deslocamento de voo de 18 metros.  Você emana uma aura de ameaça num raio de 9 metros. A primeira vez que qualquer criatura inimiga entrar na aura ou começar seu turno nela, durante uma batalha, a criatura deve ser bem sucedida num teste de resistência de Sabedoria ou ficará amedrontada em relação a você por 1 minuto ou até sofrer qualquer dano. Jogadas de ataque contra a criatura amedrontada tem vantagem. Uma vez que você use essa característica, não poderá fazê-lo novamente até ter terminado um descanso longo."
       }
-    ]
+    ],
+    "gold_formula": "5d4 × 10"
   },
   {
     "index": "patrulheiro",
@@ -1605,7 +1712,15 @@
     ],
     "skill_choices": {
       "count": 3,
-      "from": []
+      "from": [
+        "Adestramento",
+        "Atletismo",
+        "Furtividade",
+        "Investigação",
+        "Natureza",
+        "Percepção",
+        "Sobrevivência"
+      ]
     },
     "spellcasting_ability": "Sabedoria",
     "summary": "Rastreadores e caçadores que dominam terrenos selvagens e são especialistas contra inimigos específicos.",
@@ -1805,6 +1920,7 @@
         "name": "No 3° nível, você domina a arte da emboscada",
         "desc": "No seu primeiro turno durante o combate, você ganha +3 metros de bônus no seu deslocamento e, se você usar a ação de Ataque nesse turno, você pode realizar um ataque adicional. Você também é especialista em evitar criaturas que contam com visão no escuro. Tais criaturas não ganham qualquer benefício quando tentarem detectar você em condições de escuridão ou penumbra. Além disso, quando o Mestre determina se você pode se esconder de uma criatura, tal criatura não ganham qualquer benefício devido a visão no escuro dela. MAGIA DO RASTREADOR SUBTERRÂNEO A partir do 3° nível, você ganha visão no escuro com um alcance de 27 metros. Você também ganha acesso a magias adicionais no 3°, 5°, 9°, 13° e 17° níveis. Uma vez que tenha adquirido uma magia de rastreador subterrâneo, ela conta como uma magia de patrulheiro para você, mas não conta na quantidade de magias de patrulheiro que você conhece. MAGIAS DO RASTREADOR SUBTERRÂNEO Nível de Patrulheiro Magias 3° disfarçar-se 5° truque de corda 9° glifo de vigilância 13° invisibilidade maior 17° similaridade ATAQUE EXTRA A partir do 5° nível, você pode atacar duas vezes, ao invés de uma, sempre que você realizar a ação de Ataque no seu turno. MENTE DE AÇO No 7° nível, você ganha proficiência em testes de resistência de Sabedoria. RAJADA DO RASTREADOR A partir do 11° nível, uma vez em cada um dos seus turnos quando você errar um ataque, você pode realizar outro ataque. ESQUIVA DO RASTREADOR No 15° nível, sempre que uma criatura atacar você e não tiver vantagem, você pode usar sua reação para impor desvantagem na jogada de ataque da criatura contra você. Você pode usar essa característica antes ou depois da jogada de ataque ser feita, mas deve ser usada antes do resultado da jogada ser determinado."
       }
-    ]
+    ],
+    "gold_formula": "5d4 × 10"
   }
 ]

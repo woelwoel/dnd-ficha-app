@@ -4,6 +4,14 @@ import { ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY, getModifier, calculateMaxHp 
 import { DetailsModal } from '../../DetailsModal'
 import { TopicList, FullDescriptionToggle } from '../../TopicList'
 
+function rollGoldFormula(formula) {
+  const m = formula.match(/(\d+)d(\d+)(?:\s*[×x]\s*(\d+))?/)
+  if (!m) return 0
+  let total = 0
+  for (let i = 0; i < Number(m[1]); i++) total += Math.ceil(Math.random() * Number(m[2]))
+  return total * (Number(m[3]) || 1)
+}
+
 export function Step3Class({ draft, updateDraft, classes }) {
   const [modal, setModal] = useState(false)
   const selectedClass = classes.find(c => c.index === draft.class)
@@ -109,13 +117,66 @@ export function Step3Class({ draft, updateDraft, classes }) {
       {selectedClass?.skill_choices && (
         <div className="bg-gray-800 border border-gray-700 rounded-lg p-3">
           <p className="text-xs text-gray-400 mb-1">
-            Você poderá escolher <span className="text-amber-300 font-semibold">{selectedClass.skill_choices.count} perícias</span> da lista:
+            Você poderá escolher <span className="text-amber-300 font-semibold">{selectedClass.skill_choices.count} perícias</span> no passo de Perícias:
           </p>
           <div className="flex flex-wrap gap-1 mt-2">
             {selectedClass.skill_choices.from?.map((s, i) => (
               <span key={i} className="text-xs bg-gray-700 px-2 py-0.5 rounded text-gray-300">{s}</span>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Equipamento inicial vs Ouro (F2) */}
+      {selectedClass && (
+        <div className="space-y-2">
+          <p className="text-xs text-gray-400">Equipamento Inicial</p>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => updateDraft({ classEquipmentChoice: 'equipment', classStartingGold: 0 })}
+              className={`flex-1 px-3 py-2 text-xs rounded-lg border transition-colors ${
+                (draft.classEquipmentChoice ?? 'equipment') !== 'gold'
+                  ? 'bg-amber-900/30 border-amber-700 text-amber-300'
+                  : 'bg-gray-800 border-gray-600 text-gray-400 hover:border-gray-500'
+              }`}
+            >
+              🎒 Equipamento do Antecedente
+            </button>
+            <button
+              type="button"
+              onClick={() => updateDraft({ classEquipmentChoice: 'gold' })}
+              className={`flex-1 px-3 py-2 text-xs rounded-lg border transition-colors ${
+                draft.classEquipmentChoice === 'gold'
+                  ? 'bg-amber-900/30 border-amber-700 text-amber-300'
+                  : 'bg-gray-800 border-gray-600 text-gray-400 hover:border-gray-500'
+              }`}
+            >
+              🪙 Ouro Inicial {selectedClass.gold_formula ? `(${selectedClass.gold_formula} PO)` : ''}
+            </button>
+          </div>
+
+          {draft.classEquipmentChoice === 'gold' && (
+            <div className="bg-gray-800 border border-gray-700 rounded-lg p-3 flex items-center gap-3">
+              <div className="flex-1">
+                <p className="text-xs text-gray-500">Fórmula de ouro inicial:</p>
+                <p className="text-sm font-bold text-amber-300">{selectedClass.gold_formula ?? '5d4 × 10'} PO</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  const gold = rollGoldFormula(selectedClass.gold_formula ?? '5d4 × 10')
+                  updateDraft({ classStartingGold: gold })
+                }}
+                className="px-3 py-1.5 bg-amber-700 hover:bg-amber-600 text-white text-xs rounded-lg transition-colors"
+              >
+                🎲 Rolar
+              </button>
+              {(draft.classStartingGold ?? 0) > 0 && (
+                <span className="text-amber-300 font-bold text-lg">{draft.classStartingGold} PO</span>
+              )}
+            </div>
+          )}
         </div>
       )}
 

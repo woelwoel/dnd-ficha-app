@@ -20,6 +20,7 @@ const INITIAL_DRAFT = {
   },
   // Conceito
   name: '',
+  playerName: '',
   alignment: '',
   appearance: '',
   // Raça
@@ -37,6 +38,9 @@ const INITIAL_DRAFT = {
   backgroundSkills: [],
   backgroundItems: [],
   backgroundGold: 0,
+  // Equipamento inicial da classe
+  classEquipmentChoice: 'equipment', // 'equipment' | 'gold'
+  classStartingGold: 0,
   // Atributos (base, sem bônus raciais)
   // standard-array / 4d6drop: inicia 0 (não atribuído); point-buy: inicia 8
   baseAttributes: { str: 0, dex: 0, con: 0, int: 0, wis: 0, cha: 0 },
@@ -260,16 +264,18 @@ function buildCharacter(draft, classData) {
       settings: draft.settings,
     },
     info: {
-      name:       draft.name,
-      race:       draft.race,
-      subrace:    draft.subrace,
-      class:      draft.class,
-      subclass:   '',
-      level:      draft.level,
-      background: draft.background,
-      alignment:  draft.alignment,
-      appearance: draft.appearance ?? '',
-      xp:         0,
+      name:        draft.name,
+      playerName:  draft.playerName ?? '',
+      race:        draft.race,
+      subrace:     draft.subrace,
+      class:       draft.class,
+      subclass:    '',
+      level:       draft.level,
+      background:  draft.background,
+      alignment:   draft.alignment,
+      appearance:  draft.appearance ?? '',
+      xp:          0,
+      scoreMethod: draft.settings.abilityScoreMethod,
     },
     attributes: attrs,
     appliedRacialBonuses: draft.racialBonuses,
@@ -298,7 +304,11 @@ function buildCharacter(draft, classData) {
       spells:     draft.spells ?? [],
     },
     inventory: {
-      currency: { cp: 0, sp: 0, ep: 0, gp: draft.backgroundGold ?? 0, pp: 0 },
+      currency: {
+        cp: 0, sp: 0, ep: 0,
+        gp: (draft.backgroundGold ?? 0) + (draft.classEquipmentChoice === 'gold' ? (draft.classStartingGold ?? 0) : 0),
+        pp: 0,
+      },
       items: (draft.backgroundItems ?? []).map(i => ({ ...i, id: generateId() })),
     },
     traits: {

@@ -13,7 +13,9 @@ export function Step4Background({ draft, updateDraft, backgrounds }) {
       .map(name => SKILLS.find(s => s.name === name)?.key)
       .filter(Boolean)
     const { items, gold } = parseBackgroundEquipment(bg?.equipment)
-    updateDraft({ background: bgIndex, backgroundSkills: bgSkillKeys, backgroundItems: items, backgroundGold: gold })
+    // Remove do chosenSkills qualquer perícia que agora é coberta pelo antecedente (B1)
+    const cleanedChosenSkills = (draft.chosenSkills ?? []).filter(k => !bgSkillKeys.includes(k))
+    updateDraft({ background: bgIndex, backgroundSkills: bgSkillKeys, backgroundItems: items, backgroundGold: gold, chosenSkills: cleanedChosenSkills })
   }
 
   const fieldCls = 'w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-400'

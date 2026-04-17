@@ -34,6 +34,20 @@ export function Step1Concept({ draft, updateDraft }) {
         )}
       </div>
 
+      {/* Nome do Jogador */}
+      <div>
+        <label className="block text-xs text-gray-400 mb-1">
+          Nome do Jogador <span className="text-gray-600">(opcional)</span>
+        </label>
+        <input
+          type="text"
+          value={draft.playerName ?? ''}
+          onChange={e => updateDraft({ playerName: e.target.value })}
+          placeholder="Seu nome real"
+          className={fieldCls(false)}
+        />
+      </div>
+
       {/* Alinhamento */}
       <div>
         <label className="block text-xs text-gray-400 mb-1">Alinhamento</label>

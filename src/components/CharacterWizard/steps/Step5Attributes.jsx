@@ -206,13 +206,29 @@ function FourD6UI({ draft, updateDraft, finalScore, racialBonus }) {
     })
   }
 
+  // Remove exatamente UMA ocorrência de cada valor usado pelos outros atributos (B2)
   function availableFor(attrKey) {
-    const otherUsed = Object.entries(baseAttrs)
-      .filter(([k]) => k !== attrKey)
-      .map(([, v]) => v)
-      .filter(v => v > 0)
-    return rolled.filter(v => !otherUsed.includes(v))
+    const pool = [...rolled]
+    for (const [k, v] of Object.entries(baseAttrs)) {
+      if (k !== attrKey && v > 0) {
+        const idx = pool.indexOf(v)
+        if (idx !== -1) pool.splice(idx, 1)
+      }
+    }
+    return pool
   }
+
+  // Marca quais posições do rolled estão em uso (por índice, não por valor) (B2)
+  const rolledDisplay = (() => {
+    const tagged = rolled.map((v, i) => ({ v, i, used: false }))
+    for (const val of Object.values(baseAttrs)) {
+      if (val > 0) {
+        const slot = tagged.find(p => p.v === val && !p.used)
+        if (slot) slot.used = true
+      }
+    }
+    return tagged
+  })()
 
   return (
     <div className="space-y-4">
@@ -228,16 +244,13 @@ function FourD6UI({ draft, updateDraft, finalScore, racialBonus }) {
           <>
             <p className="text-xs text-gray-500">Resultados rolados (distribua abaixo):</p>
             <div className="flex gap-2 flex-wrap justify-center">
-              {rolled.map((v, i) => {
-                const used = Object.values(baseAttrs).includes(v)
-                return (
-                  <span key={i} className={`text-sm font-bold px-3 py-1.5 rounded-lg border ${
-                    used ? 'border-gray-700 text-gray-600 line-through' : 'border-amber-600 text-amber-300 bg-amber-900/20'
-                  }`}>
-                    {v}
-                  </span>
-                )
-              })}
+              {rolledDisplay.map(({ v, i, used }) => (
+                <span key={i} className={`text-sm font-bold px-3 py-1.5 rounded-lg border ${
+                  used ? 'border-gray-700 text-gray-600 line-through' : 'border-amber-600 text-amber-300 bg-amber-900/20'
+                }`}>
+                  {v}
+                </span>
+              ))}
             </div>
           </>
         )}

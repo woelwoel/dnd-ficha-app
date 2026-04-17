@@ -300,8 +300,8 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-      {/* Nome */}
-      <div className="col-span-2 sm:col-span-3">
+      {/* Nome do Personagem */}
+      <div className="col-span-2 sm:col-span-2">
         <label htmlFor="field-name" className="block text-xs text-gray-400 mb-1">Nome do Personagem</label>
         <input
           id="field-name"
@@ -313,6 +313,19 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
           className={`${fieldCls(!!errors.name)} text-lg font-semibold`}
         />
         <FormFieldError id="err-name" message={errors.name} />
+      </div>
+
+      {/* Nome do Jogador */}
+      <div>
+        <label htmlFor="field-player-name" className="block text-xs text-gray-400 mb-1">Nome do Jogador</label>
+        <input
+          id="field-player-name"
+          type="text"
+          value={info.playerName ?? ''}
+          onChange={e => onUpdate('playerName', e.target.value)}
+          placeholder="Seu nome"
+          className={fieldCls(false)}
+        />
       </div>
 
       {/* Raça */}

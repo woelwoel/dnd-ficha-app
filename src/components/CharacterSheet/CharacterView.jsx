@@ -46,7 +46,7 @@ function InfoField({ label, value }) {
   return (
     <div className={`border-b-2 ${P.border} text-center`}>
       <div className={`text-[9px] font-black uppercase tracking-wide ${P.text} mt-0.5`}>{label}</div>
-      <div className={`text-xs font-semibold ${P.text} min-h-[18px] leading-tight py-0.5`}>{value || ''}</div>
+      <div className={`text-[10px] font-semibold ${P.text} min-h-[18px] leading-tight py-0.5 break-words hyphens-auto`}>{value || ''}</div>
     </div>
   )
 }
@@ -78,7 +78,7 @@ function CheckRow({ proficient, label, value, subLabel }) {
     <div className="flex items-center gap-1 py-0.5">
       <Dot filled={proficient} />
       <span className={`text-[10px] font-bold ${P.text} w-5 text-right shrink-0`}>{fmt(value)}</span>
-      <span className={`text-[9px] ${P.text} leading-tight`}>
+      <span className={`text-[9px] ${P.text} leading-tight min-w-0`}>
         {label}
         {subLabel && <span className="text-[8px] opacity-60 ml-0.5">({subLabel})</span>}
       </span>
@@ -178,7 +178,7 @@ export function CharacterView({ character, races, classes, backgrounds }) {
         <div className="grid gap-x-2 gap-y-1" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
           <InfoField label="Classe" value={selectedClass?.name} />
           <InfoField label="Antecedente" value={selectedBg?.name} />
-          <InfoField label="Nome Jogador" value="" />
+          <InfoField label="Nome Jogador" value={info.playerName} />
           <InfoField label="Raça" value={raceName} />
           <InfoField label="Tendência" value={info.alignment} />
           <div className="flex gap-1">

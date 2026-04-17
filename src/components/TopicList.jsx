@@ -25,11 +25,11 @@ export function TopicList({ items = [], emptyMessage = 'Sem informações dispon
   const hasMore = initialLimit > 0 && valid.length > initialLimit
 
   return (
-    <div className="space-y-3">
+    <div className="divide-y divide-gray-700/60">
       {visible.map((item, i) => (
-        <div key={i}>
-          <p className="text-sm font-semibold text-amber-300">{item.title}</p>
-          <p className="text-sm text-gray-400 leading-relaxed mt-0.5">{item.desc}</p>
+        <div key={i} className="py-2 first:pt-0 last:pb-0">
+          <p className="text-xs font-bold text-amber-300 uppercase tracking-wide mb-0.5">{item.title}</p>
+          <p className="text-sm text-gray-400 leading-relaxed">{item.desc}</p>
         </div>
       ))}
 

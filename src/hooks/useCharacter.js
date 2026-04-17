@@ -9,6 +9,7 @@ const DEFAULT_CHARACTER = {
   },
   info: {
     name: '',
+    playerName: '',
     race: '',
     subrace: '',
     class: '',
@@ -17,7 +18,7 @@ const DEFAULT_CHARACTER = {
     background: '',
     alignment: '',
     xp: 0,
-    scoreMethod: 'manual', // 'manual' | 'standard-array' | 'point-buy'
+    scoreMethod: 'manual',
   },
   attributes: {
     str: 10,
