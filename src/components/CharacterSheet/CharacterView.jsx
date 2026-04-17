@@ -147,7 +147,7 @@ export function CharacterView({ character, races, classes, backgrounds }) {
 
   // Percepção passiva
   const wisMod = getModifier(attributes.wis)
-  const percProf = proficiencies.skills?.includes('perception')
+  const percProf = proficiencies.skills?.includes('perception') || proficiencies.backgroundSkills?.includes('perception')
   const passivePerception = 10 + wisMod + (percProf ? prof : 0)
 
   // Ataques: usar magias + itens como armas
@@ -256,7 +256,7 @@ export function CharacterView({ character, races, classes, backgrounds }) {
           {/* Perícias */}
           <Box label="Perícias" className="flex-1">
             {sortedSkills.map(skill => {
-              const isProficient = proficiencies.skills?.includes(skill.key)
+              const isProficient = proficiencies.skills?.includes(skill.key) || proficiencies.backgroundSkills?.includes(skill.key)
               const val = getModifier(attributes[skill.ability]) + (isProficient ? prof : 0)
               return (
                 <CheckRow key={skill.key} proficient={isProficient}
@@ -272,7 +272,13 @@ export function CharacterView({ character, races, classes, backgrounds }) {
           {/* CA / Iniciativa / Deslocamento */}
           <div className="grid grid-cols-3 gap-1">
             {[
-              { label: 'Classe Armadura', value: combat.armorClass },
+              { label: 'Classe Armadura', value: (() => {
+                const dex = getModifier(attributes.dex)
+                let unarmoredAC = 10 + dex
+                if (character.info?.class === 'barbaro') unarmoredAC += getModifier(attributes.con)
+                if (character.info?.class === 'monge')   unarmoredAC += getModifier(attributes.wis)
+                return Math.max(combat.armorClass ?? 0, unarmoredAC)
+              })() },
               { label: 'Iniciativa', value: fmt(getModifier(attributes.dex)) },
               { label: 'Deslocamento', value: `${combat.speed}ft` },
             ].map(({ label, value }) => (

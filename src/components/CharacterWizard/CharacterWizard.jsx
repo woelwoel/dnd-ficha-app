@@ -252,6 +252,9 @@ function buildCharacter(draft, classData) {
 
   const dexMod = getModifier(attrs.dex ?? 10)
   const maxHp  = calculateMaxHp(classData, draft.level, attrs.con ?? 10)
+  let unarmoredAC = 10 + dexMod
+  if (draft.class === 'barbaro') unarmoredAC += getModifier(attrs.con ?? 10)
+  if (draft.class === 'monge')   unarmoredAC += getModifier(attrs.wis ?? 10)
 
   return {
     id: generateId(),
@@ -282,7 +285,7 @@ function buildCharacter(draft, classData) {
       maxHp,
       currentHp:   maxHp,
       tempHp:      0,
-      armorClass:  10 + dexMod,
+      armorClass:  unarmoredAC,
       speed:       30,
       hitDice:     draft.hitDice,
       deathSaves:  { successes: 0, failures: 0 },

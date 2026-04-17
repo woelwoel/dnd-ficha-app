@@ -48,6 +48,7 @@ export function useCharacterCalculations(character, classData = null) {
 
   // Dependências explícitas para o useMemo — evita recalcular por referências de objeto
   const level        = info?.level ?? 1
+  const classIndex   = info?.class ?? ''
   const spellAbilityLabel = spellcasting?.ability ?? null
   const saves        = proficiencies?.savingThrows
   const skills       = proficiencies?.skills
@@ -70,8 +71,10 @@ export function useCharacterCalculations(character, classData = null) {
       cha: getModifier(cha),
     }
 
-    // ── CA sugerida (sem armadura: 10 + DES) ──────────────────────
-    const suggestedAC = 10 + mods.dex
+    // ── CA sugerida (sem armadura, com fórmulas especiais de classe) ──
+    let suggestedAC = 10 + mods.dex
+    if (classIndex === 'barbaro') suggestedAC += mods.con
+    if (classIndex === 'monge')   suggestedAC += mods.wis
 
     // ── HP máximo sugerido (precisa do dado de vida da classe) ─────
     const suggestedMaxHp = classData
@@ -132,5 +135,5 @@ export function useCharacterCalculations(character, classData = null) {
       spellAbilityKey,
       fmt: formatModifier,
     }
-  }, [level, str, dex, con, int, wis, cha, spellAbilityLabel, saves, skills, expertiseSkills, currentHp, maxHp, classData])
+  }, [level, classIndex, str, dex, con, int, wis, cha, spellAbilityLabel, saves, skills, expertiseSkills, currentHp, maxHp, classData])
 }
