@@ -11,7 +11,6 @@ import { Inventory } from './Inventory'
 import { Spells } from './Spells'
 import { Notes } from './Notes'
 import { CharacterView } from './CharacterView'
-import { LevelProgression } from './LevelProgression'
 import { ABILITY_SCORES, SKILLS, ABBR_TO_KEY, ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY, STANDARD_ARRAY, POINT_BUY_COST, parseBackgroundEquipment } from '../../utils/calculations'
 import { fetchSrd } from '../../utils/fetchSrd'
 import { generateId } from '../../hooks/useCharacter'
@@ -22,7 +21,6 @@ const TABS = [
   { id: 'magias',      label: 'Magias'      },
   { id: 'inventario',  label: 'Inventário'  },
   { id: 'notas',       label: 'Notas'       },
-  { id: 'progressao',  label: 'Progressão'  },
   { id: 'visualizar',  label: 'Visualizar'  },
 ]
 
@@ -97,22 +95,52 @@ export function CharacterSheet({ characterId, onBack }) {
     return () => clearTimeout(timer)
   }, [character])
 
-  // Aplica subida de nível atomicamente (PV + atributos + nível)
-  function handleApplyLevelUp({ newLevel, hpIncrease, attrBoosts }) {
+  // Aplica subida de nível (primária ou multiclasse) atomicamente
+  function handleApplyLevelUp({ newLevel, hpIncrease, attrBoosts, multiclassIndex }) {
     setCharacter(prev => {
       const newAttrs = { ...prev.attributes }
       for (const [key, boost] of Object.entries(attrBoosts)) {
         if (boost) newAttrs[key] = Math.min(20, newAttrs[key] + boost)
       }
+      let newInfo = prev.info
+      if (multiclassIndex == null) {
+        newInfo = { ...prev.info, level: newLevel }
+      } else {
+        const mcs = [...(prev.info.multiclasses ?? [])]
+        mcs[multiclassIndex] = { ...mcs[multiclassIndex], level: newLevel }
+        newInfo = { ...prev.info, multiclasses: mcs }
+      }
       return {
         ...prev,
-        info:    { ...prev.info, level: newLevel },
+        info: newInfo,
         attributes: newAttrs,
         combat:  {
           ...prev.combat,
           maxHp:     prev.combat.maxHp + hpIncrease,
           currentHp: prev.combat.currentHp + hpIncrease,
         },
+        meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+      }
+    })
+  }
+
+  function handleAddMulticlass({ classIndex: mcClass }) {
+    setCharacter(prev => {
+      const mcs = [...(prev.info.multiclasses ?? []), { class: mcClass, level: 1 }]
+      return {
+        ...prev,
+        info: { ...prev.info, multiclasses: mcs },
+        meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+      }
+    })
+  }
+
+  function handleRemoveMulticlass(idx) {
+    setCharacter(prev => {
+      const mcs = (prev.info.multiclasses ?? []).filter((_, i) => i !== idx)
+      return {
+        ...prev,
+        info: { ...prev.info, multiclasses: mcs },
         meta: { ...prev.meta, updatedAt: new Date().toISOString() },
       }
     })
@@ -508,28 +536,19 @@ export function CharacterSheet({ characterId, onBack }) {
         />
       )}
 
-      {/* Tab: Progressão de Nível */}
-      {activeTab === 'progressao' && (
-        <LevelProgression
-          character={character}
-          classData={classData}
-          onLevelChange={lvl => updateInfo('level', lvl)}
-          onApplyLevelUp={handleApplyLevelUp}
-        />
-      )}
-
-      {/* Tab: Visualizar ficha */}
+      {/* Tab: Visualizar ficha + Upar Nível */}
       {activeTab === 'visualizar' && (
-        <div id="print-character-view" className="overflow-x-auto">
-          <div style={{ minWidth: '560px' }}>
-            <CharacterView
-              character={character}
-              races={races}
-              classes={classes}
-              backgrounds={backgrounds}
-            />
-          </div>
-        </div>
+        <CharacterView
+          character={character}
+          races={races}
+          classes={classes}
+          backgrounds={backgrounds}
+          classData={classData}
+          onApplyLevelUp={handleApplyLevelUp}
+          onLevelChange={lvl => updateInfo('level', lvl)}
+          onAddMulticlass={handleAddMulticlass}
+          onRemoveMulticlass={handleRemoveMulticlass}
+        />
       )}
     </div>
   )

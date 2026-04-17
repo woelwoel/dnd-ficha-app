@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import { ABILITY_SCORES, SKILLS, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, getModifier, getProficiencyBonus, RACE_LANGUAGES, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../utils/calculations'
+import { LevelProgression } from './LevelProgression'
 
 const KEY_ABBR = Object.fromEntries(ABILITY_SCORES.map(a => [a.key, a.abbr]))
 
@@ -121,7 +123,11 @@ function Coins({ currency }) {
 /* ════════════════════════════════════════════════════════════
    Componente principal
    ════════════════════════════════════════════════════════════ */
-export function CharacterView({ character, races, classes, backgrounds }) {
+export function CharacterView({
+  character, races, classes, backgrounds,
+  classData, onApplyLevelUp, onLevelChange, onAddMulticlass, onRemoveMulticlass,
+}) {
+  const [subTab, setSubTab] = useState('ficha')
   const { info, attributes, combat, proficiencies, spellcasting, inventory, traits } = character
   const prof = getProficiencyBonus(info.level)
 
@@ -158,6 +164,40 @@ export function CharacterView({ character, races, classes, backgrounds }) {
   const attackSpells = spellcasting.spells?.filter(s => s.attack_type) || []
 
   return (
+    <div>
+      {/* Mini-tabs */}
+      <div className="flex gap-1 mb-4 border-b border-gray-700 pb-2">
+        {[['ficha', 'Ficha Completa'], ['levelup', 'Upar Nível de Classe']].map(([id, label]) => (
+          <button
+            key={id}
+            onClick={() => setSubTab(id)}
+            className={`px-4 py-1.5 rounded-t text-sm font-semibold transition-colors ${
+              subTab === id
+                ? 'bg-amber-700 text-white'
+                : 'text-gray-400 hover:text-gray-200'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {/* Mini-tab: Upar Nível de Classe */}
+      {subTab === 'levelup' && (
+        <LevelProgression
+          character={character}
+          classData={classData}
+          classes={classes}
+          onLevelChange={onLevelChange}
+          onApplyLevelUp={onApplyLevelUp}
+          onAddMulticlass={onAddMulticlass}
+          onRemoveMulticlass={onRemoveMulticlass}
+        />
+      )}
+
+      {/* Mini-tab: Ficha Completa */}
+      {subTab === 'ficha' && (
+    <div id="print-character-view" className="overflow-x-auto"><div style={{ minWidth: '560px' }}>
     <div
       className={`${P.bg} ${P.text} text-[10px] font-serif p-2 rounded-lg`}
       style={{ fontFamily: "'Georgia', 'Times New Roman', serif" }}
@@ -404,6 +444,9 @@ export function CharacterView({ character, races, classes, backgrounds }) {
 
       {/* ── PÁGINA DE MAGIAS (só se houver magias ou classe conjuradora) ── */}
       <SpellsPage character={character} selectedClass={selectedClass} attributes={attributes} prof={prof} />
+    </div>
+    </div></div>
+      )}
     </div>
   )
 }

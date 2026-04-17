@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { DetailsModal } from '../DetailsModal'
 import { ABILITY_SCORES, getModifier, formatModifier } from '../../utils/calculations'
+import { calculateMulticlassSpellSlots } from '../../utils/spellcasting'
 
 /* ── Helpers ────────────────────────────────────────────────────────── */
 
@@ -402,25 +403,30 @@ function AcquiredFeatures({ levels, currentLevel, onFeatureClick }) {
 /* ═══════════════════════════════════════════════════════════════════
    Componente principal
    ═══════════════════════════════════════════════════════════════════ */
-export function LevelProgression({ character, classData, onLevelChange, onApplyLevelUp }) {
-  const [progression,  setProgression]  = useState(null)
+export function LevelProgression({ character, classData, classes, onLevelChange, onApplyLevelUp, onAddMulticlass, onRemoveMulticlass }) {
+  const [allProgressions, setAllProgressions] = useState(null)
   const [selectedFeat, setSelectedFeat] = useState(null)
   const [wizardOpen,   setWizardOpen]   = useState(false)
   const [showAll,      setShowAll]      = useState(false)
-  const [jumpLevel,    setJumpLevel]    = useState(null) // nível focado pela timeline
+  const [jumpLevel,    setJumpLevel]    = useState(null)
+  const [mcWizardOpen, setMcWizardOpen] = useState(null) // índice do MC com wizard aberto
+  const [showAddMC,    setShowAddMC]    = useState(false)
+  const [addMCClass,   setAddMCClass]   = useState('')
 
-  const classIndex   = character.info.class
-  const currentLevel = character.info.level
-  const conMod       = getModifier(character.attributes.con)
-  const hitDie       = classData?.hit_die ?? 8
+  const classIndex    = character.info.class
+  const currentLevel  = character.info.level
+  const multiclasses  = character.info.multiclasses ?? []
+  const conMod        = getModifier(character.attributes.con)
+  const hitDie        = classData?.hit_die ?? 8
 
   useEffect(() => {
     setWizardOpen(false)
+    setMcWizardOpen(null)
     fetch('/srd-data/phb-class-progression-pt.json')
       .then(r => r.json())
-      .then(data => setProgression(data[classIndex] ?? null))
-      .catch(() => setProgression(null))
-  }, [classIndex])
+      .then(data => setAllProgressions(data))
+      .catch(() => setAllProgressions({}))
+  }, [])
 
   if (!classIndex) {
     return (
@@ -429,8 +435,13 @@ export function LevelProgression({ character, classData, onLevelChange, onApplyL
       </div>
     )
   }
-  if (!progression) {
+  if (!allProgressions) {
     return <div className="text-center py-10 text-gray-500">Carregando progressão...</div>
+  }
+
+  const progression = allProgressions[classIndex] ?? null
+  if (!progression) {
+    return <div className="text-center py-10 text-gray-500">Dados de progressão não encontrados para esta classe.</div>
   }
 
   const levels      = progression.levels ?? []
@@ -438,15 +449,35 @@ export function LevelProgression({ character, classData, onLevelChange, onApplyL
   const nextEntry    = levels.find(l => l.level === currentLevel + 1)
   const focusEntry   = jumpLevel ? levels.find(l => l.level === jumpLevel) : null
 
-  // Janela de exibição na tabela (ao redor do nível atual ou jumpLevel)
   const focusLvl = jumpLevel ?? currentLevel
   const visibleLevels = showAll
     ? levels
     : levels.filter(l => l.level >= Math.max(1, focusLvl - 1) && l.level <= Math.min(20, focusLvl + 6))
 
+  // Classes disponíveis para adicionar como multiclasse
+  const usedClasses = new Set([classIndex, ...multiclasses.map(m => m.class)])
+  const availableForMC = (classes ?? []).filter(c => !usedClasses.has(c.index))
+
+  // Slots de magia fundidos
+  const fusedSlots = multiclasses.length > 0
+    ? calculateMulticlassSpellSlots(classIndex, currentLevel, multiclasses)
+    : null
+
   function handleConfirmLevelUp(payload) {
     onApplyLevelUp?.(payload)
     setWizardOpen(false)
+  }
+
+  function handleConfirmMCLevelUp(multiclassIndex, payload) {
+    onApplyLevelUp?.({ ...payload, multiclassIndex })
+    setMcWizardOpen(null)
+  }
+
+  function handleConfirmAddMC() {
+    if (!addMCClass) return
+    onAddMulticlass?.({ classIndex: addMCClass })
+    setAddMCClass('')
+    setShowAddMC(false)
   }
 
   return (
@@ -622,6 +653,145 @@ export function LevelProgression({ character, classData, onLevelChange, onApplyL
           </p>
         )}
       </div>
+
+      {/* ── Seção de Multiclasse ── */}
+      {currentLevel >= 3 && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-amber-400">Multiclasse</h3>
+            {multiclasses.length < 3 && !showAddMC && (
+              <button
+                onClick={() => setShowAddMC(true)}
+                className="text-xs px-3 py-1.5 rounded bg-gray-700 hover:bg-gray-600 text-amber-400 font-semibold"
+              >
+                ＋ Adicionar Multiclasse
+              </button>
+            )}
+          </div>
+
+          {/* Picker de nova multiclasse */}
+          {showAddMC && (
+            <div className="bg-gray-800 border border-amber-700/50 rounded-lg p-4 space-y-3">
+              <p className="text-xs text-gray-400">Escolha a classe para adicionar:</p>
+              <select
+                value={addMCClass}
+                onChange={e => setAddMCClass(e.target.value)}
+                className="w-full bg-gray-900 border border-gray-600 rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:border-amber-600"
+              >
+                <option value="">— Selecione —</option>
+                {availableForMC.map(c => (
+                  <option key={c.index} value={c.index}>{c.name}</option>
+                ))}
+              </select>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => { setShowAddMC(false); setAddMCClass('') }}
+                  className="px-3 py-1.5 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-xs"
+                >
+                  Cancelar
+                </button>
+                <button
+                  disabled={!addMCClass}
+                  onClick={handleConfirmAddMC}
+                  className="px-4 py-1.5 rounded bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  Confirmar
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Lista de multiclasses */}
+          {multiclasses.length === 0 && !showAddMC && (
+            <p className="text-xs text-gray-600 italic">Nenhuma multiclasse adicionada.</p>
+          )}
+
+          {multiclasses.map((mc, idx) => {
+            const mcProg    = allProgressions[mc.class] ?? null
+            const mcLevels  = mcProg?.levels ?? []
+            const mcEntry   = mcLevels.find(l => l.level === mc.level)
+            const mcNext    = mcLevels.find(l => l.level === mc.level + 1)
+            const mcClass   = (classes ?? []).find(c => c.index === mc.class)
+            const mcHitDie  = mcClass?.hit_die ?? 8
+            const isOpen    = mcWizardOpen === idx
+
+            return (
+              <div key={idx} className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-sm font-bold text-gray-200">{mcProg?.name ?? mc.class}</span>
+                    <span className="ml-2 text-xs text-gray-400">
+                      Nível <span className="text-white font-bold">{mc.level}</span>
+                      <span className="mx-1 text-gray-600">·</span>
+                      Prof +{mcEntry?.proficiency_bonus ?? '?'}
+                    </span>
+                  </div>
+                  <div className="flex gap-2">
+                    {mc.level < 20 && !isOpen && (
+                      <button
+                        onClick={() => setMcWizardOpen(idx)}
+                        className="text-xs px-3 py-1 rounded bg-amber-700 hover:bg-amber-600 text-white font-semibold"
+                      >
+                        Subir Nv {mc.level + 1} →
+                      </button>
+                    )}
+                    <button
+                      onClick={() => onRemoveMulticlass?.(idx)}
+                      className="text-xs px-2 py-1 rounded bg-gray-700 hover:bg-red-800 text-gray-400 hover:text-red-200"
+                      title="Remover multiclasse"
+                    >
+                      ×
+                    </button>
+                  </div>
+                </div>
+
+                {/* Wizard do MC */}
+                {isOpen && mcNext && (
+                  <LevelUpPanel
+                    nextLevel={mc.level + 1}
+                    nextEntry={mcNext}
+                    hitDie={mcHitDie}
+                    conMod={conMod}
+                    attributes={character.attributes}
+                    onConfirm={payload => handleConfirmMCLevelUp(idx, payload)}
+                    onCancel={() => setMcWizardOpen(null)}
+                  />
+                )}
+
+                {/* Features do nível atual da MC */}
+                {mcEntry?.features?.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {mcEntry.features.map((f, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setSelectedFeat(f)}
+                        className="text-xs bg-gray-700 border border-gray-600 hover:border-amber-600 px-2.5 py-1 rounded text-amber-200"
+                      >
+                        {f.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )
+          })}
+
+          {/* Slots de magia fundidos */}
+          {fusedSlots && (
+            <div className="bg-gray-800 border border-blue-900/50 rounded-lg p-4">
+              <p className="text-xs font-semibold text-blue-300 mb-2">Espaços de Magia Fundidos (Multiclasse)</p>
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(fusedSlots).map(([lvl, qty]) => (
+                  <div key={lvl} className="bg-gray-900 border border-gray-700 rounded px-3 py-1.5 text-xs text-center">
+                    <span className="text-gray-400">Nível {lvl}: </span>
+                    <span className="text-blue-300 font-bold">{qty}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Modal de detalhe de feature */}
       <DetailsModal

@@ -1,5 +1,69 @@
 import { getModifier } from './calculations'
 
+/* ── Multiclasse: tipo de conjurador por classe ────────────────── */
+const CASTER_TYPE = {
+  bardo:      'full',
+  clerigo:    'full',
+  druida:     'full',
+  feiticeiro: 'full',
+  mago:       'full',
+  bruxo:      'full',
+  paladino:   'half',
+  patrulheiro:'half',
+}
+
+/* ── Tabela de slots multiclasse (nível efetivo 1–20) ─────────── */
+// Cada linha: [1°,2°,3°,4°,5°,6°,7°,8°,9°] espaços disponíveis
+const MULTICLASS_SPELL_SLOTS = [
+  [2,0,0,0,0,0,0,0,0], // 1
+  [3,0,0,0,0,0,0,0,0], // 2
+  [4,2,0,0,0,0,0,0,0], // 3
+  [4,3,0,0,0,0,0,0,0], // 4
+  [4,3,2,0,0,0,0,0,0], // 5
+  [4,3,3,0,0,0,0,0,0], // 6
+  [4,3,3,1,0,0,0,0,0], // 7
+  [4,3,3,2,0,0,0,0,0], // 8
+  [4,3,3,3,1,0,0,0,0], // 9
+  [4,3,3,3,2,0,0,0,0], // 10
+  [4,3,3,3,2,1,0,0,0], // 11
+  [4,3,3,3,2,1,0,0,0], // 12
+  [4,3,3,3,2,1,1,0,0], // 13
+  [4,3,3,3,2,1,1,0,0], // 14
+  [4,3,3,3,2,1,1,1,0], // 15
+  [4,3,3,3,2,1,1,1,0], // 16
+  [4,3,3,3,2,1,1,1,1], // 17
+  [4,3,3,3,3,1,1,1,1], // 18
+  [4,3,3,3,3,2,1,1,1], // 19
+  [4,3,3,3,3,2,2,1,1], // 20
+]
+
+/**
+ * Calcula os espaços de magia fundidos para multiclasse (regra oficial D&D 5e).
+ * Retorna null quando não há multiclasse conjuradora relevante.
+ *
+ * @param {string}  primaryClass   - índice PT-BR da classe primária
+ * @param {number}  primaryLevel   - nível da classe primária
+ * @param {Array}   multiclasses   - [{ class, level }, ...]
+ * @returns {object|null}  { 1: N, 2: N, ... } ou null
+ */
+export function calculateMulticlassSpellSlots(primaryClass, primaryLevel, multiclasses) {
+  if (!multiclasses?.length) return null
+  const all = [{ class: primaryClass, level: primaryLevel }, ...(multiclasses ?? [])]
+  let effectiveLevel = 0
+  for (const { class: cls, level } of all) {
+    const type = CASTER_TYPE[cls]
+    if (type === 'full')  effectiveLevel += level
+    else if (type === 'half') effectiveLevel += Math.floor(level / 2)
+  }
+  if (effectiveLevel < 1) return null
+  const slots = MULTICLASS_SPELL_SLOTS[Math.min(20, effectiveLevel) - 1]
+  const result = {}
+  for (let i = 0; i < 9; i++) {
+    if (slots[i] > 0) result[i + 1] = slots[i]
+  }
+  return result
+}
+
 /**
  * Mecânicas de conjuração por classe (D&D 5e SRD).
  *
