@@ -1,4 +1,4 @@
-import { formatModifier, getProficiencyBonus, calculateInitiative, getModifier } from '../../utils/calculations'
+import { formatModifier, getProficiencyBonus, calculateInitiative } from '../../utils/calculations'
 import { FormFieldError } from '../FormFieldError'
 
 export function CombatStats({ combat, attributes, level, onUpdateCombat, suggestedAC, suggestedMaxHp, passivePerception, errors = {} }) {

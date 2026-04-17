@@ -1,7 +1,7 @@
 // Passo 8 — Revisão Final
 import { ABILITY_SCORES, SKILLS, getProficiencyBonus, getModifier, formatModifier, calculateMaxHp, SPELL_ABILITY_PT_TO_KEY, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../../utils/calculations'
 
-export function Step8Review({ draft, races, classes, backgrounds, classData }) {
+export function Step8Review({ draft, races, backgrounds, classData }) {
   const selectedRace = races.find(r => r.index === draft.race)
   const selectedSubrace = selectedRace?.subraces?.find(sr => sr.index === draft.subrace)
   const selectedBg = backgrounds.find(b => b.index === draft.background)

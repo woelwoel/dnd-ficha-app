@@ -1,35 +1,14 @@
 // Passo 7 — Magias: seleção por aba de nível + busca + limites
-import { useState, useEffect, useMemo } from 'react'
-import { SPELL_ABILITY_PT_TO_KEY, getProficiencyBonus, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../../utils/calculations'
+import { useState, useMemo } from 'react'
+import { ABILITY_SCORES, PREPARE_CLASSES, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, getProficiencyBonus, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../../utils/calculations'
+import { useClassSpells } from '../../../hooks/useClassSpells'
 import { generateId } from '../../../hooks/useCharacter'
 import { SpellDetailModal } from '../../SpellDetailModal'
 
-const KEY_TO_ABBR = { int: 'INT', wis: 'SAB', cha: 'CAR' }
-const KEY_TO_NAME = { int: 'Inteligência', wis: 'Sabedoria', cha: 'Carisma' }
-const PT_CLASS_TO_EN = {
-  barbaro: 'barbarian', bardo: 'bard', bruxo: 'warlock', clerigo: 'cleric',
-  druida: 'druid', feiticeiro: 'sorcerer', guerreiro: 'fighter', ladino: 'rogue',
-  mago: 'wizard', monge: 'monk', paladino: 'paladin', patrulheiro: 'ranger',
-}
-const SCHOOL_ABBR = {
-  abjuração: 'Abj', conjuração: 'Con', adivinhação: 'Adv', encantamento: 'Enc',
-  evocação: 'Evo', ilusão: 'Ilu', necromancia: 'Nec', transmutação: 'Tra',
-}
-const PREPARE_CLASSES = new Set(['mago', 'clerigo', 'druida', 'paladino'])
-
-function normalizeSpell(s) {
-  return {
-    ...s,
-    desc: Array.isArray(s.desc) ? s.desc.join(' ') : (s.desc || ''),
-    casting_time: s.casting_time || '',
-    concentration: s.concentration || (typeof s.duration === 'string' && s.duration.toLowerCase().includes('concentra')),
-    classes: Array.isArray(s.classes) ? s.classes : [],
-  }
-}
+const KEY_TO_ABBR = Object.fromEntries(ABILITY_SCORES.map(a => [a.key, a.abbr]))
+const KEY_TO_NAME = Object.fromEntries(ABILITY_SCORES.map(a => [a.key, a.name]))
 
 export function Step7Spells({ draft, updateDraft, classData }) {
-  const [allSpells, setAllSpells] = useState([])
-  const [levelData, setLevelData] = useState(null)
   const [activeTab, setActiveTab] = useState(0)
   const [search, setSearch] = useState('')
   const [detailSpell, setDetailSpell] = useState(null)
@@ -49,45 +28,10 @@ export function Step7Spells({ draft, updateDraft, classData }) {
   const spellSaveDC      = spellAbilityKey ? calculateSpellSaveDC(spellScore, profBonus) : null
   const spellAttackBonus = spellAbilityKey ? calculateSpellAttackBonus(spellScore, profBonus) : null
 
-  // Carregar magias PT
-  useEffect(() => {
-    fetch('/srd-data/phb-spells-pt.json')
-      .then(r => r.json())
-      .then(data => setAllSpells(data.map(normalizeSpell)))
-      .catch(() => {})
-  }, [])
+  const { classSpells, levelData, slotLevels, availableTabs, cantripsKnown, spellsKnown } =
+    useClassSpells(draft.class, draft.level)
 
-  // Carregar dados de nível (cantrips_known, spells_known, slots)
-  const classIndexEn = PT_CLASS_TO_EN[draft.class] ?? draft.class
-  useEffect(() => {
-    if (!classIndexEn) return
-    fetch('/srd-data/5e-SRD-Levels.json')
-      .then(r => r.json())
-      .then(data => {
-        const entry = data.find(l => l.class?.index === classIndexEn && l.level === draft.level)
-        setLevelData(entry?.spellcasting ?? null)
-      })
-      .catch(() => {})
-  }, [classIndexEn, draft.level])
-
-  const cantripsKnown = levelData?.cantrips_known ?? null
-  const spellsKnown   = levelData?.spells_known ?? null
-  const isPrepare     = PREPARE_CLASSES.has(draft.class)
-  const slotLevels    = levelData
-    ? [1,2,3,4,5,6,7,8,9].filter(l => (levelData[`spell_slots_level_${l}`] || 0) > 0)
-    : []
-
-  // Magias filtradas por classe
-  const classSpells = useMemo(() =>
-    allSpells.filter(s => s.classes?.includes(draft.class)),
-    [allSpells, draft.class]
-  )
-
-  // Abas disponíveis
-  const availableTabs = useMemo(() => {
-    const lvls = new Set(classSpells.map(s => s.level))
-    return [0, ...slotLevels].filter(l => lvls.has(l))
-  }, [classSpells, slotLevels])
+  const isPrepare = PREPARE_CLASSES.has(draft.class)
 
   // Magias escolhidas no draft
   const chosenSpells = draft.spells ?? []

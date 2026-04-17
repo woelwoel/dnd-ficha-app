@@ -76,6 +76,33 @@ export const SPELL_ABILITY_PT_TO_KEY = {
   'Inteligência': 'int', 'Sabedoria': 'wis', 'Carisma': 'cha',
 }
 
+export const PT_CLASS_TO_EN = {
+  barbaro: 'barbarian', bardo: 'bard', bruxo: 'warlock', clerigo: 'cleric',
+  druida: 'druid', feiticeiro: 'sorcerer', guerreiro: 'fighter', ladino: 'rogue',
+  mago: 'wizard', monge: 'monk', paladino: 'paladin', patrulheiro: 'ranger',
+}
+
+// Classes que PREPARAM magias (lista completa) vs CONHECEM (número fixo)
+export const PREPARE_CLASSES = new Set(['mago', 'clerigo', 'druida', 'paladino'])
+
+export const SCHOOL_ABBR = {
+  abjuração: 'Abj', conjuração: 'Con', adivinhação: 'Adv', encantamento: 'Enc',
+  evocação: 'Evo', ilusão: 'Ilu', necromancia: 'Nec', transmutação: 'Tra',
+  abjuration: 'Abj', conjuration: 'Con', divination: 'Adv', enchantment: 'Enc',
+  evocation: 'Evo', illusion: 'Ilu', necromancy: 'Nec', transmutation: 'Tra',
+}
+
+export function normalizeSpell(s) {
+  return {
+    ...s,
+    desc: Array.isArray(s.desc) ? s.desc.join(' ') : (s.desc || ''),
+    higher_level: Array.isArray(s.higher_level) ? s.higher_level.join(' ') : (s.higher_level || ''),
+    casting_time: s.casting_time || s.castingTime || '',
+    concentration: s.concentration || (typeof s.duration === 'string' && s.duration.toLowerCase().includes('concentra')),
+    classes: Array.isArray(s.classes) ? s.classes : [],
+  }
+}
+
 export const DND_LANGUAGES = [
   'Comum', 'Anão', 'Élfico', 'Gigante', 'Gnômico', 'Goblin', 'Halfling', 'Orc',
   'Abissal', 'Celestial', 'Dracônico', 'Linguagem das Trevas', 'Infernal',

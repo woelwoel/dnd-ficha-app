@@ -1,6 +1,6 @@
 // Passo 3 — Classe
 import { useState } from 'react'
-import { ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY, getModifier, calculateMaxHp } from '../../../utils/calculations'
+import { ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY, calculateMaxHp } from '../../../utils/calculations'
 import { DetailsModal } from '../../DetailsModal'
 import { TopicList, FullDescriptionToggle } from '../../TopicList'
 

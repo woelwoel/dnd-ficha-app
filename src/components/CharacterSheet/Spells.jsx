@@ -1,45 +1,14 @@
-import { useState, useEffect, useMemo } from 'react'
-import { formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus, getProficiencyBonus } from '../../utils/calculations'
+import { useState, useMemo } from 'react'
+import { ABILITY_SCORES, PREPARE_CLASSES, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus, getProficiencyBonus } from '../../utils/calculations'
+import { useClassSpells } from '../../hooks/useClassSpells'
 import { SpellDetailModal } from '../SpellDetailModal'
 
-const SPELL_ABILITY_PT_TO_KEY = {
-  'Inteligência': 'int', 'Sabedoria': 'wis', 'Carisma': 'cha',
-}
-const KEY_TO_ABBR_PT = { int: 'INT', wis: 'SAB', cha: 'CAR', str: 'FOR', dex: 'DES', con: 'CON' }
-const PT_CLASS_TO_EN = {
-  barbaro: 'barbarian', bardo: 'bard', bruxo: 'warlock', clerigo: 'cleric',
-  druida: 'druid', feiticeiro: 'sorcerer', guerreiro: 'fighter', ladino: 'rogue',
-  mago: 'wizard', monge: 'monk', paladino: 'paladin', patrulheiro: 'ranger',
-}
-const SCHOOL_ABBR = {
-  abjuração: 'Abj', conjuração: 'Con', adivinhação: 'Adv', encantamento: 'Enc',
-  evocação: 'Evo', ilusão: 'Ilu', necromancia: 'Nec', transmutação: 'Tra',
-  abjuration: 'Abj', conjuration: 'Con', divination: 'Div', enchantment: 'Enc',
-  evocation: 'Evo', illusion: 'Ilu', necromancy: 'Nec', transmutation: 'Tra',
-}
-
-function normalizeSpell(s) {
-  return {
-    ...s,
-    desc: Array.isArray(s.desc) ? s.desc.join(' ') : (s.desc || ''),
-    higher_level: Array.isArray(s.higher_level) ? s.higher_level.join(' ') : (s.higher_level || ''),
-    casting_time: s.casting_time || s.castingTime || '',
-    concentration: s.concentration || (typeof s.duration === 'string' && s.duration.toLowerCase().includes('concentra')),
-    classes: Array.isArray(s.classes) ? s.classes : [],
-  }
-}
-
-// Classes que PREPARAM magias (lista completa da classe) vs CONHECEM (número fixo)
-const PREPARE_CLASSES = new Set(['mago', 'clerigo', 'druida', 'paladino'])
+const KEY_TO_ABBR = Object.fromEntries(ABILITY_SCORES.map(a => [a.key, a.abbr]))
 
 export function Spells({ character, attributes, level, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onToggleSlot }) {
-  const [allSpells, setAllSpells] = useState([])
-  const [levelSlots, setLevelSlots] = useState(null)
-  const [levelData, setLevelData] = useState(null)
   const [activeTab, setActiveTab] = useState(0)
   const [search, setSearch] = useState('')
   const [pickerOpen, setPickerOpen] = useState(false)
-  const [expandedId, setExpandedId] = useState(null)
   const [detailSpell, setDetailSpell] = useState(null)
 
   const classIndex   = character.info?.class || ''
@@ -53,57 +22,14 @@ export function Spells({ character, attributes, level, classData, onUpdateSpellc
   const spellSaveDC   = calculateSpellSaveDC(abilityScore, profBonus)
   const spellAttack   = calculateSpellAttackBonus(abilityScore, profBonus)
 
-  // Carregar magias PT
-  useEffect(() => {
-    fetch('/srd-data/phb-spells-pt.json')
-      .then(r => r.json())
-      .then(data => setAllSpells(data.map(normalizeSpell)))
-      .catch(() => {})
-  }, [])
-
-  // Carregar slots e cantrips_known / spells_known
-  const classIndexEn = PT_CLASS_TO_EN[classIndex] ?? classIndex
-  useEffect(() => {
-    if (!classIndexEn) return
-    fetch('/srd-data/5e-SRD-Levels.json')
-      .then(r => r.json())
-      .then(data => {
-        const entry = data.find(l => l.class?.index === classIndexEn && l.level === level)
-        if (entry?.spellcasting) {
-          setLevelSlots(entry.spellcasting)
-          setLevelData(entry.spellcasting)
-        } else {
-          setLevelSlots(null)
-          setLevelData(null)
-        }
-      })
-      .catch(() => {})
-  }, [classIndexEn, level])
+  const { classSpells, levelData, slotLevels, availableTabs, cantripsKnown, spellsKnown } =
+    useClassSpells(classIndex, level)
 
   const usedSlots   = character.spellcasting.usedSlots || {}
   const mySpells    = character.spellcasting.spells || []
   const myCantrips  = mySpells.filter(s => s.level === 0)
   const myLeveled   = mySpells.filter(s => s.level > 0)
-  const slotLevels  = levelSlots
-    ? [1,2,3,4,5,6,7,8,9].filter(l => (levelSlots[`spell_slots_level_${l}`] || 0) > 0)
-    : []
-
-  // Limites
-  const cantripsKnown = levelData?.cantrips_known ?? null
-  const spellsKnown   = levelData?.spells_known ?? null
-  const isPrepare     = PREPARE_CLASSES.has(classIndex)
-
-  // Magias disponíveis para esta classe (para o picker)
-  const classSpells = useMemo(() => {
-    if (!classIndex) return allSpells
-    return allSpells.filter(s => s.classes?.includes(classIndex))
-  }, [allSpells, classIndex])
-
-  // Tabs: 0 = Truques, 1-9 = níveis. Só mostrar tabs com magias disponíveis para a classe.
-  const availableLevels = useMemo(() => {
-    const lvls = new Set(classSpells.map(s => s.level))
-    return [0, ...slotLevels].filter(l => lvls.has(l))
-  }, [classSpells, slotLevels])
+  const isPrepare   = PREPARE_CLASSES.has(classIndex)
 
   // Picker filtrado
   const filteredPicker = useMemo(() => {
@@ -147,7 +73,7 @@ export function Spells({ character, attributes, level, classData, onUpdateSpellc
           {[
             { label: 'CD de Magia', value: spellAbility ? spellSaveDC : '—' },
             { label: 'Ataque', value: spellAbility ? formatModifier(spellAttack) : '—' },
-            { label: 'Atributo', value: spellAbility ? KEY_TO_ABBR_PT[spellAbility] : '—' },
+            { label: 'Atributo', value: spellAbility ? KEY_TO_ABBR[spellAbility] : '—' },
           ].map(({ label, value }) => (
             <div key={label} className="flex flex-col items-center bg-gray-900 rounded p-2">
               <span className="text-xs text-gray-400 mb-1">{label}</span>
@@ -190,7 +116,7 @@ export function Spells({ character, attributes, level, classData, onUpdateSpellc
             </div>
             <div className="space-y-1.5">
               {slotLevels.map(sl => {
-                const max = levelSlots[`spell_slots_level_${sl}`]
+                const max = levelData[`spell_slots_level_${sl}`]
                 const used = usedSlots[sl] || 0
                 return (
                   <div key={sl} className="flex items-center gap-3">
@@ -262,7 +188,7 @@ export function Spells({ character, attributes, level, classData, onUpdateSpellc
       {/* Picker integrado */}
       {pickerOpen && isSpellcaster && (
         <SpellPicker
-          tabs={availableLevels}
+          tabs={availableTabs}
           activeTab={activeTab}
           onTabChange={t => { setActiveTab(t); setSearch('') }}
           search={search}

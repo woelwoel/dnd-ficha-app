@@ -1,6 +1,6 @@
 // Passo 6 — Perícias
 // Escolha N perícias da lista da classe; perícias do antecedente já estão bloqueadas.
-import { SKILLS, ABILITY_SCORES, getProficiencyBonus, getModifier, calculateSkillModifier, formatModifier } from '../../../utils/calculations'
+import { SKILLS, ABILITY_SCORES, getProficiencyBonus, calculateSkillModifier, formatModifier } from '../../../utils/calculations'
 
 export function Step6Skills({ draft, updateDraft, classData }) {
   const limit         = classData?.skill_choices?.count ?? null
@@ -57,7 +57,6 @@ export function Step6Skills({ draft, updateDraft, classData }) {
           const isChosen       = chosen.includes(key)
           const proficient     = isChosen || isBgSkill
           const mod            = calculateSkillModifier(finalAttrs[ability], profBonus, proficient, false)
-          const disabled       = !isClassOption || (atLimit && !isChosen)
 
           return (
             <div

@@ -13,6 +13,7 @@ import { Notes } from './Notes'
 import { CharacterView } from './CharacterView'
 import { LevelProgression } from './LevelProgression'
 import { ABILITY_SCORES, SKILLS, ABBR_TO_KEY, ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY, STANDARD_ARRAY, POINT_BUY_COST, parseBackgroundEquipment } from '../../utils/calculations'
+import { fetchSrd } from '../../utils/fetchSrd'
 import { generateId } from '../../hooks/useCharacter'
 
 const TABS = [
@@ -48,7 +49,6 @@ export function CharacterSheet({ characterId, onBack }) {
     updateTraits,
     updateAttribute,
     updateCombat,
-    toggleSaveProficiency,
     toggleSkillProficiency,
     toggleExpertiseSkill,
     updateCurrency,
@@ -69,18 +69,12 @@ export function CharacterSheet({ characterId, onBack }) {
   const calc = useCharacterCalculations(character, classData)
   // deps de validação — races para checar sub-raça obrigatória
   const validationDeps = useMemo(() => ({ races }), [races])
-  const { validateTab, getTabErrors, markTouched, hasErrors, focusFirstError } = useTabValidation(character, validationDeps)
+  const { getTabErrors, markTouched, hasErrors, focusFirstError } = useTabValidation(character, validationDeps)
 
   useEffect(() => {
-    fetch('/srd-data/phb-races-pt.json')
-      .then(r => r.json()).then(setRaces)
-      .catch(() => fetch('/srd-data/5e-SRD-Races.json').then(r => r.json()).then(setRaces).catch(() => {}))
-    fetch('/srd-data/phb-classes-pt.json')
-      .then(r => r.json()).then(setClasses)
-      .catch(() => fetch('/srd-data/5e-SRD-Classes.json').then(r => r.json()).then(setClasses).catch(() => {}))
-    fetch('/srd-data/phb-backgrounds-pt.json')
-      .then(r => r.json()).then(setBackgrounds)
-      .catch(() => fetch('/srd-data/5e-SRD-Backgrounds.json').then(r => r.json()).then(setBackgrounds).catch(() => {}))
+    fetchSrd('phb-races-pt.json',       '5e-SRD-Races.json'      ).then(setRaces).catch(() => {})
+    fetchSrd('phb-classes-pt.json',     '5e-SRD-Classes.json'    ).then(setClasses).catch(() => {})
+    fetchSrd('phb-backgrounds-pt.json', '5e-SRD-Backgrounds.json').then(setBackgrounds).catch(() => {})
   }, [])
 
   // Atualiza título da página com nome do personagem
@@ -152,17 +146,17 @@ export function CharacterSheet({ characterId, onBack }) {
     return map
   }
 
-  // Troca raça: reverte bônus antigos, aplica novos, reseta sub-raça
-  function handleRaceChange(newRaceIndex) {
+  // Re-aplica bônus raciais: reverte os antigos, soma os novos e atualiza info
+  function applyRacialChange(infoPatch, raceIndex, subraceIndex) {
     setCharacter(prev => {
       const oldApplied = prev.appliedRacialBonuses ?? {}
-      const newBonuses = computeRacialBonuses(newRaceIndex, '')
+      const newBonuses = computeRacialBonuses(raceIndex, subraceIndex)
       const attrs = { ...prev.attributes }
       for (const [k, v] of Object.entries(oldApplied)) attrs[k] = Math.max(1, attrs[k] - v)
       for (const [k, v] of Object.entries(newBonuses)) attrs[k] = Math.min(30, attrs[k] + v)
       return {
         ...prev,
-        info: { ...prev.info, race: newRaceIndex, subrace: '' },
+        info: { ...prev.info, ...infoPatch },
         attributes: attrs,
         appliedRacialBonuses: newBonuses,
         meta: { ...prev.meta, updatedAt: new Date().toISOString() },
@@ -170,23 +164,8 @@ export function CharacterSheet({ characterId, onBack }) {
     })
   }
 
-  // Troca sub-raça: reverte bônus antigos (raça+subrace anterior), aplica raça+nova subrace
-  function handleSubraceChange(newSubraceIndex) {
-    setCharacter(prev => {
-      const oldApplied = prev.appliedRacialBonuses ?? {}
-      const newBonuses = computeRacialBonuses(prev.info.race, newSubraceIndex)
-      const attrs = { ...prev.attributes }
-      for (const [k, v] of Object.entries(oldApplied)) attrs[k] = Math.max(1, attrs[k] - v)
-      for (const [k, v] of Object.entries(newBonuses)) attrs[k] = Math.min(30, attrs[k] + v)
-      return {
-        ...prev,
-        info: { ...prev.info, subrace: newSubraceIndex },
-        attributes: attrs,
-        appliedRacialBonuses: newBonuses,
-        meta: { ...prev.meta, updatedAt: new Date().toISOString() },
-      }
-    })
-  }
+  const handleRaceChange    = idx => applyRacialChange({ race: idx, subrace: '' }, idx, '')
+  const handleSubraceChange = idx => applyRacialChange({ subrace: idx }, character.info.race, idx)
 
   // Troca antecedente: perícias automáticas + itens de equipamento no inventário
   function handleBackgroundChange(newBgIndex) {
@@ -394,85 +373,74 @@ export function CharacterSheet({ characterId, onBack }) {
               </div>
             </div>
 
-            {/* Aviso e info por método */}
             {(() => {
               const method = character.info.scoreMethod ?? 'manual'
               const racialBonuses = character.appliedRacialBonuses ?? {}
+              const baseValues = Object.fromEntries(
+                ABILITY_SCORES.map(({ key }) => [key, character.attributes[key] - (racialBonuses[key] ?? 0)])
+              )
+              const pbSpent = ABILITY_SCORES.reduce((sum, { key }) =>
+                sum + (POINT_BUY_COST[Math.min(15, Math.max(8, baseValues[key]))] ?? 0), 0)
+              const pbRemaining = 27 - pbSpent
+
               const appliedList = Object.entries(racialBonuses)
                 .filter(([, v]) => v > 0)
                 .map(([k, v]) => `+${v} ${ABILITY_SCORES.find(a => a.key === k)?.abbr ?? k}`)
 
-              // Point Buy: custo total
-              const pbSpent = ABILITY_SCORES.reduce((sum, { key }) => {
-                const base = character.attributes[key] - (racialBonuses[key] ?? 0)
-                return sum + (POINT_BUY_COST[Math.min(15, Math.max(8, base))] ?? 0)
-              }, 0)
-              const pbRemaining = 27 - pbSpent
-
-              // Standard Array: verificar valores inválidos
-              const saUsed = ABILITY_SCORES.map(({ key }) => character.attributes[key] - (racialBonuses[key] ?? 0))
+              const saUsed  = ABILITY_SCORES.map(({ key }) => baseValues[key])
               const saValid = STANDARD_ARRAY.every(v => saUsed.includes(v)) && saUsed.every(v => STANDARD_ARRAY.includes(v))
 
               return (
-                <div className="mb-3 space-y-1">
-                  {appliedList.length > 0 && (
-                    <p className="text-xs text-amber-500/80">
-                      ↑ Bônus racial aplicado automaticamente: {appliedList.join(', ')}
-                    </p>
-                  )}
-                  {method === 'point-buy' && (
-                    <p className={`text-xs font-semibold ${pbRemaining < 0 ? 'text-red-400' : pbRemaining === 0 ? 'text-green-400' : 'text-sky-400'}`}>
-                      Compra de Pontos — {pbRemaining < 0 ? `${Math.abs(pbRemaining)} pts acima do limite` : `${pbRemaining}/27 pts restantes`}
-                    </p>
-                  )}
-                  {method === 'standard-array' && !saValid && (
-                    <p className="text-xs text-amber-400">
-                      Array Padrão: atribua os valores [8, 10, 12, 13, 14, 15] uma vez cada.
-                    </p>
-                  )}
-                  {method === 'standard-array' && saValid && (
-                    <p className="text-xs text-green-400">Array Padrão completo ✓</p>
-                  )}
-                </div>
+                <>
+                  <div className="mb-3 space-y-1">
+                    {appliedList.length > 0 && (
+                      <p className="text-xs text-amber-500/80">
+                        ↑ Bônus racial aplicado automaticamente: {appliedList.join(', ')}
+                      </p>
+                    )}
+                    {method === 'point-buy' && (
+                      <p className={`text-xs font-semibold ${pbRemaining < 0 ? 'text-red-400' : pbRemaining === 0 ? 'text-green-400' : 'text-sky-400'}`}>
+                        Compra de Pontos — {pbRemaining < 0 ? `${Math.abs(pbRemaining)} pts acima do limite` : `${pbRemaining}/27 pts restantes`}
+                      </p>
+                    )}
+                    {method === 'standard-array' && !saValid && (
+                      <p className="text-xs text-amber-400">
+                        Array Padrão: atribua os valores [8, 10, 12, 13, 14, 15] uma vez cada.
+                      </p>
+                    )}
+                    {method === 'standard-array' && saValid && (
+                      <p className="text-xs text-green-400">Array Padrão completo ✓</p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
+                    {ABILITY_SCORES.map(({ key, abbr, name }) => {
+                      const racialBonus = racialBonuses[key] ?? 0
+                      const baseValue   = baseValues[key]
+                      const availableSA = STANDARD_ARRAY.filter(v =>
+                        v === baseValue || !saUsed.includes(v)
+                      )
+                      return (
+                        <AttributeBox
+                          key={key}
+                          abbr={abbr}
+                          name={name}
+                          value={character.attributes[key]}
+                          baseValue={baseValue}
+                          racialBonus={racialBonus}
+                          mode={method}
+                          availableSA={availableSA}
+                          pointsRemaining={pbRemaining}
+                          onChange={value => updateAttribute(key, value)}
+                          onChangeBase={newBase => updateAttribute(key, Math.min(30, Math.max(1, newBase)) + racialBonus)}
+                          error={fichaErrors[`attr_${key}`]}
+                        />
+                      )
+                    })}
+                  </div>
+                </>
               )
             })()}
-
-            <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
-              {ABILITY_SCORES.map(({ key, abbr, name }) => {
-                const method       = character.info.scoreMethod ?? 'manual'
-                const racialBonuses = character.appliedRacialBonuses ?? {}
-                const racialBonus  = racialBonuses[key] ?? 0
-                const baseValue    = character.attributes[key] - racialBonus
-
-                // SA: valores disponíveis = SA não usados por OUTROS atributos
-                const otherBases = ABILITY_SCORES.filter(a => a.key !== key)
-                  .map(a => character.attributes[a.key] - (racialBonuses[a.key] ?? 0))
-                const availableSA = STANDARD_ARRAY.filter(v => !otherBases.includes(v) || v === baseValue)
-
-                // PB: pontos restantes
-                const pbSpent = ABILITY_SCORES.reduce((sum, a) => {
-                  const b = character.attributes[a.key] - (racialBonuses[a.key] ?? 0)
-                  return sum + (POINT_BUY_COST[Math.min(15, Math.max(8, b))] ?? 0)
-                }, 0)
-
-                return (
-                  <AttributeBox
-                    key={key}
-                    abbr={abbr}
-                    name={name}
-                    value={character.attributes[key]}
-                    baseValue={baseValue}
-                    racialBonus={racialBonus}
-                    mode={method}
-                    availableSA={availableSA}
-                    pointsRemaining={27 - pbSpent}
-                    onChange={value => updateAttribute(key, value)}
-                    onChangeBase={newBase => updateAttribute(key, Math.min(30, Math.max(1, newBase)) + racialBonus)}
-                    error={fichaErrors[`attr_${key}`]}
-                  />
-                )
-              })}
-            </div>
           </section>
 
           <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -488,7 +456,6 @@ export function CharacterSheet({ characterId, onBack }) {
             />
             <SavingThrows
               attributes={character.attributes}
-              proficiencies={character.proficiencies}
               level={character.info.level}
               classData={classData}
             />
@@ -545,7 +512,6 @@ export function CharacterSheet({ characterId, onBack }) {
       {activeTab === 'progressao' && (
         <LevelProgression
           character={character}
-          classes={classes}
           classData={classData}
           onLevelChange={lvl => updateInfo('level', lvl)}
           onApplyLevelUp={handleApplyLevelUp}

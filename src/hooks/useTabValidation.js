@@ -87,19 +87,6 @@ const TAB_VALIDATORS = {
 
 /* ── Hook ─────────────────────────────────────────────────────────── */
 
-/**
- * Gerencia validação por aba.
- *
- * @param {object} character - estado completo do personagem
- * @param {object} deps      - dependências para validação (ex: { races })
- * @returns {object}
- *   - validateTab(tabId)    : valida e retorna objeto de erros (sem mutar estado)
- *   - getTabErrors(tabId)   : retorna erros APENAS se a aba já foi "tocada"
- *   - markTouched(tabId)    : marca a aba como tocada (erros passam a ser exibidos)
- *   - isTabTouched(tabId)   : booleano
- *   - hasErrors(tabId)      : booleano — se a aba tem erros (independente de tocada)
- *   - focusFirstError(tabId): foca o primeiro campo inválido da aba no DOM
- */
 export function useTabValidation(character, deps = {}) {
   // Abas que o usuário já tentou sair (validação visível)
   const [touchedTabs, setTouchedTabs] = useState(new Set())
@@ -125,8 +112,6 @@ export function useTabValidation(character, deps = {}) {
     })
   }, [])
 
-  const isTabTouched = useCallback((tabId) => touchedTabs.has(tabId), [touchedTabs])
-
   const hasErrors = useCallback((tabId) => {
     return Object.keys(validateTab(tabId)).length > 0
   }, [validateTab])
@@ -150,10 +135,8 @@ export function useTabValidation(character, deps = {}) {
   }, [validateTab])
 
   return {
-    validateTab,
     getTabErrors,
     markTouched,
-    isTabTouched,
     hasErrors,
     focusFirstError,
   }

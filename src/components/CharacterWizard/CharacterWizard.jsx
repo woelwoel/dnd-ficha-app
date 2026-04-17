@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { generateId } from '../../hooks/useCharacter'
-import { calculateMaxHp, ABBR_TO_KEY, ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY, SKILLS, getModifier, parseBackgroundEquipment } from '../../utils/calculations'
+import { calculateMaxHp, ABBR_TO_KEY, ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY, SKILLS, getModifier } from '../../utils/calculations'
 import { Step0Settings } from './steps/Step0Settings'
 import { Step1Concept } from './steps/Step1Concept'
 import { Step2Race } from './steps/Step2Race'
@@ -140,7 +140,7 @@ export function CharacterWizard({ onBack, onComplete }) {
           {currentStepId === 'attributes' && <Step5Attributes draft={draft} updateDraft={updateDraft} />}
           {currentStepId === 'skills'     && <Step6Skills     draft={draft} updateDraft={updateDraft} classData={classData} />}
           {currentStepId === 'spells'     && <Step7Spells     draft={draft} updateDraft={updateDraft} classData={classData} />}
-          {currentStepId === 'review'     && <Step8Review     draft={draft} races={races} classes={classes} backgrounds={backgrounds} classData={classData} />}
+          {currentStepId === 'review'     && <Step8Review     draft={draft} races={races} backgrounds={backgrounds} classData={classData} />}
         </div>
 
         {/* Navegação */}
@@ -250,7 +250,6 @@ function buildCharacter(draft, classData) {
     attrs[k] = Math.min(30, (attrs[k] ?? 10) + v)
   }
 
-  const conMod = getModifier(attrs.con ?? 10)
   const dexMod = getModifier(attrs.dex ?? 10)
   const maxHp  = calculateMaxHp(classData, draft.level, attrs.con ?? 10)
 

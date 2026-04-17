@@ -1,7 +1,7 @@
 import { ABILITY_SCORES, ATTR_NAME_TO_KEY, formatModifier, calculateSavingThrow, getProficiencyBonus, getModifier } from '../../utils/calculations'
 import { Tooltip } from '../Tooltip'
 
-export function SavingThrows({ attributes, proficiencies, level, classData }) {
+export function SavingThrows({ attributes, level, classData }) {
   const profBonus = getProficiencyBonus(level)
 
   // Salvaguardas são definidas exclusivamente pela classe

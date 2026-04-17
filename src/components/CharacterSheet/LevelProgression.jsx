@@ -402,7 +402,7 @@ function AcquiredFeatures({ levels, currentLevel, onFeatureClick }) {
 /* ═══════════════════════════════════════════════════════════════════
    Componente principal
    ═══════════════════════════════════════════════════════════════════ */
-export function LevelProgression({ character, classes, classData, onLevelChange, onApplyLevelUp }) {
+export function LevelProgression({ character, classData, onLevelChange, onApplyLevelUp }) {
   const [progression,  setProgression]  = useState(null)
   const [selectedFeat, setSelectedFeat] = useState(null)
   const [wizardOpen,   setWizardOpen]   = useState(false)

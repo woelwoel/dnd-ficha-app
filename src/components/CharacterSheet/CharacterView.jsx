@@ -1,4 +1,6 @@
-import { ABILITY_SCORES, SKILLS, getModifier, getProficiencyBonus, RACE_LANGUAGES, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../utils/calculations'
+import { ABILITY_SCORES, SKILLS, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, getModifier, getProficiencyBonus, RACE_LANGUAGES, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../utils/calculations'
+
+const KEY_ABBR = Object.fromEntries(ABILITY_SCORES.map(a => [a.key, a.abbr]))
 
 /* ── Paleta de cores da ficha impressa ── */
 // Usamos classes Tailwind com valores customizados via style quando necessário.
@@ -52,7 +54,7 @@ function InfoField({ label, value }) {
 }
 
 /* ── Caixa de atributo (círculo grande + score + nome) ── */
-function AttributeBox({ name, abbr, score }) {
+function AttributeBox({ name, score }) {
   const mod = getModifier(score)
   return (
     <div className="flex flex-col items-center">
@@ -212,7 +214,7 @@ export function CharacterView({ character, races, classes, backgrounds }) {
 
           {/* 6 atributos */}
           {ABILITY_SCORES.map(({ key, name }) => (
-            <AttributeBox key={key} name={name} abbr={key} score={attributes[key]} />
+            <AttributeBox key={key} name={name} score={attributes[key]} />
           ))}
 
           {/* Percepção Passiva */}
@@ -395,22 +397,12 @@ export function CharacterView({ character, races, classes, backgrounds }) {
 /* ════════════════════════════════════════════════════════════
    Página de Magias
    ════════════════════════════════════════════════════════════ */
-const SPELL_ABILITY_MAP = {
-  'Inteligência': 'int', 'Sabedoria': 'wis', 'Carisma': 'cha',
-}
-const KEY_ABBR = { int: 'INT', wis: 'SAB', cha: 'CAR' }
-const SCHOOL_ABBR_VIEW = {
-  abjuração: 'Abj', conjuração: 'Con', adivinhação: 'Adv', encantamento: 'Enc',
-  evocação: 'Evo', ilusão: 'Ilu', necromancia: 'Nec', transmutação: 'Tra',
-}
-
 function SpellsPage({ character, selectedClass, attributes, prof }) {
   const { spellcasting } = character
   const spells = spellcasting?.spells ?? []
-  const usedSlots = spellcasting?.usedSlots ?? {}
 
   const spellAbilityName = selectedClass?.spellcasting_ability
-  const spellAbilityKey  = spellAbilityName ? (SPELL_ABILITY_MAP[spellAbilityName] ?? null) : null
+  const spellAbilityKey  = spellAbilityName ? (SPELL_ABILITY_PT_TO_KEY[spellAbilityName] ?? null) : null
   const isSpellcaster    = !!spellAbilityKey
   const hasSpells        = spells.length > 0
 
@@ -473,7 +465,7 @@ function SpellsPage({ character, selectedClass, attributes, prof }) {
                   <span>Badges</span>
                 </div>
                 {list.map(spell => {
-                  const school = SCHOOL_ABBR_VIEW[(spell.school || '').toLowerCase()] || (spell.school || '').slice(0,3)
+                  const school = SCHOOL_ABBR[(spell.school || '').toLowerCase()] || (spell.school || '').slice(0,3)
                   return (
                     <div key={spell.id ?? spell.index}
                          className={`grid gap-1 text-[8px] border-b ${P.border} last:border-b-0 px-1 py-0.5 items-center`}
