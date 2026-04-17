@@ -2,6 +2,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { SPELL_ABILITY_PT_TO_KEY, getProficiencyBonus, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../../utils/calculations'
 import { generateId } from '../../../hooks/useCharacter'
+import { SpellDetailModal } from '../../SpellDetailModal'
 
 const KEY_TO_ABBR = { int: 'INT', wis: 'SAB', cha: 'CAR' }
 const KEY_TO_NAME = { int: 'Inteligência', wis: 'Sabedoria', cha: 'Carisma' }
@@ -31,6 +32,7 @@ export function Step7Spells({ draft, updateDraft, classData }) {
   const [levelData, setLevelData] = useState(null)
   const [activeTab, setActiveTab] = useState(0)
   const [search, setSearch] = useState('')
+  const [detailSpell, setDetailSpell] = useState(null)
 
   const spellAbilityKey = draft.spellcastingAbility ?? SPELL_ABILITY_PT_TO_KEY[classData?.spellcasting_ability]
 
@@ -242,19 +244,32 @@ export function Step7Spells({ draft, updateDraft, classData }) {
                   key={spell.index}
                   className={`flex items-center gap-2 px-3 py-2 transition-colors ${chosen ? 'opacity-40' : blocked ? 'opacity-50' : 'hover:bg-gray-700/50'}`}
                 >
-                  <div className="flex-1 min-w-0">
+                  {/* Nome clicável → abre descrição */}
+                  <button
+                    onClick={() => setDetailSpell(spell)}
+                    className="flex-1 min-w-0 text-left"
+                  >
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="text-sm font-medium text-white">{spell.name}</span>
+                      <span className="text-sm font-medium text-white hover:text-amber-300 transition-colors">{spell.name}</span>
                       {spell.ritual && <span className="text-green-400 text-xs">📿</span>}
                       {spell.concentration && <span className="text-blue-400 text-xs">⊙</span>}
                       <span className="text-xs text-gray-500">{school}</span>
                     </div>
                     <p className="text-xs text-gray-600 mt-0.5">{spell.casting_time} · {spell.range}</p>
-                  </div>
+                  </button>
+                  {/* Botão info */}
+                  <button
+                    onClick={() => setDetailSpell(spell)}
+                    className="flex-shrink-0 text-gray-600 hover:text-amber-400 text-xs px-1 transition-colors"
+                    title="Ver descrição"
+                  >
+                    ℹ
+                  </button>
+                  {/* Botão adicionar */}
                   <button
                     onClick={() => !chosen && !blocked && addSpell(spell)}
                     disabled={chosen || blocked}
-                    className={`flex-shrink-0 text-xs px-2 py-1 rounded transition-colors ${
+                    className={`flex-shrink-0 text-xs px-2 py-1 rounded font-bold transition-colors ${
                       chosen  ? 'text-gray-600 cursor-default' :
                       blocked ? 'text-gray-600 cursor-not-allowed' :
                                 'text-amber-400 hover:text-amber-300 hover:bg-amber-900/30'
@@ -283,6 +298,9 @@ export function Step7Spells({ draft, updateDraft, classData }) {
           </div>
         </div>
       )}
+
+      {/* Modal de detalhes */}
+      {detailSpell && <SpellDetailModal spell={detailSpell} onClose={() => setDetailSpell(null)} />}
     </div>
   )
 }

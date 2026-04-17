@@ -1,4 +1,4 @@
-import { ABILITY_SCORES, SKILLS, getModifier, getProficiencyBonus, RACE_LANGUAGES } from '../../utils/calculations'
+import { ABILITY_SCORES, SKILLS, getModifier, getProficiencyBonus, RACE_LANGUAGES, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../utils/calculations'
 
 /* ── Paleta de cores da ficha impressa ── */
 // Usamos classes Tailwind com valores customizados via style quando necessário.
@@ -383,6 +383,115 @@ export function CharacterView({ character, races, classes, backgrounds }) {
           <Box label="Notas de Campanha">
             <p className="text-[9px] leading-tight whitespace-pre-wrap">{traits.notes}</p>
           </Box>
+        </div>
+      )}
+
+      {/* ── PÁGINA DE MAGIAS (só se houver magias ou classe conjuradora) ── */}
+      <SpellsPage character={character} selectedClass={selectedClass} attributes={attributes} prof={prof} />
+    </div>
+  )
+}
+
+/* ════════════════════════════════════════════════════════════
+   Página de Magias
+   ════════════════════════════════════════════════════════════ */
+const SPELL_ABILITY_MAP = {
+  'Inteligência': 'int', 'Sabedoria': 'wis', 'Carisma': 'cha',
+}
+const KEY_ABBR = { int: 'INT', wis: 'SAB', cha: 'CAR' }
+const SCHOOL_ABBR_VIEW = {
+  abjuração: 'Abj', conjuração: 'Con', adivinhação: 'Adv', encantamento: 'Enc',
+  evocação: 'Evo', ilusão: 'Ilu', necromancia: 'Nec', transmutação: 'Tra',
+}
+
+function SpellsPage({ character, selectedClass, attributes, prof }) {
+  const { spellcasting } = character
+  const spells = spellcasting?.spells ?? []
+  const usedSlots = spellcasting?.usedSlots ?? {}
+
+  const spellAbilityName = selectedClass?.spellcasting_ability
+  const spellAbilityKey  = spellAbilityName ? (SPELL_ABILITY_MAP[spellAbilityName] ?? null) : null
+  const isSpellcaster    = !!spellAbilityKey
+  const hasSpells        = spells.length > 0
+
+  if (!isSpellcaster && !hasSpells) return null
+
+  const abilityScore = spellAbilityKey ? (attributes[spellAbilityKey] ?? 10) : 10
+  const spellSaveDC  = calculateSpellSaveDC(abilityScore, prof)
+  const spellAttack  = calculateSpellAttackBonus(abilityScore, prof)
+
+  // Agrupar por nível
+  const levels = [0,1,2,3,4,5,6,7,8,9]
+  const grouped = levels.map(l => ({ level: l, list: spells.filter(s => s.level === l) }))
+                        .filter(g => g.list.length > 0)
+
+  // Slots de magia a partir do personagem (usedSlots guarda os usados)
+  // Precisamos dos máximos — vamos inferir da classe + nível via character
+  // (a CharacterView não tem acesso ao SRD-Levels, então usamos o tracker existente)
+
+  return (
+    <div className={`mt-2 border-t-4 ${P.border} pt-2`}>
+      {/* Cabeçalho da página de magias */}
+      <div className={`text-center text-[10px] font-black tracking-widest uppercase py-1 ${P.header} ${P.border} border rounded mb-1`}>
+        ✦ Magias ✦
+      </div>
+
+      {/* Stats de conjuração */}
+      {spellAbilityKey && (
+        <div className="grid grid-cols-3 gap-1 mb-2">
+          {[
+            { label: 'Habilidade de Magia', value: KEY_ABBR[spellAbilityKey] },
+            { label: 'CD de Magia', value: spellSaveDC },
+            { label: 'Bônus de Ataque', value: fmt(spellAttack) },
+          ].map(({ label, value }) => (
+            <div key={label} className={`border-2 ${P.border} rounded text-center ${P.section} py-1`}>
+              <div className="text-sm font-black leading-none">{value}</div>
+              <div className="text-[7px] font-black uppercase leading-tight mt-0.5">{label}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Lista de magias agrupadas */}
+      {grouped.length === 0 ? (
+        <div className={`${P.section} ${P.border} border rounded p-2 text-center text-[9px] ${P.text} opacity-60`}>
+          Nenhuma magia registrada
+        </div>
+      ) : (
+        <div className="space-y-1">
+          {grouped.map(({ level, list }) => (
+            <div key={level}>
+              <SectionHeader>{level === 0 ? 'Truques' : `Magias de ${level}º Nível`}</SectionHeader>
+              <div className={`${P.section} ${P.border} border-b border-x rounded-b`}>
+                {/* Cabeçalho da tabela */}
+                <div className={`grid gap-1 text-[7px] font-black uppercase border-b ${P.border} px-1 py-0.5`}
+                     style={{ gridTemplateColumns: '2fr 40px 60px 60px 40px' }}>
+                  <span>Nome</span>
+                  <span>Esc.</span>
+                  <span>Tempo</span>
+                  <span>Alcance</span>
+                  <span>Badges</span>
+                </div>
+                {list.map(spell => {
+                  const school = SCHOOL_ABBR_VIEW[(spell.school || '').toLowerCase()] || (spell.school || '').slice(0,3)
+                  return (
+                    <div key={spell.id ?? spell.index}
+                         className={`grid gap-1 text-[8px] border-b ${P.border} last:border-b-0 px-1 py-0.5 items-center`}
+                         style={{ gridTemplateColumns: '2fr 40px 60px 60px 40px' }}>
+                      <span className={`font-semibold ${P.text} leading-tight`}>{spell.name}</span>
+                      <span className={`${P.text} opacity-70`}>{school}</span>
+                      <span className={`${P.text} opacity-70 leading-tight`}>{(spell.castingTime || spell.casting_time || '').replace('ação', 'ação')}</span>
+                      <span className={`${P.text} opacity-70`}>{spell.range || ''}</span>
+                      <span className="flex gap-0.5">
+                        {spell.ritual && <span className="text-green-700 text-[8px]">📿</span>}
+                        {spell.concentration && <span className="text-blue-700 text-[8px]">⊙</span>}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>

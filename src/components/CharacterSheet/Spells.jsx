@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus, getProficiencyBonus } from '../../utils/calculations'
+import { SpellDetailModal } from '../SpellDetailModal'
 
 const SPELL_ABILITY_PT_TO_KEY = {
   'Inteligência': 'int', 'Sabedoria': 'wis', 'Carisma': 'cha',
@@ -39,6 +40,7 @@ export function Spells({ character, attributes, level, classData, onUpdateSpellc
   const [search, setSearch] = useState('')
   const [pickerOpen, setPickerOpen] = useState(false)
   const [expandedId, setExpandedId] = useState(null)
+  const [detailSpell, setDetailSpell] = useState(null)
 
   const classIndex   = character.info?.class || ''
   const classAbility = classData?.spellcasting_ability
@@ -238,8 +240,7 @@ export function Spells({ character, attributes, level, classData, onUpdateSpellc
                 <SpellRow
                   key={spell.id}
                   spell={spell}
-                  expanded={expandedId === spell.id}
-                  onExpand={() => setExpandedId(expandedId === spell.id ? null : spell.id)}
+                  onDetail={() => setDetailSpell(spell)}
                   onRemove={() => onRemoveSpell(spell.id)}
                 />
               ))}
@@ -269,6 +270,7 @@ export function Spells({ character, attributes, level, classData, onUpdateSpellc
           spells={filteredPicker}
           mySpellIds={mySpellIds}
           onAdd={addSpell}
+          onDetail={setDetailSpell}
           classIndex={classIndex}
           cantripsKnown={cantripsKnown}
           spellsKnown={spellsKnown}
@@ -277,41 +279,47 @@ export function Spells({ character, attributes, level, classData, onUpdateSpellc
           isPrepare={isPrepare}
         />
       )}
+
+      {/* Modal de detalhes da magia */}
+      {detailSpell && <SpellDetailModal spell={detailSpell} onClose={() => setDetailSpell(null)} />}
     </div>
   )
 }
 
-function SpellRow({ spell, expanded, onExpand, onRemove }) {
+function SpellRow({ spell, onDetail, onRemove }) {
   const schoolAbbr = SCHOOL_ABBR[(spell.school || '').toLowerCase()] || (spell.school || '').slice(0, 3)
   return (
-    <div className="bg-gray-900 rounded-lg overflow-hidden">
-      <div className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-gray-800 transition-colors" onClick={onExpand}>
-        <span className="text-sm font-medium text-white flex-1">{spell.name}</span>
-        <div className="flex items-center gap-1.5 text-xs">
-          {spell.ritual && <span className="text-green-400 font-bold" title="Ritual">📿</span>}
-          {spell.concentration && <span className="text-blue-400 font-bold" title="Concentração">⊙</span>}
-          <span className="text-gray-500">{schoolAbbr}</span>
-          <span className="text-gray-600">{expanded ? '▲' : '▼'}</span>
-        </div>
-        <button onClick={e => { e.stopPropagation(); onRemove() }} className="text-red-500 hover:text-red-400 text-lg leading-none ml-1">×</button>
+    <div className="bg-gray-900 rounded-lg flex items-center gap-2 px-3 py-2 hover:bg-gray-800 transition-colors">
+      <button
+        onClick={onDetail}
+        className="text-sm font-medium text-white flex-1 text-left hover:text-amber-300 transition-colors"
+      >
+        {spell.name}
+      </button>
+      <div className="flex items-center gap-1.5 text-xs flex-shrink-0">
+        {spell.ritual && <span className="text-green-400" title="Ritual">📿</span>}
+        {spell.concentration && <span className="text-blue-400" title="Concentração">⊙</span>}
+        <span className="text-gray-600">{schoolAbbr}</span>
+        <span className="text-gray-600 text-[10px]">{spell.castingTime || ''}</span>
       </div>
-      {expanded && (
-        <div className="px-3 pb-3 text-xs text-gray-300 space-y-1 border-t border-gray-700 pt-2">
-          <div className="flex flex-wrap gap-x-4 gap-y-1 text-gray-400 mb-2">
-            {spell.castingTime && <span>Tempo: <span className="text-gray-300">{spell.castingTime}</span></span>}
-            {spell.range && <span>Alcance: <span className="text-gray-300">{spell.range}</span></span>}
-            {spell.duration && <span>Duração: <span className="text-gray-300">{spell.duration}</span></span>}
-            {spell.components && <span>Comp.: <span className="text-gray-300">{spell.components}</span></span>}
-          </div>
-          {spell.desc && <p className="leading-relaxed">{spell.desc.slice(0, 400)}{spell.desc.length > 400 ? '…' : ''}</p>}
-          {spell.higherLevel && <p className="text-gray-400 italic mt-1">Em nível maior: {spell.higherLevel.slice(0, 200)}{spell.higherLevel.length > 200 ? '…' : ''}</p>}
-        </div>
-      )}
+      <button
+        onClick={onDetail}
+        className="text-gray-600 hover:text-amber-400 text-xs px-1 transition-colors flex-shrink-0"
+        title="Ver descrição"
+      >
+        ℹ
+      </button>
+      <button
+        onClick={onRemove}
+        className="text-red-500 hover:text-red-400 text-lg leading-none flex-shrink-0"
+      >
+        ×
+      </button>
     </div>
   )
 }
 
-function SpellPicker({ tabs, activeTab, onTabChange, search, onSearch, spells, mySpellIds, onAdd, classIndex, cantripsKnown, spellsKnown, myCantripsCount, myLeveledCount, isPrepare }) {
+function SpellPicker({ tabs, activeTab, onTabChange, search, onSearch, spells, mySpellIds, onAdd, onDetail, cantripsKnown, spellsKnown, myCantripsCount, myLeveledCount, isPrepare }) {
   const atCantripLimit = cantripsKnown != null && myCantripsCount >= cantripsKnown && activeTab === 0
   const atSpellLimit   = !isPrepare && spellsKnown != null && myLeveledCount >= spellsKnown && activeTab > 0
 
@@ -362,23 +370,36 @@ function SpellPicker({ tabs, activeTab, onTabChange, search, onSearch, spells, m
           return (
             <div
               key={spell.index}
-              className={`flex items-start gap-2 px-3 py-2 transition-colors ${alreadyHas ? 'opacity-40' : blocked ? 'opacity-50' : 'hover:bg-gray-700/50'}`}
+              className={`flex items-center gap-2 px-3 py-2 transition-colors ${alreadyHas ? 'opacity-40' : blocked ? 'opacity-50' : 'hover:bg-gray-700/50'}`}
             >
+              {/* Nome clicável → abre descrição */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="text-sm font-medium text-white">{spell.name}</span>
-                  {spell.ritual && <span className="text-green-400 text-xs" title="Ritual">📿</span>}
-                  {spell.concentration && <span className="text-blue-400 text-xs" title="Concentração">⊙</span>}
-                  <span className="text-xs text-gray-500">{schoolAbbr}</span>
-                </div>
-                <div className="text-xs text-gray-500 mt-0.5">
-                  {spell.casting_time} · {spell.range}
-                </div>
+                <button
+                  onClick={() => onDetail(spell)}
+                  className="text-left w-full"
+                >
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-sm font-medium text-white hover:text-amber-300 transition-colors">{spell.name}</span>
+                    {spell.ritual && <span className="text-green-400 text-xs" title="Ritual">📿</span>}
+                    {spell.concentration && <span className="text-blue-400 text-xs" title="Concentração">⊙</span>}
+                    <span className="text-xs text-gray-500">{schoolAbbr}</span>
+                  </div>
+                  <div className="text-xs text-gray-600 mt-0.5">{spell.casting_time} · {spell.range}</div>
+                </button>
               </div>
+              {/* Botão info */}
+              <button
+                onClick={() => onDetail(spell)}
+                className="flex-shrink-0 text-gray-600 hover:text-amber-400 text-xs px-1 transition-colors"
+                title="Ver descrição"
+              >
+                ℹ
+              </button>
+              {/* Botão adicionar */}
               <button
                 onClick={() => !alreadyHas && !blocked && onAdd(spell)}
                 disabled={alreadyHas || blocked}
-                className={`flex-shrink-0 text-xs px-2 py-1 rounded transition-colors ${
+                className={`flex-shrink-0 text-xs px-2 py-1 rounded font-bold transition-colors ${
                   alreadyHas
                     ? 'text-gray-600 cursor-default'
                     : blocked
