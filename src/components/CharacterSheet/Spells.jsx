@@ -1,29 +1,20 @@
-import { useState, useEffect } from 'react'
-import { SrdSearchModal } from '../SrdSearchModal'
+import { useState, useEffect, useMemo } from 'react'
 import { formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus, getProficiencyBonus } from '../../utils/calculations'
 
-// Mapeia nome completo PT-BR do atributo para a chave usada no estado
 const SPELL_ABILITY_PT_TO_KEY = {
   'Inteligência': 'int', 'Sabedoria': 'wis', 'Carisma': 'cha',
 }
-// Abreviações PT-BR para exibição
 const KEY_TO_ABBR_PT = { int: 'INT', wis: 'SAB', cha: 'CAR', str: 'FOR', dex: 'DES', con: 'CON' }
-// Mapeia índice PT-BR da classe para o índice inglês usado no 5e-SRD-Levels.json
 const PT_CLASS_TO_EN = {
   barbaro: 'barbarian', bardo: 'bard', bruxo: 'warlock', clerigo: 'cleric',
   druida: 'druid', feiticeiro: 'sorcerer', guerreiro: 'fighter', ladino: 'rogue',
   mago: 'wizard', monge: 'monk', paladino: 'paladin', patrulheiro: 'ranger',
 }
-
 const SCHOOL_ABBR = {
-  // inglês (SRD)
-  abjuration: 'Abj', conjuration: 'Con', divination: 'Div',
-  enchantment: 'Enc', evocation: 'Evo', illusion: 'Ilu',
-  necromancy: 'Nec', transmutation: 'Tra',
-  // português (PHB-PT)
-  abjuração: 'Abj', conjuração: 'Con', adivinhação: 'Adv',
-  encantamento: 'Enc', evocação: 'Evo', ilusão: 'Ilu',
-  necromancia: 'Nec', transmutação: 'Tra',
+  abjuração: 'Abj', conjuração: 'Con', adivinhação: 'Adv', encantamento: 'Enc',
+  evocação: 'Evo', ilusão: 'Ilu', necromancia: 'Nec', transmutação: 'Tra',
+  abjuration: 'Abj', conjuration: 'Con', divination: 'Div', enchantment: 'Enc',
+  evocation: 'Evo', illusion: 'Ilu', necromancy: 'Nec', transmutation: 'Tra',
 }
 
 function normalizeSpell(s) {
@@ -33,43 +24,42 @@ function normalizeSpell(s) {
     higher_level: Array.isArray(s.higher_level) ? s.higher_level.join(' ') : (s.higher_level || ''),
     casting_time: s.casting_time || s.castingTime || '',
     concentration: s.concentration || (typeof s.duration === 'string' && s.duration.toLowerCase().includes('concentra')),
+    classes: Array.isArray(s.classes) ? s.classes : [],
   }
 }
 
-export function Spells({ character, attributes, level, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onToggleSlot }) {
-  const [srdSpells, setSrdSpells] = useState([])
-  const [levelSlots, setLevelSlots] = useState(null)
-  const [searchOpen, setSearchOpen] = useState(false)
-  const [expandedSpell, setExpandedSpell] = useState(null)
+// Classes que PREPARAM magias (lista completa da classe) vs CONHECEM (número fixo)
+const PREPARE_CLASSES = new Set(['mago', 'clerigo', 'druida', 'paladino'])
 
-  const classIndex    = character.info?.class || ''
-  // Atributo de magia vem da classe (via classData) — armazenado no estado pelo handleClassChange
-  const classAbility  = classData?.spellcasting_ability
+export function Spells({ character, attributes, level, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onToggleSlot }) {
+  const [allSpells, setAllSpells] = useState([])
+  const [levelSlots, setLevelSlots] = useState(null)
+  const [levelData, setLevelData] = useState(null)
+  const [activeTab, setActiveTab] = useState(0)
+  const [search, setSearch] = useState('')
+  const [pickerOpen, setPickerOpen] = useState(false)
+  const [expandedId, setExpandedId] = useState(null)
+
+  const classIndex   = character.info?.class || ''
+  const classAbility = classData?.spellcasting_ability
     ? (SPELL_ABILITY_PT_TO_KEY[classData.spellcasting_ability] ?? null)
     : null
   const isSpellcaster = classAbility !== null
   const spellAbility  = character.spellcasting.ability ?? classAbility
+  const profBonus     = getProficiencyBonus(level)
+  const abilityScore  = spellAbility ? attributes[spellAbility] : 10
+  const spellSaveDC   = calculateSpellSaveDC(abilityScore, profBonus)
+  const spellAttack   = calculateSpellAttackBonus(abilityScore, profBonus)
 
-  const profBonus = getProficiencyBonus(level)
-  const abilityScore = spellAbility ? attributes[spellAbility] : 10
-  const spellSaveDC = calculateSpellSaveDC(abilityScore, profBonus)
-  const spellAttack = calculateSpellAttackBonus(abilityScore, profBonus)
-
-  // Carregar magias PHB-PT (primário) com fallback para SRD inglês
+  // Carregar magias PT
   useEffect(() => {
     fetch('/srd-data/phb-spells-pt.json')
       .then(r => r.json())
-      .then(data => setSrdSpells(data.map(normalizeSpell)))
-      .catch(() => {
-        // fallback para SRD em inglês
-        fetch('/srd-data/5e-SRD-Spells.json')
-          .then(r => r.json())
-          .then(data => setSrdSpells(data.map(normalizeSpell)))
-          .catch(() => {})
-      })
+      .then(data => setAllSpells(data.map(normalizeSpell)))
+      .catch(() => {})
   }, [])
 
-  // Load spell slots for this class+level from SRD (usa índice inglês para busca)
+  // Carregar slots e cantrips_known / spells_known
   const classIndexEn = PT_CLASS_TO_EN[classIndex] ?? classIndex
   useEffect(() => {
     if (!classIndexEn) return
@@ -77,57 +67,122 @@ export function Spells({ character, attributes, level, classData, onUpdateSpellc
       .then(r => r.json())
       .then(data => {
         const entry = data.find(l => l.class?.index === classIndexEn && l.level === level)
-        if (entry?.spellcasting) setLevelSlots(entry.spellcasting)
-        else setLevelSlots(null)
+        if (entry?.spellcasting) {
+          setLevelSlots(entry.spellcasting)
+          setLevelData(entry.spellcasting)
+        } else {
+          setLevelSlots(null)
+          setLevelData(null)
+        }
       })
       .catch(() => {})
   }, [classIndexEn, level])
 
-  const usedSlots = character.spellcasting.usedSlots || {}
-  const spells = character.spellcasting.spells || []
-  const cantrips = spells.filter(s => s.level === 0)
-  const knownSpells = spells.filter(s => s.level > 0)
-
-  // Spell slots available this level
-  const slotLevels = levelSlots
-    ? [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(l => (levelSlots[`spell_slots_level_${l}`] || 0) > 0)
+  const usedSlots   = character.spellcasting.usedSlots || {}
+  const mySpells    = character.spellcasting.spells || []
+  const myCantrips  = mySpells.filter(s => s.level === 0)
+  const myLeveled   = mySpells.filter(s => s.level > 0)
+  const slotLevels  = levelSlots
+    ? [1,2,3,4,5,6,7,8,9].filter(l => (levelSlots[`spell_slots_level_${l}`] || 0) > 0)
     : []
+
+  // Limites
+  const cantripsKnown = levelData?.cantrips_known ?? null
+  const spellsKnown   = levelData?.spells_known ?? null
+  const isPrepare     = PREPARE_CLASSES.has(classIndex)
+
+  // Magias disponíveis para esta classe (para o picker)
+  const classSpells = useMemo(() => {
+    if (!classIndex) return allSpells
+    return allSpells.filter(s => s.classes?.includes(classIndex))
+  }, [allSpells, classIndex])
+
+  // Tabs: 0 = Truques, 1-9 = níveis. Só mostrar tabs com magias disponíveis para a classe.
+  const availableLevels = useMemo(() => {
+    const lvls = new Set(classSpells.map(s => s.level))
+    return [0, ...slotLevels].filter(l => lvls.has(l))
+  }, [classSpells, slotLevels])
+
+  // Picker filtrado
+  const filteredPicker = useMemo(() => {
+    const base = classSpells.filter(s => s.level === activeTab)
+    if (!search.trim()) return base
+    const q = search.toLowerCase()
+    return base.filter(s =>
+      s.name.toLowerCase().includes(q) ||
+      (s.school || '').toLowerCase().includes(q) ||
+      (s.casting_time || '').toLowerCase().includes(q)
+    )
+  }, [classSpells, activeTab, search])
+
+  const mySpellIds = new Set(mySpells.map(s => s.index))
+
+  function addSpell(spell) {
+    if (mySpellIds.has(spell.index)) return
+    onAddSpell({
+      index: spell.index,
+      name: spell.name,
+      level: spell.level,
+      school: spell.school?.name || spell.school || '',
+      castingTime: spell.casting_time,
+      range: spell.range,
+      duration: spell.duration,
+      concentration: spell.concentration,
+      components: Array.isArray(spell.components) ? spell.components.join(', ') : (spell.components || ''),
+      desc: spell.desc,
+      higherLevel: spell.higher_level,
+      ritual: spell.ritual || false,
+      source: spell.source || 'PHB-PT',
+    })
+  }
 
   return (
     <div className="space-y-4">
-      {/* Spellcasting stats */}
+      {/* Stats de conjuração */}
       <div className="bg-gray-800 border border-gray-600 rounded-lg p-4">
         <h3 className="text-sm font-bold text-amber-400 uppercase tracking-widest mb-3">Conjuração</h3>
-
         <div className="grid grid-cols-3 gap-3 mb-4">
-          <div className="flex flex-col items-center bg-gray-900 rounded p-2">
-            <span className="text-xs text-gray-400 mb-1">CD de Magia</span>
-            <span className="text-xl font-bold text-white">{spellAbility ? spellSaveDC : '—'}</span>
-          </div>
-          <div className="flex flex-col items-center bg-gray-900 rounded p-2">
-            <span className="text-xs text-gray-400 mb-1">Ataque</span>
-            <span className="text-xl font-bold text-white">{spellAbility ? formatModifier(spellAttack) : '—'}</span>
-          </div>
-          <div className="flex flex-col items-center bg-gray-900 rounded p-2">
-            <span className="text-xs text-gray-400 mb-1">Atributo</span>
-            <span className="text-white font-bold text-xl leading-none mt-0.5">
-              {spellAbility ? KEY_TO_ABBR_PT[spellAbility] : '—'}
-            </span>
-            {classData?.spellcasting_ability && (
-              <span className="text-[10px] text-gray-600 mt-0.5 leading-none">{classData.spellcasting_ability}</span>
-            )}
-          </div>
+          {[
+            { label: 'CD de Magia', value: spellAbility ? spellSaveDC : '—' },
+            { label: 'Ataque', value: spellAbility ? formatModifier(spellAttack) : '—' },
+            { label: 'Atributo', value: spellAbility ? KEY_TO_ABBR_PT[spellAbility] : '—' },
+          ].map(({ label, value }) => (
+            <div key={label} className="flex flex-col items-center bg-gray-900 rounded p-2">
+              <span className="text-xs text-gray-400 mb-1">{label}</span>
+              <span className="text-xl font-bold text-white">{value}</span>
+            </div>
+          ))}
         </div>
 
-        {/* Slot tracker */}
-        {slotLevels.length > 0 ? (
+        {/* Contadores */}
+        {isSpellcaster && (
+          <div className="flex gap-4 text-xs text-gray-400 mb-3">
+            {cantripsKnown != null && (
+              <span>
+                Truques: <span className={myCantrips.length > cantripsKnown ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
+                  {myCantrips.length}/{cantripsKnown}
+                </span>
+              </span>
+            )}
+            {spellsKnown != null && !isPrepare && (
+              <span>
+                Magias conhecidas: <span className={myLeveled.length > spellsKnown ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
+                  {myLeveled.length}/{spellsKnown}
+                </span>
+              </span>
+            )}
+            {isPrepare && (
+              <span className="text-gray-600 italic">Prepara magias da lista de classe</span>
+            )}
+          </div>
+        )}
+
+        {/* Tracker de slots */}
+        {slotLevels.length > 0 && (
           <div>
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-gray-400 uppercase tracking-wide">Espaços de Magia</span>
-              <button
-                onClick={() => onUpdateSpellcasting('usedSlots', {})}
-                className="text-xs text-amber-600 hover:text-amber-400"
-              >
+              <button onClick={() => onUpdateSpellcasting('usedSlots', {})} className="text-xs text-amber-600 hover:text-amber-400">
                 Descanso Longo
               </button>
             </div>
@@ -145,11 +200,7 @@ export function Spells({ character, attributes, level, classData, onUpdateSpellc
                           <button
                             key={i}
                             onClick={() => onToggleSlot(sl, isUsed ? used - 1 : used + 1)}
-                            className={`w-5 h-5 rounded-full border-2 transition-colors ${
-                              isUsed
-                                ? 'bg-gray-700 border-gray-600'
-                                : 'bg-amber-400 border-amber-400'
-                            }`}
+                            className={`w-5 h-5 rounded-full border-2 transition-colors ${isUsed ? 'bg-gray-700 border-gray-600' : 'bg-amber-400 border-amber-400'}`}
                             title={isUsed ? 'Recuperar espaço' : 'Gastar espaço'}
                           />
                         )
@@ -161,134 +212,185 @@ export function Spells({ character, attributes, level, classData, onUpdateSpellc
               })}
             </div>
           </div>
-        ) : classIndex && !isSpellcaster ? (
-          <p className="text-xs text-gray-500">
-            {classData?.name ?? classIndex} não possui conjuração.
-          </p>
-        ) : !classIndex ? (
-          <p className="text-xs text-gray-500">Selecione uma classe na aba Ficha para ver os espaços.</p>
-        ) : null}
+        )}
+
+        {classIndex && !isSpellcaster && (
+          <p className="text-xs text-gray-500">{classData?.name ?? classIndex} não possui conjuração.</p>
+        )}
+        {!classIndex && (
+          <p className="text-xs text-gray-500">Selecione uma classe para ver espaços de magia.</p>
+        )}
       </div>
 
-      {/* Cantrips */}
-      <SpellGroup
-        title="Truques"
-        spells={cantrips}
-        expandedSpell={expandedSpell}
-        onExpand={setExpandedSpell}
-        onRemove={onRemoveSpell}
-      />
-
-      {/* Known spells */}
-      <SpellGroup
-        title="Magias Conhecidas"
-        spells={knownSpells}
-        expandedSpell={expandedSpell}
-        onExpand={setExpandedSpell}
-        onRemove={onRemoveSpell}
-      />
-
-      {/* Add spell button */}
-      <button
-        onClick={() => setSearchOpen(true)}
-        className="w-full py-2.5 rounded-lg border-2 border-dashed border-gray-600 hover:border-amber-600 text-gray-500 hover:text-amber-400 text-sm font-medium transition-colors"
-      >
-        + Adicionar magia do SRD
-      </button>
-
-      {/* SRD spell search modal */}
-      <SrdSearchModal
-        isOpen={searchOpen}
-        onClose={() => setSearchOpen(false)}
-        title="Buscar Magia (SRD)"
-        items={srdSpells}
-        onSelect={spell => onAddSpell({
-          index: spell.index,
-          name: spell.name,
-          level: spell.level,
-          school: spell.school?.name || spell.school || '',
-          castingTime: spell.casting_time,
-          range: spell.range,
-          duration: spell.duration,
-          concentration: spell.concentration,
-          components: Array.isArray(spell.components) ? spell.components.join(', ') : (spell.components || ''),
-          desc: spell.desc,
-          higherLevel: spell.higher_level,
-          ritual: spell.ritual || false,
-          source: spell.source || 'SRD',
-        })}
-        renderItem={spell => (
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm font-medium text-white">{spell.name}</span>
-              <span className="text-xs text-gray-500">
-                {spell.level === 0 ? 'Truque' : `Nível ${spell.level}`}
-              </span>
-              {spell.ritual && <span className="text-xs text-green-400">Ritual</span>}
-              {spell.concentration && <span className="text-xs text-blue-400">Conc.</span>}
-              {spell.source === 'PHB-PT' && (
-                <span className="text-xs text-amber-600">PHB</span>
-              )}
-            </div>
-            <div className="text-xs text-gray-400 mt-0.5">
-              {spell.school?.name || spell.school} · {spell.casting_time} · {spell.range}
+      {/* Magias da ficha agrupadas por nível */}
+      {[0, 1,2,3,4,5,6,7,8,9].map(lvl => {
+        const group = mySpells.filter(s => s.level === lvl)
+        if (group.length === 0) return null
+        const label = lvl === 0 ? 'Truques' : `Nível ${lvl}`
+        return (
+          <div key={lvl} className="bg-gray-800 border border-gray-600 rounded-lg p-4">
+            <h3 className="text-sm font-bold text-amber-400 uppercase tracking-widest mb-3">
+              {label}
+              <span className="ml-2 text-gray-500 font-normal normal-case text-xs">{group.length}</span>
+            </h3>
+            <div className="space-y-2">
+              {group.map(spell => (
+                <SpellRow
+                  key={spell.id}
+                  spell={spell}
+                  expanded={expandedId === spell.id}
+                  onExpand={() => setExpandedId(expandedId === spell.id ? null : spell.id)}
+                  onRemove={() => onRemoveSpell(spell.id)}
+                />
+              ))}
             </div>
           </div>
-        )}
-      />
+        )
+      })}
+
+      {/* Botão para abrir picker */}
+      {isSpellcaster && (
+        <button
+          onClick={() => setPickerOpen(!pickerOpen)}
+          className="w-full py-2.5 rounded-lg border-2 border-dashed border-gray-600 hover:border-amber-600 text-gray-500 hover:text-amber-400 text-sm font-medium transition-colors"
+        >
+          {pickerOpen ? '− Fechar catálogo' : '+ Adicionar magia'}
+        </button>
+      )}
+
+      {/* Picker integrado */}
+      {pickerOpen && isSpellcaster && (
+        <SpellPicker
+          tabs={availableLevels}
+          activeTab={activeTab}
+          onTabChange={t => { setActiveTab(t); setSearch('') }}
+          search={search}
+          onSearch={setSearch}
+          spells={filteredPicker}
+          mySpellIds={mySpellIds}
+          onAdd={addSpell}
+          classIndex={classIndex}
+          cantripsKnown={cantripsKnown}
+          spellsKnown={spellsKnown}
+          myCantripsCount={myCantrips.length}
+          myLeveledCount={myLeveled.length}
+          isPrepare={isPrepare}
+        />
+      )}
     </div>
   )
 }
 
-function SpellGroup({ title, spells, expandedSpell, onExpand, onRemove }) {
-  if (spells.length === 0) return null
+function SpellRow({ spell, expanded, onExpand, onRemove }) {
+  const schoolAbbr = SCHOOL_ABBR[(spell.school || '').toLowerCase()] || (spell.school || '').slice(0, 3)
+  return (
+    <div className="bg-gray-900 rounded-lg overflow-hidden">
+      <div className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-gray-800 transition-colors" onClick={onExpand}>
+        <span className="text-sm font-medium text-white flex-1">{spell.name}</span>
+        <div className="flex items-center gap-1.5 text-xs">
+          {spell.ritual && <span className="text-green-400 font-bold" title="Ritual">📿</span>}
+          {spell.concentration && <span className="text-blue-400 font-bold" title="Concentração">⊙</span>}
+          <span className="text-gray-500">{schoolAbbr}</span>
+          <span className="text-gray-600">{expanded ? '▲' : '▼'}</span>
+        </div>
+        <button onClick={e => { e.stopPropagation(); onRemove() }} className="text-red-500 hover:text-red-400 text-lg leading-none ml-1">×</button>
+      </div>
+      {expanded && (
+        <div className="px-3 pb-3 text-xs text-gray-300 space-y-1 border-t border-gray-700 pt-2">
+          <div className="flex flex-wrap gap-x-4 gap-y-1 text-gray-400 mb-2">
+            {spell.castingTime && <span>Tempo: <span className="text-gray-300">{spell.castingTime}</span></span>}
+            {spell.range && <span>Alcance: <span className="text-gray-300">{spell.range}</span></span>}
+            {spell.duration && <span>Duração: <span className="text-gray-300">{spell.duration}</span></span>}
+            {spell.components && <span>Comp.: <span className="text-gray-300">{spell.components}</span></span>}
+          </div>
+          {spell.desc && <p className="leading-relaxed">{spell.desc.slice(0, 400)}{spell.desc.length > 400 ? '…' : ''}</p>}
+          {spell.higherLevel && <p className="text-gray-400 italic mt-1">Em nível maior: {spell.higherLevel.slice(0, 200)}{spell.higherLevel.length > 200 ? '…' : ''}</p>}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function SpellPicker({ tabs, activeTab, onTabChange, search, onSearch, spells, mySpellIds, onAdd, classIndex, cantripsKnown, spellsKnown, myCantripsCount, myLeveledCount, isPrepare }) {
+  const atCantripLimit = cantripsKnown != null && myCantripsCount >= cantripsKnown && activeTab === 0
+  const atSpellLimit   = !isPrepare && spellsKnown != null && myLeveledCount >= spellsKnown && activeTab > 0
 
   return (
-    <div className="bg-gray-800 border border-gray-600 rounded-lg p-4">
-      <h3 className="text-sm font-bold text-amber-400 uppercase tracking-widest mb-3">
-        {title}
-        <span className="ml-2 text-gray-500 font-normal normal-case text-xs">
-          {spells.length} magia{spells.length !== 1 ? 's' : ''}
-        </span>
-      </h3>
-      <div className="space-y-2">
-        {spells.map(spell => (
-          <div key={spell.id} className="bg-gray-900 rounded-lg overflow-hidden">
+    <div className="bg-gray-800 border border-amber-700/40 rounded-lg overflow-hidden">
+      {/* Abas por nível */}
+      <div className="flex overflow-x-auto border-b border-gray-700 bg-gray-900">
+        {tabs.map(lvl => (
+          <button
+            key={lvl}
+            onClick={() => onTabChange(lvl)}
+            className={`flex-shrink-0 px-3 py-2 text-xs font-semibold transition-colors ${
+              activeTab === lvl
+                ? 'bg-amber-900/40 text-amber-300 border-b-2 border-amber-500'
+                : 'text-gray-500 hover:text-gray-300'
+            }`}
+          >
+            {lvl === 0 ? 'Truques' : `Nv ${lvl}`}
+          </button>
+        ))}
+      </div>
+
+      {/* Busca */}
+      <div className="p-3 border-b border-gray-700">
+        <input
+          type="text"
+          value={search}
+          onChange={e => onSearch(e.target.value)}
+          placeholder="Buscar magia..."
+          className="w-full bg-gray-900 border border-gray-700 rounded px-3 py-1.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-amber-600"
+        />
+        {(atCantripLimit || atSpellLimit) && (
+          <p className="text-xs text-amber-500 mt-1.5">
+            ⚠ Limite atingido para este nível ({activeTab === 0 ? `${myCantripsCount}/${cantripsKnown} truques` : `${myLeveledCount}/${spellsKnown} magias`})
+          </p>
+        )}
+      </div>
+
+      {/* Lista de magias */}
+      <div className="max-h-72 overflow-y-auto divide-y divide-gray-700/50">
+        {spells.length === 0 && (
+          <p className="text-xs text-gray-600 p-4 text-center">Nenhuma magia encontrada.</p>
+        )}
+        {spells.map(spell => {
+          const alreadyHas = mySpellIds.has(spell.index)
+          const blocked    = !alreadyHas && (atCantripLimit || atSpellLimit)
+          const schoolAbbr = SCHOOL_ABBR[(spell.school || '').toLowerCase()] || ''
+          return (
             <div
-              className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-gray-800 transition-colors"
-              onClick={() => onExpand(expandedSpell === spell.id ? null : spell.id)}
+              key={spell.index}
+              className={`flex items-start gap-2 px-3 py-2 transition-colors ${alreadyHas ? 'opacity-40' : blocked ? 'opacity-50' : 'hover:bg-gray-700/50'}`}
             >
-              <span className="text-sm font-medium text-white flex-1">{spell.name}</span>
-              <div className="flex items-center gap-1.5 text-xs text-gray-400">
-                {spell.school && (
-                  <span className="text-gray-500">{SCHOOL_ABBR[spell.school.toLowerCase()] || spell.school.slice(0, 3)}</span>
-                )}
-                {spell.concentration && <span className="text-blue-400">C</span>}
-                <span className="text-gray-600">{expandedSpell === spell.id ? '▲' : '▼'}</span>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="text-sm font-medium text-white">{spell.name}</span>
+                  {spell.ritual && <span className="text-green-400 text-xs" title="Ritual">📿</span>}
+                  {spell.concentration && <span className="text-blue-400 text-xs" title="Concentração">⊙</span>}
+                  <span className="text-xs text-gray-500">{schoolAbbr}</span>
+                </div>
+                <div className="text-xs text-gray-500 mt-0.5">
+                  {spell.casting_time} · {spell.range}
+                </div>
               </div>
               <button
-                onClick={e => { e.stopPropagation(); onRemove(spell.id) }}
-                className="text-red-500 hover:text-red-400 text-lg leading-none ml-1"
+                onClick={() => !alreadyHas && !blocked && onAdd(spell)}
+                disabled={alreadyHas || blocked}
+                className={`flex-shrink-0 text-xs px-2 py-1 rounded transition-colors ${
+                  alreadyHas
+                    ? 'text-gray-600 cursor-default'
+                    : blocked
+                    ? 'text-gray-600 cursor-not-allowed'
+                    : 'text-amber-400 hover:text-amber-300 hover:bg-amber-900/30'
+                }`}
               >
-                ×
+                {alreadyHas ? '✓' : '+'}
               </button>
             </div>
-            {expandedSpell === spell.id && (
-              <div className="px-3 pb-3 text-xs text-gray-300 space-y-1 border-t border-gray-700 pt-2">
-                <div className="flex flex-wrap gap-x-4 gap-y-1 text-gray-400 mb-2">
-                  {spell.castingTime && <span>Tempo: <span className="text-gray-300">{spell.castingTime}</span></span>}
-                  {spell.range && <span>Alcance: <span className="text-gray-300">{spell.range}</span></span>}
-                  {spell.duration && <span>Duração: <span className="text-gray-300">{spell.duration}</span></span>}
-                  {spell.components && <span>Comp.: <span className="text-gray-300">{spell.components}</span></span>}
-                </div>
-                {spell.desc && <p className="leading-relaxed">{spell.desc.slice(0, 300)}{spell.desc.length > 300 ? '…' : ''}</p>}
-                {spell.higherLevel && (
-                  <p className="text-gray-400 italic">Em nível maior: {spell.higherLevel.slice(0, 200)}{spell.higherLevel.length > 200 ? '…' : ''}</p>
-                )}
-              </div>
-            )}
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

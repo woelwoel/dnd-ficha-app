@@ -1,14 +1,40 @@
-// Passo 7 — Magias (apenas para conjuradores)
-import { SPELL_ABILITY_PT_TO_KEY, getProficiencyBonus, getModifier, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../../utils/calculations'
+// Passo 7 — Magias: seleção por aba de nível + busca + limites
+import { useState, useEffect, useMemo } from 'react'
+import { SPELL_ABILITY_PT_TO_KEY, getProficiencyBonus, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../../utils/calculations'
+import { generateId } from '../../../hooks/useCharacter'
 
 const KEY_TO_ABBR = { int: 'INT', wis: 'SAB', cha: 'CAR' }
 const KEY_TO_NAME = { int: 'Inteligência', wis: 'Sabedoria', cha: 'Carisma' }
+const PT_CLASS_TO_EN = {
+  barbaro: 'barbarian', bardo: 'bard', bruxo: 'warlock', clerigo: 'cleric',
+  druida: 'druid', feiticeiro: 'sorcerer', guerreiro: 'fighter', ladino: 'rogue',
+  mago: 'wizard', monge: 'monk', paladino: 'paladin', patrulheiro: 'ranger',
+}
+const SCHOOL_ABBR = {
+  abjuração: 'Abj', conjuração: 'Con', adivinhação: 'Adv', encantamento: 'Enc',
+  evocação: 'Evo', ilusão: 'Ilu', necromancia: 'Nec', transmutação: 'Tra',
+}
+const PREPARE_CLASSES = new Set(['mago', 'clerigo', 'druida', 'paladino'])
 
-export function Step7Spells({ draft, classData }) {
-  const spellAbilityKey = draft.spellcastingAbility
-    ?? SPELL_ABILITY_PT_TO_KEY[classData?.spellcasting_ability]
+function normalizeSpell(s) {
+  return {
+    ...s,
+    desc: Array.isArray(s.desc) ? s.desc.join(' ') : (s.desc || ''),
+    casting_time: s.casting_time || '',
+    concentration: s.concentration || (typeof s.duration === 'string' && s.duration.toLowerCase().includes('concentra')),
+    classes: Array.isArray(s.classes) ? s.classes : [],
+  }
+}
 
-  // Atributos finais (base + racial)
+export function Step7Spells({ draft, updateDraft, classData }) {
+  const [allSpells, setAllSpells] = useState([])
+  const [levelData, setLevelData] = useState(null)
+  const [activeTab, setActiveTab] = useState(0)
+  const [search, setSearch] = useState('')
+
+  const spellAbilityKey = draft.spellcastingAbility ?? SPELL_ABILITY_PT_TO_KEY[classData?.spellcasting_ability]
+
+  // Atributos finais com bônus raciais
   const finalAttrs = {}
   for (const key of ['str', 'dex', 'con', 'int', 'wis', 'cha']) {
     const base  = draft.baseAttributes[key] ?? 10
@@ -21,13 +47,93 @@ export function Step7Spells({ draft, classData }) {
   const spellSaveDC      = spellAbilityKey ? calculateSpellSaveDC(spellScore, profBonus) : null
   const spellAttackBonus = spellAbilityKey ? calculateSpellAttackBonus(spellScore, profBonus) : null
 
+  // Carregar magias PT
+  useEffect(() => {
+    fetch('/srd-data/phb-spells-pt.json')
+      .then(r => r.json())
+      .then(data => setAllSpells(data.map(normalizeSpell)))
+      .catch(() => {})
+  }, [])
+
+  // Carregar dados de nível (cantrips_known, spells_known, slots)
+  const classIndexEn = PT_CLASS_TO_EN[draft.class] ?? draft.class
+  useEffect(() => {
+    if (!classIndexEn) return
+    fetch('/srd-data/5e-SRD-Levels.json')
+      .then(r => r.json())
+      .then(data => {
+        const entry = data.find(l => l.class?.index === classIndexEn && l.level === draft.level)
+        setLevelData(entry?.spellcasting ?? null)
+      })
+      .catch(() => {})
+  }, [classIndexEn, draft.level])
+
+  const cantripsKnown = levelData?.cantrips_known ?? null
+  const spellsKnown   = levelData?.spells_known ?? null
+  const isPrepare     = PREPARE_CLASSES.has(draft.class)
+  const slotLevels    = levelData
+    ? [1,2,3,4,5,6,7,8,9].filter(l => (levelData[`spell_slots_level_${l}`] || 0) > 0)
+    : []
+
+  // Magias filtradas por classe
+  const classSpells = useMemo(() =>
+    allSpells.filter(s => s.classes?.includes(draft.class)),
+    [allSpells, draft.class]
+  )
+
+  // Abas disponíveis
+  const availableTabs = useMemo(() => {
+    const lvls = new Set(classSpells.map(s => s.level))
+    return [0, ...slotLevels].filter(l => lvls.has(l))
+  }, [classSpells, slotLevels])
+
+  // Magias escolhidas no draft
+  const chosenSpells = draft.spells ?? []
+  const chosenCantrips = chosenSpells.filter(s => s.level === 0)
+  const chosenLeveled  = chosenSpells.filter(s => s.level > 0)
+  const chosenIds = new Set(chosenSpells.map(s => s.index))
+
+  // Picker filtrado por tab + busca
+  const filteredSpells = useMemo(() => {
+    const base = classSpells.filter(s => s.level === activeTab)
+    if (!search.trim()) return base
+    const q = search.toLowerCase()
+    return base.filter(s => s.name.toLowerCase().includes(q) || (s.school || '').toLowerCase().includes(q))
+  }, [classSpells, activeTab, search])
+
+  const atCantripLimit = activeTab === 0 && cantripsKnown != null && chosenCantrips.length >= cantripsKnown
+  const atSpellLimit   = activeTab > 0 && !isPrepare && spellsKnown != null && chosenLeveled.length >= spellsKnown
+
+  function addSpell(spell) {
+    if (chosenIds.has(spell.index)) return
+    const newSpell = {
+      id: generateId(),
+      index: spell.index,
+      name: spell.name,
+      level: spell.level,
+      school: spell.school || '',
+      castingTime: spell.casting_time,
+      range: spell.range,
+      duration: spell.duration,
+      concentration: spell.concentration,
+      components: Array.isArray(spell.components) ? spell.components.join(', ') : (spell.components || ''),
+      desc: spell.desc || '',
+      higherLevel: spell.higher_level || '',
+      ritual: spell.ritual || false,
+      source: spell.source || 'PHB-PT',
+    }
+    updateDraft({ spells: [...chosenSpells, newSpell] })
+  }
+
+  function removeSpell(index) {
+    updateDraft({ spells: chosenSpells.filter(s => s.index !== index) })
+  }
+
   return (
     <div className="space-y-5">
       <div>
         <h2 className="text-lg font-bold text-amber-400 mb-1">Magias</h2>
-        <p className="text-sm text-gray-400">
-          Seu personagem é um conjurador. Veja os stats de magia calculados.
-        </p>
+        <p className="text-sm text-gray-400">Escolha seus truques e magias iniciais.</p>
       </div>
 
       {/* Stats de magia */}
@@ -41,55 +147,142 @@ export function Step7Spells({ draft, classData }) {
           <div className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-3 text-center">
             <p className="text-[11px] text-gray-500 mb-1">CD de Magia</p>
             <p className="text-lg font-bold text-amber-300">{spellSaveDC ?? '—'}</p>
-            <p className="text-[11px] text-gray-600">8 + prof + mod</p>
           </div>
           <div className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-3 text-center">
             <p className="text-[11px] text-gray-500 mb-1">Ataque de Magia</p>
             <p className="text-lg font-bold text-amber-300">{spellAttackBonus !== null ? formatModifier(spellAttackBonus) : '—'}</p>
-            <p className="text-[11px] text-gray-600">prof + mod</p>
           </div>
         </div>
       )}
 
-      {/* Slots */}
-      {classData && (
-        <SpellSlotsPreview classData={classData} level={draft.level} />
+      {/* Contadores de limites */}
+      <div className="flex flex-wrap gap-4 text-sm">
+        {cantripsKnown != null && (
+          <span className="text-gray-400">
+            Truques: <span className={chosenCantrips.length > cantripsKnown ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
+              {chosenCantrips.length}/{cantripsKnown}
+            </span>
+          </span>
+        )}
+        {!isPrepare && spellsKnown != null && (
+          <span className="text-gray-400">
+            Magias: <span className={chosenLeveled.length > spellsKnown ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
+              {chosenLeveled.length}/{spellsKnown}
+            </span>
+          </span>
+        )}
+        {isPrepare && <span className="text-gray-600 italic text-xs">Prepara magias — adicione o que preferir agora</span>}
+      </div>
+
+      {/* Magias escolhidas */}
+      {chosenSpells.length > 0 && (
+        <div className="space-y-1">
+          <p className="text-xs text-gray-500 uppercase tracking-wide">Selecionadas</p>
+          <div className="flex flex-wrap gap-2">
+            {chosenSpells.map(spell => (
+              <div key={spell.index} className="flex items-center gap-1 bg-gray-800 border border-gray-700 rounded-full px-3 py-1 text-xs">
+                <span className="text-gray-200">{spell.name}</span>
+                {spell.level === 0 && <span className="text-gray-600">·T</span>}
+                {spell.concentration && <span className="text-blue-400 ml-0.5">⊙</span>}
+                {spell.ritual && <span className="text-green-400 ml-0.5">📿</span>}
+                <button onClick={() => removeSpell(spell.index)} className="ml-1 text-gray-600 hover:text-red-400 transition-colors">×</button>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
-      {/* Aviso sobre configuração completa */}
-      <div className="bg-blue-900/20 border border-blue-700/40 rounded-lg p-4 text-sm text-blue-300">
-        <p className="font-semibold mb-1">Configuração completa na ficha</p>
-        <p className="text-blue-400 text-xs leading-relaxed">
-          Após criar o personagem, use a aba <strong>Magias</strong> para adicionar truques,
-          magias conhecidas e gerenciar slots durante o jogo.
-        </p>
-      </div>
-    </div>
-  )
-}
-
-function SpellSlotsPreview({ classData, level }) {
-  // Tenta ler slots do classData (pre-calculados) para o nível atual
-  const progression = classData?.spell_slot_progression
-  if (!progression) return null
-
-  const slots = progression[level] ?? progression[String(level)]
-  if (!slots) return null
-
-  const slotEntries = Object.entries(slots).filter(([, v]) => v > 0)
-  if (slotEntries.length === 0) return null
-
-  return (
-    <div>
-      <p className="text-xs text-gray-400 mb-2">Espaços de magia no nível {level}:</p>
-      <div className="flex flex-wrap gap-2">
-        {slotEntries.map(([lvl, count]) => (
-          <div key={lvl} className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-xs text-center">
-            <span className="text-gray-400">Nível {lvl}: </span>
-            <span className="text-amber-300 font-bold">{count}</span>
+      {/* Picker: abas por nível + busca */}
+      {availableTabs.length > 0 && (
+        <div className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
+          {/* Abas */}
+          <div className="flex overflow-x-auto border-b border-gray-700 bg-gray-900">
+            {availableTabs.map(lvl => (
+              <button
+                key={lvl}
+                onClick={() => { setActiveTab(lvl); setSearch('') }}
+                className={`flex-shrink-0 px-3 py-2 text-xs font-semibold transition-colors ${
+                  activeTab === lvl
+                    ? 'bg-amber-900/40 text-amber-300 border-b-2 border-amber-500'
+                    : 'text-gray-500 hover:text-gray-300'
+                }`}
+              >
+                {lvl === 0 ? 'Truques' : `Nv ${lvl}`}
+              </button>
+            ))}
           </div>
-        ))}
-      </div>
+
+          {/* Busca */}
+          <div className="p-3 border-b border-gray-700">
+            <input
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Buscar magia..."
+              className="w-full bg-gray-900 border border-gray-700 rounded px-3 py-1.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-amber-600"
+            />
+            {(atCantripLimit || atSpellLimit) && (
+              <p className="text-xs text-amber-500 mt-1.5">
+                ⚠ Limite de {activeTab === 0 ? 'truques' : 'magias'} atingido
+              </p>
+            )}
+          </div>
+
+          {/* Lista */}
+          <div className="max-h-60 overflow-y-auto divide-y divide-gray-700/50">
+            {filteredSpells.length === 0 && (
+              <p className="text-xs text-gray-600 p-4 text-center">Nenhuma magia encontrada.</p>
+            )}
+            {filteredSpells.map(spell => {
+              const chosen  = chosenIds.has(spell.index)
+              const blocked = !chosen && (atCantripLimit || atSpellLimit)
+              const school  = SCHOOL_ABBR[(spell.school || '').toLowerCase()] || ''
+              return (
+                <div
+                  key={spell.index}
+                  className={`flex items-center gap-2 px-3 py-2 transition-colors ${chosen ? 'opacity-40' : blocked ? 'opacity-50' : 'hover:bg-gray-700/50'}`}
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-sm font-medium text-white">{spell.name}</span>
+                      {spell.ritual && <span className="text-green-400 text-xs">📿</span>}
+                      {spell.concentration && <span className="text-blue-400 text-xs">⊙</span>}
+                      <span className="text-xs text-gray-500">{school}</span>
+                    </div>
+                    <p className="text-xs text-gray-600 mt-0.5">{spell.casting_time} · {spell.range}</p>
+                  </div>
+                  <button
+                    onClick={() => !chosen && !blocked && addSpell(spell)}
+                    disabled={chosen || blocked}
+                    className={`flex-shrink-0 text-xs px-2 py-1 rounded transition-colors ${
+                      chosen  ? 'text-gray-600 cursor-default' :
+                      blocked ? 'text-gray-600 cursor-not-allowed' :
+                                'text-amber-400 hover:text-amber-300 hover:bg-amber-900/30'
+                    }`}
+                  >
+                    {chosen ? '✓' : '+'}
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Slots de preview */}
+      {slotLevels.length > 0 && levelData && (
+        <div>
+          <p className="text-xs text-gray-500 mb-2">Espaços de magia no nível {draft.level}:</p>
+          <div className="flex flex-wrap gap-2">
+            {slotLevels.map(lvl => (
+              <div key={lvl} className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-xs text-center">
+                <span className="text-gray-400">Nível {lvl}: </span>
+                <span className="text-amber-300 font-bold">{levelData[`spell_slots_level_${lvl}`]}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
