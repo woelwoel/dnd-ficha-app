@@ -154,3 +154,12 @@ export function parseBackgroundEquipment(equipmentStr) {
   }
   return { items, gold }
 }
+
+
+// Extrai quantos idiomas extras o antecedente concede ("Dois à sua escolha" → 2)
+export function parseBackgroundLanguageCount(langStr) {
+  if (!langStr) return 0
+  if (/dois|two|\b2\b/i.test(langStr)) return 2
+  if (/uma?|one|\b1\b/i.test(langStr)) return 1
+  return 0
+}

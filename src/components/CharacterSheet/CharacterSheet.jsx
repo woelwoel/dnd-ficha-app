@@ -490,7 +490,6 @@ export function CharacterSheet({ characterId, onBack }) {
               attributes={character.attributes}
               proficiencies={character.proficiencies}
               level={character.info.level}
-              onToggle={toggleSaveProficiency}
               classData={classData}
             />
           </section>

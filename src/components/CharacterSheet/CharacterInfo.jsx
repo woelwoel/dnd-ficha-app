@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { DetailsModal } from '../DetailsModal'
 import { FormFieldError } from '../FormFieldError'
 import { TopicList, FullDescriptionToggle } from '../TopicList'
-import { ABBR_TO_KEY, ALIGNMENTS, DND_LANGUAGES, RACE_LANGUAGES } from '../../utils/calculations'
+import { ABBR_TO_KEY, ALIGNMENTS, DND_LANGUAGES, RACE_LANGUAGES, parseBackgroundLanguageCount } from '../../utils/calculations'
 
 /* ── Modal: Raça ── */
 function RaceModalContent({ race }) {
@@ -207,20 +207,34 @@ function TableSection({ title, items }) {
 }
 
 /* ── Seletor de Idiomas ── */
-function LanguageSelector({ raceIndex, backgroundLanguages, selectedLanguages, onToggle }) {
+function LanguageSelector({ raceIndex, backgroundLanguages, selectedLanguages, onToggle, maxCount }) {
   const [showAll, setShowAll] = useState(false)
-  const raceLangs = RACE_LANGUAGES[raceIndex] ?? []
+  const raceLangs  = RACE_LANGUAGES[raceIndex] ?? []
+  const atLimit    = maxCount > 0 && selectedLanguages.length >= maxCount
+  const hasSlots   = maxCount > 0
 
   return (
     <div className="col-span-2 sm:col-span-3 bg-gray-800 border border-gray-600 rounded-lg p-3 space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">Idiomas</span>
-        <button
-          onClick={() => setShowAll(v => !v)}
-          className="text-xs text-gray-400 hover:text-amber-400"
-        >
-          {showAll ? 'Recolher' : 'Selecionar idiomas'}
-        </button>
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">Idiomas</span>
+          {hasSlots && (
+            <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold ${
+              atLimit ? 'bg-amber-900/40 text-amber-400 border border-amber-700' : 'bg-gray-700 text-gray-400'
+            }`}>
+              {selectedLanguages.length}/{maxCount} extras
+            </span>
+          )}
+        </div>
+        {hasSlots && (
+          <button
+            onClick={() => setShowAll(v => !v)}
+            disabled={atLimit && !showAll}
+            className="text-xs text-gray-400 hover:text-amber-400 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {showAll ? 'Recolher' : atLimit ? 'Limite atingido' : 'Selecionar idiomas'}
+          </button>
+        )}
       </div>
 
       {/* Idiomas fixos da raça */}
@@ -234,10 +248,11 @@ function LanguageSelector({ raceIndex, backgroundLanguages, selectedLanguages, o
         </div>
       )}
 
-      {/* Nota de idiomas do antecedente */}
+      {/* Nota do antecedente */}
       {backgroundLanguages && (
         <p className="text-xs text-gray-400">
           <span className="text-amber-500">Antecedente:</span> {backgroundLanguages}
+          {!hasSlots && <span className="text-gray-600 ml-1">(sem seleção livre)</span>}
         </p>
       )}
 
@@ -257,18 +272,22 @@ function LanguageSelector({ raceIndex, backgroundLanguages, selectedLanguages, o
         </div>
       )}
 
-      {/* Painel de seleção */}
-      {showAll && (
+      {/* Painel de seleção — só aparece se houver slots e o usuário abrir */}
+      {hasSlots && showAll && (
         <div className="flex flex-wrap gap-1 pt-1 border-t border-gray-700">
           {DND_LANGUAGES.filter(l => !raceLangs.includes(l)).map(lang => {
-            const selected = selectedLanguages.includes(lang)
+            const selected  = selectedLanguages.includes(lang)
+            const blocked   = !selected && atLimit
             return (
               <button
                 key={lang}
-                onClick={() => onToggle(lang)}
+                onClick={() => !blocked && onToggle(lang)}
+                disabled={blocked}
                 className={`text-xs px-2 py-0.5 rounded-full border transition-colors ${
                   selected
                     ? 'bg-amber-800 border-amber-600 text-amber-200'
+                    : blocked
+                    ? 'bg-gray-800 border-gray-700 text-gray-600 cursor-not-allowed opacity-50'
                     : 'bg-gray-700 border-gray-600 text-gray-300 hover:border-amber-500 hover:text-amber-300'
                 }`}
               >
@@ -277,6 +296,11 @@ function LanguageSelector({ raceIndex, backgroundLanguages, selectedLanguages, o
             )
           })}
         </div>
+      )}
+
+      {/* Mensagem quando antecedente não concede idiomas selecionáveis */}
+      {!hasSlots && !backgroundLanguages && raceLangs.length === 0 && (
+        <p className="text-xs text-gray-600 italic">Selecione raça e antecedente para ver os idiomas.</p>
       )}
     </div>
   )
@@ -484,6 +508,7 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
           backgroundLanguages={selectedBg?.languages ?? null}
           selectedLanguages={info.languages ?? []}
           onToggle={onToggleLanguage}
+          maxCount={parseBackgroundLanguageCount(selectedBg?.languages)}
         />
       )}
 
