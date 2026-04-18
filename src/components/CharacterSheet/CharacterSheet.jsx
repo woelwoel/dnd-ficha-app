@@ -96,10 +96,10 @@ export function CharacterSheet({ characterId, onBack }) {
   }, [character])
 
   // Aplica subida de nível (primária ou multiclasse) atomicamente
-  function handleApplyLevelUp({ newLevel, hpIncrease, attrBoosts, multiclassIndex }) {
+  function handleApplyLevelUp({ newLevel, hpIncrease, attrBoosts, multiclassIndex, newChoices, bonusSpells }) {
     setCharacter(prev => {
       const newAttrs = { ...prev.attributes }
-      for (const [key, boost] of Object.entries(attrBoosts)) {
+      for (const [key, boost] of Object.entries(attrBoosts ?? {})) {
         if (boost) newAttrs[key] = Math.min(20, newAttrs[key] + boost)
       }
       let newInfo = prev.info
@@ -110,6 +110,20 @@ export function CharacterSheet({ characterId, onBack }) {
         mcs[multiclassIndex] = { ...mcs[multiclassIndex], level: newLevel }
         newInfo = { ...prev.info, multiclasses: mcs }
       }
+      // Aplica choices escolhidas no level-up
+      if (newChoices && Object.keys(newChoices).length > 0) {
+        newInfo = { ...newInfo, chosenFeatures: { ...(newInfo.chosenFeatures ?? {}), ...newChoices } }
+      }
+      // Aplica magias bônus (cantrips do Pacto do Tomo, etc.)
+      let spells = prev.spellcasting?.spells ?? []
+      if (bonusSpells?.length) {
+        const existingIdx = new Set(spells.map(s => s.index))
+        spells = [...spells, ...bonusSpells.filter(s => !existingIdx.has(s.index))]
+      }
+      // Pacto da Corrente: add find-familiar
+      if (newChoices?.pact_boon === 'corrente' && !spells.find(s => s.index === 'find-familiar')) {
+        spells = [...spells, { index: 'find-familiar', name: 'Achar Familiar', level: 1, school: 'Conjuração', ritual: true, concentration: false, desc: 'Você evoca um espírito familiar que assume a forma de um animal.' }]
+      }
       return {
         ...prev,
         info: newInfo,
@@ -119,6 +133,7 @@ export function CharacterSheet({ characterId, onBack }) {
           maxHp:     prev.combat.maxHp + hpIncrease,
           currentHp: prev.combat.currentHp + hpIncrease,
         },
+        spellcasting: { ...prev.spellcasting, spells },
         meta: { ...prev.meta, updatedAt: new Date().toISOString() },
       }
     })
@@ -583,6 +598,7 @@ export function CharacterSheet({ characterId, onBack }) {
           onAddMulticlass={handleAddMulticlass}
           onRemoveMulticlass={handleRemoveMulticlass}
           onChosenFeaturesChange={handleChosenFeaturesChange}
+          onNavigateToSpells={() => setActiveTab('magias')}
         />
       )}
     </div>

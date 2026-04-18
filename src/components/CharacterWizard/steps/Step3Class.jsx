@@ -13,7 +13,8 @@ function rollGoldFormula(formula) {
 }
 
 export function Step3Class({ draft, updateDraft, classes, classChoices = {} }) {
-  const [modal, setModal] = useState(false)
+  const [modal,     setModal]     = useState(false)
+  const [infoModal, setInfoModal] = useState(null)   // { name, desc, grants }
   const selectedClass = classes.find(c => c.index === draft.class)
   const level1Choices = (classChoices[draft.class]?.choices ?? []).filter(c => c.level === 1)
 
@@ -98,48 +99,70 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {} }) {
         <div className="space-y-4">
           {level1Choices.map(choice => {
             const selected = draft.chosenFeatures?.[choice.id] ?? ''
-            const selectedOpt = choice.options.find(o => o.value === selected)
             return (
               <div key={choice.id} className="bg-gray-800 border border-amber-800/40 rounded-xl p-4 space-y-3">
                 <div>
                   <p className="text-xs text-amber-500 font-semibold uppercase tracking-widest mb-0.5">{choice.featureName}</p>
                   <p className="text-sm text-gray-300">{choice.prompt} <span className="text-red-400">*</span></p>
                 </div>
-                <div className="grid gap-2">
+                <div className="flex flex-col gap-1.5">
                   {choice.options.map(opt => (
-                    <button
-                      key={opt.value}
-                      type="button"
-                      onClick={() => handleFeatureChoice(choice.id, opt.value)}
-                      className={`text-left p-3 rounded-lg border transition-colors ${
-                        selected === opt.value
-                          ? 'border-amber-500 bg-amber-900/30 text-amber-200'
-                          : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
-                      }`}
-                    >
-                      <p className="font-semibold text-sm">{opt.name}</p>
-                      <p className="text-xs text-gray-400 mt-0.5 leading-relaxed line-clamp-2">{opt.desc}</p>
-                      {opt.grants?.bonusCantrips > 0 && (
-                        <span className="inline-block mt-1 text-[10px] bg-blue-900/40 border border-blue-700/50 text-blue-300 px-2 py-0.5 rounded-full">
-                          +{opt.grants.bonusCantrips} cantrips bônus
-                        </span>
-                      )}
-                      {opt.grants?.spells?.length > 0 && (
-                        <span className="inline-block mt-1 text-[10px] bg-green-900/40 border border-green-700/50 text-green-300 px-2 py-0.5 rounded-full">
-                          Concede: {opt.grants.spells.join(', ')}
-                        </span>
-                      )}
-                    </button>
+                    <div key={opt.value} className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleFeatureChoice(choice.id, opt.value)}
+                        className={`flex-1 text-left px-3 py-2 rounded-lg border transition-colors flex items-center gap-2 ${
+                          selected === opt.value
+                            ? 'border-amber-500 bg-amber-900/30 text-amber-200'
+                            : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
+                        }`}
+                      >
+                        <span className={`w-3.5 h-3.5 rounded-full border-2 shrink-0 ${selected === opt.value ? 'border-amber-400 bg-amber-500' : 'border-gray-600'}`} />
+                        <span className="font-semibold text-sm">{opt.name}</span>
+                        {opt.grants?.bonusCantrips > 0 && (
+                          <span className="text-[10px] bg-blue-900/40 border border-blue-700/50 text-blue-300 px-1.5 py-0.5 rounded-full ml-auto shrink-0">
+                            +{opt.grants.bonusCantrips} truques
+                          </span>
+                        )}
+                        {opt.grants?.spells?.length > 0 && (
+                          <span className="text-[10px] bg-green-900/40 border border-green-700/50 text-green-300 px-1.5 py-0.5 rounded-full ml-auto shrink-0">
+                            +magia
+                          </span>
+                        )}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setInfoModal(opt)}
+                        className="w-7 h-7 rounded-full bg-gray-700 hover:bg-amber-800 text-amber-400 text-xs font-bold shrink-0 transition-colors"
+                        title="Ver descrição"
+                      >ℹ</button>
+                    </div>
                   ))}
                 </div>
-                {selectedOpt && (
-                  <p className="text-xs text-gray-400 italic leading-relaxed">{selectedOpt.desc}</p>
-                )}
               </div>
             )
           })}
         </div>
       )}
+
+      {/* Modal de descrição da opção */}
+      <DetailsModal isOpen={!!infoModal} onClose={() => setInfoModal(null)} title={infoModal?.name ?? ''}>
+        {infoModal && (
+          <div className="space-y-3">
+            <p className="text-sm text-gray-300 leading-relaxed">{infoModal.desc}</p>
+            {infoModal.grants?.bonusCantrips > 0 && (
+              <p className="text-xs bg-blue-900/30 border border-blue-700/40 text-blue-300 px-3 py-2 rounded-lg">
+                Concede: +{infoModal.grants.bonusCantrips} truques à sua escolha de qualquer lista de magias.
+              </p>
+            )}
+            {infoModal.grants?.spells?.length > 0 && (
+              <p className="text-xs bg-green-900/30 border border-green-700/40 text-green-300 px-3 py-2 rounded-lg">
+                Concede automaticamente: {infoModal.grants.spells.join(', ')}
+              </p>
+            )}
+          </div>
+        )}
+      </DetailsModal>
 
       {/* Cards de stats da classe */}
       {selectedClass && (

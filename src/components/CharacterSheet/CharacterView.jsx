@@ -125,7 +125,7 @@ function Coins({ currency }) {
    ════════════════════════════════════════════════════════════ */
 export function CharacterView({
   character, races, classes, backgrounds,
-  classData, onApplyLevelUp, onLevelChange, onAddMulticlass, onRemoveMulticlass, onChosenFeaturesChange,
+  classData, onApplyLevelUp, onLevelChange, onAddMulticlass, onRemoveMulticlass, onChosenFeaturesChange, onNavigateToSpells,
 }) {
   const [subTab, setSubTab] = useState('ficha')
   const [classChoices, setClassChoices] = useState({})
@@ -199,6 +199,7 @@ export function CharacterView({
           onAddMulticlass={onAddMulticlass}
           onRemoveMulticlass={onRemoveMulticlass}
           onChosenFeaturesChange={onChosenFeaturesChange}
+          onNavigateToSpells={onNavigateToSpells}
         />
       )}
 
@@ -247,7 +248,9 @@ export function CharacterView({
             <InfoField label="Experiência" value={info.xp?.toLocaleString('pt-BR')} />
             <div className={`flex flex-col items-center justify-center border-2 ${P.border} rounded px-2 ${P.header} shrink-0`}>
               <span className="text-[8px] font-black uppercase">Nível</span>
-              <span className="text-xl font-black leading-none">{info.level}</span>
+              <span className="text-xl font-black leading-none">
+                {info.level + (info.multiclasses ?? []).reduce((s, m) => s + (m.level ?? 0), 0)}
+              </span>
             </div>
           </div>
         </div>

@@ -229,12 +229,76 @@ function ASIPicker({ attributes, onBoostsChange }) {
   )
 }
 
+/* ── Picker de cantrips bônus (Pacto do Tomo, etc.) ─────────────────── */
+function CantripsGrantPicker({ needed, chosen, onChosenChange }) {
+  const [allSpells, setAllSpells] = useState([])
+  const [search, setSearch] = useState('')
+
+  useEffect(() => {
+    fetch('/srd-data/phb-spells-pt.json')
+      .then(r => r.json())
+      .then(data => setAllSpells((data ?? []).filter(s => s.level === 0)))
+      .catch(() => {})
+  }, [])
+
+  const filtered = allSpells.filter(s =>
+    s.name?.toLowerCase().includes(search.toLowerCase())
+  )
+
+  return (
+    <div className="bg-gray-900 border border-blue-800/50 rounded-lg p-3 space-y-2">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-blue-300">Escolha {needed} truque{needed > 1 ? 's' : ''} de qualquer lista</p>
+        <span className="text-xs text-gray-500">{chosen.length}/{needed}</span>
+      </div>
+      <input
+        type="text"
+        placeholder="Pesquisar truques..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        className="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-blue-500"
+      />
+      <div className="max-h-44 overflow-y-auto space-y-1 pr-1">
+        {filtered.map(spell => {
+          const isChosen = !!chosen.find(c => c.index === spell.index)
+          const disabled = !isChosen && chosen.length >= needed
+          return (
+            <button
+              key={spell.index}
+              type="button"
+              disabled={disabled}
+              onClick={() => {
+                if (isChosen) onChosenChange(chosen.filter(c => c.index !== spell.index))
+                else onChosenChange([...chosen, { index: spell.index, name: spell.name, level: 0, school: spell.school ?? '', desc: spell.desc ?? '' }])
+              }}
+              className={`w-full text-left flex items-center gap-2 px-2.5 py-1.5 rounded text-xs transition-colors ${
+                isChosen ? 'bg-blue-900/40 border border-blue-600/50 text-blue-200'
+                : disabled ? 'opacity-30 cursor-not-allowed text-gray-500 bg-gray-800'
+                : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+              }`}
+            >
+              <span className={`w-3 h-3 rounded-full border-2 shrink-0 ${isChosen ? 'border-blue-400 bg-blue-500' : 'border-gray-600'}`} />
+              <span className="flex-1">{spell.name}</span>
+              {spell.school && <span className="text-gray-500 text-[10px]">{spell.school}</span>}
+            </button>
+          )
+        })}
+        {filtered.length === 0 && (
+          <p className="text-xs text-gray-600 italic text-center py-2">Nenhum truque encontrado.</p>
+        )}
+      </div>
+    </div>
+  )
+}
+
 /* ── Wizard de Level Up ─────────────────────────────────────────────── */
 function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConfirm, onCancel, levelChoices, currentChosenFeatures }) {
-  const [hpGain,      setHpGain]      = useState(null)
-  const [boosts,      setBoosts]      = useState({})
-  const [newChoices,  setNewChoices]  = useState({})
-  const [featModal,   setFeatModal]   = useState(null)
+  const [hpGain,              setHpGain]              = useState(null)
+  const [boosts,              setBoosts]              = useState({})
+  const [newChoices,          setNewChoices]          = useState({})
+  const [bonusCantripsChosen, setBonusCantripsChosen] = useState([])
+  const [featModal,           setFeatModal]           = useState(null)
+  const [infoModal,           setInfoModal]           = useState(null)
 
   const newFeatures = nextEntry?.features?.filter(f => !f.name?.includes('Aumento') && !f.name?.includes('Melhoria')) ?? []
   const hasASI      = isASIEntry(nextEntry)
@@ -242,7 +306,15 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
   const choicesForLevel = (levelChoices ?? []).filter(c => c.level === nextLevel)
   const choicesReady = choicesForLevel.every(c => !!(newChoices[c.id] ?? currentChosenFeatures?.[c.id]))
 
-  const canCommit = hpGain != null && asiReady && choicesReady
+  // Soma cantrips bônus necessários de todas as choices selecionadas neste nível
+  const bonusCantripsNeeded = choicesForLevel.reduce((sum, choice) => {
+    const val = newChoices[choice.id] ?? currentChosenFeatures?.[choice.id] ?? ''
+    const opt = choice.options.find(o => o.value === val)
+    return sum + (opt?.grants?.bonusCantrips ?? 0)
+  }, 0)
+  const bonusCantripsReady = bonusCantripsChosen.length >= bonusCantripsNeeded
+
+  const canCommit = hpGain != null && asiReady && choicesReady && bonusCantripsReady
 
   const newProfBonus = nextEntry?.proficiency_bonus
   const oldProfBonus = Math.ceil((nextLevel - 1) / 4) + 1
@@ -274,36 +346,70 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
           <div key={choice.id} className="space-y-2">
             <h4 className="text-sm font-bold text-amber-300">🎭 {choice.featureName} <span className="text-red-400 font-normal text-xs">*</span></h4>
             <p className="text-xs text-gray-400">{choice.prompt}</p>
-            <div className="grid gap-2">
+            <div className="flex flex-col gap-1.5">
               {choice.options.map(opt => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onClick={() => setNewChoices(prev => ({ ...prev, [choice.id]: opt.value }))}
-                  className={`text-left p-3 rounded-lg border transition-colors ${
-                    currentVal === opt.value
-                      ? 'border-amber-500 bg-amber-900/30 text-amber-200'
-                      : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
-                  }`}
-                >
-                  <p className="font-semibold text-sm">{opt.name}</p>
-                  <p className="text-xs text-gray-400 mt-0.5 leading-relaxed line-clamp-2">{opt.desc}</p>
-                  {opt.grants?.bonusCantrips > 0 && (
-                    <span className="inline-block mt-1 text-[10px] bg-blue-900/40 border border-blue-700/50 text-blue-300 px-2 py-0.5 rounded-full">
-                      +{opt.grants.bonusCantrips} cantrips bônus
-                    </span>
-                  )}
-                  {opt.grants?.spells?.length > 0 && (
-                    <span className="inline-block mt-1 text-[10px] bg-green-900/40 border border-green-700/50 text-green-300 px-2 py-0.5 rounded-full">
-                      Concede: {opt.grants.spells.join(', ')}
-                    </span>
-                  )}
-                </button>
+                <div key={opt.value} className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => { setNewChoices(prev => ({ ...prev, [choice.id]: opt.value })); setBonusCantripsChosen([]) }}
+                    className={`flex-1 text-left px-3 py-2 rounded-lg border transition-colors flex items-center gap-2 ${
+                      currentVal === opt.value
+                        ? 'border-amber-500 bg-amber-900/30 text-amber-200'
+                        : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
+                    }`}
+                  >
+                    <span className={`w-3.5 h-3.5 rounded-full border-2 shrink-0 ${currentVal === opt.value ? 'border-amber-400 bg-amber-500' : 'border-gray-600'}`} />
+                    <span className="font-semibold text-sm">{opt.name}</span>
+                    {opt.grants?.bonusCantrips > 0 && (
+                      <span className="text-[10px] bg-blue-900/40 border border-blue-700/50 text-blue-300 px-1.5 py-0.5 rounded-full ml-auto shrink-0">
+                        +{opt.grants.bonusCantrips} truques
+                      </span>
+                    )}
+                    {opt.grants?.spells?.length > 0 && (
+                      <span className="text-[10px] bg-green-900/40 border border-green-700/50 text-green-300 px-1.5 py-0.5 rounded-full ml-auto shrink-0">
+                        +magia
+                      </span>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setInfoModal(opt)}
+                    className="w-7 h-7 rounded-full bg-gray-700 hover:bg-amber-800 text-amber-400 text-xs font-bold shrink-0"
+                    title="Ver descrição"
+                  >ℹ</button>
+                </div>
               ))}
             </div>
+            {/* Picker de cantrips bônus */}
+            {bonusCantripsNeeded > 0 && currentVal && (
+              <CantripsGrantPicker
+                needed={bonusCantripsNeeded}
+                chosen={bonusCantripsChosen}
+                onChosenChange={setBonusCantripsChosen}
+              />
+            )}
           </div>
         )
       })}
+
+      {/* Modal de descrição da opção */}
+      <DetailsModal isOpen={!!infoModal} onClose={() => setInfoModal(null)} title={infoModal?.name ?? ''}>
+        {infoModal && (
+          <div className="space-y-3">
+            <p className="text-sm text-gray-300 leading-relaxed">{infoModal.desc}</p>
+            {infoModal.grants?.bonusCantrips > 0 && (
+              <p className="text-xs bg-blue-900/30 border border-blue-700/40 text-blue-300 px-3 py-2 rounded-lg">
+                Concede: +{infoModal.grants.bonusCantrips} truques à sua escolha de qualquer lista de magias.
+              </p>
+            )}
+            {infoModal.grants?.spells?.length > 0 && (
+              <p className="text-xs bg-green-900/30 border border-green-700/40 text-green-300 px-3 py-2 rounded-lg">
+                Concede automaticamente: {infoModal.grants.spells.join(', ')}
+              </p>
+            )}
+          </div>
+        )}
+      </DetailsModal>
 
       {/* Novas Características */}
       {newFeatures.length > 0 && (
@@ -353,7 +459,7 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
         </button>
         <button
           disabled={!canCommit}
-          onClick={() => canCommit && onConfirm({ newLevel: nextLevel, hpIncrease: hpGain, attrBoosts: boosts, newChoices })}
+          onClick={() => canCommit && onConfirm({ newLevel: nextLevel, hpIncrease: hpGain, attrBoosts: boosts, newChoices, bonusSpells: bonusCantripsChosen })}
           className={`flex-1 py-2 rounded text-sm font-bold transition-all ${
             canCommit
               ? 'bg-amber-600 hover:bg-amber-500 text-white'
@@ -361,7 +467,10 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
           }`}
         >
           {!canCommit
-            ? (!hpGain ? 'Escolha o ganho de PV' : !choicesReady ? 'Escolha sua característica' : 'Escolha a melhoria de atributo')
+            ? (!hpGain ? 'Escolha o ganho de PV'
+              : !choicesReady ? 'Escolha sua característica'
+              : !bonusCantripsReady ? `Escolha ${bonusCantripsNeeded - bonusCantripsChosen.length} truque(s) bônus`
+              : 'Escolha a melhoria de atributo')
             : `Confirmar Subida para Nível ${nextLevel}`
           }
         </button>
@@ -420,7 +529,7 @@ function AcquiredFeatures({ levels, currentLevel, onFeatureClick }) {
 function ClassProgressionPanel({
   progression, currentLevel, hitDie, conMod, attributes, isMulticlass,
   onLevelChange, onApplyLevelUp, multiclassIndex,
-  levelChoices, chosenFeatures, onChoiceApplied,
+  levelChoices, chosenFeatures,
 }) {
   const [wizardOpen, setWizardOpen] = useState(false)
   const [showAll,    setShowAll]    = useState(false)
@@ -437,9 +546,6 @@ function ClassProgressionPanel({
     : levels.filter(l => l.level >= Math.max(1, focusLvl - 1) && l.level <= Math.min(20, focusLvl + 6))
 
   function handleConfirmLevelUp(payload) {
-    if (payload.newChoices && Object.keys(payload.newChoices).length > 0) {
-      onChoiceApplied?.(payload.newChoices)
-    }
     onApplyLevelUp?.({ ...payload, multiclassIndex: multiclassIndex ?? null })
     setWizardOpen(false)
   }
@@ -617,7 +723,7 @@ function ClassProgressionPanel({
 /* ═══════════════════════════════════════════════════════════════════
    Componente principal
    ═══════════════════════════════════════════════════════════════════ */
-export function LevelProgression({ character, classData, classes, onLevelChange, onApplyLevelUp, onAddMulticlass, onRemoveMulticlass, onChosenFeaturesChange }) {
+export function LevelProgression({ character, classData, classes, onLevelChange, onApplyLevelUp, onAddMulticlass, onRemoveMulticlass, onChosenFeaturesChange, onNavigateToSpells }) {
   const [allProgressions, setAllProgressions] = useState(null)
   const [classChoices,    setClassChoices]    = useState({})
   const [mcRules,         setMcRules]         = useState({})
@@ -699,14 +805,17 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
           <div className="flex flex-wrap gap-3">
             <div>
               <p className="text-[10px] text-gray-500 uppercase">Classe Principal</p>
-              <p className="text-sm font-bold text-white">{progression.name} <span className="text-amber-400">{currentLevel}</span></p>
+              <p className="text-sm font-bold text-white">
+                {(classes ?? []).find(c => c.index === classIndex)?.name ?? progression.name}{' '}
+                <span className="text-amber-400">{currentLevel}</span>
+              </p>
             </div>
             {multiclasses.map((mc, idx) => {
-              const mcProg = allProgressions[mc.class]
+              const mcName = (classes ?? []).find(c => c.index === mc.class)?.name ?? mc.class
               return (
                 <div key={idx}>
                   <p className="text-[10px] text-gray-500 uppercase">Multiclasse {idx + 1}</p>
-                  <p className="text-sm font-bold text-white">{mcProg?.name ?? mc.class} <span className="text-amber-400">{mc.level}</span></p>
+                  <p className="text-sm font-bold text-white">{mcName} <span className="text-amber-400">{mc.level}</span></p>
                 </div>
               )
             })}
@@ -725,7 +834,7 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
               : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-gray-800/50'
           }`}
         >
-          <span>{progression.name}</span>
+          <span>{(classes ?? []).find(c => c.index === classIndex)?.name ?? progression.name}</span>
           <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold ${
             safeTab === 'primary' ? 'bg-amber-600 text-white' : 'bg-gray-700 text-gray-300'
           }`}>{currentLevel}</span>
@@ -733,7 +842,7 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
 
         {/* Abas de multiclasses */}
         {multiclasses.map((mc, idx) => {
-          const mcProg = allProgressions[mc.class]
+          const mcClassName = (classes ?? []).find(c => c.index === mc.class)?.name ?? mc.class
           return (
             <button
               key={idx}
@@ -744,7 +853,7 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
                   : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-gray-800/50'
               }`}
             >
-              <span>{mcProg?.name ?? mc.class}</span>
+              <span>{mcClassName}</span>
               <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold ${
                 safeTab === idx ? 'bg-amber-600 text-white' : 'bg-gray-700 text-gray-300'
               }`}>{mc.level}</span>
@@ -881,7 +990,6 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
           multiclassIndex={null}
           levelChoices={classChoices[classIndex]?.choices ?? []}
           chosenFeatures={chosenFeatures}
-          onChoiceApplied={newChoices => onChosenFeaturesChange?.({ ...chosenFeatures, ...newChoices })}
         />
       )}
 
@@ -903,15 +1011,24 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
             multiclassIndex={safeTab}
             levelChoices={classChoices[mc.class]?.choices ?? []}
             chosenFeatures={chosenFeatures}
-            onChoiceApplied={newChoices => onChosenFeaturesChange?.({ ...chosenFeatures, ...newChoices })}
           />
         )
       })()}
 
       {/* ── Slots de magia fundidos ── */}
       {fusedSlots && !showAddMC && (
-        <div className="bg-gray-800 border border-blue-900/50 rounded-lg p-4">
-          <p className="text-xs font-semibold text-blue-300 mb-2">Espaços de Magia Fundidos (Multiclasse D&D 5e)</p>
+        <div className="bg-gray-800 border border-blue-900/50 rounded-lg p-4 space-y-3">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <p className="text-xs font-semibold text-blue-300">Espaços de Magia Fundidos (Multiclasse D&D 5e)</p>
+            {onNavigateToSpells && (
+              <button
+                onClick={onNavigateToSpells}
+                className="text-xs px-3 py-1.5 rounded bg-blue-900/40 hover:bg-blue-800/50 border border-blue-700/50 text-blue-300 font-semibold transition-colors"
+              >
+                ✨ Adicionar / Gerenciar Magias →
+              </button>
+            )}
+          </div>
           <div className="flex flex-wrap gap-2">
             {Object.entries(fusedSlots).map(([lvl, qty]) => (
               <div key={lvl} className="bg-gray-900 border border-gray-700 rounded px-3 py-1.5 text-xs text-center">
