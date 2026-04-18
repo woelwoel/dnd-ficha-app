@@ -50,6 +50,7 @@ const INITIAL_DRAFT = {
   chosenSkills: [],
   // Magias iniciais
   spells: [],
+  bonusSpells: [],
 }
 
 export function CharacterWizard({ onBack, onComplete }) {
@@ -231,8 +232,13 @@ function canAdvance(stepId, draft, classChoices = {}) {
     case 'class': {
       if (!draft.class) return false
       const choices = classChoices[draft.class]?.choices ?? []
-      const level1Choices = choices.filter(c => c.level === 1)
-      return level1Choices.every(c => !!draft.chosenFeatures?.[c.id])
+      const leveledChoices = choices.filter(c => c.level <= draft.level)
+      if (!leveledChoices.every(c => !!draft.chosenFeatures?.[c.id])) return false
+      const bonusCantripsNeeded = leveledChoices.reduce((sum, c) => {
+        const opt = c.options.find(o => o.value === draft.chosenFeatures?.[c.id])
+        return sum + (opt?.grants?.bonusCantrips ?? 0)
+      }, 0)
+      return (draft.bonusSpells?.length ?? 0) >= bonusCantripsNeeded
     }
     case 'background':  return !!draft.background
     case 'attributes':  return isAttributesComplete(draft)
@@ -314,7 +320,7 @@ function buildCharacter(draft, classData) {
       ability:    draft.spellcastingAbility,
       usedSlots:  {},
       spells: (() => {
-        const baseSpells = [...(draft.spells ?? [])]
+        const baseSpells = [...(draft.spells ?? []), ...(draft.bonusSpells ?? [])]
         if (draft.chosenFeatures?.pact_boon === 'corrente' && !baseSpells.find(s => s.index === 'find-familiar')) {
           baseSpells.push({
             index: 'find-familiar', name: 'Achar Familiar', level: 1,
@@ -322,7 +328,8 @@ function buildCharacter(draft, classData) {
             desc: 'Você evoca um espírito familiar que assume a forma de um animal.',
           })
         }
-        return baseSpells
+        const seen = new Set()
+        return baseSpells.filter(s => !seen.has(s.index) && seen.add(s.index))
       })(),
     },
     inventory: {
