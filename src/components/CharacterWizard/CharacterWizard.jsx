@@ -313,7 +313,17 @@ function buildCharacter(draft, classData) {
     spellcasting: {
       ability:    draft.spellcastingAbility,
       usedSlots:  {},
-      spells:     draft.spells ?? [],
+      spells: (() => {
+        const baseSpells = [...(draft.spells ?? [])]
+        if (draft.chosenFeatures?.pact_boon === 'corrente' && !baseSpells.find(s => s.index === 'find-familiar')) {
+          baseSpells.push({
+            index: 'find-familiar', name: 'Achar Familiar', level: 1,
+            school: 'Conjuração', ritual: true, concentration: false,
+            desc: 'Você evoca um espírito familiar que assume a forma de um animal.',
+          })
+        }
+        return baseSpells
+      })(),
     },
     inventory: {
       currency: {

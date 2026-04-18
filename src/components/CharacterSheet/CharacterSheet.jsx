@@ -145,11 +145,28 @@ export function CharacterSheet({ characterId, onBack }) {
   }
 
   function handleChosenFeaturesChange(newFeatures) {
-    setCharacter(prev => ({
-      ...prev,
-      info: { ...prev.info, chosenFeatures: newFeatures },
-      meta: { ...prev.meta, updatedAt: new Date().toISOString() },
-    }))
+    setCharacter(prev => {
+      const oldFeatures = prev.info.chosenFeatures ?? {}
+      let spells = [...(prev.spellcasting?.spells ?? [])]
+
+      // Pacto da Corrente → adiciona Achar Familiar às magias
+      if (newFeatures.pact_boon === 'corrente' && oldFeatures.pact_boon !== 'corrente') {
+        if (!spells.find(s => s.index === 'find-familiar')) {
+          spells = [...spells, {
+            index: 'find-familiar', name: 'Achar Familiar', level: 1,
+            school: 'Conjuração', ritual: true, concentration: false,
+            desc: 'Você evoca um espírito familiar que assume a forma de um animal.',
+          }]
+        }
+      }
+
+      return {
+        ...prev,
+        info: { ...prev.info, chosenFeatures: newFeatures },
+        spellcasting: { ...prev.spellcasting, spells },
+        meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+      }
+    })
   }
 
   function handleRemoveMulticlass(idx) {

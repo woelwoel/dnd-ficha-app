@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ABILITY_SCORES, SKILLS, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, getModifier, getProficiencyBonus, RACE_LANGUAGES, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../utils/calculations'
 import { LevelProgression } from './LevelProgression'
 
@@ -128,6 +128,12 @@ export function CharacterView({
   classData, onApplyLevelUp, onLevelChange, onAddMulticlass, onRemoveMulticlass, onChosenFeaturesChange,
 }) {
   const [subTab, setSubTab] = useState('ficha')
+  const [classChoices, setClassChoices] = useState({})
+
+  useEffect(() => {
+    fetch('/srd-data/phb-class-choices-pt.json').then(r => r.json()).then(setClassChoices).catch(() => {})
+  }, [])
+
   const { info, attributes, combat, proficiencies, spellcasting, inventory, traits } = character
   const prof = getProficiencyBonus(info.level)
 
@@ -222,7 +228,17 @@ export function CharacterView({
 
         {/* Campos de info */}
         <div className="grid gap-x-2 gap-y-1" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
-          <InfoField label="Classe" value={selectedClass?.name} />
+          <InfoField label="Classe" value={(() => {
+            if (!selectedClass) return ''
+            const multiclasses = info.multiclasses ?? []
+            if (!multiclasses.length) return selectedClass.name
+            const total = info.level + multiclasses.reduce((s, m) => s + (m.level ?? 0), 0)
+            const parts = multiclasses.map(m => {
+              const mc = classes.find(c => c.index === m.class)
+              return `${mc?.name ?? m.class} ${m.level}`
+            }).join(' / ')
+            return `${selectedClass.name} ${info.level} / ${parts} (Nv ${total})`
+          })()} />
           <InfoField label="Antecedente" value={selectedBg?.name} />
           <InfoField label="Nome Jogador" value={info.playerName} />
           <InfoField label="Raça" value={raceName} />
@@ -235,6 +251,26 @@ export function CharacterView({
             </div>
           </div>
         </div>
+
+        {/* Características de Classe escolhidas */}
+        {info.class && (() => {
+          const choices = classChoices[info.class]?.choices ?? []
+          const chosen = info.chosenFeatures ?? {}
+          const filled = choices.filter(c => c.level <= info.level && chosen[c.id])
+          if (!filled.length) return null
+          return (
+            <div className={`mt-1 px-2 py-1 border ${P.border} rounded text-[8px] flex flex-wrap gap-x-3 gap-y-0.5`}>
+              {filled.map(c => {
+                const opt = c.options.find(o => o.value === chosen[c.id])
+                return (
+                  <span key={c.id} className="text-[#5c3d11]">
+                    <span className="font-bold">{c.featureName}:</span> {opt?.name ?? chosen[c.id]}
+                  </span>
+                )
+              })}
+            </div>
+          )
+        })()}
       </div>
 
       {/* ── CORPO PRINCIPAL: 3 colunas ── */}
