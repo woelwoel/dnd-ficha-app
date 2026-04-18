@@ -131,11 +131,42 @@
             "desc": "Seu poder mágico inato vem de um tumulto de magia selvagem no seu coração. Essa magia selvagem pode ter vindo de uma exposição a alguma força mágica bruta, como a magia que emana da Fonte de Magia Selvagem ou de uma criança nascida durante uma tempestade mágica."
           }
         ]
+      },
+      {
+        "level": 3,
+        "id": "metamagic",
+        "featureName": "Metamagia",
+        "prompt": "Escolha 2 opções de Metamagia",
+        "multiSelect": 2,
+        "options": [
+          { "value": "cuidadosa",  "name": "Magia Cuidadosa",  "desc": "Ao conjurar uma magia que força outras criaturas a fazer um TR, você pode proteger algumas delas do pleno poder da magia. Gaste 1 ponto de magia para escolher um número de criaturas iguais ao modificador de Carisma (mín. 1). A criatura escolhida automaticamente passa no TR contra a magia." },
+          { "value": "distante",   "name": "Magia Distante",   "desc": "Ao conjurar uma magia que tenha alcance de 1,5 metro ou maior, pode gastar 1 ponto de magia para dobrar o alcance dela. Ao conjurar uma magia com alcance de Toque, você pode gastar 1 ponto de magia para tornar o alcance dela 9 metros." },
+          { "value": "potenciada", "name": "Magia Potenciada",  "desc": "Ao rolar dano para uma magia, você pode gastar 1 ponto de magia para rolar novamente até um número de dados de dano iguais ao seu modificador de Carisma (mín. 1). Deve usar os novos resultados. Pode usá-la com outra Metamagia na mesma magia." },
+          { "value": "expandida",  "name": "Magia Expandida",  "desc": "Ao conjurar uma magia que tenha uma área de efeito do tipo cone, cubo, linha ou esfera, pode gastar 1 ponto de magia para aumentar seu tamanho ao dobro." },
+          { "value": "estendida",  "name": "Magia Estendida",  "desc": "Ao conjurar uma magia que tenha duração de 1 minuto ou maior, pode gastar 1 ponto de magia para dobrar a duração da magia, até o máximo de 24 horas." },
+          { "value": "intensificada","name": "Magia Intensificada","desc": "Ao conjurar uma magia que force uma criatura a fazer um TR para resistir aos seus efeitos, pode gastar 3 pontos de magia para dar a uma criatura desvantagem no primeiro TR que fizer contra ela." },
+          { "value": "rapida",     "name": "Magia Rápida",     "desc": "Ao conjurar uma magia que tenha tempo de conjuração de 1 ação, pode gastar 2 pontos de magia para mudar o tempo de conjuração para 1 ação bônus para esse conjuro." },
+          { "value": "sutil",      "name": "Magia Sutil",      "desc": "Ao conjurar uma magia, pode gastar 1 ponto de magia para conjurá-la sem componentes somáticos ou verbais." }
+        ]
       }
     ]
   },
   "guerreiro": {
     "choices": [
+      {
+        "level": 1,
+        "id": "fighting_style",
+        "featureName": "Estilo de Combate",
+        "prompt": "Escolha seu Estilo de Combate",
+        "options": [
+          { "value": "arqueiro",   "name": "Arqueiro",   "desc": "Você ganha um bônus de +2 em jogadas de ataque que fizer com armas de alcance." },
+          { "value": "defesa",     "name": "Defesa",     "desc": "Enquanto estiver usando armadura, você ganha um bônus de +1 na Classe de Armadura." },
+          { "value": "duelo",      "name": "Duelo",      "desc": "Quando estiver empunhando uma arma corpo a corpo em uma mão e sem outras armas, você ganha um bônus de +2 nas jogadas de dano com essa arma." },
+          { "value": "duas_maos",  "name": "Combate com Duas Armas", "desc": "Quando você se engajar em combate com duas armas, você pode adicionar seu modificador de habilidade ao dano do segundo ataque." },
+          { "value": "protecao",   "name": "Proteção",   "desc": "Quando uma criatura que você pode ver ataca um alvo que não seja você a até 1,5 metro de você, pode usar sua reação para impor desvantagem na jogada de ataque. Deve estar empunhando um escudo." },
+          { "value": "grande_arma","name": "Grande Arma","desc": "Quando você rolar 1 ou 2 no dado de dano de um ataque que fizer com uma arma corpo a corpo que esteja empunhando com as duas mãos, você pode rolar o dado novamente e deve usar o novo resultado, mesmo que seja 1 ou 2. A arma deve ter a propriedade Duas Mãos ou Versátil para você ganhar esse benefício." }
+        ]
+      },
       {
         "level": 3,
         "id": "martial_archetype",
@@ -270,6 +301,18 @@
   "paladino": {
     "choices": [
       {
+        "level": 2,
+        "id": "fighting_style_paladin",
+        "featureName": "Estilo de Combate",
+        "prompt": "Escolha seu Estilo de Combate",
+        "options": [
+          { "value": "defesa",     "name": "Defesa",     "desc": "Enquanto estiver usando armadura, você ganha um bônus de +1 na Classe de Armadura." },
+          { "value": "duelo",      "name": "Duelo",      "desc": "Quando estiver empunhando uma arma corpo a corpo em uma mão e sem outras armas, você ganha um bônus de +2 nas jogadas de dano com essa arma." },
+          { "value": "grande_arma","name": "Grande Arma","desc": "Quando você rolar 1 ou 2 no dado de dano de um ataque com arma corpo a corpo de duas mãos, você pode rolar novamente e deve usar o novo resultado." },
+          { "value": "protecao",   "name": "Proteção",   "desc": "Quando uma criatura que você pode ver ataca um alvo que não seja você a até 1,5 metro de você, pode usar sua reação para impor desvantagem na jogada de ataque. Deve estar empunhando um escudo." }
+        ]
+      },
+      {
         "level": 3,
         "id": "sacred_oath",
         "featureName": "Juramento Sagrado",
@@ -296,6 +339,18 @@
   },
   "patrulheiro": {
     "choices": [
+      {
+        "level": 2,
+        "id": "fighting_style_ranger",
+        "featureName": "Estilo de Combate",
+        "prompt": "Escolha seu Estilo de Combate",
+        "options": [
+          { "value": "arqueiro",   "name": "Arqueiro",   "desc": "Você ganha um bônus de +2 em jogadas de ataque que fizer com armas de alcance." },
+          { "value": "defesa",     "name": "Defesa",     "desc": "Enquanto estiver usando armadura, você ganha um bônus de +1 na Classe de Armadura." },
+          { "value": "duelo",      "name": "Duelo",      "desc": "Quando estiver empunhando uma arma corpo a corpo em uma mão e sem outras armas, você ganha um bônus de +2 nas jogadas de dano com essa arma." },
+          { "value": "duas_maos",  "name": "Combate com Duas Armas", "desc": "Quando você se engajar em combate com duas armas, você pode adicionar seu modificador de habilidade ao dano do segundo ataque." }
+        ]
+      },
       {
         "level": 3,
         "id": "ranger_archetype",

@@ -1,0 +1,887 @@
+// Gerador de phb-class-progression-full-pt.json
+// D&D 5e SRD — Progressão completa das 12 classes (nível 1-20) em PT-BR
+'use strict'
+const fs = require('fs')
+
+// ─── Utilitários ─────────────────────────────────────────────────────────────
+const ASI = { name: 'Aumento de Atributo', desc: 'Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar.' }
+
+const FULL_SLOTS = [
+  null,                           // idx 0 (não usado)
+  [2,0,0,0,0,0,0,0,0],           // nível 1
+  [3,0,0,0,0,0,0,0,0],           // 2
+  [4,2,0,0,0,0,0,0,0],           // 3
+  [4,3,0,0,0,0,0,0,0],           // 4
+  [4,3,2,0,0,0,0,0,0],           // 5
+  [4,3,3,0,0,0,0,0,0],           // 6
+  [4,3,3,1,0,0,0,0,0],           // 7
+  [4,3,3,2,0,0,0,0,0],           // 8
+  [4,3,3,3,1,0,0,0,0],           // 9
+  [4,3,3,3,2,0,0,0,0],           // 10
+  [4,3,3,3,2,1,0,0,0],           // 11
+  [4,3,3,3,2,1,0,0,0],           // 12
+  [4,3,3,3,2,1,1,0,0],           // 13
+  [4,3,3,3,2,1,1,0,0],           // 14
+  [4,3,3,3,2,1,1,1,0],           // 15
+  [4,3,3,3,2,1,1,1,0],           // 16
+  [4,3,3,3,2,1,1,1,1],           // 17
+  [4,3,3,3,3,1,1,1,1],           // 18
+  [4,3,3,3,3,2,1,1,1],           // 19
+  [4,3,3,3,3,2,2,1,1],           // 20
+]
+
+const HALF_SLOTS = [
+  null, null,                     // 0-1 não usados
+  [2,0,0,0,0],                   // nível 2
+  [3,0,0,0,0],                   // 3
+  [3,0,0,0,0],                   // 4
+  [4,2,0,0,0],                   // 5
+  [4,2,0,0,0],                   // 6
+  [4,3,0,0,0],                   // 7
+  [4,3,0,0,0],                   // 8
+  [4,3,2,0,0],                   // 9
+  [4,3,2,0,0],                   // 10
+  [4,3,3,0,0],                   // 11
+  [4,3,3,0,0],                   // 12
+  [4,3,3,1,0],                   // 13
+  [4,3,3,1,0],                   // 14
+  [4,3,3,2,0],                   // 15
+  [4,3,3,2,0],                   // 16
+  [4,3,3,3,1],                   // 17
+  [4,3,3,3,1],                   // 18
+  [4,3,3,3,2],                   // 19
+  [4,3,3,3,2],                   // 20
+]
+
+// Pact Magic: [slots, slot_level]
+const PACT_MAGIC = [
+  null,
+  [1,1],[2,1],[2,2],[2,2],[2,3],[2,3],[2,4],[2,4],[2,5],[2,5],
+  [3,5],[3,5],[3,5],[3,5],[3,5],[3,5],[4,5],[4,5],[4,5],[4,5],
+]
+
+// Proficiency bonus por nível
+function prof(lvl) {
+  if (lvl <= 4) return 2
+  if (lvl <= 8) return 3
+  if (lvl <= 12) return 4
+  if (lvl <= 16) return 5
+  return 6
+}
+
+// ─── BÁRBARO ─────────────────────────────────────────────────────────────────
+const BARBARO = {
+  index: 'barbaro', name: 'Bárbaro', hit_die: 10,
+  primary_ability: 'Força',
+  saving_throws: ['Força', 'Constituição'],
+  armor_proficiencies: ['Leve', 'Média', 'Escudos'],
+  weapon_proficiencies: ['Simples', 'Marciais'],
+  tool_proficiencies: [],
+  skill_choices: { count: 2, from: ['Adestramento', 'Atletismo', 'Intimidação', 'Natureza', 'Percepção', 'Sobrevivência'] },
+  spell_slots_table: null,
+  // rage_count por nível 1-20
+  rage_counts: [2,2,3,3,3,4,4,4,4,4,5,6,6,6,7,7,7,999,999,999],
+  rage_damage: [2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,4],
+  levels: [
+    { level:1,  prof:2, features:[
+      { name:'Fúria', desc:'Como ação bônus, você pode entrar em fúria por 1 minuto. Enquanto em fúria: vantagem em testes e TR de Força; bônus de dano em ataques corpo a corpo com Força (ver tabela); resistência a dano de concussão, cortante e perfurante; não pode lançar ou concentrar magias. Termina se você ficar inconsciente, não atacar um inimigo nem sofrer dano desde seu último turno. Descanso longo recupera todos os usos.' },
+      { name:'Defesa Desarmada', desc:'Enquanto não estiver usando armadura, sua Classe de Armadura é igual a 10 + seu modificador de Destreza + seu modificador de Constituição. Você pode usar um escudo e ainda se beneficiar dessa característica.' },
+    ], class_specific:{ rage_count:2, rage_damage_bonus:2, brutal_critical_dice:0 } },
+    { level:2,  prof:2, features:[
+      { name:'Ataque Descuidado', desc:'Ao usar a ação Atacar no seu turno, você pode fazer o primeiro ataque com vantagem. Fazendo isso, qualquer ataque contra você tem vantagem até o início do seu próximo turno.' },
+      { name:'Sentido de Perigo', desc:'Você tem vantagem nos Testes de Resistência de Destreza contra efeitos que possa ver (armadilhas, magias, etc.). Não funciona se você estiver cego, surdo ou incapacitado.' },
+    ], class_specific:{ rage_count:2, rage_damage_bonus:2, brutal_critical_dice:0 } },
+    { level:3,  prof:2, features:[
+      { name:'Caminho Primitivo', desc:'Escolha o Caminho do Berserker ou o Caminho do Guerreiro Totêmico. Cada caminho define seu estilo de combate sobrenatural e concede características nos níveis 3, 6, 10 e 14.', choice_id:'primal_path' },
+    ], class_specific:{ rage_count:3, rage_damage_bonus:2, brutal_critical_dice:0 } },
+    { level:4,  prof:2, features:[ ASI ], class_specific:{ rage_count:3, rage_damage_bonus:2, brutal_critical_dice:0 } },
+    { level:5,  prof:3, features:[
+      { name:'Ataque Extra', desc:'Quando você usa a ação Atacar no seu turno, você pode atacar duas vezes em vez de uma.' },
+      { name:'Movimentação Veloz', desc:'Seu deslocamento aumenta em 3 metros enquanto você não estiver usando armadura.' },
+    ], class_specific:{ rage_count:3, rage_damage_bonus:2, brutal_critical_dice:0 } },
+    { level:6,  prof:3, features:[
+      { name:'Característica do Caminho Primitivo', desc:'Você recebe uma característica do seu Caminho Primitivo escolhido (Berserker: Presença Intimidante; Totêmico: Aspecto do Totêm).', subclass:true },
+    ], class_specific:{ rage_count:4, rage_damage_bonus:2, brutal_critical_dice:0 } },
+    { level:7,  prof:3, features:[
+      { name:'Instinto Selvagem', desc:'Seus instintos são tão aguçados que você tem vantagem em testes de iniciativa. Além disso, se você estiver surpreso no início do combate e não estiver incapacitado, poderá agir normalmente no seu primeiro turno, mas somente se entrar em fúria antes de fazer qualquer outra coisa naquele turno.' },
+    ], class_specific:{ rage_count:4, rage_damage_bonus:2, brutal_critical_dice:0 } },
+    { level:8,  prof:3, features:[ ASI ], class_specific:{ rage_count:4, rage_damage_bonus:2, brutal_critical_dice:0 } },
+    { level:9,  prof:4, features:[
+      { name:'Crítico Brutal (1 dado)', desc:'A partir do nível 9, quando você acerta um acerto crítico com um ataque corpo a corpo, você pode rolar um dado de dano extra da arma e adicioná-lo ao dano extra do acerto crítico.' },
+    ], class_specific:{ rage_count:4, rage_damage_bonus:3, brutal_critical_dice:1 } },
+    { level:10, prof:4, features:[
+      { name:'Característica do Caminho Primitivo', desc:'Você recebe uma nova característica do seu Caminho Primitivo (Berserker: Retaliação; Totêmico: Comunhão Totêmica).', subclass:true },
+    ], class_specific:{ rage_count:4, rage_damage_bonus:3, brutal_critical_dice:1 } },
+    { level:11, prof:4, features:[
+      { name:'Fúria Implacável', desc:'Sua fúria pode manter você combatendo apesar de ferimentos graves. Se você cair a 0 pontos de vida enquanto estiver em fúria e não morrer imediatamente, você pode fazer um TR de Constituição CD 10. Com sucesso, você volta para 1 ponto de vida. Cada vez que usar esta característica após a primeira, a CD aumenta em 5. Reinicia com descanso longo.' },
+    ], class_specific:{ rage_count:4, rage_damage_bonus:3, brutal_critical_dice:1 } },
+    { level:12, prof:4, features:[ ASI ], class_specific:{ rage_count:5, rage_damage_bonus:3, brutal_critical_dice:1 } },
+    { level:13, prof:5, features:[
+      { name:'Crítico Brutal (2 dados)', desc:'Você pode rolar dois dados extras de dano da arma ao acertar um crítico corpo a corpo.' },
+    ], class_specific:{ rage_count:5, rage_damage_bonus:3, brutal_critical_dice:2 } },
+    { level:14, prof:5, features:[
+      { name:'Característica do Caminho Primitivo', desc:'Você recebe uma característica poderosa do seu Caminho Primitivo (Berserker: Retaliação; Totêmico: Aspecto do Totêm).', subclass:true },
+    ], class_specific:{ rage_count:5, rage_damage_bonus:3, brutal_critical_dice:2 } },
+    { level:15, prof:5, features:[
+      { name:'Fúria Persistente', desc:'Sua fúria é tão feroz que só termina antecipadamente se você ficar inconsciente ou se você decidir encerrá-la. A fúria não termina mais por você não atacar ou não sofrer dano.' },
+    ], class_specific:{ rage_count:5, rage_damage_bonus:3, brutal_critical_dice:2 } },
+    { level:16, prof:5, features:[ ASI ], class_specific:{ rage_count:5, rage_damage_bonus:4, brutal_critical_dice:2 } },
+    { level:17, prof:6, features:[
+      { name:'Crítico Brutal (3 dados)', desc:'Você pode rolar três dados extras de dano da arma ao acertar um crítico corpo a corpo.' },
+    ], class_specific:{ rage_count:6, rage_damage_bonus:4, brutal_critical_dice:3 } },
+    { level:18, prof:6, features:[
+      { name:'Força Indomável', desc:'Se o resultado de um teste de Força for menor que o seu valor de Força, você pode usar esse valor no lugar do resultado do teste.' },
+    ], class_specific:{ rage_count:6, rage_damage_bonus:4, brutal_critical_dice:3 } },
+    { level:19, prof:6, features:[ ASI ], class_specific:{ rage_count:6, rage_damage_bonus:4, brutal_critical_dice:3 } },
+    { level:20, prof:6, features:[
+      { name:'Campeão Primitivo', desc:'Você é o epitome do poder selvagem e brutal. Seus valores de Força e Constituição aumentam em 4. O máximo para esses valores agora é 24.' },
+      { name:'Fúria Ilimitada', desc:'Você pode entrar em fúria um número ilimitado de vezes.' },
+    ], class_specific:{ rage_count:999, rage_damage_bonus:4, brutal_critical_dice:3 } },
+  ]
+}
+
+// ─── BARDO ───────────────────────────────────────────────────────────────────
+// Cantrips: 2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4
+// Spells known: 4,5,6,7,8,9,10,11,12,14,15,15,16,18,19,19,20,22,22,22
+const BARDO = {
+  index:'bardo', name:'Bardo', hit_die:8,
+  primary_ability:'Carisma',
+  saving_throws:['Destreza','Carisma'],
+  armor_proficiencies:['Leve'],
+  weapon_proficiencies:['Simples','Bestas de Mão','Espadas Longas','Rapieiras','Espadas Curtas'],
+  tool_proficiencies:['Três instrumentos musicais à sua escolha'],
+  skill_choices:{ count:3, from:['qualquer três perícias'] },
+  spell_slots_table: FULL_SLOTS.slice(1),
+  cantrips_known:  [2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4],
+  spells_known:    [4,5,6,7,8,9,10,11,12,14,15,15,16,18,19,19,20,22,22,22],
+  levels:[
+    { level:1,  prof:2, features:[
+      { name:'Conjuração de Bardo', desc:'Você aprendeu a desatar a magia pela palavra e música. Usa Carisma como habilidade de magia (CD de magia = 8 + bônus de proficiência + mod Carisma). Prepara cantrips e magias conhecidas conforme a tabela do Bardo. Como Bardo, você aprende magias conhecendo-as pelo coração.' },
+      { name:'Inspiração Bárdica (d6)', desc:'Como ação bônus, você pode escolher uma criatura que não seja você a até 18 metros que possa ouvi-lo. Ela ganha um dado de Inspiração Bárdica (d6). Por 10 minutos, a criatura pode rolar esse dado e somar o resultado a um teste de habilidade, jogada de ataque ou TR que ela fizer. Pode ser usado depois de ver o resultado, mas antes de saber se foi bem ou mal sucedido. Você tem um número de usos iguais ao seu modificador de Carisma (mínimo 1). Recupera com descanso longo.' },
+    ] },
+    { level:2,  prof:2, features:[
+      { name:'Faz de Tudo', desc:'Você pode adicionar metade do seu bônus de proficiência, arredondado para baixo, a qualquer teste de habilidade que não use já o bônus de proficiência.' },
+      { name:'Canção de Descanso (d6)', desc:'Você pode usar música ou oratória para reconfortar aliados durante o descanso curto. Se você ou qualquer criatura amigável que passe o descanso curto ouvindo sua performance gastar Dados de Vida, cada criatura pode recuperar 1d6 pontos de vida adicionais.' },
+    ] },
+    { level:3,  prof:2, features:[
+      { name:'Especialização', desc:'Escolha duas perícias nas quais você tenha proficiência. Seu bônus de proficiência é dobrado para qualquer teste de habilidade que use essas perícias.' },
+      { name:'Colégio de Bardos', desc:'Você mergulha nas técnicas avançadas de um colégio de bardos de sua escolha: Colégio do Conhecimento ou Colégio do Valor. Cada colégio concede características nos níveis 3, 6 e 14.', choice_id:'bard_college' },
+    ] },
+    { level:4,  prof:2, features:[ ASI ] },
+    { level:5,  prof:3, features:[
+      { name:'Inspiração Bárdica (d8)', desc:'Seu dado de Inspiração Bárdica aumenta para d8.' },
+      { name:'Fonte de Inspiração', desc:'Você recupera todos os seus usos gastos de Inspiração Bárdica quando termina um descanso curto ou longo.' },
+    ] },
+    { level:6,  prof:3, features:[
+      { name:'Contrafeitiço', desc:'Você ganha a habilidade de usar sons ou palavras de poder para interromper efeitos mágicos. Como ação, você pode iniciar uma performance que dura até o fim do seu próximo turno. Durante esse tempo, você e quaisquer criaturas amigáveis a até 9 metros de você que possam ouvi-lo têm vantagem em Testes de Resistência contra magias e outros efeitos mágicos.' },
+      { name:'Característica do Colégio de Bardos', desc:'Você recebe uma característica do seu Colégio de Bardos (Conhecimento: Segredos Mágicos Adicionais; Valor: Ataque Extra).', subclass:true },
+    ] },
+    { level:7,  prof:3, features:[] },
+    { level:8,  prof:3, features:[ ASI ] },
+    { level:9,  prof:4, features:[
+      { name:'Canção de Descanso (d8)', desc:'O dado de cura bônus da Canção de Descanso aumenta para d8.' },
+    ] },
+    { level:10, prof:4, features:[
+      { name:'Especialização (mais 2)', desc:'Escolha mais duas perícias para ganhar bônus dobrado de proficiência.' },
+      { name:'Inspiração Bárdica (d10)', desc:'Seu dado de Inspiração Bárdica aumenta para d10.' },
+      { name:'Segredos Mágicos', desc:'Você aprendeu magias de outras classes. Escolha duas magias de qualquer classe, incluindo esta. Uma magia que você escolher deve ser de um nível de magia que você possa lançar, como mostrado na tabela do Bardo. As magias escolhidas contam como magias de bardo para você e são incluídas no número de magias conhecidas.' },
+    ] },
+    { level:11, prof:4, features:[] },
+    { level:12, prof:4, features:[ ASI ] },
+    { level:13, prof:5, features:[
+      { name:'Canção de Descanso (d10)', desc:'O dado de cura bônus da Canção de Descanso aumenta para d10.' },
+    ] },
+    { level:14, prof:5, features:[
+      { name:'Segredos Mágicos', desc:'Escolha mais duas magias de qualquer classe. As magias escolhidas contam como magias de bardo.' },
+      { name:'Característica do Colégio de Bardos', desc:'Você recebe a característica de nível 14 do seu Colégio (Conhecimento: Habilidade Inigualável; Valor: Magia de Batalha).', subclass:true },
+    ] },
+    { level:15, prof:5, features:[
+      { name:'Inspiração Bárdica (d12)', desc:'Seu dado de Inspiração Bárdica aumenta para d12.' },
+    ] },
+    { level:16, prof:5, features:[ ASI ] },
+    { level:17, prof:6, features:[
+      { name:'Canção de Descanso (d12)', desc:'O dado de cura bônus da Canção de Descanso aumenta para d12.' },
+    ] },
+    { level:18, prof:6, features:[
+      { name:'Segredos Mágicos', desc:'Escolha mais duas magias de qualquer classe. As magias escolhidas contam como magias de bardo.' },
+    ] },
+    { level:19, prof:6, features:[ ASI ] },
+    { level:20, prof:6, features:[
+      { name:'Inspiração Superior', desc:'Quando você joga para iniciativa e não tem usos de Inspiração Bárdica restantes, você recupera um uso.' },
+    ] },
+  ]
+}
+
+// ─── CLÉRIGO ─────────────────────────────────────────────────────────────────
+const CLERIGO = {
+  index:'clerigo', name:'Clérigo', hit_die:8,
+  primary_ability:'Sabedoria',
+  saving_throws:['Sabedoria','Carisma'],
+  armor_proficiencies:['Leve','Média','Escudos'],
+  weapon_proficiencies:['Simples'],
+  tool_proficiencies:[],
+  skill_choices:{ count:2, from:['História','Intuição','Medicina','Persuasão','Religião'] },
+  spell_slots_table: FULL_SLOTS.slice(1),
+  cantrips_known: [3,3,3,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5],
+  levels:[
+    { level:1,  prof:2, features:[
+      { name:'Conjuração de Clérigo', desc:'Como conduto do poder divino, você pode lançar magias de clérigo. Usa Sabedoria como habilidade de magia (CD = 8 + bônus de proficiência + mod Sab). Você prepara uma lista de magias de clérigo disponíveis para uso. Escolha um número de magias igual ao seu mod Sabedoria + seu nível de clérigo (mínimo 1). Para lançar uma magia preparada, use um espaço de magia de nível igual ou maior ao da magia.' },
+      { name:'Domínio Divino', desc:'Escolha um domínio divino relacionado à sua divindade. O domínio escolhido concede magias de domínio e outras características nos níveis 1, 2, 6, 8 e 17. As magias de domínio são sempre preparadas e não contam para o limite de magias preparadas.', choice_id:'divine_domain' },
+      { name:'Magias de Domínio', desc:'Cada domínio divino concede uma lista de magias especiais, os níveis 1, 3, 5, 7 e 9. Essas magias são sempre consideradas preparadas e não contam para o número de magias que você pode preparar por dia.' },
+    ] },
+    { level:2,  prof:2, features:[
+      { name:'Canalizar Divindade (1/descanso)', desc:'Você ganha a habilidade de canalizar energia divina diretamente da sua divindade 1 vez por descanso curto ou longo. Você começa com dois efeitos: Virar Mortos-Vivos e um efeito determinado pelo seu domínio. Conforme avança de nível, ganha mais usos e efeitos.' },
+      { name:'Canalizar Divindade: Virar Mortos-Vivos', desc:'Como ação, você apresenta seu símbolo sagrado e profere uma prece que repele os mortos-vivos. Cada morto-vivo que puder vê-lo ou ouvi-lo a até 9 metros deve fazer um TR de Sabedoria. Com falha, a criatura é virada por 1 minuto ou até sofrer dano. Uma criatura virada deve gastar seus turnos tentando se afastar de você e não pode se aproximar voluntariamente.' },
+      { name:'Característica do Domínio', desc:'Você recebe a característica do Domínio Divino de nível 2 (ex: Canal da Divindade do domínio).', subclass:true },
+    ] },
+    { level:3,  prof:2, features:[
+      { name:'Magias de Domínio (nível 3)', desc:'Você tem acesso às magias de domínio de 2º nível (2 magias de acordo com seu domínio).' },
+    ] },
+    { level:4,  prof:2, features:[ ASI ] },
+    { level:5,  prof:3, features:[
+      { name:'Magias de Domínio (nível 5)', desc:'Você tem acesso às magias de domínio de 3º nível.' },
+      { name:'Destruir Mortos-Vivos (CR ≤1/2)', desc:'Quando um morto-vivo falha no TR contra Virar Mortos-Vivos, ele é imediatamente destruído se seu valor de desafio for 1/2 ou menor.' },
+    ] },
+    { level:6,  prof:3, features:[
+      { name:'Canalizar Divindade (2/descanso)', desc:'Você pode usar Canalizar Divindade duas vezes entre descansos.' },
+      { name:'Característica do Domínio', desc:'Você recebe uma característica adicional do seu Domínio Divino.', subclass:true },
+    ] },
+    { level:7,  prof:3, features:[
+      { name:'Magias de Domínio (nível 7)', desc:'Você tem acesso às magias de domínio de 4º nível.' },
+    ] },
+    { level:8,  prof:3, features:[
+      ASI,
+      { name:'Destruir Mortos-Vivos (CR ≤1)', desc:'Mortos-vivos com VD 1 ou menor são destruídos quando falham no TR de Virar Mortos-Vivos.' },
+      { name:'Característica do Domínio', desc:'Você recebe a característica de nível 8 do seu Domínio (ex: Golpe Divino ou Golpe Abençoado).', subclass:true },
+    ] },
+    { level:9,  prof:4, features:[
+      { name:'Magias de Domínio (nível 9)', desc:'Você tem acesso às magias de domínio de 5º nível.' },
+    ] },
+    { level:10, prof:4, features:[
+      { name:'Intervenção Divina', desc:'Você pode implorar à sua divindade para intervir em seu favor. Rolando d100, se o resultado for igual ou menor ao seu nível de clérigo, sua divindade intervém. O Mestre escolhe a natureza da intervenção. Se ela funcionar, você não pode usá-la novamente por 7 dias. Caso contrário, você pode usá-la novamente após um descanso longo.' },
+    ] },
+    { level:11, prof:4, features:[
+      { name:'Destruir Mortos-Vivos (CR ≤2)', desc:'Mortos-vivos com VD 2 ou menor são destruídos quando falham no TR de Virar.' },
+    ] },
+    { level:12, prof:4, features:[ ASI ] },
+    { level:13, prof:5, features:[] },
+    { level:14, prof:5, features:[
+      { name:'Destruir Mortos-Vivos (CR ≤3)', desc:'Mortos-vivos com VD 3 ou menor são destruídos quando falham no TR de Virar.' },
+    ] },
+    { level:15, prof:5, features:[] },
+    { level:16, prof:5, features:[ ASI ] },
+    { level:17, prof:6, features:[
+      { name:'Destruir Mortos-Vivos (CR ≤4)', desc:'Mortos-vivos com VD 4 ou menor são destruídos quando falham no TR de Virar.' },
+      { name:'Característica do Domínio', desc:'Você recebe a característica final (nível 17) do seu Domínio Divino.', subclass:true },
+    ] },
+    { level:18, prof:6, features:[
+      { name:'Canalizar Divindade (3/descanso)', desc:'Você pode usar Canalizar Divindade três vezes entre descansos.' },
+    ] },
+    { level:19, prof:6, features:[ ASI ] },
+    { level:20, prof:6, features:[
+      { name:'Melhoria da Intervenção Divina', desc:'Sua chamada pela intervenção da sua divindade tem sucesso automaticamente, sem precisar fazer a rolagem.' },
+    ] },
+  ]
+}
+
+// ─── DRUIDA ──────────────────────────────────────────────────────────────────
+const DRUIDA = {
+  index:'druida', name:'Druida', hit_die:8,
+  primary_ability:'Sabedoria',
+  saving_throws:['Inteligência','Sabedoria'],
+  armor_proficiencies:['Leve','Média','Escudos (não metálicos)'],
+  weapon_proficiencies:['Clavas','Adagas','Dardos','Lanças','Maças','Bastões','Cimitarras','Foices','Fundas','Azagaias'],
+  tool_proficiencies:['Kit de herborista'],
+  skill_choices:{ count:2, from:['Adestramento','Arcana','História','Intuição','Medicina','Natureza','Percepção','Religião','Sobrevivência'] },
+  spell_slots_table: FULL_SLOTS.slice(1),
+  cantrips_known: [2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4],
+  wild_shape_cr: [null,null,'1/4','1/4','1/2','1/2','1/2','1/2','1','1','1','1','1','1','1','1','1','1','1','1'],
+  levels:[
+    { level:1,  prof:2, features:[
+      { name:'Conjuração de Druida', desc:'A magia drúidica vem da natureza. Usa Sabedoria como habilidade de magia (CD = 8 + bônus de prof + mod Sab). Você prepara magias após cada descanso longo, escolhendo do número = mod Sabedoria + nível de druida (mín. 1). Você pode lançar magias usando concentração de plantas, pedras ou materiais naturais como foco.' },
+      { name:'Drúidico', desc:'Você conhece o Drúidico, a linguagem secreta dos druidas. Você pode falar a língua e usá-la para deixar mensagens escondidas. Você e outros que conheçam essa língua notam automaticamente tal mensagem. Outros percebem que há uma mensagem com um TR bem sucedido de Sabedoria (Percepção) CD 15, mas não podem decifrá-la sem magia.' },
+    ] },
+    { level:2,  prof:2, features:[
+      { name:'Forma Selvagem', desc:'Você pode usar sua ação para assumir magicamente a forma de uma besta que tenha visto antes. Você pode usar esta característica duas vezes. Recupera com descanso curto ou longo. Seu nível limita as formas disponíveis: nível 2 (CR ≤1/4, sem natação ou velocidade de voo), nível 4 (CR ≤1/2, sem velocidade de voo), nível 8 (CR ≤1). Você mantém seus TRs, PV máximos tomam o PV da besta. Se cair a 0 PV na forma, o dano excedente se aplica na forma humana.' },
+      { name:'Círculo Druídico', desc:'Você se alinha a um Círculo de Druidas: Círculo da Terra ou Círculo da Lua. O círculo concede características nos níveis 2, 6, 10 e 14.', choice_id:'druid_circle' },
+    ] },
+    { level:3,  prof:2, features:[] },
+    { level:4,  prof:2, features:[
+      { name:'Forma Selvagem (CR ≤1/2)', desc:'Sua Forma Selvagem agora permite formas de besta com VD 1/2 ou menos, ainda sem velocidade de voo.' },
+      ASI,
+    ] },
+    { level:5,  prof:3, features:[] },
+    { level:6,  prof:3, features:[
+      { name:'Característica do Círculo Druídico', desc:'Você recebe uma característica adicional do seu Círculo (Terra: Mente da Terra; Lua: Formas Elementais).', subclass:true },
+    ] },
+    { level:7,  prof:3, features:[] },
+    { level:8,  prof:3, features:[
+      { name:'Forma Selvagem (CR ≤1)', desc:'Sua Forma Selvagem agora permite formas de besta com VD 1 ou menos.' },
+      ASI,
+    ] },
+    { level:9,  prof:4, features:[] },
+    { level:10, prof:4, features:[
+      { name:'Característica do Círculo Druídico', desc:'Você recebe a característica de nível 10 do seu Círculo (Terra: Natureza Imune; Lua: Formas Planetárias).', subclass:true },
+    ] },
+    { level:11, prof:4, features:[] },
+    { level:12, prof:4, features:[ ASI ] },
+    { level:13, prof:5, features:[] },
+    { level:14, prof:5, features:[
+      { name:'Característica do Círculo Druídico', desc:'Você recebe a característica de nível 14 do seu Círculo (Terra: Santuário da Natureza; Lua: Mais Formas).', subclass:true },
+    ] },
+    { level:15, prof:5, features:[] },
+    { level:16, prof:5, features:[ ASI ] },
+    { level:17, prof:6, features:[] },
+    { level:18, prof:6, features:[
+      { name:'Corpo Eterno', desc:'A magia druídica que você canaliza faz você envelhecer mais lentamente. Para cada 10 anos que passam, seu corpo envelhece apenas 1 ano.' },
+      { name:'Magias de Besta', desc:'Você pode lançar muitas das suas magias de druida em qualquer forma que usar com Forma Selvagem. Você pode executar componentes somáticos e verbais de uma magia de druida enquanto estiver em forma de besta, mas não pode prover componentes materiais.' },
+    ] },
+    { level:19, prof:6, features:[ ASI ] },
+    { level:20, prof:6, features:[
+      { name:'Arquidruida', desc:'Você pode usar sua Forma Selvagem um número ilimitado de vezes. Além disso, você pode ignorar os requisitos verbais e somáticos das suas magias de druida, bem como quaisquer requisitos de componentes materiais que não tenham um custo e não sejam consumidos pela magia.' },
+    ] },
+  ]
+}
+
+// ─── GUERREIRO ───────────────────────────────────────────────────────────────
+const GUERREIRO = {
+  index:'guerreiro', name:'Guerreiro', hit_die:10,
+  primary_ability:'Força ou Destreza',
+  saving_throws:['Força','Constituição'],
+  armor_proficiencies:['Todas as Armaduras','Escudos'],
+  weapon_proficiencies:['Simples','Marciais'],
+  tool_proficiencies:[],
+  skill_choices:{ count:2, from:['Acrobacia','Adestramento','Atletismo','História','Intuição','Intimidação','Percepção','Sobrevivência'] },
+  spell_slots_table: null,
+  levels:[
+    { level:1,  prof:2, features:[
+      { name:'Estilo de Combate', desc:'Você adota um estilo de combate como especialidade. Escolha uma das opções: Arqueiro (+2 em jogadas de ataque à distância), Defesa (+1 CA usando armadura), Duelo (+2 dano com arma de uma mão sem outra arma), Combate com Duas Armas (adicionar mod de atributo ao dano da segunda arma), Proteção (reação: impor desvantagem em ataque contra aliado adjacente usando escudo), Grande Arma (rolar novamente 1 ou 2 no dano de armas de duas mãos).', choice_id:'fighting_style' },
+      { name:'Segunda Rajada', desc:'Você pode se empurrar além dos seus limites por um momento. No seu turno, pode usar ação bônus para recuperar PV iguais a 1d10 + seu nível de guerreiro. Após usar esta característica, você deve terminar um descanso curto ou longo antes de usá-la novamente.' },
+    ] },
+    { level:2,  prof:2, features:[
+      { name:'Surto de Ação (1 uso)', desc:'No seu turno, você pode tomar uma ação adicional além da sua ação normal e possível ação bônus. Uma vez usado, você deve terminar um descanso curto ou longo antes de usá-lo novamente.' },
+    ] },
+    { level:3,  prof:2, features:[
+      { name:'Arquétipo Marcial', desc:'Escolha um arquétipo que reflita seu estilo e técnicas: Campeão, Mestre de Batalha ou Cavaleiro de Batalha. O arquétipo concede características nos níveis 3, 7, 10, 15 e 18.', choice_id:'martial_archetype' },
+    ] },
+    { level:4,  prof:2, features:[ ASI ] },
+    { level:5,  prof:3, features:[
+      { name:'Ataque Extra', desc:'Quando você usa a ação Atacar no seu turno, você pode atacar duas vezes em vez de uma.' },
+    ] },
+    { level:6,  prof:3, features:[ ASI ] },
+    { level:7,  prof:3, features:[
+      { name:'Característica do Arquétipo Marcial', desc:'Você recebe uma característica do seu Arquétipo Marcial (Campeão: Sentido Sobrenatural; Mestre de Batalha: Reconhecer Adversário; Cavaleiro de Batalha: Magia).', subclass:true },
+    ] },
+    { level:8,  prof:3, features:[ ASI ] },
+    { level:9,  prof:4, features:[
+      { name:'Indomável (1 uso)', desc:'Você pode rolar novamente um TR que falhou. Deve usar o novo resultado. Você não pode usar esta característica novamente até terminar um descanso longo.' },
+    ] },
+    { level:10, prof:4, features:[
+      { name:'Característica do Arquétipo Marcial', desc:'Você recebe outra característica do seu Arquétipo Marcial.', subclass:true },
+    ] },
+    { level:11, prof:4, features:[
+      { name:'Ataque Extra (2)', desc:'Quando você usa a ação Atacar no seu turno, você pode atacar três vezes em vez de uma.' },
+    ] },
+    { level:12, prof:4, features:[ ASI ] },
+    { level:13, prof:5, features:[
+      { name:'Indomável (2 usos)', desc:'Você pode usar Indomável duas vezes entre descansos longos.' },
+    ] },
+    { level:14, prof:5, features:[ ASI ] },
+    { level:15, prof:5, features:[
+      { name:'Característica do Arquétipo Marcial', desc:'Você recebe outra característica do seu Arquétipo Marcial.', subclass:true },
+    ] },
+    { level:16, prof:5, features:[ ASI ] },
+    { level:17, prof:6, features:[
+      { name:'Surto de Ação (2 usos)', desc:'Agora você pode usar Surto de Ação duas vezes antes de precisar descansar, mas não mais de uma vez por turno.' },
+      { name:'Indomável (3 usos)', desc:'Você pode usar Indomável três vezes entre descansos longos.' },
+    ] },
+    { level:18, prof:6, features:[
+      { name:'Característica do Arquétipo Marcial', desc:'Você recebe a característica final do seu Arquétipo Marcial.', subclass:true },
+    ] },
+    { level:19, prof:6, features:[ ASI ] },
+    { level:20, prof:6, features:[
+      { name:'Ataque Extra (3)', desc:'Quando você usa a ação Atacar no seu turno, você pode atacar quatro vezes em vez de uma.' },
+    ] },
+  ]
+}
+
+// ─── LADINO ──────────────────────────────────────────────────────────────────
+const sneak = (d) => `${d}d6`
+const LADINO = {
+  index:'ladino', name:'Ladino', hit_die:8,
+  primary_ability:'Destreza',
+  saving_throws:['Destreza','Inteligência'],
+  armor_proficiencies:['Leve'],
+  weapon_proficiencies:['Simples','Bestas de Mão','Espadas Longas','Rapieiras','Espadas Curtas'],
+  tool_proficiencies:['Ferramentas de Ladrão'],
+  skill_choices:{ count:4, from:['Acrobacia','Atletismo','Atuação','Enganação','Furtividade','História','Intimidação','Intuição','Investigação','Percepção','Persuasão','Prestidigitação'] },
+  spell_slots_table: null,
+  sneak_attack_dice: [1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10],
+  levels:[
+    { level:1,  prof:2, features:[
+      { name:'Especialização', desc:'Escolha duas das suas perícias com proficiência ou uma perícia e as ferramentas de ladrão. Seu bônus de proficiência é dobrado para qualquer teste de habilidade que use essas proficiências.' },
+      { name:'Ataque Furtivo (1d6)', desc:'Uma vez por turno, você pode causar 1d6 de dano extra a uma criatura que acertar com um ataque se tiver vantagem na jogada de ataque. O ataque deve usar uma arma com acuidade ou de alcance. Você não precisa de vantagem se outro inimigo da criatura estiver a 1,5 m dela e esse inimigo não estiver incapacitado.' },
+      { name:'Gíria dos Ladrões', desc:'Durante seu treinamento como ladino, você aprendeu a gíria dos ladrões, uma mistura de dialeto, jargão e código que permite que você esconda mensagens em conversas aparentemente normais.' },
+    ] },
+    { level:2,  prof:2, features:[
+      { name:'Ação Ardilosa', desc:'Sua capacidade de pensar e se mover agilmente permite que você se mova e aja mais rapidamente. Você pode tomar uma ação bônus no seu turno em cada combate. Essa ação pode ser usada somente para Disparar, Desengajar ou Esconder.' },
+    ] },
+    { level:3,  prof:2, features:[
+      { name:'Arquétipo de Gatuno', desc:'Você escolhe um arquétipo que incorpora seu ideal de gatuno: Assassino, Trapaceiro Arcano ou Gatuno. Seu arquétipo concede características nos níveis 3, 9, 13 e 17.', choice_id:'roguish_archetype' },
+      { name:'Ataque Furtivo (2d6)', desc:'Seu dado de Ataque Furtivo aumenta para 2d6.' },
+    ] },
+    { level:4,  prof:2, features:[ ASI ] },
+    { level:5,  prof:3, features:[
+      { name:'Esquiva Instintiva', desc:'Quando um atacante que você possa ver acertar você com um ataque, você pode usar sua reação para reduzir o dano pela metade.' },
+      { name:'Ataque Furtivo (3d6)', desc:'Seu dado de Ataque Furtivo aumenta para 3d6.' },
+    ] },
+    { level:6,  prof:3, features:[
+      { name:'Especialização (mais 2)', desc:'Escolha mais duas proficiências de perícia para ganhar bônus dobrado.' },
+      { name:'Ataque Furtivo (4d6)', desc:'Seu dado de Ataque Furtivo aumenta para 4d6.' },
+    ] },
+    { level:7,  prof:3, features:[
+      { name:'Evasão', desc:'Você pode se esquivar adiantado de certos efeitos de área, como o sopro de fogo de um dragão vermelho ou uma magia relâmpago. Quando você é submetido a um efeito que permite um TR de Destreza para sofrer apenas metade do dano, você sofre nenhum dano com sucesso e apenas metade com falha.' },
+      { name:'Ataque Furtivo (4d6)', desc:'Mantém 4d6.' },
+    ] },
+    { level:8,  prof:3, features:[ ASI ] },
+    { level:9,  prof:4, features:[
+      { name:'Característica do Arquétipo de Gatuno', desc:'Você recebe uma característica do seu Arquétipo (Assassino: Infiltrador; Trapaceiro Arcano: Conjurar Magia; Gatuno: Mãos Rápidas / Andar em Paredes).', subclass:true },
+      { name:'Ataque Furtivo (5d6)', desc:'Seu dado de Ataque Furtivo aumenta para 5d6.' },
+    ] },
+    { level:10, prof:4, features:[
+      ASI,
+      { name:'Ataque Furtivo (6d6)', desc:'Seu dado de Ataque Furtivo aumenta para 6d6.' },
+    ] },
+    { level:11, prof:4, features:[
+      { name:'Talento Confiável', desc:'Você aperfeiçoou suas habilidades escolhidas ao ponto da excelência. Sempre que você fizer um teste de habilidade que permita adicionar seu bônus de proficiência, você pode tratar um resultado de 9 ou menos no d20 como um 10.' },
+      { name:'Ataque Furtivo (6d6)', desc:'Mantém 6d6.' },
+    ] },
+    { level:12, prof:4, features:[ ASI ] },
+    { level:13, prof:5, features:[
+      { name:'Característica do Arquétipo de Gatuno', desc:'Você recebe outra característica do seu Arquétipo.', subclass:true },
+      { name:'Ataque Furtivo (7d6)', desc:'Seu dado de Ataque Furtivo aumenta para 7d6.' },
+    ] },
+    { level:14, prof:5, features:[
+      { name:'Sentido Cego', desc:'Se você consegue ouvir, você está ciente da localização de qualquer criatura invisível ou ocultada a até 3 metros de você.' },
+      { name:'Ataque Furtivo (8d6)', desc:'Seu dado de Ataque Furtivo aumenta para 8d6.' },
+    ] },
+    { level:15, prof:5, features:[
+      { name:'Mente Escorregadia', desc:'Você ganhou uma maior força de mente. Você ganha proficiência em Testes de Resistência de Sabedoria.' },
+      { name:'Ataque Furtivo (8d6)', desc:'Mantém 8d6.' },
+    ] },
+    { level:16, prof:5, features:[ ASI ] },
+    { level:17, prof:6, features:[
+      { name:'Característica do Arquétipo de Gatuno', desc:'Você recebe a característica final do seu Arquétipo.', subclass:true },
+      { name:'Ataque Furtivo (9d6)', desc:'Seu dado de Ataque Furtivo aumenta para 9d6.' },
+    ] },
+    { level:18, prof:6, features:[
+      { name:'Ilusório', desc:'Você é tão evasivo que os atacantes raramente conseguem vantagem contra você. Nenhum ataque pode ter vantagem contra você enquanto você não estiver incapacitado.' },
+      { name:'Ataque Furtivo (9d6)', desc:'Mantém 9d6.' },
+    ] },
+    { level:19, prof:6, features:[ ASI ] },
+    { level:20, prof:6, features:[
+      { name:'Golpe de Sorte', desc:'Você tem um dom inexplicável para ter sucesso quando você mais precisa. Se seu ataque errar um alvo a alcance, você pode transformar o erro em acerto. Alternativamente, se você falhar em um teste de habilidade, você pode tratar o d20 como 20. Ao usar essa característica, você não pode usá-la novamente até terminar um descanso curto ou longo.' },
+      { name:'Ataque Furtivo (10d6)', desc:'Seu dado de Ataque Furtivo aumenta para 10d6.' },
+    ] },
+  ]
+}
+
+// ─── MONGE ───────────────────────────────────────────────────────────────────
+const MONGE = {
+  index:'monge', name:'Monge', hit_die:8,
+  primary_ability:'Destreza e Sabedoria',
+  saving_throws:['Força','Destreza'],
+  armor_proficiencies:[],
+  weapon_proficiencies:['Simples','Espadas Curtas'],
+  tool_proficiencies:['Instrumento musical ou ferramenta de artesão (1 à escolha)'],
+  skill_choices:{ count:2, from:['Acrobacia','Atletismo','Furtividade','História','Intuição','Religião'] },
+  spell_slots_table: null,
+  ki_points: [0,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+  martial_arts_die: ['d4','d4','d4','d4','d6','d6','d6','d6','d6','d6','d8','d8','d8','d8','d8','d8','d10','d10','d10','d10'],
+  levels:[
+    { level:1,  prof:2, features:[
+      { name:'Defesa Desarmada', desc:'Enquanto você não estiver usando armadura e sem escudo, sua Classe de Armadura é igual a 10 + seu modificador de Destreza + seu modificador de Sabedoria.' },
+      { name:'Artes Marciais (d4)', desc:'Sua prática das artes marciais lhe dá maestria em combate usando ataques desarmados e armas de monge (espadas curtas e simples sem propriedade de alcance ou de duas mãos). Você ganha os seguintes benefícios: usar Des no lugar de For em ataques desarmados/armas de monge; rolar d4 no lugar do dano normal; atacar desarmado como ação bônus após usar Atacar.' },
+    ], class_specific:{ ki_points:0, martial_arts_die:'d4' } },
+    { level:2,  prof:2, features:[
+      { name:'Ki (2 pontos)', desc:'Seu treinamento permite que você aproveite o fluxo místico de ki dentro de você. Você tem 2 pontos de ki que se recuperam com descanso curto ou longo. Você pode gastá-los nos seguintes poderes:' },
+      { name:'Rajada de Golpes', desc:'Imediatamente após usar Atacar no seu turno, você pode gastar 1 ponto de ki para fazer dois ataques desarmados como ação bônus.' },
+      { name:'Defesa Paciente', desc:'Você pode gastar 1 ponto de ki para usar Esquivar como ação bônus.' },
+      { name:'Vento na Corrida', desc:'Você pode gastar 1 ponto de ki para usar Disparar ou Desengajar como ação bônus, e seu deslocamento de salto é dobrado até o fim do turno.' },
+      { name:'Movimento Desarmado (+10m)', desc:'Seu deslocamento aumenta em 3 metros enquanto você não usa armadura ou escudo. No nível 9, você também pode se mover pela água e superfícies verticais sem cair (se terminar o movimento em superfície sólida).' },
+    ], class_specific:{ ki_points:2, martial_arts_die:'d4' } },
+    { level:3,  prof:2, features:[
+      { name:'Tradição Monástica', desc:'Você se compromete com uma tradição monástica: Caminho da Mão Aberta, Caminho da Sombra ou Caminho dos Quatro Elementos. A tradição concede características nos níveis 3, 6, 11 e 17.', choice_id:'monastic_tradition' },
+      { name:'Defletir Projéteis', desc:'Você pode usar sua reação para defletir ou pegar o míssil quando for acertado por um ataque de arma de alcance. Quando faz isso, o dano sofrido é reduzido em 1d10 + mod Destreza + nível de monge. Se o dano for reduzido a 0, você pode pegar o projétil se couber na mão. Se pegar, pode gastar 1 ki para fazer um ataque de alcance com a munição ou a arma, com alcance de 6/18 metros, usando proficiência.' },
+    ], class_specific:{ ki_points:3, martial_arts_die:'d4' } },
+    { level:4,  prof:2, features:[
+      ASI,
+      { name:'Queda Lenta', desc:'Você pode usar sua reação quando cair para reduzir o dano de queda que você sofre em quantidade igual a cinco vezes o seu nível de monge.' },
+    ], class_specific:{ ki_points:4, martial_arts_die:'d4' } },
+    { level:5,  prof:3, features:[
+      { name:'Ataque Extra', desc:'Quando você usa a ação Atacar no seu turno, você pode atacar duas vezes em vez de uma.' },
+      { name:'Golpe Atordoante', desc:'Você pode interferir no fluxo de ki de um inimigo. Ao acertar outra criatura com um ataque de arma de monge, você pode gastar 1 ki para tentar um golpe atordoante. O alvo deve ter sucesso em um TR de Constituição (CD = 8 + bônus de prof + mod Sab) ou ficará atordoado até o fim do seu próximo turno.' },
+    ], class_specific:{ ki_points:5, martial_arts_die:'d6' } },
+    { level:6,  prof:3, features:[
+      { name:'Golpes Imbuídos de Ki', desc:'Seus ataques desarmados são considerados mágicos para fins de superar resistência a dano não mágico.' },
+      { name:'Característica da Tradição Monástica', desc:'Você recebe uma característica adicional da sua Tradição Monástica.', subclass:true },
+    ], class_specific:{ ki_points:6, martial_arts_die:'d6' } },
+    { level:7,  prof:3, features:[
+      { name:'Evasão', desc:'Seu instinto ágil é tão refinado que você pode se esquivar de certas magias. Quando submetido a um efeito que permita TR de Destreza para metade do dano, você sofre nenhum dano com sucesso e metade com falha.' },
+      { name:'Tranquilidade Mental', desc:'Você pode usar uma ação para terminar um efeito em você mesmo que cause que você esteja assustado ou enfeitiçado.' },
+    ], class_specific:{ ki_points:7, martial_arts_die:'d6' } },
+    { level:8,  prof:3, features:[ ASI ], class_specific:{ ki_points:8, martial_arts_die:'d6' } },
+    { level:9,  prof:4, features:[
+      { name:'Movimento Desarmado (escalar e andar sobre água)', desc:'Você pode se mover por superfícies verticais e sobre líquidos no seu turno sem cair durante o movimento. Você deve terminar seu turno em superfície sólida horizontal.' },
+    ], class_specific:{ ki_points:9, martial_arts_die:'d6' } },
+    { level:10, prof:4, features:[
+      { name:'Pureza de Corpo', desc:'Seu domínio do ki imuniza-o contra doenças e venenos.' },
+    ], class_specific:{ ki_points:10, martial_arts_die:'d6' } },
+    { level:11, prof:4, features:[
+      { name:'Característica da Tradição Monástica', desc:'Você recebe a característica de nível 11 da sua Tradição Monástica.', subclass:true },
+    ], class_specific:{ ki_points:11, martial_arts_die:'d8' } },
+    { level:12, prof:4, features:[ ASI ], class_specific:{ ki_points:12, martial_arts_die:'d8' } },
+    { level:13, prof:5, features:[
+      { name:'Língua do Sol e da Lua', desc:'Você aprende a tocar o ki de outras mentes para que você possa se comunicar com qualquer criatura que fale qualquer idioma. Qualquer criatura que possa entender um idioma pode entender o que você diz.' },
+    ], class_specific:{ ki_points:13, martial_arts_die:'d8' } },
+    { level:14, prof:5, features:[
+      { name:'Alma de Diamante', desc:'Seu domínio do ki concede proficiência em todos os Testes de Resistência. Além disso, sempre que você fizer um TR e falhar, você pode gastar 1 ponto de ki para fazê-lo novamente e deve usar o segundo resultado.' },
+    ], class_specific:{ ki_points:14, martial_arts_die:'d8' } },
+    { level:15, prof:5, features:[
+      { name:'Corpo Eterno', desc:'Seu ki preserva seu corpo. Você envelhece mais lentamente. Para cada 10 anos que passam, seu corpo envelhece apenas 1 ano. Você também não pode mais ser envelhecido magicamente.' },
+    ], class_specific:{ ki_points:15, martial_arts_die:'d8' } },
+    { level:16, prof:5, features:[ ASI ], class_specific:{ ki_points:16, martial_arts_die:'d8' } },
+    { level:17, prof:6, features:[
+      { name:'Característica da Tradição Monástica', desc:'Você recebe a característica de nível 17 da sua Tradição Monástica.', subclass:true },
+      { name:'Golpe Trêmulo', desc:'Você pode interferir no ki de uma criatura ao atingi-la. Quando você acertar uma criatura com um ataque de arma de monge, você pode gastar 3 ki para iniciar uma vibração no corpo da criatura. Até o final do seu próximo turno, você pode usar sua ação para causar que a criatura fique incapacitada até o final do seu próximo turno, ou para matá-la se ela tiver menos de 100 PV.' },
+    ], class_specific:{ ki_points:17, martial_arts_die:'d10' } },
+    { level:18, prof:6, features:[
+      { name:'Corpo Vazio', desc:'Você pode gastar 4 ki para lançar invisibilidade em si mesmo, sem componentes. Além disso, você ganha resistência a dano não mágico.' },
+    ], class_specific:{ ki_points:18, martial_arts_die:'d10' } },
+    { level:19, prof:6, features:[ ASI ], class_specific:{ ki_points:19, martial_arts_die:'d10' } },
+    { level:20, prof:6, features:[
+      { name:'Eu Perfeito', desc:'Quando você jogar para iniciativa e não tiver ki restantes, você recupera 4 pontos de ki.' },
+    ], class_specific:{ ki_points:20, martial_arts_die:'d10' } },
+  ]
+}
+
+// ─── PALADINO ────────────────────────────────────────────────────────────────
+const PALADINO = {
+  index:'paladino', name:'Paladino', hit_die:10,
+  primary_ability:'Força e Carisma',
+  saving_throws:['Sabedoria','Carisma'],
+  armor_proficiencies:['Todas as Armaduras','Escudos'],
+  weapon_proficiencies:['Simples','Marciais'],
+  tool_proficiencies:[],
+  skill_choices:{ count:2, from:['Atletismo','Intimidação','Intuição','Medicina','Persuasão','Religião'] },
+  spell_slots_table: HALF_SLOTS.filter(Boolean),
+  levels:[
+    { level:1,  prof:2, features:[
+      { name:'Sentido Divino', desc:'A presença de poderes do bem ou do mal é sensível a você. Como ação, você pode abrir sua consciência para detectar tais forças. Até o final do seu próximo turno, você sabe a localização de qualquer celestial, infernal ou morto-vivo a até 18 metros de você que não esteja com cobertura total. Você sabe o tipo mas não a identidade. Nos mesmos alcances, você também detecta a presença de qualquer local ou objeto que foi consagrado ou profanado. Você pode usar esta característica um número de vezes igual a 1 + mod Carisma. Recupera com descanso longo.' },
+      { name:'Cura pelas Mãos', desc:'Seu toque sagrado pode curar feridas. Você tem uma reserva de poder de cura que se repõe com cada descanso longo. Com esta reserva, você pode restaurar PV iguais ao seu nível de paladino × 5. Como ação, pode tocar uma criatura e restaurar qualquer quantidade de PV que reste nessa reserva. Alternativamente, pode gastar 5 PV para curar uma doença ou neutralizar um veneno. Não funciona em mortos-vivos e constructos.' },
+    ] },
+    { level:2,  prof:2, features:[
+      { name:'Estilo de Combate', desc:'Você adota um estilo de combate como especialidade. Escolha: Defesa (+1 CA com armadura), Duelo (+2 dano com arma de 1 mão), Proteção (reação para impor desvantagem em ataque contra aliado), Grande Arma (rolar novamente 1 ou 2 em dano de armas de 2 mãos).', choice_id:'fighting_style_paladin' },
+      { name:'Conjuração de Paladino', desc:'Você aprendeu a extrair magia divina através de meditação e oração. A habilidade de magia do paladino é Carisma (CD = 8 + bônus prof + mod Car). Você prepara magias após descanso longo: mod Carisma + metade nível paladino (arredondado para baixo). Para conjurar, use espaço de magia de nível igual ou maior ao da magia. Recupera espaços com descanso longo.' },
+      { name:'Golpe Divino', desc:'Quando você acertar uma criatura com uma arma de ataque corpo a corpo, pode gastar um espaço de magia para causar dano radiante adicional ao alvo, em adição ao dano da arma. O dano extra é 2d8 por nível do espaço usado (máximo 5d8). O dano aumenta em 1d8 se o alvo for um morto-vivo ou infernal.' },
+    ] },
+    { level:3,  prof:2, features:[
+      { name:'Saúde Divina', desc:'A magia divina que flui por você o torna imune a doenças.' },
+      { name:'Juramento Sagrado', desc:'Você faz seu juramento que vincula você como um paladino para sempre. Escolha entre Juramento de Devoção, Juramento dos Anciões ou Juramento de Vingança. O juramento concede magias e características nos níveis 3, 7, 15 e 20.', choice_id:'sacred_oath' },
+      { name:'Magias do Juramento', desc:'Cada juramento sagrado tem uma lista de magias associadas. Essas magias de juramento são sempre preparadas e não contam para o número de magias que você pode preparar por dia.' },
+      { name:'Canalizar Divindade', desc:'Seu juramento lhe permite canalizar energia divina para alimentar efeitos mágicos. Cada opção de Canalizar Divindade é explicada no próprio juramento. Quando usa Canalizar Divindade, escolha qual efeito usar. Você deve terminar um descanso curto ou longo para usar novamente.' },
+    ] },
+    { level:4,  prof:2, features:[ ASI ] },
+    { level:5,  prof:3, features:[
+      { name:'Ataque Extra', desc:'Quando você usa a ação Atacar no seu turno, você pode atacar duas vezes em vez de uma.' },
+    ] },
+    { level:6,  prof:3, features:[
+      { name:'Aura de Proteção', desc:'Sempre que você ou uma criatura amigável a até 1,5 metros de você precisar fazer um TR, a criatura ganha um bônus igual ao seu modificador de Carisma no TR (mínimo +1). Você deve estar consciente para conceder este bônus.' },
+    ] },
+    { level:7,  prof:3, features:[
+      { name:'Característica do Juramento Sagrado', desc:'Você recebe uma característica do seu Juramento Sagrado (ex: Juramento de Devoção: Aura de Devoção; Anciões: Aura de Guardiões; Vingança: Olho por Olho).', subclass:true },
+    ] },
+    { level:8,  prof:3, features:[ ASI ] },
+    { level:9,  prof:4, features:[] },
+    { level:10, prof:4, features:[
+      { name:'Aura de Coragem', desc:'Você e criaturas amigáveis a até 1,5 metros de você não podem ficar assustadas enquanto você estiver consciente.' },
+    ] },
+    { level:11, prof:4, features:[
+      { name:'Golpe Divino Aprimorado', desc:'Você é tão imbuído de poder justo que todos os seus ataques com armas corpo a corpo carregam poder divino com eles. Sempre que você acertar uma criatura com uma arma de ataque corpo a corpo, a criatura sofre 1d8 de dano radiante extra.' },
+    ] },
+    { level:12, prof:4, features:[ ASI ] },
+    { level:13, prof:5, features:[] },
+    { level:14, prof:5, features:[
+      { name:'Toque Purificador', desc:'Você pode usar sua ação para pôr fim a uma magia em você mesmo ou em uma criatura amigável a seu toque. Você pode usar esta característica um número de vezes igual ao seu modificador de Carisma (mínimo 1 vez). Você recupera os usos gastos com descanso longo.' },
+    ] },
+    { level:15, prof:5, features:[
+      { name:'Característica do Juramento Sagrado', desc:'Você recebe a característica de nível 15 do seu Juramento.', subclass:true },
+    ] },
+    { level:16, prof:5, features:[ ASI ] },
+    { level:17, prof:6, features:[] },
+    { level:18, prof:6, features:[
+      { name:'Melhoria das Auras (9m)', desc:'O raio das Auras de Proteção e Coragem aumenta de 1,5 metros para 9 metros.' },
+    ] },
+    { level:19, prof:6, features:[ ASI ] },
+    { level:20, prof:6, features:[
+      { name:'Característica do Juramento Sagrado', desc:'Você recebe a característica final (nível 20) do seu Juramento (ex: Devoção: Campeão Sagrado; Anciões: Ancião Eterno; Vingança: Avatar da Vingança).', subclass:true },
+    ] },
+  ]
+}
+
+// ─── PATRULHEIRO ─────────────────────────────────────────────────────────────
+const PATRULHEIRO = {
+  index:'patrulheiro', name:'Patrulheiro', hit_die:10,
+  primary_ability:'Destreza e Sabedoria',
+  saving_throws:['Força','Destreza'],
+  armor_proficiencies:['Leve','Média','Escudos'],
+  weapon_proficiencies:['Simples','Marciais'],
+  tool_proficiencies:[],
+  skill_choices:{ count:3, from:['Adestramento','Atletismo','Furtividade','Intuição','Investigação','Natureza','Percepção','Sobrevivência'] },
+  spell_slots_table: HALF_SLOTS.filter(Boolean),
+  levels:[
+    { level:1,  prof:2, features:[
+      { name:'Inimigo Favorito', desc:'Você tem experiência significativa em estudar, rastrear, caçar e até mesmo falar com um certo tipo de inimigo. Escolha um tipo de inimigo favorito: aberrações, bestas, celestiais, constructos, dragões, elementais, fadas, infernais, gigantes, limos, monstruosidades, mortos-vivos ou plantas. Alternativamente, selecione duas raças de humanóides. Você tem vantagem em testes de Sabedoria (Sobrevivência) para rastrear seus inimigos favoritos, bem como em testes de Inteligência para recordar informações sobre eles.' },
+      { name:'Explorador Natural', desc:'Você é especialmente familiarizado com um tipo de ambiente natural e é habilidoso em viajar e sobreviver em tais regiões. Escolha um tipo de terreno favorito: ártico, costa, deserto, floresta, pântano, montanha, planície ou Subterrâneo. Ao fazer um teste de Inteligência ou Sabedoria relacionado ao terreno favorito onde você tem proficiência, seu bônus de proficiência é dobrado se aplicável.' },
+    ] },
+    { level:2,  prof:2, features:[
+      { name:'Estilo de Combate', desc:'Você adota um estilo de combate como especialidade. Escolha: Arqueiro (+2 em ataques à distância), Defesa (+1 CA com armadura), Duelo (+2 dano com arma de 1 mão), Combate com Duas Armas (adicionar mod de atributo ao dano da segunda arma).', choice_id:'fighting_style_ranger' },
+      { name:'Conjuração de Patrulheiro', desc:'Você aprendeu a usar a essência mágica da natureza para lançar magias. A habilidade de magia do patrulheiro é Sabedoria (CD = 8 + bônus prof + mod Sab). Você usa espaços de magia de meio lançador: começa a receber no nível 2.' },
+    ] },
+    { level:3,  prof:2, features:[
+      { name:'Arquétipo do Patrulheiro', desc:'Você escolhe um arquétipo que você se esforça para emular: Caçador ou Mestre das Bestas. O arquétipo concede características nos níveis 3, 7, 11 e 15.', choice_id:'ranger_archetype' },
+      { name:'Consciência Primeva', desc:'Você pode gastar um espaço de magia para focar sua consciência em território circundante. Por 1 minuto por nível do espaço usado, você pode sentir se os seguintes tipos de criaturas estão presentes dentro de 1,5 km: aberrações, celestiais, dragões, elementais, fadas, infernais e mortos-vivos (ou dentro de 9 km se estiver em seu terreno favorito). Esta característica não revela a localização ou número delas.' },
+    ] },
+    { level:4,  prof:2, features:[ ASI ] },
+    { level:5,  prof:3, features:[
+      { name:'Ataque Extra', desc:'Quando você usa a ação Atacar no seu turno, você pode atacar duas vezes em vez de uma.' },
+    ] },
+    { level:6,  prof:3, features:[
+      { name:'Inimigo Favorito (2 tipos)', desc:'Você escolhe um inimigo favorito adicional, bem como um idioma adicional associado. Você também aprende um idioma adicional falado pelos seus inimigos favoritos.' },
+      { name:'Explorador Natural (2 terrenos)', desc:'Você escolhe um terreno favorito adicional.' },
+    ] },
+    { level:7,  prof:3, features:[
+      { name:'Característica do Arquétipo do Patrulheiro', desc:'Você recebe uma característica do seu Arquétipo (Caçador: Táticas Defensivas; Mestre das Bestas: Ataque Excepcional).', subclass:true },
+    ] },
+    { level:8,  prof:3, features:[
+      ASI,
+      { name:'Passo da Terra', desc:'Mover-se por terreno difícil não mágico não custa movimento extra. Você também pode mover-se por plantas não mágicas sem ser retardado por elas e sem sofrer dano se elas tiverem espinhos, pontas ou ameaça similar. Além disso, você tem vantagem nos TR de Destreza contra plantas criadas ou manipuladas magicamente para impedir o movimento.' },
+    ] },
+    { level:9,  prof:4, features:[] },
+    { level:10, prof:4, features:[
+      { name:'Explorador Natural (3 terrenos)', desc:'Você escolhe mais um terreno favorito.' },
+      { name:'Ocultar-se às Claras', desc:'Você pode gastar 1 minuto criando uma toca para se ocultar. Você deve ter água e material de terreno disponíveis. Após criado, você e até seis criaturas amigáveis nela ficam difíceis de detectar. A CD para qualquer criatura que não seja o patrulheiro que perceber você e suas companhias enquanto ocultos é 10 + bônus Sabedoria do patrulheiro.' },
+    ] },
+    { level:11, prof:4, features:[
+      { name:'Característica do Arquétipo do Patrulheiro', desc:'Você recebe outra característica do seu Arquétipo.', subclass:true },
+    ] },
+    { level:12, prof:4, features:[ ASI ] },
+    { level:13, prof:5, features:[] },
+    { level:14, prof:5, features:[
+      { name:'Inimigo Favorito (3 tipos)', desc:'Você escolhe mais um inimigo favorito e aprende mais um idioma associado.' },
+      { name:'Desaparecer', desc:'Você pode usar a ação Esconder como ação bônus no seu turno. Além disso, você não pode ser rastreado por meios não mágicos, a não ser que você escolha deixar rastros.' },
+    ] },
+    { level:15, prof:5, features:[
+      { name:'Característica do Arquétipo do Patrulheiro', desc:'Você recebe a característica de nível 15 do seu Arquétipo.', subclass:true },
+    ] },
+    { level:16, prof:5, features:[ ASI ] },
+    { level:17, prof:6, features:[] },
+    { level:18, prof:6, features:[
+      { name:'Sentidos Ferais', desc:'Você ganha sentidos sobrenaturais que ajudam a lutar contra criaturas que você não pode ver. Quando atacar uma criatura que não possa ver, sua incapacidade de vê-la não impõe desvantagem nos seus ataques. Você também está ciente da localização de qualquer criatura invisível a até 9 metros, contanto que ela não esteja escondida de você e você não esteja cego ou surdo.' },
+    ] },
+    { level:19, prof:6, features:[ ASI ] },
+    { level:20, prof:6, features:[
+      { name:'Matador de Inimigos', desc:'Você se torna um caçador sem paralelo de seus inimigos. Uma vez em cada um dos seus turnos, você pode somar 1d8 adicional ao ataque e ao dano de uma jogada contra um de seus inimigos favoritos.' },
+    ] },
+  ]
+}
+
+// ─── FEITICEIRO ──────────────────────────────────────────────────────────────
+const FEITICEIRO = {
+  index:'feiticeiro', name:'Feiticeiro', hit_die:6,
+  primary_ability:'Carisma',
+  saving_throws:['Constituição','Carisma'],
+  armor_proficiencies:[],
+  weapon_proficiencies:['Adagas','Bestas Leves','Cajados','Dardos','Fundas'],
+  tool_proficiencies:[],
+  skill_choices:{ count:2, from:['Arcana','Enganação','Intuição','Intimidação','Persuasão','Religião'] },
+  spell_slots_table: FULL_SLOTS.slice(1),
+  cantrips_known:  [4,4,4,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6,6,6],
+  spells_known:    [2,3,4,5,6,7,8,9,10,11,12,12,13,13,14,14,15,15,15,15],
+  sorcery_points:  [0,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+  levels:[
+    { level:1,  prof:2, features:[
+      { name:'Conjuração de Feiticeiro', desc:'Um evento em sua passada e a magia que flui em você concede habilidade de conjurar magias. Usa Carisma como habilidade de magia (CD = 8 + bônus prof + mod Car). Você conhece 4 cantrips e 2 magias de 1° nível da lista de feiticeiro. Suas magias não precisam ser preparadas — você as lança a partir das que conhece.' },
+      { name:'Origem Feiticeira', desc:'Escolha uma origem feiticeira que descreva a fonte de seu poder mágico inato: Linhagem Dracônica ou Magia Selvagem. Sua escolha concede características nos níveis 1, 6, 14 e 18.', choice_id:'sorcerous_origin' },
+    ], class_specific:{ sorcery_points:0 } },
+    { level:2,  prof:2, features:[
+      { name:'Fonte de Magia', desc:'Você toca o poder latente em sua alma. Você tem um número de pontos de magia iguais ao seu nível de feiticeiro. Você gasta pontos de magia para criar espaços de magia e vice-versa (1° = 2 pt, 2° = 3 pt, 3° = 5 pt, 4° = 6 pt, 5° = 7 pt). Recupera todos os pontos de magia com descanso longo.' },
+      { name:'Conversão de Pontos de Magia', desc:'Como ação bônus, você pode transformar espaços de magia em pontos de magia (1 ponto por nível do espaço) ou pontos de magia em espaços. Não pode criar espaços acima do 5° nível desta forma.' },
+    ], class_specific:{ sorcery_points:2 } },
+    { level:3,  prof:2, features:[
+      { name:'Metamagia', desc:'Você ganha a habilidade de torcer suas magias para atender às suas necessidades. Escolha 2 opções de Metamagia entre: Magia Cuidadosa, Magia Distante, Magia Potenciada, Magia Expandida, Magia Estendida, Magia Intensificada, Magia Rápida e Magia Sutil. Pode selecionar mais nas progressões subsequentes. Uma Metamagia afeta uma magia a menos que especificado de outra forma.', choice_id:'metamagic' },
+    ], class_specific:{ sorcery_points:3 } },
+    { level:4,  prof:2, features:[ ASI ], class_specific:{ sorcery_points:4 } },
+    { level:5,  prof:3, features:[], class_specific:{ sorcery_points:5 } },
+    { level:6,  prof:3, features:[
+      { name:'Característica da Origem Feiticeira', desc:'Você recebe uma característica da sua Origem (Linhagem Dracônica: Afinidade Elemental; Magia Selvagem: Ondulação de Magia Selvagem).', subclass:true },
+    ], class_specific:{ sorcery_points:6 } },
+    { level:7,  prof:3, features:[], class_specific:{ sorcery_points:7 } },
+    { level:8,  prof:3, features:[ ASI ], class_specific:{ sorcery_points:8 } },
+    { level:9,  prof:4, features:[], class_specific:{ sorcery_points:9 } },
+    { level:10, prof:4, features:[
+      { name:'Metamagia (mais 1)', desc:'Você aprende mais uma opção de Metamagia.' },
+    ], class_specific:{ sorcery_points:10 } },
+    { level:11, prof:4, features:[], class_specific:{ sorcery_points:11 } },
+    { level:12, prof:4, features:[ ASI ], class_specific:{ sorcery_points:12 } },
+    { level:13, prof:5, features:[], class_specific:{ sorcery_points:13 } },
+    { level:14, prof:5, features:[
+      { name:'Característica da Origem Feiticeira', desc:'Você recebe a característica de nível 14 da sua Origem (Linhagem Dracônica: Asas Dracônicas; Magia Selvagem: Ondulação Controlada).', subclass:true },
+    ], class_specific:{ sorcery_points:14 } },
+    { level:15, prof:5, features:[], class_specific:{ sorcery_points:15 } },
+    { level:16, prof:5, features:[ ASI ], class_specific:{ sorcery_points:16 } },
+    { level:17, prof:6, features:[
+      { name:'Metamagia (mais 1)', desc:'Você aprende mais uma opção de Metamagia, totalizando 4.' },
+    ], class_specific:{ sorcery_points:17 } },
+    { level:18, prof:6, features:[
+      { name:'Característica da Origem Feiticeira', desc:'Você recebe a característica de nível 18 da sua Origem (Linhagem Dracônica: Presença Dracônica; Magia Selvagem: Ondulação Fortalecida).', subclass:true },
+    ], class_specific:{ sorcery_points:18 } },
+    { level:19, prof:6, features:[ ASI ], class_specific:{ sorcery_points:19 } },
+    { level:20, prof:6, features:[
+      { name:'Restauração Feiticeira', desc:'Você recupera 4 pontos de magia gastos sempre que terminar um descanso curto.' },
+    ], class_specific:{ sorcery_points:20 } },
+  ]
+}
+
+// ─── BRUXO ───────────────────────────────────────────────────────────────────
+const BRUXO = {
+  index:'bruxo', name:'Bruxo', hit_die:8,
+  primary_ability:'Carisma',
+  saving_throws:['Sabedoria','Carisma'],
+  armor_proficiencies:['Leve'],
+  weapon_proficiencies:['Simples'],
+  tool_proficiencies:[],
+  skill_choices:{ count:2, from:['Arcana','Enganação','História','Intimidação','Investigação','Natureza','Religião'] },
+  spell_slots_table: null,  // Magia de Pacto, tabela especial
+  pact_magic_table: PACT_MAGIC.slice(1),
+  cantrips_known:    [2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4],
+  spells_known:      [2,3,4,5,6,7,8,9,10,10,11,11,12,12,13,13,13,13,14,15],
+  invocations_known: [0,2,2,2,3,3,4,4,5,5,5,6,6,7,7,7,8,8,8,8],
+  levels:[
+    { level:1,  prof:2, features:[
+      { name:'Patrono Sobrenatural', desc:'Você fechou um pacto com um ser sobrenatural de seu patrono à sua escolha: O Arquifada (Feérico), O Diabo (Infernal) ou O Grande Antigo. Cada patrono concede características nos níveis 1, 6, 10 e 14.', choice_id:'patron' },
+      { name:'Magia de Pacto', desc:'Seu conhecimento arcano é derivado de magia que você extraiu de seu pacto com um ser sobrenatural. Você tem espaços de magia de Pacto que recupera com descanso curto ou longo. No nível 1: 1 espaço de 1° nível. Usa Carisma como habilidade de magia (CD = 8 + prof + mod Car). Suas magias conhecidas não são preparadas — você as lança a partir das que conhece.' },
+    ], class_specific:{ pact_slots:1, pact_slot_level:1, invocations:0 } },
+    { level:2,  prof:2, features:[
+      { name:'Invocações Eldritch', desc:'No seu estudo do conhecimento oculto, você descobriu invocações eldritch, fragmentos de conhecimento proibido que imbuem você com uma habilidade arcana duradoura. Você aprende 2 invocações eldritch de sua escolha. Você aprende invocações eldritch adicionais de sua escolha nos níveis mais altos. Sempre que ganhar um nível de bruxo, você pode substituir uma invocação que conhece por outra.' },
+    ], class_specific:{ pact_slots:2, pact_slot_level:1, invocations:2 } },
+    { level:3,  prof:2, features:[
+      { name:'Dádiva de Pacto', desc:'Seu patrono sobrenatural lhe concede um presente por seus serviços leais. Escolha uma das seguintes opções: Pacto da Corrente (familiar especial), Pacto da Lâmina (arma mágica conjurada), Pacto do Tomo (Livro das Sombras com truques extras).', choice_id:'pact_boon' },
+    ], class_specific:{ pact_slots:2, pact_slot_level:2, invocations:2 } },
+    { level:4,  prof:2, features:[ ASI ], class_specific:{ pact_slots:2, pact_slot_level:2, invocations:2 } },
+    { level:5,  prof:3, features:[], class_specific:{ pact_slots:2, pact_slot_level:3, invocations:3 } },
+    { level:6,  prof:3, features:[
+      { name:'Característica do Patrono Sobrenatural', desc:'Você recebe a característica de nível 6 do seu Patrono (Feérico: Fuga Fada; Infernal: Sorte do Próprio Diabo; Grande Antigo: Mente Protecionada).', subclass:true },
+    ], class_specific:{ pact_slots:2, pact_slot_level:3, invocations:3 } },
+    { level:7,  prof:3, features:[], class_specific:{ pact_slots:2, pact_slot_level:4, invocations:4 } },
+    { level:8,  prof:3, features:[ ASI ], class_specific:{ pact_slots:2, pact_slot_level:4, invocations:4 } },
+    { level:9,  prof:4, features:[], class_specific:{ pact_slots:2, pact_slot_level:5, invocations:5 } },
+    { level:10, prof:4, features:[
+      { name:'Característica do Patrono Sobrenatural', desc:'Você recebe a característica de nível 10 do seu Patrono (Feérico: Fuga Fada aprimorada; Infernal: Resistência Infernal; Grande Antigo: Mente de Évola).', subclass:true },
+    ], class_specific:{ pact_slots:2, pact_slot_level:5, invocations:5 } },
+    { level:11, prof:4, features:[
+      { name:'Misticismo Arcano (6° nível)', desc:'Você aprende um segredo de magia de alto nível. Escolha uma magia de 6° nível da lista de bruxo como seu misticismo arcano. Você pode lançá-la uma vez sem gastar espaço de magia. Deve terminar um descanso longo para lançá-la novamente.' },
+    ], class_specific:{ pact_slots:3, pact_slot_level:5, invocations:5 } },
+    { level:12, prof:4, features:[ ASI ], class_specific:{ pact_slots:3, pact_slot_level:5, invocations:6 } },
+    { level:13, prof:5, features:[
+      { name:'Misticismo Arcano (7° nível)', desc:'Você aprende uma magia de 7° nível da lista de bruxo. Lança uma vez por descanso longo sem usar espaço de magia.' },
+    ], class_specific:{ pact_slots:3, pact_slot_level:5, invocations:6 } },
+    { level:14, prof:5, features:[
+      { name:'Característica do Patrono Sobrenatural', desc:'Você recebe a característica de nível 14 do seu Patrono (Feérico: Encantamento das Fadas; Infernal: Arremesse pelo Inferno; Grande Antigo: Telepatia Criada).', subclass:true },
+    ], class_specific:{ pact_slots:3, pact_slot_level:5, invocations:7 } },
+    { level:15, prof:5, features:[
+      { name:'Misticismo Arcano (8° nível)', desc:'Você aprende uma magia de 8° nível da lista de bruxo. Lança uma vez por descanso longo sem usar espaço de magia.' },
+    ], class_specific:{ pact_slots:3, pact_slot_level:5, invocations:7 } },
+    { level:16, prof:5, features:[ ASI ], class_specific:{ pact_slots:3, pact_slot_level:5, invocations:7 } },
+    { level:17, prof:6, features:[
+      { name:'Misticismo Arcano (9° nível)', desc:'Você aprende uma magia de 9° nível da lista de bruxo. Lança uma vez por descanso longo sem usar espaço de magia.' },
+    ], class_specific:{ pact_slots:4, pact_slot_level:5, invocations:8 } },
+    { level:18, prof:6, features:[], class_specific:{ pact_slots:4, pact_slot_level:5, invocations:8 } },
+    { level:19, prof:6, features:[ ASI ], class_specific:{ pact_slots:4, pact_slot_level:5, invocations:8 } },
+    { level:20, prof:6, features:[
+      { name:'Mestre Eldritch', desc:'Você pode implorar a seu patrono para recuperar seus recursos gastos. Pode gastar 1 minuto em comunicação com seu patrono e pedir para ele restaurar seus espaços de magia gastos de Pacto. Uma vez feito isso, você não pode usar esta característica novamente até terminar um descanso longo.' },
+    ], class_specific:{ pact_slots:4, pact_slot_level:5, invocations:8 } },
+  ]
+}
+
+// ─── MAGO ────────────────────────────────────────────────────────────────────
+const MAGO = {
+  index:'mago', name:'Mago', hit_die:6,
+  primary_ability:'Inteligência',
+  saving_throws:['Inteligência','Sabedoria'],
+  armor_proficiencies:[],
+  weapon_proficiencies:['Adagas','Bestas Leves','Cajados','Dardos','Fundas','Zarabatanas'],
+  tool_proficiencies:[],
+  skill_choices:{ count:2, from:['Arcana','História','Intuição','Investigação','Medicina','Religião'] },
+  spell_slots_table: FULL_SLOTS.slice(1),
+  cantrips_known: [3,3,3,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5],
+  levels:[
+    { level:1,  prof:2, features:[
+      { name:'Conjuração de Mago', desc:'Como estudioso da magia arcana, você tem um grimório que contém magias que mostram os primeiros vislumbres do seu verdadeiro poder. Usa Inteligência como habilidade de magia (CD = 8 + prof + mod Int). Você prepara magias do seu grimório após descanso longo: número igual ao mod Inteligência + nível de mago (mín. 1). Você pode mudar suas magias preparadas durante um descanso longo. No nível 1, você conhece 3 cantrips e tem 6 magias de 1° nível no grimório.' },
+      { name:'Recuperação Arcana', desc:'Uma vez por dia, quando terminar um descanso curto, você pode recuperar alguns espaços de magia gastos. Você pode recuperar espaços de magia com nível total combinado igual ou menor à metade do seu nível de mago (mínimo 1). Não pode recuperar espaços de magia acima do 5° nível.' },
+    ] },
+    { level:2,  prof:2, features:[
+      { name:'Tradição Arcana', desc:'Você escolhe uma tradição arcana, moldando sua prática da magia por uma de oito escolas: Abjuração, Conjuração, Adivinhação, Encantamento, Evocação, Ilusão, Invocação, Necromancia ou Transmutação. Sua escolha concede características nos níveis 2, 6, 10 e 14.', choice_id:'arcane_tradition' },
+    ] },
+    { level:3,  prof:2, features:[] },
+    { level:4,  prof:2, features:[ ASI ] },
+    { level:5,  prof:3, features:[] },
+    { level:6,  prof:3, features:[
+      { name:'Característica da Tradição Arcana', desc:'Você recebe uma característica da sua Tradição Arcana.', subclass:true },
+    ] },
+    { level:7,  prof:3, features:[] },
+    { level:8,  prof:3, features:[ ASI ] },
+    { level:9,  prof:4, features:[] },
+    { level:10, prof:4, features:[
+      { name:'Característica da Tradição Arcana', desc:'Você recebe outra característica da sua Tradição Arcana.', subclass:true },
+    ] },
+    { level:11, prof:4, features:[] },
+    { level:12, prof:4, features:[ ASI ] },
+    { level:13, prof:5, features:[] },
+    { level:14, prof:5, features:[
+      { name:'Característica da Tradição Arcana', desc:'Você recebe a característica de nível 14 da sua Tradição Arcana.', subclass:true },
+    ] },
+    { level:15, prof:5, features:[] },
+    { level:16, prof:5, features:[ ASI ] },
+    { level:17, prof:6, features:[] },
+    { level:18, prof:6, features:[
+      { name:'Maestria de Magia', desc:'Você alcançou tal domínio com certos magias que pode lançá-las à vontade. Escolha uma magia de 1° nível e uma magia de 2° nível em seu grimório. Você pode lançar essas magias no nível mais baixo sem gastar um espaço de magia. Se quiser lançá-las em um nível mais alto, deve usar um espaço de magia normalmente.' },
+    ] },
+    { level:19, prof:6, features:[ ASI ] },
+    { level:20, prof:6, features:[
+      { name:'Magia Marcante', desc:'Você domina três magias adicionais e pode lançá-las com pouco esforço. Escolha até três magias de 3° nível ou inferior em seu grimório como suas magias marcantes. Você as lança sem gastar espaço de magia mas não pode lançar a mesma magia marcante duas vezes por turno. Você pode recuperar todos os seus usos quando terminar um descanso longo.' },
+    ] },
+  ]
+}
+
+// ─── Montar o objeto final ────────────────────────────────────────────────────
+const output = {}
+for (const cls of [BARBARO, BARDO, BRUXO, CLERIGO, DRUIDA, FEITICEIRO, GUERREIRO, LADINO, MAGO, MONGE, PALADINO, PATRULHEIRO]) {
+  output[cls.index] = cls
+}
+
+const outPath = './public/srd-data/phb-class-progression-full-pt.json'
+fs.writeFileSync(outPath, JSON.stringify(output, null, 2), 'utf8')
+console.log('✅ Gerado:', outPath)
+
+// Estatísticas
+let totalLevels = 0, totalFeatures = 0
+for (const [k, cls] of Object.entries(output)) {
+  const feats = cls.levels.reduce((s, l) => s + (l.features?.length ?? 0), 0)
+  totalLevels += cls.levels.length
+  totalFeatures += feats
+  console.log(`  ${k}: ${cls.levels.length} níveis, ${feats} características`)
+}
+console.log(`\nTotal: ${totalLevels} entradas de nível, ${totalFeatures} características`)
+const size = fs.statSync(outPath).size
+console.log(`Tamanho do arquivo: ${(size/1024).toFixed(1)} KB`)
