@@ -59,13 +59,15 @@ export function CharacterWizard({ onBack, onComplete }) {
   const [races, setRaces] = useState([])
   const [classes, setClasses] = useState([])
   const [backgrounds, setBackgrounds] = useState([])
-  const [classChoices, setClassChoices] = useState({})
+  const [classChoices,    setClassChoices]    = useState({})
+  const [classProgression, setClassProgression] = useState({})
 
   useEffect(() => {
     fetch('/srd-data/phb-races-pt.json').then(r => r.json()).then(setRaces).catch(() => {})
     fetch('/srd-data/phb-classes-pt.json').then(r => r.json()).then(setClasses).catch(() => {})
     fetch('/srd-data/phb-backgrounds-pt.json').then(r => r.json()).then(setBackgrounds).catch(() => {})
     fetch('/srd-data/phb-class-choices-pt.json').then(r => r.json()).then(setClassChoices).catch(() => {})
+    fetch('/srd-data/phb-class-progression-pt.json').then(r => r.json()).then(setClassProgression).catch(() => {})
   }, [])
 
   const classData = useMemo(
@@ -139,7 +141,7 @@ export function CharacterWizard({ onBack, onComplete }) {
           {currentStepId === 'settings'   && <Step0Settings   draft={draft} updateDraft={updateDraft} />}
           {currentStepId === 'concept'    && <Step1Concept    draft={draft} updateDraft={updateDraft} />}
           {currentStepId === 'race'       && <Step2Race       draft={draft} updateDraft={updateDraft} races={races} />}
-          {currentStepId === 'class'      && <Step3Class      draft={draft} updateDraft={updateDraft} classes={classes} classChoices={classChoices} />}
+          {currentStepId === 'class'      && <Step3Class      draft={draft} updateDraft={updateDraft} classes={classes} classChoices={classChoices} classProgression={classProgression} />}
           {currentStepId === 'background' && <Step4Background draft={draft} updateDraft={updateDraft} backgrounds={backgrounds} />}
           {currentStepId === 'attributes' && <Step5Attributes draft={draft} updateDraft={updateDraft} />}
           {currentStepId === 'skills'     && <Step6Skills     draft={draft} updateDraft={updateDraft} classData={classData} />}
