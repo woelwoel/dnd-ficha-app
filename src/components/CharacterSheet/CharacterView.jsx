@@ -125,7 +125,7 @@ function Coins({ currency }) {
    ════════════════════════════════════════════════════════════ */
 export function CharacterView({
   character, races, classes, backgrounds,
-  classData, onApplyLevelUp, onLevelChange, onAddMulticlass, onRemoveMulticlass,
+  classData, onApplyLevelUp, onLevelChange, onAddMulticlass, onRemoveMulticlass, onChosenFeaturesChange,
 }) {
   const [subTab, setSubTab] = useState('ficha')
   const { info, attributes, combat, proficiencies, spellcasting, inventory, traits } = character
@@ -192,6 +192,7 @@ export function CharacterView({
           onApplyLevelUp={onApplyLevelUp}
           onAddMulticlass={onAddMulticlass}
           onRemoveMulticlass={onRemoveMulticlass}
+          onChosenFeaturesChange={onChosenFeaturesChange}
         />
       )}
 

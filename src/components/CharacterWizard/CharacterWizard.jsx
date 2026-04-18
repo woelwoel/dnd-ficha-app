@@ -30,6 +30,7 @@ const INITIAL_DRAFT = {
   // Classe
   class: '',
   level: 1,
+  chosenFeatures: {},
   savingThrows: [],
   spellcastingAbility: null,
   hitDice: '1d8',
@@ -57,11 +58,13 @@ export function CharacterWizard({ onBack, onComplete }) {
   const [races, setRaces] = useState([])
   const [classes, setClasses] = useState([])
   const [backgrounds, setBackgrounds] = useState([])
+  const [classChoices, setClassChoices] = useState({})
 
   useEffect(() => {
     fetch('/srd-data/phb-races-pt.json').then(r => r.json()).then(setRaces).catch(() => {})
     fetch('/srd-data/phb-classes-pt.json').then(r => r.json()).then(setClasses).catch(() => {})
     fetch('/srd-data/phb-backgrounds-pt.json').then(r => r.json()).then(setBackgrounds).catch(() => {})
+    fetch('/srd-data/phb-class-choices-pt.json').then(r => r.json()).then(setClassChoices).catch(() => {})
   }, [])
 
   const classData = useMemo(
@@ -94,7 +97,7 @@ export function CharacterWizard({ onBack, onComplete }) {
   }
 
   const currentStepId = steps[step]?.id
-  const canGoNext = canAdvance(currentStepId, draft)
+  const canGoNext = canAdvance(currentStepId, draft, classChoices)
 
   function handleNext() {
     if (canGoNext) setStep(s => Math.min(s + 1, steps.length - 1))
@@ -135,7 +138,7 @@ export function CharacterWizard({ onBack, onComplete }) {
           {currentStepId === 'settings'   && <Step0Settings   draft={draft} updateDraft={updateDraft} />}
           {currentStepId === 'concept'    && <Step1Concept    draft={draft} updateDraft={updateDraft} />}
           {currentStepId === 'race'       && <Step2Race       draft={draft} updateDraft={updateDraft} races={races} />}
-          {currentStepId === 'class'      && <Step3Class      draft={draft} updateDraft={updateDraft} classes={classes} />}
+          {currentStepId === 'class'      && <Step3Class      draft={draft} updateDraft={updateDraft} classes={classes} classChoices={classChoices} />}
           {currentStepId === 'background' && <Step4Background draft={draft} updateDraft={updateDraft} backgrounds={backgrounds} />}
           {currentStepId === 'attributes' && <Step5Attributes draft={draft} updateDraft={updateDraft} />}
           {currentStepId === 'skills'     && <Step6Skills     draft={draft} updateDraft={updateDraft} classData={classData} />}
@@ -220,12 +223,17 @@ function StepIndicator({ steps, current }) {
 }
 
 /* ── Validação de avanço por passo ───────────────────────────── */
-function canAdvance(stepId, draft) {
+function canAdvance(stepId, draft, classChoices = {}) {
   switch (stepId) {
     case 'settings':    return true
     case 'concept':     return !!draft.name?.trim()
     case 'race':        return !!draft.race
-    case 'class':       return !!draft.class
+    case 'class': {
+      if (!draft.class) return false
+      const choices = classChoices[draft.class]?.choices ?? []
+      const level1Choices = choices.filter(c => c.level === 1)
+      return level1Choices.every(c => !!draft.chosenFeatures?.[c.id])
+    }
     case 'background':  return !!draft.background
     case 'attributes':  return isAttributesComplete(draft)
     case 'skills':      return true
@@ -270,10 +278,12 @@ function buildCharacter(draft, classData) {
       playerName:  draft.playerName ?? '',
       race:        draft.race,
       subrace:     draft.subrace,
-      class:       draft.class,
-      subclass:    '',
-      level:       draft.level,
-      background:  draft.background,
+      class:          draft.class,
+      subclass:       '',
+      level:          draft.level,
+      multiclasses:   [],
+      chosenFeatures: draft.chosenFeatures ?? {},
+      background:     draft.background,
       alignment:   draft.alignment,
       appearance:  draft.appearance ?? '',
       xp:          0,

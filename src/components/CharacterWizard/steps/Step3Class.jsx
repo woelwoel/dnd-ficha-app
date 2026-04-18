@@ -12,9 +12,10 @@ function rollGoldFormula(formula) {
   return total * (Number(m[3]) || 1)
 }
 
-export function Step3Class({ draft, updateDraft, classes }) {
+export function Step3Class({ draft, updateDraft, classes, classChoices = {} }) {
   const [modal, setModal] = useState(false)
   const selectedClass = classes.find(c => c.index === draft.class)
+  const level1Choices = (classChoices[draft.class]?.choices ?? []).filter(c => c.level === 1)
 
   function handleClassChange(classIndex) {
     const cls       = classes.find(c => c.index === classIndex) ?? null
@@ -23,10 +24,15 @@ export function Step3Class({ draft, updateDraft, classes }) {
     const hitDice   = cls?.hit_die ? `1d${cls.hit_die}` : '1d8'
     updateDraft({
       class: classIndex,
+      chosenFeatures: {},
       savingThrows: saveKeys,
       spellcastingAbility: spellKey,
       hitDice,
     })
+  }
+
+  function handleFeatureChoice(choiceId, value) {
+    updateDraft({ chosenFeatures: { ...(draft.chosenFeatures ?? {}), [choiceId]: value } })
   }
 
   // HP preview
@@ -86,6 +92,54 @@ export function Step3Class({ draft, updateDraft, classes }) {
           ))}
         </select>
       </div>
+
+      {/* Escolhas de características de nível 1 */}
+      {level1Choices.length > 0 && (
+        <div className="space-y-4">
+          {level1Choices.map(choice => {
+            const selected = draft.chosenFeatures?.[choice.id] ?? ''
+            const selectedOpt = choice.options.find(o => o.value === selected)
+            return (
+              <div key={choice.id} className="bg-gray-800 border border-amber-800/40 rounded-xl p-4 space-y-3">
+                <div>
+                  <p className="text-xs text-amber-500 font-semibold uppercase tracking-widest mb-0.5">{choice.featureName}</p>
+                  <p className="text-sm text-gray-300">{choice.prompt} <span className="text-red-400">*</span></p>
+                </div>
+                <div className="grid gap-2">
+                  {choice.options.map(opt => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => handleFeatureChoice(choice.id, opt.value)}
+                      className={`text-left p-3 rounded-lg border transition-colors ${
+                        selected === opt.value
+                          ? 'border-amber-500 bg-amber-900/30 text-amber-200'
+                          : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
+                      }`}
+                    >
+                      <p className="font-semibold text-sm">{opt.name}</p>
+                      <p className="text-xs text-gray-400 mt-0.5 leading-relaxed line-clamp-2">{opt.desc}</p>
+                      {opt.grants?.bonusCantrips > 0 && (
+                        <span className="inline-block mt-1 text-[10px] bg-blue-900/40 border border-blue-700/50 text-blue-300 px-2 py-0.5 rounded-full">
+                          +{opt.grants.bonusCantrips} cantrips bônus
+                        </span>
+                      )}
+                      {opt.grants?.spells?.length > 0 && (
+                        <span className="inline-block mt-1 text-[10px] bg-green-900/40 border border-green-700/50 text-green-300 px-2 py-0.5 rounded-full">
+                          Concede: {opt.grants.spells.join(', ')}
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+                {selectedOpt && (
+                  <p className="text-xs text-gray-400 italic leading-relaxed">{selectedOpt.desc}</p>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      )}
 
       {/* Cards de stats da classe */}
       {selectedClass && (

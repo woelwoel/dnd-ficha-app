@@ -1,0 +1,110 @@
+{
+  "barbaro": {
+    "prerequisites": { "str": 13 },
+    "proficiencies": {
+      "armor": ["leve", "media", "escudos"],
+      "weapons": ["simples", "marciais"],
+      "tools": [],
+      "skills": 0
+    }
+  },
+  "bardo": {
+    "prerequisites": { "cha": 13 },
+    "proficiencies": {
+      "armor": ["leve"],
+      "weapons": [],
+      "tools": ["instrumento musical"],
+      "skills": 1
+    }
+  },
+  "clerigo": {
+    "prerequisites": { "wis": 13 },
+    "proficiencies": {
+      "armor": ["leve", "media", "escudos"],
+      "weapons": [],
+      "tools": [],
+      "skills": 0
+    }
+  },
+  "druida": {
+    "prerequisites": { "wis": 13 },
+    "proficiencies": {
+      "armor": ["leve", "media", "escudos"],
+      "weapons": [],
+      "tools": [],
+      "skills": 0
+    }
+  },
+  "guerreiro": {
+    "prerequisites": { "str": 13, "or": "dex" },
+    "proficiencies": {
+      "armor": ["leve", "media", "escudos"],
+      "weapons": ["simples", "marciais"],
+      "tools": [],
+      "skills": 0
+    }
+  },
+  "monge": {
+    "prerequisites": { "dex": 13, "wis": 13 },
+    "proficiencies": {
+      "armor": [],
+      "weapons": ["simples", "espadas curtas"],
+      "tools": [],
+      "skills": 0
+    }
+  },
+  "paladino": {
+    "prerequisites": { "str": 13, "cha": 13 },
+    "proficiencies": {
+      "armor": ["leve", "media", "escudos"],
+      "weapons": ["simples", "marciais"],
+      "tools": [],
+      "skills": 0
+    }
+  },
+  "patrulheiro": {
+    "prerequisites": { "dex": 13, "wis": 13 },
+    "proficiencies": {
+      "armor": ["leve", "media", "escudos"],
+      "weapons": ["simples", "marciais"],
+      "tools": [],
+      "skills": 1
+    }
+  },
+  "ladino": {
+    "prerequisites": { "dex": 13 },
+    "proficiencies": {
+      "armor": ["leve"],
+      "weapons": [],
+      "tools": ["ferramentas de ladrão"],
+      "skills": 1
+    }
+  },
+  "feiticeiro": {
+    "prerequisites": { "cha": 13 },
+    "proficiencies": {
+      "armor": [],
+      "weapons": [],
+      "tools": [],
+      "skills": 0
+    }
+  },
+  "bruxo": {
+    "prerequisites": { "cha": 13 },
+    "proficiencies": {
+      "armor": ["leve"],
+      "weapons": ["simples"],
+      "tools": [],
+      "skills": 0
+    }
+  },
+  "mago": {
+    "prerequisites": { "int": 13 },
+    "proficiencies": {
+      "armor": [],
+      "weapons": [],
+      "tools": [],
+      "skills": 0
+    }
+  }
+}

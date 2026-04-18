@@ -124,15 +124,32 @@ export function CharacterSheet({ characterId, onBack }) {
     })
   }
 
-  function handleAddMulticlass({ classIndex: mcClass }) {
+  function handleAddMulticlass({ classIndex: mcClass, proficiencies: mcProfs = {} }) {
     setCharacter(prev => {
-      const mcs = [...(prev.info.multiclasses ?? []), { class: mcClass, level: 1 }]
+      const mcs       = [...(prev.info.multiclasses ?? []), { class: mcClass, level: 1 }]
+      const newArmor   = mcProfs.armor   ?? []
+      const newWeapons = mcProfs.weapons ?? []
+      const newTools   = mcProfs.tools   ?? []
       return {
         ...prev,
         info: { ...prev.info, multiclasses: mcs },
+        proficiencies: {
+          ...prev.proficiencies,
+          armor:   [...new Set([...(prev.proficiencies?.armor   ?? []), ...newArmor])],
+          weapons: [...new Set([...(prev.proficiencies?.weapons ?? []), ...newWeapons])],
+          tools:   [...new Set([...(prev.proficiencies?.tools   ?? []), ...newTools])],
+        },
         meta: { ...prev.meta, updatedAt: new Date().toISOString() },
       }
     })
+  }
+
+  function handleChosenFeaturesChange(newFeatures) {
+    setCharacter(prev => ({
+      ...prev,
+      info: { ...prev.info, chosenFeatures: newFeatures },
+      meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+    }))
   }
 
   function handleRemoveMulticlass(idx) {
@@ -548,6 +565,7 @@ export function CharacterSheet({ characterId, onBack }) {
           onLevelChange={lvl => updateInfo('level', lvl)}
           onAddMulticlass={handleAddMulticlass}
           onRemoveMulticlass={handleRemoveMulticlass}
+          onChosenFeaturesChange={handleChosenFeaturesChange}
         />
       )}
     </div>

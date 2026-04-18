@@ -16,6 +16,7 @@ const DEFAULT_CHARACTER = {
     subclass: '',
     level: 1,
     multiclasses: [],
+    chosenFeatures: {},
     background: '',
     alignment: '',
     xp: 0,

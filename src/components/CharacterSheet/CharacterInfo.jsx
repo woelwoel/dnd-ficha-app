@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { DetailsModal } from '../DetailsModal'
 import { FormFieldError } from '../FormFieldError'
 import { TopicList, FullDescriptionToggle } from '../TopicList'
@@ -309,6 +309,11 @@ function LanguageSelector({ raceIndex, backgroundLanguages, selectedLanguages, o
 /* ── Componente principal ── */
 export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, errors = {}, onRaceChange, onSubraceChange, onBackgroundChange, onClassChange, onToggleLanguage }) {
   const [modal, setModal] = useState(null)
+  const [classChoices, setClassChoices] = useState({})
+
+  useEffect(() => {
+    fetch('/srd-data/phb-class-choices-pt.json').then(r => r.json()).then(setClassChoices).catch(() => {})
+  }, [])
 
   const selectedRace    = races.find(r => r.index === info.race)
   const selectedClass   = classes.find(c => c.index === info.class)
@@ -445,7 +450,18 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
 
       {/* Nível */}
       <div>
-        <label htmlFor="field-level" className="block text-xs text-gray-400 mb-1">Nível</label>
+        <label htmlFor="field-level" className="block text-xs text-gray-400 mb-1">
+          Nível
+          {(info.multiclasses?.length > 0) && (() => {
+            const totalLevel = info.level + (info.multiclasses ?? []).reduce((s, m) => s + (m.level ?? 0), 0)
+            const parts = (info.multiclasses ?? []).map(m => `${m.class} ${m.level}`).join(' / ')
+            return (
+              <span className="ml-2 text-amber-500 font-normal">
+                Total: {totalLevel} <span className="text-gray-500 text-[10px]">({info.class} {info.level} / {parts})</span>
+              </span>
+            )
+          })()}
+        </label>
         <select
           id="field-level"
           value={info.level}
@@ -459,6 +475,27 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
         </select>
         <FormFieldError id="err-level" message={errors.level} />
       </div>
+
+      {/* Características escolhidas da classe */}
+      {info.class && (() => {
+        const choices = classChoices[info.class]?.choices ?? []
+        const chosen = info.chosenFeatures ?? {}
+        const filled = choices.filter(c => c.level <= info.level && chosen[c.id])
+        if (!filled.length) return null
+        return (
+          <div className="bg-gray-800/50 border border-amber-800/30 rounded-lg px-3 py-2 space-y-1">
+            <p className="text-[10px] text-amber-600 uppercase tracking-widest font-semibold">Características de Classe</p>
+            {filled.map(c => {
+              const opt = c.options.find(o => o.value === chosen[c.id])
+              return (
+                <p key={c.id} className="text-xs text-gray-300">
+                  <span className="text-amber-400">{c.featureName}:</span> {opt?.name ?? chosen[c.id]}
+                </p>
+              )
+            })}
+          </div>
+        )
+      })()}
 
       {/* Antecedente */}
       <div>

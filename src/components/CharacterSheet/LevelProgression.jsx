@@ -19,6 +19,8 @@ function rollDie(sides) {
   return Math.ceil(Math.random() * sides)
 }
 
+const ATTR_LABELS = { str: 'FOR', dex: 'DES', con: 'CON', int: 'INT', wis: 'SAB', cha: 'CAR' }
+
 /* ── Timeline 1-20 ─────────────────────────────────────────────────── */
 function LevelTimeline({ currentLevel, levels, onJump }) {
   const scrollRef = useRef(null)
@@ -64,7 +66,7 @@ function LevelTimeline({ currentLevel, levels, onJump }) {
   )
 }
 
-/* ── HP Section (dentro do wizard) ─────────────────────────────────── */
+/* ── HP Section ─────────────────────────────────────────────────────── */
 function HPSection({ hitDie, conMod, hpGain, onHpChange }) {
   const avg  = calcHpAverage(hitDie, conMod)
   const max  = calcHpMax(hitDie, conMod)
@@ -80,15 +82,11 @@ function HPSection({ hitDie, conMod, hpGain, onHpChange }) {
     <div className="space-y-3">
       <p className="text-xs text-gray-400">
         Dado de vida: <span className="text-amber-300 font-bold">d{hitDie}</span>
-        {conMod !== 0 && (
-          <span className="ml-2">CON {formatModifier(conMod)}</span>
-        )}
+        {conMod !== 0 && <span className="ml-2">CON {formatModifier(conMod)}</span>}
       </p>
-
       <div className="flex flex-wrap gap-2">
-        {/* Média */}
         <button
-          onClick={() => onHpChange(avg)}
+          onClick={() => { setRolled(null); onHpChange(avg) }}
           className={`flex flex-col items-center px-4 py-2 rounded border-2 transition-all ${
             hpGain === avg && rolled === null
               ? 'border-amber-500 bg-amber-900/30 text-amber-200'
@@ -98,10 +96,8 @@ function HPSection({ hitDie, conMod, hpGain, onHpChange }) {
           <span className="text-xs text-gray-400">Média</span>
           <span className="text-xl font-black">+{avg}</span>
         </button>
-
-        {/* Máximo */}
         <button
-          onClick={() => onHpChange(max)}
+          onClick={() => { setRolled(null); onHpChange(max) }}
           className={`flex flex-col items-center px-4 py-2 rounded border-2 transition-all ${
             hpGain === max && rolled === null
               ? 'border-amber-500 bg-amber-900/30 text-amber-200'
@@ -111,8 +107,6 @@ function HPSection({ hitDie, conMod, hpGain, onHpChange }) {
           <span className="text-xs text-gray-400">Máximo</span>
           <span className="text-xl font-black">+{max}</span>
         </button>
-
-        {/* Rolar */}
         <button
           onClick={handleRoll}
           className={`flex flex-col items-center px-4 py-2 rounded border-2 transition-all ${
@@ -122,16 +116,11 @@ function HPSection({ hitDie, conMod, hpGain, onHpChange }) {
           }`}
         >
           <span className="text-xs text-gray-400">Rolar 1d{hitDie}</span>
-          <span className="text-xl font-black">
-            {rolled !== null ? `+${rolled}` : '🎲'}
-          </span>
+          <span className="text-xl font-black">{rolled !== null ? `+${rolled}` : '🎲'}</span>
         </button>
       </div>
-
       {hpGain != null && (
-        <p className="text-sm text-green-400 font-semibold">
-          Ganho selecionado: +{hpGain} PV
-        </p>
+        <p className="text-sm text-green-400 font-semibold">Ganho selecionado: +{hpGain} PV</p>
       )}
     </div>
   )
@@ -187,12 +176,10 @@ function ASIPicker({ attributes, onBoostsChange }) {
           </button>
         ))}
       </div>
-
       {mode === 'single' && (
         <div className="flex flex-wrap gap-2">
           {ABILITY_SCORES.map(({ key, abbr }) => {
-            const cur = attributes[key], atMax = cur >= 20
-            const sel = pick1 === key
+            const cur = attributes[key], atMax = cur >= 20, sel = pick1 === key
             return (
               <button key={key} disabled={atMax} onClick={() => selectSingle(key)}
                 className={`flex flex-col items-center px-3 py-2 rounded border-2 text-xs transition-all min-w-[52px] ${
@@ -209,7 +196,6 @@ function ASIPicker({ attributes, onBoostsChange }) {
           })}
         </div>
       )}
-
       {mode === 'split' && (
         <div className="space-y-3">
           {[{ slot: 0, label: '1° +1', pick: pick1, other: pick2 },
@@ -218,8 +204,7 @@ function ASIPicker({ attributes, onBoostsChange }) {
               <p className="text-xs text-gray-400 mb-1.5">{label}</p>
               <div className="flex flex-wrap gap-1.5">
                 {ABILITY_SCORES.map(({ key, abbr }) => {
-                  const cur = attributes[key], atMax = cur >= 20, taken = key === other
-                  const sel = pick === key
+                  const cur = attributes[key], atMax = cur >= 20, taken = key === other, sel = pick === key
                   return (
                     <button key={key} disabled={atMax || taken} onClick={() => selectSplit(slot, key)}
                       className={`flex flex-col items-center px-2.5 py-1.5 rounded border text-[11px] transition-all ${
@@ -245,23 +230,25 @@ function ASIPicker({ attributes, onBoostsChange }) {
 }
 
 /* ── Wizard de Level Up ─────────────────────────────────────────────── */
-function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConfirm, onCancel }) {
-  const [hpGain, setHpGain]   = useState(null)
-  const [boosts, setBoosts]   = useState({})
+function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConfirm, onCancel, levelChoices, currentChosenFeatures }) {
+  const [hpGain,      setHpGain]      = useState(null)
+  const [boosts,      setBoosts]      = useState({})
+  const [newChoices,  setNewChoices]  = useState({})
+  const [featModal,   setFeatModal]   = useState(null)
 
   const newFeatures = nextEntry?.features?.filter(f => !f.name?.includes('Aumento') && !f.name?.includes('Melhoria')) ?? []
   const hasASI      = isASIEntry(nextEntry)
-  const [featModal, setFeatModal] = useState(null)
+  const asiReady    = !hasASI || Object.keys(boosts).length > 0
+  const choicesForLevel = (levelChoices ?? []).filter(c => c.level === nextLevel)
+  const choicesReady = choicesForLevel.every(c => !!(newChoices[c.id] ?? currentChosenFeatures?.[c.id]))
 
-  const asiReady  = !hasASI || Object.keys(boosts).length > 0
-  const canCommit = hpGain != null && asiReady
+  const canCommit = hpGain != null && asiReady && choicesReady
 
   const newProfBonus = nextEntry?.proficiency_bonus
   const oldProfBonus = Math.ceil((nextLevel - 1) / 4) + 1
 
   return (
     <div className="bg-gray-800 border border-amber-700 rounded-xl p-5 space-y-5">
-      {/* Cabeçalho */}
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-black text-amber-400">Subindo para Nível {nextLevel}!</h3>
@@ -279,6 +266,44 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
         <h4 className="text-sm font-bold text-amber-300 mb-2">❤️ Pontos de Vida</h4>
         <HPSection hitDie={hitDie} conMod={conMod} hpGain={hpGain} onHpChange={setHpGain} />
       </div>
+
+      {/* Escolhas de características */}
+      {choicesForLevel.map(choice => {
+        const currentVal = newChoices[choice.id] ?? currentChosenFeatures?.[choice.id] ?? ''
+        return (
+          <div key={choice.id} className="space-y-2">
+            <h4 className="text-sm font-bold text-amber-300">🎭 {choice.featureName} <span className="text-red-400 font-normal text-xs">*</span></h4>
+            <p className="text-xs text-gray-400">{choice.prompt}</p>
+            <div className="grid gap-2">
+              {choice.options.map(opt => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setNewChoices(prev => ({ ...prev, [choice.id]: opt.value }))}
+                  className={`text-left p-3 rounded-lg border transition-colors ${
+                    currentVal === opt.value
+                      ? 'border-amber-500 bg-amber-900/30 text-amber-200'
+                      : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
+                  }`}
+                >
+                  <p className="font-semibold text-sm">{opt.name}</p>
+                  <p className="text-xs text-gray-400 mt-0.5 leading-relaxed line-clamp-2">{opt.desc}</p>
+                  {opt.grants?.bonusCantrips > 0 && (
+                    <span className="inline-block mt-1 text-[10px] bg-blue-900/40 border border-blue-700/50 text-blue-300 px-2 py-0.5 rounded-full">
+                      +{opt.grants.bonusCantrips} cantrips bônus
+                    </span>
+                  )}
+                  {opt.grants?.spells?.length > 0 && (
+                    <span className="inline-block mt-1 text-[10px] bg-green-900/40 border border-green-700/50 text-green-300 px-2 py-0.5 rounded-full">
+                      Concede: {opt.grants.spells.join(', ')}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+      })}
 
       {/* Novas Características */}
       {newFeatures.length > 0 && (
@@ -322,17 +347,13 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
         </div>
       )}
 
-      {/* Confirm / Cancel */}
       <div className="flex gap-3 pt-1">
-        <button
-          onClick={onCancel}
-          className="px-4 py-2 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm"
-        >
+        <button onClick={onCancel} className="px-4 py-2 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm">
           Cancelar
         </button>
         <button
           disabled={!canCommit}
-          onClick={() => canCommit && onConfirm({ newLevel: nextLevel, hpIncrease: hpGain, attrBoosts: boosts })}
+          onClick={() => canCommit && onConfirm({ newLevel: nextLevel, hpIncrease: hpGain, attrBoosts: boosts, newChoices })}
           className={`flex-1 py-2 rounded text-sm font-bold transition-all ${
             canCommit
               ? 'bg-amber-600 hover:bg-amber-500 text-white'
@@ -340,13 +361,12 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
           }`}
         >
           {!canCommit
-            ? (!hpGain ? 'Escolha o ganho de PV' : 'Escolha a melhoria de atributo')
+            ? (!hpGain ? 'Escolha o ganho de PV' : !choicesReady ? 'Escolha sua característica' : 'Escolha a melhoria de atributo')
             : `Confirmar Subida para Nível ${nextLevel}`
           }
         </button>
       </div>
 
-      {/* Modal de feature */}
       <DetailsModal isOpen={!!featModal} onClose={() => setFeatModal(null)} title={featModal?.name || ''}>
         {featModal && (
           <p className="text-sm text-gray-300 leading-relaxed">
@@ -361,15 +381,11 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
 /* ── Features adquiridas ────────────────────────────────────────────── */
 function AcquiredFeatures({ levels, currentLevel, onFeatureClick }) {
   const [open, setOpen] = useState(false)
-
   const acquired = []
   for (const entry of levels) {
     if (entry.level > currentLevel) break
-    for (const f of (entry.features ?? [])) {
-      acquired.push({ ...f, level: entry.level })
-    }
+    for (const f of (entry.features ?? [])) acquired.push({ ...f, level: entry.level })
   }
-
   if (!acquired.length) return null
 
   return (
@@ -400,93 +416,39 @@ function AcquiredFeatures({ levels, currentLevel, onFeatureClick }) {
   )
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   Componente principal
-   ═══════════════════════════════════════════════════════════════════ */
-export function LevelProgression({ character, classData, classes, onLevelChange, onApplyLevelUp, onAddMulticlass, onRemoveMulticlass }) {
-  const [allProgressions, setAllProgressions] = useState(null)
+/* ── Painel de progressão por classe ────────────────────────────────── */
+function ClassProgressionPanel({
+  progression, currentLevel, hitDie, conMod, attributes, isMulticlass,
+  onLevelChange, onApplyLevelUp, multiclassIndex,
+  levelChoices, chosenFeatures, onChoiceApplied,
+}) {
+  const [wizardOpen, setWizardOpen] = useState(false)
+  const [showAll,    setShowAll]    = useState(false)
+  const [jumpLevel,  setJumpLevel]  = useState(null)
   const [selectedFeat, setSelectedFeat] = useState(null)
-  const [wizardOpen,   setWizardOpen]   = useState(false)
-  const [showAll,      setShowAll]      = useState(false)
-  const [jumpLevel,    setJumpLevel]    = useState(null)
-  const [mcWizardOpen, setMcWizardOpen] = useState(null) // índice do MC com wizard aberto
-  const [showAddMC,    setShowAddMC]    = useState(false)
-  const [addMCClass,   setAddMCClass]   = useState('')
 
-  const classIndex    = character.info.class
-  const currentLevel  = character.info.level
-  const multiclasses  = character.info.multiclasses ?? []
-  const conMod        = getModifier(character.attributes.con)
-  const hitDie        = classData?.hit_die ?? 8
-
-  useEffect(() => {
-    setWizardOpen(false)
-    setMcWizardOpen(null)
-    fetch('/srd-data/phb-class-progression-pt.json')
-      .then(r => r.json())
-      .then(data => setAllProgressions(data))
-      .catch(() => setAllProgressions({}))
-  }, [])
-
-  if (!classIndex) {
-    return (
-      <div className="text-center py-16 text-gray-500">
-        Selecione uma classe na aba Ficha para ver a progressão de nível.
-      </div>
-    )
-  }
-  if (!allProgressions) {
-    return <div className="text-center py-10 text-gray-500">Carregando progressão...</div>
-  }
-
-  const progression = allProgressions[classIndex] ?? null
-  if (!progression) {
-    return <div className="text-center py-10 text-gray-500">Dados de progressão não encontrados para esta classe.</div>
-  }
-
-  const levels      = progression.levels ?? []
+  const levels      = progression?.levels ?? []
   const currentEntry = levels.find(l => l.level === currentLevel)
   const nextEntry    = levels.find(l => l.level === currentLevel + 1)
   const focusEntry   = jumpLevel ? levels.find(l => l.level === jumpLevel) : null
-
-  const focusLvl = jumpLevel ?? currentLevel
+  const focusLvl     = jumpLevel ?? currentLevel
   const visibleLevels = showAll
     ? levels
     : levels.filter(l => l.level >= Math.max(1, focusLvl - 1) && l.level <= Math.min(20, focusLvl + 6))
 
-  // Classes disponíveis para adicionar como multiclasse
-  const usedClasses = new Set([classIndex, ...multiclasses.map(m => m.class)])
-  const availableForMC = (classes ?? []).filter(c => !usedClasses.has(c.index))
-
-  // Slots de magia fundidos
-  const fusedSlots = multiclasses.length > 0
-    ? calculateMulticlassSpellSlots(classIndex, currentLevel, multiclasses)
-    : null
-
   function handleConfirmLevelUp(payload) {
-    onApplyLevelUp?.(payload)
+    if (payload.newChoices && Object.keys(payload.newChoices).length > 0) {
+      onChoiceApplied?.(payload.newChoices)
+    }
+    onApplyLevelUp?.({ ...payload, multiclassIndex: multiclassIndex ?? null })
     setWizardOpen(false)
   }
 
-  function handleConfirmMCLevelUp(multiclassIndex, payload) {
-    onApplyLevelUp?.({ ...payload, multiclassIndex })
-    setMcWizardOpen(null)
-  }
-
-  function handleConfirmAddMC() {
-    if (!addMCClass) return
-    onAddMulticlass?.({ classIndex: addMCClass })
-    setAddMCClass('')
-    setShowAddMC(false)
-  }
-
   return (
-    <div className="space-y-5">
-
-      {/* ── Cabeçalho ── */}
+    <div className="space-y-4">
+      {/* Cabeçalho da classe selecionada */}
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
-          <h2 className="text-base font-bold text-amber-400">{progression.name}</h2>
           <p className="text-xs text-gray-400 mt-0.5">
             Nível atual: <span className="text-white font-bold text-base">{currentLevel}</span>
             <span className="mx-2 text-gray-600">·</span>
@@ -494,11 +456,10 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
           </p>
         </div>
         <div className="flex gap-2">
-          {currentLevel > 1 && (
+          {!isMulticlass && currentLevel > 1 && (
             <button
-              onClick={() => onLevelChange(currentLevel - 1)}
+              onClick={() => onLevelChange?.(currentLevel - 1)}
               className="text-xs px-3 py-1.5 rounded bg-gray-700 hover:bg-gray-600 text-gray-400"
-              title="Reduzir nível (desfazer)"
             >
               − Nível {currentLevel - 1}
             </button>
@@ -514,20 +475,22 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
         </div>
       </div>
 
-      {/* ── Wizard de Level Up ── */}
+      {/* Wizard de Level Up */}
       {wizardOpen && nextEntry && (
         <LevelUpPanel
           nextLevel={currentLevel + 1}
           nextEntry={nextEntry}
           hitDie={hitDie}
           conMod={conMod}
-          attributes={character.attributes}
+          attributes={attributes}
+          levelChoices={levelChoices}
+          currentChosenFeatures={chosenFeatures}
           onConfirm={handleConfirmLevelUp}
           onCancel={() => setWizardOpen(false)}
         />
       )}
 
-      {/* ── Timeline ── */}
+      {/* Timeline */}
       <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
         <p className="text-xs text-gray-400 mb-2 font-semibold uppercase tracking-wide">Linha do Tempo</p>
         <LevelTimeline
@@ -537,7 +500,7 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
         />
       </div>
 
-      {/* ── Preview do nível focado (ao clicar na timeline) ── */}
+      {/* Preview do nível focado */}
       {focusEntry && focusEntry.level !== currentLevel && (
         <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 space-y-2">
           <div className="flex items-center justify-between">
@@ -574,10 +537,10 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
         </div>
       )}
 
-      {/* ── Features adquiridas ── */}
+      {/* Features adquiridas */}
       <AcquiredFeatures levels={levels} currentLevel={currentLevel} onFeatureClick={setSelectedFeat} />
 
-      {/* ── Tabela de progressão ── */}
+      {/* Tabela de progressão */}
       <div className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700">
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Progressão Completa</p>
@@ -590,30 +553,20 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
             const isCurrent = entry.level === currentLevel
             const isPast    = entry.level < currentLevel
             const isASI     = isASIEntry(entry)
-
             return (
               <div
                 key={entry.level}
                 className={`flex items-start gap-3 px-4 py-2.5 transition-colors ${
-                  isCurrent
-                    ? 'bg-amber-900/20 border-l-2 border-amber-500'
-                    : isPast
-                    ? 'opacity-60'
-                    : ''
+                  isCurrent ? 'bg-amber-900/20 border-l-2 border-amber-500' : isPast ? 'opacity-60' : ''
                 }`}
               >
-                {/* Bolinha do nível */}
                 <div className={`w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-xs font-bold border ${
-                  isCurrent
-                    ? 'bg-amber-600 border-amber-400 text-white'
-                    : isPast
-                    ? 'bg-gray-700 border-gray-600 text-gray-400'
-                    : 'bg-gray-800 border-gray-700 text-gray-500'
+                  isCurrent ? 'bg-amber-600 border-amber-400 text-white'
+                  : isPast ? 'bg-gray-700 border-gray-600 text-gray-400'
+                  : 'bg-gray-800 border-gray-700 text-gray-500'
                 }`}>
                   {entry.level}
                 </div>
-
-                {/* Conteúdo */}
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5">
                     <span className="text-xs text-gray-500">Prof +{entry.proficiency_bonus}</span>
@@ -624,9 +577,7 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
                         {f.name}
                       </button>
                     ))}
-                    {!entry.features?.length && !isASI && (
-                      <span className="text-xs text-gray-600 italic">—</span>
-                    )}
+                    {!entry.features?.length && !isASI && <span className="text-xs text-gray-600 italic">—</span>}
                   </div>
                   {entry.spell_slots?.some(s => s > 0) && (
                     <div className="flex flex-wrap gap-1 mt-1">
@@ -647,164 +598,330 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
         {!showAll && (
           <p className="text-[10px] text-center text-gray-600 py-2 border-t border-gray-700">
             Exibindo níveis próximos ao atual.{' '}
-            <button onClick={() => setShowAll(true)} className="text-amber-600 hover:text-amber-400">
-              Ver todos
-            </button>
+            <button onClick={() => setShowAll(true)} className="text-amber-600 hover:text-amber-400">Ver todos</button>
           </p>
         )}
       </div>
 
-      {/* ── Seção de Multiclasse ── */}
-      {currentLevel >= 3 && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-amber-400">Multiclasse</h3>
-            {multiclasses.length < 3 && !showAddMC && (
-              <button
-                onClick={() => setShowAddMC(true)}
-                className="text-xs px-3 py-1.5 rounded bg-gray-700 hover:bg-gray-600 text-amber-400 font-semibold"
-              >
-                ＋ Adicionar Multiclasse
-              </button>
-            )}
-          </div>
-
-          {/* Picker de nova multiclasse */}
-          {showAddMC && (
-            <div className="bg-gray-800 border border-amber-700/50 rounded-lg p-4 space-y-3">
-              <p className="text-xs text-gray-400">Escolha a classe para adicionar:</p>
-              <select
-                value={addMCClass}
-                onChange={e => setAddMCClass(e.target.value)}
-                className="w-full bg-gray-900 border border-gray-600 rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:border-amber-600"
-              >
-                <option value="">— Selecione —</option>
-                {availableForMC.map(c => (
-                  <option key={c.index} value={c.index}>{c.name}</option>
-                ))}
-              </select>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => { setShowAddMC(false); setAddMCClass('') }}
-                  className="px-3 py-1.5 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-xs"
-                >
-                  Cancelar
-                </button>
-                <button
-                  disabled={!addMCClass}
-                  onClick={handleConfirmAddMC}
-                  className="px-4 py-1.5 rounded bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  Confirmar
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Lista de multiclasses */}
-          {multiclasses.length === 0 && !showAddMC && (
-            <p className="text-xs text-gray-600 italic">Nenhuma multiclasse adicionada.</p>
-          )}
-
-          {multiclasses.map((mc, idx) => {
-            const mcProg    = allProgressions[mc.class] ?? null
-            const mcLevels  = mcProg?.levels ?? []
-            const mcEntry   = mcLevels.find(l => l.level === mc.level)
-            const mcNext    = mcLevels.find(l => l.level === mc.level + 1)
-            const mcClass   = (classes ?? []).find(c => c.index === mc.class)
-            const mcHitDie  = mcClass?.hit_die ?? 8
-            const isOpen    = mcWizardOpen === idx
-
-            return (
-              <div key={idx} className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-sm font-bold text-gray-200">{mcProg?.name ?? mc.class}</span>
-                    <span className="ml-2 text-xs text-gray-400">
-                      Nível <span className="text-white font-bold">{mc.level}</span>
-                      <span className="mx-1 text-gray-600">·</span>
-                      Prof +{mcEntry?.proficiency_bonus ?? '?'}
-                    </span>
-                  </div>
-                  <div className="flex gap-2">
-                    {mc.level < 20 && !isOpen && (
-                      <button
-                        onClick={() => setMcWizardOpen(idx)}
-                        className="text-xs px-3 py-1 rounded bg-amber-700 hover:bg-amber-600 text-white font-semibold"
-                      >
-                        Subir Nv {mc.level + 1} →
-                      </button>
-                    )}
-                    <button
-                      onClick={() => onRemoveMulticlass?.(idx)}
-                      className="text-xs px-2 py-1 rounded bg-gray-700 hover:bg-red-800 text-gray-400 hover:text-red-200"
-                      title="Remover multiclasse"
-                    >
-                      ×
-                    </button>
-                  </div>
-                </div>
-
-                {/* Wizard do MC */}
-                {isOpen && mcNext && (
-                  <LevelUpPanel
-                    nextLevel={mc.level + 1}
-                    nextEntry={mcNext}
-                    hitDie={mcHitDie}
-                    conMod={conMod}
-                    attributes={character.attributes}
-                    onConfirm={payload => handleConfirmMCLevelUp(idx, payload)}
-                    onCancel={() => setMcWizardOpen(null)}
-                  />
-                )}
-
-                {/* Features do nível atual da MC */}
-                {mcEntry?.features?.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5">
-                    {mcEntry.features.map((f, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setSelectedFeat(f)}
-                        className="text-xs bg-gray-700 border border-gray-600 hover:border-amber-600 px-2.5 py-1 rounded text-amber-200"
-                      >
-                        {f.name}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )
-          })}
-
-          {/* Slots de magia fundidos */}
-          {fusedSlots && (
-            <div className="bg-gray-800 border border-blue-900/50 rounded-lg p-4">
-              <p className="text-xs font-semibold text-blue-300 mb-2">Espaços de Magia Fundidos (Multiclasse)</p>
-              <div className="flex flex-wrap gap-2">
-                {Object.entries(fusedSlots).map(([lvl, qty]) => (
-                  <div key={lvl} className="bg-gray-900 border border-gray-700 rounded px-3 py-1.5 text-xs text-center">
-                    <span className="text-gray-400">Nível {lvl}: </span>
-                    <span className="text-blue-300 font-bold">{qty}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Modal de detalhe de feature */}
-      <DetailsModal
-        isOpen={!!selectedFeat}
-        onClose={() => setSelectedFeat(null)}
-        title={selectedFeat?.name || ''}
-      >
+      <DetailsModal isOpen={!!selectedFeat} onClose={() => setSelectedFeat(null)} title={selectedFeat?.name || ''}>
         {selectedFeat && (
           <p className="text-sm text-gray-300 leading-relaxed">
             {selectedFeat.desc || 'Consulte o Livro do Jogador para a descrição completa desta característica.'}
           </p>
         )}
       </DetailsModal>
+    </div>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Componente principal
+   ═══════════════════════════════════════════════════════════════════ */
+export function LevelProgression({ character, classData, classes, onLevelChange, onApplyLevelUp, onAddMulticlass, onRemoveMulticlass, onChosenFeaturesChange }) {
+  const [allProgressions, setAllProgressions] = useState(null)
+  const [classChoices,    setClassChoices]    = useState({})
+  const [mcRules,         setMcRules]         = useState({})
+  const [activeTab,       setActiveTab]       = useState('primary')
+  const [showAddMC,       setShowAddMC]       = useState(false)
+  const [addMCClass,      setAddMCClass]      = useState('')
+
+  const classIndex   = character.info.class
+  const currentLevel = character.info.level
+  const multiclasses = character.info.multiclasses ?? []
+  const chosenFeatures = character.info.chosenFeatures ?? {}
+  const conMod       = getModifier(character.attributes.con)
+  const hitDie       = classData?.hit_die ?? 8
+
+  const totalLevel = currentLevel + multiclasses.reduce((s, m) => s + (m.level ?? 0), 0)
+
+  useEffect(() => {
+    fetch('/srd-data/phb-class-progression-pt.json')
+      .then(r => r.json()).then(setAllProgressions).catch(() => setAllProgressions({}))
+    fetch('/srd-data/phb-class-choices-pt.json')
+      .then(r => r.json()).then(setClassChoices).catch(() => setClassChoices({}))
+    fetch('/srd-data/phb-multiclass-pt.json')
+      .then(r => r.json()).then(setMcRules).catch(() => setMcRules({}))
+  }, [])
+
+  if (!classIndex) {
+    return <div className="text-center py-16 text-gray-500">Selecione uma classe na aba Ficha para ver a progressão de nível.</div>
+  }
+  if (!allProgressions) {
+    return <div className="text-center py-10 text-gray-500">Carregando progressão...</div>
+  }
+
+  const progression = allProgressions[classIndex] ?? null
+  if (!progression) {
+    return <div className="text-center py-10 text-gray-500">Dados de progressão não encontrados para esta classe.</div>
+  }
+
+  const usedClasses     = new Set([classIndex, ...multiclasses.map(m => m.class)])
+  const availableForMC  = (classes ?? []).filter(c => !usedClasses.has(c.index))
+  const fusedSlots      = multiclasses.length > 0
+    ? calculateMulticlassSpellSlots(classIndex, currentLevel, multiclasses)
+    : null
+
+  // Pré-requisitos para a classe de MC selecionada no picker
+  const addMCReqs = addMCClass ? mcRules[addMCClass]?.prerequisites ?? {} : {}
+  const addMCProfs = addMCClass ? mcRules[addMCClass]?.proficiencies ?? {} : {}
+  const reqWarnings = Object.entries(addMCReqs)
+    .filter(([k]) => k !== 'or')
+    .map(([attr, val]) => {
+      const actual = character.attributes[attr] ?? 10
+      return { attr, val, met: actual >= val }
+    })
+  const orAttr = addMCReqs.or
+  const orMet = orAttr ? (character.attributes[orAttr] ?? 10) >= (addMCReqs[orAttr] ?? 13) : true
+
+  function handleConfirmAddMC() {
+    if (!addMCClass) return
+    const mcProfs = mcRules[addMCClass]?.proficiencies ?? {}
+    onAddMulticlass?.({ classIndex: addMCClass, proficiencies: mcProfs })
+    setAddMCClass('')
+    setShowAddMC(false)
+    setActiveTab(multiclasses.length) // switch to the new mc tab
+  }
+
+  // Determine se active tab ainda existe
+  const tabExists = activeTab === 'primary' || (typeof activeTab === 'number' && activeTab < multiclasses.length)
+  const safeTab = tabExists ? activeTab : 'primary'
+
+  return (
+    <div className="space-y-5">
+
+      {/* ── Nível Total em destaque ── */}
+      {multiclasses.length > 0 && (
+        <div className="bg-amber-900/20 border border-amber-700/40 rounded-xl px-5 py-3 flex items-center gap-6 flex-wrap">
+          <div>
+            <p className="text-[10px] text-amber-600 uppercase tracking-widest font-semibold">Nível Total</p>
+            <p className="text-3xl font-black text-amber-300">{totalLevel}</p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <div>
+              <p className="text-[10px] text-gray-500 uppercase">Classe Principal</p>
+              <p className="text-sm font-bold text-white">{progression.name} <span className="text-amber-400">{currentLevel}</span></p>
+            </div>
+            {multiclasses.map((mc, idx) => {
+              const mcProg = allProgressions[mc.class]
+              return (
+                <div key={idx}>
+                  <p className="text-[10px] text-gray-500 uppercase">Multiclasse {idx + 1}</p>
+                  <p className="text-sm font-bold text-white">{mcProg?.name ?? mc.class} <span className="text-amber-400">{mc.level}</span></p>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ── Abas por classe ── */}
+      <div className="flex items-center gap-1 overflow-x-auto">
+        {/* Aba classe primária */}
+        <button
+          onClick={() => setActiveTab('primary')}
+          className={`shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-t-lg text-sm font-semibold border-b-2 transition-colors ${
+            safeTab === 'primary'
+              ? 'border-amber-500 text-amber-300 bg-amber-900/20'
+              : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-gray-800/50'
+          }`}
+        >
+          <span>{progression.name}</span>
+          <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold ${
+            safeTab === 'primary' ? 'bg-amber-600 text-white' : 'bg-gray-700 text-gray-300'
+          }`}>{currentLevel}</span>
+        </button>
+
+        {/* Abas de multiclasses */}
+        {multiclasses.map((mc, idx) => {
+          const mcProg = allProgressions[mc.class]
+          return (
+            <button
+              key={idx}
+              onClick={() => setActiveTab(idx)}
+              className={`shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-t-lg text-sm font-semibold border-b-2 transition-colors ${
+                safeTab === idx
+                  ? 'border-amber-500 text-amber-300 bg-amber-900/20'
+                  : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-gray-800/50'
+              }`}
+            >
+              <span>{mcProg?.name ?? mc.class}</span>
+              <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold ${
+                safeTab === idx ? 'bg-amber-600 text-white' : 'bg-gray-700 text-gray-300'
+              }`}>{mc.level}</span>
+              <button
+                onClick={e => { e.stopPropagation(); onRemoveMulticlass?.(idx); if (safeTab === idx) setActiveTab('primary') }}
+                className="ml-1 text-gray-500 hover:text-red-400 transition-colors text-xs"
+                title="Remover multiclasse"
+              >×</button>
+            </button>
+          )
+        })}
+
+        {/* Aba "+" para adicionar multiclasse */}
+        {currentLevel >= 3 && multiclasses.length < 3 && (
+          <button
+            onClick={() => { setShowAddMC(v => !v); setActiveTab('primary') }}
+            className="shrink-0 px-3 py-2 rounded-t-lg text-sm text-amber-500 hover:text-amber-300 font-bold border-b-2 border-transparent hover:bg-gray-800/50 transition-colors"
+            title="Adicionar multiclasse"
+          >
+            ＋
+          </button>
+        )}
+      </div>
+
+      {/* ── Picker de nova multiclasse ── */}
+      {showAddMC && (
+        <div className="bg-gray-800 border border-amber-700/50 rounded-xl p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-amber-400">Adicionar Multiclasse</h3>
+            <button onClick={() => { setShowAddMC(false); setAddMCClass('') }} className="text-gray-500 hover:text-gray-300 text-lg">✕</button>
+          </div>
+
+          <div>
+            <label className="block text-xs text-gray-400 mb-1.5">Escolha a classe:</label>
+            <select
+              value={addMCClass}
+              onChange={e => setAddMCClass(e.target.value)}
+              className="w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-600"
+            >
+              <option value="">— Selecione —</option>
+              {availableForMC.map(c => (
+                <option key={c.index} value={c.index}>{c.name}</option>
+              ))}
+            </select>
+          </div>
+
+          {addMCClass && (
+            <>
+              {/* Pré-requisitos */}
+              {reqWarnings.length > 0 && (
+                <div className="space-y-1.5">
+                  <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Pré-requisitos (LdJ Cap. 6)</p>
+                  <div className="flex flex-wrap gap-2">
+                    {reqWarnings.map(({ attr, val, met }) => (
+                      <div key={attr} className={`flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border ${
+                        met ? 'border-green-700 bg-green-900/20 text-green-300' : 'border-yellow-700 bg-yellow-900/20 text-yellow-300'
+                      }`}>
+                        {met ? '✓' : '⚠'} {ATTR_LABELS[attr] ?? attr.toUpperCase()} {val}+
+                        <span className="text-gray-500">({character.attributes[attr] ?? 10})</span>
+                      </div>
+                    ))}
+                    {orAttr && (
+                      <div className={`flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border ${
+                        orMet ? 'border-green-700 bg-green-900/20 text-green-300' : 'border-yellow-700 bg-yellow-900/20 text-yellow-300'
+                      }`}>
+                        {orMet ? '✓' : '⚠'} ou {ATTR_LABELS[orAttr] ?? orAttr.toUpperCase()} 13+
+                        <span className="text-gray-500">({character.attributes[orAttr] ?? 10})</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Proficiências ganhas */}
+              {(addMCProfs.armor?.length > 0 || addMCProfs.weapons?.length > 0 || addMCProfs.tools?.length > 0 || addMCProfs.skills > 0) && (
+                <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 space-y-2">
+                  <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Proficiências ganhas ao entrar nessa classe</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {addMCProfs.armor?.map((a, i) => (
+                      <span key={i} className="text-xs bg-blue-900/30 border border-blue-700/50 text-blue-300 px-2 py-0.5 rounded-full">
+                        Armadura: {a}
+                      </span>
+                    ))}
+                    {addMCProfs.weapons?.map((w, i) => (
+                      <span key={i} className="text-xs bg-orange-900/30 border border-orange-700/50 text-orange-300 px-2 py-0.5 rounded-full">
+                        Arma: {w}
+                      </span>
+                    ))}
+                    {addMCProfs.tools?.map((t, i) => (
+                      <span key={i} className="text-xs bg-purple-900/30 border border-purple-700/50 text-purple-300 px-2 py-0.5 rounded-full">
+                        Ferramenta: {t}
+                      </span>
+                    ))}
+                    {addMCProfs.skills > 0 && (
+                      <span className="text-xs bg-green-900/30 border border-green-700/50 text-green-300 px-2 py-0.5 rounded-full">
+                        +{addMCProfs.skills} perícia(s)
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
+          <div className="flex gap-2">
+            <button
+              onClick={() => { setShowAddMC(false); setAddMCClass('') }}
+              className="px-4 py-2 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm"
+            >
+              Cancelar
+            </button>
+            <button
+              disabled={!addMCClass}
+              onClick={handleConfirmAddMC}
+              className="flex-1 px-4 py-2 rounded bg-amber-600 hover:bg-amber-500 text-white text-sm font-bold disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Confirmar — ganhar proficiências e adicionar {addMCClass ? (classes ?? []).find(c => c.index === addMCClass)?.name ?? addMCClass : ''}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Conteúdo da aba ativa ── */}
+      {safeTab === 'primary' && !showAddMC && (
+        <ClassProgressionPanel
+          progression={progression}
+          currentLevel={currentLevel}
+          hitDie={hitDie}
+          conMod={conMod}
+          attributes={character.attributes}
+          isMulticlass={false}
+          onLevelChange={onLevelChange}
+          onApplyLevelUp={onApplyLevelUp}
+          multiclassIndex={null}
+          levelChoices={classChoices[classIndex]?.choices ?? []}
+          chosenFeatures={chosenFeatures}
+          onChoiceApplied={newChoices => onChosenFeaturesChange?.({ ...chosenFeatures, ...newChoices })}
+        />
+      )}
+
+      {typeof safeTab === 'number' && !showAddMC && (() => {
+        const mc = multiclasses[safeTab]
+        if (!mc) return null
+        const mcProg   = allProgressions[mc.class] ?? null
+        const mcClass  = (classes ?? []).find(c => c.index === mc.class)
+        const mcHitDie = mcClass?.hit_die ?? 8
+        return (
+          <ClassProgressionPanel
+            progression={mcProg}
+            currentLevel={mc.level}
+            hitDie={mcHitDie}
+            conMod={conMod}
+            attributes={character.attributes}
+            isMulticlass={true}
+            onApplyLevelUp={onApplyLevelUp}
+            multiclassIndex={safeTab}
+            levelChoices={classChoices[mc.class]?.choices ?? []}
+            chosenFeatures={chosenFeatures}
+            onChoiceApplied={newChoices => onChosenFeaturesChange?.({ ...chosenFeatures, ...newChoices })}
+          />
+        )
+      })()}
+
+      {/* ── Slots de magia fundidos ── */}
+      {fusedSlots && !showAddMC && (
+        <div className="bg-gray-800 border border-blue-900/50 rounded-lg p-4">
+          <p className="text-xs font-semibold text-blue-300 mb-2">Espaços de Magia Fundidos (Multiclasse D&D 5e)</p>
+          <div className="flex flex-wrap gap-2">
+            {Object.entries(fusedSlots).map(([lvl, qty]) => (
+              <div key={lvl} className="bg-gray-900 border border-gray-700 rounded px-3 py-1.5 text-xs text-center">
+                <span className="text-gray-400">Nível {lvl}: </span>
+                <span className="text-blue-300 font-bold">{qty}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

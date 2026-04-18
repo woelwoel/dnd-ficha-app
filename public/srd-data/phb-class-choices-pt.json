@@ -1,0 +1,376 @@
+{
+  "barbaro": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "primal_path",
+        "featureName": "Caminho Primitivo",
+        "prompt": "Escolha seu Caminho Primitivo",
+        "options": [
+          {
+            "value": "berserker",
+            "name": "Caminho do Berserker",
+            "desc": "Para alguns bárbaros, a raiva é um meio para um fim — esse fim sendo a violência. O Caminho do Berserker é um caminho de fúria desenfreada, encharcada de sangue. Quando você entra em frenesi de batalha, você aproveita o caos do combate, sem se importar com sua própria saúde ou bem-estar."
+          },
+          {
+            "value": "totem",
+            "name": "Caminho do Guerreiro Totêmico",
+            "desc": "O Caminho do Guerreiro Totêmico é um caminho espiritual em que um animal espírito se torna guia, protetor e inspiração. Em batalha, você canaliza o espírito do seu totem para potencializar sua fúria."
+          }
+        ]
+      }
+    ]
+  },
+  "bardo": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "bard_college",
+        "featureName": "Colégio de Bardos",
+        "prompt": "Escolha seu Colégio de Bardos",
+        "options": [
+          {
+            "value": "conhecimento",
+            "name": "Colégio do Conhecimento",
+            "desc": "Bardos do Colégio do Conhecimento sabem um pouco sobre quase tudo, coletando fragmentos de conhecimento de fontes tão diversas quanto tomos eruditos e contos de camponeses. Seja cantando baladas populares em tabernas ou composições elaboradas em cortes reais, esses bardos usam seus dons para cativar as audiências."
+          },
+          {
+            "value": "valor",
+            "name": "Colégio do Valor",
+            "desc": "Bardos do Colégio do Valor são intrépidos que preservam os feitos de grandes heróis e garantem que tais feitos inspirem as gerações futuras. Esses bardos se reúnem nos salões dos mestres para aprender e compartilhar poesias, canções e relatos de grandes eventos."
+          }
+        ]
+      }
+    ]
+  },
+  "clerigo": {
+    "choices": [
+      {
+        "level": 1,
+        "id": "divine_domain",
+        "featureName": "Domínio Divino",
+        "prompt": "Escolha seu Domínio Divino",
+        "options": [
+          {
+            "value": "conhecimento",
+            "name": "Domínio do Conhecimento",
+            "desc": "Os deuses do conhecimento — incluindo Ioun, Boccob, the Raven Queen, Aureon e Thoth — valorizam a aprendizagem e a compreensão acima de tudo. Alguns pregam a importância do estudo, da coleta de conhecimento e da preservação de textos e tradições ancestrais."
+          },
+          {
+            "value": "vida",
+            "name": "Domínio da Vida",
+            "desc": "O domínio da Vida foca na vibrante energia positiva — uma das forças fundamentais do universo — que sustenta toda a vida. Os deuses da vida promovem a vitalidade e a saúde através da cura dos doentes e feridos, cuidando dos necessitados e afastando as forças da morte e dos mortos-vivos."
+          },
+          {
+            "value": "luz",
+            "name": "Domínio da Luz",
+            "desc": "Deuses da luz — incluindo Helm, Lathander, Pholtus, Branchala, the Silver Flame, Belenus, Apollo e Sarenrae — promovem os ideais de renascimento e renovação, verdade, vigilância e beleza, muitas vezes usando o sol como símbolo."
+          },
+          {
+            "value": "natureza",
+            "name": "Domínio da Natureza",
+            "desc": "Deuses da natureza são tão variados quanto o mundo natural, abrangendo desde deuses implacáveis de selvageria feroz até deuses benignos associados a fazendas e peixes abundantes, e deuses neutros cujas preocupações são a fertilidade e o crescimento de estações."
+          },
+          {
+            "value": "tempestade",
+            "name": "Domínio da Tempestade",
+            "desc": "Deuses cujos domínios incluem tempestades, mar e céu comandam ventanias poderosas, trovões ensurdecedores e relâmpagos capazes de matar. Esses deuses incluem guerreiros poderosos como Talos, Thor, Bane, Haela Brightaxe e Reorx."
+          },
+          {
+            "value": "enganacao",
+            "name": "Domínio da Enganação",
+            "desc": "Deuses da enganação — como Tymora, Beshaba, Olidammara, the Traveler, Garl Glittergold e Loki — são caprichosos e inspiram seus seguidores a se tornarem vigaristas, ladrões ou criadores de problemas."
+          },
+          {
+            "value": "guerra",
+            "name": "Domínio da Guerra",
+            "desc": "A guerra tem muitas manifestações. Ela pode tornar heróis de homens comuns. Pode ser desesperadora e horrível. Acima de tudo, a guerra é poderosa. Deuses da guerra — incluindo Tempus, Nike, Hextor, Maglubiyet, Nuada, the Red Knight, Tigone e Erathis — abrangem guerreiros ideais."
+          }
+        ]
+      }
+    ]
+  },
+  "druida": {
+    "choices": [
+      {
+        "level": 2,
+        "id": "druid_circle",
+        "featureName": "Círculo Druídico",
+        "prompt": "Escolha seu Círculo Druídico",
+        "options": [
+          {
+            "value": "terra",
+            "name": "Círculo da Terra",
+            "desc": "O Círculo da Terra é feito de místicos e sábios que protegem o conhecimento e ritos ancestrais através de uma vasta rede oral de segredos e iniciações. O poder verdadeiro do círculo não reside nos membros reunidos mas permeia na terra sagrada por ele protegida."
+          },
+          {
+            "value": "lua",
+            "name": "Círculo da Lua",
+            "desc": "Druidas do Círculo da Lua são guardiões ferozes das terras selvagens. Seus rituais e encontros são guardados em segredo total, realizados nas profundezas das florestas onde poucos podem bisbilhotar. Os druidas desse círculo se reúnem a cada lua nova para compartilhar notícias e prestar reverências aos espíritos da natureza."
+          }
+        ]
+      }
+    ]
+  },
+  "feiticeiro": {
+    "choices": [
+      {
+        "level": 1,
+        "id": "sorcerous_origin",
+        "featureName": "Origem de Feiticeiro",
+        "prompt": "Escolha sua Origem de Feiticeiro",
+        "options": [
+          {
+            "value": "linhagem_draconico",
+            "name": "Linhagem Dracônica",
+            "desc": "Seu poder mágico inato vem de magia dracônica que se misturou com seu sangue ou o de seus ancestrais. Mais comumente, feiticeiros com essa origem rastreiam sua descendência a um poderoso mago que firmou um negócio com um dragão ou que pode ter tido um romance com alguém de origem dracônica."
+          },
+          {
+            "value": "magia_selvagem",
+            "name": "Magia Selvagem",
+            "desc": "Seu poder mágico inato vem de um tumulto de magia selvagem no seu coração. Essa magia selvagem pode ter vindo de uma exposição a alguma força mágica bruta, como a magia que emana da Fonte de Magia Selvagem ou de uma criança nascida durante uma tempestade mágica."
+          }
+        ]
+      }
+    ]
+  },
+  "guerreiro": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "martial_archetype",
+        "featureName": "Arquétipo Marcial",
+        "prompt": "Escolha seu Arquétipo Marcial",
+        "options": [
+          {
+            "value": "campeao",
+            "name": "Campeão",
+            "desc": "O arquétipo de Campeão foca no desenvolvimento do poder físico bruto aprimorado para perfeição letal. Aqueles que modelam o ideal do campeão combinam treinamento rigoroso com excelência física para causar golpes devastadores."
+          },
+          {
+            "value": "cavaleiro_batalla",
+            "name": "Cavaleiro de Batalha",
+            "desc": "O arquétipo do Cavaleiro de Batalha combina magia arcana com maestria de combate. Esses guerreiros aprendem magias que potencializam suas habilidades de combate e os tornam ainda mais ameaçadores em batalha."
+          },
+          {
+            "value": "mestre_combate",
+            "name": "Mestre de Combate",
+            "desc": "Aqueles que emulam o arquétipo de Mestre de Combate empregam técnicas especiais chamadas manobras. Uma manobra pode dobrar por um movimento de arma especial, uma tática que o lutador usa para manter seus oponentes em desvantagem, ou um show de superioridade que humilha o oponente."
+          }
+        ]
+      }
+    ]
+  },
+  "ladino": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "roguish_archetype",
+        "featureName": "Arquétipo Ladino",
+        "prompt": "Escolha seu Arquétipo Ladino",
+        "options": [
+          {
+            "value": "assassino",
+            "name": "Assassino",
+            "desc": "Você focou seu treinamento na sinistra arte da morte. Aqueles que aderem a esse arquétipo são diversos: mercenários pagos, espiões, buscadores de recompensa e até sacerdotes especialmente treinados para eliminar inimigos de suas divindades."
+          },
+          {
+            "value": "arcano",
+            "name": "Trapaceiro Arcano",
+            "desc": "Alguns ladrões aprimoram suas habilidades físicas e furtivas com magia, aprendendo truques de encantamento e ilusão. Esses ladrões incluem os ladrões de tumbas que aprendem a lidar com armadilhas mágicas, os capangas que desenvolvem a habilidade de hipnotizar as pessoas, e os assassinos que usam ilusões para se disfarçar."
+          },
+          {
+            "value": "gatuno",
+            "name": "Gatuno Thief",
+            "desc": "Você aperfeiçoa suas habilidades nas artes do roubo. Ladrões, bandidos, picaretas, trapaceiros — você tem muitos nomes. Além de melhorar suas habilidades físicas, você aprende habilidades úteis para muitas situações diferentes, no mundo criminoso e não."
+          }
+        ]
+      }
+    ]
+  },
+  "mago": {
+    "choices": [
+      {
+        "level": 2,
+        "id": "arcane_tradition",
+        "featureName": "Tradição Arcana",
+        "prompt": "Escolha sua Tradição Arcana",
+        "options": [
+          {
+            "value": "abjuracao",
+            "name": "Abjuração",
+            "desc": "A Escola de Abjuração enfatiza magia que bloqueia, bane ou protege. Detratores dessa tradição chamam seus adeptos de magos de proteção, mas esses magos preferem o título de abjuradores."
+          },
+          {
+            "value": "conjuracao",
+            "name": "Conjuração",
+            "desc": "Como membro da Escola de Conjuração, você favorece magias que produzem objetos e criaturas do nada. Algumas conjurações trazem réplicas temporárias de objetos valiosos, enquanto outras convocam criaturas para lutar ao lado do conjurador."
+          },
+          {
+            "value": "adivinhacao",
+            "name": "Adivinhação",
+            "desc": "O poder de sua magia alimenta sua sede de saber e revelar mistérios ocultos. Você se esforça para conhecer tudo e não deixar nada no desconhecido. Magos que seguem essa tradição são chamados de advinhos."
+          },
+          {
+            "value": "encantamento",
+            "name": "Encantamento",
+            "desc": "Como membro da Escola de Encantamento, você aperfeiçoou suas habilidades para encantar magicamente as mentes dos outros. Aqueles que seguem essa tradição são chamados de encantadores. Não satisfeitos em influenciar apenas os corpos de seus inimigos, os encantadores dominam a mente, moldando e controlando os pensamentos e emoções das criaturas."
+          },
+          {
+            "value": "evocacao",
+            "name": "Evocação",
+            "desc": "Você foca seu estudo na magia que cria efeitos físicos poderosos. Sua magia lança raios de fogo, relâmpagos, gelo e ácido. Alguns evocadores encontram emprego em forças militares, servindo como artilharia para queimar e destruir exércitos adversários."
+          },
+          {
+            "value": "ilusao",
+            "name": "Ilusão",
+            "desc": "Você foca seu estudo em magia que ofusca e engana. Sua magia é sutil, mas os mestres da escola sabem que a mente de uma criatura é a maior arma ou defesa, e qualquer percepção pode se tornar realidade na cabeça da vítima."
+          },
+          {
+            "value": "necromancia",
+            "name": "Necromancia",
+            "desc": "A Escola de Necromancia explora as forças cósmicas de vida, morte e mortos-vivos. Você trabalha com as forças que existem além da vida e morte, com tudo que oscila na fronteira entre os dois."
+          },
+          {
+            "value": "transmutacao",
+            "name": "Transmutação",
+            "desc": "Você é um estudante de magia que modifica energia e matéria. Para você, o mundo não é um conjunto fixo de possibilidades, mas um leque de oportunidades de ser moldado. Você usa a magia para refazer tanto os objetos mundanos quanto os seres vivos conforme sua vontade."
+          }
+        ]
+      }
+    ]
+  },
+  "monge": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "monastic_tradition",
+        "featureName": "Tradição Monástica",
+        "prompt": "Escolha sua Tradição Monástica",
+        "options": [
+          {
+            "value": "quatro_elementos",
+            "name": "Caminho dos Quatro Elementos",
+            "desc": "Você segue uma tradição monástica que abraça a conexão entre o plano material e os quatro elementos. Ao abrir-se à energia elemental ao seu redor, você aprende a controlar esses elementos e os tornar sua vontade."
+          },
+          {
+            "value": "mao_aberta",
+            "name": "Caminho da Mão Aberta",
+            "desc": "Monges do Caminho da Mão Aberta são os mestres supremos das artes marciais. Eles aprendem técnicas para empurrar e derrubar seus oponentes, manipular ki para curar os danos do próprio corpo e praticar técnicas avançadas de meditação que podem protegê-los de danos."
+          },
+          {
+            "value": "sombra",
+            "name": "Caminho da Sombra",
+            "desc": "Monges do Caminho da Sombra seguem uma tradição que valoriza a furtividade e o engano. Esses monges podem ser chamados de ninjas ou dançarinos sombrios, e servem como espiões e assassinos."
+          }
+        ]
+      }
+    ]
+  },
+  "paladino": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "sacred_oath",
+        "featureName": "Juramento Sagrado",
+        "prompt": "Escolha seu Juramento Sagrado",
+        "options": [
+          {
+            "value": "devocao",
+            "name": "Juramento de Devoção",
+            "desc": "O Juramento de Devoção une um paladino ao mais brilhante ideal de justiça, virtude e ordem. Às vezes chamados de cavaleiros, cavaleiros brancos ou guerreiros sagrados, esses paladinos se encontram em sentinelas contra a escuridão."
+          },
+          {
+            "value": "os_antigos",
+            "name": "Juramento dos Anciões",
+            "desc": "O Juramento dos Anciões é tão antigo quanto a raça dos elfos e os rituais dos druidas. Às vezes chamados de cavaleiros de conto ou cavaleiros verdes, os paladinos que jurou esse juramento colocam ao lado dos poderes bonitos e benignos do mundo."
+          },
+          {
+            "value": "vinganca",
+            "name": "Juramento de Vingança",
+            "desc": "O Juramento de Vingança é um sério compromisso de punir aqueles que cometeram um mal grave. Quando os inimigos de uma civilização chacalam suas aldeias, quando um culto demoníaco mata inocentes, quando um tirano oprime as pessoas, os paladinos que juraram o Juramento de Vingança surgem como caçadores."
+          }
+        ]
+      }
+    ]
+  },
+  "patrulheiro": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "ranger_archetype",
+        "featureName": "Arquétipo de Patrulheiro",
+        "prompt": "Escolha seu Arquétipo de Patrulheiro",
+        "options": [
+          {
+            "value": "cacador",
+            "name": "Caçador",
+            "desc": "Emular o arquétipo de Caçador significa aceitar seu lugar como um baluarte entre a civilização e os terrores das terras selvagens. Ao caminhar pelo Caminho do Caçador, você aprende técnicas especializadas para lutar contra as ameaças que você enfrenta, de gigantes vorazes a enxames de orcs."
+          },
+          {
+            "value": "mestre_das_bestas",
+            "name": "Mestre das Bestas",
+            "desc": "Muitos patrulheiros são acompanhados por animais que são companheiros e parceiros confiáveis. Esse vínculo com animais é tão antigo quanto o mundo."
+          }
+        ]
+      }
+    ]
+  },
+  "bruxo": {
+    "choices": [
+      {
+        "level": 1,
+        "id": "patron",
+        "featureName": "Patrono Sobrenatural",
+        "prompt": "Escolha seu Patrono Sobrenatural",
+        "options": [
+          {
+            "value": "feerico",
+            "name": "O Feérico",
+            "desc": "Seu patrono é um senhor ou senhora do Feywild, um reino de beleza, capricho e perigo supremo. Esse ser — que pode ser um archefada poderoso, um trolle ancião, ou uma unicórnia encantada — comanda bondade pela terra enquanto guarda seus próprios interesses misteriosos."
+          },
+          {
+            "value": "infernal",
+            "name": "O Infernal",
+            "desc": "Você fez um pacto com um diabo dos planos inferiores. Seu patrono pode ser Asmodeus, o senhor do Nono, ou outro arquidiabo poderoso. Essas entidades querem influência, poder e almas, e usam mortais como seus agentes no mundo material."
+          },
+          {
+            "value": "grande_antigo",
+            "name": "O Grande Antigo",
+            "desc": "Seu patrono é um ser misterioso cuja natureza é totalmente alheia ao tecido da realidade. Pode ter chegado ao multiverso através de um colapso dimensional, ou é uma entidade antiga que dorme e sonha em um lugar remoto do cosmos."
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "id": "pact_boon",
+        "featureName": "Dádiva de Pacto",
+        "prompt": "Escolha sua Dádiva de Pacto",
+        "options": [
+          {
+            "value": "corrente",
+            "name": "Pacto da Corrente",
+            "desc": "Você aprende a magia Achar Familiar (se ainda não a souber) e pode conjurá-la como um ritual. Quando você conjura a magia, você pode escolher uma das formas normais para seu familiar ou uma das seguintes formas especiais: imp, pseudodragão, quasit, ou sprite.",
+            "grants": {
+              "spells": ["find-familiar"]
+            }
+          },
+          {
+            "value": "lamina",
+            "name": "Pacto da Lâmina",
+            "desc": "Você pode usar sua ação para criar uma arma corpo a corpo de pacto em sua mão vazia. Você pode escolher a forma que essa arma corpo a corpo toma cada vez que você a criar. Você é proficiente com ela enquanto a empunha. Essa arma conta como mágica para o propósito de superar resistência e imunidade a ataques e danos não mágicos.",
+            "grants": {}
+          },
+          {
+            "value": "tomo",
+            "name": "Pacto do Tomo",
+            "desc": "Seu patrono te dá um grimório chamado Livro das Sombras. Quando você ganha essa característica, escolha três cantrips de qualquer lista de magias (as magias não precisam ser da mesma lista). Enquanto o livro estiver com você, você pode conjurar esses cantrips à vontade, eles não contam contra o seu número de cantrips conhecidos.",
+            "grants": {
+              "bonusCantrips": 3
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
