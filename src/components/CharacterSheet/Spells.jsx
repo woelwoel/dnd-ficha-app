@@ -6,7 +6,7 @@ import { SpellDetailModal } from '../SpellDetailModal'
 
 const KEY_TO_ABBR = Object.fromEntries(ABILITY_SCORES.map(a => [a.key, a.abbr]))
 
-export function Spells({ character, attributes, level, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onToggleSlot }) {
+export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onToggleSlot }) {
   const [activeTab, setActiveTab] = useState(0)
   const [search, setSearch] = useState('')
   const [pickerOpen, setPickerOpen] = useState(false)
@@ -18,7 +18,10 @@ export function Spells({ character, attributes, level, classData, onUpdateSpellc
     : null
   const isSpellcaster = classAbility !== null
   const spellAbility  = character.spellcasting.ability ?? classAbility
-  const profBonus     = getProficiencyBonus(level)
+  // Usa profBonus passado pelo pai (nível total); fallback calcula pelo nível total internamente
+  const mcs        = character.info?.multiclasses ?? []
+  const totalLevel = level + mcs.reduce((s, m) => s + (m.level ?? 0), 0)
+  const profBonus  = profBonusProp ?? getProficiencyBonus(totalLevel)
   const abilityScore  = spellAbility ? attributes[spellAbility] : 10
   const spellSaveDC   = calculateSpellSaveDC(abilityScore, profBonus)
   const spellAttack   = calculateSpellAttackBonus(abilityScore, profBonus)

@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import { generateId } from '../../hooks/useCharacter'
 import { calculateMaxHp, ABBR_TO_KEY, ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY, SKILLS, getModifier } from '../../utils/calculations'
+import { upsertCharacter } from '../../utils/storage'
+import { fetchSrd } from '../../utils/fetchSrd'
 import { Step0Settings } from './steps/Step0Settings'
 import { Step1Concept } from './steps/Step1Concept'
 import { Step2Race } from './steps/Step2Race'
@@ -63,11 +65,11 @@ export function CharacterWizard({ onBack, onComplete }) {
   const [classProgression, setClassProgression] = useState({})
 
   useEffect(() => {
-    fetch('/srd-data/phb-races-pt.json').then(r => r.json()).then(setRaces).catch(() => {})
-    fetch('/srd-data/phb-classes-pt.json').then(r => r.json()).then(setClasses).catch(() => {})
-    fetch('/srd-data/phb-backgrounds-pt.json').then(r => r.json()).then(setBackgrounds).catch(() => {})
-    fetch('/srd-data/phb-class-choices-pt.json').then(r => r.json()).then(setClassChoices).catch(() => {})
-    fetch('/srd-data/phb-class-progression-pt.json').then(r => r.json()).then(setClassProgression).catch(() => {})
+    fetchSrd('phb-races-pt.json').then(setRaces).catch(() => {})
+    fetchSrd('phb-classes-pt.json').then(setClasses).catch(() => {})
+    fetchSrd('phb-backgrounds-pt.json').then(setBackgrounds).catch(() => {})
+    fetchSrd('phb-class-choices-pt.json').then(setClassChoices).catch(() => {})
+    fetchSrd('phb-class-progression-pt.json').then(setClassProgression).catch(() => {})
   }, [])
 
   const classData = useMemo(
@@ -100,7 +102,7 @@ export function CharacterWizard({ onBack, onComplete }) {
   }
 
   const currentStepId = steps[step]?.id
-  const canGoNext = canAdvance(currentStepId, draft, classChoices)
+  const canGoNext = canAdvance(currentStepId, draft, classChoices, races, classData)
 
   function handleNext() {
     if (canGoNext) setStep(s => Math.min(s + 1, steps.length - 1))
@@ -112,9 +114,7 @@ export function CharacterWizard({ onBack, onComplete }) {
 
   function handleFinish() {
     const character = buildCharacter(draft, classData)
-    const stored = JSON.parse(localStorage.getItem('dnd-app-characters') || '[]')
-    stored.push(character)
-    localStorage.setItem('dnd-app-characters', JSON.stringify(stored))
+    upsertCharacter(character)
     onComplete(character.id)
   }
 
@@ -226,11 +226,16 @@ function StepIndicator({ steps, current }) {
 }
 
 /* ── Validação de avanço por passo ───────────────────────────── */
-function canAdvance(stepId, draft, classChoices = {}) {
+function canAdvance(stepId, draft, classChoices = {}, races = [], classData = null) {
   switch (stepId) {
-    case 'settings':    return true
-    case 'concept':     return !!draft.name?.trim()
-    case 'race':        return !!draft.race
+    case 'settings':   return true
+    case 'concept':    return !!draft.name?.trim()
+    case 'race': {
+      if (!draft.race) return false
+      const selectedRace = races.find(r => r.index === draft.race)
+      if (selectedRace?.subraces?.length > 0 && !draft.subrace) return false
+      return true
+    }
     case 'class': {
       if (!draft.class) return false
       const choices = classChoices[draft.class]?.choices ?? []
@@ -242,12 +247,23 @@ function canAdvance(stepId, draft, classChoices = {}) {
       }, 0)
       return (draft.bonusSpells?.length ?? 0) >= bonusCantripsNeeded
     }
-    case 'background':  return !!draft.background
-    case 'attributes':  return isAttributesComplete(draft)
-    case 'skills':      return true
-    case 'spells':      return true
-    case 'review':      return true
-    default:            return true
+    case 'background': return !!draft.background
+    case 'attributes': return isAttributesComplete(draft)
+    case 'skills': {
+      const limit = classData?.skill_choices?.count ?? null
+      if (limit === null) return true
+      return (draft.chosenSkills?.length ?? 0) >= limit
+    }
+    case 'spells': {
+      // Classes sem truques (paladino, patrulheiro) avançam sempre
+      const CLASSES_SEM_CANTRIPS = new Set(['paladino', 'patrulheiro'])
+      if (CLASSES_SEM_CANTRIPS.has(draft.class)) return true
+      // Demais conjuradores precisam de pelo menos 1 truque escolhido
+      const chosenCantrips = (draft.spells ?? []).filter(s => s.level === 0)
+      return chosenCantrips.length > 0
+    }
+    case 'review':     return true
+    default:           return true
   }
 }
 

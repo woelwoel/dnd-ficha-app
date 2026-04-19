@@ -14,6 +14,7 @@ import { CharacterView } from './CharacterView'
 import { ABILITY_SCORES, SKILLS, ABBR_TO_KEY, ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY, STANDARD_ARRAY, POINT_BUY_COST, parseBackgroundEquipment } from '../../utils/calculations'
 import { fetchSrd } from '../../utils/fetchSrd'
 import { generateId } from '../../hooks/useCharacter'
+import { loadCharacterById, upsertCharacter } from '../../utils/storage'
 
 const TABS = [
   { id: 'ficha',       label: 'Ficha'       },
@@ -29,6 +30,7 @@ export function CharacterSheet({ characterId, onBack }) {
   const [classes, setClasses] = useState([])
   const [backgrounds, setBackgrounds] = useState([])
   const [saved, setSaved] = useState(false)
+  const [importError, setImportError] = useState(null)
   const [activeTab, setActiveTab] = useState('ficha')
   // Controla se o banner de "erros bloqueando avanço" está visível
   const [navBlocked, setNavBlocked] = useState(false)
@@ -36,8 +38,7 @@ export function CharacterSheet({ characterId, onBack }) {
 
   const initialCharacter = useMemo(() => {
     if (!characterId || characterId === 'new') return null
-    const stored = JSON.parse(localStorage.getItem('dnd-app-characters') || '[]')
-    return stored.find(c => c.id === characterId) || null
+    return loadCharacterById(characterId)
   }, [characterId])
 
   const {
@@ -85,11 +86,7 @@ export function CharacterSheet({ characterId, onBack }) {
   // Auto-save
   useEffect(() => {
     if (!character.id) return
-    const stored = JSON.parse(localStorage.getItem('dnd-app-characters') || '[]')
-    const idx = stored.findIndex(c => c.id === character.id)
-    if (idx >= 0) stored[idx] = character
-    else stored.push(character)
-    localStorage.setItem('dnd-app-characters', JSON.stringify(stored))
+    upsertCharacter(character)
     setSaved(true)
     const timer = setTimeout(() => setSaved(false), 1500)
     return () => clearTimeout(timer)
@@ -245,6 +242,7 @@ export function CharacterSheet({ characterId, onBack }) {
   const handleSubraceChange = idx => applyRacialChange({ subrace: idx }, character.info.race, idx)
 
   // Troca antecedente: perícias automáticas + itens de equipamento no inventário
+  // O ouro do antecedente anterior é revertido antes de aplicar o novo.
   function handleBackgroundChange(newBgIndex) {
     const bg = backgrounds.find(b => b.index === newBgIndex)
     const bgSkillKeys = (bg?.skill_proficiencies ?? [])
@@ -252,9 +250,15 @@ export function CharacterSheet({ characterId, onBack }) {
       .filter(Boolean)
     const { items: bgItems, gold: bgGold } = parseBackgroundEquipment(bg?.equipment)
     setCharacter(prev => {
+      // Remove o ouro que foi concedido pelo antecedente anterior
+      const prevBgIndex = prev.info.background
+      const prevBg = backgrounds.find(b => b.index === prevBgIndex)
+      const { gold: prevBgGold } = parseBackgroundEquipment(prevBg?.equipment)
+      const gpWithoutOldBg = Math.max(0, prev.inventory.currency.gp - prevBgGold)
+
       const keepItems = prev.inventory.items.filter(i => i.source !== 'background')
       const newItems = [...keepItems, ...bgItems.map(i => ({ ...i, id: generateId() }))]
-      const newGp = prev.inventory.currency.gp + (newBgIndex ? bgGold : 0)
+      const newGp = gpWithoutOldBg + (newBgIndex ? bgGold : 0)
       return {
         ...prev,
         info: { ...prev.info, background: newBgIndex },
@@ -308,9 +312,13 @@ export function CharacterSheet({ characterId, onBack }) {
         const imported = JSON.parse(ev.target.result)
         if (!imported.id || !imported.info) throw new Error('Formato inválido')
         setCharacter(imported)
+        setImportError(null)
         e.target.value = ''
       } catch {
-        alert('Arquivo inválido. Certifique-se de importar uma ficha exportada pelo app.')
+        setImportError('Arquivo inválido. Certifique-se de importar uma ficha exportada pelo app.')
+        const t = setTimeout(() => setImportError(null), 5000)
+        e.target.value = ''
+        return () => clearTimeout(t)
       }
     }
     reader.readAsText(file)
@@ -384,6 +392,14 @@ export function CharacterSheet({ characterId, onBack }) {
           </button>
         ))}
       </div>
+
+      {/* Banner de erro de importação */}
+      {importError && (
+        <div role="alert" className="flex items-center justify-between gap-3 bg-red-900/40 border border-red-700 rounded-lg px-4 py-3 text-sm">
+          <span className="text-red-300">{importError}</span>
+          <button onClick={() => setImportError(null)} className="text-red-400 hover:text-white text-lg leading-none">✕</button>
+        </div>
+      )}
 
       {/* Banner de erros — aparece quando a navegação é bloqueada */}
       {navBlocked && (
@@ -533,7 +549,7 @@ export function CharacterSheet({ characterId, onBack }) {
             />
             <SavingThrows
               attributes={character.attributes}
-              level={character.info.level}
+              profBonus={calc.profBonus}
               classData={classData}
             />
           </section>
@@ -545,7 +561,7 @@ export function CharacterSheet({ characterId, onBack }) {
         <SkillsList
           attributes={character.attributes}
           proficiencies={character.proficiencies}
-          level={character.info.level}
+          profBonus={calc.profBonus}
           onToggle={toggleSkillProficiency}
           onToggleExpertise={toggleExpertiseSkill}
           classData={classData}
@@ -558,6 +574,7 @@ export function CharacterSheet({ characterId, onBack }) {
           character={character}
           attributes={character.attributes}
           level={character.info.level}
+          profBonus={calc.profBonus}
           classData={classData}
           onUpdateSpellcasting={updateSpellcasting}
           onAddSpell={addSpell}
@@ -599,6 +616,8 @@ export function CharacterSheet({ characterId, onBack }) {
           onRemoveMulticlass={handleRemoveMulticlass}
           onChosenFeaturesChange={handleChosenFeaturesChange}
           onNavigateToSpells={() => setActiveTab('magias')}
+          allowMulticlass={character.meta?.settings?.allowMulticlass ?? true}
+          allowFeats={character.meta?.settings?.allowFeats ?? false}
         />
       )}
     </div>

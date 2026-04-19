@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { DetailsModal } from '../DetailsModal'
+import { CantripsGrantPicker } from '../CantripsGrantPicker'
 import { ABILITY_SCORES, getModifier, formatModifier } from '../../utils/calculations'
 import { calculateMulticlassSpellSlots } from '../../utils/spellcasting'
 
@@ -229,70 +230,8 @@ function ASIPicker({ attributes, onBoostsChange }) {
   )
 }
 
-/* ── Picker de cantrips bônus (Pacto do Tomo, etc.) ─────────────────── */
-function CantripsGrantPicker({ needed, chosen, onChosenChange }) {
-  const [allSpells, setAllSpells] = useState([])
-  const [search, setSearch] = useState('')
-
-  useEffect(() => {
-    fetch('/srd-data/phb-spells-pt.json')
-      .then(r => r.json())
-      .then(data => setAllSpells((data ?? []).filter(s => s.level === 0)))
-      .catch(() => {})
-  }, [])
-
-  const filtered = allSpells.filter(s =>
-    s.name?.toLowerCase().includes(search.toLowerCase())
-  )
-
-  return (
-    <div className="bg-gray-900 border border-blue-800/50 rounded-lg p-3 space-y-2">
-      <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold text-blue-300">Escolha {needed} truque{needed > 1 ? 's' : ''} de qualquer lista</p>
-        <span className="text-xs text-gray-500">{chosen.length}/{needed}</span>
-      </div>
-      <input
-        type="text"
-        placeholder="Pesquisar truques..."
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        className="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-blue-500"
-      />
-      <div className="max-h-44 overflow-y-auto space-y-1 pr-1">
-        {filtered.map(spell => {
-          const isChosen = !!chosen.find(c => c.index === spell.index)
-          const disabled = !isChosen && chosen.length >= needed
-          return (
-            <button
-              key={spell.index}
-              type="button"
-              disabled={disabled}
-              onClick={() => {
-                if (isChosen) onChosenChange(chosen.filter(c => c.index !== spell.index))
-                else onChosenChange([...chosen, { index: spell.index, name: spell.name, level: 0, school: spell.school ?? '', desc: spell.desc ?? '' }])
-              }}
-              className={`w-full text-left flex items-center gap-2 px-2.5 py-1.5 rounded text-xs transition-colors ${
-                isChosen ? 'bg-blue-900/40 border border-blue-600/50 text-blue-200'
-                : disabled ? 'opacity-30 cursor-not-allowed text-gray-500 bg-gray-800'
-                : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
-              }`}
-            >
-              <span className={`w-3 h-3 rounded-full border-2 shrink-0 ${isChosen ? 'border-blue-400 bg-blue-500' : 'border-gray-600'}`} />
-              <span className="flex-1">{spell.name}</span>
-              {spell.school && <span className="text-gray-500 text-[10px]">{spell.school}</span>}
-            </button>
-          )
-        })}
-        {filtered.length === 0 && (
-          <p className="text-xs text-gray-600 italic text-center py-2">Nenhum truque encontrado.</p>
-        )}
-      </div>
-    </div>
-  )
-}
-
 /* ── Wizard de Level Up ─────────────────────────────────────────────── */
-function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConfirm, onCancel, levelChoices, currentChosenFeatures }) {
+function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConfirm, onCancel, levelChoices, currentChosenFeatures, allowFeats = false }) {
   const [hpGain,              setHpGain]              = useState(null)
   const [boosts,              setBoosts]              = useState({})
   const [newChoices,          setNewChoices]          = useState({})
@@ -429,10 +368,15 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
         </div>
       )}
 
-      {/* ASI */}
+      {/* ASI / Talento */}
       {hasASI && (
         <div>
           <h4 className="text-sm font-bold text-amber-300 mb-2">⬆️ Melhoria de Atributo</h4>
+          {allowFeats && (
+            <p className="text-xs text-blue-300 bg-blue-900/20 border border-blue-700/40 rounded px-3 py-2 mb-3">
+              Talentos permitidos pela campanha — aplique-o manualmente nas notas após confirmar, se preferir um talento ao invés da melhoria de atributo.
+            </p>
+          )}
           <ASIPicker attributes={attributes} onBoostsChange={setBoosts} />
         </div>
       )}
@@ -529,7 +473,7 @@ function AcquiredFeatures({ levels, currentLevel, onFeatureClick }) {
 function ClassProgressionPanel({
   progression, currentLevel, hitDie, conMod, attributes, isMulticlass,
   onLevelChange, onApplyLevelUp, multiclassIndex,
-  levelChoices, chosenFeatures,
+  levelChoices, chosenFeatures, allowFeats = false,
 }) {
   const [wizardOpen, setWizardOpen] = useState(false)
   const [showAll,    setShowAll]    = useState(false)
@@ -593,6 +537,7 @@ function ClassProgressionPanel({
           currentChosenFeatures={chosenFeatures}
           onConfirm={handleConfirmLevelUp}
           onCancel={() => setWizardOpen(false)}
+          allowFeats={allowFeats}
         />
       )}
 
@@ -723,7 +668,7 @@ function ClassProgressionPanel({
 /* ═══════════════════════════════════════════════════════════════════
    Componente principal
    ═══════════════════════════════════════════════════════════════════ */
-export function LevelProgression({ character, classData, classes, onLevelChange, onApplyLevelUp, onAddMulticlass, onRemoveMulticlass, onChosenFeaturesChange, onNavigateToSpells }) {
+export function LevelProgression({ character, classData, classes, onLevelChange, onApplyLevelUp, onAddMulticlass, onRemoveMulticlass, onNavigateToSpells, allowMulticlass = true, allowFeats = false }) {
   const [allProgressions, setAllProgressions] = useState(null)
   const [classChoices,    setClassChoices]    = useState({})
   const [mcRules,         setMcRules]         = useState({})
@@ -843,31 +788,34 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
         {/* Abas de multiclasses */}
         {multiclasses.map((mc, idx) => {
           const mcClassName = (classes ?? []).find(c => c.index === mc.class)?.name ?? mc.class
+          const isActive = safeTab === idx
           return (
-            <button
-              key={idx}
-              onClick={() => setActiveTab(idx)}
-              className={`shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-t-lg text-sm font-semibold border-b-2 transition-colors ${
-                safeTab === idx
-                  ? 'border-amber-500 text-amber-300 bg-amber-900/20'
-                  : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-gray-800/50'
-              }`}
-            >
-              <span>{mcClassName}</span>
-              <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold ${
-                safeTab === idx ? 'bg-amber-600 text-white' : 'bg-gray-700 text-gray-300'
-              }`}>{mc.level}</span>
+            <div key={idx} className="relative shrink-0 flex items-center">
               <button
-                onClick={e => { e.stopPropagation(); onRemoveMulticlass?.(idx); if (safeTab === idx) setActiveTab('primary') }}
-                className="ml-1 text-gray-500 hover:text-red-400 transition-colors text-xs"
+                onClick={() => setActiveTab(idx)}
+                className={`flex items-center gap-1.5 px-3 pr-7 py-2 rounded-t-lg text-sm font-semibold border-b-2 transition-colors ${
+                  isActive
+                    ? 'border-amber-500 text-amber-300 bg-amber-900/20'
+                    : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-gray-800/50'
+                }`}
+              >
+                <span>{mcClassName}</span>
+                <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold ${
+                  isActive ? 'bg-amber-600 text-white' : 'bg-gray-700 text-gray-300'
+                }`}>{mc.level}</span>
+              </button>
+              <button
+                onClick={() => { onRemoveMulticlass?.(idx); if (isActive) setActiveTab('primary') }}
+                className="absolute right-1 text-gray-500 hover:text-red-400 transition-colors text-xs w-5 h-5 flex items-center justify-center"
+                aria-label={`Remover ${mcClassName}`}
                 title="Remover multiclasse"
               >×</button>
-            </button>
+            </div>
           )
         })}
 
-        {/* Aba "+" para adicionar multiclasse */}
-        {currentLevel >= 3 && multiclasses.length < 3 && (
+        {/* Aba "+" para adicionar multiclasse — só aparece quando permitido pela campanha */}
+        {allowMulticlass && currentLevel >= 3 && multiclasses.length < 3 && (
           <button
             onClick={() => { setShowAddMC(v => !v); setActiveTab('primary') }}
             className="shrink-0 px-3 py-2 rounded-t-lg text-sm text-amber-500 hover:text-amber-300 font-bold border-b-2 border-transparent hover:bg-gray-800/50 transition-colors"
@@ -990,6 +938,7 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
           multiclassIndex={null}
           levelChoices={classChoices[classIndex]?.choices ?? []}
           chosenFeatures={chosenFeatures}
+          allowFeats={allowFeats}
         />
       )}
 
@@ -1011,6 +960,7 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
             multiclassIndex={safeTab}
             levelChoices={classChoices[mc.class]?.choices ?? []}
             chosenFeatures={chosenFeatures}
+            allowFeats={allowFeats}
           />
         )
       })()}

@@ -126,6 +126,8 @@ function Coins({ currency }) {
 export function CharacterView({
   character, races, classes, backgrounds,
   classData, onApplyLevelUp, onLevelChange, onAddMulticlass, onRemoveMulticlass, onChosenFeaturesChange, onNavigateToSpells,
+  allowMulticlass = true,
+  allowFeats = false,
 }) {
   const [subTab, setSubTab] = useState('ficha')
   const [classChoices, setClassChoices] = useState({})
@@ -200,6 +202,8 @@ export function CharacterView({
           onRemoveMulticlass={onRemoveMulticlass}
           onChosenFeaturesChange={onChosenFeaturesChange}
           onNavigateToSpells={onNavigateToSpells}
+          allowMulticlass={allowMulticlass}
+          allowFeats={allowFeats}
         />
       )}
 
