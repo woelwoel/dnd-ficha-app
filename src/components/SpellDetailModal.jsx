@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 const SCHOOL_PT = {
   abjuração: 'Abjuração', conjuração: 'Conjuração', adivinhação: 'Adivinhação',
@@ -22,12 +22,20 @@ function schoolColor(school) {
   return 'bg-gray-800 text-gray-400 border-gray-600'
 }
 
+const SPELL_DETAIL_TITLE_ID = 'spell-detail-modal-title'
+
 export function SpellDetailModal({ spell, onClose }) {
-  // Fechar com Escape
+  const closeRef = useRef(null)
+
+  // Fechar com Escape + foco automático no botão de fechar
   useEffect(() => {
     function handler(e) { if (e.key === 'Escape') onClose() }
     window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
+    const t = setTimeout(() => closeRef.current?.focus(), 50)
+    return () => {
+      window.removeEventListener('keydown', handler)
+      clearTimeout(t)
+    }
   }, [onClose])
 
   if (!spell) return null
@@ -46,7 +54,12 @@ export function SpellDetailModal({ spell, onClose }) {
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
       onClick={e => { if (e.target === e.currentTarget) onClose() }}
     >
-      <div className="bg-gray-900 border border-amber-700/50 rounded-xl shadow-2xl w-full max-w-md max-h-[85vh] flex flex-col">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={SPELL_DETAIL_TITLE_ID}
+        className="bg-gray-900 border border-amber-700/50 rounded-xl shadow-2xl w-full max-w-md max-h-[85vh] flex flex-col"
+      >
         {/* Header */}
         <div className="flex items-start gap-3 p-4 border-b border-gray-700">
           <div className="flex-1 min-w-0">
@@ -66,10 +79,12 @@ export function SpellDetailModal({ spell, onClose }) {
                 </span>
               )}
             </div>
-            <h2 className="text-lg font-bold text-amber-300 font-display leading-tight">{spell.name}</h2>
+            <h2 id={SPELL_DETAIL_TITLE_ID} className="text-lg font-bold text-amber-300 font-display leading-tight">{spell.name}</h2>
           </div>
           <button
+            ref={closeRef}
             onClick={onClose}
+            aria-label="Fechar detalhes da magia"
             className="text-gray-500 hover:text-gray-300 text-xl leading-none flex-shrink-0 mt-0.5 transition-colors"
           >
             ×

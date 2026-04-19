@@ -95,6 +95,8 @@ export function CharacterSheet({ characterId, onBack }) {
   // Aplica subida de nível (primária ou multiclasse) atomicamente
   function handleApplyLevelUp({ newLevel, hpIncrease, attrBoosts, multiclassIndex, newChoices, bonusSpells, chosenFeat }) {
     setCharacter(prev => {
+      const settings = prev.meta?.settings ?? {}
+      const allowFeats = settings.allowFeats ?? false
       const newAttrs = { ...prev.attributes }
       for (const [key, boost] of Object.entries(attrBoosts ?? {})) {
         if (boost) newAttrs[key] = Math.min(20, newAttrs[key] + boost)
@@ -111,8 +113,8 @@ export function CharacterSheet({ characterId, onBack }) {
       if (newChoices && Object.keys(newChoices).length > 0) {
         newInfo = { ...newInfo, chosenFeatures: { ...(newInfo.chosenFeatures ?? {}), ...newChoices } }
       }
-      // Aplica talento escolhido no level-up
-      if (chosenFeat) {
+      // Aplica talento escolhido no level-up apenas se a flag allowFeats estiver ativa
+      if (chosenFeat && allowFeats) {
         const feats = [...(newInfo.feats ?? []), { index: chosenFeat.index, name: chosenFeat.name }]
         newInfo = { ...newInfo, feats }
       }
@@ -143,6 +145,8 @@ export function CharacterSheet({ characterId, onBack }) {
 
   function handleAddMulticlass({ classIndex: mcClass, proficiencies: mcProfs = {} }) {
     setCharacter(prev => {
+      // Bloqueia adição de multiclasse se a flag allowMulticlass estiver desativada
+      if (!(prev.meta?.settings?.allowMulticlass ?? true)) return prev
       const mcs       = [...(prev.info.multiclasses ?? []), { class: mcClass, level: 1 }]
       const newArmor   = mcProfs.armor   ?? []
       const newWeapons = mcProfs.weapons ?? []
@@ -545,7 +549,7 @@ export function CharacterSheet({ characterId, onBack }) {
             <CombatStats
               combat={character.combat}
               attributes={character.attributes}
-              level={character.info.level}
+              profBonus={calc.profBonus}
               onUpdateCombat={updateCombat}
               suggestedAC={calc.suggestedAC}
               suggestedMaxHp={calc.suggestedMaxHp}

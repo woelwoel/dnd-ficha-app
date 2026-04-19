@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
+import { fetchSrd } from '../utils/fetchSrd'
 
 export function CantripsGrantPicker({ needed, chosen, onChosenChange }) {
   const [allSpells, setAllSpells] = useState([])
   const [search, setSearch] = useState('')
 
   useEffect(() => {
-    fetch('/srd-data/phb-spells-pt.json')
-      .then(r => r.json())
+    fetchSrd('phb-spells-pt.json')
       .then(data => setAllSpells((data ?? []).filter(s => s.level === 0)))
       .catch(() => {})
   }, [])

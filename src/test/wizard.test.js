@@ -139,26 +139,107 @@ describe('canAdvance — magias PT-BR (nomes de classes em português)', () => {
   }
 })
 
-describe('flags de campanha — allowMulticlass', () => {
-  it('allowMulticlass false → indica que MC está desabilitada nas configurações', () => {
-    const settings = { allowMulticlass: false, allowFeats: false }
-    expect(settings.allowMulticlass).toBe(false)
+/* ─────────────────────────────────────────────────────────────────────────
+   Replica da lógica de handleApplyLevelUp (CharacterSheet.jsx)
+   ──────────────────────────────────────────────────────────────────────── */
+function applyLevelUp(prev, { newLevel, attrBoosts = {}, multiclassIndex = null, newChoices = {}, chosenFeat = null }) {
+  const settings   = prev.meta?.settings ?? {}
+  const allowFeats = settings.allowFeats ?? false
+
+  const newAttrs = { ...prev.attributes }
+  for (const [key, boost] of Object.entries(attrBoosts)) {
+    if (boost) newAttrs[key] = Math.min(20, newAttrs[key] + boost)
+  }
+
+  let newInfo = prev.info
+  if (multiclassIndex == null) {
+    newInfo = { ...prev.info, level: newLevel }
+  } else {
+    const mcs = [...(prev.info.multiclasses ?? [])]
+    mcs[multiclassIndex] = { ...mcs[multiclassIndex], level: newLevel }
+    newInfo = { ...prev.info, multiclasses: mcs }
+  }
+
+  if (Object.keys(newChoices).length > 0) {
+    newInfo = { ...newInfo, chosenFeatures: { ...(newInfo.chosenFeatures ?? {}), ...newChoices } }
+  }
+
+  // Talento só é aplicado se allowFeats = true
+  if (chosenFeat && allowFeats) {
+    const feats = [...(newInfo.feats ?? []), { index: chosenFeat.index, name: chosenFeat.name }]
+    newInfo = { ...newInfo, feats }
+  }
+
+  return { ...prev, info: newInfo, attributes: newAttrs }
+}
+
+/* Replica da lógica de handleAddMulticlass (CharacterSheet.jsx) */
+function addMulticlass(prev, { classIndex: mcClass }) {
+  if (!(prev.meta?.settings?.allowMulticlass ?? true)) return prev
+  const mcs = [...(prev.info.multiclasses ?? []), { class: mcClass, level: 1 }]
+  return { ...prev, info: { ...prev.info, multiclasses: mcs } }
+}
+
+const makeCharState = (overrides = {}) => ({
+  info: { level: 4, multiclasses: [], feats: [], chosenFeatures: {}, ...overrides.info },
+  attributes: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10, ...overrides.attributes },
+  meta: { settings: { allowFeats: false, allowMulticlass: true }, ...overrides.meta },
+})
+
+describe('flags de campanha — allowMulticlass (lógica real do handler)', () => {
+  it('allowMulticlass true → adiciona multiclasse normalmente', () => {
+    const prev = makeCharState({ meta: { settings: { allowMulticlass: true, allowFeats: false } } })
+    const next = addMulticlass(prev, { classIndex: 'guerreiro' })
+    expect(next.info.multiclasses).toHaveLength(1)
+    expect(next.info.multiclasses[0].class).toBe('guerreiro')
   })
 
-  it('allowMulticlass true → MC permitida', () => {
-    const settings = { allowMulticlass: true, allowFeats: false }
-    expect(settings.allowMulticlass).toBe(true)
+  it('allowMulticlass false → handler ignora a adição e retorna estado anterior', () => {
+    const prev = makeCharState({ meta: { settings: { allowMulticlass: false, allowFeats: false } } })
+    const next = addMulticlass(prev, { classIndex: 'guerreiro' })
+    expect(next.info.multiclasses).toHaveLength(0)
+    expect(next).toBe(prev) // referência idêntica = sem mudança
+  })
+
+  it('allowMulticlass ausente nas settings → padrão true → permite adição', () => {
+    const prev = makeCharState({ meta: { settings: {} } })
+    const next = addMulticlass(prev, { classIndex: 'ladino' })
+    expect(next.info.multiclasses).toHaveLength(1)
   })
 })
 
-describe('flags de campanha — allowFeats', () => {
-  it('allowFeats false por padrão', () => {
-    const defaultSettings = { allowFeats: false, allowMulticlass: false }
-    expect(defaultSettings.allowFeats).toBe(false)
+describe('flags de campanha — allowFeats (lógica real do handler)', () => {
+  it('allowFeats true → talento é aplicado no level-up', () => {
+    const prev = makeCharState({ meta: { settings: { allowFeats: true, allowMulticlass: false } } })
+    const next = applyLevelUp(prev, {
+      newLevel: 5,
+      chosenFeat: { index: 'alert', name: 'Alerta' },
+    })
+    expect(next.info.feats).toHaveLength(1)
+    expect(next.info.feats[0].index).toBe('alert')
   })
 
-  it('allowFeats true → talentos permitidos', () => {
-    const settings = { allowFeats: true, allowMulticlass: false }
-    expect(settings.allowFeats).toBe(true)
+  it('allowFeats false → talento é ignorado mesmo que enviado no payload', () => {
+    const prev = makeCharState({ meta: { settings: { allowFeats: false, allowMulticlass: false } } })
+    const next = applyLevelUp(prev, {
+      newLevel: 5,
+      chosenFeat: { index: 'alert', name: 'Alerta' },
+    })
+    expect(next.info.feats ?? []).toHaveLength(0)
+  })
+
+  it('allowFeats ausente → padrão false → talento ignorado', () => {
+    const prev = makeCharState({ meta: { settings: {} } })
+    const next = applyLevelUp(prev, {
+      newLevel: 5,
+      chosenFeat: { index: 'alert', name: 'Alerta' },
+    })
+    expect(next.info.feats ?? []).toHaveLength(0)
+  })
+
+  it('level-up sem talento não altera a lista de feats', () => {
+    const prev = makeCharState({ meta: { settings: { allowFeats: true, allowMulticlass: false } } })
+    const next = applyLevelUp(prev, { newLevel: 5 })
+    expect(next.info.feats).toHaveLength(0)
   })
 })

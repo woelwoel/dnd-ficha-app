@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 export function SrdSearchModal({ isOpen, onClose, title, items, onSelect, renderItem, filterFn }) {
   const [query, setQuery] = useState('')
   const inputRef = useRef(null)
+  const titleId = 'srd-search-modal-title'
 
   useEffect(() => {
     function onKey(e) {
@@ -34,10 +35,15 @@ export function SrdSearchModal({ isOpen, onClose, title, items, onSelect, render
       className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
       onClick={e => e.target === e.currentTarget && onClose()}
     >
-      <div className="bg-gray-800 border border-gray-600 rounded-xl w-full max-w-lg max-h-[80vh] flex flex-col shadow-xl">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        className="bg-gray-800 border border-gray-600 rounded-xl w-full max-w-lg max-h-[80vh] flex flex-col shadow-xl"
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700">
-          <h3 className="font-bold text-amber-400">{title}</h3>
+          <h3 id={titleId} className="font-bold text-amber-400">{title}</h3>
           <button onClick={onClose} aria-label="Fechar" className="text-gray-400 hover:text-white text-2xl leading-none">×</button>
         </div>
 

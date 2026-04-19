@@ -1,8 +1,7 @@
-import { formatModifier, getProficiencyBonus, calculateInitiative } from '../../utils/calculations'
+import { formatModifier, calculateInitiative } from '../../utils/calculations'
 import { FormFieldError } from '../FormFieldError'
 
-export function CombatStats({ combat, attributes, level, onUpdateCombat, suggestedAC, suggestedMaxHp, passivePerception, errors = {} }) {
-  const profBonus = getProficiencyBonus(level)
+export function CombatStats({ combat, attributes, profBonus, onUpdateCombat, suggestedAC, suggestedMaxHp, passivePerception, errors = {} }) {
   const initiative = calculateInitiative(attributes.dex)
 
   function handleHpChange(field, value) {
