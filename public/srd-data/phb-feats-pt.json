@@ -1,0 +1,268 @@
+[
+  {
+    "index": "adepto-elemental",
+    "name": "Adepto Elemental",
+    "prereq": { "type": "spellcasting" },
+    "stackable": true,
+    "desc": "Quando você ganha esse talento, escolha um dos tipos de dano: ácido, elétrico, fogo, frio ou trovão. As magias que você conjurar ignoram resistência a dano do tipo escolhido. Além disso, quando você rola o dano para uma magia que causar dano desse tipo, você pode tratar qualquer 1 num dado de dano como um 2. Pode escolher esse talento diversas vezes, escolhendo um tipo diferente a cada vez."
+  },
+  {
+    "index": "adepto-marcial",
+    "name": "Adepto Marcial",
+    "prereq": null,
+    "desc": "Você aprende duas manobras do arquétipo Mestre de Batalha (guerreiro). Além disso, ganha um dado de superioridade (d6) se não tiver, ou um adicional se já tiver. Recupera os dados ao terminar um descanso curto ou longo."
+  },
+  {
+    "index": "alerta",
+    "name": "Alerta",
+    "prereq": null,
+    "desc": "+5 de bônus em iniciativa. Você não pode ser surpreendido enquanto estiver consciente. Outras criaturas não ganham vantagem em jogadas de ataque contra você por não serem visíveis por você."
+  },
+  {
+    "index": "ambidestro",
+    "name": "Ambidestro",
+    "prereq": null,
+    "desc": "+1 de bônus na CA enquanto empunhar uma arma corpo-a-corpo em cada mão. Pode usar combater com duas armas mesmo que a arma de uma mão não seja leve. Pode sacar ou guardar duas armas de uma mão quando normalmente seria capaz de apenas uma."
+  },
+  {
+    "index": "atacante-bestial",
+    "name": "Atacante Bestial",
+    "prereq": null,
+    "desc": "Uma vez por turno, quando você rolar o dano para um ataque corpo-a-corpo com arma, pode jogar novamente o dado de dano da arma e usar qualquer dos valores."
+  },
+  {
+    "index": "atirador-agucado",
+    "name": "Atirador Aguçado",
+    "prereq": null,
+    "desc": "Atacar além da distância normal não impõe desvantagem com armas à distância. Seus ataques à distância ignoram meia-cobertura e três-quartos de cobertura. Antes de atacar com arma à distância (proficiente), pode sofrer –5 na jogada de ataque para adicionar +10 no dano se acertar."
+  },
+  {
+    "index": "atirador-de-magia",
+    "name": "Atirador de Magia",
+    "prereq": { "type": "spellcasting" },
+    "desc": "Magias que requerem jogada de ataque têm o alcance dobrado. Ataques à distância com magia ignoram meia-cobertura ou três-quartos de cobertura. Você aprende um truque de ataque (bardo, bruxo, clérigo, druida, feiticeiro ou mago)."
+  },
+  {
+    "index": "atleta",
+    "name": "Atleta",
+    "prereq": null,
+    "attrBonus": { "choices": ["str", "dex"], "amount": 1 },
+    "desc": "+1 em Força ou Destreza (máx 20). Levantar-se de caído requer apenas 1,5 m de deslocamento. Escalar não custa movimento adicional. Pode realizar salto em distância/altura correndo com apenas 1,5 m de impulso."
+  },
+  {
+    "index": "ator",
+    "name": "Ator",
+    "prereq": null,
+    "attrBonus": { "choices": ["cha"], "amount": 1 },
+    "desc": "+1 em Carisma (máx 20). Vantagem em testes de Atuação e Enganação ao se passar por outra pessoa. Pode imitar a articulação de outra pessoa ou sons de criaturas após 1 minuto de observação."
+  },
+  {
+    "index": "combatente-montado",
+    "name": "Combatente Montado",
+    "prereq": null,
+    "desc": "Enquanto montado e não incapacitado: vantagem em ataques corpo-a-corpo contra criaturas desmontadas menores que sua montaria; pode forçar que um ataque direcionado à montaria seja direcionado a você; sua montaria não sofre dano se passar em resistência de Destreza (sofre metade se falhar)."
+  },
+  {
+    "index": "conjurador-de-guerra",
+    "name": "Conjurador de Guerra",
+    "prereq": { "type": "spellcasting" },
+    "desc": "Vantagem em resistências de Constituição para manter concentração quando sofrer dano. Pode realizar componentes somáticos com armas ou escudo nas mãos. Pode conjurar uma magia (1 ação, 1 alvo) como ataque de oportunidade em vez do ataque normal."
+  },
+  {
+    "index": "conjurador-de-ritual",
+    "name": "Conjurador de Ritual",
+    "prereq": { "type": "ability_or", "abilities": [{ "ability": "int", "min": 13 }, { "ability": "wis", "min": 13 }] },
+    "desc": "Você ganha um livro de rituais com duas magias de 1° nível com descritor ritual, escolhidas de uma classe (bardo, bruxo, clérigo, druida, feiticeiro ou mago). Pode adicionar mais magias ritual ao livro ao encontrá-las (2 horas e 50 po por nível)."
+  },
+  {
+    "index": "curandeiro",
+    "name": "Curandeiro",
+    "prereq": null,
+    "desc": "Ao usar kit de primeiros-socorros para estabilizar uma criatura, ela recupera 1 PV. Com uma ação, gaste um uso do kit para restaurar 1d6+4 PV + número de Dados de Vida da criatura. A criatura não pode se beneficiar disso novamente até terminar um descanso."
+  },
+  {
+    "index": "duelista-defensivo",
+    "name": "Duelista Defensivo",
+    "prereq": { "type": "ability", "ability": "dex", "min": 13 },
+    "desc": "Quando estiver empunhando uma arma de acuidade (proficiente) e outra criatura atingir você com um ataque corpo-a-corpo, pode usar sua reação para adicionar seu bônus de proficiência à sua CA para esse ataque."
+  },
+  {
+    "index": "especialista-em-besta",
+    "name": "Especialista em Besta",
+    "prereq": null,
+    "desc": "Você ignora a qualidade de recarga de bestas nas quais é proficiente. Estar a 1,5 m de criatura hostil não impõe desvantagem nos ataques à distância. Ao usar a ação de Ataque com uma arma de uma mão, pode usar ação bônus para atacar com uma besta de mão carregada."
+  },
+  {
+    "index": "especialista-em-briga",
+    "name": "Especialista em Briga",
+    "prereq": null,
+    "attrBonus": { "choices": ["str", "con"], "amount": 1 },
+    "desc": "+1 em Força ou Constituição (máx 20). Seus ataques desarmados causam 1d4 de dano. Ao atingir com ataque desarmado ou arma improvisada, pode usar ação bônus para tentar agarrar o alvo."
+  },
+  {
+    "index": "explorador-de-cavernas",
+    "name": "Explorador de Cavernas",
+    "prereq": null,
+    "desc": "Vantagem em Percepção e Investigação para detectar portas secretas. Vantagem em resistências contra armadilhas. Resistência a dano causado por armadilhas. Pode procurar armadilhas em ritmo normal de viagem."
+  },
+  {
+    "index": "imobilizador",
+    "name": "Imobilizador",
+    "prereq": { "type": "ability", "ability": "str", "min": 13 },
+    "desc": "Vantagem em jogadas de ataque contra criatura agarrada. Pode usar sua ação para tentar imobilizar uma criatura agarrada por você (outro teste de agarrar); se bem sucedido, ambos ficam impedidos até o agarre terminar."
+  },
+  {
+    "index": "iniciado-em-magia",
+    "name": "Iniciado em Magia",
+    "prereq": null,
+    "desc": "Escolha uma classe (bardo, bruxo, clérigo, druida, feiticeiro ou mago). Você aprende dois truques da lista dessa classe. Além disso, aprende uma magia de 1° nível da mesma lista e pode conjurá-la uma vez por descanso longo."
+  },
+  {
+    "index": "investida-poderosa",
+    "name": "Investida Poderosa",
+    "prereq": null,
+    "desc": "Quando usa a ação de Disparada, pode usar ação bônus para realizar um ataque corpo-a-corpo ou empurrar uma criatura. Se mover pelo menos 3 m em linha reta antes disso, ganha +5 de bônus no dano do ataque (se acertar) ou empurra o alvo até 3 m."
+  },
+  {
+    "index": "lider-inspirador",
+    "name": "Líder Inspirador",
+    "prereq": { "type": "ability", "ability": "cha", "min": 13 },
+    "desc": "Gaste 10 minutos inspirando até seis aliados (incluindo você) a até 9 m. Cada um ganha PV temporários igual ao seu nível + modificador de Carisma. Não pode se beneficiar novamente até terminar um descanso."
+  },
+  {
+    "index": "maestria-em-arma-de-haste",
+    "name": "Maestria em Arma de Haste",
+    "prereq": null,
+    "desc": "Ao atacar com glaive, alabarda ou bastão, pode usar ação bônus para atacar com a outra extremidade (1d4, concussão). Enquanto empunhar glaive, alabarda, lança longa ou bastão, criaturas provocam ataque de oportunidade ao entrarem no seu alcance."
+  },
+  {
+    "index": "maestria-em-armadura-media",
+    "name": "Maestria em Armadura Média",
+    "prereq": { "type": "proficiency", "proficiency": "medium-armor" },
+    "desc": "Armadura média não impõe desvantagem em Furtividade. Quando vestindo armadura média, pode adicionar 3 (em vez de 2) à CA se tiver Destreza 16 ou maior."
+  },
+  {
+    "index": "maestria-em-armadura-pesada",
+    "name": "Maestria em Armadura Pesada",
+    "prereq": { "type": "proficiency", "proficiency": "heavy-armor" },
+    "attrBonus": { "choices": ["str"], "amount": 1 },
+    "desc": "+1 em Força (máx 20). Enquanto vestindo armadura pesada, dano de concussão, cortante e perfurante de ataques não-mágicos é reduzido em 3."
+  },
+  {
+    "index": "matador-de-conjuradores",
+    "name": "Matador de Conjuradores",
+    "prereq": null,
+    "desc": "Quando uma criatura a até 1,5 m de você conjurar uma magia, pode usar sua reação para realizar um ataque corpo-a-corpo contra ela. Ao causar dano em criatura concentrada em uma magia, ela tem desvantagem no teste para manter a concentração. Vantagem em resistências contra magias de criaturas a até 1,5 m."
+  },
+  {
+    "index": "mente-afiada",
+    "name": "Mente Afiada",
+    "prereq": null,
+    "attrBonus": { "choices": ["int"], "amount": 1 },
+    "desc": "+1 em Inteligência (máx 20). Sempre sabe a direção do norte. Sempre sabe as horas restantes para o próximo nascer/pôr do sol. Pode relembrar com precisão qualquer coisa que viu ou ouviu no último mês."
+  },
+  {
+    "index": "mestre-de-armas",
+    "name": "Mestre de Armas",
+    "prereq": null,
+    "attrBonus": { "choices": ["str", "dex"], "amount": 1 },
+    "desc": "+1 em Força ou Destreza (máx 20). Ganha proficiência com quatro armas simples ou marciais à sua escolha."
+  },
+  {
+    "index": "mestre-de-armas-grandes",
+    "name": "Mestre de Armas Grandes",
+    "prereq": null,
+    "desc": "No seu turno, ao acertar um crítico ou reduzir PV de uma criatura a 0, pode realizar um ataque corpo-a-corpo como ação bônus. Antes de atacar com arma pesada (proficiente), pode sofrer –5 na jogada de ataque para adicionar +10 no dano."
+  },
+  {
+    "index": "mestre-de-escudo",
+    "name": "Mestre de Escudo",
+    "prereq": null,
+    "desc": "Enquanto empunhar escudo: ao usar ação de Ataque, pode usar ação bônus para empurrar uma criatura a 1,5 m. Adiciona o bônus de CA do escudo a resistências de Destreza. Se passar numa resistência de Destreza (metade do dano), pode usar reação para não sofrer dano."
+  },
+  {
+    "index": "mobilidade",
+    "name": "Mobilidade",
+    "prereq": null,
+    "desc": "+3 m de deslocamento. Ao usar a ação de Disparada, terreno difícil não custa movimento adicional. Ao realizar um ataque corpo-a-corpo, não provoca ataques de oportunidade para essa criatura pelo resto do turno."
+  },
+  {
+    "index": "observador",
+    "name": "Observador",
+    "prereq": null,
+    "attrBonus": { "choices": ["int", "wis"], "amount": 1 },
+    "desc": "+1 em Inteligência ou Sabedoria (máx 20). Pode ler lábios se ver a boca de uma criatura falando um idioma que compreende. +5 de bônus nos valores passivos de Percepção e Investigação."
+  },
+  {
+    "index": "perito",
+    "name": "Perito",
+    "prereq": null,
+    "desc": "Você ganha proficiência em qualquer combinação de três perícias ou ferramentas à sua escolha."
+  },
+  {
+    "index": "poliglota",
+    "name": "Poliglota",
+    "prereq": null,
+    "attrBonus": { "choices": ["int"], "amount": 1 },
+    "desc": "+1 em Inteligência (máx 20). Aprende três idiomas à sua escolha. Pode criar criptogramas escritos que outros não conseguem decifrar sem ser ensinados por você, um teste de Inteligência (CD = Int + proficiência) ou magia."
+  },
+  {
+    "index": "protecao-leve",
+    "name": "Proteção Leve",
+    "prereq": null,
+    "attrBonus": { "choices": ["str", "dex"], "amount": 1 },
+    "desc": "+1 em Força ou Destreza (máx 20). Você ganha proficiência com armaduras leves."
+  },
+  {
+    "index": "protecao-moderada",
+    "name": "Proteção Moderada",
+    "prereq": { "type": "proficiency", "proficiency": "light-armor" },
+    "attrBonus": { "choices": ["str", "dex"], "amount": 1 },
+    "desc": "+1 em Força ou Destreza (máx 20). Você ganha proficiência com armadura média e escudos."
+  },
+  {
+    "index": "protecao-pesada",
+    "name": "Proteção Pesada",
+    "prereq": { "type": "proficiency", "proficiency": "medium-armor" },
+    "attrBonus": { "choices": ["str"], "amount": 1 },
+    "desc": "+1 em Força (máx 20). Você ganha proficiência com armadura pesada."
+  },
+  {
+    "index": "resiliente",
+    "name": "Resiliente",
+    "prereq": null,
+    "attrBonus": { "choices": ["str", "dex", "con", "int", "wis", "cha"], "amount": 1 },
+    "desc": "Escolha um atributo. +1 nesse atributo (máx 20). Você ganha proficiência em testes de resistência usando o atributo escolhido."
+  },
+  {
+    "index": "resistente",
+    "name": "Resistente",
+    "prereq": null,
+    "attrBonus": { "choices": ["con"], "amount": 1 },
+    "desc": "+1 em Constituição (máx 20). Quando rolar um Dado de Vida para recuperar PV, o valor mínimo recuperado é igual a duas vezes seu modificador de Constituição (mínimo de 2)."
+  },
+  {
+    "index": "robusto",
+    "name": "Robusto",
+    "prereq": null,
+    "desc": "Seu máximo de PV aumenta em 2 × seu nível ao adquirir esse talento. A cada novo nível conquistado, seu máximo de PV aumenta em 2 adicionais."
+  },
+  {
+    "index": "sentinela",
+    "name": "Sentinela",
+    "prereq": null,
+    "desc": "Ao acertar um ataque de oportunidade, o deslocamento da criatura se torna 0 pelo resto do turno. Criaturas provocam ataques de oportunidade de você mesmo ao usar Desengajar. Quando uma criatura a 1,5 m atacar outro alvo, pode usar reação para realizar um ataque corpo-a-corpo contra ela."
+  },
+  {
+    "index": "sorrateiro",
+    "name": "Sorrateiro",
+    "prereq": { "type": "ability", "ability": "dex", "min": 13 },
+    "desc": "Pode tentar se esconder quando levemente obscurecido. Errar um ataque à distância enquanto escondido não revela sua posição. Penumbra não impõe desvantagem nos seus testes de Percepção relacionados a visão."
+  },
+  {
+    "index": "sortudo",
+    "name": "Sortudo",
+    "prereq": null,
+    "desc": "Você tem 3 pontos de sorte (recuperados no descanso longo). Antes de saber o resultado de uma jogada de ataque, teste ou resistência, pode gastar 1 ponto para rolar um d20 adicional e escolher qual usar. Também pode usar contra ataques a você."
+  }
+]

@@ -278,6 +278,16 @@ export function CharacterView({
             </div>
           )
         })()}
+
+        {/* Talentos adquiridos */}
+        {(info.feats ?? []).length > 0 && (
+          <div className={`mt-1 px-2 py-1 border ${P.border} rounded text-[8px] flex flex-wrap gap-x-3 gap-y-0.5`}>
+            <span className="font-black text-[#5c3d11] w-full">Talentos:</span>
+            {info.feats.map(f => (
+              <span key={f.index} className="text-[#5c3d11]">🌟 {f.name}</span>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ── CORPO PRINCIPAL: 3 colunas ── */}

@@ -238,10 +238,25 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
   const [bonusCantripsChosen, setBonusCantripsChosen] = useState([])
   const [featModal,           setFeatModal]           = useState(null)
   const [infoModal,           setInfoModal]           = useState(null)
+  // Modo ASI vs Talento
+  const [asiMode,             setAsiMode]             = useState('asi') // 'asi' | 'feat'
+  const [feats,               setFeats]               = useState([])
+  const [selectedFeatIdx,     setSelectedFeatIdx]     = useState(null)
+  const [featSearch,          setFeatSearch]          = useState('')
+
+  useEffect(() => {
+    if (allowFeats) {
+      fetch('/srd-data/phb-feats-pt.json').then(r => r.json()).then(setFeats).catch(() => {})
+    }
+  }, [allowFeats])
 
   const newFeatures = nextEntry?.features?.filter(f => !f.name?.includes('Aumento') && !f.name?.includes('Melhoria')) ?? []
   const hasASI      = isASIEntry(nextEntry)
-  const asiReady    = !hasASI || Object.keys(boosts).length > 0
+
+  const chosenFeat  = selectedFeatIdx !== null ? feats[selectedFeatIdx] : null
+  // ASI pronto: se modo ASI precisam boosts; se modo talento precisa ter selecionado um talento
+  const asiReady    = !hasASI || (asiMode === 'asi' ? Object.keys(boosts).length > 0 : chosenFeat !== null)
+
   const choicesForLevel = (levelChoices ?? []).filter(c => c.level === nextLevel)
   const choicesReady = choicesForLevel.every(c => !!(newChoices[c.id] ?? currentChosenFeatures?.[c.id]))
 
@@ -257,6 +272,21 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
 
   const newProfBonus = nextEntry?.proficiency_bonus
   const oldProfBonus = Math.ceil((nextLevel - 1) / 4) + 1
+
+  // Filtra talentos pelo pré-requisito e busca
+  const filteredFeats = feats.filter(f => {
+    if (featSearch.trim()) {
+      if (!f.name.toLowerCase().includes(featSearch.toLowerCase())) return false
+    }
+    if (!f.prereq) return true
+    if (f.prereq.type === 'ability') {
+      return (attributes[f.prereq.ability] ?? 10) >= f.prereq.min
+    }
+    if (f.prereq.type === 'ability_or') {
+      return f.prereq.abilities.some(a => (attributes[a.ability] ?? 10) >= a.min)
+    }
+    return true
+  })
 
   return (
     <div className="bg-gray-800 border border-amber-700 rounded-xl p-5 space-y-5">
@@ -370,16 +400,101 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
 
       {/* ASI / Talento */}
       {hasASI && (
-        <div>
-          <h4 className="text-sm font-bold text-amber-300 mb-2">⬆️ Melhoria de Atributo</h4>
+        <div className="space-y-3">
+          <h4 className="text-sm font-bold text-amber-300">⬆️ Melhoria de Atributo{allowFeats ? ' ou Talento' : ''}</h4>
+
+          {/* Toggle ASI vs Talento */}
           {allowFeats && (
-            <p className="text-xs text-blue-300 bg-blue-900/20 border border-blue-700/40 rounded px-3 py-2 mb-3">
-              Talentos permitidos pela campanha — aplique-o manualmente nas notas após confirmar, se preferir um talento ao invés da melhoria de atributo.
-            </p>
+            <div className="flex gap-2">
+              {[['asi', '📈 Melhorar Atributos'], ['feat', '🌟 Escolher Talento']].map(([mode, label]) => (
+                <button
+                  key={mode}
+                  onClick={() => { setAsiMode(mode); setBoosts({}); setSelectedFeatIdx(null) }}
+                  className={`text-xs px-3 py-1.5 rounded font-semibold transition-colors ${
+                    asiMode === mode
+                      ? 'bg-amber-700 text-white'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           )}
-          <ASIPicker attributes={attributes} onBoostsChange={setBoosts} />
+
+          {/* Modo ASI */}
+          {(!allowFeats || asiMode === 'asi') && (
+            <ASIPicker attributes={attributes} onBoostsChange={setBoosts} />
+          )}
+
+          {/* Modo Talento */}
+          {allowFeats && asiMode === 'feat' && (
+            <div className="space-y-3">
+              <input
+                type="text"
+                placeholder="Buscar talento..."
+                value={featSearch}
+                onChange={e => setFeatSearch(e.target.value)}
+                className="w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-600"
+              />
+              <div className="max-h-56 overflow-y-auto space-y-1.5 pr-1">
+                {filteredFeats.length === 0 && (
+                  <p className="text-xs text-gray-500 text-center py-4">Nenhum talento encontrado.</p>
+                )}
+                {filteredFeats.map((feat) => {
+                  const realIdx = feats.indexOf(feat)
+                  const sel = selectedFeatIdx === realIdx
+                  return (
+                    <button
+                      key={feat.index}
+                      type="button"
+                      onClick={() => setSelectedFeatIdx(sel ? null : realIdx)}
+                      className={`w-full text-left px-3 py-2 rounded-lg border transition-colors ${
+                        sel
+                          ? 'border-amber-500 bg-amber-900/30 text-amber-200'
+                          : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <div>
+                          <span className="font-semibold text-sm">{feat.name}</span>
+                          {feat.prereq && (
+                            <span className="ml-2 text-[10px] text-gray-500">
+                              {feat.prereq.type === 'spellcasting' && '(requer conjuração)'}
+                              {feat.prereq.type === 'ability' && `(requer ${feat.prereq.ability.toUpperCase()} ${feat.prereq.min}+)`}
+                              {feat.prereq.type === 'ability_or' && `(requer atributo ${feat.prereq.abilities[0].min}+)`}
+                              {feat.prereq.type === 'proficiency' && '(requer proficiência)'}
+                            </span>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={e => { e.stopPropagation(); setFeatModal(feat) }}
+                          className="w-6 h-6 shrink-0 rounded-full bg-gray-700 hover:bg-amber-800 text-amber-400 text-xs font-bold"
+                          title="Ver descrição"
+                        >ℹ</button>
+                      </div>
+                      {sel && (
+                        <p className="text-xs text-gray-400 mt-1 leading-relaxed line-clamp-2">{feat.desc}</p>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+              {chosenFeat && (
+                <p className="text-xs text-green-400 font-semibold">✓ Talento selecionado: {chosenFeat.name}</p>
+              )}
+            </div>
+          )}
         </div>
       )}
+
+      {/* Modal de descrição do talento */}
+      <DetailsModal isOpen={!!featModal && featModal !== featModal?.features} onClose={() => setFeatModal(null)} title={featModal?.name ?? ''}>
+        {featModal && (
+          <p className="text-sm text-gray-300 leading-relaxed">{featModal.desc}</p>
+        )}
+      </DetailsModal>
 
       {/* Spell slots */}
       {nextEntry?.spell_slots?.some(s => s > 0) && (
@@ -403,7 +518,14 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
         </button>
         <button
           disabled={!canCommit}
-          onClick={() => canCommit && onConfirm({ newLevel: nextLevel, hpIncrease: hpGain, attrBoosts: boosts, newChoices, bonusSpells: bonusCantripsChosen })}
+          onClick={() => canCommit && onConfirm({
+            newLevel: nextLevel,
+            hpIncrease: hpGain,
+            attrBoosts: asiMode === 'asi' ? boosts : {},
+            newChoices,
+            bonusSpells: bonusCantripsChosen,
+            chosenFeat: asiMode === 'feat' ? chosenFeat : null,
+          })}
           className={`flex-1 py-2 rounded text-sm font-bold transition-all ${
             canCommit
               ? 'bg-amber-600 hover:bg-amber-500 text-white'
@@ -414,19 +536,11 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
             ? (!hpGain ? 'Escolha o ganho de PV'
               : !choicesReady ? 'Escolha sua característica'
               : !bonusCantripsReady ? `Escolha ${bonusCantripsNeeded - bonusCantripsChosen.length} truque(s) bônus`
-              : 'Escolha a melhoria de atributo')
+              : asiMode === 'feat' ? 'Escolha um talento' : 'Escolha a melhoria de atributo')
             : `Confirmar Subida para Nível ${nextLevel}`
           }
         </button>
       </div>
-
-      <DetailsModal isOpen={!!featModal} onClose={() => setFeatModal(null)} title={featModal?.name || ''}>
-        {featModal && (
-          <p className="text-sm text-gray-300 leading-relaxed">
-            {featModal.desc || 'Consulte o Livro do Jogador para a descrição completa.'}
-          </p>
-        )}
-      </DetailsModal>
     </div>
   )
 }

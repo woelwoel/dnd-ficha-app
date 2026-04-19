@@ -93,7 +93,7 @@ export function CharacterSheet({ characterId, onBack }) {
   }, [character])
 
   // Aplica subida de nível (primária ou multiclasse) atomicamente
-  function handleApplyLevelUp({ newLevel, hpIncrease, attrBoosts, multiclassIndex, newChoices, bonusSpells }) {
+  function handleApplyLevelUp({ newLevel, hpIncrease, attrBoosts, multiclassIndex, newChoices, bonusSpells, chosenFeat }) {
     setCharacter(prev => {
       const newAttrs = { ...prev.attributes }
       for (const [key, boost] of Object.entries(attrBoosts ?? {})) {
@@ -110,6 +110,11 @@ export function CharacterSheet({ characterId, onBack }) {
       // Aplica choices escolhidas no level-up
       if (newChoices && Object.keys(newChoices).length > 0) {
         newInfo = { ...newInfo, chosenFeatures: { ...(newInfo.chosenFeatures ?? {}), ...newChoices } }
+      }
+      // Aplica talento escolhido no level-up
+      if (chosenFeat) {
+        const feats = [...(newInfo.feats ?? []), { index: chosenFeat.index, name: chosenFeat.name }]
+        newInfo = { ...newInfo, feats }
       }
       // Aplica magias bônus (cantrips do Pacto do Tomo, etc.)
       let spells = prev.spellcasting?.spells ?? []
