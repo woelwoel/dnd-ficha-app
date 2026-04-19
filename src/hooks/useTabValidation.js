@@ -71,7 +71,7 @@ function validateFicha(character, races = []) {
 // magia esteja definido.
 function validateMagias(character) {
   const errors = {}
-  const SPELLCASTERS = ['bard','cleric','druid','paladin','ranger','sorcerer','warlock','wizard']
+  const SPELLCASTERS = ['bardo','clerigo','druida','paladino','patrulheiro','feiticeiro','bruxo','mago']
   const cls = character.info.class?.toLowerCase()
   if (cls && SPELLCASTERS.includes(cls) && !character.spellcasting.ability) {
     errors.spellAbility = 'Defina o atributo de conjuração na aba Magias'

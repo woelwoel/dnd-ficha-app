@@ -1,8 +1,7 @@
-import { SKILLS, ABILITY_SCORES, formatModifier, calculateSkillModifier, getProficiencyBonus, getModifier } from '../../utils/calculations'
+import { SKILLS, ABILITY_SCORES, formatModifier, calculateSkillModifier, getModifier } from '../../utils/calculations'
 import { Tooltip } from '../Tooltip'
 
-export function SkillsList({ attributes, proficiencies, level, onToggle, onToggleExpertise, classData }) {
-  const profBonus       = getProficiencyBonus(level)
+export function SkillsList({ attributes, proficiencies, profBonus, onToggle, onToggleExpertise, classData }) {
   const skillLimit      = classData?.skill_choices?.count ?? null
   // Apenas perícias escolhidas pela classe contam para o limite
   const selectedCount   = proficiencies.skills.length

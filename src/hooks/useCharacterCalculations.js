@@ -48,7 +48,7 @@ export function useCharacterCalculations(character, classData = null) {
 
   // Dependências explícitas para o useMemo — evita recalcular por referências de objeto
   const level        = info?.level ?? 1
-  const multiclasses = info?.multiclasses ?? []
+  const multiclasses = info?.multiclasses  // referência estável; null/undefined tratado dentro do useMemo
   const classIndex   = info?.class ?? ''
   const spellAbilityLabel = spellcasting?.ability ?? null
   const saves        = proficiencies?.savingThrows
@@ -60,7 +60,8 @@ export function useCharacterCalculations(character, classData = null) {
 
   return useMemo(() => {
     // ── Bônus de proficiência (nível total: primário + multiclasses) ──
-    const totalLevel = level + multiclasses.reduce((s, m) => s + (m.level ?? 0), 0)
+    const mcs = multiclasses ?? []
+    const totalLevel = level + mcs.reduce((s, m) => s + (m.level ?? 0), 0)
     const profBonus = getProficiencyBonus(totalLevel)
 
     // ── Modificadores dos 6 atributos ─────────────────────────────
@@ -137,5 +138,5 @@ export function useCharacterCalculations(character, classData = null) {
       spellAbilityKey,
       fmt: formatModifier,
     }
-  }, [level, multiclasses, classIndex, str, dex, con, int, wis, cha, spellAbilityLabel, saves, skills, expertiseSkills, currentHp, maxHp, classData])
+  }, [level, multiclasses, classIndex, str, dex, con, int, wis, cha, spellAbilityLabel, saves, skills, expertiseSkills, currentHp, maxHp, classData, attributes])
 }

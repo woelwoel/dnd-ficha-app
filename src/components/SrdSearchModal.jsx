@@ -5,20 +5,23 @@ export function SrdSearchModal({ isOpen, onClose, title, items, onSelect, render
   const inputRef = useRef(null)
 
   useEffect(() => {
-    if (isOpen) {
-      setQuery('')
-      setTimeout(() => inputRef.current?.focus(), 50)
-    }
-  }, [isOpen])
-
-  useEffect(() => {
     function onKey(e) {
       if (e.key === 'Escape') onClose()
     }
-    if (isOpen) document.addEventListener('keydown', onKey)
+    if (isOpen) {
+      // Foca o campo de busca ao abrir (setTimeout evita conflito com foco do portal)
+      const t = setTimeout(() => inputRef.current?.focus(), 50)
+      document.addEventListener('keydown', onKey)
+      return () => {
+        clearTimeout(t)
+        document.removeEventListener('keydown', onKey)
+      }
+    }
     return () => document.removeEventListener('keydown', onKey)
   }, [isOpen, onClose])
 
+  // O componente retorna null quando !isOpen, então o state de query é
+  // automaticamente zerado no próximo mount — sem necessidade de reset manual.
   if (!isOpen) return null
 
   const defaultFilter = (item) => item.name.toLowerCase().includes(query.toLowerCase())
@@ -35,7 +38,7 @@ export function SrdSearchModal({ isOpen, onClose, title, items, onSelect, render
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700">
           <h3 className="font-bold text-amber-400">{title}</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-white text-2xl leading-none">×</button>
+          <button onClick={onClose} aria-label="Fechar" className="text-gray-400 hover:text-white text-2xl leading-none">×</button>
         </div>
 
         {/* Search */}

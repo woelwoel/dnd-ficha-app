@@ -1,10 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { PT_CLASS_TO_EN, normalizeSpell } from '../utils/calculations'
 
-/**
- * Carrega o catálogo de magias PT, os dados de nível da classe (slots,
- * cantrips_known, spells_known) e deriva slotLevels / classSpells / availableTabs.
- */
 export function useClassSpells(classIndex, level) {
   const [allSpells, setAllSpells] = useState([])
   const [levelData, setLevelData] = useState(null)
@@ -18,7 +14,11 @@ export function useClassSpells(classIndex, level) {
 
   const classIndexEn = PT_CLASS_TO_EN[classIndex] ?? classIndex
   useEffect(() => {
-    if (!classIndexEn) { setLevelData(null); return }
+    if (!classIndexEn) {
+      // Usa setTimeout para evitar setState síncrono dentro do corpo do efeito
+      const t = setTimeout(() => setLevelData(null), 0)
+      return () => clearTimeout(t)
+    }
     fetch('/srd-data/5e-SRD-Levels.json')
       .then(r => r.json())
       .then(data => {

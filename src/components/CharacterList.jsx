@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react'
+import { loadCharacters, deleteCharacter } from '../utils/storage'
 
 const CLASS_ICONS = {
-  guerreiro: '⚔️', mago: '🔮', clérigo: '✨', ladino: '🗡️',
-  bárbaro: '🪓', bardo: '🎭', druida: '🌿', guardião: '🏹',
+  guerreiro: '⚔️', mago: '🔮', clerigo: '✨', ladino: '🗡️',
+  barbaro: '🪓', bardo: '🎭', druida: '🌿', patrulheiro: '🏹',
   paladino: '🛡️', feiticeiro: '🌟', bruxo: '👁️', monge: '☯️',
 }
 
@@ -15,18 +16,13 @@ function classIcon(cls) {
   return '📜'
 }
 
-function loadCharacters() {
-  return JSON.parse(localStorage.getItem('dnd-app-characters') || '[]')
-}
-
 export function CharacterList({ onSelect, onCreate }) {
   const [characters, setCharacters] = useState(loadCharacters)
   const [confirmDelete, setConfirmDelete] = useState(null)
 
   const handleDelete = useCallback((id) => {
-    const updated = loadCharacters().filter(c => c.id !== id)
-    localStorage.setItem('dnd-app-characters', JSON.stringify(updated))
-    setCharacters(updated)
+    deleteCharacter(id)
+    setCharacters(loadCharacters())
     setConfirmDelete(null)
   }, [])
 

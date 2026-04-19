@@ -1,15 +1,16 @@
 import { getModifier } from './calculations'
 
 /* ── Multiclasse: tipo de conjurador por classe ────────────────── */
+// Bruxo usa Pact Magic (separado); NÃO entra na tabela unificada de slots
 const CASTER_TYPE = {
   bardo:      'full',
   clerigo:    'full',
   druida:     'full',
   feiticeiro: 'full',
   mago:       'full',
-  bruxo:      'full',
   paladino:   'half',
   patrulheiro:'half',
+  // bruxo: omitido — Pact Magic é calculado separadamente
 }
 
 /* ── Tabela de slots multiclasse (nível efetivo 1–20) ─────────── */
@@ -37,8 +38,28 @@ const MULTICLASS_SPELL_SLOTS = [
   [4,3,3,3,3,2,2,1,1], // 20
 ]
 
+// Slots de Pact Magic do Bruxo por nível (PHB cap. 9)
+// índice = nível do bruxo - 1; valor = [qtd_slots, nivel_slot]
+const WARLOCK_PACT_SLOTS = [
+  [1, 1], [2, 1], [2, 2], [2, 2], [2, 3],
+  [2, 3], [2, 4], [2, 4], [2, 5], [2, 5],
+  [3, 5], [3, 5], [3, 5], [3, 5], [3, 5],
+  [3, 5], [4, 5], [4, 5], [4, 5], [4, 5],
+]
+
+/**
+ * Retorna os slots de Pact Magic do Bruxo para o nível dado.
+ * @returns {{ qty: number, slotLevel: number } | null}
+ */
+export function getWarlockPactSlots(warlockLevel) {
+  if (!warlockLevel || warlockLevel < 1) return null
+  const [qty, slotLevel] = WARLOCK_PACT_SLOTS[Math.min(20, warlockLevel) - 1]
+  return { qty, slotLevel }
+}
+
 /**
  * Calcula os espaços de magia fundidos para multiclasse (regra oficial D&D 5e).
+ * Bruxo usa Pact Magic separado — não entra nesta tabela.
  * Retorna null quando não há multiclasse conjuradora relevante.
  *
  * @param {string}  primaryClass   - índice PT-BR da classe primária
@@ -50,12 +71,14 @@ export function calculateMulticlassSpellSlots(primaryClass, primaryLevel, multic
   if (!multiclasses?.length) return null
   const all = [{ class: primaryClass, level: primaryLevel }, ...(multiclasses ?? [])]
   let effectiveLevel = 0
+  let hasSpellcaster = false
   for (const { class: cls, level } of all) {
     const type = CASTER_TYPE[cls]
-    if (type === 'full')  effectiveLevel += level
-    else if (type === 'half') effectiveLevel += Math.floor(level / 2)
+    if (type === 'full')  { effectiveLevel += level; hasSpellcaster = true }
+    else if (type === 'half') { effectiveLevel += Math.floor(level / 2); hasSpellcaster = true }
+    // bruxo: ignorado aqui
   }
-  if (effectiveLevel < 1) return null
+  if (!hasSpellcaster || effectiveLevel < 1) return null
   const slots = MULTICLASS_SPELL_SLOTS[Math.min(20, effectiveLevel) - 1]
   const result = {}
   for (let i = 0; i < 9; i++) {
