@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { DetailsModal } from '../DetailsModal'
 import { CantripsGrantPicker } from '../CantripsGrantPicker'
 import { ABILITY_SCORES, getModifier, formatModifier } from '../../utils/calculations'
+import { abbrOfKey } from '../../domain/attributes'
 import { calculateMulticlassSpellSlots } from '../../utils/spellcasting'
 
 /* ── Helpers ────────────────────────────────────────────────────────── */
@@ -20,7 +21,6 @@ function rollDie(sides) {
   return Math.ceil(Math.random() * sides)
 }
 
-const ATTR_LABELS = { str: 'FOR', dex: 'DES', con: 'CON', int: 'INT', wis: 'SAB', cha: 'CAR' }
 
 /* ── Timeline 1-20 ─────────────────────────────────────────────────── */
 function LevelTimeline({ currentLevel, levels, onJump }) {
@@ -973,7 +973,7 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
                       <div key={attr} className={`flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border ${
                         met ? 'border-green-700 bg-green-900/20 text-green-300' : 'border-yellow-700 bg-yellow-900/20 text-yellow-300'
                       }`}>
-                        {met ? '✓' : '⚠'} {ATTR_LABELS[attr] ?? attr.toUpperCase()} {val}+
+                        {met ? '✓' : '⚠'} {abbrOfKey(attr) ?? attr.toUpperCase()} {val}+
                         <span className="text-gray-500">({character.attributes[attr] ?? 10})</span>
                       </div>
                     ))}
@@ -981,7 +981,7 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
                       <div className={`flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border ${
                         orMet ? 'border-green-700 bg-green-900/20 text-green-300' : 'border-yellow-700 bg-yellow-900/20 text-yellow-300'
                       }`}>
-                        {orMet ? '✓' : '⚠'} ou {ATTR_LABELS[orAttr] ?? orAttr.toUpperCase()} 13+
+                        {orMet ? '✓' : '⚠'} ou {abbrOfKey(orAttr) ?? orAttr.toUpperCase()} 13+
                         <span className="text-gray-500">({character.attributes[orAttr] ?? 10})</span>
                       </div>
                     )}

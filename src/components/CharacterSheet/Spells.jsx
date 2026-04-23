@@ -1,10 +1,9 @@
 import { useState, useMemo } from 'react'
 import { ABILITY_SCORES, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus, getProficiencyBonus } from '../../utils/calculations'
+import { abbrOfKey } from '../../domain/attributes'
 import { getSpellcastingRules } from '../../utils/spellcasting'
 import { useClassSpells } from '../../hooks/useClassSpells'
 import { SpellDetailModal } from '../SpellDetailModal'
-
-const KEY_TO_ABBR = Object.fromEntries(ABILITY_SCORES.map(a => [a.key, a.abbr]))
 
 export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onToggleSlot }) {
   const [activeTab, setActiveTab] = useState(0)
@@ -82,7 +81,7 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
           {[
             { label: 'CD de Magia', value: spellAbility ? spellSaveDC : '—' },
             { label: 'Ataque', value: spellAbility ? formatModifier(spellAttack) : '—' },
-            { label: 'Atributo', value: spellAbility ? KEY_TO_ABBR[spellAbility] : '—' },
+            { label: 'Atributo', value: spellAbility ? abbrOfKey(spellAbility) : '—' },
           ].map(({ label, value }) => (
             <div key={label} className="flex flex-col items-center bg-gray-900 rounded p-2">
               <span className="text-xs text-gray-400 mb-1">{label}</span>

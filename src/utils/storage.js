@@ -1,4 +1,9 @@
+import { safeParseCharacter } from '../domain/characterSchema'
+
 const STORAGE_KEY = 'dnd-app-characters'
+const CURRENT_VERSION = '1.0'
+
+/* ── Primitivas seguras sobre localStorage ───────────────────────── */
 
 function safeGet(key, fallback) {
   try {
@@ -13,15 +18,41 @@ function safeGet(key, fallback) {
 function safeSet(key, value) {
   try {
     localStorage.setItem(key, JSON.stringify(value))
-    return true
-  } catch {
-    return false
+    return { ok: true }
+  } catch (err) {
+    const reason = err?.name === 'QuotaExceededError' ? 'quota' : 'unknown'
+    if (import.meta.env.DEV) console.error('[storage] falha ao salvar:', err)
+    return { ok: false, reason }
   }
 }
 
+/* ── Migração ────────────────────────────────────────────────────── */
+
+function migrate(character) {
+  if (character?.meta?.version === CURRENT_VERSION) return character
+  // Espaço para migrações futuras (1.0 → 1.1, etc.)
+  return {
+    ...character,
+    meta: { ...(character?.meta ?? {}), version: CURRENT_VERSION },
+  }
+}
+
+/* ── API pública ─────────────────────────────────────────────────── */
+
 export function loadCharacters() {
   const data = safeGet(STORAGE_KEY, [])
-  return Array.isArray(data) ? data : []
+  if (!Array.isArray(data)) return []
+
+  const valid = []
+  for (const raw of data) {
+    const migrated = migrate(raw)
+    const parsed = safeParseCharacter(migrated)
+    if (parsed.success) valid.push(parsed.data)
+    else if (import.meta.env.DEV) {
+      console.warn('[storage] personagem ignorado (schema inválido):', parsed.error.issues)
+    }
+  }
+  return valid
 }
 
 export function saveCharacters(characters) {

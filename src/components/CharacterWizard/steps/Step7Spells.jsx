@@ -1,13 +1,11 @@
 // Passo 7 — Magias: seleção por aba de nível + busca + limites
 import { useState, useMemo } from 'react'
 import { ABILITY_SCORES, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, getProficiencyBonus, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../../utils/calculations'
+import { abbrOfKey, nameOfKey } from '../../../domain/attributes'
 import { useClassSpells } from '../../../hooks/useClassSpells'
 import { getSpellcastingRules } from '../../../utils/spellcasting'
 import { generateId } from '../../../hooks/useCharacter'
 import { SpellDetailModal } from '../../SpellDetailModal'
-
-const KEY_TO_ABBR = Object.fromEntries(ABILITY_SCORES.map(a => [a.key, a.abbr]))
-const KEY_TO_NAME = Object.fromEntries(ABILITY_SCORES.map(a => [a.key, a.name]))
 
 export function Step7Spells({ draft, updateDraft, classData }) {
   const [activeTab, setActiveTab] = useState(0)
@@ -89,8 +87,8 @@ export function Step7Spells({ draft, updateDraft, classData }) {
         <div className="grid grid-cols-3 gap-2">
           <div className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-3 text-center">
             <p className="text-[11px] text-gray-500 mb-1">Habilidade</p>
-            <p className="text-lg font-bold text-amber-300">{KEY_TO_ABBR[spellAbilityKey] ?? spellAbilityKey.toUpperCase()}</p>
-            <p className="text-[11px] text-gray-600">{KEY_TO_NAME[spellAbilityKey] ?? ''}</p>
+            <p className="text-lg font-bold text-amber-300">{abbrOfKey(spellAbilityKey) ?? spellAbilityKey.toUpperCase()}</p>
+            <p className="text-[11px] text-gray-600">{nameOfKey(spellAbilityKey) ?? ''}</p>
           </div>
           <div className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-3 text-center">
             <p className="text-[11px] text-gray-500 mb-1">CD de Magia</p>

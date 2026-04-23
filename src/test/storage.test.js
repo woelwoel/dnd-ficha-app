@@ -1,6 +1,24 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { loadCharacters, saveCharacters, loadCharacterById, upsertCharacter, deleteCharacter } from '../utils/storage'
 
+// Fixture mínimo que passa pela validação Zod do characterSchema
+function makeChar(id, name = 'Teste', extra = {}) {
+  const now = new Date().toISOString()
+  return {
+    id,
+    meta: { createdAt: now, updatedAt: now, version: '1.0' },
+    info: { name, level: 1, xp: 0, scoreMethod: 'manual' },
+    attributes: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+    appliedRacialBonuses: {},
+    combat: { maxHp: 10, currentHp: 10, armorClass: 10 },
+    proficiencies: {},
+    spellcasting: {},
+    inventory: { currency: {}, items: [] },
+    traits: {},
+    ...extra,
+  }
+}
+
 describe('storage helpers — localStorage resiliente', () => {
   beforeEach(() => {
     localStorage.clear()
@@ -21,30 +39,31 @@ describe('storage helpers — localStorage resiliente', () => {
   })
 
   it('persiste e carrega personagens corretamente', () => {
-    const chars = [{ id: '1', info: { name: 'Teste' } }]
-    saveCharacters(chars)
-    expect(loadCharacters()).toEqual(chars)
+    saveCharacters([makeChar('1', 'Teste')])
+    const loaded = loadCharacters()
+    expect(loaded).toHaveLength(1)
+    expect(loaded[0].id).toBe('1')
+    expect(loaded[0].info.name).toBe('Teste')
   })
 
   it('upsert insere novo personagem', () => {
-    const c = { id: 'abc', info: { name: 'Novo' } }
-    upsertCharacter(c)
+    upsertCharacter(makeChar('abc', 'Novo'))
     expect(loadCharacters()).toHaveLength(1)
     expect(loadCharacters()[0].id).toBe('abc')
   })
 
   it('upsert atualiza personagem existente sem duplicar', () => {
-    const c = { id: 'abc', info: { name: 'Original' } }
+    const c = makeChar('abc', 'Original')
     upsertCharacter(c)
-    upsertCharacter({ ...c, info: { name: 'Atualizado' } })
+    upsertCharacter({ ...c, info: { ...c.info, name: 'Atualizado' } })
     const all = loadCharacters()
     expect(all).toHaveLength(1)
     expect(all[0].info.name).toBe('Atualizado')
   })
 
   it('deleteCharacter remove o personagem correto', () => {
-    upsertCharacter({ id: '1', info: { name: 'A' } })
-    upsertCharacter({ id: '2', info: { name: 'B' } })
+    upsertCharacter(makeChar('1', 'A'))
+    upsertCharacter(makeChar('2', 'B'))
     deleteCharacter('1')
     const all = loadCharacters()
     expect(all).toHaveLength(1)
@@ -56,7 +75,16 @@ describe('storage helpers — localStorage resiliente', () => {
   })
 
   it('loadCharacterById retorna o personagem correto', () => {
-    upsertCharacter({ id: 'x', info: { name: 'X' } })
+    upsertCharacter(makeChar('x', 'X'))
     expect(loadCharacterById('x').info.name).toBe('X')
+  })
+
+  it('loadCharacters descarta personagens inválidos', () => {
+    const valid = makeChar('ok', 'Ok')
+    const invalid = { id: 'bad', info: { name: 'Lixo' } } // faltam campos
+    localStorage.setItem('dnd-app-characters', JSON.stringify([valid, invalid]))
+    const loaded = loadCharacters()
+    expect(loaded).toHaveLength(1)
+    expect(loaded[0].id).toBe('ok')
   })
 })

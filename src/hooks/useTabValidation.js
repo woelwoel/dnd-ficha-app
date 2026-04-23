@@ -1,5 +1,6 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { ABILITY_SCORES } from '../utils/calculations'
+import { SPELLCASTER_CLASSES } from '../domain/rules'
 
 /**
  * IDs dos campos com erro, em ordem de prioridade.
@@ -21,41 +22,37 @@ export const ERROR_FIELD_IDS = {
   currentHp:   'field-currentHp',
 }
 
-/* ── Validadores por aba ──────────────────────────────────────────── */
+/* ── Validadores puros por aba ────────────────────────────────────── */
 
 function validateFicha(character, races = []) {
   const errors = {}
   const { info, attributes, combat } = character
 
-  // Informações básicas
   if (!info.name?.trim())
     errors.name = 'Nome é obrigatório'
 
   if (!info.race)
     errors.race = 'Raça é obrigatória'
 
-  // Sub-raça obrigatória quando a raça tem sub-raças disponíveis
   if (info.race && races.length > 0) {
     const selectedRace = races.find(r => r.index === info.race)
     if (selectedRace?.subraces?.length > 0 && info.subrace === '')
-      errors.subrace = 'Sub-raça é obrigatória para ' + selectedRace.name
+      errors.subrace = `Sub-raça é obrigatória para ${selectedRace.name}`
   }
 
   if (!info.class)
     errors.class = 'Classe é obrigatória'
 
   const lvl = Number(info.level)
-  if (isNaN(lvl) || lvl < 1 || lvl > 20)
+  if (Number.isNaN(lvl) || lvl < 1 || lvl > 20)
     errors.level = 'Nível deve estar entre 1 e 20'
 
-  // Atributos: valor válido é 3–20 (point buy/array; 1-30 é técnico, mas 3-20 é o padrão de jogo)
   for (const { key, name } of ABILITY_SCORES) {
     const v = Number(attributes[key])
-    if (isNaN(v) || v < 3 || v > 20)
+    if (Number.isNaN(v) || v < 3 || v > 20)
       errors[`attr_${key}`] = `${name}: valor deve estar entre 3 e 20`
   }
 
-  // Combate
   if (Number(combat.armorClass) < 10)
     errors.armorClass = 'Classe de Armadura mínima é 10'
 
@@ -65,63 +62,63 @@ function validateFicha(character, races = []) {
   return errors
 }
 
-// Slots de magia precisariam de dados assíncronos (5e-SRD-Levels.json),
-// então a validação quantitativa é feita inline no componente Spells.
-// Aqui apenas garantimos que, se a classe for conjuradora, o atributo de
-// magia esteja definido.
 function validateMagias(character) {
   const errors = {}
-  const SPELLCASTERS = ['bardo','clerigo','druida','paladino','patrulheiro','feiticeiro','bruxo','mago']
   const cls = character.info.class?.toLowerCase()
-  if (cls && SPELLCASTERS.includes(cls) && !character.spellcasting.ability) {
+  if (cls && SPELLCASTER_CLASSES.has(cls) && !character.spellcasting.ability) {
     errors.spellAbility = 'Defina o atributo de conjuração na aba Magias'
   }
   return errors
 }
 
-// TAB_VALIDATORS é uma função que recebe (character, deps) e retorna erros
 const TAB_VALIDATORS = {
-  ficha:   (character, deps) => validateFicha(character, deps?.races),
-  magias:  (character)       => validateMagias(character),
+  ficha:  (character, deps) => validateFicha(character, deps?.races),
+  magias: (character)        => validateMagias(character),
 }
 
 /* ── Hook ─────────────────────────────────────────────────────────── */
 
+/**
+ * Validação por aba com memoização. Erros recomputados apenas quando
+ * `character` ou `deps.races` mudam.
+ */
 export function useTabValidation(character, deps = {}) {
-  // Abas que o usuário já tentou sair (validação visível)
-  const [touchedTabs, setTouchedTabs] = useState(new Set())
+  const [touchedTabs, setTouchedTabs] = useState(() => new Set())
 
-  /** Executa a validação e retorna os erros, sem alterar estado */
-  const validateTab = useCallback((tabId) => {
-    const validator = TAB_VALIDATORS[tabId]
-    if (!validator) return {}
-    return validator(character, deps)
-  }, [character, deps])
+  const races = deps?.races
+  // Extrai apenas o que importa para evitar recomputar quando deps é
+  // um objeto novo em cada render com conteúdo equivalente.
+  const allErrors = useMemo(() => {
+    const out = {}
+    for (const tabId of Object.keys(TAB_VALIDATORS)) {
+      out[tabId] = TAB_VALIDATORS[tabId](character, { races })
+    }
+    return out
+  }, [character, races])
 
-  /** Retorna erros apenas se a aba já foi tocada */
-  const getTabErrors = useCallback((tabId) => {
+  const validateTab = useCallback(tabId => allErrors[tabId] ?? {}, [allErrors])
+
+  const getTabErrors = useCallback(tabId => {
     if (!touchedTabs.has(tabId)) return {}
-    return validateTab(tabId)
-  }, [touchedTabs, validateTab])
+    return allErrors[tabId] ?? {}
+  }, [touchedTabs, allErrors])
 
-  /** Marca a aba como "tocada" — a partir daí os erros são exibidos */
-  const markTouched = useCallback((tabId) => {
+  const markTouched = useCallback(tabId => {
     setTouchedTabs(prev => {
       if (prev.has(tabId)) return prev
-      return new Set([...prev, tabId])
+      const next = new Set(prev)
+      next.add(tabId)
+      return next
     })
   }, [])
 
-  const hasErrors = useCallback((tabId) => {
-    return Object.keys(validateTab(tabId)).length > 0
-  }, [validateTab])
+  const hasErrors = useCallback(
+    tabId => Object.keys(allErrors[tabId] ?? {}).length > 0,
+    [allErrors]
+  )
 
-  /**
-   * Foca e rola até o primeiro campo inválido da aba.
-   * Usa os IDs definidos em ERROR_FIELD_IDS na ordem de prioridade.
-   */
-  const focusFirstError = useCallback((tabId) => {
-    const errors = validateTab(tabId)
+  const focusFirstError = useCallback(tabId => {
+    const errors = allErrors[tabId] ?? {}
     for (const [key, fieldId] of Object.entries(ERROR_FIELD_IDS)) {
       if (errors[key]) {
         const el = document.getElementById(fieldId)
@@ -132,9 +129,10 @@ export function useTabValidation(character, deps = {}) {
         }
       }
     }
-  }, [validateTab])
+  }, [allErrors])
 
   return {
+    validateTab,
     getTabErrors,
     markTouched,
     hasErrors,

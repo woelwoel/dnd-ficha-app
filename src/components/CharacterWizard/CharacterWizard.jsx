@@ -1,8 +1,8 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { generateId } from '../../hooks/useCharacter'
-import { calculateMaxHp, ABBR_TO_KEY, ATTR_NAME_TO_KEY, SPELL_ABILITY_PT_TO_KEY, SKILLS, getModifier } from '../../utils/calculations'
+import { calculateMaxHp, SPELL_ABILITY_PT_TO_KEY, getModifier } from '../../utils/calculations'
 import { upsertCharacter } from '../../utils/storage'
-import { fetchSrd } from '../../utils/fetchSrd'
+import { useSrd } from '../../providers/SrdProvider'
 import { Step0Settings } from './steps/Step0Settings'
 import { Step1Concept } from './steps/Step1Concept'
 import { Step2Race } from './steps/Step2Race'
@@ -58,19 +58,11 @@ const INITIAL_DRAFT = {
 export function CharacterWizard({ onBack, onComplete }) {
   const [step, setStep] = useState(0)
   const [draft, setDraft] = useState(INITIAL_DRAFT)
-  const [races, setRaces] = useState([])
-  const [classes, setClasses] = useState([])
-  const [backgrounds, setBackgrounds] = useState([])
-  const [classChoices,    setClassChoices]    = useState({})
-  const [classProgression, setClassProgression] = useState({})
 
-  useEffect(() => {
-    fetchSrd('phb-races-pt.json').then(setRaces).catch(() => {})
-    fetchSrd('phb-classes-pt.json').then(setClasses).catch(() => {})
-    fetchSrd('phb-backgrounds-pt.json').then(setBackgrounds).catch(() => {})
-    fetchSrd('phb-class-choices-pt.json').then(setClassChoices).catch(() => {})
-    fetchSrd('phb-class-progression-pt.json').then(setClassProgression).catch(() => {})
-  }, [])
+  const {
+    races, classes, backgrounds,
+    classChoices, progression: classProgression,
+  } = useSrd()
 
   const classData = useMemo(
     () => classes.find(c => c.index === draft.class) ?? null,

@@ -1,42 +1,82 @@
-// Modifier from ability score: floor((score - 10) / 2)
+/**
+ * Cálculos puros de regras D&D 5e e constantes PT-BR.
+ * Os mapeamentos canônicos de atributos estão em `domain/attributes.js` —
+ * re-exportados aqui para retrocompatibilidade com arquivos antigos.
+ */
+
+import {
+  ABILITIES as _ABILITIES,
+  abbrOfKey,
+  nameOfKey,
+} from '../domain/attributes'
+
+/* ── Re-export de mapeamentos (compat) ───────────────────────────── */
+
+// Formato usado no código legado: { FOR: 'str', DES: 'dex', ... }
+export const ABBR_TO_KEY = Object.fromEntries(
+  _ABILITIES.map(a => [a.abbrPt, a.key])
+)
+
+export const ATTR_NAME_TO_KEY = Object.fromEntries(
+  _ABILITIES.map(a => [a.name, a.key])
+)
+
+export const SPELL_ABILITY_PT_TO_KEY = {
+  'Inteligência': 'int',
+  'Sabedoria':    'wis',
+  'Carisma':      'cha',
+}
+
+export const ABILITY_SCORES = _ABILITIES.map(a => ({
+  key:  a.key,
+  name: a.name,
+  abbr: a.abbrPt,
+}))
+
+/* ── Cálculos básicos ────────────────────────────────────────────── */
+
+// Modificador: floor((score - 10) / 2)
 export function getModifier(score) {
   return Math.floor((score - 10) / 2)
 }
 
-// Format modifier with sign: +3, -1, +0
+// Formato com sinal: +3, -1, +0
 export function formatModifier(mod) {
   return mod >= 0 ? `+${mod}` : `${mod}`
 }
 
-// Proficiency bonus by level
+// Bônus de proficiência pelo nível
 export function getProficiencyBonus(level) {
   return Math.ceil(level / 4) + 1
 }
 
-// Max HP at level 1: hit die max + CON modifier
-// For higher levels: average hit die + CON modifier per level
+/**
+ * HP máximo para classe única (sem multiclasse). Para multiclasse, use
+ * `calculateMaxHpMulticlass` em `domain/rules.js`.
+ *
+ * Regra 5e:
+ *  - Nível 1: hitDie + CON
+ *  - Níveis 2+: (média arredondada p/ cima + CON) por nível adicional
+ */
 export function calculateMaxHp(classData, level, conScore) {
   if (!classData) return 0
   const conMod = getModifier(conScore)
   const hitDie = classData.hit_die || 8
-  // Level 1: max hit die + CON mod
-  // Level 2+: average (rounded up) + CON mod per additional level
   const avgPerLevel = Math.floor(hitDie / 2) + 1
-  return hitDie + conMod + (level - 1) * (avgPerLevel + conMod)
+  const first = hitDie + conMod
+  const rest = Math.max(0, level - 1) * (avgPerLevel + conMod)
+  return Math.max(1, first + rest)
 }
 
-// Initiative = DEX modifier
 export function calculateInitiative(dexScore) {
   return getModifier(dexScore)
 }
 
-// Passive Perception = 10 + Perception modifier (+ profBonus se especialização)
 export function calculatePassivePerception(wisScore, profBonus, isProficient, isExpert = false) {
   const wisMod = getModifier(wisScore)
   return 10 + wisMod + (isProficient ? profBonus : 0) + (isExpert ? profBonus : 0)
 }
 
-// Skill modifier = ability modifier + (proficient ? profBonus : 0) + (expertise ? profBonus : 0)
 export function calculateSkillModifier(abilityScore, profBonus, proficient, expertise) {
   const abilityMod = getModifier(abilityScore)
   const profMod = proficient ? profBonus : 0
@@ -44,37 +84,24 @@ export function calculateSkillModifier(abilityScore, profBonus, proficient, expe
   return abilityMod + profMod + expertiseMod
 }
 
-// Saving throw = ability modifier + (proficient ? profBonus : 0)
 export function calculateSavingThrow(abilityScore, profBonus, proficient) {
   return getModifier(abilityScore) + (proficient ? profBonus : 0)
 }
 
-// Spell Save DC = 8 + profBonus + spellcasting ability modifier
 export function calculateSpellSaveDC(abilityScore, profBonus) {
   return 8 + profBonus + getModifier(abilityScore)
 }
 
-// Spell Attack Bonus = profBonus + spellcasting ability modifier
 export function calculateSpellAttackBonus(abilityScore, profBonus) {
   return profBonus + getModifier(abilityScore)
 }
 
-// Standard Array for ability scores
+/* ── Constantes de criação de personagem ─────────────────────────── */
+
 export const STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]
 
-// Point Buy cost per score (PHB p.13)
 export const POINT_BUY_COST = { 8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9 }
 export const POINT_BUY_BUDGET = 27
-
-// Attribute key mappings (PT-BR)
-export const ABBR_TO_KEY = { FOR: 'str', DES: 'dex', CON: 'con', INT: 'int', SAB: 'wis', CAR: 'cha' }
-export const ATTR_NAME_TO_KEY = {
-  'Força': 'str', 'Destreza': 'dex', 'Constituição': 'con',
-  'Inteligência': 'int', 'Sabedoria': 'wis', 'Carisma': 'cha',
-}
-export const SPELL_ABILITY_PT_TO_KEY = {
-  'Inteligência': 'int', 'Sabedoria': 'wis', 'Carisma': 'cha',
-}
 
 export const PT_CLASS_TO_EN = {
   barbaro: 'barbarian', bardo: 'bard', bruxo: 'warlock', clerigo: 'cleric',
@@ -82,7 +109,7 @@ export const PT_CLASS_TO_EN = {
   mago: 'wizard', monge: 'monk', paladino: 'paladin', patrulheiro: 'ranger',
 }
 
-// Classes que PREPARAM magias (lista completa) vs CONHECEM (número fixo)
+// Classes que PREPARAM magias vs CONHECEM
 export const PREPARE_CLASSES = new Set(['mago', 'clerigo', 'druida', 'paladino'])
 
 export const SCHOOL_ABBR = {
@@ -127,17 +154,8 @@ export const ALIGNMENTS = [
   'Leal e Mau', 'Neutro e Mau', 'Caótico e Mau',
 ]
 
-// Ability score names
-export const ABILITY_SCORES = [
-  { key: 'str', name: 'Força', abbr: 'FOR' },
-  { key: 'dex', name: 'Destreza', abbr: 'DES' },
-  { key: 'con', name: 'Constituição', abbr: 'CON' },
-  { key: 'int', name: 'Inteligência', abbr: 'INT' },
-  { key: 'wis', name: 'Sabedoria', abbr: 'SAB' },
-  { key: 'cha', name: 'Carisma', abbr: 'CAR' },
-]
+/* ── 18 perícias D&D 5e ──────────────────────────────────────────── */
 
-// 18 D&D 5e skills
 export const SKILLS = [
   { key: 'acrobatics',     name: 'Acrobacia',       ability: 'dex', abbr: 'DES' },
   { key: 'animal-handling',name: 'Adestramento',     ability: 'wis', abbr: 'SAB' },
@@ -159,22 +177,33 @@ export const SKILLS = [
   { key: 'survival',       name: 'Sobrevivência',    ability: 'wis', abbr: 'SAB' },
 ]
 
+/* ── Parser de equipamento de antecedente ────────────────────────── */
+
+/**
+ * Parseia texto livre de equipamento do antecedente.
+ * Regex limitada (âncora no início) para evitar backtracking excessivo.
+ */
 export function parseBackgroundEquipment(equipmentStr) {
-  if (!equipmentStr) return { items: [], gold: 0 }
-  const loreIdx = equipmentStr.search(/\s[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ]{5,}/)
+  if (!equipmentStr || typeof equipmentStr !== 'string') return { items: [], gold: 0 }
+
+  // Separa lista de itens de eventual "lore" (sequência de maiúsculas sinaliza início de nome próprio)
+  const loreIdx = equipmentStr.search(/\s[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ]{5,15}/)
   const clean = loreIdx > 0 ? equipmentStr.slice(0, loreIdx).trim() : equipmentStr.trim()
-  const rawParts = clean.split(/,\s*(?:e\s+)?|\s+e\s+(?=[^,]+$)/).map(s => s.trim()).filter(Boolean)
+  const rawParts = clean.split(/,\s*(?:e\s+)?|\s+e\s+(?=[^,]+$)/)
+    .map(s => s.trim())
+    .filter(Boolean)
+
   const items = []
   let gold = 0
   for (const part of rawParts) {
-    const goldMatch = part.match(/(\d+)\s*po/i)
+    const goldMatch = part.match(/(\d+)\s*po\b/i)
     if (goldMatch && /algibeira|bolsa|saco/i.test(part)) {
-      gold = parseInt(goldMatch[1])
+      gold = parseInt(goldMatch[1], 10) || 0
       continue
     }
     const qtyMatch = part.match(/^(\d+)\s+(.+)/)
     if (qtyMatch) {
-      items.push({ name: qtyMatch[2], qty: parseInt(qtyMatch[1]), source: 'background' })
+      items.push({ name: qtyMatch[2], qty: parseInt(qtyMatch[1], 10) || 1, source: 'background' })
     } else {
       items.push({ name: part, qty: 1, source: 'background' })
     }
@@ -182,11 +211,15 @@ export function parseBackgroundEquipment(equipmentStr) {
   return { items, gold }
 }
 
-
-// Extrai quantos idiomas extras o antecedente concede ("Dois à sua escolha" → 2)
+// Extrai quantos idiomas extras o antecedente concede
 export function parseBackgroundLanguageCount(langStr) {
   if (!langStr) return 0
   if (/dois|two|\b2\b/i.test(langStr)) return 2
   if (/uma?|one|\b1\b/i.test(langStr)) return 1
   return 0
 }
+
+/* ── Helpers de formatação (deprecados: preferir domain/attributes) ─ */
+
+export const getAbbrOfKey = abbrOfKey
+export const getNameOfKey = nameOfKey

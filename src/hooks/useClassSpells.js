@@ -1,36 +1,26 @@
-import { useState, useEffect, useMemo } from 'react'
-import { PT_CLASS_TO_EN, normalizeSpell } from '../utils/calculations'
+import { useMemo } from 'react'
+import { PT_CLASS_TO_EN } from '../utils/calculations'
+import { useSrd } from '../providers/SrdProvider'
 
+/**
+ * Lê magias e dados de nível a partir do SrdProvider (cache compartilhado).
+ * Nada de fetch aqui — race conditions e requisições duplicadas ficam
+ * resolvidas no provider.
+ */
 export function useClassSpells(classIndex, level) {
-  const [allSpells, setAllSpells] = useState([])
-  const [levelData, setLevelData] = useState(null)
-
-  useEffect(() => {
-    fetch('/srd-data/phb-spells-pt.json')
-      .then(r => r.json())
-      .then(data => setAllSpells(data.map(normalizeSpell)))
-      .catch(() => {})
-  }, [])
+  const { spells: allSpells, levels } = useSrd()
 
   const classIndexEn = PT_CLASS_TO_EN[classIndex] ?? classIndex
-  useEffect(() => {
-    if (!classIndexEn) {
-      // Usa setTimeout para evitar setState síncrono dentro do corpo do efeito
-      const t = setTimeout(() => setLevelData(null), 0)
-      return () => clearTimeout(t)
-    }
-    fetch('/srd-data/5e-SRD-Levels.json')
-      .then(r => r.json())
-      .then(data => {
-        const entry = data.find(l => l.class?.index === classIndexEn && l.level === level)
-        setLevelData(entry?.spellcasting ?? null)
-      })
-      .catch(() => setLevelData(null))
-  }, [classIndexEn, level])
+
+  const levelData = useMemo(() => {
+    if (!classIndexEn || !Array.isArray(levels) || levels.length === 0) return null
+    const entry = levels.find(l => l.class?.index === classIndexEn && l.level === level)
+    return entry?.spellcasting ?? null
+  }, [levels, classIndexEn, level])
 
   const slotLevels = useMemo(() => (
     levelData
-      ? [1,2,3,4,5,6,7,8,9].filter(l => (levelData[`spell_slots_level_${l}`] || 0) > 0)
+      ? [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(l => (levelData[`spell_slots_level_${l}`] || 0) > 0)
       : []
   ), [levelData])
 

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 
 const DEFAULT_CHARACTER = {
   id: null,
@@ -23,12 +23,7 @@ const DEFAULT_CHARACTER = {
     scoreMethod: 'manual',
   },
   attributes: {
-    str: 10,
-    dex: 10,
-    con: 10,
-    int: 10,
-    wis: 10,
-    cha: 10,
+    str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10,
   },
   combat: {
     maxHp: 0,
@@ -69,27 +64,25 @@ const DEFAULT_CHARACTER = {
   },
 }
 
-function generateId() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2)
+export function generateId() {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+  // Fallback para ambientes sem Web Crypto
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 11)}`
 }
 
-// Stamp meta.updatedAt em qualquer patch — todo updater passa por aqui
-const stampMeta = patch => prev => ({
-  ...prev,
-  ...patch,
-  meta: { ...prev.meta, updatedAt: new Date().toISOString() },
+/**
+ * Todo patch passa por aqui: carimba `meta.updatedAt`.
+ * Aceita patch ou função (prev → next).
+ */
+const stampMeta = (next) => ({
+  ...next,
+  meta: { ...next.meta, updatedAt: new Date().toISOString() },
 })
 
-// Helpers para reduzir boilerplate: patcha um sub-objeto
-const setField    = (section, field, value) => prev => stampMeta({ [section]: { ...prev[section], [field]: value } })(prev)
-const toggleInList = (section, field, item) => prev => {
-  const list = prev[section][field] ?? []
-  const next = list.includes(item) ? list.filter(x => x !== item) : [...list, item]
-  return stampMeta({ [section]: { ...prev[section], [field]: next } })(prev)
-}
-
 export function useCharacter(initialCharacter = null) {
-  const [character, setCharacter] = useState(() => {
+  const [character, setCharacterRaw] = useState(() => {
     if (initialCharacter) return initialCharacter
     const now = new Date().toISOString()
     return {
@@ -99,75 +92,138 @@ export function useCharacter(initialCharacter = null) {
     }
   })
 
-  const updateInfo    = useCallback((field, value) => setCharacter(setField('info',    field, value)), [])
-  const updateCombat  = useCallback((field, value) => setCharacter(setField('combat',  field, value)), [])
-  const updateTraits  = useCallback((field, value) => setCharacter(setField('traits',  field, value)), [])
-
-  const updateAttribute = useCallback((attr, value) => {
-    const num = parseInt(value, 10)
-    if (isNaN(num)) return
-    const clamped = Math.min(30, Math.max(1, num))
-    setCharacter(setField('attributes', attr, clamped))
-  }, [])
-
-  const toggleSkillProficiency = useCallback(skillIndex =>
-    setCharacter(toggleInList('proficiencies', 'skills', skillIndex)), [])
-
-  const toggleLanguage = useCallback(lang =>
-    setCharacter(toggleInList('proficiencies', 'languages', lang)), [])
-
-  const toggleExpertiseSkill = useCallback(skillIndex => {
-    setCharacter(prev => {
-      // Só permite expertise se já for proficiente (por classe ou antecedente)
-      const bgSkills = prev.proficiencies.backgroundSkills ?? []
-      if (!prev.proficiencies.skills.includes(skillIndex) && !bgSkills.includes(skillIndex)) return prev
-      return toggleInList('proficiencies', 'expertiseSkills', skillIndex)(prev)
+  /**
+   * Wrapper obrigatório: qualquer update do personagem passa por stampMeta,
+   * impossibilitando esquecer de atualizar `meta.updatedAt`.
+   */
+  const setCharacter = useCallback(updater => {
+    setCharacterRaw(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater
+      return stampMeta(next)
     })
   }, [])
 
+  /* ── Helpers de patch ────────────────────────────────────────── */
+
+  const patchSection = useCallback((section, field, value) => {
+    setCharacter(prev => ({
+      ...prev,
+      [section]: { ...prev[section], [field]: value },
+    }))
+  }, [setCharacter])
+
+  const toggleInList = useCallback((section, field, item) => {
+    setCharacter(prev => {
+      const list = prev[section]?.[field] ?? []
+      const next = list.includes(item) ? list.filter(x => x !== item) : [...list, item]
+      return { ...prev, [section]: { ...prev[section], [field]: next } }
+    })
+  }, [setCharacter])
+
+  /* ── Updaters públicos ───────────────────────────────────────── */
+
+  const updateInfo    = useCallback((f, v) => patchSection('info',    f, v), [patchSection])
+  const updateCombat  = useCallback((f, v) => patchSection('combat',  f, v), [patchSection])
+  const updateTraits  = useCallback((f, v) => patchSection('traits',  f, v), [patchSection])
+
+  const updateAttribute = useCallback((attr, value) => {
+    const num = parseInt(value, 10)
+    if (Number.isNaN(num)) return
+    const clamped = Math.min(30, Math.max(1, num))
+    patchSection('attributes', attr, clamped)
+  }, [patchSection])
+
+  const toggleSkillProficiency = useCallback(
+    skillIndex => toggleInList('proficiencies', 'skills', skillIndex),
+    [toggleInList]
+  )
+
+  const toggleLanguage = useCallback(
+    lang => toggleInList('proficiencies', 'languages', lang),
+    [toggleInList]
+  )
+
+  const toggleExpertiseSkill = useCallback(skillIndex => {
+    setCharacter(prev => {
+      const bgSkills = prev.proficiencies.backgroundSkills ?? []
+      const hasProf = prev.proficiencies.skills.includes(skillIndex) || bgSkills.includes(skillIndex)
+      if (!hasProf) return prev
+      const list = prev.proficiencies.expertiseSkills ?? []
+      const next = list.includes(skillIndex) ? list.filter(x => x !== skillIndex) : [...list, skillIndex]
+      return { ...prev, proficiencies: { ...prev.proficiencies, expertiseSkills: next } }
+    })
+  }, [setCharacter])
+
   const updateCurrency = useCallback((key, value) => {
     const num = Math.max(0, parseInt(value, 10) || 0)
-    setCharacter(prev => stampMeta({
-      inventory: { ...prev.inventory, currency: { ...prev.inventory.currency, [key]: num } }
-    })(prev))
-  }, [])
+    setCharacter(prev => ({
+      ...prev,
+      inventory: {
+        ...prev.inventory,
+        currency: { ...prev.inventory.currency, [key]: num },
+      },
+    }))
+  }, [setCharacter])
 
-  const addItem = useCallback(item => setCharacter(prev => stampMeta({
-    inventory: { ...prev.inventory, items: [...prev.inventory.items, { ...item, id: generateId() }] }
-  })(prev)), [])
+  const addItem = useCallback(item => {
+    setCharacter(prev => ({
+      ...prev,
+      inventory: {
+        ...prev.inventory,
+        items: [...prev.inventory.items, { ...item, id: generateId() }],
+      },
+    }))
+  }, [setCharacter])
 
-  const removeItem = useCallback(itemId => setCharacter(prev => stampMeta({
-    inventory: { ...prev.inventory, items: prev.inventory.items.filter(i => i.id !== itemId) }
-  })(prev)), [])
+  const removeItem = useCallback(itemId => {
+    setCharacter(prev => ({
+      ...prev,
+      inventory: {
+        ...prev.inventory,
+        items: prev.inventory.items.filter(i => i.id !== itemId),
+      },
+    }))
+  }, [setCharacter])
 
-  const updateSpellcasting = useCallback((field, value) =>
-    setCharacter(setField('spellcasting', field, value)), [])
+  const updateSpellcasting = useCallback((f, v) => patchSection('spellcasting', f, v), [patchSection])
 
-  const addSpell = useCallback(spell => setCharacter(prev => {
-    if (prev.spellcasting.spells.some(s => s.index === spell.index)) return prev
-    return stampMeta({
+  const addSpell = useCallback(spell => {
+    setCharacter(prev => {
+      if (prev.spellcasting.spells.some(s => s.index === spell.index)) return prev
+      return {
+        ...prev,
+        spellcasting: {
+          ...prev.spellcasting,
+          spells: [...prev.spellcasting.spells, { ...spell, id: generateId() }],
+        },
+      }
+    })
+  }, [setCharacter])
+
+  const removeSpell = useCallback(spellId => {
+    setCharacter(prev => ({
+      ...prev,
       spellcasting: {
         ...prev.spellcasting,
-        spells: [...prev.spellcasting.spells, { ...spell, id: generateId() }],
-      }
-    })(prev)
-  }), [])
+        spells: prev.spellcasting.spells.filter(s => s.id !== spellId),
+      },
+    }))
+  }, [setCharacter])
 
-  const removeSpell = useCallback(spellId => setCharacter(prev => stampMeta({
-    spellcasting: {
-      ...prev.spellcasting,
-      spells: prev.spellcasting.spells.filter(s => s.id !== spellId),
-    }
-  })(prev)), [])
+  const toggleSlot = useCallback((level, newUsed) => {
+    setCharacter(prev => ({
+      ...prev,
+      spellcasting: {
+        ...prev.spellcasting,
+        usedSlots: {
+          ...(prev.spellcasting.usedSlots || {}),
+          [level]: Math.max(0, newUsed),
+        },
+      },
+    }))
+  }, [setCharacter])
 
-  const toggleSlot = useCallback((level, newUsed) => setCharacter(prev => stampMeta({
-    spellcasting: {
-      ...prev.spellcasting,
-      usedSlots: { ...(prev.spellcasting.usedSlots || {}), [level]: Math.max(0, newUsed) },
-    }
-  })(prev)), [])
-
-  return {
+  return useMemo(() => ({
     character,
     setCharacter,
     updateInfo,
@@ -184,7 +240,11 @@ export function useCharacter(initialCharacter = null) {
     removeSpell,
     toggleSlot,
     toggleLanguage,
-  }
+  }), [
+    character, setCharacter,
+    updateInfo, updateAttribute, updateCombat, updateTraits,
+    toggleSkillProficiency, toggleExpertiseSkill,
+    updateCurrency, addItem, removeItem,
+    updateSpellcasting, addSpell, removeSpell, toggleSlot, toggleLanguage,
+  ])
 }
-
-export { generateId }
