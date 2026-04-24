@@ -1,10 +1,17 @@
 /**
  * Schema Zod para validar personagens ao carregar/importar.
- * Passthrough em objetos intermediários para tolerar campos extras
- * (e.g., campos adicionados em versões futuras que ainda não migraram).
+ *
+ * Passthrough em objetos intermediários para tolerar campos extras (e.g.,
+ * campos adicionados em versões futuras que ainda não migraram).
+ *
+ * SCHEMA_VERSION identifica o formato canônico do personagem. Ao bump,
+ * escreva uma migração em `migrations/` e rode em `safeParseCharacter`.
  */
 
 import { z } from 'zod'
+
+/** Versão atual do formato de ficha. Incrementar a cada breaking change. */
+export const SCHEMA_VERSION = 1
 
 const abilitiesSchema = z.object({
   str: z.number().int().min(1).max(30),
@@ -24,6 +31,11 @@ const metaSchema = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
   version: z.string().default('1.0'),
+  /**
+   * Versão do schema do documento. Ausente → assume 1 (legado).
+   * Usada por `migrateCharacter` para aplicar migrações incrementais.
+   */
+  schemaVersion: z.number().int().min(1).default(SCHEMA_VERSION),
   settings: settingsSchema.optional(),
   creationMethod: z.string().optional(),
 }).passthrough()
@@ -127,9 +139,35 @@ export const characterSchema = z.object({
 }).passthrough()
 
 export function parseCharacter(raw) {
-  return characterSchema.parse(raw)
+  return characterSchema.parse(migrateCharacter(raw))
 }
 
 export function safeParseCharacter(raw) {
-  return characterSchema.safeParse(raw)
+  return characterSchema.safeParse(migrateCharacter(raw))
+}
+
+/**
+ * Aplica migrações incrementais entre schemaVersion lido no documento
+ * e `SCHEMA_VERSION` atual. Idempotente: se já está na versão atual,
+ * devolve o mesmo objeto.
+ *
+ * Como adicionar uma migração nova:
+ *   1. Incremente `SCHEMA_VERSION` para N.
+ *   2. Adicione um case para `from === N-1` que produz o formato de N.
+ */
+export function migrateCharacter(raw) {
+  if (!raw || typeof raw !== 'object') return raw
+  const current = raw.meta?.schemaVersion ?? 1
+  if (current >= SCHEMA_VERSION) return raw
+
+  let doc = raw
+  for (let v = current; v < SCHEMA_VERSION; v++) {
+    console.info(`[characterSchema] migrando v${v} → v${v + 1}`)
+    // Exemplo de esqueleto para migrações futuras:
+    // if (v === 1) doc = { ...doc, info: { ...doc.info, xp: doc.info.xp ?? 0 } }
+  }
+  return {
+    ...doc,
+    meta: { ...(doc.meta ?? {}), schemaVersion: SCHEMA_VERSION },
+  }
 }

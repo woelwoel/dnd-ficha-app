@@ -1,18 +1,20 @@
-import { useState, useEffect } from 'react'
-import { fetchSrd } from '../utils/fetchSrd'
+import { useMemo, useState } from 'react'
+import { useSrd } from '../providers/SrdProvider'
 
 export function CantripsGrantPicker({ needed, chosen, onChosenChange }) {
-  const [allSpells, setAllSpells] = useState([])
+  const { spells } = useSrd()
   const [search, setSearch] = useState('')
 
-  useEffect(() => {
-    fetchSrd('phb-spells-pt.json')
-      .then(data => setAllSpells((data ?? []).filter(s => s.level === 0)))
-      .catch(() => {})
-  }, [])
+  // Memoizado: deriva truques a partir do cache compartilhado do provider.
+  const cantrips = useMemo(
+    () => (spells ?? []).filter(s => s.level === 0),
+    [spells]
+  )
 
-  const filtered = allSpells.filter(s =>
-    s.name?.toLowerCase().includes(search.toLowerCase())
+  const q = search.toLowerCase()
+  const filtered = useMemo(
+    () => cantrips.filter(s => s.name?.toLowerCase().includes(q)),
+    [cantrips, q]
   )
 
   return (

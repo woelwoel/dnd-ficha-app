@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { ABILITY_SCORES, SKILLS, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, getModifier, getProficiencyBonus, RACE_LANGUAGES, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../utils/calculations'
-import { fetchSrd } from '../../utils/fetchSrd'
+import { useSrd } from '../../providers/SrdProvider'
 import { LevelProgression } from './LevelProgression'
 
 const KEY_ABBR = Object.fromEntries(ABILITY_SCORES.map(a => [a.key, a.abbr]))
@@ -131,11 +131,7 @@ export function CharacterView({
   allowFeats = false,
 }) {
   const [subTab, setSubTab] = useState('ficha')
-  const [classChoices, setClassChoices] = useState({})
-
-  useEffect(() => {
-    fetchSrd('phb-class-choices-pt.json').then(setClassChoices).catch(() => {})
-  }, [])
+  const { classChoices } = useSrd()
 
   const { info, attributes, combat, proficiencies, spellcasting, inventory, traits } = character
   const totalLevel = info.level + (info.multiclasses ?? []).reduce((s, m) => s + (m.level ?? 0), 0)

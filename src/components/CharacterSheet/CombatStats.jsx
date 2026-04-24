@@ -1,7 +1,8 @@
+import { memo } from 'react'
 import { formatModifier, calculateInitiative } from '../../utils/calculations'
 import { FormFieldError } from '../FormFieldError'
 
-export function CombatStats({ combat, attributes, profBonus, onUpdateCombat, suggestedAC, suggestedMaxHp, passivePerception, errors = {} }) {
+function CombatStatsBase({ combat, attributes, profBonus, onUpdateCombat, suggestedAC, suggestedMaxHp, passivePerception, errors = {} }) {
   const initiative = calculateInitiative(attributes.dex)
 
   function handleHpChange(field, value) {
@@ -116,7 +117,9 @@ export function CombatStats({ combat, attributes, profBonus, onUpdateCombat, sug
   )
 }
 
-function StatBox({ label, value, editable, onChange, hint, fieldId, errId, error }) {
+export const CombatStats = memo(CombatStatsBase)
+
+const StatBox = memo(function StatBox({ label, value, editable, onChange, hint, fieldId, errId, error }) {
   return (
     <div className="flex flex-col items-center bg-gray-900 rounded p-2">
       <span className="text-xs text-gray-400 text-center mb-1 leading-tight">{label}</span>
@@ -150,4 +153,4 @@ function StatBox({ label, value, editable, onChange, hint, fieldId, errId, error
       )}
     </div>
   )
-}
+})

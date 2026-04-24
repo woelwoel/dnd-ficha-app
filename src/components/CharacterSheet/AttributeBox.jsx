@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { getModifier, formatModifier, POINT_BUY_COST } from '../../utils/calculations'
 import { FormFieldError } from '../FormFieldError'
 import { Tooltip } from '../Tooltip'
@@ -10,7 +11,7 @@ function scoreColor(value) {
   return              { border: 'border-amber-500',  text: 'text-amber-200', ring: 'border-amber-400' }
 }
 
-export function AttributeBox({
+function AttributeBoxBase({
   abbr, name, value, onChange,
   mode = 'manual',
   racialBonus = 0,
@@ -150,3 +151,5 @@ export function AttributeBox({
     </div>
   )
 }
+
+export const AttributeBox = memo(AttributeBoxBase)

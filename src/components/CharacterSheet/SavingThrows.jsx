@@ -1,7 +1,8 @@
+import { memo } from 'react'
 import { ABILITY_SCORES, ATTR_NAME_TO_KEY, formatModifier, calculateSavingThrow, getModifier } from '../../utils/calculations'
 import { Tooltip } from '../Tooltip'
 
-export function SavingThrows({ attributes, profBonus, classData }) {
+function SavingThrowsBase({ attributes, profBonus, classData }) {
 
   // Salvaguardas são definidas exclusivamente pela classe
   const classGranted = (classData?.saving_throws ?? [])
@@ -50,3 +51,5 @@ export function SavingThrows({ attributes, profBonus, classData }) {
     </div>
   )
 }
+
+export const SavingThrows = memo(SavingThrowsBase)
