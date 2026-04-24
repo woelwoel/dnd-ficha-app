@@ -73,16 +73,22 @@ export function applyClassChange(character, classData) {
     ? keyFromName(classData.spellcasting_ability)
     : null
 
-  const hitDice = classData.hit_die
-    ? `1d${classData.hit_die}`
-    : character.combat?.hitDice ?? '1d8'
+  const die = classData.hit_die ?? 8
+  const dieKey = `d${die}`
+  const level = character.info?.level ?? 1
+  // Schema v2: `hitDice` é objeto com pool por tipo de dado. Regenera o pool
+  // da classe primária, preservando outros dados (multiclasse) se existirem.
+  const existingPool = (character.combat?.hitDice && typeof character.combat.hitDice === 'object'
+    ? character.combat.hitDice.pool
+    : null) ?? {}
+  const nextPool = { ...existingPool, [dieKey]: { total: level, used: existingPool[dieKey]?.used ?? 0 } }
 
   return {
     ...character,
     info: { ...character.info, class: classData.index },
     proficiencies: { ...character.proficiencies, savingThrows: saveKeys },
     spellcasting: { ...character.spellcasting, ability: spellKey },
-    combat: { ...character.combat, hitDice },
+    combat: { ...character.combat, hitDice: { pool: nextPool } },
   }
 }
 
@@ -120,7 +126,9 @@ export function applyRacialChange(character, infoPatch, raceIndex, subraceIndex,
     attrs[k] = clampAbility((attrs[k] ?? 10) - v)
   }
   for (const [k, v] of Object.entries(newBonuses)) {
-    attrs[k] = clampAbility((attrs[k] ?? 10) + v, HARD_MAX_ATTRIBUTE)
+    // Durante criação o teto é 20 (PHB p.13 "Ability Score Maximum").
+    // HARD_MAX_ATTRIBUTE (30) só se aplica a efeitos in-game.
+    attrs[k] = clampAbility((attrs[k] ?? 10) + v, MAX_ATTRIBUTE_VALUE)
   }
 
   return {

@@ -8,6 +8,7 @@ import {
   calculatePassivePerception,
 } from '../utils/calculations'
 import { calculateMaxHpMulticlass } from '../domain/rules'
+import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
 import { keyFromAbbr } from '../domain/attributes'
 
 /**
@@ -19,7 +20,7 @@ import { keyFromAbbr } from '../domain/attributes'
  * @returns {object} valores derivados memoizados
  */
 export function useCharacterCalculations(character, classData = null, classDataMap = {}) {
-  const { attributes, info, spellcasting, proficiencies, combat } = character
+  const { attributes, info, spellcasting, proficiencies, combat, inventory } = character
 
   const level             = info?.level ?? 1
   const multiclasses      = info?.multiclasses
@@ -30,6 +31,7 @@ export function useCharacterCalculations(character, classData = null, classDataM
   const expertiseSkills   = proficiencies?.expertiseSkills
   const currentHp         = combat?.currentHp ?? 0
   const maxHp             = combat?.maxHp ?? 0
+  const items             = inventory?.items
   const { str = 10, dex = 10, con = 10, int: intel = 10, wis = 10, cha = 10 } = attributes ?? {}
 
   return useMemo(() => {
@@ -46,9 +48,10 @@ export function useCharacterCalculations(character, classData = null, classDataM
       cha: getModifier(cha),
     }
 
-    let suggestedAC = 10 + mods.dex
-    if (classIndex === 'barbaro') suggestedAC += mods.con
-    if (classIndex === 'monge')   suggestedAC += mods.wis
+    // CA sugerida leva em conta armadura/escudo equipados (PHB p.144–145)
+    // e Unarmored Defense de bárbaro/monge quando sem armadura.
+    const { armor, hasShield } = getEquippedArmor(items)
+    const suggestedAC = calculateArmorClass({ mods, classIndex, armor, hasShield })
 
     // HP sugerido: multiclasse correto quando há multiclasses
     const fullClassMap = classData
@@ -104,9 +107,15 @@ export function useCharacterCalculations(character, classData = null, classDataM
       fmt: formatModifier,
     }
   }, [
+    // NOTA: `attributes` e `character` estão aqui para compatibilidade com o
+    // React Compiler (que faz análise de dependências). Os primitivos
+    // str/dex/con/intel/wis/cha cobrem `attributes` conceitualmente.
+    character, attributes,
     level, multiclasses, classIndex,
     str, dex, con, intel, wis, cha,
     spellAbilityLabel, saves, skills, expertiseSkills,
-    currentHp, maxHp, classData, classDataMap, attributes, character,
+    currentHp, maxHp, classData, classDataMap,
+    // inventory.items muda a CA sugerida (armadura/escudo equipados).
+    items,
   ])
 }

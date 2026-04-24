@@ -5,7 +5,7 @@ import { getSpellcastingRules } from '../../utils/spellcasting'
 import { useClassSpells } from '../../hooks/useClassSpells'
 import { SpellDetailModal } from '../SpellDetailModal'
 
-export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onToggleSlot }) {
+export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onToggleSlot, onSetConcentration }) {
   const [activeTab, setActiveTab] = useState(0)
   const [search, setSearch] = useState('')
   const [pickerOpen, setPickerOpen] = useState(false)
@@ -38,6 +38,7 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   const mySpells    = character.spellcasting.spells || []
   const myCantrips  = mySpells.filter(s => s.level === 0)
   const myLeveled   = mySpells.filter(s => s.level > 0)
+  const concentrating = character.combat?.concentrating ?? null
 
   // Picker filtrado
   const filteredPicker = useMemo(() => {
@@ -74,6 +75,23 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
 
   return (
     <div className="space-y-4">
+      {/* Banner de concentração ativa (PHB p.203) */}
+      {concentrating?.spellIndex && (
+        <div className="bg-blue-950/40 border border-blue-700/50 rounded-lg px-4 py-2 flex items-center gap-3">
+          <span className="text-blue-400 text-lg">⊙</span>
+          <span className="text-sm text-blue-200 flex-1">
+            Concentrando em <strong>{concentrating.spellName}</strong>
+            <span className="text-xs text-blue-400 ml-2">· teste de Concentração ao sofrer dano (CD 10 ou metade do dano)</span>
+          </span>
+          <button
+            onClick={() => onSetConcentration?.(null)}
+            className="text-xs text-blue-400 hover:text-blue-200 px-2 py-1 rounded border border-blue-700 hover:bg-blue-900/30"
+          >
+            Romper
+          </button>
+        </div>
+      )}
+
       {/* Stats de conjuração */}
       <div className="bg-gray-800 border border-gray-600 rounded-lg p-4">
         <h3 className="text-sm font-bold text-amber-400 uppercase tracking-widest mb-3">Conjuração</h3>
@@ -176,6 +194,13 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
                 <SpellRow
                   key={spell.id}
                   spell={spell}
+                  isConcentrating={concentrating?.spellIndex === spell.index}
+                  canConcentrate={!!spell.concentration && !!onSetConcentration}
+                  onToggleConcentration={() =>
+                    concentrating?.spellIndex === spell.index
+                      ? onSetConcentration?.(null)
+                      : onSetConcentration?.(spell)
+                  }
                   onDetail={() => setDetailSpell(spell)}
                   onRemove={() => onRemoveSpell(spell.id)}
                 />
@@ -222,10 +247,10 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   )
 }
 
-function SpellRow({ spell, onDetail, onRemove }) {
+function SpellRow({ spell, onDetail, onRemove, isConcentrating, canConcentrate, onToggleConcentration }) {
   const schoolAbbr = SCHOOL_ABBR[(spell.school || '').toLowerCase()] || (spell.school || '').slice(0, 3)
   return (
-    <div className="bg-gray-900 rounded-lg flex items-center gap-2 px-3 py-2 hover:bg-gray-800 transition-colors">
+    <div className={`bg-gray-900 rounded-lg flex items-center gap-2 px-3 py-2 hover:bg-gray-800 transition-colors ${isConcentrating ? 'ring-1 ring-blue-500/60' : ''}`}>
       <button
         onClick={onDetail}
         className="text-sm font-medium text-white flex-1 text-left hover:text-amber-300 transition-colors"
@@ -238,6 +263,19 @@ function SpellRow({ spell, onDetail, onRemove }) {
         <span className="text-gray-600">{schoolAbbr}</span>
         <span className="text-gray-600 text-[10px]">{spell.castingTime || ''}</span>
       </div>
+      {canConcentrate && (
+        <button
+          onClick={onToggleConcentration}
+          title={isConcentrating ? 'Romper concentração' : 'Concentrar (substitui a magia atual em concentração)'}
+          className={`flex-shrink-0 text-xs px-1.5 py-0.5 rounded border transition-colors ${
+            isConcentrating
+              ? 'border-blue-500 bg-blue-900/30 text-blue-300'
+              : 'border-gray-700 text-gray-500 hover:text-blue-300 hover:border-blue-700'
+          }`}
+        >
+          {isConcentrating ? '⊙ ativa' : '⊙'}
+        </button>
+      )}
       <button
         onClick={onDetail}
         className="text-gray-600 hover:text-amber-400 text-xs px-1 transition-colors flex-shrink-0"

@@ -7,6 +7,8 @@ import { Spells } from './Spells'
 import { Notes } from './Notes'
 import { CharacterView } from './CharacterView'
 import { AttributesSection } from './AttributesSection'
+import { RestActions } from './RestActions'
+import { Attacks } from './Attacks'
 
 /**
  * Wrapper com role="tabpanel" + ids/aria-labelledby casando com SheetTabs.
@@ -33,6 +35,7 @@ function TabPanel({ id, children }) {
 export function SheetContent({
   activeTab,
   character,
+  setCharacter,
   calc,
   classData,
   races,
@@ -46,9 +49,11 @@ export function SheetContent({
   const {
     updateInfo, updateTraits, updateAttribute, updateCombat,
     toggleSkillProficiency, toggleExpertiseSkill,
-    updateCurrency, addItem, removeItem,
+    updateCurrency, addItem, removeItem, updateItem,
     updateSpellcasting, addSpell, removeSpell, toggleSlot,
+    setConcentration,
     toggleLanguage,
+    addAttack, removeAttack, updateAttack,
   } = updaters
 
   const {
@@ -103,6 +108,17 @@ export function SheetContent({
               classData={classData}
             />
           </section>
+
+          <Attacks
+            attacks={character.combat?.attacks ?? []}
+            attributes={character.attributes}
+            profBonus={calc.profBonus}
+            onAdd={addAttack}
+            onRemove={removeAttack}
+            onUpdate={updateAttack}
+          />
+
+          <RestActions character={character} onApply={setCharacter} />
         </div>
       </TabPanel>
     )
@@ -136,6 +152,7 @@ export function SheetContent({
           onAddSpell={addSpell}
           onRemoveSpell={removeSpell}
           onToggleSlot={toggleSlot}
+          onSetConcentration={setConcentration}
         />
       </TabPanel>
     )
@@ -149,6 +166,7 @@ export function SheetContent({
           onUpdateCurrency={updateCurrency}
           onAddItem={addItem}
           onRemoveItem={removeItem}
+          onUpdateItem={updateItem}
         />
       </TabPanel>
     )

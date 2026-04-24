@@ -80,7 +80,9 @@ export function calculatePassivePerception(wisScore, profBonus, isProficient, is
 export function calculateSkillModifier(abilityScore, profBonus, proficient, expertise) {
   const abilityMod = getModifier(abilityScore)
   const profMod = proficient ? profBonus : 0
-  const expertiseMod = expertise ? profBonus : 0
+  // Especialização (PHB p.96) requer que o personagem SEJA proficiente.
+  // Sem proficiência, ignora o flag de expertise.
+  const expertiseMod = (proficient && expertise) ? profBonus : 0
   return abilityMod + profMod + expertiseMod
 }
 

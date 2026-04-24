@@ -6,6 +6,7 @@ const DEFAULT_CHARACTER = {
     createdAt: null,
     updatedAt: null,
     version: '1.0',
+    schemaVersion: 2,
   },
   info: {
     name: '',
@@ -31,7 +32,10 @@ const DEFAULT_CHARACTER = {
     tempHp: 0,
     armorClass: 10,
     speed: 30,
-    hitDice: '1d8',
+    // Schema v2: pool por tipo de dado ({ d8: { total, used } }).
+    hitDice: { pool: {} },
+    attacks: [],
+    concentrating: { spellIndex: null, spellName: null },
     deathSaves: { successes: 0, failures: 0 },
   },
   proficiencies: {
@@ -185,6 +189,46 @@ export function useCharacter(initialCharacter = null) {
     }))
   }, [setCharacter])
 
+  const updateItem = useCallback((itemId, patch) => {
+    setCharacter(prev => ({
+      ...prev,
+      inventory: {
+        ...prev.inventory,
+        items: prev.inventory.items.map(i => i.id === itemId ? { ...i, ...patch } : i),
+      },
+    }))
+  }, [setCharacter])
+
+  const addAttack = useCallback(attack => {
+    setCharacter(prev => ({
+      ...prev,
+      combat: {
+        ...prev.combat,
+        attacks: [...(prev.combat?.attacks ?? []), { ...attack, id: generateId() }],
+      },
+    }))
+  }, [setCharacter])
+
+  const removeAttack = useCallback(attackId => {
+    setCharacter(prev => ({
+      ...prev,
+      combat: {
+        ...prev.combat,
+        attacks: (prev.combat?.attacks ?? []).filter(a => a.id !== attackId),
+      },
+    }))
+  }, [setCharacter])
+
+  const updateAttack = useCallback((attackId, patch) => {
+    setCharacter(prev => ({
+      ...prev,
+      combat: {
+        ...prev.combat,
+        attacks: (prev.combat?.attacks ?? []).map(a => a.id === attackId ? { ...a, ...patch } : a),
+      },
+    }))
+  }, [setCharacter])
+
   const updateSpellcasting = useCallback((f, v) => patchSection('spellcasting', f, v), [patchSection])
 
   const addSpell = useCallback(spell => {
@@ -223,6 +267,56 @@ export function useCharacter(initialCharacter = null) {
     }))
   }, [setCharacter])
 
+  // Ações semânticas de slots — usadas por Rest actions.
+  const spendSlot = useCallback(level => {
+    setCharacter(prev => ({
+      ...prev,
+      spellcasting: {
+        ...prev.spellcasting,
+        usedSlots: {
+          ...(prev.spellcasting.usedSlots || {}),
+          [level]: (prev.spellcasting.usedSlots?.[level] ?? 0) + 1,
+        },
+      },
+    }))
+  }, [setCharacter])
+
+  const regainSlot = useCallback(level => {
+    setCharacter(prev => ({
+      ...prev,
+      spellcasting: {
+        ...prev.spellcasting,
+        usedSlots: {
+          ...(prev.spellcasting.usedSlots || {}),
+          [level]: Math.max(0, (prev.spellcasting.usedSlots?.[level] ?? 0) - 1),
+        },
+      },
+    }))
+  }, [setCharacter])
+
+  const restoreAllSlots = useCallback(() => {
+    setCharacter(prev => ({
+      ...prev,
+      spellcasting: { ...prev.spellcasting, usedSlots: {} },
+    }))
+  }, [setCharacter])
+
+  /**
+   * Define a magia em concentração (PHB p.203). Passar null/''  encerra.
+   * Substituição é intencional: apenas uma magia de concentração por vez.
+   */
+  const setConcentration = useCallback((spell) => {
+    setCharacter(prev => ({
+      ...prev,
+      combat: {
+        ...prev.combat,
+        concentrating: spell
+          ? { spellIndex: spell.index, spellName: spell.name }
+          : { spellIndex: null, spellName: null },
+      },
+    }))
+  }, [setCharacter])
+
   return useMemo(() => ({
     character,
     setCharacter,
@@ -235,16 +329,27 @@ export function useCharacter(initialCharacter = null) {
     updateCurrency,
     addItem,
     removeItem,
+    updateItem,
     updateSpellcasting,
     addSpell,
     removeSpell,
     toggleSlot,
+    spendSlot,
+    regainSlot,
+    restoreAllSlots,
+    setConcentration,
     toggleLanguage,
+    addAttack,
+    removeAttack,
+    updateAttack,
   }), [
     character, setCharacter,
     updateInfo, updateAttribute, updateCombat, updateTraits,
     toggleSkillProficiency, toggleExpertiseSkill,
-    updateCurrency, addItem, removeItem,
-    updateSpellcasting, addSpell, removeSpell, toggleSlot, toggleLanguage,
+    updateCurrency, addItem, removeItem, updateItem,
+    updateSpellcasting, addSpell, removeSpell,
+    toggleSlot, spendSlot, regainSlot, restoreAllSlots, setConcentration,
+    toggleLanguage,
+    addAttack, removeAttack, updateAttack,
   ])
 }

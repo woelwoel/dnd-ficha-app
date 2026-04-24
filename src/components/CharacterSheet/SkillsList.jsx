@@ -1,9 +1,14 @@
 import { SKILLS, ABILITY_SCORES, formatModifier, calculateSkillModifier, getModifier } from '../../utils/calculations'
 import { Tooltip } from '../Tooltip'
 
-export function SkillsList({ attributes, proficiencies, profBonus, onToggle, onToggleExpertise, classData }) {
-  const skillLimit      = classData?.skill_choices?.count ?? null
-  // Apenas perícias escolhidas pela classe contam para o limite
+export function SkillsList({ attributes, proficiencies, profBonus, onToggle, onToggleExpertise, classData, extraSkillBudget = 0 }) {
+  // O limite exibido soma o budget da classe primária + quaisquer perícias
+  // concedidas por multiclasse/feats (`extraSkillBudget`, default 0).
+  // Assim MC que concede perícias não faz o contador aparecer como "excedido".
+  const baseLimit       = classData?.skill_choices?.count ?? null
+  const skillLimit      = baseLimit !== null ? baseLimit + (extraSkillBudget ?? 0) : null
+  // Apenas perícias escolhidas pela classe contam para o limite.
+  // backgroundSkills estão em campo próprio (não entram em `proficiencies.skills`).
   const selectedCount   = proficiencies.skills.length
   const atLimit         = skillLimit !== null && selectedCount >= skillLimit
   const backgroundSkills = proficiencies.backgroundSkills ?? []

@@ -119,6 +119,7 @@ export function CharacterSheet({ characterId, onBack }) {
       <SheetContent
         activeTab={activeTab}
         character={character}
+        setCharacter={setCharacter}
         calc={calc}
         classData={classData}
         races={races}

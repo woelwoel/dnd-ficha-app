@@ -1,5 +1,6 @@
 import { memo } from 'react'
 import { formatModifier, calculateInitiative } from '../../utils/calculations'
+import { formatHitDicePool } from '../../utils/hitDice'
 import { FormFieldError } from '../FormFieldError'
 
 function CombatStatsBase({ combat, attributes, profBonus, onUpdateCombat, suggestedAC, suggestedMaxHp, passivePerception, errors = {} }) {
@@ -8,6 +9,15 @@ function CombatStatsBase({ combat, attributes, profBonus, onUpdateCombat, sugges
   function handleHpChange(field, value) {
     const num = parseInt(value, 10)
     if (!isNaN(num)) onUpdateCombat(field, Math.max(0, num))
+  }
+
+  // PHB p.198: HP Temporário nunca empilha — o novo valor substitui o anterior
+  // apenas se for maior. Campo aceita qualquer entrada, mas aplica o max.
+  function handleTempHpChange(value) {
+    const num = parseInt(value, 10)
+    if (isNaN(num)) return
+    const next = Math.max(0, num)
+    onUpdateCombat('tempHp', Math.max(combat.tempHp ?? 0, next))
   }
 
   return (
@@ -31,7 +41,7 @@ function CombatStatsBase({ combat, attributes, profBonus, onUpdateCombat, sugges
 
       <div className="grid grid-cols-3 gap-3 mb-4">
         <StatBox label="Bônus de Prof." value={formatModifier(profBonus)} />
-        <StatBox label="Dado de Vida" value={combat.hitDice} />
+        <StatBox label="Dado de Vida" value={formatHitDicePool(combat.hitDice)} />
         <StatBox label="Percepção Passiva" value={passivePerception ?? '—'} />
       </div>
 
@@ -79,13 +89,25 @@ function CombatStatsBase({ combat, attributes, profBonus, onUpdateCombat, sugges
         </div>
 
         <div>
-          <label className="text-xs text-gray-400">PV Temporários</label>
+          <div className="flex items-center justify-between">
+            <label className="text-xs text-gray-400" title="PHB p.198 — HP Temporário não empilha">PV Temporários</label>
+            {(combat.tempHp ?? 0) > 0 && (
+              <button
+                onClick={() => onUpdateCombat('tempHp', 0)}
+                className="text-[10px] text-gray-500 hover:text-red-400 underline"
+                title="Zerar PV temporários"
+              >
+                zerar
+              </button>
+            )}
+          </div>
           <input
             type="number"
             min={0}
             value={combat.tempHp}
-            onChange={e => handleHpChange('tempHp', e.target.value)}
+            onChange={e => handleTempHpChange(e.target.value)}
             onWheel={e => e.currentTarget.blur()}
+            title="Nova fonte de PV temporário apenas substitui se for maior (PHB p.198)"
             className="w-full mt-1 text-center bg-gray-700 border border-gray-500 rounded px-2 py-1 text-white focus:outline-none focus:border-amber-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>

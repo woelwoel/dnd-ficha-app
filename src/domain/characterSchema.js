@@ -10,8 +10,16 @@
 
 import { z } from 'zod'
 
-/** Versão atual do formato de ficha. Incrementar a cada breaking change. */
-export const SCHEMA_VERSION = 1
+/**
+ * Versão atual do formato de ficha. Incrementar a cada breaking change.
+ *
+ * Histórico:
+ *  - v1 → versão inicial. `combat.hitDice` era string ('1d8').
+ *  - v2 → `combat.hitDice` agora pode ser objeto `{ pool: { d6|d8|d10|d12:
+ *         { total, used } } }` para suportar HD por classe/multiclasse.
+ *         Também introduz `combat.attacks[]` e `combat.concentrating`.
+ */
+export const SCHEMA_VERSION = 2
 
 const abilitiesSchema = z.object({
   str: z.number().int().min(1).max(30),
@@ -61,17 +69,55 @@ const infoSchema = z.object({
   scoreMethod: z.string().default('manual'),
 }).passthrough()
 
+const hitDicePoolEntrySchema = z.object({
+  total: z.number().int().min(0),
+  used:  z.number().int().min(0),
+}).passthrough()
+
+const concentrationSchema = z.object({
+  spellIndex: z.string().nullable().default(null),
+  spellName:  z.string().nullable().default(null),
+}).passthrough()
+
 const combatSchema = z.object({
   maxHp: z.number().int().min(0),
   currentHp: z.number().int().min(0),
   tempHp: z.number().int().min(0).default(0),
   armorClass: z.number().int().min(0),
   speed: z.number().int().min(0).default(30),
-  hitDice: z.string().default('1d8'),
+  /**
+   * v1 → string (e.g. '1d8').
+   * v2 → { pool: { d8: { total, used }, ... } } — pool por tipo de dado,
+   * permitindo multiclasse. `migrateCharacter` v1→v2 converte.
+   */
+  hitDice: z.union([
+    z.string(),
+    z.object({
+      pool: z.record(z.string(), hitDicePoolEntrySchema).default({}),
+    }).passthrough(),
+  ]).default('1d8'),
   deathSaves: z.object({
     successes: z.number().int().min(0).max(3).default(0),
     failures:  z.number().int().min(0).max(3).default(0),
   }).default({ successes: 0, failures: 0 }),
+  /**
+   * Ataques registrados na ficha (armas + bônus mágicos). Schema aberto
+   * para tolerar dados antigos; campos calculados vêm de `src/utils/attacks`.
+   */
+  attacks: z.array(z.object({
+    id:            z.string(),
+    name:          z.string(),
+    abilityOverride: z.string().optional(),
+    damageDice:    z.string().default('1d4'),
+    damageType:    z.string().default(''),
+    properties:    z.array(z.string()).default([]),
+    proficient:    z.boolean().default(false),
+    magicBonus:    z.number().int().default(0),
+    versatileDice: z.string().optional(),
+    notes:         z.string().default(''),
+  }).passthrough()).default([]),
+  /** Magia atualmente em concentração (PHB p.203). */
+  concentrating: concentrationSchema.default({ spellIndex: null, spellName: null }),
 }).passthrough()
 
 const proficienciesSchema = z.object({
@@ -136,7 +182,15 @@ export const characterSchema = z.object({
   spellcasting: spellcastingSchema,
   inventory: inventorySchema,
   traits: traitsSchema,
-}).passthrough()
+}).passthrough().refine(
+  // PHB p.15: nível de personagem é limitado a 20 no total (primário + multiclasses).
+  ch => {
+    const primary = ch.info?.level ?? 0
+    const mc = (ch.info?.multiclasses ?? []).reduce((s, m) => s + (m.level ?? 0), 0)
+    return primary + mc <= 20
+  },
+  { message: 'Nível total (classe primária + multiclasses) não pode exceder 20', path: ['info', 'level'] },
+)
 
 export function parseCharacter(raw) {
   return characterSchema.parse(migrateCharacter(raw))
@@ -163,11 +217,40 @@ export function migrateCharacter(raw) {
   let doc = raw
   for (let v = current; v < SCHEMA_VERSION; v++) {
     console.info(`[characterSchema] migrando v${v} → v${v + 1}`)
-    // Exemplo de esqueleto para migrações futuras:
-    // if (v === 1) doc = { ...doc, info: { ...doc.info, xp: doc.info.xp ?? 0 } }
+    if (v === 1) doc = migrateV1ToV2(doc)
   }
   return {
     ...doc,
     meta: { ...(doc.meta ?? {}), schemaVersion: SCHEMA_VERSION },
+  }
+}
+
+/**
+ * v1 → v2: converte `combat.hitDice: '1d8'` em `{ pool: { d8: { total, used } } }`.
+ * O total vem do nível primário (ou 1 para fichas muito legadas); `used` = 0.
+ * Strings malformadas caem em `d8` como fallback seguro.
+ * Também garante defaults para `attacks` e `concentrating`.
+ */
+function migrateV1ToV2(doc) {
+  const hd = doc.combat?.hitDice
+  const level = doc.info?.level ?? 1
+  let poolObj
+  if (hd && typeof hd === 'object' && hd.pool) {
+    poolObj = hd // já é v2 (idempotente)
+  } else if (typeof hd === 'string') {
+    const match = hd.match(/d(\d+)/i)
+    const die = match ? `d${match[1]}` : 'd8'
+    poolObj = { pool: { [die]: { total: Math.max(1, level), used: 0 } } }
+  } else {
+    poolObj = { pool: { d8: { total: Math.max(1, level), used: 0 } } }
+  }
+  return {
+    ...doc,
+    combat: {
+      ...(doc.combat ?? {}),
+      hitDice: poolObj,
+      attacks: doc.combat?.attacks ?? [],
+      concentrating: doc.combat?.concentrating ?? { spellIndex: null, spellName: null },
+    },
   }
 }

@@ -125,7 +125,9 @@ export function getSpellcastingRules(classIndex, level, attributes, levelData) {
     const cfg = PREPARE_CONFIG[classIndex]
     const abilityMod = getModifier(attributes?.[cfg.ability] ?? 10)
     const effLevel   = cfg.halfLevel ? Math.floor(level / 2) : level
-    const spellsLimit = Math.max(1, abilityMod + effLevel)
+    // Half-casters (paladino, patrulheiro) só conjuram a partir do nível 2
+    // (PHB p.84 e p.89). Antes disso, spellsLimit = 0.
+    const spellsLimit = effLevel > 0 ? Math.max(1, abilityMod + effLevel) : 0
     return {
       type: 'prepared',
       ability: cfg.ability,

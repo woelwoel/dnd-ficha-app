@@ -286,6 +286,7 @@ function buildCharacter(draft, classData) {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       version: '1.0',
+      schemaVersion: 2,
       creationMethod: 'wizard',
       settings: draft.settings,
     },
@@ -313,7 +314,14 @@ function buildCharacter(draft, classData) {
       tempHp:      0,
       armorClass:  unarmoredAC,
       speed:       30,
-      hitDice:     draft.hitDice,
+      // Schema v2: pool por tipo de dado. Ainda sem multiclasse aqui.
+      hitDice: {
+        pool: {
+          [`d${classData?.hit_die ?? 8}`]: { total: draft.level, used: 0 },
+        },
+      },
+      attacks:     [],
+      concentrating: { spellIndex: null, spellName: null },
       deathSaves:  { successes: 0, failures: 0 },
     },
     proficiencies: {

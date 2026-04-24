@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { SrdSearchModal } from '../SrdSearchModal'
+import { findArmorByName, ARMOR_TABLE } from '../../domain/equipment'
 
 const CURRENCY_CONFIG = [
   { key: 'pp', label: 'PPl', title: 'Platina',  color: 'text-purple-300' },
@@ -11,7 +12,7 @@ const CURRENCY_CONFIG = [
 
 const EMPTY_ITEM = { name: '', qty: 1, weight: '', notes: '' }
 
-export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem }) {
+export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem, onUpdateItem }) {
   const [newItem, setNewItem] = useState(EMPTY_ITEM)
   const [showForm, setShowForm] = useState(false)
   const [srdEquipment, setSrdEquipment] = useState([])
@@ -26,11 +27,14 @@ export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem
 
   function handleAdd() {
     if (!newItem.name.trim()) return
+    // Detecta armadura/escudo pelo nome para preencher metadados auto.
+    const armor = findArmorByName(newItem.name)
     onAddItem({
       name: newItem.name.trim(),
       qty: Math.max(1, parseInt(newItem.qty) || 1),
       weight: newItem.weight,
       notes: newItem.notes,
+      ...(armor ? { armorKey: armor.key, armorType: armor.category } : {}),
     })
     setNewItem(EMPTY_ITEM)
     setShowForm(false)
@@ -144,16 +148,31 @@ export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem
           onClose={() => setSearchOpen(false)}
           title="Buscar Equipamento (SRD)"
           items={srdEquipment}
-          onSelect={eq => onAddItem({
-            name: eq.name,
-            qty: 1,
-            weight: eq.weight ? `${eq.weight}lb` : '',
-            notes: [
-              eq.damage?.damage_dice ? `Dano: ${eq.damage.damage_dice}` : null,
-              eq.armor_class ? `CA: ${eq.armor_class.base}` : null,
-              eq.cost ? `Custo: ${eq.cost.quantity}${eq.cost.unit}` : null,
-            ].filter(Boolean).join(' · '),
-          })}
+          onSelect={eq => {
+            // Detecta armadura/escudo a partir do SRD (armor_category) ou por nome (PT-BR).
+            const byName = findArmorByName(eq.name)
+            const srdCategory = (eq.armor_category || '').toLowerCase()
+            const armorType = srdCategory.includes('shield') || srdCategory === 'escudo'
+              ? 'shield'
+              : srdCategory.includes('light') || srdCategory === 'leve'
+                ? 'light'
+                : srdCategory.includes('medium') || srdCategory === 'média' || srdCategory === 'media'
+                  ? 'medium'
+                  : srdCategory.includes('heavy') || srdCategory === 'pesada'
+                    ? 'heavy'
+                    : (byName?.category ?? null)
+            onAddItem({
+              name: eq.name,
+              qty: 1,
+              weight: eq.weight ? `${eq.weight}lb` : '',
+              notes: [
+                eq.damage?.damage_dice ? `Dano: ${eq.damage.damage_dice}` : null,
+                eq.armor_class ? `CA: ${eq.armor_class.base}` : null,
+                eq.cost ? `Custo: ${eq.cost.quantity}${eq.cost.unit}` : null,
+              ].filter(Boolean).join(' · '),
+              ...(armorType ? { armorKey: byName?.key, armorType } : {}),
+            })
+          }}
           renderItem={eq => (
             <div>
               <div className="flex items-center gap-2">
@@ -189,29 +208,57 @@ export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem
               <span>Notas</span>
               <span />
             </div>
-            {inventory.items.map(item => (
-              <div
-                key={item.id}
-                className={`grid grid-cols-[1fr_3rem_4rem_1fr_2rem] gap-2 items-center rounded px-2 py-1.5 ${
-                  item.source === 'background' ? 'bg-amber-950/30 border border-amber-900/40' : 'bg-gray-900'
-                }`}
-              >
-                <span className="text-sm text-white truncate flex items-center gap-1">
-                  {item.source === 'background' && <span title="Item do antecedente" className="text-[10px]">🎒</span>}
-                  {item.name}
-                </span>
-                <span className="text-sm text-gray-300 text-center">{item.qty}</span>
-                <span className="text-sm text-gray-400 text-center">{item.weight || '—'}</span>
-                <span className="text-xs text-gray-500 truncate">{item.notes || '—'}</span>
-                <button
-                  onClick={() => onRemoveItem(item.id)}
-                  className="text-red-500 hover:text-red-400 text-lg leading-none font-bold justify-self-center"
-                  title="Remover"
+            {inventory.items.map(item => {
+              // Detecta armadura/escudo explicitamente marcado ou por nome (legado).
+              const resolvedArmor = item.armorType
+                ? (item.armorKey && ARMOR_TABLE[item.armorKey]
+                    ? { ...ARMOR_TABLE[item.armorKey], key: item.armorKey }
+                    : { category: item.armorType, type: item.armorType === 'shield' ? 'shield' : 'armor' })
+                : findArmorByName(item.name)
+              const isEquippable = !!resolvedArmor
+              const isEquipped = !!item.equipped
+              return (
+                <div
+                  key={item.id}
+                  className={`grid grid-cols-[1fr_3rem_4rem_1fr_2rem] gap-2 items-center rounded px-2 py-1.5 ${
+                    item.source === 'background' ? 'bg-amber-950/30 border border-amber-900/40' : 'bg-gray-900'
+                  } ${isEquipped ? 'ring-1 ring-amber-600/50' : ''}`}
                 >
-                  ×
-                </button>
-              </div>
-            ))}
+                  <span className="text-sm text-white truncate flex items-center gap-1.5">
+                    {item.source === 'background' && <span title="Item do antecedente" className="text-[10px]">🎒</span>}
+                    {isEquippable && (
+                      <button
+                        onClick={() => onUpdateItem?.(item.id, { equipped: !isEquipped })}
+                        title={isEquipped ? 'Desequipar' : 'Equipar (contribui para a CA)'}
+                        className={`text-[10px] px-1.5 py-0.5 rounded border transition-colors ${
+                          isEquipped
+                            ? 'border-amber-500 bg-amber-900/30 text-amber-300'
+                            : 'border-gray-600 text-gray-500 hover:text-gray-300 hover:border-gray-500'
+                        }`}
+                      >
+                        {isEquipped ? '✓ Equipado' : 'Equipar'}
+                      </button>
+                    )}
+                    {isEquippable && (
+                      <span className="text-[9px] text-gray-500 uppercase">
+                        {resolvedArmor.type === 'shield' ? 'escudo' : resolvedArmor.category}
+                      </span>
+                    )}
+                    <span className="truncate">{item.name}</span>
+                  </span>
+                  <span className="text-sm text-gray-300 text-center">{item.qty}</span>
+                  <span className="text-sm text-gray-400 text-center">{item.weight || '—'}</span>
+                  <span className="text-xs text-gray-500 truncate">{item.notes || '—'}</span>
+                  <button
+                    onClick={() => onRemoveItem(item.id)}
+                    className="text-red-500 hover:text-red-400 text-lg leading-none font-bold justify-self-center"
+                    title="Remover"
+                  >
+                    ×
+                  </button>
+                </div>
+              )
+            })}
           </div>
         )}
       </div>

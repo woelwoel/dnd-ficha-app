@@ -4,6 +4,7 @@ import { CantripsGrantPicker } from '../CantripsGrantPicker'
 import { ABILITY_SCORES, getModifier, formatModifier } from '../../utils/calculations'
 import { abbrOfKey } from '../../domain/attributes'
 import { calculateMulticlassSpellSlots } from '../../utils/spellcasting'
+import { useSrd } from '../../providers/SrdProvider'
 
 /* ── Helpers ────────────────────────────────────────────────────────── */
 
@@ -240,15 +241,10 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
   const [infoModal,           setInfoModal]           = useState(null)
   // Modo ASI vs Talento
   const [asiMode,             setAsiMode]             = useState('asi') // 'asi' | 'feat'
-  const [feats,               setFeats]               = useState([])
   const [selectedFeatIdx,     setSelectedFeatIdx]     = useState(null)
   const [featSearch,          setFeatSearch]          = useState('')
-
-  useEffect(() => {
-    if (allowFeats) {
-      fetch('/srd-data/phb-feats-pt.json').then(r => r.json()).then(setFeats).catch(() => {})
-    }
-  }, [allowFeats])
+  // Feats vêm do SrdProvider (cache centralizado + AbortController no provider)
+  const { feats: feats } = useSrd()
 
   const newFeatures = nextEntry?.features?.filter(f => !f.name?.includes('Aumento') && !f.name?.includes('Melhoria')) ?? []
   const hasASI      = isASIEntry(nextEntry)
@@ -837,9 +833,14 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
     })
   const orAttr = addMCReqs.or
   const orMet = orAttr ? (character.attributes[orAttr] ?? 10) >= (addMCReqs[orAttr] ?? 13) : true
+  // Bloqueio rígido dos pré-requisitos de multiclasse (PHB p.163).
+  // Confirmação só é liberada quando TODOS os requisitos fixos E a cláusula "or" estão atendidos.
+  const allPrereqsMet = addMCClass
+    ? reqWarnings.every(r => r.met) && orMet
+    : false
 
   function handleConfirmAddMC() {
-    if (!addMCClass) return
+    if (!addMCClass || !allPrereqsMet) return
     const mcProfs = mcRules[addMCClass]?.proficiencies ?? {}
     onAddMulticlass?.({ classIndex: addMCClass, proficiencies: mcProfs })
     setAddMCClass('')
@@ -1028,11 +1029,14 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
               Cancelar
             </button>
             <button
-              disabled={!addMCClass}
+              disabled={!addMCClass || !allPrereqsMet}
               onClick={handleConfirmAddMC}
+              title={!allPrereqsMet && addMCClass ? 'Pré-requisitos de atributo não atendidos (PHB p.163)' : undefined}
               className="flex-1 px-4 py-2 rounded bg-amber-600 hover:bg-amber-500 text-white text-sm font-bold disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Confirmar — ganhar proficiências e adicionar {addMCClass ? (classes ?? []).find(c => c.index === addMCClass)?.name ?? addMCClass : ''}
+              {addMCClass && !allPrereqsMet
+                ? 'Pré-requisitos não atendidos'
+                : `Confirmar — ganhar proficiências e adicionar ${addMCClass ? (classes ?? []).find(c => c.index === addMCClass)?.name ?? addMCClass : ''}`}
             </button>
           </div>
         </div>

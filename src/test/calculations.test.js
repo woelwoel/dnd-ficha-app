@@ -87,6 +87,10 @@ describe('calculateSkillModifier', () => {
   it('com especialização', () => {
     expect(calculateSkillModifier(14, 3, true, true)).toBe(8)
   })
+  it('especialização sem proficiência → apenas modificador (PHB p.96)', () => {
+    // expertise só conta se o personagem também for proficiente
+    expect(calculateSkillModifier(14, 3, false, true)).toBe(2)
+  })
 })
 
 describe('calculatePassivePerception', () => {

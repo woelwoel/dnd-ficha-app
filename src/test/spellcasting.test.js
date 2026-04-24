@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { calculateMulticlassSpellSlots, getWarlockPactSlots } from '../utils/spellcasting'
+import { calculateMulticlassSpellSlots, getWarlockPactSlots, getSpellcastingRules } from '../utils/spellcasting'
 
 describe('calculateMulticlassSpellSlots', () => {
   it('monoclasse sem multiclasse retorna null', () => {
@@ -67,5 +67,24 @@ describe('getWarlockPactSlots', () => {
   it('retorna null para nível 0 ou inválido', () => {
     expect(getWarlockPactSlots(0)).toBeNull()
     expect(getWarlockPactSlots(null)).toBeNull()
+  })
+})
+
+describe('getSpellcastingRules — half-casters L1', () => {
+  const atts = { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 16 } // CAR +3
+  it('paladino nível 1 → spellsLimit 0 (PHB p.84)', () => {
+    const r = getSpellcastingRules('paladino', 1, atts, null)
+    expect(r.type).toBe('prepared')
+    expect(r.spellsLimit).toBe(0)
+  })
+  it('paladino nível 2 → spellsLimit = mod CAR + nível/2 (mín 1)', () => {
+    const r = getSpellcastingRules('paladino', 2, atts, null)
+    // effLevel = floor(2/2) = 1, CAR +3 → 1+3 = 4
+    expect(r.spellsLimit).toBe(4)
+  })
+  it('patrulheiro nível 1 → spellsLimit 0 (PHB p.89)', () => {
+    const r = getSpellcastingRules('patrulheiro', 1, atts, { spells_known: 0 })
+    // patrulheiro é 'known' — spells_known da tabela SRD é 0 no L1
+    expect(r.spellsLimit).toBe(0)
   })
 })

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { ABILITY_SCORES, SKILLS, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, getModifier, getProficiencyBonus, RACE_LANGUAGES, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../utils/calculations'
+import { formatHitDicePool } from '../../utils/hitDice'
 import { useSrd } from '../../providers/SrdProvider'
 import { LevelProgression } from './LevelProgression'
 
@@ -407,7 +408,7 @@ export function CharacterView({
           {/* Dados de Vida + Testes contra a Morte */}
           <div className="grid grid-cols-2 gap-1">
             <Box label="Dados de Vida">
-              <div className="font-bold">{combat.hitDice}</div>
+              <div className="font-bold">{formatHitDicePool(combat.hitDice)}</div>
             </Box>
             <Box label="Testes contra a Morte">
               <div className="space-y-1">
