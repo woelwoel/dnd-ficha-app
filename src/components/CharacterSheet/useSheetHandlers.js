@@ -36,7 +36,19 @@ export function useSheetHandlers({ setCharacter, races, classes, backgrounds }) 
   }, [backgrounds, setCharacter])
 
   const handleAddMulticlass = useCallback(payload => {
-    setCharacter(prev => addMulticlass(prev, payload))
+    setCharacter(prev => {
+      // addMulticlass agora retorna { ok, character, error?, missing? }.
+      // Em falha, mantém estado anterior e loga em dev (UI deve bloquear no
+      // botão Confirmar via `allPrereqsMet`, mas defendemos aqui também).
+      const result = addMulticlass(prev, payload)
+      if (!result.ok) {
+        if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
+          console.warn('[handleAddMulticlass] bloqueado:', result.error)
+        }
+        return prev
+      }
+      return result.character
+    })
   }, [setCharacter])
 
   const handleRemoveMulticlass = useCallback(idx => {

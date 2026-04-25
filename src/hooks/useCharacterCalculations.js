@@ -102,21 +102,21 @@ export function useCharacterCalculations(character, classData = null, classDataM
       : null
 
     // Slots unificados (single ou multiclasse) — sempre passa pelo mesmo caminho.
-    const maxSlots = getSpellSlots(character) ?? {}
+    // `getSpellSlots` espera (primaryClass, primaryLevel, multiclasses) e
+    // devolve null para single-class não-conjurador / só-bruxo.
+    const maxSlots = getSpellSlots(classIndex, level, mcs) ?? {}
     const safeUsedSlots = clampUsedSlots(usedSlots ?? {}, maxSlots)
 
-    // Pact Magic (Bruxo) — slots separados.
-    const pactSlots = getWarlockPactSlots
-      ? getWarlockPactSlots(character)
-      : null
-    const safePactUsed = clampPactSlotsUsed
-      ? clampPactSlotsUsed(pactSlotsUsed, character)
-      : pactSlotsUsed
+    // Pact Magic (Bruxo) — slots separados; precisa do nível de bruxo agregado.
+    const warlockLevel =
+      (classIndex === 'bruxo' ? level : 0) +
+      mcs.filter(m => m?.class === 'bruxo')
+         .reduce((s, m) => s + (m.level ?? 0), 0)
+    const pactSlots = warlockLevel > 0 ? getWarlockPactSlots(warlockLevel) : null
+    const safePactUsed = clampPactSlotsUsed(pactSlotsUsed, warlockLevel)
 
     // Matemática de magia por classe (DC/ataque por classe em multiclasse híbrida).
-    const spellcastingClasses = listSpellcastingClasses
-      ? listSpellcastingClasses(character)
-      : []
+    const spellcastingClasses = listSpellcastingClasses(character) ?? []
     const spellMathByClass = {}
     for (const cls of spellcastingClasses) {
       spellMathByClass[cls] = getClassSpellMath(cls, profBonus, attributes)
