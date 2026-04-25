@@ -54,27 +54,70 @@ export function getProficiencyBonus(level) {
  * HP máximo para classe única (sem multiclasse). Para multiclasse, use
  * `calculateMaxHpMulticlass` em `domain/rules.js`.
  *
- * Regra 5e:
+ * IMPORTANTE: esta função é equivalente a `calculateMaxHpMulticlass` com
+ * `multiclasses: []` — preferir aquela em selectors novos. Mantida para
+ * compatibilidade com o wizard de criação (single-class).
+ *
+ * Regra 5e (PHB p.12 e p.164):
  *  - Nível 1: hitDie + CON
- *  - Níveis 2+: (média arredondada p/ cima + CON) por nível adicional
+ *  - Níveis 2+: max(1, floor(die/2) + 1 + CON) por nível adicional (mínimo 1)
  */
 export function calculateMaxHp(classData, level, conScore) {
   if (!classData) return 0
   const conMod = getModifier(conScore)
   const hitDie = classData.hit_die || 8
   const avgPerLevel = Math.floor(hitDie / 2) + 1
-  const first = hitDie + conMod
-  const rest = Math.max(0, level - 1) * (avgPerLevel + conMod)
+  const first = Math.max(1, hitDie + conMod)
+  // Cada nível garante mínimo +1 (PHB p.15: "you can always gain at least 1 hp").
+  const rest = Math.max(0, level - 1) * Math.max(1, avgPerLevel + conMod)
   return Math.max(1, first + rest)
 }
 
-export function calculateInitiative(dexScore) {
-  return getModifier(dexScore)
+/**
+ * Iniciativa = mod DEX + bônus de feats.
+ *
+ * @param {number} dexScore
+ * @param {object} [opts]
+ * @param {Array<{index?:string,name?:string}>} [opts.feats]   Feats do personagem.
+ * @param {number} [opts.miscBonus=0]                          Buff/item/etc.
+ * @returns {number}
+ */
+export function calculateInitiative(dexScore, { feats = [], miscBonus = 0 } = {}) {
+  let bonus = 0
+  if (hasFeat(feats, 'alert')) bonus += 5  // PHB p.165
+  return getModifier(dexScore) + bonus + miscBonus
 }
 
-export function calculatePassivePerception(wisScore, profBonus, isProficient, isExpert = false) {
+/**
+ * Percepção Passiva = 10 + mod SAB (+ prof se proficiente, +2× se expert)
+ *                     + Observant (+5) — PHB p.265.
+ *
+ * @param {number} wisScore
+ * @param {number} profBonus
+ * @param {boolean} isProficient
+ * @param {boolean} [isExpert=false]
+ * @param {object} [opts]
+ * @param {Array<{index?:string,name?:string}>} [opts.feats]
+ * @returns {number}
+ */
+export function calculatePassivePerception(wisScore, profBonus, isProficient, isExpert = false, { feats = [] } = {}) {
   const wisMod = getModifier(wisScore)
-  return 10 + wisMod + (isProficient ? profBonus : 0) + (isExpert ? profBonus : 0)
+  const observant = hasFeat(feats, 'observant') ? 5 : 0
+  return 10 + wisMod
+    + (isProficient ? profBonus : 0)
+    + (isExpert ? profBonus : 0)
+    + observant
+}
+
+/** Helper interno: detecta feat por index ou nome (case-insensitive). */
+function hasFeat(feats, key) {
+  if (!Array.isArray(feats)) return false
+  const norm = String(key).toLowerCase()
+  return feats.some(f => {
+    const idx = String(f?.index ?? '').toLowerCase()
+    const nm  = String(f?.name  ?? '').toLowerCase()
+    return idx === norm || nm.includes(norm)
+  })
 }
 
 export function calculateSkillModifier(abilityScore, profBonus, proficient, expertise) {

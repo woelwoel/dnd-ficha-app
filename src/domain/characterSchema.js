@@ -18,21 +18,39 @@ import { z } from 'zod'
  *  - v2 → `combat.hitDice` agora pode ser objeto `{ pool: { d6|d8|d10|d12:
  *         { total, used } } }` para suportar HD por classe/multiclasse.
  *         Também introduz `combat.attacks[]` e `combat.concentrating`.
+ *  - v3 → `spellcasting.abilitiesByClass` (objeto classIndex → ability key)
+ *         para multiclasse híbrida. `combat.classFeatureUses[]` rastreia usos
+ *         limitados (Action Surge, Ki, Bardic Inspiration, etc.) com regra de
+ *         recarga (short/long/dawn). `info.asiOrFeatByLevel` registra para
+ *         cada nível de ASI a escolha do jogador (`asi` ou `feat`).
  */
-export const SCHEMA_VERSION = 2
+export const SCHEMA_VERSION = 3
+
+/**
+ * Limite máximo absoluto (PHB p.13: "ability score maximum is 20" em criação;
+ * 30 só é alcançável por efeitos cósmicos como Manual of Bodily Health). Usado
+ * apenas como teto de validação tolerante para imports legados — fluxos de UI
+ * devem clampar a 20 via `MAX_ATTRIBUTE_VALUE` em `domain/rules.js`.
+ */
+const HARD_MAX_ABILITY = 30
 
 const abilitiesSchema = z.object({
-  str: z.number().int().min(1).max(30),
-  dex: z.number().int().min(1).max(30),
-  con: z.number().int().min(1).max(30),
-  int: z.number().int().min(1).max(30),
-  wis: z.number().int().min(1).max(30),
-  cha: z.number().int().min(1).max(30),
+  str: z.number().int().min(1).max(HARD_MAX_ABILITY),
+  dex: z.number().int().min(1).max(HARD_MAX_ABILITY),
+  con: z.number().int().min(1).max(HARD_MAX_ABILITY),
+  int: z.number().int().min(1).max(HARD_MAX_ABILITY),
+  wis: z.number().int().min(1).max(HARD_MAX_ABILITY),
+  cha: z.number().int().min(1).max(HARD_MAX_ABILITY),
 })
 
 const settingsSchema = z.object({
   allowFeats: z.boolean().default(false),
   allowMulticlass: z.boolean().default(false),
+  /**
+   * Regras opcionais (Tasha's, etc.). Quando true, `applyRacialChange`
+   * aceita um override em `info.racialAsiOverride: { str: 2, con: 1 }`.
+   */
+  flexibleRacialAsi: z.boolean().default(false),
 }).partial().default({})
 
 const metaSchema = z.object({
@@ -53,6 +71,21 @@ const multiclassSchema = z.object({
   level: z.number().int().min(1).max(20),
 }).passthrough()
 
+/**
+ * Para cada nível com ASI/Feat (4, 8, 12, 16, 19 + variantes de classe),
+ * registra a escolha. PHB p.165: é mutuamente exclusivo (um OU outro).
+ * Chave = nível em que ocorreu, valor = 'asi' | 'feat'.
+ */
+const asiOrFeatSchema = z.record(z.string(), z.enum(['asi', 'feat']))
+  .default({})
+
+const featSchema = z.object({
+  index: z.string(),
+  name: z.string(),
+  /** Nível de personagem em que o feat foi escolhido (rastreabilidade). */
+  takenAtLevel: z.number().int().min(1).max(20).optional(),
+}).passthrough()
+
 const infoSchema = z.object({
   name: z.string(),
   playerName: z.string().default(''),
@@ -67,6 +100,13 @@ const infoSchema = z.object({
   alignment: z.string().default(''),
   xp: z.number().int().min(0).default(0),
   scoreMethod: z.string().default('manual'),
+  feats: z.array(featSchema).default([]),
+  asiOrFeatByLevel: asiOrFeatSchema,
+  /**
+   * Override de ASI racial flexível (Tasha's). Só é aplicado quando
+   * `meta.settings.flexibleRacialAsi === true`. Soma deve ser ≤ +3 (+2/+1).
+   */
+  racialAsiOverride: z.record(z.number().int()).optional(),
 }).passthrough()
 
 const hitDicePoolEntrySchema = z.object({
@@ -79,6 +119,26 @@ const concentrationSchema = z.object({
   spellName:  z.string().nullable().default(null),
 }).passthrough()
 
+/**
+ * Uso limitado de feature de classe (PHB cap. 3).
+ *
+ *  - id          : chave estável (ex.: 'fighter-action-surge', 'monk-ki').
+ *  - name        : rótulo PT-BR.
+ *  - max         : usos no máximo (recalculado por nível/classe).
+ *  - used        : usos consumidos atualmente.
+ *  - recharge    : 'short' (descanso curto/longo) | 'long' (só longo) |
+ *                  'dawn' (recarga ao amanhecer) | 'manual'.
+ *  - source      : classe que concede ('guerreiro', 'monge', ...).
+ */
+const classFeatureUseSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  max: z.number().int().min(0),
+  used: z.number().int().min(0).default(0),
+  recharge: z.enum(['short', 'long', 'dawn', 'manual']).default('long'),
+  source: z.string().default(''),
+}).passthrough()
+
 const combatSchema = z.object({
   maxHp: z.number().int().min(0),
   currentHp: z.number().int().min(0),
@@ -87,7 +147,7 @@ const combatSchema = z.object({
   speed: z.number().int().min(0).default(30),
   /**
    * v1 → string (e.g. '1d8').
-   * v2 → { pool: { d8: { total, used }, ... } } — pool por tipo de dado,
+   * v2+ → { pool: { d8: { total, used }, ... } } — pool por tipo de dado,
    * permitindo multiclasse. `migrateCharacter` v1→v2 converte.
    */
   hitDice: z.union([
@@ -114,10 +174,16 @@ const combatSchema = z.object({
     proficient:    z.boolean().default(false),
     magicBonus:    z.number().int().default(0),
     versatileDice: z.string().optional(),
+    /** Fighting Style aplicável a este ataque (PHB p.72) — escolhido na UI. */
+    fightingStyle: z.enum(['archery', 'dueling', 'great-weapon', 'two-weapon', 'none']).default('none'),
+    /** Marca golpe off-hand (TWF) para cálculo de dano. */
+    offHand:       z.boolean().default(false),
     notes:         z.string().default(''),
   }).passthrough()).default([]),
-  /** Magia atualmente em concentração (PHB p.203). */
+  /** Magia atualmente em concentração (PHB p.203). Apenas uma por vez. */
   concentrating: concentrationSchema.default({ spellIndex: null, spellName: null }),
+  /** Usos limitados de class features (Action Surge, Ki, etc.). */
+  classFeatureUses: z.array(classFeatureUseSchema).default([]),
 }).passthrough()
 
 const proficienciesSchema = z.object({
@@ -138,9 +204,39 @@ const spellSchema = z.object({
 }).passthrough()
 
 const spellcastingSchema = z.object({
+  /**
+   * Ability "principal" para a UI (compat). A fonte de verdade em multiclasse
+   * é `abilitiesByClass`. Selectors devem cair em abilitiesByClass[primary]
+   * quando ambos existem.
+   */
   ability: z.string().nullable().default(null),
+  /**
+   * Mapa classIndex → ability key. Para multiclasse híbrida (Mago+Clérigo),
+   * cada classe carrega sua ability de conjuração. Magias guardam `class`
+   * para o selector saber qual usar para CD/ataque.
+   */
+  abilitiesByClass: z.record(z.string()).default({}),
+  /**
+   * Slots usados por nível de magia. Validado em `safeParseCharacter` contra
+   * o máximo computado a partir de classes/níveis.
+   */
   usedSlots: z.record(z.number().int().min(0)).default({}),
-  spells: z.array(spellSchema).default([]),
+  /** Slots de Pact Magic do Bruxo usados (separado de usedSlots). */
+  pactSlotsUsed: z.number().int().min(0).default(0),
+  /**
+   * Grimório do Mago (PHB p.114): magias *conhecidas* mas não necessariamente
+   * preparadas. `spells` é o pool universal (preparadas/conhecidas conforme
+   * a classe); `spellbook` é apenas o repositório do Mago.
+   */
+  spellbook: z.array(spellSchema.extend({
+    class: z.string().optional(),
+  })).default([]),
+  spells: z.array(spellSchema.extend({
+    /** Classe que dá acesso (importante p/ DC quando multiclasse). */
+    class: z.string().optional(),
+    /** Marcado como preparado (mago/clérigo/druida/paladino). */
+    prepared: z.boolean().optional(),
+  })).default([]),
 }).passthrough()
 
 const currencySchema = z.object({
@@ -155,6 +251,9 @@ const itemSchema = z.object({
   id: z.string(),
   name: z.string(),
   qty: z.number().int().min(0).default(1),
+  /** Bônus mágico em atributo (ex: Belt of Giant Strength = { str: 21 fixo }). */
+  abilityOverride: z.record(z.number().int().min(1).max(HARD_MAX_ABILITY)).optional(),
+  abilityBonus:    z.record(z.number().int()).optional(),
 }).passthrough()
 
 const inventorySchema = z.object({
@@ -182,15 +281,45 @@ export const characterSchema = z.object({
   spellcasting: spellcastingSchema,
   inventory: inventorySchema,
   traits: traitsSchema,
-}).passthrough().refine(
-  // PHB p.15: nível de personagem é limitado a 20 no total (primário + multiclasses).
-  ch => {
-    const primary = ch.info?.level ?? 0
-    const mc = (ch.info?.multiclasses ?? []).reduce((s, m) => s + (m.level ?? 0), 0)
-    return primary + mc <= 20
-  },
-  { message: 'Nível total (classe primária + multiclasses) não pode exceder 20', path: ['info', 'level'] },
-)
+}).passthrough().superRefine((ch, ctx) => {
+  // PHB p.15: nível total ≤ 20.
+  const primary = ch.info?.level ?? 0
+  const mc = (ch.info?.multiclasses ?? []).reduce((s, m) => s + (m.level ?? 0), 0)
+  if (primary + mc > 20) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Nível total (classe primária + multiclasses) não pode exceder 20',
+      path: ['info', 'level'],
+    })
+  }
+
+  // currentHp não pode exceder maxHp + tempHp (limite lógico).
+  const max = ch.combat?.maxHp ?? 0
+  const cur = ch.combat?.currentHp ?? 0
+  if (cur > max) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `currentHp (${cur}) não pode exceder maxHp (${max})`,
+      path: ['combat', 'currentHp'],
+    })
+  }
+
+  // Death saves: só fazem sentido com 0 HP.
+  // (Permitimos > 0, pois o jogador pode "deixar marcado" entre quedas.)
+
+  // Tasha's: soma do override flexível ≤ +3.
+  const override = ch.info?.racialAsiOverride
+  if (ch.meta?.settings?.flexibleRacialAsi && override) {
+    const sum = Object.values(override).reduce((s, v) => s + (Number(v) || 0), 0)
+    if (sum > 3) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'racialAsiOverride: soma máxima é +3 (Tasha\'s: +2 e +1)',
+        path: ['info', 'racialAsiOverride'],
+      })
+    }
+  }
+})
 
 export function parseCharacter(raw) {
   return characterSchema.parse(migrateCharacter(raw))
@@ -216,8 +345,11 @@ export function migrateCharacter(raw) {
 
   let doc = raw
   for (let v = current; v < SCHEMA_VERSION; v++) {
-    console.info(`[characterSchema] migrando v${v} → v${v + 1}`)
+    if (typeof console !== 'undefined' && console.info) {
+      console.info(`[characterSchema] migrando v${v} → v${v + 1}`)
+    }
     if (v === 1) doc = migrateV1ToV2(doc)
+    if (v === 2) doc = migrateV2ToV3(doc)
   }
   return {
     ...doc,
@@ -236,7 +368,7 @@ function migrateV1ToV2(doc) {
   const level = doc.info?.level ?? 1
   let poolObj
   if (hd && typeof hd === 'object' && hd.pool) {
-    poolObj = hd // já é v2 (idempotente)
+    poolObj = hd
   } else if (typeof hd === 'string') {
     const match = hd.match(/d(\d+)/i)
     const die = match ? `d${match[1]}` : 'd8'
@@ -251,6 +383,48 @@ function migrateV1ToV2(doc) {
       hitDice: poolObj,
       attacks: doc.combat?.attacks ?? [],
       concentrating: doc.combat?.concentrating ?? { spellIndex: null, spellName: null },
+    },
+  }
+}
+
+/**
+ * v2 → v3:
+ *  - cria `spellcasting.abilitiesByClass` a partir de `spellcasting.ability`
+ *    + classe primária (heurística para fichas single-class antigas);
+ *  - inicializa `spellcasting.pactSlotsUsed = 0` se ausente;
+ *  - cria `spellcasting.spellbook = []` (não tenta inferir);
+ *  - inicializa `combat.classFeatureUses = []`;
+ *  - inicializa `info.feats = []` se ausente e `info.asiOrFeatByLevel = {}`.
+ */
+function migrateV2ToV3(doc) {
+  const abilitiesByClass = doc.spellcasting?.abilitiesByClass ?? {}
+  const ability = doc.spellcasting?.ability
+  const primaryClass = doc.info?.class
+  if (ability && primaryClass && !abilitiesByClass[primaryClass]) {
+    abilitiesByClass[primaryClass] = String(ability).toLowerCase().slice(0, 3)
+  }
+  return {
+    ...doc,
+    info: {
+      ...(doc.info ?? {}),
+      feats: doc.info?.feats ?? [],
+      asiOrFeatByLevel: doc.info?.asiOrFeatByLevel ?? {},
+    },
+    combat: {
+      ...(doc.combat ?? {}),
+      classFeatureUses: doc.combat?.classFeatureUses ?? [],
+      // Reescreve attacks com defaults de v3.
+      attacks: (doc.combat?.attacks ?? []).map(a => ({
+        fightingStyle: 'none',
+        offHand: false,
+        ...a,
+      })),
+    },
+    spellcasting: {
+      ...(doc.spellcasting ?? {}),
+      abilitiesByClass,
+      pactSlotsUsed: doc.spellcasting?.pactSlotsUsed ?? 0,
+      spellbook: doc.spellcasting?.spellbook ?? [],
     },
   }
 }

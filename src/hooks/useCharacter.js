@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from 'react'
+import { SCHEMA_VERSION } from '../domain/characterSchema'
 
 const DEFAULT_CHARACTER = {
   id: null,
@@ -6,7 +7,7 @@ const DEFAULT_CHARACTER = {
     createdAt: null,
     updatedAt: null,
     version: '1.0',
-    schemaVersion: 2,
+    schemaVersion: SCHEMA_VERSION,
   },
   info: {
     name: '',
@@ -22,6 +23,9 @@ const DEFAULT_CHARACTER = {
     alignment: '',
     xp: 0,
     scoreMethod: 'manual',
+    // v3
+    feats: [],
+    asiOrFeatByLevel: {},
   },
   attributes: {
     str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10,
@@ -32,11 +36,13 @@ const DEFAULT_CHARACTER = {
     tempHp: 0,
     armorClass: 10,
     speed: 30,
-    // Schema v2: pool por tipo de dado ({ d8: { total, used } }).
+    // Schema v2+: pool por tipo de dado ({ d8: { total, used } }).
     hitDice: { pool: {} },
     attacks: [],
     concentrating: { spellIndex: null, spellName: null },
     deathSaves: { successes: 0, failures: 0 },
+    // v3: usos limitados de class features (Action Surge, Ki, etc.).
+    classFeatureUses: [],
   },
   proficiencies: {
     savingThrows: [],
@@ -51,7 +57,10 @@ const DEFAULT_CHARACTER = {
   appliedRacialBonuses: {},
   spellcasting: {
     ability: null,
+    abilitiesByClass: {},
     usedSlots: {},
+    pactSlotsUsed: 0,
+    spellbook: [],
     spells: [],
   },
   inventory: {
@@ -254,31 +263,42 @@ export function useCharacter(initialCharacter = null) {
     }))
   }, [setCharacter])
 
-  const toggleSlot = useCallback((level, newUsed) => {
-    setCharacter(prev => ({
-      ...prev,
-      spellcasting: {
-        ...prev.spellcasting,
-        usedSlots: {
-          ...(prev.spellcasting.usedSlots || {}),
-          [level]: Math.max(0, newUsed),
+  /**
+   * Define `usedSlots[level]`. Aceita `maxSlots` opcional para clampar
+   * automaticamente (`Math.min(max, value)`), evitando estado inválido.
+   */
+  const toggleSlot = useCallback((level, newUsed, maxSlots = null) => {
+    setCharacter(prev => {
+      const max = maxSlots?.[level] ?? Infinity
+      return {
+        ...prev,
+        spellcasting: {
+          ...prev.spellcasting,
+          usedSlots: {
+            ...(prev.spellcasting.usedSlots || {}),
+            [level]: Math.max(0, Math.min(max, newUsed)),
+          },
         },
-      },
-    }))
+      }
+    })
   }, [setCharacter])
 
   // Ações semânticas de slots — usadas por Rest actions.
-  const spendSlot = useCallback(level => {
-    setCharacter(prev => ({
-      ...prev,
-      spellcasting: {
-        ...prev.spellcasting,
-        usedSlots: {
-          ...(prev.spellcasting.usedSlots || {}),
-          [level]: (prev.spellcasting.usedSlots?.[level] ?? 0) + 1,
+  const spendSlot = useCallback((level, maxSlots = null) => {
+    setCharacter(prev => {
+      const cur = prev.spellcasting.usedSlots?.[level] ?? 0
+      const max = maxSlots?.[level] ?? Infinity
+      return {
+        ...prev,
+        spellcasting: {
+          ...prev.spellcasting,
+          usedSlots: {
+            ...(prev.spellcasting.usedSlots || {}),
+            [level]: Math.min(max, cur + 1),
+          },
         },
-      },
-    }))
+      }
+    })
   }, [setCharacter])
 
   const regainSlot = useCallback(level => {
@@ -297,8 +317,59 @@ export function useCharacter(initialCharacter = null) {
   const restoreAllSlots = useCallback(() => {
     setCharacter(prev => ({
       ...prev,
-      spellcasting: { ...prev.spellcasting, usedSlots: {} },
+      spellcasting: { ...prev.spellcasting, usedSlots: {}, pactSlotsUsed: 0 },
     }))
+  }, [setCharacter])
+
+  /* ── Pact Magic (Bruxo) — slots separados ────────────────────── */
+
+  const spendPactSlot = useCallback((maxQty = Infinity) => {
+    setCharacter(prev => {
+      const cur = prev.spellcasting.pactSlotsUsed ?? 0
+      return {
+        ...prev,
+        spellcasting: { ...prev.spellcasting, pactSlotsUsed: Math.min(maxQty, cur + 1) },
+      }
+    })
+  }, [setCharacter])
+
+  const regainPactSlot = useCallback(() => {
+    setCharacter(prev => ({
+      ...prev,
+      spellcasting: {
+        ...prev.spellcasting,
+        pactSlotsUsed: Math.max(0, (prev.spellcasting.pactSlotsUsed ?? 0) - 1),
+      },
+    }))
+  }, [setCharacter])
+
+  /* ── Class Feature Uses (Action Surge, Ki, etc.) ─────────────── */
+
+  const setClassFeatureUses = useCallback(uses => {
+    setCharacter(prev => ({
+      ...prev,
+      combat: { ...prev.combat, classFeatureUses: uses ?? [] },
+    }))
+  }, [setCharacter])
+
+  const spendFeatureUse = useCallback(id => {
+    setCharacter(prev => {
+      const list = prev.combat?.classFeatureUses ?? []
+      const next = list.map(u => u.id === id
+        ? { ...u, used: Math.min(u.max, (u.used ?? 0) + 1) }
+        : u)
+      return { ...prev, combat: { ...prev.combat, classFeatureUses: next } }
+    })
+  }, [setCharacter])
+
+  const regainFeatureUse = useCallback(id => {
+    setCharacter(prev => {
+      const list = prev.combat?.classFeatureUses ?? []
+      const next = list.map(u => u.id === id
+        ? { ...u, used: Math.max(0, (u.used ?? 0) - 1) }
+        : u)
+      return { ...prev, combat: { ...prev.combat, classFeatureUses: next } }
+    })
   }, [setCharacter])
 
   /**
@@ -337,19 +408,27 @@ export function useCharacter(initialCharacter = null) {
     spendSlot,
     regainSlot,
     restoreAllSlots,
+    spendPactSlot,
+    regainPactSlot,
     setConcentration,
     toggleLanguage,
     addAttack,
     removeAttack,
     updateAttack,
+    setClassFeatureUses,
+    spendFeatureUse,
+    regainFeatureUse,
   }), [
     character, setCharacter,
     updateInfo, updateAttribute, updateCombat, updateTraits,
     toggleSkillProficiency, toggleExpertiseSkill,
     updateCurrency, addItem, removeItem, updateItem,
     updateSpellcasting, addSpell, removeSpell,
-    toggleSlot, spendSlot, regainSlot, restoreAllSlots, setConcentration,
+    toggleSlot, spendSlot, regainSlot, restoreAllSlots,
+    spendPactSlot, regainPactSlot,
+    setConcentration,
     toggleLanguage,
     addAttack, removeAttack, updateAttack,
+    setClassFeatureUses, spendFeatureUse, regainFeatureUse,
   ])
 }

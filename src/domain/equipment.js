@@ -78,35 +78,69 @@ export function findArmorByName(name) {
 }
 
 /**
+ * Mapeia categoria de armadura → chaves de proficiência aceitas.
+ * Aceita formato EN ('light', 'medium', 'heavy', 'shields') e PT-BR
+ * ('leve', 'media', 'pesada', 'escudos').
+ */
+const ARMOR_CATEGORY_PROFICIENCY = {
+  light:  ['light', 'leve', 'light-armor', 'armaduras-leves'],
+  medium: ['medium', 'media', 'média', 'medium-armor', 'armaduras-médias'],
+  heavy:  ['heavy', 'pesada', 'heavy-armor', 'armaduras-pesadas'],
+  shield: ['shield', 'shields', 'escudo', 'escudos'],
+}
+
+/** Verifica se o personagem é proficiente em uma categoria de armadura/escudo. */
+export function hasArmorProficiency(profList, category) {
+  if (!profList || profList.length === 0) return false
+  const accepted = new Set(ARMOR_CATEGORY_PROFICIENCY[category] ?? [])
+  return profList.some(p => accepted.has(String(p).toLowerCase()))
+}
+
+/**
  * Calcula a CA a partir da armadura/escudo equipados + atributos + classe.
  *
  * Regra (PHB p.144–145):
  *  - Sem armadura: CA = 10 + DES (Unarmored Defense do bárbaro adiciona CON,
- *    do monge adiciona SAB — monge não pode usar escudo).
+ *    do monge adiciona SAB — monge perde a feature ao usar escudo).
  *  - Leve:   baseAC + DES
  *  - Média:  baseAC + min(DES, 2)
  *  - Pesada: baseAC (ignora DES)
- *  - Escudo: +2 em qualquer uma das opções acima (monge perde Unarmored
- *    Defense ao usar escudo; bárbaro mantém).
+ *  - Escudo: +2 em qualquer uma das opções acima.
+ *
+ * Penalidades retornadas em `warnings[]` (não modificam CA):
+ *  - Sem proficiência na armadura/escudo equipado (PHB p.144).
+ *  - FOR < strMin em armadura pesada → speedPenalty: 10 (PHB p.144).
  *
  * @param {object} params
  * @param {object} params.mods       - { dex, con, wis, ... }
+ * @param {object} [params.attributes] - { str, dex, ... } (para checar strMin)
  * @param {string} params.classIndex - índice da classe primária
- * @param {object|null} params.armor - entrada de ARMOR_TABLE (leve/média/pesada) ou null
+ * @param {object|null} params.armor - entrada de ARMOR_TABLE ou null
  * @param {boolean} params.hasShield - true se um escudo está equipado
+ * @param {string[]} [params.armorProficiencies] - lista de proficiências
+ * @returns {{ ac:number, warnings:string[], speedPenalty:number,
+ *             noProficiency:boolean }}
  */
-export function calculateArmorClass({ mods, classIndex, armor, hasShield }) {
+export function calculateArmorClass({
+  mods,
+  attributes = null,
+  classIndex,
+  armor,
+  hasShield,
+  armorProficiencies = [],
+}) {
   const dexMod = mods?.dex ?? 0
   const conMod = mods?.con ?? 0
   const wisMod = mods?.wis ?? 0
+  const warnings = []
+  let speedPenalty = 0
 
   let base
   if (!armor) {
-    // Unarmored Defense
     if (classIndex === 'barbaro') {
+      // Bárbaro mantém Unarmored Defense mesmo com escudo (PHB p.48).
       base = 10 + dexMod + conMod
     } else if (classIndex === 'monge' && !hasShield) {
-      // Monge perde Unarmored Defense ao equipar escudo
       base = 10 + dexMod + wisMod
     } else {
       base = 10 + dexMod
@@ -117,14 +151,46 @@ export function calculateArmorClass({ mods, classIndex, armor, hasShield }) {
     const cappedDex = armor.maxDex == null ? dexMod : Math.min(dexMod, armor.maxDex)
     base = armor.baseAC + cappedDex
   } else if (armor.category === 'heavy') {
-    base = armor.baseAC // ignora DES
+    base = armor.baseAC
   } else {
     base = 10 + dexMod
   }
 
-  // Escudo (+2). Monge usando armadura comum também pode usar escudo.
   if (hasShield) base += ARMOR_TABLE.shield.baseAC
-  return base
+
+  // ── Avisos de regra (não modificam CA) ─────────────────────
+  let noProficiency = false
+  if (armor && !hasArmorProficiency(armorProficiencies, armor.category)) {
+    warnings.push(
+      `Sem proficiência em armadura ${armor.category} — desvantagem em testes/saves de FOR/DES e ` +
+      `não pode conjurar magias (PHB p.144).`
+    )
+    noProficiency = true
+  }
+  if (hasShield && !hasArmorProficiency(armorProficiencies, 'shield')) {
+    warnings.push('Sem proficiência em escudo — mesmas penalidades acima (PHB p.144).')
+    noProficiency = true
+  }
+
+  if (armor && armor.strMin > 0 && attributes) {
+    const str = attributes.str ?? 10
+    if (str < armor.strMin) {
+      speedPenalty = 10
+      warnings.push(
+        `FOR ${str} < ${armor.strMin} requerida pela armadura — velocidade -10 ft (PHB p.144).`
+      )
+    }
+  }
+
+  return { ac: base, warnings, speedPenalty, noProficiency }
+}
+
+/**
+ * Compat: alguns consumidores antigos esperavam apenas o número da CA.
+ * Internamente chama o novo `calculateArmorClass` e retorna `.ac`.
+ */
+export function calculateArmorClassValue(params) {
+  return calculateArmorClass(params).ac
 }
 
 /**

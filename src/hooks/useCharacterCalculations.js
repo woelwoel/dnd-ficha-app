@@ -6,13 +6,24 @@ import {
   calculateSpellSaveDC,
   calculateSpellAttackBonus,
   calculatePassivePerception,
+  calculateInitiative,
 } from '../utils/calculations'
-import { calculateMaxHpMulticlass } from '../domain/rules'
+import { calculateMaxHpMulticlass, listSpellcastingClasses } from '../domain/rules'
 import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
 import { keyFromAbbr } from '../domain/attributes'
+import {
+  getSpellSlots,
+  clampUsedSlots,
+  clampPactSlotsUsed,
+  getClassSpellMath,
+  getWarlockPactSlots,
+} from '../utils/spellcasting'
 
 /**
  * Hook de cálculos reativos da ficha.
+ *
+ * Consome as APIs refatoradas (CA com avisos, slots unificados single/multi,
+ * matemática por classe para multiclasse híbrida, feats Alert/Observant).
  *
  * @param {object} character - objeto completo do personagem
  * @param {object|null} classData - dados da classe primária do SRD
@@ -25,10 +36,14 @@ export function useCharacterCalculations(character, classData = null, classDataM
   const level             = info?.level ?? 1
   const multiclasses      = info?.multiclasses
   const classIndex        = info?.class ?? ''
+  const feats             = info?.feats
   const spellAbilityLabel = spellcasting?.ability ?? null
+  const usedSlots         = spellcasting?.usedSlots
+  const pactSlotsUsed     = spellcasting?.pactSlotsUsed ?? 0
   const saves             = proficiencies?.savingThrows
   const skills            = proficiencies?.skills
   const expertiseSkills   = proficiencies?.expertiseSkills
+  const armorProfs        = proficiencies?.armor
   const currentHp         = combat?.currentHp ?? 0
   const maxHp             = combat?.maxHp ?? 0
   const items             = inventory?.items
@@ -48,10 +63,20 @@ export function useCharacterCalculations(character, classData = null, classDataM
       cha: getModifier(cha),
     }
 
-    // CA sugerida leva em conta armadura/escudo equipados (PHB p.144–145)
-    // e Unarmored Defense de bárbaro/monge quando sem armadura.
+    // CA sugerida (PHB p.144–145) — agora retorna objeto rico com avisos.
     const { armor, hasShield } = getEquippedArmor(items)
-    const suggestedAC = calculateArmorClass({ mods, classIndex, armor, hasShield })
+    const acResult = calculateArmorClass({
+      mods,
+      attributes,
+      classIndex,
+      armor,
+      hasShield,
+      armorProficiencies: armorProfs ?? [],
+    })
+    const suggestedAC   = acResult.ac
+    const acWarnings    = acResult.warnings
+    const speedPenalty  = acResult.speedPenalty
+    const acNoProf      = acResult.noProficiency
 
     // HP sugerido: multiclasse correto quando há multiclasses
     const fullClassMap = classData
@@ -61,9 +86,10 @@ export function useCharacterCalculations(character, classData = null, classDataM
       ? calculateMaxHpMulticlass(character, fullClassMap)
       : null
 
-    const initiative = mods.dex
+    // Iniciativa com Alert (+5) via feats.
+    const initiative = calculateInitiative(dex, { feats })
 
-    // Atributo de magia: usa o mapa canônico de domain/attributes (FOR/DES/CON/INT/SAB/CAR)
+    // Atributo de magia (compat: classe primária)
     const spellAbilityKey = spellAbilityLabel ? keyFromAbbr(spellAbilityLabel) : null
     const spellScore = spellAbilityKey ? (attributes?.[spellAbilityKey] ?? 10) : 10
 
@@ -75,6 +101,27 @@ export function useCharacterCalculations(character, classData = null, classDataM
       ? calculateSpellAttackBonus(spellScore, profBonus)
       : null
 
+    // Slots unificados (single ou multiclasse) — sempre passa pelo mesmo caminho.
+    const maxSlots = getSpellSlots(character) ?? {}
+    const safeUsedSlots = clampUsedSlots(usedSlots ?? {}, maxSlots)
+
+    // Pact Magic (Bruxo) — slots separados.
+    const pactSlots = getWarlockPactSlots
+      ? getWarlockPactSlots(character)
+      : null
+    const safePactUsed = clampPactSlotsUsed
+      ? clampPactSlotsUsed(pactSlotsUsed, character)
+      : pactSlotsUsed
+
+    // Matemática de magia por classe (DC/ataque por classe em multiclasse híbrida).
+    const spellcastingClasses = listSpellcastingClasses
+      ? listSpellcastingClasses(character)
+      : []
+    const spellMathByClass = {}
+    for (const cls of spellcastingClasses) {
+      spellMathByClass[cls] = getClassSpellMath(cls, profBonus, attributes)
+    }
+
     const savingThrows = {}
     for (const key of ['str', 'dex', 'con', 'int', 'wis', 'cha']) {
       const isProficient = saves?.includes(key) ?? false
@@ -83,7 +130,9 @@ export function useCharacterCalculations(character, classData = null, classDataM
 
     const isPerceptionProficient = skills?.includes('perception') ?? false
     const isPerceptionExpert     = expertiseSkills?.includes('perception') ?? false
-    const passivePerception = calculatePassivePerception(wis, profBonus, isPerceptionProficient, isPerceptionExpert)
+    const passivePerception = calculatePassivePerception(
+      wis, profBonus, isPerceptionProficient, isPerceptionExpert, { feats }
+    )
 
     const hpPercent = maxHp > 0
       ? Math.min(100, Math.round((currentHp / maxHp) * 100))
@@ -95,10 +144,18 @@ export function useCharacterCalculations(character, classData = null, classDataM
       profBonus,
       mods,
       suggestedAC,
+      acWarnings,
+      speedPenalty,
+      acNoProficiency: acNoProf,
       suggestedMaxHp,
       initiative,
       spellSaveDC,
       spellAttackBonus,
+      spellMathByClass,
+      maxSlots,
+      safeUsedSlots,
+      pactSlots,
+      safePactUsed,
       savingThrows,
       passivePerception,
       hpPercent,
@@ -111,9 +168,10 @@ export function useCharacterCalculations(character, classData = null, classDataM
     // React Compiler (que faz análise de dependências). Os primitivos
     // str/dex/con/intel/wis/cha cobrem `attributes` conceitualmente.
     character, attributes,
-    level, multiclasses, classIndex,
+    level, multiclasses, classIndex, feats,
     str, dex, con, intel, wis, cha,
-    spellAbilityLabel, saves, skills, expertiseSkills,
+    spellAbilityLabel, usedSlots, pactSlotsUsed,
+    saves, skills, expertiseSkills, armorProfs,
     currentHp, maxHp, classData, classDataMap,
     // inventory.items muda a CA sugerida (armadura/escudo equipados).
     items,
