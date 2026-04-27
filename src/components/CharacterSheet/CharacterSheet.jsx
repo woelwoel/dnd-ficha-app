@@ -9,6 +9,7 @@ import { SheetHeader } from './SheetHeader'
 import { SheetTabs, TABS, NavBlockedBanner, ImportErrorBanner } from './SheetTabs'
 import { SheetContent } from './SheetContent'
 import { useSheetHandlers } from './useSheetHandlers'
+import { PrintView } from '../PrintView/PrintView'
 
 /**
  * Orquestrador da ficha.
@@ -106,7 +107,7 @@ export function CharacterSheet({ characterId, onBack }) {
         onImport={handleImport}
         onImportError={setImportError}
         onPrint={() => window.print()}
-        showPrint={false}
+        showPrint={true}
         quickStats={quickStats}
       />
 
@@ -151,6 +152,14 @@ export function CharacterSheet({ characterId, onBack }) {
           </div>
         </main>
       </div>
+
+      {/* Ficha para impressão/PDF — invisível na UI, visível apenas em @media print */}
+      <PrintView
+        character={character}
+        calc={calc}
+        classData={classData}
+        backgrounds={backgrounds}
+      />
     </div>
   )
 }

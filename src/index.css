@@ -138,15 +138,47 @@ h1, h2, h3,
     0 8px 40px rgba(3, 5, 13, 0.7);
 }
 
-/* ── Impressão ───────────────────────────────────────────────── */
+/* ── Impressão / Exportar PDF ────────────────────────────────── */
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
 @media print {
-  body > * { display: none !important; }
-  #root > * { display: none !important; }
+  /* Oculta toda a aplicação */
+  body > *       { display: none !important; }
+  #root > *      { display: none !important; }
+
+  /* Garante que cores e fundos sejam impressos */
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Mostra apenas a ficha de impressão */
   #print-character-view {
     display: block !important;
-    position: fixed; inset: 0;
-    margin: 0; padding: 8px;
-    background: #f2e8c8;
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #f2e8c8 !important;
     overflow: visible;
+    font-family: Georgia, serif;
+    color: #1a1209;
+  }
+
+  /* Cada página da ficha quebra corretamente */
+  #print-character-view > div {
+    page-break-after: always;
+    break-after: page;
+    background: #f2e8c8 !important;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  #print-character-view > div:last-child {
+    page-break-after: avoid;
+    break-after: avoid;
   }
 }
