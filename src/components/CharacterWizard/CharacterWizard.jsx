@@ -13,48 +13,112 @@ import { Step6Skills } from './steps/Step6Skills'
 import { Step7Spells } from './steps/Step7Spells'
 import { Step8Review } from './steps/Step8Review'
 
-// Estado inicial do wizard — zero preenchido
+/* ── Estado inicial do wizard ─────────────────────────────────── */
 const INITIAL_DRAFT = {
   settings: {
-    abilityScoreMethod: 'standard-array', // 'standard-array' | 'point-buy' | '4d6drop'
+    abilityScoreMethod: 'standard-array',
     allowFeats: false,
     allowMulticlass: false,
   },
-  // Conceito
-  name: '',
-  playerName: '',
-  alignment: '',
-  appearance: '',
-  // Raça
-  race: '',
-  subrace: '',
-  racialBonuses: {},   // { str: 2, con: 1, ... }
-  // Classe
-  class: '',
-  level: 1,
-  chosenFeatures: {},
-  savingThrows: [],
-  spellcastingAbility: null,
-  hitDice: '1d8',
-  // Antecedente
-  background: '',
-  backgroundSkills: [],
-  backgroundItems: [],
+  name: '', playerName: '', alignment: '', appearance: '',
+  race: '', subrace: '', racialBonuses: {},
+  class: '', level: 1, chosenFeatures: {}, savingThrows: [],
+  spellcastingAbility: null, hitDice: '1d8',
+  background: '', backgroundSkills: [], backgroundItems: [],
   backgroundGold: 0,
-  // Equipamento inicial da classe
-  classEquipmentChoice: 'equipment', // 'equipment' | 'gold'
-  classStartingGold: 0,
-  // Atributos (base, sem bônus raciais)
-  // standard-array / 4d6drop: inicia 0 (não atribuído); point-buy: inicia 8
+  classEquipmentChoice: 'equipment', classStartingGold: 0,
   baseAttributes: { str: 0, dex: 0, con: 0, int: 0, wis: 0, cha: 0 },
-  rolledScores: [],    // apenas para 4d6drop
-  // Perícias escolhidas pela classe
+  rolledScores: [],
   chosenSkills: [],
-  // Magias iniciais
-  spells: [],
-  bonusSpells: [],
+  spells: [], bonusSpells: [],
 }
 
+/* ── Sidebar de passos (desktop) ──────────────────────────────── */
+function WizardStepSidebar({ steps, current }) {
+  return (
+    <div className="flex flex-col gap-0 py-2">
+      {steps.map((s, i) => {
+        const done    = i < current
+        const active  = i === current
+        const pending = i > current
+
+        return (
+          <div key={s.id} className="flex items-start gap-3 px-2">
+            {/* Coluna: círculo + conector */}
+            <div className="flex flex-col items-center min-w-[28px]">
+              {/* Círculo */}
+              <div className={[
+                'w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 border transition-all duration-200',
+                done    ? 'border-blue-600/80 bg-blue-900/50 text-blue-300'                                         : '',
+                active  ? 'border-amber-400 bg-amber-900/30 text-amber-300 shadow-[0_0_14px_rgba(196,144,48,0.35)]' : '',
+                pending ? 'border-gray-700 bg-gray-900 text-gray-700'                                               : '',
+              ].join(' ')}>
+                {done ? '✓' : i + 1}
+              </div>
+              {/* Conector */}
+              {i < steps.length - 1 && (
+                <div className={[
+                  'w-px flex-1 min-h-[24px] mt-0.5 mb-0.5',
+                  done ? 'bg-blue-700/50' : 'bg-gray-800',
+                ].join(' ')} />
+              )}
+            </div>
+
+            {/* Rótulo */}
+            <div className={[
+              'pt-1 text-sm leading-tight transition-colors duration-150',
+              active  ? 'text-amber-300 font-display font-semibold tracking-wide' : '',
+              done    ? 'text-gray-500'                                            : '',
+              pending ? 'text-gray-700'                                            : '',
+            ].join(' ')}>
+              {s.label}
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+/* ── Indicador de passos mobile ───────────────────────────────── */
+function MobileStepIndicator({ steps, current }) {
+  return (
+    <div className="mb-4">
+      <div className="flex items-center gap-0.5 overflow-x-auto pb-1 scrollbar-none">
+        {steps.map((s, i) => (
+          <div key={s.id} className="flex items-center shrink-0">
+            <div className={[
+              'flex items-center gap-1 px-2 py-0.5 rounded text-xs whitespace-nowrap transition-colors',
+              i === current ? 'text-amber-300' : i < current ? 'text-gray-600' : 'text-gray-700',
+            ].join(' ')}>
+              <span className={[
+                'w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold border shrink-0 transition-all',
+                i === current ? 'border-amber-400 bg-amber-900/40 text-amber-300 shadow-[0_0_8px_rgba(196,144,48,0.3)]'
+                : i < current  ? 'border-blue-700/70 bg-blue-950/40 text-gray-500'
+                :                'border-gray-800 bg-gray-900 text-gray-700',
+              ].join(' ')}>
+                {i < current ? '✓' : i + 1}
+              </span>
+              {s.label}
+            </div>
+            {i < steps.length - 1 && (
+              <div className={`w-2 h-px mx-0.5 ${i < current ? 'bg-gray-600' : 'bg-gray-800'}`} />
+            )}
+          </div>
+        ))}
+      </div>
+      {/* Barra de progresso */}
+      <div className="h-0.5 bg-gray-800 rounded-full mt-2">
+        <div
+          className="h-0.5 bg-gradient-to-r from-blue-500 to-amber-400 rounded-full transition-all duration-300"
+          style={{ width: `${steps.length > 1 ? (current / (steps.length - 1)) * 100 : 0}%` }}
+        />
+      </div>
+    </div>
+  )
+}
+
+/* ── Componente principal ──────────────────────────────────────── */
 export function CharacterWizard({ onBack, onComplete }) {
   const [step, setStep] = useState(0)
   const [draft, setDraft] = useState(INITIAL_DRAFT)
@@ -66,23 +130,22 @@ export function CharacterWizard({ onBack, onComplete }) {
 
   const classData = useMemo(
     () => classes.find(c => c.index === draft.class) ?? null,
-    [classes, draft.class]
+    [classes, draft.class],
   )
   const isSpellcaster = useMemo(
     () => !!SPELL_ABILITY_PT_TO_KEY[classData?.spellcasting_ability],
-    [classData]
+    [classData],
   )
 
-  // Passos — Magias só aparece para conjuradores
   const steps = useMemo(() => {
     const base = [
-      { id: 'settings',    label: 'Campanha'   },
-      { id: 'concept',     label: 'Conceito'   },
-      { id: 'race',        label: 'Raça'       },
-      { id: 'class',       label: 'Classe'     },
-      { id: 'background',  label: 'Antecedente'},
-      { id: 'attributes',  label: 'Atributos'  },
-      { id: 'skills',      label: 'Perícias'   },
+      { id: 'settings',   label: 'Campanha'    },
+      { id: 'concept',    label: 'Conceito'    },
+      { id: 'race',       label: 'Raça'        },
+      { id: 'class',      label: 'Classe'      },
+      { id: 'background', label: 'Antecedente' },
+      { id: 'attributes', label: 'Atributos'   },
+      { id: 'skills',     label: 'Perícias'    },
     ]
     if (isSpellcaster) base.push({ id: 'spells', label: 'Magias' })
     base.push({ id: 'review', label: 'Revisão' })
@@ -111,107 +174,105 @@ export function CharacterWizard({ onBack, onComplete }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
-      <div className="max-w-2xl mx-auto px-4 pt-8 pb-20">
+    <div className="h-screen flex flex-col overflow-hidden relative">
 
-        {/* Cabeçalho */}
-        <div className="flex items-center gap-3 mb-6">
-          <button
-            onClick={onBack}
-            className="text-gray-500 hover:text-amber-400 text-sm transition-colors"
-          >
-            ← Personagens
-          </button>
-          <h1 className="text-xl font-bold text-amber-400 font-display tracking-wide">Criar Personagem</h1>
-        </div>
-
-        {/* Indicador de progresso */}
-        <StepIndicator steps={steps} current={step} />
-
-        {/* Conteúdo do passo */}
-        <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 mt-6">
-          {currentStepId === 'settings'   && <Step0Settings   draft={draft} updateDraft={updateDraft} />}
-          {currentStepId === 'concept'    && <Step1Concept    draft={draft} updateDraft={updateDraft} />}
-          {currentStepId === 'race'       && <Step2Race       draft={draft} updateDraft={updateDraft} races={races} />}
-          {currentStepId === 'class'      && <Step3Class      draft={draft} updateDraft={updateDraft} classes={classes} classChoices={classChoices} classProgression={classProgression} />}
-          {currentStepId === 'background' && <Step4Background draft={draft} updateDraft={updateDraft} backgrounds={backgrounds} />}
-          {currentStepId === 'attributes' && <Step5Attributes draft={draft} updateDraft={updateDraft} />}
-          {currentStepId === 'skills'     && <Step6Skills     draft={draft} updateDraft={updateDraft} classData={classData} />}
-          {currentStepId === 'spells'     && <Step7Spells     draft={draft} updateDraft={updateDraft} classData={classData} />}
-          {currentStepId === 'review'     && <Step8Review     draft={draft} races={races} backgrounds={backgrounds} classData={classData} />}
-        </div>
-
-        {/* Navegação */}
-        <div className="flex justify-between mt-5">
-          <button
-            onClick={handlePrev}
-            disabled={step === 0}
-            className="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm font-medium disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-          >
-            ← Anterior
-          </button>
-
-          {step < steps.length - 1 ? (
-            <button
-              onClick={handleNext}
-              disabled={!canGoNext}
-              className="px-5 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              Próximo →
-            </button>
-          ) : (
-            <button
-              onClick={handleFinish}
-              disabled={!draft.name?.trim()}
-              className="px-5 py-2 rounded-lg bg-green-700 hover:bg-green-600 text-white text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              Criar Personagem ✓
-            </button>
-          )}
-        </div>
+      {/* Névoa de fundo */}
+      <div className="fixed inset-0 pointer-events-none" aria-hidden>
+        <div className="absolute top-0 left-1/3 w-[600px] h-[500px] rounded-full bg-blue-900/15 blur-[130px]" />
+        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] rounded-full bg-purple-900/10 blur-[110px]" />
       </div>
-    </div>
-  )
-}
 
-/* ── Indicador de passos ─────────────────────────────────────── */
-function StepIndicator({ steps, current }) {
-  return (
-    <div>
-      {/* Rótulos dos passos — scrollável no mobile */}
-      <div className="flex items-center gap-0.5 overflow-x-auto pb-1 scrollbar-none">
-        {steps.map((s, i) => (
-          <div key={s.id} className="flex items-center shrink-0">
-            <div className={`flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium whitespace-nowrap transition-colors ${
-              i === current
-                ? 'text-amber-300'
-                : i < current
-                ? 'text-amber-600'
-                : 'text-gray-600'
-            }`}>
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold border shrink-0 ${
-                i === current
-                  ? 'border-amber-400 bg-amber-900 text-amber-300'
-                  : i < current
-                  ? 'border-amber-700 bg-amber-950 text-amber-600'
-                  : 'border-gray-700 bg-gray-900 text-gray-600'
-              }`}>
-                {i < current ? '✓' : i + 1}
-              </span>
-              {s.label}
+      {/* ── Header ─────────────────────────────────────────── */}
+      <header className="relative z-10 flex items-center gap-4 px-6 py-3.5 border-b border-gray-700/60 bg-gray-900/60 backdrop-blur-sm shrink-0">
+        <button
+          onClick={onBack}
+          className="text-gray-500 hover:text-amber-400 text-sm transition-colors"
+        >
+          ← Personagens
+        </button>
+        <div className="w-px h-4 bg-gray-700/60" />
+        <h1 className="text-sm font-bold text-amber-400 font-display tracking-widest uppercase">
+          Criar Personagem
+        </h1>
+        {/* Contagem de passo mobile */}
+        <span className="ml-auto md:hidden text-xs text-gray-600 font-display">
+          {step + 1} / {steps.length}
+        </span>
+      </header>
+
+      {/* ── Corpo: sidebar + conteúdo ───────────────────────── */}
+      <div className="relative flex flex-1 min-h-0">
+
+        {/* Sidebar de passos (somente desktop) */}
+        <aside className="hidden md:flex flex-col w-52 shrink-0 border-r border-gray-700/50 bg-gray-900/30 overflow-y-auto py-6 px-4">
+          <WizardStepSidebar steps={steps} current={step} />
+        </aside>
+
+        {/* Área de conteúdo */}
+        <div className="flex-1 overflow-y-auto min-w-0">
+          <div className="max-w-xl mx-auto px-4 py-6">
+
+            {/* Indicador mobile */}
+            <div className="md:hidden">
+              <MobileStepIndicator steps={steps} current={step} />
             </div>
-            {i < steps.length - 1 && (
-              <div className={`w-3 h-px mx-0.5 shrink-0 ${i < current ? 'bg-amber-700' : 'bg-gray-800'}`} />
-            )}
+
+            {/* Card do passo */}
+            <div className="bg-gray-800/60 border border-gray-700/60 rounded-xl overflow-hidden arcane-card">
+              {/* Título do passo */}
+              <div className="px-6 pt-5 pb-4 border-b border-gray-700/40">
+                <p className="text-[10px] text-gray-600 font-display tracking-[0.3em] uppercase mb-0.5">
+                  Passo {step + 1} de {steps.length}
+                </p>
+                <h2 className="text-base font-bold text-amber-400 font-display tracking-widest uppercase">
+                  {steps[step]?.label}
+                </h2>
+              </div>
+
+              {/* Conteúdo */}
+              <div className="px-6 py-5">
+                {currentStepId === 'settings'   && <Step0Settings   draft={draft} updateDraft={updateDraft} />}
+                {currentStepId === 'concept'    && <Step1Concept    draft={draft} updateDraft={updateDraft} />}
+                {currentStepId === 'race'       && <Step2Race       draft={draft} updateDraft={updateDraft} races={races} />}
+                {currentStepId === 'class'      && <Step3Class      draft={draft} updateDraft={updateDraft} classes={classes} classChoices={classChoices} classProgression={classProgression} />}
+                {currentStepId === 'background' && <Step4Background draft={draft} updateDraft={updateDraft} backgrounds={backgrounds} />}
+                {currentStepId === 'attributes' && <Step5Attributes draft={draft} updateDraft={updateDraft} />}
+                {currentStepId === 'skills'     && <Step6Skills     draft={draft} updateDraft={updateDraft} classData={classData} />}
+                {currentStepId === 'spells'     && <Step7Spells     draft={draft} updateDraft={updateDraft} classData={classData} />}
+                {currentStepId === 'review'     && <Step8Review     draft={draft} races={races} backgrounds={backgrounds} classData={classData} />}
+              </div>
+            </div>
+
+            {/* ── Navegação ──────────────────────────────────── */}
+            <div className="flex justify-between mt-5">
+              <button
+                onClick={handlePrev}
+                disabled={step === 0}
+                className="px-5 py-2 rounded-lg border border-gray-700/80 hover:border-gray-500 text-gray-400 hover:text-gray-100 text-sm disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
+              >
+                ← Anterior
+              </button>
+
+              {step < steps.length - 1 ? (
+                <button
+                  onClick={handleNext}
+                  disabled={!canGoNext}
+                  className="px-6 py-2 rounded-lg bg-blue-700/50 hover:bg-blue-600/60 border border-blue-600/60 hover:border-blue-400/70 text-blue-100 text-sm font-semibold disabled:opacity-35 disabled:cursor-not-allowed transition-all hover:shadow-[0_0_16px_rgba(40,90,152,0.3)]"
+                >
+                  Próximo →
+                </button>
+              ) : (
+                <button
+                  onClick={handleFinish}
+                  disabled={!draft.name?.trim()}
+                  className="px-6 py-2 rounded-lg bg-amber-700/50 hover:bg-amber-600/60 border border-amber-600/60 hover:border-amber-400/70 text-amber-100 text-sm font-semibold disabled:opacity-35 disabled:cursor-not-allowed transition-all hover:shadow-[0_0_16px_rgba(196,144,48,0.3)]"
+                >
+                  Criar Personagem ✦
+                </button>
+              )}
+            </div>
           </div>
-        ))}
-      </div>
-      {/* Barra de progresso */}
-      <div className="h-1 bg-gray-800 rounded-full mt-2">
-        <div
-          className="h-1 bg-amber-500 rounded-full transition-all duration-300"
-          style={{ width: `${steps.length > 1 ? (current / (steps.length - 1)) * 100 : 0}%` }}
-        />
+        </div>
       </div>
     </div>
   )
@@ -247,28 +308,24 @@ function canAdvance(stepId, draft, classChoices = {}, races = [], classData = nu
       return (draft.chosenSkills?.length ?? 0) >= limit
     }
     case 'spells': {
-      // Classes sem truques (paladino, patrulheiro) avançam sempre
       const CLASSES_SEM_CANTRIPS = new Set(['paladino', 'patrulheiro'])
       if (CLASSES_SEM_CANTRIPS.has(draft.class)) return true
-      // Demais conjuradores precisam de pelo menos 1 truque escolhido
       const chosenCantrips = (draft.spells ?? []).filter(s => s.level === 0)
       return chosenCantrips.length > 0
     }
-    case 'review':     return true
-    default:           return true
+    case 'review': return true
+    default:       return true
   }
 }
 
 function isAttributesComplete(draft) {
   const { abilityScoreMethod } = draft.settings
-  if (abilityScoreMethod === 'point-buy') return true // sempre válido (começa em 8)
-  // standard-array e 4d6drop: todos os 6 atributos devem ter valor > 0
+  if (abilityScoreMethod === 'point-buy') return true
   return Object.values(draft.baseAttributes).every(v => v > 0)
 }
 
 /* ── Converte draft → character completo ──────────────────────── */
 function buildCharacter(draft, classData) {
-  // Aplica bônus raciais em cima dos atributos base
   const attrs = { ...draft.baseAttributes }
   for (const [k, v] of Object.entries(draft.racialBonuses)) {
     attrs[k] = Math.min(30, (attrs[k] ?? 10) + v)
@@ -291,20 +348,20 @@ function buildCharacter(draft, classData) {
       settings: draft.settings,
     },
     info: {
-      name:        draft.name,
-      playerName:  draft.playerName ?? '',
-      race:        draft.race,
-      subrace:     draft.subrace,
+      name:           draft.name,
+      playerName:     draft.playerName ?? '',
+      race:           draft.race,
+      subrace:        draft.subrace,
       class:          draft.class,
       subclass:       '',
       level:          draft.level,
       multiclasses:   [],
       chosenFeatures: draft.chosenFeatures ?? {},
       background:     draft.background,
-      alignment:   draft.alignment,
-      appearance:  draft.appearance ?? '',
-      xp:          0,
-      scoreMethod: draft.settings.abilityScoreMethod,
+      alignment:      draft.alignment,
+      appearance:     draft.appearance ?? '',
+      xp:             0,
+      scoreMethod:    draft.settings.abilityScoreMethod,
     },
     attributes: attrs,
     appliedRacialBonuses: draft.racialBonuses,
@@ -314,7 +371,6 @@ function buildCharacter(draft, classData) {
       tempHp:      0,
       armorClass:  unarmoredAC,
       speed:       30,
-      // Schema v2: pool por tipo de dado. Ainda sem multiclasse aqui.
       hitDice: {
         pool: {
           [`d${classData?.hit_die ?? 8}`]: { total: draft.level, used: 0 },
@@ -325,14 +381,14 @@ function buildCharacter(draft, classData) {
       deathSaves:  { successes: 0, failures: 0 },
     },
     proficiencies: {
-      savingThrows:   draft.savingThrows,
-      skills:         draft.chosenSkills,
-      expertiseSkills:[],
+      savingThrows:    draft.savingThrows,
+      skills:          draft.chosenSkills,
+      expertiseSkills: [],
       backgroundSkills: draft.backgroundSkills,
-      armor:          [],
-      weapons:        [],
-      tools:          [],
-      languages:      [],
+      armor:   [],
+      weapons: [],
+      tools:   [],
+      languages: [],
     },
     spellcasting: {
       ability:    draft.spellcastingAbility,

@@ -2,47 +2,48 @@
 import { memo, useCallback, useMemo, useRef } from 'react'
 
 export const TABS = [
-  { id: 'ficha',       label: 'Ficha'        },
-  { id: 'percias',     label: 'Perícias'     },
-  { id: 'magias',      label: 'Magias'       },
-  { id: 'inventario',  label: 'Inventário'   },
-  { id: 'notas',       label: 'Notas'        },
-  { id: 'progressao',  label: 'Progressão'   },
-  { id: 'acoes',       label: 'Ações'        },
-  { id: 'habilidades', label: 'Habilidades'  },
+  { id: 'ficha',       label: 'Ficha',       icon: '◆' },
+  { id: 'percias',     label: 'Perícias',    icon: '✦' },
+  { id: 'magias',      label: 'Magias',      icon: '✧' },
+  { id: 'inventario',  label: 'Inventário',  icon: '◈' },
+  { id: 'notas',       label: 'Notas',       icon: '≡' },
+  { id: 'progressao',  label: 'Progressão',  icon: '▲' },
+  { id: 'acoes',       label: 'Ações',       icon: '⚔' },
+  { id: 'habilidades', label: 'Habilidades', icon: '⊛' },
 ]
 
 /**
- * Barra de abas acessível.
- * - role="tablist" / role="tab" / aria-selected / aria-controls
- * - roving tabindex: só a aba ativa tem tabIndex=0
- * - navegação por teclado: ←/→ circular, Home/End para extremos
+ * Navegação responsiva da ficha.
  *
- * O painel controlado por cada aba deve ter `role="tabpanel"`
- * e `id={"tabpanel-" + tab.id}` (ver SheetContent).
+ * Mobile  → barra horizontal scrollável (topo)
+ * Desktop → sidebar vertical (esquerda)
+ *
+ * Acessibilidade: role="tablist" / role="tab" / aria-selected / aria-controls.
+ * Teclado: ←/→ (mobile) ou ↑/↓ (desktop) + Home/End.
  */
 function SheetTabsBase({ activeTab, onChange }) {
   const btnRefs = useRef({})
   const activeIndex = useMemo(
     () => Math.max(0, TABS.findIndex(t => t.id === activeTab)),
-    [activeTab]
+    [activeTab],
   )
 
   const focusTab = useCallback(index => {
     const tab = TABS[index]
     if (!tab) return
     onChange(tab.id)
-    // Foca no próximo tick para garantir que o render aplicou tabIndex.
     queueMicrotask(() => btnRefs.current[tab.id]?.focus())
   }, [onChange])
 
   const handleKeyDown = useCallback(e => {
     switch (e.key) {
       case 'ArrowRight':
+      case 'ArrowDown':
         e.preventDefault()
         focusTab((activeIndex + 1) % TABS.length)
         break
       case 'ArrowLeft':
+      case 'ArrowUp':
         e.preventDefault()
         focusTab((activeIndex - 1 + TABS.length) % TABS.length)
         break
@@ -63,7 +64,16 @@ function SheetTabsBase({ activeTab, onChange }) {
       role="tablist"
       aria-label="Seções da ficha"
       onKeyDown={handleKeyDown}
-      className="flex gap-0.5 border-b border-gray-700 overflow-x-auto scrollbar-none"
+      className={[
+        /* base */
+        'flex shrink-0 bg-gray-900/50',
+        /* mobile: linha horizontal */
+        'flex-row overflow-x-auto scrollbar-none border-b border-gray-700/70',
+        /* desktop: coluna lateral */
+        'lg:flex-col lg:overflow-x-hidden lg:overflow-y-auto',
+        'lg:w-44 lg:border-b-0 lg:border-r lg:border-gray-700/70',
+        'lg:py-3 lg:gap-px',
+      ].join(' ')}
     >
       {TABS.map(tab => {
         const isActive = activeTab === tab.id
@@ -78,13 +88,46 @@ function SheetTabsBase({ activeTab, onChange }) {
             aria-controls={`tabpanel-${tab.id}`}
             tabIndex={isActive ? 0 : -1}
             onClick={() => onChange(tab.id)}
-            className={`px-3 py-2 text-xs font-display tracking-wide whitespace-nowrap transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${
+            className={[
+              'relative flex items-center shrink-0',
+              /* mobile */
+              'gap-1.5 px-3 py-2.5 text-xs whitespace-nowrap',
+              /* desktop */
+              'lg:gap-3 lg:px-5 lg:py-3 lg:text-sm lg:whitespace-normal lg:w-full',
+              'transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400',
               isActive
-                ? 'text-amber-400 border-b-2 border-amber-500 -mb-px bg-amber-950/30'
-                : 'text-gray-500 hover:text-gray-300 hover:bg-gray-800/50'
-            }`}
+                ? 'text-amber-300'
+                : 'text-gray-500 hover:text-gray-200 hover:bg-gray-800/40',
+            ].join(' ')}
           >
-            {tab.label}
+            {/* Indicador mobile: barra embaixo */}
+            {isActive && (
+              <span
+                className="lg:hidden absolute bottom-0 inset-x-1 h-0.5 rounded-full bg-gradient-to-r from-blue-500 via-blue-400 to-amber-400"
+                aria-hidden
+              />
+            )}
+            {/* Indicador desktop: barra à esquerda + fundo */}
+            {isActive && (
+              <>
+                <span
+                  className="hidden lg:block absolute left-0 inset-y-1.5 w-0.5 rounded-r-full bg-gradient-to-b from-blue-400 to-amber-400"
+                  aria-hidden
+                />
+                <span
+                  className="hidden lg:block absolute inset-0 bg-blue-950/40 rounded-none"
+                  aria-hidden
+                />
+              </>
+            )}
+
+            {/* Conteúdo do botão */}
+            <span className="relative text-sm lg:text-base" aria-hidden>
+              {tab.icon}
+            </span>
+            <span className="relative font-display tracking-wide">
+              {tab.label}
+            </span>
           </button>
         )
       })}
@@ -94,21 +137,23 @@ function SheetTabsBase({ activeTab, onChange }) {
 
 export const SheetTabs = memo(SheetTabsBase)
 
+/* ── Banners ─────────────────────────────────────────────────── */
+
 export const NavBlockedBanner = memo(function NavBlockedBanner({ onReview, onDismiss }) {
   return (
     <div
       role="alert"
-      className="flex items-center justify-between gap-3 bg-red-900/40 border border-red-700 rounded-lg px-4 py-3 text-sm"
+      className="flex items-center justify-between gap-3 bg-red-900/30 border border-red-700/60 rounded-lg px-4 py-3 text-sm"
     >
       <div className="flex items-center gap-2 text-red-300">
-        <svg aria-hidden="true" className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <svg aria-hidden className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
         </svg>
-        Corrija os erros antes de avançar para a próxima aba.
+        Corrija os erros antes de avançar.
       </div>
       <div className="flex items-center gap-2">
         <button onClick={onReview} className="text-xs text-red-300 hover:text-white underline whitespace-nowrap">
-          Revisar erros
+          Revisar
         </button>
         {onDismiss && (
           <button onClick={onDismiss} className="text-red-400 hover:text-white text-lg leading-none" aria-label="Fechar">
@@ -122,7 +167,7 @@ export const NavBlockedBanner = memo(function NavBlockedBanner({ onReview, onDis
 
 export const ImportErrorBanner = memo(function ImportErrorBanner({ message, onDismiss }) {
   return (
-    <div role="alert" className="flex items-center justify-between gap-3 bg-red-900/40 border border-red-700 rounded-lg px-4 py-3 text-sm">
+    <div role="alert" className="flex items-center justify-between gap-3 bg-red-900/30 border border-red-700/60 rounded-lg px-4 py-3 text-sm">
       <span className="text-red-300">{message}</span>
       <button onClick={onDismiss} className="text-red-400 hover:text-white text-lg leading-none" aria-label="Fechar">✕</button>
     </div>

@@ -1,53 +1,68 @@
 @import "tailwindcss";
 
-/* ── Paleta medieval/D&D — sobrescreve os grays do Tailwind ──── */
+/* ── Paleta Grimório Arcano (azul-preto profundo + índigo + ouro) ── */
 @theme {
-  /* Fundos quentes (quase-preto marrom → bege escuro) */
-  --color-gray-950: #0c0907;
-  --color-gray-900: #14100a;
-  --color-gray-800: #1e160d;
-  --color-gray-700: #2b1e11;
-  --color-gray-600: #3e2c18;
-  --color-gray-500: #6b4e2e;
-  --color-gray-400: #9a7a55;
-  --color-gray-300: #c0a07a;
-  --color-gray-200: #d8c09a;
-  --color-gray-100: #ede0c4;
+  /* Fundos: azul-preto profundo */
+  --color-gray-950: #03050d;
+  --color-gray-900: #060918;
+  --color-gray-800: #0d1428;
+  --color-gray-700: #162035;
+  --color-gray-600: #1e2e48;
+  --color-gray-500: #304a68;
+  --color-gray-400: #5880a0;
+  --color-gray-300: #88aac8;
+  --color-gray-200: #b8cfe0;
+  --color-gray-100: #deeaf8;
 
-  /* Ouro/âmbar */
-  --color-amber-950: #2a1400;
-  --color-amber-900: #3d1f00;
-  --color-amber-800: #5c3000;
-  --color-amber-700: #7a4800;
-  --color-amber-600: #9a6510;
-  --color-amber-500: #bf8820;
-  --color-amber-400: #d4a843;
-  --color-amber-300: #e8c464;
-  --color-amber-200: #f2d888;
+  /* Ouro arcano */
+  --color-amber-950: #120b00;
+  --color-amber-900: #231500;
+  --color-amber-800: #382200;
+  --color-amber-700: #563400;
+  --color-amber-600: #7a4e00;
+  --color-amber-500: #9e7010;
+  --color-amber-400: #c49030;
+  --color-amber-300: #dcb050;
+  --color-amber-200: #eece78;
 
-  /* Vermelho escuro para HP/perigo */
-  --color-red-950: #1a0000;
-  --color-red-900: #2d0000;
-  --color-red-800: #4a0808;
-  --color-red-700: #6b1010;
-  --color-red-600: #8b2020;
-  --color-red-500: #b03030;
-  --color-red-400: #d05050;
-  --color-red-300: #e07070;
+  /* Azul arcano (interativo, destaque) */
+  --color-blue-950: #020510;
+  --color-blue-900: #050c20;
+  --color-blue-800: #0a1838;
+  --color-blue-700: #102650;
+  --color-blue-600: #1a3c6c;
+  --color-blue-500: #285a98;
+  --color-blue-400: #4080c8;
+  --color-blue-300: #68a4e0;
+  --color-blue-200: #98c4f0;
 
-  /* Verde floresta */
-  --color-green-800: #1a3010;
-  --color-green-700: #254818;
-  --color-green-600: #336020;
-  --color-green-500: #4a8030;
-  --color-green-400: #68a845;
+  /* Violeta mágico */
+  --color-purple-950: #080412;
+  --color-purple-900: #100820;
+  --color-purple-800: #1e1038;
+  --color-purple-700: #2e1a52;
+  --color-purple-600: #422870;
+  --color-purple-500: #5c3c90;
+  --color-purple-400: #8060b8;
+  --color-purple-300: #a888d8;
 
-  /* Azul arcano */
-  --color-blue-900: #0a1020;
-  --color-blue-800: #101828;
-  --color-blue-700: #1a2840;
-  --color-blue-600: #253c60;
-  --color-blue-400: #4a78b0;
+  /* Vermelho perigo / HP baixo */
+  --color-red-950: #0c0005;
+  --color-red-900: #1a0010;
+  --color-red-800: #380818;
+  --color-red-700: #541428;
+  --color-red-600: #742038;
+  --color-red-500: #9c3050;
+  --color-red-400: #c84868;
+  --color-red-300: #e07088;
+
+  /* Verde vida */
+  --color-green-900: #040c06;
+  --color-green-800: #081a08;
+  --color-green-700: #0e2c10;
+  --color-green-600: #184418;
+  --color-green-500: #246024;
+  --color-green-400: #388040;
 
   /* Tipografia */
   --font-display: 'Cinzel', 'Georgia', serif;
@@ -55,10 +70,8 @@
   --font-sans: 'Crimson Pro', 'Georgia', serif;
 }
 
-/* ── Base global ────────────────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
+/* ── Base global ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 
 html {
   font-size: 16px;
@@ -71,9 +84,14 @@ body {
   color: var(--color-gray-100);
   -webkit-font-smoothing: antialiased;
   line-height: 1.5;
+  /* Névoa arcana subtil no fundo */
+  background-image:
+    radial-gradient(ellipse 70% 50% at 15% 10%, rgba(40, 90, 152, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 85% 90%, rgba(92, 60, 144, 0.05) 0%, transparent 60%);
+  background-attachment: fixed;
 }
 
-/* ── Tipografia por padrão ─────────────────────────────────── */
+/* ── Tipografia ──────────────────────────────────────────────── */
 h1, h2, h3,
 .font-display,
 [class*="tracking-widest"],
@@ -82,53 +100,52 @@ h1, h2, h3,
   letter-spacing: 0.04em;
 }
 
-/* ── Scrollbar personalizada ───────────────────────────────── */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--color-gray-900);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--color-gray-600);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-amber-700);
-}
+/* ── Scrollbar arcana ─────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--color-gray-900); }
+::-webkit-scrollbar-thumb { background: var(--color-gray-600); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-blue-500); }
 
-/* ── Seleção de texto ──────────────────────────────────────── */
+/* ── Seleção ─────────────────────────────────────────────────── */
 ::selection {
-  background: var(--color-amber-800);
-  color: var(--color-amber-200);
+  background: rgba(64, 128, 200, 0.3);
+  color: var(--color-blue-200);
 }
 
-/* ── Classe utilitária: ocultar scrollbar visualmente ─────── */
+/* ── Scrollbar oculta ────────────────────────────────────────── */
 .scrollbar-none::-webkit-scrollbar { display: none; }
 .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* ── Borda ornamental (efeito pergaminho) ──────────────────── */
-.border-ornate {
-  border-image: linear-gradient(
-    135deg,
-    var(--color-amber-700),
-    var(--color-amber-500),
-    var(--color-amber-700)
-  ) 1;
+/* ── Cartão arcano: gradiente interno + linha de luz no topo ─── */
+.arcane-card {
+  position: relative;
+  background: linear-gradient(160deg, var(--color-gray-800) 0%, var(--color-gray-900) 100%);
+}
+.arcane-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 15%; right: 15%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(64, 128, 200, 0.35), transparent);
+  border-radius: 1px;
+  pointer-events: none;
 }
 
-/* ── Impressão ─────────────────────────────────────────────── */
+/* ── Brilho azul arcano (sombra externa) ─────────────────────── */
+.arcane-glow {
+  box-shadow:
+    0 0 0 1px rgba(40, 90, 152, 0.35),
+    0 0 24px rgba(40, 90, 152, 0.15),
+    0 8px 40px rgba(3, 5, 13, 0.7);
+}
+
+/* ── Impressão ───────────────────────────────────────────────── */
 @media print {
   body > * { display: none !important; }
   #root > * { display: none !important; }
-
   #print-character-view {
     display: block !important;
-    position: fixed;
-    inset: 0;
-    margin: 0;
-    padding: 8px;
+    position: fixed; inset: 0;
+    margin: 0; padding: 8px;
     background: #f2e8c8;
     overflow: visible;
   }

@@ -11,12 +11,9 @@ import { SheetContent } from './SheetContent'
 import { useSheetHandlers } from './useSheetHandlers'
 
 /**
- * Orquestrador da ficha. Responsabilidades:
- *  - carrega personagem inicial (novo ou existente)
- *  - conecta datasets SRD, cálculos e validações
- *  - controla aba ativa, banners e handlers de alto nível
+ * Orquestrador da ficha.
  *
- * Lógica de negócio está em `domain/rules` + `useSheetHandlers`.
+ * Layout: header fixo + sidebar de navegação (desktop) + área de conteúdo scrollável.
  */
 export function CharacterSheet({ characterId, onBack }) {
   const { races, classes, backgrounds } = useSrd()
@@ -37,7 +34,7 @@ export function CharacterSheet({ characterId, onBack }) {
 
   const classData = useMemo(
     () => classes.find(c => c.index === character.info.class) ?? null,
-    [classes, character.info.class]
+    [classes, character.info.class],
   )
 
   const calc = useCharacterCalculations(character, classData, classDataMap)
@@ -47,7 +44,7 @@ export function CharacterSheet({ characterId, onBack }) {
 
   const handlers = useSheetHandlers({ setCharacter, races, classes, backgrounds })
 
-  // Título da aba reflete o nome do personagem
+  // Título do navegador
   useEffect(() => {
     const name = character.info.name?.trim()
     document.title = name ? `${name} — D&D 5e` : 'Grimório de Personagens — D&D 5e'
@@ -86,8 +83,20 @@ export function CharacterSheet({ characterId, onBack }) {
 
   const fichaErrors = getTabErrors('ficha')
 
+  // Quick stats para o header
+  const quickStats = {
+    currentHp:  character.combat.currentHp,
+    maxHp:      character.combat.maxHp,
+    armorClass: character.combat.armorClass,
+    initiative: calc.initiative,
+    hpPercent:  calc.hpPercent,
+    hpColor:    calc.hpColor,
+  }
+
   return (
-    <div className="max-w-4xl mx-auto p-4 space-y-4">
+    <div className="h-screen flex flex-col overflow-hidden">
+
+      {/* ── Header fixo ──────────────────────────────────────── */}
       <SheetHeader
         characterName={character.info.name}
         saved={saved}
@@ -98,38 +107,50 @@ export function CharacterSheet({ characterId, onBack }) {
         onImportError={setImportError}
         onPrint={() => window.print()}
         showPrint={false}
+        quickStats={quickStats}
       />
 
-      <SheetTabs activeTab={activeTab} onChange={handleTabChange} />
+      {/* ── Corpo: sidebar + conteúdo ────────────────────────── */}
+      <div className="flex flex-1 min-h-0">
 
-      {importError && (
-        <ImportErrorBanner
-          message={importError}
-          onDismiss={() => setImportError(null)}
-        />
-      )}
+        {/* Sidebar de navegação (embutida em SheetTabs) */}
+        <SheetTabs activeTab={activeTab} onChange={handleTabChange} />
 
-      {navBlocked && (
-        <NavBlockedBanner
-          onReview={() => focusFirstError(activeTab)}
-          onDismiss={() => setNavBlocked(false)}
-        />
-      )}
+        {/* Área de conteúdo scrollável */}
+        <main className="flex-1 overflow-y-auto min-w-0">
+          <div className="max-w-4xl mx-auto px-4 py-4 lg:px-6 lg:py-6 space-y-4">
 
-      <SheetContent
-        activeTab={activeTab}
-        character={character}
-        setCharacter={setCharacter}
-        calc={calc}
-        classData={classData}
-        races={races}
-        classes={classes}
-        backgrounds={backgrounds}
-        fichaErrors={fichaErrors}
-        updaters={updaters}
-        handlers={handlers}
-        onNavigateToSpells={() => setActiveTab('magias')}
-      />
+            {importError && (
+              <ImportErrorBanner
+                message={importError}
+                onDismiss={() => setImportError(null)}
+              />
+            )}
+
+            {navBlocked && (
+              <NavBlockedBanner
+                onReview={() => focusFirstError(activeTab)}
+                onDismiss={() => setNavBlocked(false)}
+              />
+            )}
+
+            <SheetContent
+              activeTab={activeTab}
+              character={character}
+              setCharacter={setCharacter}
+              calc={calc}
+              classData={classData}
+              races={races}
+              classes={classes}
+              backgrounds={backgrounds}
+              fichaErrors={fichaErrors}
+              updaters={updaters}
+              handlers={handlers}
+              onNavigateToSpells={() => setActiveTab('magias')}
+            />
+          </div>
+        </main>
+      </div>
     </div>
   )
 }

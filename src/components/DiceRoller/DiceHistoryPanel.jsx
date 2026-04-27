@@ -12,7 +12,7 @@ function RollEntry({ entry }) {
   const isFumble = entry.sides === 20 && entry.rolls?.length === 1 && entry.rolls[0] === 1
 
   return (
-    <div className="flex items-start justify-between gap-2 py-2 border-b border-gray-800/60 last:border-0">
+    <div className="flex items-start justify-between gap-2 py-2 border-b border-gray-700/40 last:border-0">
       <div className="min-w-0 flex-1">
         {entry.label && (
           <p className="text-xs text-gray-200 font-semibold truncate leading-tight">{entry.label}</p>
@@ -21,17 +21,15 @@ function RollEntry({ entry }) {
         {entry.rolls?.length > 0 && (
           <p className="text-[11px] text-gray-500">
             [{entry.rolls.join(', ')}]
-            {entry.modifier !== 0
-              ? ` ${entry.modifier > 0 ? '+' : ''}${entry.modifier}`
-              : ''}
+            {entry.modifier !== 0 ? ` ${entry.modifier > 0 ? '+' : ''}${entry.modifier}` : ''}
           </p>
         )}
       </div>
       <div className="flex flex-col items-end shrink-0 gap-0.5">
         <span className={`text-xl font-bold leading-none font-mono ${
-          isCrit   ? 'text-green-400' :
-          isFumble ? 'text-red-400'   :
-          'text-amber-400'
+          isCrit   ? 'text-green-400'  :
+          isFumble ? 'text-red-400'    :
+                     'text-amber-400'
         }`}>
           {entry.total}
           {isCrit   && <span className="text-sm ml-0.5">✦</span>}
@@ -45,8 +43,8 @@ function RollEntry({ entry }) {
 
 /**
  * Painel flutuante de histórico de dados.
- * Quando fechado, exibe um botão 🎲 no canto inferior direito.
- * Quando aberto, exibe um card com o histórico de rolagens.
+ * Fechado → botão 🎲 arcano no canto inferior direito.
+ * Aberto  → card com histórico de rolagens.
  */
 export function DiceHistoryPanel() {
   const { history, clearHistory, open, togglePanel } = useDiceRoller()
@@ -55,9 +53,12 @@ export function DiceHistoryPanel() {
     return (
       <button
         onClick={togglePanel}
-        className="fixed bottom-5 right-5 z-50 w-12 h-12 rounded-full bg-amber-700 hover:bg-amber-600
-          shadow-xl text-xl flex items-center justify-center transition-colors"
+        className="fixed bottom-5 right-5 z-50 w-12 h-12 rounded-full
+          bg-blue-900/70 hover:bg-blue-800/80 border border-blue-700/60 hover:border-blue-500
+          shadow-[0_0_20px_rgba(40,90,152,0.3)] hover:shadow-[0_0_28px_rgba(40,90,152,0.45)]
+          text-xl flex items-center justify-center transition-all duration-200"
         title="Histórico de dados (🎲)"
+        aria-label="Abrir histórico de rolagens"
       >
         🎲
       </button>
@@ -68,14 +69,17 @@ export function DiceHistoryPanel() {
 
   return (
     <div
-      className="fixed bottom-5 right-5 z-50 w-72 bg-gray-900 border border-gray-700 rounded-xl
-        shadow-2xl flex flex-col"
+      className="fixed bottom-5 right-5 z-50 w-72 rounded-xl flex flex-col
+        border border-gray-700/70 bg-gray-900/95 backdrop-blur-md
+        shadow-[0_0_40px_rgba(3,5,13,0.8),0_0_0_1px_rgba(40,90,152,0.15)] arcane-card"
       style={{ maxHeight: '70vh' }}
     >
       {/* Header */}
-      <div className="flex items-center gap-2 px-3 py-2 border-b border-gray-700 shrink-0">
-        <span className="text-base shrink-0">🎲</span>
-        <h3 className="text-sm font-bold text-amber-400 flex-1">Rolagens</h3>
+      <div className="flex items-center gap-2 px-3 py-2.5 border-b border-gray-700/50 shrink-0">
+        <span className="text-base shrink-0" aria-hidden>🎲</span>
+        <h3 className="text-sm font-bold text-amber-400 font-display tracking-wide flex-1">
+          Rolagens
+        </h3>
         {last && (
           <span className="text-xs text-gray-500 font-mono">
             último: <span className="text-amber-300 font-bold">{last.total}</span>
@@ -91,7 +95,7 @@ export function DiceHistoryPanel() {
         )}
         <button
           onClick={togglePanel}
-          className="text-gray-500 hover:text-white transition-colors leading-none ml-1"
+          className="text-gray-500 hover:text-gray-100 transition-colors leading-none ml-1"
           aria-label="Fechar painel de dados"
         >
           ✕
