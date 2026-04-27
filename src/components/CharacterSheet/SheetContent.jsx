@@ -7,8 +7,7 @@ import { Inventory } from './Inventory'
 import { Spells } from './Spells'
 import { Notes } from './Notes'
 import { LevelProgression } from './LevelProgression'
-import { ActionsTab } from './ActionsTab'
-import { HabilitiesTab } from './HabilitiesTab'
+import { FeaturesTab } from './FeaturesTab'
 import { AttributesSection } from './AttributesSection'
 import { RestActions } from './RestActions'
 import { Attacks } from './Attacks'
@@ -218,25 +217,11 @@ export function SheetContent({
     )
   }
 
-  /* ── Aba: Ações ─────────────────────────────────────────── */
+  /* ── Aba: Poderes (Ações + Habilidades fundidos) ────────── */
   if (activeTab === 'acoes') {
     return (
       <TabPanel id="acoes">
-        <ActionsTab
-          character={character}
-          featureUses={featureUses}
-          onSpend={spendFeatureUse}
-          onRegain={regainFeatureUse}
-        />
-      </TabPanel>
-    )
-  }
-
-  /* ── Aba: Habilidades ───────────────────────────────────── */
-  if (activeTab === 'habilidades') {
-    return (
-      <TabPanel id="habilidades">
-        <HabilitiesTab
+        <FeaturesTab
           character={character}
           featureUses={featureUses}
           onSpend={spendFeatureUse}
