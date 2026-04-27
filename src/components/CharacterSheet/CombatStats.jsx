@@ -174,14 +174,14 @@ function CombatStatsBase({
       <h3 className="text-sm font-bold text-amber-400 uppercase tracking-widest">Combate</h3>
 
       {/* Linha 1: CA / Iniciativa / Velocidade */}
-      <div className="grid grid-cols-3 gap-3">
-        <StatBox label="Classe de Armadura" value={combat.armorClass} editable
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
+        <StatBox label="CA" value={combat.armorClass} editable
           fieldId="field-armorClass"
           errId="err-armorClass"
           error={errors.armorClass}
           onChange={v => onUpdateCombat('armorClass', Math.max(0, parseInt(v) || 0))}
           hint={suggestedAC !== undefined && suggestedAC !== combat.armorClass
-            ? { label: `Sugerida: ${suggestedAC}`, onApply: () => onUpdateCombat('armorClass', suggestedAC) }
+            ? { label: `Sug: ${suggestedAC}`, onApply: () => onUpdateCombat('armorClass', suggestedAC) }
             : null}
         />
         <StatBox
@@ -194,10 +194,10 @@ function CombatStatsBase({
       </div>
 
       {/* Linha 2: Bônus de Prof / Dado de Vida / Percepção Passiva */}
-      <div className="grid grid-cols-3 gap-3">
-        <StatBox label="Bônus de Prof." value={formatModifier(profBonus)} />
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
+        <StatBox label="Prof. Bônus" value={formatModifier(profBonus)} />
         <StatBox label="Dado de Vida" value={formatHitDicePool(combat.hitDice)} />
-        <StatBox label="Percepção Passiva" value={passivePerception ?? '—'} />
+        <StatBox label="Perc. Passiva" value={passivePerception ?? '—'} />
       </div>
 
       {/* Inspiração + Exaustão */}

@@ -95,7 +95,7 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
       {/* Stats de conjuração */}
       <div className="bg-gray-800 border border-gray-600 rounded-lg p-4">
         <h3 className="text-sm font-bold text-amber-400 uppercase tracking-widest mb-3">Conjuração</h3>
-        <div className="grid grid-cols-3 gap-3 mb-4">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4">
           {[
             { label: 'CD de Magia', value: spellAbility ? spellSaveDC : '—' },
             { label: 'Ataque', value: spellAbility ? formatModifier(spellAttack) : '—' },

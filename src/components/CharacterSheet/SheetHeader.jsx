@@ -105,42 +105,41 @@ export function SheetHeader({
       )}
 
       {/* ── Direita: salvo + ações ─────────────────────────── */}
-      <div className="flex items-center gap-2 shrink-0">
+      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
         {saveError && (
-          <span className="text-xs text-red-400" title={`Erro: ${saveError}`} aria-label="Falha ao salvar">
-            ⚠
-          </span>
+          <span className="text-xs text-red-400" title={`Erro: ${saveError}`} aria-label="Falha ao salvar">⚠</span>
         )}
         <span
           className={`text-xs transition-opacity duration-500 ${saved ? 'opacity-100 text-green-400' : 'opacity-0'}`}
           aria-live="polite"
-        >
-          ✓
-        </span>
+        >✓</span>
 
         <button
           onClick={onExport}
-          className="text-xs px-2.5 py-1.5 rounded border border-gray-700/80 hover:border-gray-500 text-gray-400 hover:text-gray-100 transition-colors"
+          className="text-xs px-2 sm:px-2.5 py-1.5 min-h-[36px] rounded border border-gray-700/80 hover:border-gray-500 text-gray-400 hover:text-gray-100 transition-colors"
           title="Exportar como JSON"
         >
-          Exportar
+          <span className="hidden sm:inline">Exportar</span>
+          <span className="sm:hidden">⬇</span>
         </button>
         <button
           onClick={() => importRef.current?.click()}
-          className="text-xs px-2.5 py-1.5 rounded border border-gray-700/80 hover:border-gray-500 text-gray-400 hover:text-gray-100 transition-colors"
+          className="text-xs px-2 sm:px-2.5 py-1.5 min-h-[36px] rounded border border-gray-700/80 hover:border-gray-500 text-gray-400 hover:text-gray-100 transition-colors"
           title="Importar de JSON"
         >
-          Importar
+          <span className="hidden sm:inline">Importar</span>
+          <span className="sm:hidden">⬆</span>
         </button>
         <input ref={importRef} type="file" accept=".json" onChange={handleFile} className="hidden" />
 
         {showPrint && (
           <button
             onClick={onPrint}
-            className="text-xs px-2.5 py-1.5 rounded border border-amber-700/60 hover:border-amber-500 text-amber-400 hover:text-amber-200 transition-colors"
+            className="text-xs px-2 sm:px-2.5 py-1.5 min-h-[36px] rounded border border-amber-700/60 hover:border-amber-500 text-amber-400 hover:text-amber-200 transition-colors"
             title="Imprimir / Exportar PDF"
           >
-            Imprimir
+            <span className="hidden sm:inline">Imprimir</span>
+            <span className="sm:hidden">🖨</span>
           </button>
         )}
       </div>

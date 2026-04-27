@@ -116,6 +116,27 @@ h1, h2, h3,
 .scrollbar-none::-webkit-scrollbar { display: none; }
 .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
 
+/* ── Touch targets mínimos (WCAG 2.5.5 / iOS guidelines) ───────── */
+@media (pointer: coarse) {
+  button, [role="button"], input[type="checkbox"], input[type="radio"] {
+    min-height: 36px;
+    min-width: 36px;
+  }
+  /* Exceção: checkboxes inline em listas densas */
+  .skill-check, .saving-check {
+    min-height: unset;
+    min-width: unset;
+  }
+}
+
+/* ── Fonte base menor em telas muito pequenas ───────────────────── */
+@media (max-width: 375px) {
+  html { font-size: 16px; }
+}
+@media (min-width: 376px) and (max-width: 639px) {
+  html { font-size: 17px; }
+}
+
 /* ── Cartão arcano: gradiente interno + linha de luz no topo ─── */
 .arcane-card {
   position: relative;

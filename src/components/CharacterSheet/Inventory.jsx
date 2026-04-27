@@ -88,7 +88,7 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
       </div>
 
       {/* Capacidade de Carga + Atunamento */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {/* Peso */}
         <div className="bg-gray-800 border border-gray-600 rounded-lg p-3 space-y-1.5">
           <div className="flex items-center justify-between">
@@ -280,98 +280,162 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
         {inventory.items.length === 0 ? (
           <p className="text-gray-500 text-sm text-center py-4">Nenhum item ainda.</p>
         ) : (
-          <div className="space-y-1">
-            {/* Header */}
-            <div className="grid grid-cols-[1fr_3rem_4rem_1fr_auto_2rem] gap-2 px-2 text-xs text-gray-500 uppercase">
-              <span>Nome</span>
-              <span className="text-center">Qtd</span>
-              <span className="text-center">Peso</span>
-              <span>Notas</span>
-              <span className="text-center">Atunar</span>
-              <span />
-            </div>
-            {inventory.items.map(item => {
-              const resolvedArmor = item.armorType
-                ? (item.armorKey && ARMOR_TABLE[item.armorKey]
-                    ? { ...ARMOR_TABLE[item.armorKey], key: item.armorKey }
-                    : { category: item.armorType, type: item.armorType === 'shield' ? 'shield' : 'armor' })
-                : findArmorByName(item.name)
-              const isEquippable   = !!resolvedArmor
-              const isEquipped     = !!item.equipped
-              const canAtune       = !!item.requiresAttunement
-              const isAttuned      = !!item.attuned
-              const canAddAtunement = !isAttuned && attunedCount < MAX_ATTUNED
+          <>
+            {/* ── Mobile: cards empilhados ─────────────────────── */}
+            <div className="sm:hidden space-y-2">
+              {inventory.items.map(item => {
+                const resolvedArmor = item.armorType
+                  ? (item.armorKey && ARMOR_TABLE[item.armorKey]
+                      ? { ...ARMOR_TABLE[item.armorKey], key: item.armorKey }
+                      : { category: item.armorType, type: item.armorType === 'shield' ? 'shield' : 'armor' })
+                  : findArmorByName(item.name)
+                const isEquippable    = !!resolvedArmor
+                const isEquipped      = !!item.equipped
+                const canAtune        = !!item.requiresAttunement
+                const isAttuned       = !!item.attuned
+                const canAddAtunement = !isAttuned && attunedCount < MAX_ATTUNED
 
-              return (
-                <div
-                  key={item.id}
-                  className={`grid grid-cols-[1fr_3rem_4rem_1fr_auto_2rem] gap-2 items-center rounded px-2 py-1.5 ${
-                    item.source === 'background' ? 'bg-amber-950/30 border border-amber-900/40' : 'bg-gray-900'
-                  } ${isEquipped ? 'ring-1 ring-amber-600/50' : ''} ${isAttuned ? 'ring-1 ring-purple-600/50' : ''}`}
-                >
-                  <span className="text-sm text-white truncate flex items-center gap-1.5">
-                    {item.source === 'background' && <span title="Item do antecedente" className="text-[10px]">🎒</span>}
-                    {isAttuned && <span title="Atunado" className="text-[10px]">💎</span>}
-                    {isEquippable && (
-                      <button
-                        onClick={() => onUpdateItem?.(item.id, { equipped: !isEquipped })}
-                        title={isEquipped ? 'Desequipar' : 'Equipar (contribui para a CA)'}
-                        className={`text-[10px] px-1.5 py-0.5 rounded border transition-colors ${
-                          isEquipped
-                            ? 'border-amber-500 bg-amber-900/30 text-amber-300'
-                            : 'border-gray-600 text-gray-500 hover:text-gray-300 hover:border-gray-500'
-                        }`}
-                      >
-                        {isEquipped ? '✓ Equipado' : 'Equipar'}
-                      </button>
-                    )}
-                    {isEquippable && (
-                      <span className="text-[9px] text-gray-500 uppercase">
-                        {resolvedArmor.type === 'shield' ? 'escudo' : resolvedArmor.category}
-                      </span>
-                    )}
-                    <span className="truncate">{item.name}</span>
-                  </span>
-                  <span className="text-sm text-gray-300 text-center">{item.qty}</span>
-                  <span className="text-sm text-gray-400 text-center">{item.weight || '—'}</span>
-                  <span className="text-xs text-gray-500 truncate">{item.notes || '—'}</span>
-
-                  {/* Atunamento */}
-                  <div className="flex items-center justify-center">
-                    {canAtune ? (
-                      <button
-                        onClick={() => {
-                          if (!isAttuned && !canAddAtunement) return
-                          onUpdateItem?.(item.id, { attuned: !isAttuned })
-                        }}
-                        disabled={!isAttuned && !canAddAtunement}
-                        title={isAttuned ? 'Remover atunamento' : canAddAtunement ? 'Atunar item' : 'Limite de atunamento atingido'}
-                        className={`text-xs px-1.5 py-0.5 rounded border transition-colors ${
-                          isAttuned
-                            ? 'border-purple-500 bg-purple-900/30 text-purple-300'
-                            : canAddAtunement
-                              ? 'border-gray-600 text-gray-500 hover:border-purple-600 hover:text-purple-400'
-                              : 'border-gray-700 text-gray-700 cursor-not-allowed'
-                        }`}
-                      >
-                        {isAttuned ? '💎' : '○'}
-                      </button>
-                    ) : (
-                      <span className="text-gray-700">—</span>
-                    )}
-                  </div>
-
-                  <button
-                    onClick={() => onRemoveItem(item.id)}
-                    className="text-red-500 hover:text-red-400 text-lg leading-none font-bold justify-self-center"
-                    title="Remover"
+                return (
+                  <div
+                    key={item.id}
+                    className={`rounded-lg px-3 py-2.5 ${
+                      item.source === 'background' ? 'bg-amber-950/30 border border-amber-900/40' : 'bg-gray-900 border border-gray-700/50'
+                    } ${isEquipped ? 'ring-1 ring-amber-600/50' : ''} ${isAttuned ? 'ring-1 ring-purple-600/50' : ''}`}
                   >
-                    ×
-                  </button>
-                </div>
-              )
-            })}
-          </div>
+                    {/* Linha 1: nome + ações */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                        {item.source === 'background' && <span className="text-[11px] shrink-0">🎒</span>}
+                        {isAttuned && <span className="text-[11px] shrink-0">💎</span>}
+                        <span className="text-sm text-white font-medium truncate">{item.name}</span>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        {canAtune && (
+                          <button
+                            onClick={() => { if (!isAttuned && !canAddAtunement) return; onUpdateItem?.(item.id, { attuned: !isAttuned }) }}
+                            disabled={!isAttuned && !canAddAtunement}
+                            title={isAttuned ? 'Remover atunamento' : 'Atunar'}
+                            className={`text-xs px-2 py-1 rounded border transition-colors min-h-[32px] ${
+                              isAttuned ? 'border-purple-500 bg-purple-900/30 text-purple-300' :
+                              canAddAtunement ? 'border-gray-600 text-gray-400 hover:border-purple-600 hover:text-purple-400' :
+                              'border-gray-700 text-gray-700 cursor-not-allowed opacity-50'
+                            }`}
+                          >
+                            {isAttuned ? '💎' : '○'}
+                          </button>
+                        )}
+                        <button
+                          onClick={() => onRemoveItem(item.id)}
+                          className="w-8 h-8 flex items-center justify-center text-red-500 hover:text-red-400 text-xl font-bold"
+                          title="Remover"
+                        >×</button>
+                      </div>
+                    </div>
+                    {/* Linha 2: detalhes + equipar */}
+                    <div className="flex items-center gap-3 mt-1 flex-wrap">
+                      <span className="text-xs text-gray-500">
+                        {item.qty > 1 ? `${item.qty}×` : ''}
+                        {item.weight ? ` · ${item.weight}` : ''}
+                      </span>
+                      {item.notes && <span className="text-xs text-gray-500 truncate flex-1">{item.notes}</span>}
+                      {isEquippable && (
+                        <button
+                          onClick={() => onUpdateItem?.(item.id, { equipped: !isEquipped })}
+                          className={`text-xs px-2 py-1 rounded border transition-colors min-h-[28px] ${
+                            isEquipped ? 'border-amber-500 bg-amber-900/30 text-amber-300' : 'border-gray-600 text-gray-500 hover:border-amber-500 hover:text-amber-300'
+                          }`}
+                        >
+                          {isEquipped ? '✓ Equipado' : 'Equipar'}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* ── Desktop: grid tabela ─────────────────────────── */}
+            <div className="hidden sm:block space-y-1">
+              {/* Header */}
+              <div className="grid grid-cols-[1fr_3rem_4rem_1fr_auto_2rem] gap-2 px-2 text-xs text-gray-500 uppercase">
+                <span>Nome</span>
+                <span className="text-center">Qtd</span>
+                <span className="text-center">Peso</span>
+                <span>Notas</span>
+                <span className="text-center">Atunar</span>
+                <span />
+              </div>
+              {inventory.items.map(item => {
+                const resolvedArmor = item.armorType
+                  ? (item.armorKey && ARMOR_TABLE[item.armorKey]
+                      ? { ...ARMOR_TABLE[item.armorKey], key: item.armorKey }
+                      : { category: item.armorType, type: item.armorType === 'shield' ? 'shield' : 'armor' })
+                  : findArmorByName(item.name)
+                const isEquippable    = !!resolvedArmor
+                const isEquipped      = !!item.equipped
+                const canAtune        = !!item.requiresAttunement
+                const isAttuned       = !!item.attuned
+                const canAddAtunement = !isAttuned && attunedCount < MAX_ATTUNED
+
+                return (
+                  <div
+                    key={item.id}
+                    className={`grid grid-cols-[1fr_3rem_4rem_1fr_auto_2rem] gap-2 items-center rounded px-2 py-1.5 ${
+                      item.source === 'background' ? 'bg-amber-950/30 border border-amber-900/40' : 'bg-gray-900'
+                    } ${isEquipped ? 'ring-1 ring-amber-600/50' : ''} ${isAttuned ? 'ring-1 ring-purple-600/50' : ''}`}
+                  >
+                    <span className="text-sm text-white truncate flex items-center gap-1.5">
+                      {item.source === 'background' && <span title="Item do antecedente" className="text-[10px]">🎒</span>}
+                      {isAttuned && <span title="Atunado" className="text-[10px]">💎</span>}
+                      {isEquippable && (
+                        <button
+                          onClick={() => onUpdateItem?.(item.id, { equipped: !isEquipped })}
+                          title={isEquipped ? 'Desequipar' : 'Equipar'}
+                          className={`text-[10px] px-1.5 py-0.5 rounded border transition-colors ${
+                            isEquipped ? 'border-amber-500 bg-amber-900/30 text-amber-300' : 'border-gray-600 text-gray-500 hover:text-gray-300 hover:border-gray-500'
+                          }`}
+                        >
+                          {isEquipped ? '✓ Equipado' : 'Equipar'}
+                        </button>
+                      )}
+                      {isEquippable && (
+                        <span className="text-[9px] text-gray-500 uppercase">
+                          {resolvedArmor.type === 'shield' ? 'escudo' : resolvedArmor.category}
+                        </span>
+                      )}
+                      <span className="truncate">{item.name}</span>
+                    </span>
+                    <span className="text-sm text-gray-300 text-center">{item.qty}</span>
+                    <span className="text-sm text-gray-400 text-center">{item.weight || '—'}</span>
+                    <span className="text-xs text-gray-500 truncate">{item.notes || '—'}</span>
+                    <div className="flex items-center justify-center">
+                      {canAtune ? (
+                        <button
+                          onClick={() => { if (!isAttuned && !canAddAtunement) return; onUpdateItem?.(item.id, { attuned: !isAttuned }) }}
+                          disabled={!isAttuned && !canAddAtunement}
+                          title={isAttuned ? 'Remover atunamento' : canAddAtunement ? 'Atunar item' : 'Limite atingido'}
+                          className={`text-xs px-1.5 py-0.5 rounded border transition-colors ${
+                            isAttuned ? 'border-purple-500 bg-purple-900/30 text-purple-300' :
+                            canAddAtunement ? 'border-gray-600 text-gray-500 hover:border-purple-600 hover:text-purple-400' :
+                            'border-gray-700 text-gray-700 cursor-not-allowed'
+                          }`}
+                        >
+                          {isAttuned ? '💎' : '○'}
+                        </button>
+                      ) : (
+                        <span className="text-gray-700">—</span>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => onRemoveItem(item.id)}
+                      className="text-red-500 hover:text-red-400 text-lg leading-none font-bold justify-self-center"
+                      title="Remover"
+                    >×</button>
+                  </div>
+                )
+              })}
+            </div>
+          </>
         )}
       </div>
     </div>

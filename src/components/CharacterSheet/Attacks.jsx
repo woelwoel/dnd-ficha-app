@@ -167,60 +167,103 @@ export function Attacks({ attacks = [], attributes, profBonus, onAdd, onRemove, 
       {attacks.length === 0 ? (
         <p className="text-gray-500 text-sm text-center py-3">Nenhum ataque registrado.</p>
       ) : (
-        <div className="space-y-1">
-          <div className="grid grid-cols-[2fr_4rem_1fr_2rem] gap-2 px-2 text-xs text-gray-500 uppercase">
-            <span>Arma</span>
-            <span className="text-center">Ataque</span>
-            <span>Dano</span>
-            <span />
-          </div>
-          {attacks.map(atk => {
-            const attackBonus  = calculateWeaponAttackBonus(atk, attributes, profBonus)
-            const damage       = calculateWeaponDamage(atk, attributes)
-            const ability      = resolveAttackAbility(atk, attributes)
-            const abbr         = abbrOfKey(ability)
-            const atkNotation  = `1d20${formatModifier(attackBonus)}`
-            const dmgNotation  = damage.expression
-            return (
-              <div key={atk.id} className="grid grid-cols-[2fr_5rem_1fr_2rem] gap-2 items-center bg-gray-900 rounded px-2 py-1.5">
-                <div className="min-w-0">
-                  <div className="text-sm text-white truncate">{atk.name}</div>
-                  <div className="text-xs text-gray-500">
-                    {abbr}
-                    {atk.proficient ? ' · prof' : ''}
-                    {atk.magicBonus ? ` · +${atk.magicBonus} mág.` : ''}
-                    {(atk.properties ?? []).length > 0 ? ` · ${atk.properties.join(', ')}` : ''}
+        <>
+          {/* ── Mobile: cards ───────────────────────────────────── */}
+          <div className="sm:hidden space-y-2">
+            {attacks.map(atk => {
+              const attackBonus = calculateWeaponAttackBonus(atk, attributes, profBonus)
+              const damage      = calculateWeaponDamage(atk, attributes)
+              const ability     = resolveAttackAbility(atk, attributes)
+              const abbr        = abbrOfKey(ability)
+              const atkNotation = `1d20${formatModifier(attackBonus)}`
+              const dmgNotation = damage.expression
+              return (
+                <div key={atk.id} className="bg-gray-900 border border-gray-700/50 rounded-lg px-3 py-2.5">
+                  {/* Nome + remover */}
+                  <div className="flex items-center justify-between gap-2 mb-1.5">
+                    <span className="text-sm text-white font-semibold truncate">{atk.name}</span>
+                    <button
+                      onClick={() => onRemove(atk.id)}
+                      className="w-8 h-8 flex items-center justify-center text-red-500 hover:text-red-400 text-xl font-bold shrink-0"
+                      title="Remover"
+                    >×</button>
                   </div>
-                </div>
-                <div className="flex items-center gap-1 justify-center">
-                  <span className="text-sm text-amber-300 font-bold">
-                    {formatModifier(attackBonus)}
-                  </span>
-                  <RollButton notation={atkNotation} label={`Atacar — ${atk.name}`} size="xs" />
-                </div>
-                <div className="text-xs text-gray-300">
-                  <div className="flex items-center gap-1">
-                    <span>{damage.expression}</span>
-                    {atk.damageType && <span className="text-gray-500">{atk.damageType}</span>}
-                    <RollButton notation={dmgNotation} label={`Dano — ${atk.name}`} size="xs" />
-                  </div>
-                  {atk.versatileDice && (
-                    <div className="text-gray-500">
-                      2 mãos: {calculateWeaponDamage(atk, attributes, { versatileTwoHanded: true }).expression}
+                  {/* Stats */}
+                  <div className="flex items-center gap-4 flex-wrap">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs text-gray-500">Ataque</span>
+                      <span className="text-sm text-amber-300 font-bold">{formatModifier(attackBonus)}</span>
+                      <RollButton notation={atkNotation} label={`Atacar — ${atk.name}`} size="xs" />
                     </div>
-                  )}
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs text-gray-500">Dano</span>
+                      <span className="text-sm text-gray-200">{damage.expression}</span>
+                      {atk.damageType && <span className="text-xs text-gray-500">{atk.damageType}</span>}
+                      <RollButton notation={dmgNotation} label={`Dano — ${atk.name}`} size="xs" />
+                    </div>
+                  </div>
+                  {/* Sub-info */}
+                  <div className="text-xs text-gray-600 mt-1">
+                    {[abbr, atk.proficient ? 'prof' : null, atk.magicBonus ? `+${atk.magicBonus} mág.` : null, ...(atk.properties ?? [])].filter(Boolean).join(' · ')}
+                    {atk.versatileDice && ` · 2 mãos: ${calculateWeaponDamage(atk, attributes, { versatileTwoHanded: true }).expression}`}
+                  </div>
                 </div>
-                <button
-                  onClick={() => onRemove(atk.id)}
-                  className="text-red-500 hover:text-red-400 text-lg leading-none font-bold justify-self-center"
-                  title="Remover"
-                >
-                  ×
-                </button>
-              </div>
-            )
-          })}
-        </div>
+              )
+            })}
+          </div>
+
+          {/* ── Desktop: grid tabela ─────────────────────────────── */}
+          <div className="hidden sm:block space-y-1">
+            <div className="grid grid-cols-[2fr_4rem_1fr_2rem] gap-2 px-2 text-xs text-gray-500 uppercase">
+              <span>Arma</span>
+              <span className="text-center">Ataque</span>
+              <span>Dano</span>
+              <span />
+            </div>
+            {attacks.map(atk => {
+              const attackBonus = calculateWeaponAttackBonus(atk, attributes, profBonus)
+              const damage      = calculateWeaponDamage(atk, attributes)
+              const ability     = resolveAttackAbility(atk, attributes)
+              const abbr        = abbrOfKey(ability)
+              const atkNotation = `1d20${formatModifier(attackBonus)}`
+              const dmgNotation = damage.expression
+              return (
+                <div key={atk.id} className="grid grid-cols-[2fr_5rem_1fr_2rem] gap-2 items-center bg-gray-900 rounded px-2 py-1.5">
+                  <div className="min-w-0">
+                    <div className="text-sm text-white truncate">{atk.name}</div>
+                    <div className="text-xs text-gray-500">
+                      {abbr}
+                      {atk.proficient ? ' · prof' : ''}
+                      {atk.magicBonus ? ` · +${atk.magicBonus} mág.` : ''}
+                      {(atk.properties ?? []).length > 0 ? ` · ${atk.properties.join(', ')}` : ''}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 justify-center">
+                    <span className="text-sm text-amber-300 font-bold">{formatModifier(attackBonus)}</span>
+                    <RollButton notation={atkNotation} label={`Atacar — ${atk.name}`} size="xs" />
+                  </div>
+                  <div className="text-xs text-gray-300">
+                    <div className="flex items-center gap-1">
+                      <span>{damage.expression}</span>
+                      {atk.damageType && <span className="text-gray-500">{atk.damageType}</span>}
+                      <RollButton notation={dmgNotation} label={`Dano — ${atk.name}`} size="xs" />
+                    </div>
+                    {atk.versatileDice && (
+                      <div className="text-gray-500">
+                        2 mãos: {calculateWeaponDamage(atk, attributes, { versatileTwoHanded: true }).expression}
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => onRemove(atk.id)}
+                    className="text-red-500 hover:text-red-400 text-lg leading-none font-bold justify-self-center"
+                    title="Remover"
+                  >×</button>
+                </div>
+              )
+            })}
+          </div>
+        </>
       )}
 
       {/* Toggle rápido de proficiência / bônus mágico por linha */}
