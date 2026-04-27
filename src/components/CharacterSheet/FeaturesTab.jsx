@@ -240,15 +240,36 @@ const FILTERS = [
 ]
 
 /* ══════════════════════════════════════════════════════════════════
+   HELPER: resolve a opção escolhida para features com escolha
+   ══════════════════════════════════════════════════════════════════ */
+
+/**
+ * Se a feature `featureName` da classe `classIndex` tiver uma opção
+ * escolhida em `chosenFeatures`, retorna { name, desc } da opção.
+ * Retorna null se não houver escolha ou não houver correspondência.
+ */
+function resolveChosenFeature(classIndex, featureName, chosenFeatures, classChoices) {
+  const choices = classChoices?.[classIndex]?.choices ?? []
+  const match   = choices.find(c => c.featureName === featureName)
+  if (!match) return null
+  const chosen  = chosenFeatures?.[match.id]
+  if (!chosen) return null
+  const opt = match.options.find(o => o.value === chosen)
+  if (!opt) return null
+  return { name: opt.name, desc: opt.desc }
+}
+
+/* ══════════════════════════════════════════════════════════════════
    COMPONENTE PRINCIPAL
    ══════════════════════════════════════════════════════════════════ */
 export function FeaturesTab({ character, featureUses, onSpend, onRegain }) {
   const [activeFilter, setActiveFilter] = useState('acoes')
-  const { progression, races, feats: allFeats } = useSrd()
+  const { progression, races, feats: allFeats, classChoices } = useSrd()
   const { info } = character
 
   const classIndex      = info?.class ?? ''
   const level           = info?.level ?? 1
+  const chosenFeatures  = info?.chosenFeatures ?? {}
   const selectedRace    = races.find(r => r.index === info?.race)
   const selectedSubrace = selectedRace?.subraces?.find(sr => sr.index === info?.subrace)
 
@@ -261,11 +282,16 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain }) {
 
     /* ── Features da classe primária ── */
     const classFeatures = levelsUpTo.flatMap(lvl =>
-      (lvl.features ?? []).map(f => ({
-        id: `${classIndex}-${f.name}`.toLowerCase().replace(/\s+/g, '-'),
-        name: f.name, desc: f.desc,
-        source: classData?.name ?? classIndex, level: lvl.level,
-      }))
+      (lvl.features ?? []).map(f => {
+        const chosen = resolveChosenFeature(classIndex, f.name, chosenFeatures, classChoices)
+        return {
+          id:     `${classIndex}-${f.name}`.toLowerCase().replace(/\s+/g, '-'),
+          name:   chosen ? `${f.name}: ${chosen.name}` : f.name,
+          desc:   chosen ? chosen.desc : f.desc,
+          source: classData?.name ?? classIndex,
+          level:  lvl.level,
+        }
+      })
     )
 
     /* ── Features de multiclasses ── */
@@ -273,11 +299,16 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain }) {
       const mcData   = progression?.[mc.class]
       const mcLevels = mcData?.levels?.filter(l => l.level <= mc.level) ?? []
       return mcLevels.flatMap(lvl =>
-        (lvl.features ?? []).map(f => ({
-          id: `${mc.class}-${f.name}`.toLowerCase().replace(/\s+/g, '-'),
-          name: f.name, desc: f.desc,
-          source: mcData?.name ?? mc.class, level: lvl.level,
-        }))
+        (lvl.features ?? []).map(f => {
+          const chosen = resolveChosenFeature(mc.class, f.name, chosenFeatures, classChoices)
+          return {
+            id:     `${mc.class}-${f.name}`.toLowerCase().replace(/\s+/g, '-'),
+            name:   chosen ? `${f.name}: ${chosen.name}` : f.name,
+            desc:   chosen ? chosen.desc : f.desc,
+            source: mcData?.name ?? mc.class,
+            level:  lvl.level,
+          }
+        })
       )
     })
 
@@ -344,6 +375,7 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain }) {
     progression, classIndex, level,
     info?.multiclasses, info?.feats,
     selectedRace, selectedSubrace, allFeats,
+    chosenFeatures, classChoices,
   ])
 
   const totalActions  = classActions.length + classBonusActions.length + classReactions.length + raceActions.length

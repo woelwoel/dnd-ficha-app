@@ -1,3 +1,4 @@
+import { useRef, useState, useEffect } from 'react'
 import { useDiceRoller } from '../../context/DiceRollerContext'
 
 function timeAgo(ts) {
@@ -44,11 +45,71 @@ function RollEntry({ entry }) {
 /**
  * Painel flutuante de histórico de dados.
  * Fechado → botão 🎲 arcano no canto inferior direito.
- * Aberto  → card com histórico de rolagens.
+ * Aberto  → mini-janela arrastável fixada no canto onde o botão estava.
  */
 export function DiceHistoryPanel() {
   const { history, clearHistory, open, togglePanel } = useDiceRoller()
 
+  // pos === null  →  usa âncora padrão bottom-right via CSS
+  // pos === {x,y} →  posição absoluta (top-left) após arrastar
+  const [pos, setPos] = useState(null)
+  const panelRef  = useRef(null)
+  const moveRef   = useRef(null)
+  const upRef     = useRef(null)
+
+  /* ── Limpa listeners ao desmontar ──────────────────────────── */
+  useEffect(() => () => {
+    if (moveRef.current) window.removeEventListener('pointermove', moveRef.current)
+    if (upRef.current)   window.removeEventListener('pointerup',   upRef.current)
+  }, [])
+
+  /* ── Fecha e reseta posição para o canto padrão ─────────────── */
+  function handleClose() {
+    setPos(null)
+    togglePanel()
+  }
+
+  /* ── Início do arrasto (header como alça) ─────────────────── */
+  function startDrag(e) {
+    if (e.button !== 0 && e.pointerType !== 'touch') return
+    e.preventDefault()
+
+    const rect  = panelRef.current?.getBoundingClientRect()
+    if (!rect) return
+
+    const startX = e.clientX
+    const startY = e.clientY
+    const origX  = rect.left
+    const origY  = rect.top
+    const W      = panelRef.current?.offsetWidth  ?? 288
+    const H      = panelRef.current?.offsetHeight ?? 300
+
+    moveRef.current = (me) => {
+      const dx = me.clientX - startX
+      const dy = me.clientY - startY
+      setPos({
+        x: Math.max(0, Math.min(window.innerWidth  - W, origX + dx)),
+        y: Math.max(0, Math.min(window.innerHeight - H, origY + dy)),
+      })
+    }
+
+    upRef.current = () => {
+      window.removeEventListener('pointermove', moveRef.current)
+      window.removeEventListener('pointerup',   upRef.current)
+      moveRef.current = null
+      upRef.current   = null
+    }
+
+    window.addEventListener('pointermove', moveRef.current)
+    window.addEventListener('pointerup',   upRef.current)
+  }
+
+  /* ── Estilo de posição ────────────────────────────────────── */
+  const posStyle = pos
+    ? { left: pos.x, top: pos.y, bottom: 'auto', right: 'auto' }
+    : { bottom: 20, right: 20 }
+
+  /* ── Botão quando fechado ──────────────────────────────────── */
   if (!open) {
     return (
       <button
@@ -67,34 +128,43 @@ export function DiceHistoryPanel() {
 
   const last = history[0]
 
+  /* ── Painel aberto ─────────────────────────────────────────── */
   return (
     <div
-      className="fixed bottom-5 right-5 z-50 w-72 rounded-xl flex flex-col
+      ref={panelRef}
+      className="fixed z-50 w-72 rounded-xl flex flex-col
         border border-gray-700/70 bg-gray-900/95 backdrop-blur-md
         shadow-[0_0_40px_rgba(3,5,13,0.8),0_0_0_1px_rgba(40,90,152,0.15)] arcane-card"
-      style={{ maxHeight: '70vh' }}
+      style={{ ...posStyle, maxHeight: '60vh' }}
     >
-      {/* Header */}
-      <div className="flex items-center gap-2 px-3 py-2.5 border-b border-gray-700/50 shrink-0">
-        <span className="text-base shrink-0" aria-hidden>🎲</span>
-        <h3 className="text-sm font-bold text-amber-400 font-display tracking-wide flex-1">
+      {/* ── Cabeçalho / alça de arrasto ───────────────────────── */}
+      <div
+        className="flex items-center gap-2 px-3 py-2.5 border-b border-gray-700/50 shrink-0
+          cursor-grab active:cursor-grabbing select-none"
+        onPointerDown={startDrag}
+        title="Arraste para mover"
+      >
+        <span className="text-base shrink-0 pointer-events-none" aria-hidden>🎲</span>
+        <h3 className="text-sm font-bold text-amber-400 font-display tracking-wide flex-1 pointer-events-none">
           Rolagens
         </h3>
         {last && (
-          <span className="text-xs text-gray-500 font-mono">
+          <span className="text-xs text-gray-500 font-mono pointer-events-none">
             último: <span className="text-amber-300 font-bold">{last.total}</span>
           </span>
         )}
         {history.length > 0 && (
           <button
             onClick={clearHistory}
+            onPointerDown={e => e.stopPropagation()}
             className="text-[11px] text-gray-600 hover:text-red-400 transition-colors"
           >
             limpar
           </button>
         )}
         <button
-          onClick={togglePanel}
+          onClick={handleClose}
+          onPointerDown={e => e.stopPropagation()}
           className="text-gray-500 hover:text-gray-100 transition-colors leading-none ml-1"
           aria-label="Fechar painel de dados"
         >
@@ -102,7 +172,7 @@ export function DiceHistoryPanel() {
         </button>
       </div>
 
-      {/* Histórico */}
+      {/* ── Histórico ─────────────────────────────────────────── */}
       <div className="flex-1 overflow-y-auto px-3 py-1 min-h-0">
         {history.length === 0 ? (
           <div className="py-8 text-center text-gray-600">
