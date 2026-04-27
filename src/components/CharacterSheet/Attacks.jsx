@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { calculateWeaponAttackBonus, calculateWeaponDamage, resolveAttackAbility } from '../../utils/attacks'
 import { formatModifier } from '../../utils/calculations'
 import { abbrOfKey } from '../../domain/attributes'
+import { RollButton } from '../DiceRoller/RollButton'
 
 const EMPTY_ATTACK = {
   name: '',
@@ -174,12 +175,14 @@ export function Attacks({ attacks = [], attributes, profBonus, onAdd, onRemove, 
             <span />
           </div>
           {attacks.map(atk => {
-            const attackBonus = calculateWeaponAttackBonus(atk, attributes, profBonus)
-            const damage = calculateWeaponDamage(atk, attributes)
-            const ability = resolveAttackAbility(atk, attributes)
-            const abbr = abbrOfKey(ability)
+            const attackBonus  = calculateWeaponAttackBonus(atk, attributes, profBonus)
+            const damage       = calculateWeaponDamage(atk, attributes)
+            const ability      = resolveAttackAbility(atk, attributes)
+            const abbr         = abbrOfKey(ability)
+            const atkNotation  = `1d20${formatModifier(attackBonus)}`
+            const dmgNotation  = damage.expression
             return (
-              <div key={atk.id} className="grid grid-cols-[2fr_4rem_1fr_2rem] gap-2 items-center bg-gray-900 rounded px-2 py-1.5">
+              <div key={atk.id} className="grid grid-cols-[2fr_5rem_1fr_2rem] gap-2 items-center bg-gray-900 rounded px-2 py-1.5">
                 <div className="min-w-0">
                   <div className="text-sm text-white truncate">{atk.name}</div>
                   <div className="text-xs text-gray-500">
@@ -189,11 +192,18 @@ export function Attacks({ attacks = [], attributes, profBonus, onAdd, onRemove, 
                     {(atk.properties ?? []).length > 0 ? ` · ${atk.properties.join(', ')}` : ''}
                   </div>
                 </div>
-                <span className="text-sm text-amber-300 font-bold text-center">
-                  {formatModifier(attackBonus)}
-                </span>
+                <div className="flex items-center gap-1 justify-center">
+                  <span className="text-sm text-amber-300 font-bold">
+                    {formatModifier(attackBonus)}
+                  </span>
+                  <RollButton notation={atkNotation} label={`Atacar — ${atk.name}`} size="xs" />
+                </div>
                 <div className="text-xs text-gray-300">
-                  <div>{damage.expression} {atk.damageType ? <span className="text-gray-500">{atk.damageType}</span> : null}</div>
+                  <div className="flex items-center gap-1">
+                    <span>{damage.expression}</span>
+                    {atk.damageType && <span className="text-gray-500">{atk.damageType}</span>}
+                    <RollButton notation={dmgNotation} label={`Dano — ${atk.name}`} size="xs" />
+                  </div>
                   {atk.versatileDice && (
                     <div className="text-gray-500">
                       2 mãos: {calculateWeaponDamage(atk, attributes, { versatileTwoHanded: true }).expression}

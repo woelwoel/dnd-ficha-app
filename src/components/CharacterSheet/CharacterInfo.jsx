@@ -306,6 +306,96 @@ function LanguageSelector({ raceIndex, backgroundLanguages, selectedLanguages, o
   )
 }
 
+/* ── XP Thresholds D&D 5e (PHB p.15) ── */
+const XP_THRESHOLDS = [
+  0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000,
+  85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000,
+]
+
+/* ── Retrato do personagem ── */
+function PortraitUpload({ portrait, onUpload }) {
+  function handleFile(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (!file.type.startsWith('image/')) return
+    const reader = new FileReader()
+    reader.onload = ev => onUpload(ev.target.result)
+    reader.readAsDataURL(file)
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <label className="cursor-pointer group relative" title="Clique para alterar retrato">
+        <div className={`w-20 h-20 rounded-full border-2 overflow-hidden flex items-center justify-center transition-colors ${
+          portrait ? 'border-amber-600' : 'border-gray-600 border-dashed hover:border-amber-500'
+        }`}>
+          {portrait ? (
+            <img src={portrait} alt="Retrato" className="w-full h-full object-cover" />
+          ) : (
+            <span className="text-3xl text-gray-600 group-hover:text-gray-400">👤</span>
+          )}
+        </div>
+        {portrait && (
+          <div className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+            <span className="text-xs text-white font-semibold">Alterar</span>
+          </div>
+        )}
+        <input type="file" accept="image/*" onChange={handleFile} className="sr-only" />
+      </label>
+      {portrait && (
+        <button
+          onClick={() => onUpload(null)}
+          className="text-[10px] text-gray-600 hover:text-red-400 transition-colors"
+        >
+          remover
+        </button>
+      )}
+    </div>
+  )
+}
+
+/* ── Tracker de XP ── */
+function XpTracker({ xp = 0, level = 1, onUpdate }) {
+  const currentThreshold = XP_THRESHOLDS[level - 1] ?? 0
+  const nextThreshold    = XP_THRESHOLDS[level] ?? null  // null = nível 20
+  const progress = nextThreshold
+    ? Math.min(100, ((xp - currentThreshold) / (nextThreshold - currentThreshold)) * 100)
+    : 100
+
+  return (
+    <div className="col-span-2 sm:col-span-3 space-y-1">
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-gray-400 font-semibold">XP</span>
+        {nextThreshold && (
+          <span className="text-[10px] text-gray-500">
+            {xp.toLocaleString()} / {nextThreshold.toLocaleString()} para Nível {level + 1}
+          </span>
+        )}
+        {!nextThreshold && (
+          <span className="text-[10px] text-amber-500">Nível máximo ✦</span>
+        )}
+      </div>
+      <div className="flex items-center gap-2">
+        <input
+          type="number"
+          min={0}
+          value={xp}
+          onChange={e => onUpdate('xp', Math.max(0, parseInt(e.target.value) || 0))}
+          onWheel={e => e.currentTarget.blur()}
+          className="w-28 bg-gray-800 border border-gray-600 rounded px-2 py-1 text-white text-sm focus:outline-none focus:border-amber-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        />
+        <div className="flex-1 bg-gray-700 rounded-full h-2">
+          <div
+            className="h-2 rounded-full bg-amber-500 transition-all"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <span className="text-[10px] text-gray-500 w-8 text-right">{Math.round(progress)}%</span>
+      </div>
+    </div>
+  )
+}
+
 /* ── Componente principal ── */
 export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, errors = {}, onRaceChange, onSubraceChange, onBackgroundChange, onClassChange, onToggleLanguage }) {
   const [modal, setModal] = useState(null)
@@ -329,8 +419,16 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      {/* Retrato do personagem */}
+      <div className="row-span-2 flex items-start justify-center pt-1">
+        <PortraitUpload
+          portrait={info.portrait ?? null}
+          onUpload={v => onUpdate('portrait', v)}
+        />
+      </div>
+
       {/* Nome do Personagem */}
-      <div className="col-span-2 sm:col-span-2">
+      <div className="col-span-1 sm:col-span-2">
         <label htmlFor="field-name" className="block text-xs text-gray-400 mb-1">Nome do Personagem</label>
         <input
           id="field-name"
@@ -345,7 +443,7 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
       </div>
 
       {/* Nome do Jogador */}
-      <div>
+      <div className="col-span-1">
         <label htmlFor="field-player-name" className="block text-xs text-gray-400 mb-1">Nome do Jogador</label>
         <input
           id="field-player-name"
@@ -540,6 +638,9 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
           ))}
         </select>
       </div>
+
+      {/* XP Tracker */}
+      <XpTracker xp={info.xp ?? 0} level={info.level ?? 1} onUpdate={onUpdate} />
 
       {/* Seletor de Idiomas */}
       {(info.race || info.background) && (

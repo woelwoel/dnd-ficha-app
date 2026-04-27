@@ -26,6 +26,8 @@ const DEFAULT_CHARACTER = {
     // v3
     feats: [],
     asiOrFeatByLevel: {},
+    // v4
+    portrait: null,   // data URL base64 da imagem do personagem
   },
   attributes: {
     str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10,
@@ -43,6 +45,10 @@ const DEFAULT_CHARACTER = {
     deathSaves: { successes: 0, failures: 0 },
     // v3: usos limitados de class features (Action Surge, Ki, etc.).
     classFeatureUses: [],
+    // v4
+    conditions: [],      // IDs de condições ativas (poisoned, stunned, …)
+    inspiration: false,  // Inspiração
+    exhaustion: 0,       // Nível de exaustão 0-6
   },
   proficiencies: {
     savingThrows: [],
@@ -372,6 +378,46 @@ export function useCharacter(initialCharacter = null) {
     })
   }, [setCharacter])
 
+  /* ── Death Saves ────────────────────────────────────────────── */
+
+  const updateDeathSaves = useCallback((type, value) => {
+    setCharacter(prev => ({
+      ...prev,
+      combat: {
+        ...prev.combat,
+        deathSaves: {
+          ...(prev.combat.deathSaves ?? { successes: 0, failures: 0 }),
+          [type]: Math.max(0, Math.min(3, value)),
+        },
+      },
+    }))
+  }, [setCharacter])
+
+  /* ── Condições (Poisoned, Stunned, …) ────────────────────── */
+
+  const toggleCondition = useCallback(conditionId => {
+    setCharacter(prev => {
+      const list = prev.combat?.conditions ?? []
+      const next = list.includes(conditionId)
+        ? list.filter(c => c !== conditionId)
+        : [...list, conditionId]
+      return { ...prev, combat: { ...prev.combat, conditions: next } }
+    })
+  }, [setCharacter])
+
+  /* ── Inspiração e Exaustão ─────────────────────────────────── */
+
+  const setInspiration = useCallback(val => {
+    setCharacter(prev => ({ ...prev, combat: { ...prev.combat, inspiration: !!val } }))
+  }, [setCharacter])
+
+  const setExhaustion = useCallback(level => {
+    setCharacter(prev => ({
+      ...prev,
+      combat: { ...prev.combat, exhaustion: Math.max(0, Math.min(6, Number(level))) },
+    }))
+  }, [setCharacter])
+
   /**
    * Define a magia em concentração (PHB p.203). Passar null/''  encerra.
    * Substituição é intencional: apenas uma magia de concentração por vez.
@@ -418,6 +464,11 @@ export function useCharacter(initialCharacter = null) {
     setClassFeatureUses,
     spendFeatureUse,
     regainFeatureUse,
+    // v4
+    updateDeathSaves,
+    toggleCondition,
+    setInspiration,
+    setExhaustion,
   }), [
     character, setCharacter,
     updateInfo, updateAttribute, updateCombat, updateTraits,
@@ -430,5 +481,6 @@ export function useCharacter(initialCharacter = null) {
     toggleLanguage,
     addAttack, removeAttack, updateAttack,
     setClassFeatureUses, spendFeatureUse, regainFeatureUse,
+    updateDeathSaves, toggleCondition, setInspiration, setExhaustion,
   ])
 }

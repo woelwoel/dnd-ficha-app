@@ -10,9 +10,21 @@ const CURRENCY_CONFIG = [
   { key: 'cp', label: 'PC',  title: 'Cobre',    color: 'text-orange-300' },
 ]
 
-const EMPTY_ITEM = { name: '', qty: 1, weight: '', notes: '' }
+const EMPTY_ITEM = { name: '', qty: 1, weight: '', notes: '', requiresAttunement: false }
 
-export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem, onUpdateItem }) {
+/** Parse peso de um item para número (lb). Aceita "2", "2.5", "2lb", "2 lb". */
+function parseWeight(w) {
+  if (!w) return 0
+  const n = parseFloat(String(w).replace(/[^\d.]/g, ''))
+  return isNaN(n) ? 0 : n
+}
+
+/** Calcula capacidade de carga (PHB p.176): FOR × 15 lbs */
+function carryingCapacity(strScore) {
+  return (strScore ?? 10) * 15
+}
+
+export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, onRemoveItem, onUpdateItem }) {
   const [newItem, setNewItem] = useState(EMPTY_ITEM)
   const [showForm, setShowForm] = useState(false)
   const [srdEquipment, setSrdEquipment] = useState([])
@@ -27,18 +39,30 @@ export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem
 
   function handleAdd() {
     if (!newItem.name.trim()) return
-    // Detecta armadura/escudo pelo nome para preencher metadados auto.
     const armor = findArmorByName(newItem.name)
     onAddItem({
       name: newItem.name.trim(),
       qty: Math.max(1, parseInt(newItem.qty) || 1),
       weight: newItem.weight,
       notes: newItem.notes,
+      requiresAttunement: newItem.requiresAttunement,
+      attuned: false,
       ...(armor ? { armorKey: armor.key, armorType: armor.category } : {}),
     })
     setNewItem(EMPTY_ITEM)
     setShowForm(false)
   }
+
+  // Peso total e capacidade
+  const totalWeight    = inventory.items.reduce((sum, i) => sum + parseWeight(i.weight) * (i.qty || 1), 0)
+  const capacity       = carryingCapacity(attributes?.str ?? 10)
+  const weightPct      = Math.min(100, (totalWeight / capacity) * 100)
+  const isEncumbered   = totalWeight > capacity * 0.5
+  const isHeavyLoad    = totalWeight > capacity
+
+  // Atunamento
+  const attunedCount   = inventory.items.filter(i => i.attuned).length
+  const MAX_ATTUNED    = 3
 
   return (
     <div className="space-y-4">
@@ -60,6 +84,53 @@ export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem
               />
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Capacidade de Carga + Atunamento */}
+      <div className="grid grid-cols-2 gap-3">
+        {/* Peso */}
+        <div className="bg-gray-800 border border-gray-600 rounded-lg p-3 space-y-1.5">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">Carga</span>
+            <span className={`text-xs font-mono ${isHeavyLoad ? 'text-red-400' : isEncumbered ? 'text-orange-400' : 'text-gray-400'}`}>
+              {totalWeight.toFixed(1)} / {capacity} lb
+            </span>
+          </div>
+          <div className="w-full bg-gray-700 rounded-full h-2">
+            <div
+              className={`h-2 rounded-full transition-all ${
+                isHeavyLoad ? 'bg-red-500' : isEncumbered ? 'bg-orange-500' : 'bg-green-500'
+              }`}
+              style={{ width: `${weightPct}%` }}
+            />
+          </div>
+          {isHeavyLoad && <p className="text-[10px] text-red-400">Carga excessiva — velocidade −20ft</p>}
+          {isEncumbered && !isHeavyLoad && <p className="text-[10px] text-orange-400">Sobrecarregado — velocidade −10ft (opcional)</p>}
+          <p className="text-[10px] text-gray-600">FOR ({attributes?.str ?? 10}) × 15 = {capacity} lb</p>
+        </div>
+
+        {/* Atunamento */}
+        <div className="bg-gray-800 border border-gray-600 rounded-lg p-3 space-y-1.5">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">Atunamento</span>
+            <span className={`text-xs font-mono ${attunedCount >= MAX_ATTUNED ? 'text-amber-400' : 'text-gray-400'}`}>
+              {attunedCount}/{MAX_ATTUNED}
+            </span>
+          </div>
+          <div className="flex gap-1.5 mt-1">
+            {[0, 1, 2].map(i => (
+              <div
+                key={i}
+                className={`flex-1 h-4 rounded border transition-colors ${
+                  i < attunedCount
+                    ? 'bg-amber-600 border-amber-500'
+                    : 'bg-gray-700 border-gray-600'
+                }`}
+              />
+            ))}
+          </div>
+          <p className="text-[10px] text-gray-600">Máx. 3 itens mágicos (PHB p.136)</p>
         </div>
       </div>
 
@@ -132,6 +203,15 @@ export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem
                 />
               </div>
             </div>
+            <label className="flex items-center gap-2 text-xs text-gray-300 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={newItem.requiresAttunement}
+                onChange={e => setNewItem(p => ({ ...p, requiresAttunement: e.target.checked }))}
+                className="accent-amber-400"
+              />
+              Requer atunamento
+            </label>
             <button
               onClick={handleAdd}
               disabled={!newItem.name.trim()}
@@ -149,7 +229,6 @@ export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem
           title="Buscar Equipamento (SRD)"
           items={srdEquipment}
           onSelect={eq => {
-            // Detecta armadura/escudo a partir do SRD (armor_category) ou por nome (PT-BR).
             const byName = findArmorByName(eq.name)
             const srdCategory = (eq.armor_category || '').toLowerCase()
             const armorType = srdCategory.includes('shield') || srdCategory === 'escudo'
@@ -170,6 +249,8 @@ export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem
                 eq.armor_class ? `CA: ${eq.armor_class.base}` : null,
                 eq.cost ? `Custo: ${eq.cost.quantity}${eq.cost.unit}` : null,
               ].filter(Boolean).join(' · '),
+              requiresAttunement: false,
+              attuned: false,
               ...(armorType ? { armorKey: byName?.key, armorType } : {}),
             })
           }}
@@ -201,31 +282,36 @@ export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem
         ) : (
           <div className="space-y-1">
             {/* Header */}
-            <div className="grid grid-cols-[1fr_3rem_4rem_1fr_2rem] gap-2 px-2 text-xs text-gray-500 uppercase">
+            <div className="grid grid-cols-[1fr_3rem_4rem_1fr_auto_2rem] gap-2 px-2 text-xs text-gray-500 uppercase">
               <span>Nome</span>
               <span className="text-center">Qtd</span>
               <span className="text-center">Peso</span>
               <span>Notas</span>
+              <span className="text-center">Atunar</span>
               <span />
             </div>
             {inventory.items.map(item => {
-              // Detecta armadura/escudo explicitamente marcado ou por nome (legado).
               const resolvedArmor = item.armorType
                 ? (item.armorKey && ARMOR_TABLE[item.armorKey]
                     ? { ...ARMOR_TABLE[item.armorKey], key: item.armorKey }
                     : { category: item.armorType, type: item.armorType === 'shield' ? 'shield' : 'armor' })
                 : findArmorByName(item.name)
-              const isEquippable = !!resolvedArmor
-              const isEquipped = !!item.equipped
+              const isEquippable   = !!resolvedArmor
+              const isEquipped     = !!item.equipped
+              const canAtune       = !!item.requiresAttunement
+              const isAttuned      = !!item.attuned
+              const canAddAtunement = !isAttuned && attunedCount < MAX_ATTUNED
+
               return (
                 <div
                   key={item.id}
-                  className={`grid grid-cols-[1fr_3rem_4rem_1fr_2rem] gap-2 items-center rounded px-2 py-1.5 ${
+                  className={`grid grid-cols-[1fr_3rem_4rem_1fr_auto_2rem] gap-2 items-center rounded px-2 py-1.5 ${
                     item.source === 'background' ? 'bg-amber-950/30 border border-amber-900/40' : 'bg-gray-900'
-                  } ${isEquipped ? 'ring-1 ring-amber-600/50' : ''}`}
+                  } ${isEquipped ? 'ring-1 ring-amber-600/50' : ''} ${isAttuned ? 'ring-1 ring-purple-600/50' : ''}`}
                 >
                   <span className="text-sm text-white truncate flex items-center gap-1.5">
                     {item.source === 'background' && <span title="Item do antecedente" className="text-[10px]">🎒</span>}
+                    {isAttuned && <span title="Atunado" className="text-[10px]">💎</span>}
                     {isEquippable && (
                       <button
                         onClick={() => onUpdateItem?.(item.id, { equipped: !isEquipped })}
@@ -249,6 +335,32 @@ export function Inventory({ inventory, onUpdateCurrency, onAddItem, onRemoveItem
                   <span className="text-sm text-gray-300 text-center">{item.qty}</span>
                   <span className="text-sm text-gray-400 text-center">{item.weight || '—'}</span>
                   <span className="text-xs text-gray-500 truncate">{item.notes || '—'}</span>
+
+                  {/* Atunamento */}
+                  <div className="flex items-center justify-center">
+                    {canAtune ? (
+                      <button
+                        onClick={() => {
+                          if (!isAttuned && !canAddAtunement) return
+                          onUpdateItem?.(item.id, { attuned: !isAttuned })
+                        }}
+                        disabled={!isAttuned && !canAddAtunement}
+                        title={isAttuned ? 'Remover atunamento' : canAddAtunement ? 'Atunar item' : 'Limite de atunamento atingido'}
+                        className={`text-xs px-1.5 py-0.5 rounded border transition-colors ${
+                          isAttuned
+                            ? 'border-purple-500 bg-purple-900/30 text-purple-300'
+                            : canAddAtunement
+                              ? 'border-gray-600 text-gray-500 hover:border-purple-600 hover:text-purple-400'
+                              : 'border-gray-700 text-gray-700 cursor-not-allowed'
+                        }`}
+                      >
+                        {isAttuned ? '💎' : '○'}
+                      </button>
+                    ) : (
+                      <span className="text-gray-700">—</span>
+                    )}
+                  </div>
+
                   <button
                     onClick={() => onRemoveItem(item.id)}
                     className="text-red-500 hover:text-red-400 text-lg leading-none font-bold justify-self-center"

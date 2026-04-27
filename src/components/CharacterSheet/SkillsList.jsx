@@ -1,5 +1,6 @@
 import { SKILLS, ABILITY_SCORES, formatModifier, calculateSkillModifier, getModifier } from '../../utils/calculations'
 import { Tooltip } from '../Tooltip'
+import { RollButton } from '../DiceRoller/RollButton'
 
 export function SkillsList({ attributes, proficiencies, profBonus, onToggle, onToggleExpertise, classData, extraSkillBudget = 0 }) {
   // O limite exibido soma o budget da classe primária + quaisquer perícias
@@ -49,6 +50,7 @@ export function SkillsList({ attributes, proficiencies, profBonus, onToggle, onT
           // Limite só se aplica a perícias de classe — antecedente nunca bloqueia
           const limitReached = atLimit && !isClassSkill && !isBackgroundSkill
 
+          const notation = `1d20${formatModifier(mod)}`
           return (
             <div key={key} className={`flex items-center gap-1.5 py-0.5 ${limitReached ? 'opacity-50' : ''}`}>
               {/* Checkbox: travado para perícias do antecedente */}
@@ -89,6 +91,7 @@ export function SkillsList({ attributes, proficiencies, profBonus, onToggle, onT
                   {formatModifier(mod)}
                 </span>
               </Tooltip>
+              <RollButton notation={notation} label={name} size="xs" />
               <span className="text-sm text-gray-300 leading-tight">
                 {name}{' '}
                 <span className="text-gray-500 text-xs">({abbr})</span>

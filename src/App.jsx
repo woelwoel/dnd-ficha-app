@@ -1,6 +1,8 @@
 import { useCallback, useState, lazy, Suspense } from 'react'
 import { ErrorBoundary } from './ErrorBoundary'
 import { SrdProvider } from './providers/SrdProvider'
+import { DiceRollerProvider } from './context/DiceRollerContext'
+import { DiceHistoryPanel } from './components/DiceRoller/DiceHistoryPanel'
 import { CharacterList } from './components/CharacterList'
 import './index.css'
 
@@ -32,19 +34,22 @@ function App() {
   return (
     <ErrorBoundary>
       <SrdProvider>
-        <div className="min-h-screen bg-gray-950 text-gray-100">
-          <Suspense fallback={<Loader />}>
-            {view.kind === VIEW.LIST && (
-              <CharacterList onSelect={goToSheet} onCreate={goToNew} />
-            )}
-            {view.kind === VIEW.NEW && (
-              <CharacterWizard onBack={goToList} onComplete={goToSheet} />
-            )}
-            {view.kind === VIEW.SHEET && (
-              <CharacterSheet characterId={view.id} onBack={goToList} />
-            )}
-          </Suspense>
-        </div>
+        <DiceRollerProvider>
+          <div className="min-h-screen bg-gray-950 text-gray-100">
+            <Suspense fallback={<Loader />}>
+              {view.kind === VIEW.LIST && (
+                <CharacterList onSelect={goToSheet} onCreate={goToNew} />
+              )}
+              {view.kind === VIEW.NEW && (
+                <CharacterWizard onBack={goToList} onComplete={goToSheet} />
+              )}
+              {view.kind === VIEW.SHEET && (
+                <CharacterSheet characterId={view.id} onBack={goToList} />
+              )}
+            </Suspense>
+            <DiceHistoryPanel />
+          </div>
+        </DiceRollerProvider>
       </SrdProvider>
     </ErrorBoundary>
   )

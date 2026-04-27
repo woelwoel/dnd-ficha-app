@@ -57,6 +57,8 @@ export function SheetContent({
     toggleLanguage,
     addAttack, removeAttack, updateAttack,
     spendFeatureUse, regainFeatureUse,
+    // v4
+    updateDeathSaves, toggleCondition, setInspiration, setExhaustion,
   } = updaters
 
   const {
@@ -106,6 +108,10 @@ export function SheetContent({
               suggestedMaxHp={calc.suggestedMaxHp}
               passivePerception={calc.passivePerception}
               errors={fichaErrors}
+              onUpdateDeathSaves={updateDeathSaves}
+              onToggleCondition={toggleCondition}
+              onSetInspiration={setInspiration}
+              onSetExhaustion={setExhaustion}
             />
             <SavingThrows
               attributes={character.attributes}
@@ -168,6 +174,7 @@ export function SheetContent({
       <TabPanel id="inventario">
         <Inventory
           inventory={character.inventory}
+          attributes={character.attributes}
           onUpdateCurrency={updateCurrency}
           onAddItem={addItem}
           onRemoveItem={removeItem}

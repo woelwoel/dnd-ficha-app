@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import { ABILITY_SCORES, ATTR_NAME_TO_KEY, formatModifier, calculateSavingThrow, getModifier } from '../../utils/calculations'
 import { Tooltip } from '../Tooltip'
+import { RollButton } from '../DiceRoller/RollButton'
 
 function SavingThrowsBase({ attributes, profBonus, classData }) {
 
@@ -17,9 +18,10 @@ function SavingThrowsBase({ attributes, profBonus, classData }) {
       <p className="text-[10px] text-gray-600 mb-3">Definidas pela classe — 🔒 proficiente</p>
       <div className="space-y-1">
         {ABILITY_SCORES.map(({ key, abbr, name }) => {
-          const proficient = classGranted.includes(key)
-          const abilityMod = getModifier(attributes[key])
-          const mod        = calculateSavingThrow(attributes[key], profBonus, proficient)
+          const proficient   = classGranted.includes(key)
+          const abilityMod   = getModifier(attributes[key])
+          const mod          = calculateSavingThrow(attributes[key], profBonus, proficient)
+          const notation     = `1d20${formatModifier(mod)}`
           const tooltipParts = [`${abbr} ${formatModifier(abilityMod)}`]
           if (proficient) tooltipParts.push(`Prof ${formatModifier(profBonus)}`)
           tooltipParts.push(`= ${formatModifier(mod)}`)
@@ -39,6 +41,11 @@ function SavingThrowsBase({ attributes, profBonus, classData }) {
                   {formatModifier(mod)}
                 </span>
               </Tooltip>
+              <RollButton
+                notation={notation}
+                label={`Salvaguarda — ${abbr}`}
+                size="xs"
+              />
               <span className={`text-sm ${proficient ? 'text-gray-200' : 'text-gray-500'}`}>
                 {abbr}{' '}
                 <span className="text-xs opacity-60">({name})</span>
