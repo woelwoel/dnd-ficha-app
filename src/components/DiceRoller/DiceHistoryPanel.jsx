@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { useDiceRoller } from '../../context/DiceRollerContext'
 
 function timeAgo(ts) {
@@ -44,18 +45,23 @@ function RollEntry({ entry }) {
 
 /**
  * Painel flutuante de histórico de dados.
+ *
+ * Renderiza via createPortal direto no <body> para garantir que position:fixed
+ * seja sempre relativo ao viewport, independente de transforms nos ancestrais.
+ *
  * Fechado → botão 🎲 arcano no canto inferior direito.
- * Aberto  → mini-janela arrastável fixada no canto onde o botão estava.
+ * Aberto  → mini-janela arrastável (arraste pelo cabeçalho).
  */
 export function DiceHistoryPanel() {
   const { history, clearHistory, open, togglePanel } = useDiceRoller()
 
-  // pos === null  →  usa âncora padrão bottom-right via CSS
-  // pos === {x,y} →  posição absoluta (top-left) após arrastar
+  // null = posição padrão (canto inferior direito)
+  // {x, y} = posição após arrasto (left/top do viewport)
   const [pos, setPos] = useState(null)
-  const panelRef  = useRef(null)
-  const moveRef   = useRef(null)
-  const upRef     = useRef(null)
+  const panelRef = useRef(null)
+  const dragRef  = useRef(null) // { startX, startY, origX, origY }
+  const moveRef  = useRef(null)
+  const upRef    = useRef(null)
 
   /* ── Limpa listeners ao desmontar ──────────────────────────── */
   useEffect(() => () => {
@@ -63,30 +69,44 @@ export function DiceHistoryPanel() {
     if (upRef.current)   window.removeEventListener('pointerup',   upRef.current)
   }, [])
 
-  /* ── Fecha e reseta posição para o canto padrão ─────────────── */
+  /* ── Fecha e reseta para o canto padrão ─────────────────────── */
   function handleClose() {
     setPos(null)
     togglePanel()
   }
 
-  /* ── Início do arrasto (header como alça) ─────────────────── */
+  /* ── Início do arrasto no cabeçalho ─────────────────────────── */
   function startDrag(e) {
-    if (e.button !== 0 && e.pointerType !== 'touch') return
-    e.preventDefault()
+    // Só mouse esquerdo ou toque
+    if (e.pointerType === 'mouse' && e.button !== 0) return
 
-    const rect  = panelRef.current?.getBoundingClientRect()
+    const rect = panelRef.current?.getBoundingClientRect()
     if (!rect) return
 
-    const startX = e.clientX
-    const startY = e.clientY
-    const origX  = rect.left
-    const origY  = rect.top
-    const W      = panelRef.current?.offsetWidth  ?? 288
-    const H      = panelRef.current?.offsetHeight ?? 300
+    // Guarda referência do estado de arrasto sem setTimeout
+    dragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      origX:  rect.left,
+      origY:  rect.top,
+    }
+
+    // Captura o pointer para receber eventos mesmo fora da janela
+    panelRef.current?.setPointerCapture?.(e.pointerId)
+
+    let hasMoved = false
 
     moveRef.current = (me) => {
+      const { startX, startY, origX, origY } = dragRef.current
       const dx = me.clientX - startX
       const dy = me.clientY - startY
+
+      // Só inicia drag após movimento mínimo de 4px (evita salto no click simples)
+      if (!hasMoved && Math.abs(dx) < 4 && Math.abs(dy) < 4) return
+      hasMoved = true
+
+      const W = panelRef.current?.offsetWidth  ?? 288
+      const H = panelRef.current?.offsetHeight ?? 300
       setPos({
         x: Math.max(0, Math.min(window.innerWidth  - W, origX + dx)),
         y: Math.max(0, Math.min(window.innerHeight - H, origY + dy)),
@@ -96,51 +116,58 @@ export function DiceHistoryPanel() {
     upRef.current = () => {
       window.removeEventListener('pointermove', moveRef.current)
       window.removeEventListener('pointerup',   upRef.current)
-      moveRef.current = null
-      upRef.current   = null
+      dragRef.current = null
     }
 
     window.addEventListener('pointermove', moveRef.current)
     window.addEventListener('pointerup',   upRef.current)
   }
 
-  /* ── Estilo de posição ────────────────────────────────────── */
+  /* ── Estilos de posição ──────────────────────────────────────
+   * Usamos position:'fixed' via inline style (prioridade máxima)
+   * para sobrepor qualquer CSS de classe (ex: arcane-card tem
+   * position:relative que perderia para o inline style).
+   * ─────────────────────────────────────────────────────────── */
+  const baseStyle = {
+    position:  'fixed',
+    zIndex:    50,
+    maxHeight: '60vh',
+  }
   const posStyle = pos
-    ? { left: pos.x, top: pos.y, bottom: 'auto', right: 'auto' }
-    : { bottom: 20, right: 20 }
+    ? { ...baseStyle, left: pos.x, top: pos.y }
+    : { ...baseStyle, bottom: '1.25rem', right: '1.25rem' }
 
   /* ── Botão quando fechado ──────────────────────────────────── */
-  if (!open) {
-    return (
-      <button
-        onClick={togglePanel}
-        className="fixed bottom-5 right-5 z-50 w-12 h-12 rounded-full
-          bg-blue-900/70 hover:bg-blue-800/80 border border-blue-700/60 hover:border-blue-500
-          shadow-[0_0_20px_rgba(40,90,152,0.3)] hover:shadow-[0_0_28px_rgba(40,90,152,0.45)]
-          text-xl flex items-center justify-center transition-all duration-200"
-        title="Histórico de dados (🎲)"
-        aria-label="Abrir histórico de rolagens"
-      >
-        🎲
-      </button>
-    )
-  }
+  const button = !open ? (
+    <button
+      onClick={togglePanel}
+      style={{ position: 'fixed', bottom: '1.25rem', right: '1.25rem', zIndex: 50 }}
+      className="w-12 h-12 rounded-full
+        bg-blue-900/70 hover:bg-blue-800/80 border border-blue-700/60 hover:border-blue-500
+        shadow-[0_0_20px_rgba(40,90,152,0.3)] hover:shadow-[0_0_28px_rgba(40,90,152,0.45)]
+        text-xl flex items-center justify-center transition-all duration-200"
+      title="Histórico de dados (🎲)"
+      aria-label="Abrir histórico de rolagens"
+    >
+      🎲
+    </button>
+  ) : null
 
+  /* ── Painel quando aberto ──────────────────────────────────── */
   const last = history[0]
-
-  /* ── Painel aberto ─────────────────────────────────────────── */
-  return (
+  const panel = open ? (
     <div
       ref={panelRef}
-      className="fixed z-50 w-72 rounded-xl flex flex-col
+      className="w-72 rounded-xl flex flex-col
         border border-gray-700/70 bg-gray-900/95 backdrop-blur-md
-        shadow-[0_0_40px_rgba(3,5,13,0.8),0_0_0_1px_rgba(40,90,152,0.15)] arcane-card"
-      style={{ ...posStyle, maxHeight: '60vh' }}
+        shadow-[0_0_40px_rgba(3,5,13,0.8),0_0_0_1px_rgba(40,90,152,0.15)]"
+      style={posStyle}
     >
-      {/* ── Cabeçalho / alça de arrasto ───────────────────────── */}
+      {/* ── Cabeçalho / alça de arrasto ─────────────────────── */}
       <div
         className="flex items-center gap-2 px-3 py-2.5 border-b border-gray-700/50 shrink-0
-          cursor-grab active:cursor-grabbing select-none"
+          cursor-grab active:cursor-grabbing select-none rounded-t-xl
+          bg-gray-900/80"
         onPointerDown={startDrag}
         title="Arraste para mover"
       >
@@ -157,7 +184,7 @@ export function DiceHistoryPanel() {
           <button
             onClick={clearHistory}
             onPointerDown={e => e.stopPropagation()}
-            className="text-[11px] text-gray-600 hover:text-red-400 transition-colors"
+            className="text-[11px] text-gray-600 hover:text-red-400 transition-colors px-1 py-0.5"
           >
             limpar
           </button>
@@ -165,7 +192,7 @@ export function DiceHistoryPanel() {
         <button
           onClick={handleClose}
           onPointerDown={e => e.stopPropagation()}
-          className="text-gray-500 hover:text-gray-100 transition-colors leading-none ml-1"
+          className="text-gray-500 hover:text-gray-100 transition-colors leading-none ml-1 px-1 py-0.5"
           aria-label="Fechar painel de dados"
         >
           ✕
@@ -173,7 +200,13 @@ export function DiceHistoryPanel() {
       </div>
 
       {/* ── Histórico ─────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto px-3 py-1 min-h-0">
+      <div
+        className="flex-1 overflow-y-auto px-3 py-1 min-h-0"
+        style={{
+          background: 'linear-gradient(160deg, #0d1428 0%, #060918 100%)',
+          borderRadius: '0 0 0.75rem 0.75rem',
+        }}
+      >
         {history.length === 0 ? (
           <div className="py-8 text-center text-gray-600">
             <p className="text-3xl mb-2">🎲</p>
@@ -187,5 +220,11 @@ export function DiceHistoryPanel() {
         )}
       </div>
     </div>
+  ) : null
+
+  /* ── Renderiza via portal direto no body ─────────────────────── */
+  return createPortal(
+    <>{button}{panel}</>,
+    document.body
   )
 }
