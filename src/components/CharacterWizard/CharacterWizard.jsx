@@ -225,7 +225,7 @@ function canAdvance(stepId, draft, classChoices = {}, races = [], classData = nu
     case 'race': {
       if (!draft.race) return false
       const selectedRace = races.find(r => r.index === draft.race)
-      if (selectedRace?.subraces?.length > 0 && !draft.subrace) return false
+      if (selectedRace?.subraces?.length > 0 && !selectedRace.optionalSubrace && !draft.subrace) return false
       return true
     }
     case 'class': {

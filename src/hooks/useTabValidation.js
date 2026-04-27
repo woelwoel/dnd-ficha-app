@@ -36,7 +36,7 @@ function validateFicha(character, races = []) {
 
   if (info.race && races.length > 0) {
     const selectedRace = races.find(r => r.index === info.race)
-    if (selectedRace?.subraces?.length > 0 && info.subrace === '')
+    if (selectedRace?.subraces?.length > 0 && !selectedRace.optionalSubrace && info.subrace === '')
       errors.subrace = `Sub-raça é obrigatória para ${selectedRace.name}`
   }
 

@@ -70,7 +70,10 @@ export function Step2Race({ draft, updateDraft, races }) {
       {selectedRace?.subraces?.length > 0 && (
         <div>
           <label className="block text-xs text-gray-400 mb-1">
-            Sub-raça <span className="text-red-400">*</span>
+            Sub-raça{' '}
+            {selectedRace.optionalSubrace
+              ? <span className="text-gray-500">(opcional)</span>
+              : <span className="text-red-400">*</span>}
           </label>
           <div className="flex gap-2">
             <select
@@ -78,7 +81,7 @@ export function Step2Race({ draft, updateDraft, races }) {
               onChange={e => handleSubraceChange(e.target.value)}
               className={fieldCls}
             >
-              <option value="">Escolher sub-raça...</option>
+              <option value="">{selectedRace.optionalSubrace ? 'Nenhuma (raça base)' : 'Escolher sub-raça...'}</option>
               {selectedRace.subraces.map(sr => (
                 <option key={sr.index} value={sr.index}>{sr.name}</option>
               ))}

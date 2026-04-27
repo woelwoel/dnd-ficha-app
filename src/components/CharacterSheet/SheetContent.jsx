@@ -5,7 +5,9 @@ import { SkillsList } from './SkillsList'
 import { Inventory } from './Inventory'
 import { Spells } from './Spells'
 import { Notes } from './Notes'
-import { CharacterView } from './CharacterView'
+import { LevelProgression } from './LevelProgression'
+import { ActionsTab } from './ActionsTab'
+import { HabilitiesTab } from './HabilitiesTab'
 import { AttributesSection } from './AttributesSection'
 import { RestActions } from './RestActions'
 import { Attacks } from './Attacks'
@@ -54,6 +56,7 @@ export function SheetContent({
     setConcentration,
     toggleLanguage,
     addAttack, removeAttack, updateAttack,
+    spendFeatureUse, regainFeatureUse,
   } = updaters
 
   const {
@@ -61,6 +64,8 @@ export function SheetContent({
     handleClassChange, handleApplyLevelUp, handleAddMulticlass,
     handleRemoveMulticlass, handleChosenFeaturesChange,
   } = handlers
+
+  const featureUses = character.combat?.classFeatureUses ?? []
 
   if (activeTab === 'ficha') {
     return (
@@ -184,23 +189,47 @@ export function SheetContent({
     )
   }
 
-  if (activeTab === 'visualizar') {
+  if (activeTab === 'progressao') {
     return (
-      <TabPanel id="visualizar">
-        <CharacterView
+      <TabPanel id="progressao">
+        <LevelProgression
           character={character}
-          races={races}
-          classes={classes}
-          backgrounds={backgrounds}
           classData={classData}
-          onApplyLevelUp={handleApplyLevelUp}
+          classes={classes}
           onLevelChange={lvl => updateInfo('level', lvl)}
+          onApplyLevelUp={handleApplyLevelUp}
           onAddMulticlass={handleAddMulticlass}
           onRemoveMulticlass={handleRemoveMulticlass}
           onChosenFeaturesChange={handleChosenFeaturesChange}
           onNavigateToSpells={onNavigateToSpells}
           allowMulticlass={character.meta?.settings?.allowMulticlass ?? true}
           allowFeats={character.meta?.settings?.allowFeats ?? false}
+        />
+      </TabPanel>
+    )
+  }
+
+  if (activeTab === 'acoes') {
+    return (
+      <TabPanel id="acoes">
+        <ActionsTab
+          character={character}
+          featureUses={featureUses}
+          onSpend={spendFeatureUse}
+          onRegain={regainFeatureUse}
+        />
+      </TabPanel>
+    )
+  }
+
+  if (activeTab === 'habilidades') {
+    return (
+      <TabPanel id="habilidades">
+        <HabilitiesTab
+          character={character}
+          featureUses={featureUses}
+          onSpend={spendFeatureUse}
+          onRegain={regainFeatureUse}
         />
       </TabPanel>
     )

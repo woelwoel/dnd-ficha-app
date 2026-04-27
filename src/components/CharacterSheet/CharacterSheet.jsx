@@ -97,7 +97,7 @@ export function CharacterSheet({ characterId, onBack }) {
         onImport={handleImport}
         onImportError={setImportError}
         onPrint={() => window.print()}
-        showPrint={activeTab === 'visualizar'}
+        showPrint={false}
       />
 
       <SheetTabs activeTab={activeTab} onChange={handleTabChange} />

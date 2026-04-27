@@ -390,7 +390,10 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
       {selectedRace?.subraces?.length > 0 && (
         <div>
           <label htmlFor="field-subrace" className="block text-xs text-gray-400 mb-1">
-            Sub-raça <span className="text-red-400 ml-0.5" aria-hidden="true">*</span>
+            Sub-raça{' '}
+            {selectedRace.optionalSubrace
+              ? <span className="text-gray-500 ml-0.5">(opcional)</span>
+              : <span className="text-red-400 ml-0.5" aria-hidden="true">*</span>}
           </label>
           <div className="flex gap-1">
             <select
@@ -400,7 +403,7 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
               aria-describedby={errors.subrace ? 'err-subrace' : undefined}
               className={fieldCls(!!errors.subrace)}
             >
-              <option value="">Escolher sub-raça...</option>
+              <option value="">{selectedRace.optionalSubrace ? 'Nenhuma (raça base)' : 'Escolher sub-raça...'}</option>
               {selectedRace.subraces.map(sr => (
                 <option key={sr.index} value={sr.index}>{sr.name}</option>
               ))}

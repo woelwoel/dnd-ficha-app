@@ -2,12 +2,14 @@
 import { memo, useCallback, useMemo, useRef } from 'react'
 
 export const TABS = [
-  { id: 'ficha',       label: 'Ficha'       },
-  { id: 'percias',     label: 'Perícias'    },
-  { id: 'magias',      label: 'Magias'      },
-  { id: 'inventario',  label: 'Inventário'  },
-  { id: 'notas',       label: 'Notas'       },
-  { id: 'visualizar',  label: 'Visualizar'  },
+  { id: 'ficha',       label: 'Ficha'        },
+  { id: 'percias',     label: 'Perícias'     },
+  { id: 'magias',      label: 'Magias'       },
+  { id: 'inventario',  label: 'Inventário'   },
+  { id: 'notas',       label: 'Notas'        },
+  { id: 'progressao',  label: 'Progressão'   },
+  { id: 'acoes',       label: 'Ações'        },
+  { id: 'habilidades', label: 'Habilidades'  },
 ]
 
 /**
