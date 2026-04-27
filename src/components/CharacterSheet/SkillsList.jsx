@@ -32,7 +32,7 @@ export function SkillsList({ attributes, proficiencies, profBonus, onToggle, onT
           <span className="text-gray-600">🎒 = Antecedente</span>
         )}
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-1">
         {SKILLS.map(({ key, name, ability, abbr }) => {
           const isClassSkill      = proficiencies.skills.includes(key)
           const isBackgroundSkill = backgroundSkills.includes(key)

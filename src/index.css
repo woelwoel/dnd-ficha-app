@@ -74,7 +74,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
-  font-size: 16px;
+  font-size: 17px;
   scroll-behavior: smooth;
 }
 

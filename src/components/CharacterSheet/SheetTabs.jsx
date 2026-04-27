@@ -2,14 +2,13 @@
 import { memo, useCallback, useMemo, useRef } from 'react'
 
 export const TABS = [
-  { id: 'ficha',       label: 'Ficha',       icon: '◆' },
-  { id: 'percias',     label: 'Perícias',    icon: '✦' },
-  { id: 'magias',      label: 'Magias',      icon: '✧' },
-  { id: 'inventario',  label: 'Inventário',  icon: '◈' },
-  { id: 'notas',       label: 'Notas',       icon: '≡' },
-  { id: 'progressao',  label: 'Progressão',  icon: '▲' },
-  { id: 'acoes',       label: 'Ações',       icon: '⚔' },
-  { id: 'habilidades', label: 'Habilidades', icon: '⊛' },
+  { id: 'ficha',       label: 'Ficha',       icon: '◆' },  // stats + perícias + combate
+  { id: 'magias',      label: 'Magias',      icon: '✧' },  // slots e lista de magias
+  { id: 'acoes',       label: 'Ações',       icon: '⚔' },  // ações de combate
+  { id: 'habilidades', label: 'Habilidades', icon: '⊛' },  // traços de classe/raça
+  { id: 'inventario',  label: 'Inventário',  icon: '◈' },  // itens e moedas
+  { id: 'progressao',  label: 'Progressão',  icon: '▲' },  // evolução de nível
+  { id: 'notas',       label: 'Notas',       icon: '≡' },  // anotações e antecedente
 ]
 
 /**
