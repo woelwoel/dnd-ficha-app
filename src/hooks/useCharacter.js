@@ -1,5 +1,7 @@
 import { useState, useCallback, useMemo } from 'react'
 import { SCHEMA_VERSION } from '../domain/characterSchema'
+import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
+import { getModifier } from '../utils/calculations'
 
 const DEFAULT_CHARACTER = {
   id: null,
@@ -205,13 +207,35 @@ export function useCharacter(initialCharacter = null) {
   }, [setCharacter])
 
   const updateItem = useCallback((itemId, patch) => {
-    setCharacter(prev => ({
-      ...prev,
-      inventory: {
-        ...prev.inventory,
-        items: prev.inventory.items.map(i => i.id === itemId ? { ...i, ...patch } : i),
-      },
-    }))
+    setCharacter(prev => {
+      const newItems = prev.inventory.items.map(i => i.id === itemId ? { ...i, ...patch } : i)
+      const base = {
+        ...prev,
+        inventory: { ...prev.inventory, items: newItems },
+      }
+      if ('equipped' in patch) {
+        const attrs = prev.attributes ?? {}
+        const mods = {
+          str: getModifier(attrs.str ?? 10),
+          dex: getModifier(attrs.dex ?? 10),
+          con: getModifier(attrs.con ?? 10),
+          int: getModifier(attrs.int ?? 10),
+          wis: getModifier(attrs.wis ?? 10),
+          cha: getModifier(attrs.cha ?? 10),
+        }
+        const { armor, hasShield } = getEquippedArmor(newItems)
+        const { ac } = calculateArmorClass({
+          mods,
+          attributes: attrs,
+          classIndex: prev.info?.class ?? '',
+          armor,
+          hasShield,
+          armorProficiencies: prev.proficiencies?.armor ?? [],
+        })
+        return { ...base, combat: { ...base.combat, armorClass: ac } }
+      }
+      return base
+    })
   }, [setCharacter])
 
   const addAttack = useCallback(attack => {

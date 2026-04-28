@@ -162,6 +162,7 @@ export function SheetContent({
               suggestedAC={calc.suggestedAC}
               suggestedMaxHp={calc.suggestedMaxHp}
               passivePerception={calc.passivePerception}
+              featSpeedBonus={calc.featSpeedBonus}
               errors={fichaErrors}
               onUpdateDeathSaves={updateDeathSaves}
               onToggleCondition={toggleCondition}

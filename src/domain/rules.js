@@ -370,10 +370,18 @@ export function removeMulticlass(character, idx) {
  *  - Persistência da escolha em `info.asiOrFeatByLevel`
  *  - Limite de +20 em atributos (PHB p.13)
  */
+/* Proficiências de armadura concedidas por talentos específicos */
+const FEAT_ARMOR_PROFICIENCIES = {
+  'protecao-leve':    ['leve'],
+  'protecao-moderada': ['media', 'escudos'],
+  'protecao-pesada':  ['pesada'],
+}
+
 export function applyLevelUp(character, patch) {
   const {
     newLevel, hpIncrease, attrBoosts,
     multiclassIndex, newChoices, bonusSpells, chosenFeat,
+    featChosenAttr,
   } = patch
   const allowFeats = character.meta?.settings?.allowFeats ?? false
 
@@ -386,10 +394,21 @@ export function applyLevelUp(character, patch) {
     console.warn('[applyLevelUp] ASI e Feat são mutuamente exclusivos (PHB p.165). Mantendo ASI, descartando Feat.')
   }
 
-  const attributes = Object.entries(attrBoosts ?? {}).reduce(
+  let attributes = Object.entries(attrBoosts ?? {}).reduce(
     (acc, [k, v]) => ({ ...acc, [k]: Math.min(MAX_ATTRIBUTE_VALUE, (acc[k] ?? 10) + (Number(v) || 0)) }),
     { ...character.attributes }
   )
+
+  // Aplica bônus de atributo do talento (attrBonus) imediatamente aos atributos
+  if (hasFeat && !hasAsi && chosenFeat.attrBonus) {
+    const targetAttr = featChosenAttr ?? chosenFeat.attrBonus.choices[0]
+    if (targetAttr) {
+      attributes = {
+        ...attributes,
+        [targetAttr]: Math.min(MAX_ATTRIBUTE_VALUE, (attributes[targetAttr] ?? 10) + (chosenFeat.attrBonus.amount ?? 1)),
+      }
+    }
+  }
 
   let info = multiclassIndex == null
     ? { ...character.info, level: newLevel }
@@ -421,10 +440,22 @@ export function applyLevelUp(character, patch) {
     info = {
       ...info,
       feats: [...(info.feats ?? []), {
-        index: chosenFeat.index,
-        name:  chosenFeat.name,
+        index:       chosenFeat.index,
+        name:        chosenFeat.name,
         takenAtLevel: newLevel,
+        ...(chosenFeat.attrBonus ? { chosenAttr: featChosenAttr ?? chosenFeat.attrBonus.choices[0] ?? null } : {}),
       }],
+    }
+  }
+
+  // Proficiências de armadura concedidas pelo talento
+  let proficiencies = character.proficiencies
+  if (hasFeat && !hasAsi) {
+    const grantedArmor = FEAT_ARMOR_PROFICIENCIES[chosenFeat.index] ?? []
+    if (grantedArmor.length > 0) {
+      const currentArmor = proficiencies?.armor ?? []
+      const merged = [...new Set([...currentArmor, ...grantedArmor])]
+      proficiencies = { ...proficiencies, armor: merged }
     }
   }
 
@@ -433,17 +464,23 @@ export function applyLevelUp(character, patch) {
     s => s.index
   )
 
-  // PHB p.15: ganho mínimo de 1 HP por nível.
+  // Talento Robusto: +2 PV por nível ao ser adquirido (PHB p.170)
+  const isRobusto = hasFeat && !hasAsi && chosenFeat.index === 'robusto'
+  const totalLevelForRobusto = (multiclassIndex == null ? newLevel : character.info.level)
+    + (character.info.multiclasses ?? []).reduce((s, mc, i) => s + (i === multiclassIndex ? newLevel : mc.level ?? 0), 0)
+  const robustoBonusHp = isRobusto ? 2 * totalLevelForRobusto : 0
+
   const safeHpIncrease = Math.max(1, Number(hpIncrease) || 1)
 
   const next = {
     ...character,
     info,
     attributes,
+    proficiencies,
     combat: {
       ...character.combat,
-      maxHp:     (character.combat.maxHp ?? 0) + safeHpIncrease,
-      currentHp: (character.combat.currentHp ?? 0) + safeHpIncrease,
+      maxHp:     (character.combat.maxHp ?? 0) + safeHpIncrease + robustoBonusHp,
+      currentHp: (character.combat.currentHp ?? 0) + safeHpIncrease + robustoBonusHp,
     },
     spellcasting: { ...character.spellcasting, spells: mergedSpells },
   }
@@ -471,6 +508,13 @@ export function calculateMaxHpMulticlass(character, classDataByIndex) {
     const mcData = classDataByIndex?.[mc.class]
     const die = mcData?.hit_die ?? 8
     for (let l = 1; l <= (mc.level ?? 0); l++) total += avg(die)
+  }
+
+  // Talento Robusto: +2 PV por nível total (PHB p.170)
+  const hasRobusto = (info?.feats ?? []).some(f => f.index === 'robusto')
+  if (hasRobusto) {
+    const totalLevel = primaryLevel + (info?.multiclasses ?? []).reduce((s, mc) => s + (mc.level ?? 0), 0)
+    total += 2 * totalLevel
   }
 
   return Math.max(1, total)

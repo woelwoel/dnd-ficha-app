@@ -228,6 +228,11 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
           onClose={() => setSearchOpen(false)}
           title="Buscar Equipamento (SRD)"
           items={srdEquipment}
+          categories={[
+            { key: 'arma',     label: 'Armas',     match: eq => /weapon|arma/i.test(eq.equipment_category?.name ?? '') },
+            { key: 'armadura', label: 'Armaduras', match: eq => /armor|armadura|armour/i.test(eq.equipment_category?.name ?? '') || !!eq.armor_class },
+            { key: 'outro',    label: 'Outros',    match: eq => !/weapon|arma|armor|armadura|armour/i.test(eq.equipment_category?.name ?? '') && !eq.armor_class },
+          ]}
           onSelect={eq => {
             const byName = findArmorByName(eq.name)
             const srdCategory = (eq.armor_category || '').toLowerCase()

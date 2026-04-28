@@ -148,7 +148,7 @@ function ConditionsTracker({ conditions = [], onToggle }) {
 /* ── Componente principal ──────────────────────────────────── */
 function CombatStatsBase({
   combat, attributes, profBonus, onUpdateCombat,
-  suggestedAC, suggestedMaxHp, passivePerception,
+  suggestedAC, suggestedMaxHp, passivePerception, featSpeedBonus = 0,
   errors = {},
   onUpdateDeathSaves, onToggleCondition, onSetInspiration, onSetExhaustion,
 }) {
@@ -190,7 +190,11 @@ function CombatStatsBase({
           action={<RollButton notation={initNotation} label="Iniciativa" size="xs" className="mt-0.5" />}
         />
         <StatBox label="Velocidade" value={`${combat.speed}ft`} editable
-          onChange={v => onUpdateCombat('speed', Math.max(0, parseInt(v) || 0))} />
+          onChange={v => onUpdateCombat('speed', Math.max(0, parseInt(v) || 0))}
+          hint={featSpeedBonus > 0 && combat.speed < (30 + featSpeedBonus)
+            ? { label: `Mob: +${featSpeedBonus}ft`, onApply: () => onUpdateCombat('speed', combat.speed + featSpeedBonus) }
+            : null}
+        />
       </div>
 
       {/* Linha 2: Bônus de Prof / Dado de Vida / Percepção Passiva */}

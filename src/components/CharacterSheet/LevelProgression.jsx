@@ -242,6 +242,7 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
   // Modo ASI vs Talento
   const [asiMode,             setAsiMode]             = useState('asi') // 'asi' | 'feat'
   const [selectedFeatIdx,     setSelectedFeatIdx]     = useState(null)
+  const [featChosenAttr,      setFeatChosenAttr]      = useState(null)
   const [featSearch,          setFeatSearch]          = useState('')
   // Feats vêm do SrdProvider (cache centralizado + AbortController no provider)
   const { feats: feats } = useSrd()
@@ -250,8 +251,13 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
   const hasASI      = isASIEntry(nextEntry)
 
   const chosenFeat  = selectedFeatIdx !== null ? feats[selectedFeatIdx] : null
-  // ASI pronto: se modo ASI precisam boosts; se modo talento precisa ter selecionado um talento
-  const asiReady    = !hasASI || (asiMode === 'asi' ? Object.keys(boosts).length > 0 : chosenFeat !== null)
+
+  // Se o talento tem attrBonus com múltiplas escolhas, exige que o usuário escolha
+  const featNeedsAttrPick = chosenFeat?.attrBonus && (chosenFeat.attrBonus.choices?.length ?? 0) > 1
+  const featAttrReady     = !featNeedsAttrPick || featChosenAttr !== null
+
+  // ASI pronto: se modo ASI precisam boosts; se modo talento precisa talento + atributo (se aplicável)
+  const asiReady    = !hasASI || (asiMode === 'asi' ? Object.keys(boosts).length > 0 : chosenFeat !== null && featAttrReady)
 
   const choicesForLevel = (levelChoices ?? []).filter(c => c.level === nextLevel)
   const choicesReady = choicesForLevel.every(c => !!(newChoices[c.id] ?? currentChosenFeatures?.[c.id]))
@@ -405,7 +411,7 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
               {[['asi', '📈 Melhorar Atributos'], ['feat', '🌟 Escolher Talento']].map(([mode, label]) => (
                 <button
                   key={mode}
-                  onClick={() => { setAsiMode(mode); setBoosts({}); setSelectedFeatIdx(null) }}
+                  onClick={() => { setAsiMode(mode); setBoosts({}); setSelectedFeatIdx(null); setFeatChosenAttr(null) }}
                   className={`text-xs px-3 py-1.5 rounded font-semibold transition-colors ${
                     asiMode === mode
                       ? 'bg-amber-700 text-white'
@@ -444,7 +450,7 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
                     <button
                       key={feat.index}
                       type="button"
-                      onClick={() => setSelectedFeatIdx(sel ? null : realIdx)}
+                      onClick={() => { setSelectedFeatIdx(sel ? null : realIdx); setFeatChosenAttr(null) }}
                       className={`w-full text-left px-3 py-2 rounded-lg border transition-colors ${
                         sel
                           ? 'border-amber-500 bg-amber-900/30 text-amber-200'
@@ -479,6 +485,45 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
               </div>
               {chosenFeat && (
                 <p className="text-xs text-green-400 font-semibold">✓ Talento selecionado: {chosenFeat.name}</p>
+              )}
+              {/* Picker de atributo quando o talento oferece bônus de atributo */}
+              {chosenFeat?.attrBonus && (
+                <div className="p-3 bg-gray-900 border border-amber-800/40 rounded-lg space-y-2">
+                  <p className="text-xs font-semibold text-amber-300">
+                    +{chosenFeat.attrBonus.amount} ponto de atributo{chosenFeat.attrBonus.choices.length > 1 ? ' (escolha um):' : ':'}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {chosenFeat.attrBonus.choices.map(attrKey => {
+                      const score = ABILITY_SCORES.find(a => a.key === attrKey)
+                      const currentVal = attributes[attrKey] ?? 10
+                      const atMax = currentVal >= 20
+                      const isSel = featChosenAttr === attrKey || (chosenFeat.attrBonus.choices.length === 1 && featChosenAttr == null)
+                      return (
+                        <button
+                          key={attrKey}
+                          type="button"
+                          disabled={atMax}
+                          onClick={() => setFeatChosenAttr(attrKey)}
+                          className={`px-3 py-1.5 rounded border text-sm font-semibold transition-colors ${
+                            atMax
+                              ? 'border-gray-700 bg-gray-800 text-gray-600 cursor-not-allowed'
+                              : isSel && chosenFeat.attrBonus.choices.length > 1
+                              ? 'border-amber-500 bg-amber-900/30 text-amber-200'
+                              : chosenFeat.attrBonus.choices.length === 1
+                              ? 'border-green-600 bg-green-900/30 text-green-200 cursor-default'
+                              : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-amber-600'
+                          }`}
+                        >
+                          {score?.abbr ?? attrKey.toUpperCase()} {currentVal} → {Math.min(20, currentVal + chosenFeat.attrBonus.amount)}
+                          {atMax && <span className="ml-1 text-[10px] text-gray-600">(máx)</span>}
+                        </button>
+                      )
+                    })}
+                  </div>
+                  {featNeedsAttrPick && !featChosenAttr && (
+                    <p className="text-[10px] text-red-400">Escolha qual atributo será aumentado.</p>
+                  )}
+                </div>
               )}
             </div>
           )}
@@ -521,6 +566,7 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
             newChoices,
             bonusSpells: bonusCantripsChosen,
             chosenFeat: asiMode === 'feat' ? chosenFeat : null,
+            featChosenAttr: asiMode === 'feat' ? (featChosenAttr ?? (chosenFeat?.attrBonus?.choices?.[0] ?? null)) : null,
           })}
           className={`flex-1 py-2 rounded text-sm font-bold transition-all ${
             canCommit
@@ -532,7 +578,9 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
             ? (!hpGain ? 'Escolha o ganho de PV'
               : !choicesReady ? 'Escolha sua característica'
               : !bonusCantripsReady ? `Escolha ${bonusCantripsNeeded - bonusCantripsChosen.length} truque(s) bônus`
-              : asiMode === 'feat' ? 'Escolha um talento' : 'Escolha a melhoria de atributo')
+              : asiMode === 'feat' && !chosenFeat ? 'Escolha um talento'
+              : asiMode === 'feat' && !featAttrReady ? 'Escolha o atributo do talento'
+              : 'Escolha a melhoria de atributo')
             : `Confirmar Subida para Nível ${nextLevel}`
           }
         </button>
