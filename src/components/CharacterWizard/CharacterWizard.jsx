@@ -26,7 +26,7 @@ const INITIAL_DRAFT = {
   spellcastingAbility: null, hitDice: '1d8',
   background: '', backgroundSkills: [], backgroundItems: [],
   backgroundGold: 0,
-  classEquipmentChoice: 'equipment', classStartingGold: 0,
+  classEquipmentChoice: 'equipment', classEquipmentChoices: {}, classStartingGold: 0,
   baseAttributes: { str: 0, dex: 0, con: 0, int: 0, wis: 0, cha: 0 },
   rolledScores: [],
   chosenSkills: [],
@@ -125,7 +125,7 @@ export function CharacterWizard({ onBack, onComplete }) {
 
   const {
     races, classes, backgrounds,
-    classChoices, progression: classProgression,
+    classChoices, classEquipment, progression: classProgression,
   } = useSrd()
 
   const classData = useMemo(
@@ -168,7 +168,7 @@ export function CharacterWizard({ onBack, onComplete }) {
   }
 
   function handleFinish() {
-    const character = buildCharacter(draft, classData)
+    const character = buildCharacter(draft, classData, classEquipment)
     upsertCharacter(character)
     onComplete(character.id)
   }
@@ -234,7 +234,7 @@ export function CharacterWizard({ onBack, onComplete }) {
                 {currentStepId === 'settings'   && <Step0Settings   draft={draft} updateDraft={updateDraft} />}
                 {currentStepId === 'concept'    && <Step1Concept    draft={draft} updateDraft={updateDraft} />}
                 {currentStepId === 'race'       && <Step2Race       draft={draft} updateDraft={updateDraft} races={races} />}
-                {currentStepId === 'class'      && <Step3Class      draft={draft} updateDraft={updateDraft} classes={classes} classChoices={classChoices} classProgression={classProgression} />}
+                {currentStepId === 'class'      && <Step3Class      draft={draft} updateDraft={updateDraft} classes={classes} classChoices={classChoices} classEquipment={classEquipment} classProgression={classProgression} />}
                 {currentStepId === 'background' && <Step4Background draft={draft} updateDraft={updateDraft} backgrounds={backgrounds} />}
                 {currentStepId === 'attributes' && <Step5Attributes draft={draft} updateDraft={updateDraft} />}
                 {currentStepId === 'skills'     && <Step6Skills     draft={draft} updateDraft={updateDraft} classData={classData} />}
@@ -324,8 +324,26 @@ function isAttributesComplete(draft) {
   return Object.values(draft.baseAttributes).every(v => v > 0)
 }
 
+/* ── Resolve itens de equipamento de classe ───────────────────── */
+function resolveClassEquipmentItems(draft, classEquipment) {
+  if (draft.classEquipmentChoice !== 'equipment') return []
+  const classData = classEquipment?.[draft.class]
+  if (!classData) return []
+  const items = []
+  for (const choice of classData.choices ?? []) {
+    const selected = draft.classEquipmentChoices?.[choice.id]
+    if (!selected) continue
+    const opt = choice.options.find(o => o.value === selected)
+    if (opt) items.push(...(opt.items ?? []).map(i => ({ ...i, source: 'class' })))
+  }
+  for (const item of classData.fixed ?? []) {
+    items.push({ ...item, source: 'class' })
+  }
+  return items
+}
+
 /* ── Converte draft → character completo ──────────────────────── */
-function buildCharacter(draft, classData) {
+function buildCharacter(draft, classData, classEquipment) {
   const attrs = { ...draft.baseAttributes }
   for (const [k, v] of Object.entries(draft.racialBonuses)) {
     attrs[k] = Math.min(30, (attrs[k] ?? 10) + v)
@@ -412,7 +430,10 @@ function buildCharacter(draft, classData) {
         gp: (draft.backgroundGold ?? 0) + (draft.classEquipmentChoice === 'gold' ? (draft.classStartingGold ?? 0) : 0),
         pp: 0,
       },
-      items: (draft.backgroundItems ?? []).map(i => ({ ...i, id: generateId() })),
+      items: [
+        ...(draft.backgroundItems ?? []).map(i => ({ ...i, id: generateId() })),
+        ...resolveClassEquipmentItems(draft, classEquipment).map(i => ({ ...i, id: generateId() })),
+      ],
     },
     traits: {
       personalityTraits: '',

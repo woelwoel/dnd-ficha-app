@@ -14,9 +14,10 @@ const DATASETS = {
   spells:       { pt: 'phb-spells-pt.json',                fallback: null },
   levels:       { pt: '5e-SRD-Levels.json',                fallback: null },
   progression:  { pt: 'phb-class-progression-pt.json',     fallback: null },
-  classChoices: { pt: 'phb-class-choices-pt.json',         fallback: null },
-  multiclass:   { pt: 'phb-multiclass-pt.json',            fallback: null },
-  feats:        { pt: 'phb-feats-pt.json',                 fallback: null },
+  classChoices:    { pt: 'phb-class-choices-pt.json',       fallback: null },
+  classEquipment:  { pt: 'phb-class-equipment-pt.json',    fallback: null },
+  multiclass:      { pt: 'phb-multiclass-pt.json',         fallback: null },
+  feats:           { pt: 'phb-feats-pt.json',              fallback: null },
 }
 
 function loadDataset(name, { pt, fallback }, signal) {
@@ -38,7 +39,7 @@ const SrdContext = createContext(null)
 export function SrdProvider({ children }) {
   const [data, setData] = useState(() => ({
     races: [], classes: [], backgrounds: [], spells: [], levels: [],
-    progression: {}, classChoices: {}, multiclass: {}, feats: [],
+    progression: {}, classChoices: {}, classEquipment: {}, multiclass: {}, feats: [],
     ready: false,
   }))
 

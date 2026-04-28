@@ -13,7 +13,7 @@ function rollGoldFormula(formula) {
   return total * (Number(m[3]) || 1)
 }
 
-export function Step3Class({ draft, updateDraft, classes, classChoices = {}, classProgression = {} }) {
+export function Step3Class({ draft, updateDraft, classes, classChoices = {}, classEquipment = {}, classProgression = {} }) {
   const [classModal, setClassModal] = useState(false)
   const [infoModal,  setInfoModal]  = useState(null) // { name, desc, grants? }
 
@@ -46,7 +46,7 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
     const saveKeys = (cls?.saving_throws ?? []).map(n => ATTR_NAME_TO_KEY[n]).filter(Boolean)
     const spellKey = SPELL_ABILITY_PT_TO_KEY[cls?.spellcasting_ability] ?? null
     const hitDice  = cls?.hit_die ? `1d${cls.hit_die}` : '1d8'
-    updateDraft({ class: classIndex, chosenFeatures: {}, bonusSpells: [], savingThrows: saveKeys, spellcastingAbility: spellKey, hitDice })
+    updateDraft({ class: classIndex, chosenFeatures: {}, bonusSpells: [], classEquipmentChoices: {}, savingThrows: saveKeys, spellcastingAbility: spellKey, hitDice })
   }
 
   function handleLevelChange(lvl) {
@@ -265,46 +265,12 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
 
       {/* Equipamento inicial vs Ouro */}
       {selectedClass && (
-        <div className="space-y-2">
-          <p className="text-xs text-gray-400">Equipamento Inicial</p>
-          <div className="flex gap-2">
-            <button type="button"
-              onClick={() => updateDraft({ classEquipmentChoice: 'equipment', classStartingGold: 0 })}
-              className={`flex-1 px-3 py-2 text-xs rounded-lg border transition-colors ${
-                (draft.classEquipmentChoice ?? 'equipment') !== 'gold'
-                  ? 'bg-amber-900/30 border-amber-700 text-amber-300'
-                  : 'bg-gray-800 border-gray-600 text-gray-400 hover:border-gray-500'
-              }`}>
-              🎒 Equipamento do Antecedente
-            </button>
-            <button type="button"
-              onClick={() => updateDraft({ classEquipmentChoice: 'gold' })}
-              className={`flex-1 px-3 py-2 text-xs rounded-lg border transition-colors ${
-                draft.classEquipmentChoice === 'gold'
-                  ? 'bg-amber-900/30 border-amber-700 text-amber-300'
-                  : 'bg-gray-800 border-gray-600 text-gray-400 hover:border-gray-500'
-              }`}>
-              🪙 Ouro Inicial {selectedClass.gold_formula ? `(${selectedClass.gold_formula} PO)` : ''}
-            </button>
-          </div>
-
-          {draft.classEquipmentChoice === 'gold' && (
-            <div className="bg-gray-800 border border-gray-700 rounded-lg p-3 flex items-center gap-3">
-              <div className="flex-1">
-                <p className="text-xs text-gray-500">Fórmula de ouro inicial:</p>
-                <p className="text-sm font-bold text-amber-300">{selectedClass.gold_formula ?? '5d4 × 10'} PO</p>
-              </div>
-              <button type="button"
-                onClick={() => updateDraft({ classStartingGold: rollGoldFormula(selectedClass.gold_formula ?? '5d4 × 10') })}
-                className="px-3 py-1.5 bg-amber-700 hover:bg-amber-600 text-white text-xs rounded-lg transition-colors">
-                🎲 Rolar
-              </button>
-              {(draft.classStartingGold ?? 0) > 0 && (
-                <span className="text-amber-300 font-bold text-lg">{draft.classStartingGold} PO</span>
-              )}
-            </div>
-          )}
-        </div>
+        <ClassEquipmentSection
+          draft={draft}
+          updateDraft={updateDraft}
+          selectedClass={selectedClass}
+          classEquipmentData={classEquipment[draft.class] ?? null}
+        />
       )}
 
       {/* Modal de detalhes da classe */}
@@ -330,6 +296,168 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
           </div>
         )}
       </DetailsModal>
+    </div>
+  )
+}
+
+/* ── Seção de equipamento inicial da classe ───────────────────── */
+function ClassEquipmentSection({ draft, updateDraft, selectedClass, classEquipmentData }) {
+  const isEquipment = (draft.classEquipmentChoice ?? 'equipment') !== 'gold'
+
+  // Calcula os itens que serão recebidos (para preview)
+  function previewItems() {
+    if (!classEquipmentData) return []
+    const items = []
+    for (const choice of classEquipmentData.choices ?? []) {
+      const sel = draft.classEquipmentChoices?.[choice.id]
+      if (sel) {
+        const opt = choice.options.find(o => o.value === sel)
+        if (opt) items.push(...(opt.items ?? []))
+      }
+    }
+    for (const item of classEquipmentData.fixed ?? []) items.push(item)
+    return items
+  }
+
+  const totalChoices  = classEquipmentData?.choices?.length ?? 0
+  const doneChoices   = (classEquipmentData?.choices ?? []).filter(c => !!draft.classEquipmentChoices?.[c.id]).length
+  const allDone       = totalChoices > 0 && doneChoices === totalChoices
+  const preview       = isEquipment ? previewItems() : []
+
+  return (
+    <div className="space-y-2">
+      <p className="text-xs text-gray-400 font-semibold">Equipamento Inicial</p>
+
+      {/* Toggle equipamento × ouro */}
+      <div className="flex gap-2">
+        <button type="button"
+          onClick={() => updateDraft({ classEquipmentChoice: 'equipment', classStartingGold: 0 })}
+          className={`flex-1 px-3 py-2 text-xs rounded-lg border transition-colors ${
+            isEquipment
+              ? 'bg-amber-900/30 border-amber-700 text-amber-300'
+              : 'bg-gray-800 border-gray-600 text-gray-400 hover:border-gray-500'
+          }`}>
+          🎒 Equipamento da Classe
+        </button>
+        <button type="button"
+          onClick={() => updateDraft({ classEquipmentChoice: 'gold' })}
+          className={`flex-1 px-3 py-2 text-xs rounded-lg border transition-colors ${
+            !isEquipment
+              ? 'bg-amber-900/30 border-amber-700 text-amber-300'
+              : 'bg-gray-800 border-gray-600 text-gray-400 hover:border-gray-500'
+          }`}>
+          🪙 Ouro Inicial {selectedClass.gold_formula ? `(${selectedClass.gold_formula} PO)` : ''}
+        </button>
+      </div>
+
+      {/* ── Opção: equipamento da classe ── */}
+      {isEquipment && classEquipmentData && (
+        <div className="space-y-2">
+          {/* Indicador de progresso */}
+          {totalChoices > 0 && (
+            <div className={`flex items-center gap-1.5 px-2 py-1 rounded text-[11px] font-semibold ${
+              allDone
+                ? 'bg-green-900/20 border border-green-800/40 text-green-400'
+                : 'bg-amber-900/20 border border-amber-800/40 text-amber-400'
+            }`}>
+              <span>{allDone ? '✓' : '⚠'}</span>
+              <span>{allDone ? 'Todas as escolhas feitas' : `${doneChoices} de ${totalChoices} escolha${totalChoices > 1 ? 's' : ''} feita${doneChoices !== 1 ? 's' : ''}`}</span>
+            </div>
+          )}
+
+          {/* Grupos de escolha */}
+          {(classEquipmentData.choices ?? []).map(choice => {
+            const selected = draft.classEquipmentChoices?.[choice.id] ?? ''
+            return (
+              <div key={choice.id} className={`rounded-xl border p-3 space-y-2 transition-colors ${
+                selected
+                  ? 'border-green-800/50 bg-green-900/10'
+                  : 'border-amber-700/50 bg-amber-900/10'
+              }`}>
+                <p className="text-[11px] text-gray-400">
+                  {choice.prompt}
+                  {!selected && <span className="text-red-400 ml-1">*</span>}
+                </p>
+                <div className="flex flex-col gap-1.5">
+                  {choice.options.map(opt => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => updateDraft({
+                        classEquipmentChoices: {
+                          ...(draft.classEquipmentChoices ?? {}),
+                          [choice.id]: opt.value,
+                        }
+                      })}
+                      className={`text-left px-3 py-2 rounded-lg border text-xs transition-colors flex items-start gap-2 ${
+                        selected === opt.value
+                          ? 'border-amber-500 bg-amber-900/30 text-amber-200'
+                          : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
+                      }`}
+                    >
+                      <span className={`w-3 h-3 rounded-full border-2 shrink-0 mt-0.5 ${
+                        selected === opt.value ? 'border-amber-400 bg-amber-500' : 'border-gray-600'
+                      }`} />
+                      <span className="flex-1">
+                        <span className="font-medium">{opt.label}</span>
+                        <span className="text-gray-500 ml-1 text-[10px]">
+                          ({opt.items.map(i => `${i.qty > 1 ? `${i.qty}× ` : ''}${i.name}`).join(', ')})
+                        </span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
+
+          {/* Itens fixos */}
+          {(classEquipmentData.fixed ?? []).length > 0 && (
+            <div className="bg-gray-800/60 border border-gray-700/50 rounded-lg px-3 py-2">
+              <p className="text-[10px] text-gray-500 mb-1.5 uppercase tracking-widest">Incluído automaticamente</p>
+              <div className="flex flex-wrap gap-1.5">
+                {classEquipmentData.fixed.map((item, i) => (
+                  <span key={i} className="text-xs bg-gray-700/80 border border-gray-600/50 px-2 py-0.5 rounded-full text-gray-300">
+                    {item.qty > 1 ? `${item.qty}× ` : ''}{item.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Resumo do equipamento selecionado */}
+          {preview.length > 0 && allDone && (
+            <div className="bg-blue-900/15 border border-blue-700/30 rounded-lg px-3 py-2">
+              <p className="text-[10px] text-blue-400 mb-1.5 uppercase tracking-widest font-semibold">Equipamento final</p>
+              <div className="flex flex-wrap gap-1.5">
+                {preview.map((item, i) => (
+                  <span key={i} className="text-xs bg-blue-900/30 border border-blue-700/40 px-2 py-0.5 rounded-full text-blue-200">
+                    {item.qty > 1 ? `${item.qty}× ` : ''}{item.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Opção: ouro inicial ── */}
+      {!isEquipment && (
+        <div className="bg-gray-800 border border-gray-700 rounded-lg p-3 flex items-center gap-3">
+          <div className="flex-1">
+            <p className="text-xs text-gray-500">Fórmula de ouro inicial:</p>
+            <p className="text-sm font-bold text-amber-300">{selectedClass.gold_formula ?? '5d4 × 10'} PO</p>
+          </div>
+          <button type="button"
+            onClick={() => updateDraft({ classStartingGold: rollGoldFormula(selectedClass.gold_formula ?? '5d4 × 10') })}
+            className="px-3 py-1.5 bg-amber-700 hover:bg-amber-600 text-white text-xs rounded-lg transition-colors">
+            🎲 Rolar
+          </button>
+          {(draft.classStartingGold ?? 0) > 0 && (
+            <span className="text-amber-300 font-bold text-lg">{draft.classStartingGold} PO</span>
+          )}
+        </div>
+      )}
     </div>
   )
 }
