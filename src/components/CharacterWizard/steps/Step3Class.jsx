@@ -542,13 +542,19 @@ function ClassEquipmentSection({ draft, updateDraft, selectedClass, classEquipme
           {(classEquipmentData.fixed ?? []).length > 0 && (
             <div className="bg-gray-800/60 border border-gray-700/50 rounded-lg px-3 py-2 space-y-2">
               <p className="text-[10px] text-gray-500 uppercase tracking-widest">Incluído automaticamente</p>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-col gap-1.5">
                 {classEquipmentData.fixed.filter(i => !i.pick).map((item, i) => (
-                  <span key={i} className="text-xs bg-gray-700/80 border border-gray-600/50 px-2 py-0.5 rounded-full text-gray-300"
-                    title={item.desc ?? ''}>
-                    {item.qty > 1 ? `${item.qty}× ` : ''}{item.name}
-                    {item.desc && <span className="text-gray-500 ml-1 text-[10px]">· {item.desc}</span>}
-                  </span>
+                  <div key={i} className="flex items-start gap-2 px-2 py-1.5 rounded-lg bg-gray-700/50 border border-gray-600/40">
+                    <span className="text-green-500 text-[11px] mt-0.5 shrink-0">✦</span>
+                    <div className="min-w-0">
+                      <span className="text-xs text-gray-200 font-medium">
+                        {item.qty > 1 ? `${item.qty}× ` : ''}{item.name}
+                      </span>
+                      {item.desc && (
+                        <p className="text-[10px] text-gray-500 mt-0.5 leading-snug">{item.desc}</p>
+                      )}
+                    </div>
+                  </div>
                 ))}
               </div>
               {/* Picks fixos (ex: bruxo arma simples extra) */}
