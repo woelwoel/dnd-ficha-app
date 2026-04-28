@@ -217,8 +217,58 @@
           }
         ],
         "fullDescription": "Nas profundas cidades do Subterrâneo vivem os duergar, ou anões cinzentos. Estes perversos e furtivos comerciantes de escravos invadem o mundo da superfície para fazer prisioneiros, então vendem suas presas para outras raças do Subterrâneo. Eles têm habilidades mágicas inatas para tornarem-se invisíveis e crescerem temporariamente até o tamanho de um gigante.",
-        "topics": [],
-        "traits": []
+        "topics": [
+          {
+            "title": "Aumento no Valor de Habilidade",
+            "desc": "Seu valor de Força aumenta em 1 (além do +2 em Constituição da raça base)."
+          },
+          {
+            "title": "Visão no Escuro Superior",
+            "desc": "Acostumado à vida nas profundezas do Subterrâneo, você possui visão no escuro a até 36 metros."
+          },
+          {
+            "title": "Resiliência Duergar",
+            "desc": "Você possui vantagem em testes de resistência contra ilusões e contra ser enfeitiçado ou paralisado."
+          },
+          {
+            "title": "Magia Duergar",
+            "desc": "Quando atingir o 3° nível, poderá conjurar a magia Ampliar/Reduzir (somente versão Ampliar) uma vez com esse traço, e recuperará a habilidade de fazê-lo ao terminar um descanso longo. Quando atingir o 5° nível, poderá conjurar a magia Invisibilidade (somente sobre si mesmo) uma vez com esse traço, recuperando ao terminar um descanso longo. Inteligência é sua habilidade de conjuração para estas magias."
+          },
+          {
+            "title": "Sensibilidade à Luz Solar",
+            "desc": "Você tem desvantagem em jogadas de ataque e em testes de Sabedoria (Percepção) que dependam da visão quando você, o alvo do ataque ou o que você tenta perceber está em luz solar direta."
+          },
+          {
+            "title": "Idiomas",
+            "desc": "Você pode falar, ler e escrever Comum, Anão e Subterrâneo."
+          }
+        ],
+        "traits": [
+          {
+            "name": "Aumento no Valor de Habilidade",
+            "desc": "Seu valor de Força aumenta em 1 (além do +2 em Constituição da raça base)."
+          },
+          {
+            "name": "Visão no Escuro Superior",
+            "desc": "Acostumado à vida nas profundezas do Subterrâneo, você possui visão no escuro a até 36 metros."
+          },
+          {
+            "name": "Resiliência Duergar",
+            "desc": "Você possui vantagem em testes de resistência contra ilusões e contra ser enfeitiçado ou paralisado."
+          },
+          {
+            "name": "Magia Duergar",
+            "desc": "Quando atingir o 3° nível, poderá conjurar a magia Ampliar/Reduzir (somente versão Ampliar) uma vez com esse traço, e recuperará a habilidade de fazê-lo ao terminar um descanso longo. Quando atingir o 5° nível, poderá conjurar a magia Invisibilidade (somente sobre si mesmo) uma vez com esse traço, recuperando ao terminar um descanso longo. Inteligência é sua habilidade de conjuração para estas magias."
+          },
+          {
+            "name": "Sensibilidade à Luz Solar",
+            "desc": "Você tem desvantagem em jogadas de ataque e em testes de Sabedoria (Percepção) que dependam da visão quando você, o alvo do ataque ou o que você tenta perceber está em luz solar direta."
+          },
+          {
+            "name": "Idiomas",
+            "desc": "Você pode falar, ler e escrever Comum, Anão e Subterrâneo."
+          }
+        ]
       }
     ]
   },

@@ -26,12 +26,22 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
 
   // Cantrips bônus exigidos pelas choices já selecionadas
   const bonusCantripsNeeded = leveledChoices.reduce((sum, c) => {
-    const val = draft.chosenFeatures?.[c.id] ?? ''
+    const val = draft.chosenFeatures?.[c.id]
+    if (c.multiSelect) {
+      const vals = Array.isArray(val) ? val : []
+      return sum + vals.reduce((s, v) => s + (c.options.find(o => o.value === v)?.grants?.bonusCantrips ?? 0), 0)
+    }
     const opt = c.options.find(o => o.value === val)
     return sum + (opt?.grants?.bonusCantrips ?? 0)
   }, 0)
 
-  const choicesDone     = leveledChoices.filter(c => !!draft.chosenFeatures?.[c.id]).length
+  function isChoiceDone(c) {
+    const val = draft.chosenFeatures?.[c.id]
+    if (c.multiSelect) return Array.isArray(val) && val.length >= c.multiSelect
+    return !!val
+  }
+
+  const choicesDone     = leveledChoices.filter(c => isChoiceDone(c)).length
   const allChoicesDone  = choicesDone === leveledChoices.length
   const cantripsReady   = (draft.bonusSpells?.length ?? 0) >= bonusCantripsNeeded
   const allComplete     = allChoicesDone && cantripsReady
@@ -53,8 +63,16 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
     updateDraft({ level: lvl, chosenFeatures: {}, bonusSpells: [] })
   }
 
-  function handleFeatureChoice(choiceId, value) {
-    updateDraft({ chosenFeatures: { ...(draft.chosenFeatures ?? {}), [choiceId]: value }, bonusSpells: [] })
+  function handleFeatureChoice(choiceId, value, multiSelect) {
+    if (multiSelect) {
+      const prev = Array.isArray(draft.chosenFeatures?.[choiceId]) ? draft.chosenFeatures[choiceId] : []
+      const next = prev.includes(value)
+        ? prev.filter(v => v !== value)
+        : prev.length < multiSelect ? [...prev, value] : prev
+      updateDraft({ chosenFeatures: { ...(draft.chosenFeatures ?? {}), [choiceId]: next }, bonusSpells: [] })
+    } else {
+      updateDraft({ chosenFeatures: { ...(draft.chosenFeatures ?? {}), [choiceId]: value }, bonusSpells: [] })
+    }
   }
 
   const hpPreview = selectedClass
@@ -125,7 +143,7 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
               const features  = lvlData?.features ?? []
               const lvlChoices = leveledChoices.filter(c => c.level === lvl)
               const hasContent = features.length > 0 || lvlChoices.length > 0
-              const lvlDone   = lvlChoices.length > 0 && lvlChoices.every(c => !!draft.chosenFeatures?.[c.id])
+              const lvlDone   = lvlChoices.length > 0 && lvlChoices.every(c => isChoiceDone(c))
               const lvlPending= lvlChoices.length > 0 && !lvlDone
 
               if (!hasContent) return (
@@ -165,43 +183,69 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
 
                   {/* Choices inline para este nível */}
                   {lvlChoices.map(choice => {
-                    const selected = draft.chosenFeatures?.[choice.id] ?? ''
+                    const raw      = draft.chosenFeatures?.[choice.id]
+                    const selected = choice.multiSelect
+                      ? (Array.isArray(raw) ? raw : [])
+                      : (raw ?? '')
+                    const isSelected = (val) => choice.multiSelect
+                      ? selected.includes(val)
+                      : selected === val
+                    const atLimit = choice.multiSelect && selected.length >= choice.multiSelect
                     return (
                       <div key={choice.id} className="space-y-1.5 pt-2 border-t border-gray-600/40">
                         <p className="text-xs font-semibold text-amber-300">
                           {choice.featureName} <span className="text-red-400">*</span>
+                          {choice.multiSelect && (
+                            <span className={`ml-2 text-[10px] font-normal ${selected.length >= choice.multiSelect ? 'text-green-400' : 'text-amber-500'}`}>
+                              ({selected.length}/{choice.multiSelect} selecionados)
+                            </span>
+                          )}
                         </p>
                         <p className="text-[11px] text-gray-400">{choice.prompt}</p>
                         <div className="flex flex-col gap-1">
-                          {choice.options.map(opt => (
-                            <div key={opt.value} className="flex items-center gap-1.5">
-                              <button type="button"
-                                onClick={() => handleFeatureChoice(choice.id, opt.value)}
-                                className={`flex-1 text-left px-2.5 py-1.5 rounded-lg border text-xs transition-colors flex items-center gap-2 ${
-                                  selected === opt.value
-                                    ? 'border-amber-500 bg-amber-900/30 text-amber-200'
-                                    : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
-                                }`}>
-                                <span className={`w-3 h-3 rounded-full border-2 shrink-0 ${
-                                  selected === opt.value ? 'border-amber-400 bg-amber-500' : 'border-gray-600'
-                                }`} />
-                                <span className="font-medium">{opt.name}</span>
-                                {opt.grants?.bonusCantrips > 0 && (
-                                  <span className="text-[10px] bg-blue-900/40 border border-blue-700/50 text-blue-300 px-1.5 py-0.5 rounded-full ml-auto shrink-0">
-                                    +{opt.grants.bonusCantrips} truques
-                                  </span>
-                                )}
-                                {opt.grants?.spells?.length > 0 && (
-                                  <span className="text-[10px] bg-green-900/40 border border-green-700/50 text-green-300 px-1.5 py-0.5 rounded-full ml-auto shrink-0">
-                                    +magia
-                                  </span>
-                                )}
-                              </button>
-                              <button type="button" onClick={() => setInfoModal(opt)}
-                                className="w-6 h-6 rounded-full bg-gray-700 hover:bg-amber-800 text-amber-400 text-[10px] font-bold shrink-0 transition-colors"
-                                title="Ver descrição">ℹ</button>
-                            </div>
-                          ))}
+                          {choice.options.map(opt => {
+                            const sel = isSelected(opt.value)
+                            const disabled = choice.multiSelect && !sel && atLimit
+                            return (
+                              <div key={opt.value} className="flex items-center gap-1.5">
+                                <button type="button"
+                                  onClick={() => !disabled && handleFeatureChoice(choice.id, opt.value, choice.multiSelect)}
+                                  className={`flex-1 text-left px-2.5 py-1.5 rounded-lg border text-xs transition-colors flex items-center gap-2 ${
+                                    sel
+                                      ? 'border-amber-500 bg-amber-900/30 text-amber-200'
+                                      : disabled
+                                      ? 'border-gray-800 bg-gray-900/50 text-gray-600 cursor-not-allowed'
+                                      : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
+                                  }`}>
+                                  {choice.multiSelect ? (
+                                    <span className={`w-3 h-3 rounded border-2 shrink-0 flex items-center justify-center ${
+                                      sel ? 'border-amber-400 bg-amber-500' : 'border-gray-600'
+                                    }`}>
+                                      {sel && <span className="text-white text-[8px]">✓</span>}
+                                    </span>
+                                  ) : (
+                                    <span className={`w-3 h-3 rounded-full border-2 shrink-0 ${
+                                      sel ? 'border-amber-400 bg-amber-500' : 'border-gray-600'
+                                    }`} />
+                                  )}
+                                  <span className="font-medium">{opt.name}</span>
+                                  {opt.grants?.bonusCantrips > 0 && (
+                                    <span className="text-[10px] bg-blue-900/40 border border-blue-700/50 text-blue-300 px-1.5 py-0.5 rounded-full ml-auto shrink-0">
+                                      +{opt.grants.bonusCantrips} truques
+                                    </span>
+                                  )}
+                                  {opt.grants?.spells?.length > 0 && (
+                                    <span className="text-[10px] bg-green-900/40 border border-green-700/50 text-green-300 px-1.5 py-0.5 rounded-full ml-auto shrink-0">
+                                      +magia
+                                    </span>
+                                  )}
+                                </button>
+                                <button type="button" onClick={() => setInfoModal(opt)}
+                                  className="w-6 h-6 rounded-full bg-gray-700 hover:bg-amber-800 text-amber-400 text-[10px] font-bold shrink-0 transition-colors"
+                                  title="Ver descrição">ℹ</button>
+                              </div>
+                            )
+                          })}
                         </div>
                       </div>
                     )

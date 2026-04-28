@@ -32,12 +32,12 @@
           {
             "value": "conhecimento",
             "name": "Colégio do Conhecimento",
-            "desc": "Bardos do Colégio do Conhecimento sabem um pouco sobre quase tudo, coletando fragmentos de conhecimento de fontes tão diversas quanto tomos eruditos e contos de camponeses. Seja cantando baladas populares em tabernas ou composições elaboradas em cortes reais, esses bardos usam seus dons para cativar as audiências."
+            "desc": "Bardos do Colégio do Conhecimento sabem um pouco sobre quase tudo. Ao nível 3, você ganha proficiência em 3 perícias à sua escolha (além das perícias de classe normais). Você também aprende Palavras Cortantes: use uma ação bônus para subtrair 1d6 de uma rolagem de ataque, teste de habilidade ou teste de resistência de uma criatura que você possa ver e que possa ouvi-lo."
           },
           {
             "value": "valor",
             "name": "Colégio do Valor",
-            "desc": "Bardos do Colégio do Valor são intrépidos que preservam os feitos de grandes heróis e garantem que tais feitos inspirem as gerações futuras. Esses bardos se reúnem nos salões dos mestres para aprender e compartilhar poesias, canções e relatos de grandes eventos."
+            "desc": "Bardos do Colégio do Valor são intrépidos que preservam os feitos de grandes heróis. Ao nível 3, você ganha proficiência com armaduras médias, escudos e armas marciais. Você também aprende a Inspiração de Combate: suas Inspirações de Bardo podem ser usadas para adicionar dados a jogadas de ataque e jogadas de dano."
           }
         ]
       }
@@ -181,7 +181,8 @@
           {
             "value": "cavaleiro_batalla",
             "name": "Cavaleiro de Batalha",
-            "desc": "O arquétipo do Cavaleiro de Batalha combina magia arcana com maestria de combate. Esses guerreiros aprendem magias que potencializam suas habilidades de combate e os tornam ainda mais ameaçadores em batalha."
+            "desc": "O arquétipo do Cavaleiro de Batalha combina magia arcana com maestria de combate. Ao nível 3, você aprende 2 truques da lista de magias do Mago (Inteligência é sua habilidade de conjuração) e ganha acesso a um livro de magias com 3 magias de 1° nível do Mago.",
+            "grants": { "bonusCantrips": 2 }
           },
           {
             "value": "mestre_combate",
@@ -194,6 +195,34 @@
   },
   "ladino": {
     "choices": [
+      {
+        "level": 1,
+        "id": "expertise_skills",
+        "featureName": "Especialização",
+        "prompt": "Escolha 2 perícias para dobrar o bônus de proficiência (Especialização)",
+        "multiSelect": 2,
+        "options": [
+          { "value": "acrobatics",      "name": "Acrobacia",        "desc": "Você dobra o bônus de proficiência em testes de Acrobacia." },
+          { "value": "animal-handling", "name": "Adestramento",     "desc": "Você dobra o bônus de proficiência em testes de Adestramento." },
+          { "value": "arcana",          "name": "Arcanismo",        "desc": "Você dobra o bônus de proficiência em testes de Arcanismo." },
+          { "value": "athletics",       "name": "Atletismo",        "desc": "Você dobra o bônus de proficiência em testes de Atletismo." },
+          { "value": "deception",       "name": "Enganação",        "desc": "Você dobra o bônus de proficiência em testes de Enganação." },
+          { "value": "history",         "name": "História",         "desc": "Você dobra o bônus de proficiência em testes de História." },
+          { "value": "insight",         "name": "Intuição",         "desc": "Você dobra o bônus de proficiência em testes de Intuição." },
+          { "value": "intimidation",    "name": "Intimidação",      "desc": "Você dobra o bônus de proficiência em testes de Intimidação." },
+          { "value": "investigation",   "name": "Investigação",     "desc": "Você dobra o bônus de proficiência em testes de Investigação." },
+          { "value": "medicine",        "name": "Medicina",         "desc": "Você dobra o bônus de proficiência em testes de Medicina." },
+          { "value": "nature",          "name": "Natureza",         "desc": "Você dobra o bônus de proficiência em testes de Natureza." },
+          { "value": "perception",      "name": "Percepção",        "desc": "Você dobra o bônus de proficiência em testes de Percepção." },
+          { "value": "performance",     "name": "Atuação",          "desc": "Você dobra o bônus de proficiência em testes de Atuação." },
+          { "value": "persuasion",      "name": "Persuasão",        "desc": "Você dobra o bônus de proficiência em testes de Persuasão." },
+          { "value": "religion",        "name": "Religião",         "desc": "Você dobra o bônus de proficiência em testes de Religião." },
+          { "value": "sleight-of-hand", "name": "Prestidigitação",  "desc": "Você dobra o bônus de proficiência em testes de Prestidigitação." },
+          { "value": "stealth",         "name": "Furtividade",      "desc": "Você dobra o bônus de proficiência em testes de Furtividade." },
+          { "value": "survival",        "name": "Sobrevivência",    "desc": "Você dobra o bônus de proficiência em testes de Sobrevivência." },
+          { "value": "thieves-tools",   "name": "Ferramentas de Ladrão", "desc": "Você dobra o bônus de proficiência ao usar Ferramentas de Ladrão." }
+        ]
+      },
       {
         "level": 3,
         "id": "roguish_archetype",
@@ -212,7 +241,7 @@
           },
           {
             "value": "gatuno",
-            "name": "Gatuno Thief",
+            "name": "Gatuno",
             "desc": "Você aperfeiçoa suas habilidades nas artes do roubo. Ladrões, bandidos, picaretas, trapaceiros — você tem muitos nomes. Além de melhorar suas habilidades físicas, você aprende habilidades úteis para muitas situações diferentes, no mundo criminoso e não."
           }
         ]
@@ -340,6 +369,27 @@
   "patrulheiro": {
     "choices": [
       {
+        "level": 1,
+        "id": "favored_enemy",
+        "featureName": "Inimigo Favorito",
+        "prompt": "Escolha seu tipo de Inimigo Favorito",
+        "options": [
+          { "value": "aberracoes",   "name": "Aberrações",    "desc": "Você tem vantagem em testes de Sabedoria (Sobrevivência) para rastrear aberrações e em testes de Inteligência para lembrá-las. Você aprende um idioma falado por aberrações." },
+          { "value": "bestas",       "name": "Bestas",        "desc": "Você tem vantagem em testes de Sabedoria (Sobrevivência) para rastrear bestas e em testes de Inteligência para lembrá-las. Você aprende Druídico ou um idioma natural." },
+          { "value": "celestiais",   "name": "Celestiais",    "desc": "Você tem vantagem em testes de Sobrevivência para rastrear celestiais e em testes de Inteligência para lembrá-los. Aprende Celestial." },
+          { "value": "construtos",   "name": "Construtos",    "desc": "Você tem vantagem em testes de Sobrevivência para rastrear construtos e em testes de Inteligência para lembrá-los. Aprende Gnômico." },
+          { "value": "draconicos",   "name": "Dragões",       "desc": "Você tem vantagem em testes de Sobrevivência para rastrear dragões e em testes de Inteligência para lembrá-los. Aprende Dracônico." },
+          { "value": "elementais",   "name": "Elementais",    "desc": "Você tem vantagem em testes de Sobrevivência para rastrear elementais e em testes de Inteligência para lembrá-los. Aprende Primordial." },
+          { "value": "fadas",        "name": "Fadas",         "desc": "Você tem vantagem em testes de Sobrevivência para rastrear fadas e em testes de Inteligência para lembrá-las. Aprende Élfico ou Silvestre." },
+          { "value": "gigantes",     "name": "Gigantes",      "desc": "Você tem vantagem em testes de Sobrevivência para rastrear gigantes e em testes de Inteligência para lembrá-los. Aprende Gigante." },
+          { "value": "humanoides",   "name": "Humanóides (2 tipos)", "desc": "Escolha 2 raças de humanóides. Você tem vantagem em testes de Sobrevivência para rastreá-los e em testes de Inteligência para lembrá-los. Aprende os idiomas desses humanóides." },
+          { "value": "lamas",        "name": "Lamas",         "desc": "Você tem vantagem em testes de Sobrevivência para rastrear lamas e em testes de Inteligência para lembrá-las. Aprende Terrano." },
+          { "value": "monstrosidades","name": "Monstrosidades","desc": "Você tem vantagem em testes de Sobrevivência para rastrear monstrosidades e em testes de Inteligência para lembrá-las. Aprende um idioma falado por monstrosidades." },
+          { "value": "mortos_vivos", "name": "Mortos-Vivos",  "desc": "Você tem vantagem em testes de Sobrevivência para rastrear mortos-vivos e em testes de Inteligência para lembrá-los. Aprende Abissal ou Infernal." },
+          { "value": "plantas",      "name": "Plantas",       "desc": "Você tem vantagem em testes de Sobrevivência para rastrear plantas e em testes de Inteligência para lembrá-las. Aprende Élfico ou Druídico." }
+        ]
+      },
+      {
         "level": 2,
         "id": "fighting_style_ranger",
         "featureName": "Estilo de Combate",
@@ -394,6 +444,30 @@
             "name": "O Grande Antigo",
             "desc": "Seu patrono é um ser misterioso cuja natureza é totalmente alheia ao tecido da realidade. Pode ter chegado ao multiverso através de um colapso dimensional, ou é uma entidade antiga que dorme e sonha em um lugar remoto do cosmos."
           }
+        ]
+      },
+      {
+        "level": 2,
+        "id": "eldritch_invocations",
+        "featureName": "Invocações Eldritch",
+        "prompt": "Escolha 2 Invocações Eldritch",
+        "multiSelect": 2,
+        "options": [
+          { "value": "forca_agonizante",   "name": "Força Agonizante",      "desc": "Ao conjurar Explosão Eldritch, adicione seu modificador de Carisma ao dano de cada feixe." },
+          { "value": "blast_repelente",    "name": "Blast Repelente",       "desc": "Ao acertar uma criatura com Explosão Eldritch, você pode empurrá-la 3 metros em linha reta." },
+          { "value": "fala_das_bestas",    "name": "Fala das Bestas",       "desc": "Você pode conjurar Falar com os Animais à vontade, sem gastar um espaço de magia." },
+          { "value": "influencia_sedutora","name": "Influência Sedutora",   "desc": "Você ganha proficiência nas perícias Enganação e Persuasão." },
+          { "value": "visao_do_diabo",     "name": "Visão do Diabo",        "desc": "Você enxerga normalmente na escuridão (mágica e não mágica) a até 36 metros." },
+          { "value": "visao_eldritch",     "name": "Visão Eldritch",        "desc": "Você pode conjurar Detectar Magia à vontade, sem gastar um espaço de magia." },
+          { "value": "lanca_eldritch",     "name": "Lança Eldritch",        "desc": "Quando você usa Explosão Eldritch, seu alcance é de 90 metros." },
+          { "value": "vigor_infernal",     "name": "Vigor Infernal",        "desc": "Você pode conjurar Falsa Vida no nível mais baixo à vontade, sem gastar espaço de magia." },
+          { "value": "olhos_runas",        "name": "Olhos do Guardador de Runas", "desc": "Você pode ler toda escrita, seja ela mágica ou em qualquer idioma." },
+          { "value": "olhar_duas_mentes",  "name": "Olhar de Duas Mentes",  "desc": "Você pode usar uma ação para tocar um humanoide voluntário e perceber através dos sentidos dele até o fim do seu próximo turno." },
+          { "value": "mascara_faces",      "name": "Máscara de Muitas Faces","desc": "Você pode conjurar Disfarçar-se à vontade, sem gastar um espaço de magia." },
+          { "value": "visoes_nebulosas",   "name": "Visões Nebulosas",      "desc": "Você pode conjurar Imagem Silenciosa à vontade, sem gastar um espaço de magia." },
+          { "value": "um_com_sombras",     "name": "Um com as Sombras",     "desc": "Quando estiver em uma área de penumbra ou escuridão, você pode usar uma ação para se tornar invisível até se mover ou realizar qualquer ação ou reação." },
+          { "value": "sinal_mau_agouro",   "name": "Sinal de Mau Agouro",   "desc": "Você pode conjurar Enfeitiçar Pessoa uma vez, usando um espaço de magia de bruxo. Você não pode fazê-lo novamente até terminar um descanso longo." },
+          { "value": "ladrao_destinos",    "name": "Ladrão dos Cinco Destinos", "desc": "Você pode conjurar Enfeitiçar Monstro uma vez usando um espaço de magia de bruxo. Você não pode fazê-lo novamente até terminar um descanso longo." }
         ]
       },
       {

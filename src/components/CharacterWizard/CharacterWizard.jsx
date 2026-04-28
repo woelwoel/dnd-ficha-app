@@ -22,6 +22,7 @@ const INITIAL_DRAFT = {
   },
   name: '', playerName: '', alignment: '', appearance: '',
   race: '', subrace: '', racialBonuses: {},
+  racialAbilityChoices: [], racialSkills: [], draconicAncestry: '', racialCantrip: '',
   class: '', level: 1, chosenFeatures: {}, savingThrows: [],
   spellcastingAbility: null, hitDice: '1d8',
   background: '', backgroundSkills: [], backgroundItems: [],
@@ -287,14 +288,34 @@ function canAdvance(stepId, draft, classChoices = {}, races = [], classData = nu
       if (!draft.race) return false
       const selectedRace = races.find(r => r.index === draft.race)
       if (selectedRace?.subraces?.length > 0 && !selectedRace.optionalSubrace && !draft.subrace) return false
+      // Escolhas raciais obrigatórias
+      if (draft.race === 'draconato' && !draft.draconicAncestry) return false
+      if (draft.subrace === 'alto-elfo' && !draft.racialCantrip) return false
+      if (draft.subrace === 'tracos-raciais-alternativos') {
+        if ((draft.racialAbilityChoices ?? []).length < 2) return false
+        if ((draft.racialSkills ?? []).length < 1) return false
+      }
+      if (draft.race === 'meio-elfo') {
+        if ((draft.racialAbilityChoices ?? []).length < 2) return false
+        if ((draft.racialSkills ?? []).length < 2) return false
+      }
       return true
     }
     case 'class': {
       if (!draft.class) return false
       const choices = classChoices[draft.class]?.choices ?? []
       const leveledChoices = choices.filter(c => c.level <= draft.level)
-      if (!leveledChoices.every(c => !!draft.chosenFeatures?.[c.id])) return false
+      const allChosen = leveledChoices.every(c => {
+        const val = draft.chosenFeatures?.[c.id]
+        if (c.multiSelect) return Array.isArray(val) && val.length >= c.multiSelect
+        return !!val
+      })
+      if (!allChosen) return false
       const bonusCantripsNeeded = leveledChoices.reduce((sum, c) => {
+        if (c.multiSelect) {
+          const vals = Array.isArray(draft.chosenFeatures?.[c.id]) ? draft.chosenFeatures[c.id] : []
+          return sum + vals.reduce((s, v) => s + (c.options.find(o => o.value === v)?.grants?.bonusCantrips ?? 0), 0)
+        }
         const opt = c.options.find(o => o.value === draft.chosenFeatures?.[c.id])
         return sum + (opt?.grants?.bonusCantrips ?? 0)
       }, 0)
@@ -393,11 +414,12 @@ function buildCharacter(draft, classData, classEquipment) {
       level:          draft.level,
       multiclasses:   [],
       chosenFeatures: draft.chosenFeatures ?? {},
-      background:     draft.background,
-      alignment:      draft.alignment,
-      appearance:     draft.appearance ?? '',
-      xp:             0,
-      scoreMethod:    draft.settings.abilityScoreMethod,
+      background:       draft.background,
+      alignment:        draft.alignment,
+      appearance:       draft.appearance ?? '',
+      xp:               0,
+      scoreMethod:      draft.settings.abilityScoreMethod,
+      draconicAncestry: draft.draconicAncestry ?? '',
     },
     attributes: attrs,
     appliedRacialBonuses: draft.racialBonuses,
@@ -418,8 +440,10 @@ function buildCharacter(draft, classData, classEquipment) {
     },
     proficiencies: {
       savingThrows:    draft.savingThrows,
-      skills:          draft.chosenSkills,
-      expertiseSkills: [],
+      skills:          [...(draft.chosenSkills ?? []), ...(draft.racialSkills ?? [])],
+      expertiseSkills: Array.isArray(draft.chosenFeatures?.expertise_skills)
+        ? draft.chosenFeatures.expertise_skills
+        : [],
       backgroundSkills: draft.backgroundSkills,
       armor:   [],
       weapons: [],
@@ -431,6 +455,14 @@ function buildCharacter(draft, classData, classEquipment) {
       usedSlots:  {},
       spells: (() => {
         const baseSpells = [...(draft.spells ?? []), ...(draft.bonusSpells ?? [])]
+        if (draft.racialCantrip) {
+          baseSpells.push({
+            index: `racial-cantrip-${draft.racialCantrip.toLowerCase().replace(/\s/g,'-')}`,
+            name: draft.racialCantrip, level: 0,
+            school: '', ritual: false, concentration: false,
+            desc: `Truque racial (${draft.subrace === 'alto-elfo' ? 'Alto Elfo — Inteligência' : 'Racial'}).`,
+          })
+        }
         if (draft.chosenFeatures?.pact_boon === 'corrente' && !baseSpells.find(s => s.index === 'find-familiar')) {
           baseSpells.push({
             index: 'find-familiar', name: 'Achar Familiar', level: 1,
