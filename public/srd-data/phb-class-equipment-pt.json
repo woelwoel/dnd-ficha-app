@@ -5,22 +5,22 @@
         "id": "barbaro_arma_1",
         "prompt": "Arma principal",
         "options": [
-          { "value": "a", "label": "Grande Machado", "items": [{ "name": "Grande Machado", "qty": 1 }] },
-          { "value": "b", "label": "Arma marcial corpo a corpo (à escolha)", "items": [{ "name": "Arma Marcial Corpo a Corpo", "qty": 1 }] }
+          { "value": "a", "label": "Grande Machado",                       "items": [{ "name": "Grande Machado", "qty": 1, "desc": "1d12 corte · pesada · 2 mãos" }] },
+          { "value": "b", "label": "Arma marcial corpo a corpo (à escolha)","items": [{ "name": "Arma Marcial",  "qty": 1, "pick": "martial-melee" }] }
         ]
       },
       {
         "id": "barbaro_arma_2",
         "prompt": "Arma secundária",
         "options": [
-          { "value": "a", "label": "Duas Machadinhas", "items": [{ "name": "Machadinha", "qty": 2 }] },
-          { "value": "b", "label": "Arma simples (à escolha)", "items": [{ "name": "Arma Simples", "qty": 1 }] }
+          { "value": "a", "label": "Duas Machadinhas",          "items": [{ "name": "Machadinha",  "qty": 2, "desc": "1d6 corte · leve · arremesso" }] },
+          { "value": "b", "label": "Arma simples (à escolha)",  "items": [{ "name": "Arma Simples","qty": 1, "pick": "simple" }] }
         ]
       }
     ],
     "fixed": [
       { "name": "Pacote do Explorador", "qty": 1 },
-      { "name": "Javeline", "qty": 4 }
+      { "name": "Javeline", "qty": 4, "desc": "1d6 perfuração · arremesso" }
     ]
   },
 
@@ -30,9 +30,9 @@
         "id": "bardo_arma_1",
         "prompt": "Arma",
         "options": [
-          { "value": "a", "label": "Rapieira", "items": [{ "name": "Rapieira", "qty": 1 }] },
-          { "value": "b", "label": "Espada Longa", "items": [{ "name": "Espada Longa", "qty": 1 }] },
-          { "value": "c", "label": "Arma simples (à escolha)", "items": [{ "name": "Arma Simples", "qty": 1 }] }
+          { "value": "a", "label": "Rapieira",                    "items": [{ "name": "Rapieira",    "qty": 1, "desc": "1d8 perfuração · acuidade" }] },
+          { "value": "b", "label": "Espada Longa",                "items": [{ "name": "Espada Longa","qty": 1, "desc": "1d8 corte · versátil (1d10)" }] },
+          { "value": "c", "label": "Arma simples (à escolha)",    "items": [{ "name": "Arma Simples","qty": 1, "pick": "simple" }] }
         ]
       },
       {
@@ -40,21 +40,21 @@
         "prompt": "Pacote de equipamento",
         "options": [
           { "value": "a", "label": "Pacote do Diplomata", "items": [{ "name": "Pacote do Diplomata", "qty": 1 }] },
-          { "value": "b", "label": "Pacote do Artista", "items": [{ "name": "Pacote do Artista", "qty": 1 }] }
+          { "value": "b", "label": "Pacote do Artista",   "items": [{ "name": "Pacote do Artista",   "qty": 1 }] }
         ]
       },
       {
         "id": "bardo_instrumento",
         "prompt": "Instrumento musical",
         "options": [
-          { "value": "a", "label": "Alaúde", "items": [{ "name": "Alaúde", "qty": 1 }] },
-          { "value": "b", "label": "Instrumento musical (à escolha)", "items": [{ "name": "Instrumento Musical", "qty": 1 }] }
+          { "value": "a", "label": "Alaúde",                           "items": [{ "name": "Alaúde",             "qty": 1 }] },
+          { "value": "b", "label": "Instrumento musical (à escolha)",  "items": [{ "name": "Instrumento Musical","qty": 1, "pick": "instrument" }] }
         ]
       }
     ],
     "fixed": [
-      { "name": "Armadura de Couro", "qty": 1 },
-      { "name": "Adaga", "qty": 1 }
+      { "name": "Armadura de Couro", "qty": 1, "desc": "CA 11 + DES" },
+      { "name": "Adaga", "qty": 1, "desc": "1d4 perfuração · acuidade · leve" }
     ]
   },
 
@@ -62,10 +62,10 @@
     "choices": [
       {
         "id": "bruxo_arma_1",
-        "prompt": "Arma de ataque à distância ou simples",
+        "prompt": "Arma de ataque",
         "options": [
-          { "value": "a", "label": "Besta Leve e 20 Virotes", "items": [{ "name": "Besta Leve", "qty": 1 }, { "name": "Virote", "qty": 20 }] },
-          { "value": "b", "label": "Arma simples (à escolha)", "items": [{ "name": "Arma Simples", "qty": 1 }] }
+          { "value": "a", "label": "Besta Leve e 20 Virotes",   "items": [{ "name": "Besta Leve", "qty": 1, "desc": "1d8 perfuração · recarga · 2 mãos" }, { "name": "Virote", "qty": 20 }] },
+          { "value": "b", "label": "Arma simples (à escolha)",  "items": [{ "name": "Arma Simples", "qty": 1, "pick": "simple" }] }
         ]
       },
       {
@@ -73,22 +73,22 @@
         "prompt": "Foco arcano ou bolsa de componentes",
         "options": [
           { "value": "a", "label": "Bolsa de Componentes", "items": [{ "name": "Bolsa de Componentes", "qty": 1 }] },
-          { "value": "b", "label": "Foco Arcano", "items": [{ "name": "Foco Arcano", "qty": 1 }] }
+          { "value": "b", "label": "Foco Arcano",           "items": [{ "name": "Foco Arcano",          "qty": 1 }] }
         ]
       },
       {
         "id": "bruxo_pack",
         "prompt": "Pacote de equipamento",
         "options": [
-          { "value": "a", "label": "Pacote do Savant", "items": [{ "name": "Pacote do Savant", "qty": 1 }] },
+          { "value": "a", "label": "Pacote do Savant",      "items": [{ "name": "Pacote do Savant",      "qty": 1 }] },
           { "value": "b", "label": "Pacote do Aventureiro", "items": [{ "name": "Pacote do Aventureiro", "qty": 1 }] }
         ]
       }
     ],
     "fixed": [
-      { "name": "Armadura de Couro", "qty": 1 },
-      { "name": "Arma Simples", "qty": 1 },
-      { "name": "Adaga", "qty": 2 }
+      { "name": "Armadura de Couro", "qty": 1, "desc": "CA 11 + DES" },
+      { "name": "Arma Simples", "qty": 1, "pick": "simple" },
+      { "name": "Adaga", "qty": 2, "desc": "1d4 perfuração · acuidade · leve" }
     ]
   },
 
@@ -98,63 +98,63 @@
         "id": "clerigo_arma_1",
         "prompt": "Arma principal",
         "options": [
-          { "value": "a", "label": "Maça", "items": [{ "name": "Maça", "qty": 1 }] },
-          { "value": "b", "label": "Martelo de Guerra (se proficiente)", "items": [{ "name": "Martelo de Guerra", "qty": 1 }] }
+          { "value": "a", "label": "Maça",                               "items": [{ "name": "Maça",              "qty": 1, "desc": "1d6 concussão" }] },
+          { "value": "b", "label": "Martelo de Guerra (se proficiente)", "items": [{ "name": "Martelo de Guerra", "qty": 1, "desc": "1d8 concussão · versátil (1d10)" }] }
         ]
       },
       {
         "id": "clerigo_armadura",
         "prompt": "Armadura",
         "options": [
-          { "value": "a", "label": "Escamas", "items": [{ "name": "Escamas", "qty": 1 }] },
-          { "value": "b", "label": "Armadura de Couro", "items": [{ "name": "Armadura de Couro", "qty": 1 }] },
-          { "value": "c", "label": "Cota de Malha (se proficiente)", "items": [{ "name": "Cota de Malha", "qty": 1 }] }
+          { "value": "a", "label": "Escamas (médio)",               "items": [{ "name": "Escamas",          "qty": 1, "desc": "CA 14 + DES (máx 2) · furtividade ↓" }] },
+          { "value": "b", "label": "Armadura de Couro (leve)",      "items": [{ "name": "Armadura de Couro","qty": 1, "desc": "CA 11 + DES" }] },
+          { "value": "c", "label": "Cota de Malha (se proficiente)","items": [{ "name": "Cota de Malha",    "qty": 1, "desc": "CA 16 · FOR 13 · furtividade ↓" }] }
         ]
       },
       {
         "id": "clerigo_arma_2",
         "prompt": "Arma secundária",
         "options": [
-          { "value": "a", "label": "Besta Leve e 20 Virotes", "items": [{ "name": "Besta Leve", "qty": 1 }, { "name": "Virote", "qty": 20 }] },
-          { "value": "b", "label": "Arma simples (à escolha)", "items": [{ "name": "Arma Simples", "qty": 1 }] }
+          { "value": "a", "label": "Besta Leve e 20 Virotes",  "items": [{ "name": "Besta Leve", "qty": 1, "desc": "1d8 perfuração · recarga · 2 mãos" }, { "name": "Virote", "qty": 20 }] },
+          { "value": "b", "label": "Arma simples (à escolha)", "items": [{ "name": "Arma Simples", "qty": 1, "pick": "simple" }] }
         ]
       },
       {
         "id": "clerigo_pack",
         "prompt": "Pacote de equipamento",
         "options": [
-          { "value": "a", "label": "Pacote do Sacerdote", "items": [{ "name": "Pacote do Sacerdote", "qty": 1 }] },
-          { "value": "b", "label": "Pacote do Aventureiro", "items": [{ "name": "Pacote do Aventureiro", "qty": 1 }] }
+          { "value": "a", "label": "Pacote do Sacerdote",  "items": [{ "name": "Pacote do Sacerdote",  "qty": 1 }] },
+          { "value": "b", "label": "Pacote do Aventureiro","items": [{ "name": "Pacote do Aventureiro","qty": 1 }] }
         ]
       }
     ],
     "fixed": [
-      { "name": "Escudo", "qty": 1 },
-      { "name": "Símbolo Sagrado", "qty": 1 }
+      { "name": "Escudo",        "qty": 1, "desc": "CA +2" },
+      { "name": "Símbolo Sagrado","qty": 1 }
     ]
   },
 
   "druida": {
     "choices": [
       {
-        "id": "druida_arma_1",
-        "prompt": "Escudo ou arma simples",
+        "id": "druida_defesa",
+        "prompt": "Defesa adicional",
         "options": [
-          { "value": "a", "label": "Escudo de Madeira", "items": [{ "name": "Escudo", "qty": 1 }] },
-          { "value": "b", "label": "Arma simples (à escolha)", "items": [{ "name": "Arma Simples", "qty": 1 }] }
+          { "value": "a", "label": "Escudo de Madeira",           "items": [{ "name": "Escudo",      "qty": 1, "desc": "CA +2" }] },
+          { "value": "b", "label": "Arma simples (à escolha)",    "items": [{ "name": "Arma Simples","qty": 1, "pick": "simple" }] }
         ]
       },
       {
-        "id": "druida_arma_2",
+        "id": "druida_arma_1",
         "prompt": "Arma principal",
         "options": [
-          { "value": "a", "label": "Cimitarra", "items": [{ "name": "Cimitarra", "qty": 1 }] },
-          { "value": "b", "label": "Arma corpo a corpo simples (à escolha)", "items": [{ "name": "Arma Simples Corpo a Corpo", "qty": 1 }] }
+          { "value": "a", "label": "Cimitarra",                           "items": [{ "name": "Cimitarra",               "qty": 1, "desc": "1d6 corte · acuidade · leve" }] },
+          { "value": "b", "label": "Arma simples corpo a corpo (à escolha)","items": [{ "name": "Arma Simples Corpo a Corpo","qty": 1, "pick": "simple-melee" }] }
         ]
       }
     ],
     "fixed": [
-      { "name": "Armadura de Couro", "qty": 1 },
+      { "name": "Armadura de Couro", "qty": 1, "desc": "CA 11 + DES" },
       { "name": "Pacote do Explorador", "qty": 1 },
       { "name": "Foco Druídico", "qty": 1 }
     ]
@@ -166,29 +166,29 @@
         "id": "feiticeiro_arma_1",
         "prompt": "Arma de ataque",
         "options": [
-          { "value": "a", "label": "Besta Leve e 20 Virotes", "items": [{ "name": "Besta Leve", "qty": 1 }, { "name": "Virote", "qty": 20 }] },
-          { "value": "b", "label": "Arma simples (à escolha)", "items": [{ "name": "Arma Simples", "qty": 1 }] }
+          { "value": "a", "label": "Besta Leve e 20 Virotes",  "items": [{ "name": "Besta Leve", "qty": 1, "desc": "1d8 perfuração · recarga · 2 mãos" }, { "name": "Virote", "qty": 20 }] },
+          { "value": "b", "label": "Arma simples (à escolha)", "items": [{ "name": "Arma Simples", "qty": 1, "pick": "simple" }] }
         ]
       },
       {
         "id": "feiticeiro_foco",
         "prompt": "Foco arcano ou bolsa de componentes",
         "options": [
-          { "value": "a", "label": "Bolsa de Componentes", "items": [{ "name": "Bolsa de Componentes", "qty": 1 }] },
-          { "value": "b", "label": "Foco Arcano", "items": [{ "name": "Foco Arcano", "qty": 1 }] }
+          { "value": "a", "label": "Bolsa de Componentes","items": [{ "name": "Bolsa de Componentes","qty": 1 }] },
+          { "value": "b", "label": "Foco Arcano",          "items": [{ "name": "Foco Arcano",         "qty": 1 }] }
         ]
       },
       {
         "id": "feiticeiro_pack",
         "prompt": "Pacote de equipamento",
         "options": [
-          { "value": "a", "label": "Pacote do Aventureiro", "items": [{ "name": "Pacote do Aventureiro", "qty": 1 }] },
+          { "value": "a", "label": "Pacote do Aventureiro","items": [{ "name": "Pacote do Aventureiro","qty": 1 }] },
           { "value": "b", "label": "Pacote do Explorador", "items": [{ "name": "Pacote do Explorador", "qty": 1 }] }
         ]
       }
     ],
     "fixed": [
-      { "name": "Adaga", "qty": 2 }
+      { "name": "Adaga", "qty": 2, "desc": "1d4 perfuração · acuidade · leve" }
     ]
   },
 
@@ -198,31 +198,31 @@
         "id": "guerreiro_armadura",
         "prompt": "Armadura",
         "options": [
-          { "value": "a", "label": "Cota de Malha", "items": [{ "name": "Cota de Malha", "qty": 1 }] },
-          { "value": "b", "label": "Armadura de Couro, Arco Longo e 20 Flechas", "items": [{ "name": "Armadura de Couro", "qty": 1 }, { "name": "Arco Longo", "qty": 1 }, { "name": "Flecha", "qty": 20 }] }
+          { "value": "a", "label": "Cota de Malha",                                     "items": [{ "name": "Cota de Malha",     "qty": 1, "desc": "CA 16 · FOR 13 · furtividade ↓" }] },
+          { "value": "b", "label": "Armadura de Couro + Arco Longo + 20 Flechas",       "items": [{ "name": "Armadura de Couro","qty": 1, "desc": "CA 11 + DES" }, { "name": "Arco Longo", "qty": 1, "desc": "1d8 perfuração · pesada · 2 mãos" }, { "name": "Flecha", "qty": 20 }] }
         ]
       },
       {
         "id": "guerreiro_arma_1",
         "prompt": "Arma principal",
         "options": [
-          { "value": "a", "label": "Arma Marcial e Escudo", "items": [{ "name": "Arma Marcial", "qty": 1 }, { "name": "Escudo", "qty": 1 }] },
-          { "value": "b", "label": "Duas Armas Marciais", "items": [{ "name": "Arma Marcial", "qty": 2 }] }
+          { "value": "a", "label": "Arma Marcial e Escudo",  "items": [{ "name": "Arma Marcial","qty": 1, "pick": "martial", "pickLabel": "Arma marcial" }, { "name": "Escudo", "qty": 1, "desc": "CA +2" }] },
+          { "value": "b", "label": "Duas Armas Marciais",    "items": [{ "name": "Arma Marcial","qty": 1, "pick": "martial", "pickLabel": "1ª arma marcial" }, { "name": "Arma Marcial","qty": 1, "pick": "martial", "pickLabel": "2ª arma marcial" }] }
         ]
       },
       {
         "id": "guerreiro_arma_2",
         "prompt": "Arma de backup",
         "options": [
-          { "value": "a", "label": "Besta Leve e 20 Virotes", "items": [{ "name": "Besta Leve", "qty": 1 }, { "name": "Virote", "qty": 20 }] },
-          { "value": "b", "label": "Duas Machadinhas", "items": [{ "name": "Machadinha", "qty": 2 }] }
+          { "value": "a", "label": "Besta Leve e 20 Virotes","items": [{ "name": "Besta Leve",   "qty": 1, "desc": "1d8 perfuração · recarga · 2 mãos" }, { "name": "Virote", "qty": 20 }] },
+          { "value": "b", "label": "Duas Machadinhas",        "items": [{ "name": "Machadinha",  "qty": 2, "desc": "1d6 corte · leve · arremesso" }] }
         ]
       },
       {
         "id": "guerreiro_pack",
         "prompt": "Pacote de equipamento",
         "options": [
-          { "value": "a", "label": "Pacote do Aventureiro", "items": [{ "name": "Pacote do Aventureiro", "qty": 1 }] },
+          { "value": "a", "label": "Pacote do Aventureiro","items": [{ "name": "Pacote do Aventureiro","qty": 1 }] },
           { "value": "b", "label": "Pacote do Explorador", "items": [{ "name": "Pacote do Explorador", "qty": 1 }] }
         ]
       }
@@ -236,32 +236,32 @@
         "id": "ladino_arma_1",
         "prompt": "Arma principal",
         "options": [
-          { "value": "a", "label": "Rapieira", "items": [{ "name": "Rapieira", "qty": 1 }] },
-          { "value": "b", "label": "Espada Curta", "items": [{ "name": "Espada Curta", "qty": 1 }] }
+          { "value": "a", "label": "Rapieira",    "items": [{ "name": "Rapieira",    "qty": 1, "desc": "1d8 perfuração · acuidade" }] },
+          { "value": "b", "label": "Espada Curta","items": [{ "name": "Espada Curta","qty": 1, "desc": "1d6 perfuração · acuidade · leve" }] }
         ]
       },
       {
         "id": "ladino_arma_2",
         "prompt": "Arma secundária",
         "options": [
-          { "value": "a", "label": "Arco Curto e 20 Flechas", "items": [{ "name": "Arco Curto", "qty": 1 }, { "name": "Flecha", "qty": 20 }] },
-          { "value": "b", "label": "Espada Curta", "items": [{ "name": "Espada Curta", "qty": 1 }] }
+          { "value": "a", "label": "Arco Curto e 20 Flechas","items": [{ "name": "Arco Curto","qty": 1, "desc": "1d6 perfuração · munição · 2 mãos" }, { "name": "Flecha", "qty": 20 }] },
+          { "value": "b", "label": "Espada Curta",            "items": [{ "name": "Espada Curta","qty": 1, "desc": "1d6 perfuração · acuidade · leve" }] }
         ]
       },
       {
         "id": "ladino_pack",
         "prompt": "Pacote de equipamento",
         "options": [
-          { "value": "a", "label": "Pacote do Ladrão", "items": [{ "name": "Pacote do Ladrão", "qty": 1 }] },
-          { "value": "b", "label": "Pacote do Aventureiro", "items": [{ "name": "Pacote do Aventureiro", "qty": 1 }] },
+          { "value": "a", "label": "Pacote do Ladrão",    "items": [{ "name": "Pacote do Ladrão",    "qty": 1 }] },
+          { "value": "b", "label": "Pacote do Aventureiro","items": [{ "name": "Pacote do Aventureiro","qty": 1 }] },
           { "value": "c", "label": "Pacote do Explorador", "items": [{ "name": "Pacote do Explorador", "qty": 1 }] }
         ]
       }
     ],
     "fixed": [
-      { "name": "Armadura de Couro", "qty": 1 },
-      { "name": "Adaga", "qty": 2 },
-      { "name": "Ferramentas de Ladrão", "qty": 1 }
+      { "name": "Armadura de Couro",    "qty": 1, "desc": "CA 11 + DES" },
+      { "name": "Adaga",                "qty": 2, "desc": "1d4 perfuração · acuidade · leve" },
+      { "name": "Ferramentas de Ladrão","qty": 1 }
     ]
   },
 
@@ -271,24 +271,24 @@
         "id": "mago_arma_1",
         "prompt": "Arma",
         "options": [
-          { "value": "a", "label": "Cajado", "items": [{ "name": "Cajado", "qty": 1 }] },
-          { "value": "b", "label": "Adaga", "items": [{ "name": "Adaga", "qty": 1 }] }
+          { "value": "a", "label": "Cajado","items": [{ "name": "Cajado","qty": 1, "desc": "1d6 concussão · versátil (1d8)" }] },
+          { "value": "b", "label": "Adaga", "items": [{ "name": "Adaga", "qty": 1, "desc": "1d4 perfuração · acuidade · leve" }] }
         ]
       },
       {
         "id": "mago_foco",
         "prompt": "Foco arcano ou bolsa de componentes",
         "options": [
-          { "value": "a", "label": "Bolsa de Componentes", "items": [{ "name": "Bolsa de Componentes", "qty": 1 }] },
-          { "value": "b", "label": "Foco Arcano", "items": [{ "name": "Foco Arcano", "qty": 1 }] }
+          { "value": "a", "label": "Bolsa de Componentes","items": [{ "name": "Bolsa de Componentes","qty": 1 }] },
+          { "value": "b", "label": "Foco Arcano",          "items": [{ "name": "Foco Arcano",         "qty": 1 }] }
         ]
       },
       {
         "id": "mago_pack",
         "prompt": "Pacote de equipamento",
         "options": [
-          { "value": "a", "label": "Pacote do Savant", "items": [{ "name": "Pacote do Savant", "qty": 1 }] },
-          { "value": "b", "label": "Pacote do Aventureiro", "items": [{ "name": "Pacote do Aventureiro", "qty": 1 }] }
+          { "value": "a", "label": "Pacote do Savant",     "items": [{ "name": "Pacote do Savant",     "qty": 1 }] },
+          { "value": "b", "label": "Pacote do Aventureiro","items": [{ "name": "Pacote do Aventureiro","qty": 1 }] }
         ]
       }
     ],
@@ -303,21 +303,21 @@
         "id": "monge_arma_1",
         "prompt": "Arma",
         "options": [
-          { "value": "a", "label": "Espada Curta", "items": [{ "name": "Espada Curta", "qty": 1 }] },
-          { "value": "b", "label": "Arma simples (à escolha)", "items": [{ "name": "Arma Simples", "qty": 1 }] }
+          { "value": "a", "label": "Espada Curta",             "items": [{ "name": "Espada Curta","qty": 1, "desc": "1d6 perfuração · acuidade · leve" }] },
+          { "value": "b", "label": "Arma simples (à escolha)", "items": [{ "name": "Arma Simples","qty": 1, "pick": "simple" }] }
         ]
       },
       {
         "id": "monge_pack",
         "prompt": "Pacote de equipamento",
         "options": [
-          { "value": "a", "label": "Pacote do Ladrão", "items": [{ "name": "Pacote do Ladrão", "qty": 1 }] },
-          { "value": "b", "label": "Pacote do Aventureiro", "items": [{ "name": "Pacote do Aventureiro", "qty": 1 }] }
+          { "value": "a", "label": "Pacote do Ladrão",    "items": [{ "name": "Pacote do Ladrão",    "qty": 1 }] },
+          { "value": "b", "label": "Pacote do Aventureiro","items": [{ "name": "Pacote do Aventureiro","qty": 1 }] }
         ]
       }
     ],
     "fixed": [
-      { "name": "Dardo", "qty": 10 }
+      { "name": "Dardo", "qty": 10, "desc": "1d4 perfuração · acuidade · arremesso" }
     ]
   },
 
@@ -327,30 +327,30 @@
         "id": "paladino_arma_1",
         "prompt": "Arma principal",
         "options": [
-          { "value": "a", "label": "Arma Marcial e Escudo", "items": [{ "name": "Arma Marcial", "qty": 1 }, { "name": "Escudo", "qty": 1 }] },
-          { "value": "b", "label": "Duas Armas Marciais", "items": [{ "name": "Arma Marcial", "qty": 2 }] }
+          { "value": "a", "label": "Arma Marcial e Escudo","items": [{ "name": "Arma Marcial","qty": 1, "pick": "martial", "pickLabel": "Arma marcial" }, { "name": "Escudo", "qty": 1, "desc": "CA +2" }] },
+          { "value": "b", "label": "Duas Armas Marciais",  "items": [{ "name": "Arma Marcial","qty": 1, "pick": "martial", "pickLabel": "1ª arma marcial" }, { "name": "Arma Marcial","qty": 1, "pick": "martial", "pickLabel": "2ª arma marcial" }] }
         ]
       },
       {
         "id": "paladino_arma_2",
         "prompt": "Arma de lançamento",
         "options": [
-          { "value": "a", "label": "Cinco Javelines", "items": [{ "name": "Javeline", "qty": 5 }] },
-          { "value": "b", "label": "Arma corpo a corpo simples (à escolha)", "items": [{ "name": "Arma Simples Corpo a Corpo", "qty": 1 }] }
+          { "value": "a", "label": "Cinco Javelines",                      "items": [{ "name": "Javeline", "qty": 5, "desc": "1d6 perfuração · arremesso" }] },
+          { "value": "b", "label": "Arma corpo a corpo simples (à escolha)","items": [{ "name": "Arma Simples Corpo a Corpo","qty": 1, "pick": "simple-melee" }] }
         ]
       },
       {
         "id": "paladino_pack",
         "prompt": "Pacote de equipamento",
         "options": [
-          { "value": "a", "label": "Pacote do Sacerdote", "items": [{ "name": "Pacote do Sacerdote", "qty": 1 }] },
-          { "value": "b", "label": "Pacote do Aventureiro", "items": [{ "name": "Pacote do Aventureiro", "qty": 1 }] }
+          { "value": "a", "label": "Pacote do Sacerdote",  "items": [{ "name": "Pacote do Sacerdote",  "qty": 1 }] },
+          { "value": "b", "label": "Pacote do Aventureiro","items": [{ "name": "Pacote do Aventureiro","qty": 1 }] }
         ]
       }
     ],
     "fixed": [
-      { "name": "Cota de Malha", "qty": 1 },
-      { "name": "Símbolo Sagrado", "qty": 1 }
+      { "name": "Cota de Malha",  "qty": 1, "desc": "CA 16 · FOR 13 · furtividade ↓" },
+      { "name": "Símbolo Sagrado","qty": 1 }
     ]
   },
 
@@ -360,30 +360,30 @@
         "id": "patrulheiro_armadura",
         "prompt": "Armadura",
         "options": [
-          { "value": "a", "label": "Escamas", "items": [{ "name": "Escamas", "qty": 1 }] },
-          { "value": "b", "label": "Armadura de Couro", "items": [{ "name": "Armadura de Couro", "qty": 1 }] }
+          { "value": "a", "label": "Escamas",            "items": [{ "name": "Escamas",          "qty": 1, "desc": "CA 14 + DES (máx 2) · furtividade ↓" }] },
+          { "value": "b", "label": "Armadura de Couro",  "items": [{ "name": "Armadura de Couro","qty": 1, "desc": "CA 11 + DES" }] }
         ]
       },
       {
         "id": "patrulheiro_arma_1",
         "prompt": "Arma principal",
         "options": [
-          { "value": "a", "label": "Duas Espadas Curtas", "items": [{ "name": "Espada Curta", "qty": 2 }] },
-          { "value": "b", "label": "Duas armas corpo a corpo simples (à escolha)", "items": [{ "name": "Arma Simples Corpo a Corpo", "qty": 2 }] }
+          { "value": "a", "label": "Duas Espadas Curtas",                     "items": [{ "name": "Espada Curta",              "qty": 2, "desc": "1d6 perfuração · acuidade · leve" }] },
+          { "value": "b", "label": "Duas armas corpo a corpo simples (à escolha)","items": [{ "name": "Arma Simples Corpo a Corpo","qty": 1, "pick": "simple-melee", "pickLabel": "1ª arma" }, { "name": "Arma Simples Corpo a Corpo","qty": 1, "pick": "simple-melee", "pickLabel": "2ª arma" }] }
         ]
       },
       {
         "id": "patrulheiro_pack",
         "prompt": "Pacote de equipamento",
         "options": [
-          { "value": "a", "label": "Pacote do Ladrão", "items": [{ "name": "Pacote do Ladrão", "qty": 1 }] },
-          { "value": "b", "label": "Pacote do Aventureiro", "items": [{ "name": "Pacote do Aventureiro", "qty": 1 }] }
+          { "value": "a", "label": "Pacote do Ladrão",    "items": [{ "name": "Pacote do Ladrão",    "qty": 1 }] },
+          { "value": "b", "label": "Pacote do Aventureiro","items": [{ "name": "Pacote do Aventureiro","qty": 1 }] }
         ]
       }
     ],
     "fixed": [
-      { "name": "Arco Longo", "qty": 1 },
-      { "name": "Flecha", "qty": 20 }
+      { "name": "Arco Longo","qty": 1, "desc": "1d8 perfuração · pesada · munição · 2 mãos" },
+      { "name": "Flecha",    "qty": 20 }
     ]
   }
 }

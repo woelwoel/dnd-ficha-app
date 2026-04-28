@@ -13,7 +13,7 @@ function rollGoldFormula(formula) {
   return total * (Number(m[3]) || 1)
 }
 
-export function Step3Class({ draft, updateDraft, classes, classChoices = {}, classEquipment = {}, classProgression = {} }) {
+export function Step3Class({ draft, updateDraft, classes, classChoices = {}, classEquipment = {}, weaponsArmor = {}, classProgression = {} }) {
   const [classModal, setClassModal] = useState(false)
   const [infoModal,  setInfoModal]  = useState(null) // { name, desc, grants? }
 
@@ -46,7 +46,7 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
     const saveKeys = (cls?.saving_throws ?? []).map(n => ATTR_NAME_TO_KEY[n]).filter(Boolean)
     const spellKey = SPELL_ABILITY_PT_TO_KEY[cls?.spellcasting_ability] ?? null
     const hitDice  = cls?.hit_die ? `1d${cls.hit_die}` : '1d8'
-    updateDraft({ class: classIndex, chosenFeatures: {}, bonusSpells: [], classEquipmentChoices: {}, savingThrows: saveKeys, spellcastingAbility: spellKey, hitDice })
+    updateDraft({ class: classIndex, chosenFeatures: {}, bonusSpells: [], classEquipmentChoices: {}, classEquipmentPicks: {}, savingThrows: saveKeys, spellcastingAbility: spellKey, hitDice })
   }
 
   function handleLevelChange(lvl) {
@@ -270,6 +270,7 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
           updateDraft={updateDraft}
           selectedClass={selectedClass}
           classEquipmentData={classEquipment[draft.class] ?? null}
+          weaponsArmor={weaponsArmor}
         />
       )}
 
@@ -300,29 +301,123 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
   )
 }
 
+/* ── Sub-picker inline de armas/instrumentos ──────────────────── */
+function WeaponPicker({ category, pickKey, currentValue, weaponsArmor, onPick }) {
+  const allWeapons    = weaponsArmor?.weapons    ?? []
+  const allInstruments= weaponsArmor?.instruments ?? []
+
+  const list = category === 'instrument'
+    ? allInstruments
+    : allWeapons.filter(w => {
+        if (category === 'simple')        return w.category === 'simple-melee'  || w.category === 'simple-ranged'
+        if (category === 'martial')       return w.category === 'martial-melee' || w.category === 'martial-ranged'
+        return w.category === category
+      })
+
+  if (list.length === 0) return null
+
+  return (
+    <div className="mt-2 border border-blue-700/40 rounded-lg bg-blue-950/30 overflow-hidden">
+      <div className="max-h-48 overflow-y-auto divide-y divide-blue-900/30">
+        {list.map(item => {
+          const isSelected = currentValue === item.name
+          const stats = item.damage
+            ? `${item.damage}${item.props?.length ? ' · ' + item.props.join(', ') : ''}`
+            : null
+          return (
+            <button
+              key={item.index}
+              type="button"
+              onClick={() => onPick(pickKey, item.name)}
+              className={`w-full flex items-center gap-2 px-3 py-1.5 text-xs text-left transition-colors ${
+                isSelected
+                  ? 'bg-blue-800/50 text-blue-100'
+                  : 'hover:bg-blue-900/40 text-gray-300'
+              }`}
+            >
+              <span className={`w-2.5 h-2.5 rounded-full border shrink-0 ${
+                isSelected ? 'border-blue-400 bg-blue-400' : 'border-gray-600'
+              }`} />
+              <span className="font-medium flex-1">{item.name}</span>
+              {stats && <span className="text-gray-500 text-[10px] shrink-0">{stats}</span>}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 /* ── Seção de equipamento inicial da classe ───────────────────── */
-function ClassEquipmentSection({ draft, updateDraft, selectedClass, classEquipmentData }) {
+function ClassEquipmentSection({ draft, updateDraft, selectedClass, classEquipmentData, weaponsArmor }) {
   const isEquipment = (draft.classEquipmentChoice ?? 'equipment') !== 'gold'
 
-  // Calcula os itens que serão recebidos (para preview)
+  function setOptionChoice(choiceId, value) {
+    // ao trocar a opção, limpa os picks desse grupo
+    const newPicks = { ...(draft.classEquipmentPicks ?? {}) }
+    Object.keys(newPicks).forEach(k => { if (k.startsWith(`${choiceId}:`)) delete newPicks[k] })
+    updateDraft({
+      classEquipmentChoices: { ...(draft.classEquipmentChoices ?? {}), [choiceId]: value },
+      classEquipmentPicks: newPicks,
+    })
+  }
+
+  function setPick(pickKey, weaponName) {
+    updateDraft({ classEquipmentPicks: { ...(draft.classEquipmentPicks ?? {}), [pickKey]: weaponName } })
+  }
+
+  // Conta se todos os picks obrigatórios estão resolvidos
+  function allPicksDone() {
+    if (!classEquipmentData) return true
+    for (const choice of classEquipmentData.choices ?? []) {
+      const sel = draft.classEquipmentChoices?.[choice.id]
+      if (!sel) return false
+      const opt = choice.options.find(o => o.value === sel)
+      if (!opt) continue
+      for (let i = 0; i < (opt.items ?? []).length; i++) {
+        if (opt.items[i].pick && !draft.classEquipmentPicks?.[`${choice.id}:${sel}:${i}`]) return false
+      }
+    }
+    for (let i = 0; i < (classEquipmentData.fixed ?? []).length; i++) {
+      if (classEquipmentData.fixed[i].pick && !draft.classEquipmentPicks?.[`fixed:${classEquipmentData.fixed[i].name}`]) return false
+    }
+    return true
+  }
+
+  // Calcula preview final de itens
   function previewItems() {
     if (!classEquipmentData) return []
     const items = []
     for (const choice of classEquipmentData.choices ?? []) {
       const sel = draft.classEquipmentChoices?.[choice.id]
-      if (sel) {
-        const opt = choice.options.find(o => o.value === sel)
-        if (opt) items.push(...(opt.items ?? []))
+      if (!sel) continue
+      const opt = choice.options.find(o => o.value === sel)
+      if (!opt) continue
+      ;(opt.items ?? []).forEach((item, idx) => {
+        if (item.pick) {
+          const picked = draft.classEquipmentPicks?.[`${choice.id}:${sel}:${idx}`]
+          if (picked) items.push({ name: picked, qty: 1 })
+        } else {
+          items.push(item)
+        }
+      })
+    }
+    for (const item of classEquipmentData.fixed ?? []) {
+      if (item.pick) {
+        const picked = draft.classEquipmentPicks?.[`fixed:${item.name}`]
+        if (picked) items.push({ name: picked, qty: 1 })
+      } else {
+        items.push(item)
       }
     }
-    for (const item of classEquipmentData.fixed ?? []) items.push(item)
     return items
   }
 
-  const totalChoices  = classEquipmentData?.choices?.length ?? 0
-  const doneChoices   = (classEquipmentData?.choices ?? []).filter(c => !!draft.classEquipmentChoices?.[c.id]).length
-  const allDone       = totalChoices > 0 && doneChoices === totalChoices
-  const preview       = isEquipment ? previewItems() : []
+  const totalChoices = classEquipmentData?.choices?.length ?? 0
+  const doneChoices  = (classEquipmentData?.choices ?? []).filter(c => !!draft.classEquipmentChoices?.[c.id]).length
+  const picksOk      = allPicksDone()
+  const allDone      = doneChoices === totalChoices && picksOk
+  const preview      = isEquipment ? previewItems() : []
 
   return (
     <div className="space-y-2">
@@ -360,8 +455,7 @@ function ClassEquipmentSection({ draft, updateDraft, selectedClass, classEquipme
                 ? 'bg-green-900/20 border border-green-800/40 text-green-400'
                 : 'bg-amber-900/20 border border-amber-800/40 text-amber-400'
             }`}>
-              <span>{allDone ? '✓' : '⚠'}</span>
-              <span>{allDone ? 'Todas as escolhas feitas' : `${doneChoices} de ${totalChoices} escolha${totalChoices > 1 ? 's' : ''} feita${doneChoices !== 1 ? 's' : ''}`}</span>
+              {allDone ? '✓ Todas as escolhas feitas' : `⚠ ${doneChoices}/${totalChoices} escolha${totalChoices > 1 ? 's' : ''} feita${doneChoices !== 1 ? 's' : ''}`}
             </div>
           )}
 
@@ -370,63 +464,119 @@ function ClassEquipmentSection({ draft, updateDraft, selectedClass, classEquipme
             const selected = draft.classEquipmentChoices?.[choice.id] ?? ''
             return (
               <div key={choice.id} className={`rounded-xl border p-3 space-y-2 transition-colors ${
-                selected
-                  ? 'border-green-800/50 bg-green-900/10'
-                  : 'border-amber-700/50 bg-amber-900/10'
+                selected ? 'border-green-800/50 bg-green-900/10' : 'border-amber-700/50 bg-amber-900/10'
               }`}>
-                <p className="text-[11px] text-gray-400">
+                <p className="text-[11px] font-semibold text-gray-400">
                   {choice.prompt}
                   {!selected && <span className="text-red-400 ml-1">*</span>}
                 </p>
+
                 <div className="flex flex-col gap-1.5">
-                  {choice.options.map(opt => (
-                    <button
-                      key={opt.value}
-                      type="button"
-                      onClick={() => updateDraft({
-                        classEquipmentChoices: {
-                          ...(draft.classEquipmentChoices ?? {}),
-                          [choice.id]: opt.value,
-                        }
-                      })}
-                      className={`text-left px-3 py-2 rounded-lg border text-xs transition-colors flex items-start gap-2 ${
-                        selected === opt.value
-                          ? 'border-amber-500 bg-amber-900/30 text-amber-200'
-                          : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
-                      }`}
-                    >
-                      <span className={`w-3 h-3 rounded-full border-2 shrink-0 mt-0.5 ${
-                        selected === opt.value ? 'border-amber-400 bg-amber-500' : 'border-gray-600'
-                      }`} />
-                      <span className="flex-1">
-                        <span className="font-medium">{opt.label}</span>
-                        <span className="text-gray-500 ml-1 text-[10px]">
-                          ({opt.items.map(i => `${i.qty > 1 ? `${i.qty}× ` : ''}${i.name}`).join(', ')})
-                        </span>
-                      </span>
-                    </button>
-                  ))}
+                  {choice.options.map(opt => {
+                    const isSelected = selected === opt.value
+                    return (
+                      <div key={opt.value}>
+                        {/* Botão de opção */}
+                        <button
+                          type="button"
+                          onClick={() => setOptionChoice(choice.id, opt.value)}
+                          className={`w-full text-left px-3 py-2 rounded-lg border text-xs transition-colors flex items-start gap-2 ${
+                            isSelected
+                              ? 'border-amber-500 bg-amber-900/30 text-amber-200'
+                              : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
+                          }`}
+                        >
+                          <span className={`w-3 h-3 rounded-full border-2 shrink-0 mt-0.5 ${
+                            isSelected ? 'border-amber-400 bg-amber-500' : 'border-gray-600'
+                          }`} />
+                          <span className="flex-1 space-y-0.5">
+                            <span className="font-medium block">{opt.label}</span>
+                            {/* Linha de descrição dos itens */}
+                            <span className="flex flex-wrap gap-x-2 gap-y-0.5">
+                              {opt.items.map((item, idx) => (
+                                <span key={idx} className="text-[10px] text-gray-500">
+                                  {item.pick
+                                    ? <span className="text-blue-400">📌 {item.pickLabel ?? item.name} (à escolher)</span>
+                                    : <>
+                                        {item.qty > 1 ? `${item.qty}× ` : ''}<span className="text-gray-400">{item.name}</span>
+                                        {item.desc && <span className="text-gray-600"> · {item.desc}</span>}
+                                      </>
+                                  }
+                                </span>
+                              ))}
+                            </span>
+                          </span>
+                        </button>
+
+                        {/* Sub-pickers — aparecem apenas se esta opção está selecionada e tem itens com pick */}
+                        {isSelected && opt.items.map((item, itemIdx) => {
+                          if (!item.pick) return null
+                          const pickKey     = `${choice.id}:${opt.value}:${itemIdx}`
+                          const pickedValue = draft.classEquipmentPicks?.[pickKey] ?? ''
+                          return (
+                            <div key={`pick-${itemIdx}`} className="mt-1.5 ml-5">
+                              <p className="text-[10px] text-blue-400 font-semibold mb-1">
+                                📌 {item.pickLabel ?? item.name}
+                                {!pickedValue && <span className="text-red-400 ml-1">*</span>}
+                                {pickedValue && <span className="text-green-400 ml-2">→ {pickedValue}</span>}
+                              </p>
+                              <WeaponPicker
+                                category={item.pick}
+                                pickKey={pickKey}
+                                currentValue={pickedValue}
+                                weaponsArmor={weaponsArmor}
+                                onPick={setPick}
+                              />
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             )
           })}
 
-          {/* Itens fixos */}
+          {/* Itens fixos (incluindo picks fixos) */}
           {(classEquipmentData.fixed ?? []).length > 0 && (
-            <div className="bg-gray-800/60 border border-gray-700/50 rounded-lg px-3 py-2">
-              <p className="text-[10px] text-gray-500 mb-1.5 uppercase tracking-widest">Incluído automaticamente</p>
+            <div className="bg-gray-800/60 border border-gray-700/50 rounded-lg px-3 py-2 space-y-2">
+              <p className="text-[10px] text-gray-500 uppercase tracking-widest">Incluído automaticamente</p>
               <div className="flex flex-wrap gap-1.5">
-                {classEquipmentData.fixed.map((item, i) => (
-                  <span key={i} className="text-xs bg-gray-700/80 border border-gray-600/50 px-2 py-0.5 rounded-full text-gray-300">
+                {classEquipmentData.fixed.filter(i => !i.pick).map((item, i) => (
+                  <span key={i} className="text-xs bg-gray-700/80 border border-gray-600/50 px-2 py-0.5 rounded-full text-gray-300"
+                    title={item.desc ?? ''}>
                     {item.qty > 1 ? `${item.qty}× ` : ''}{item.name}
+                    {item.desc && <span className="text-gray-500 ml-1 text-[10px]">· {item.desc}</span>}
                   </span>
                 ))}
               </div>
+              {/* Picks fixos (ex: bruxo arma simples extra) */}
+              {classEquipmentData.fixed.filter(i => i.pick).map((item, fixIdx) => {
+                const pickKey     = `fixed:${item.name}`
+                const pickedValue = draft.classEquipmentPicks?.[pickKey] ?? ''
+                return (
+                  <div key={`fixed-pick-${fixIdx}`}>
+                    <p className="text-[10px] text-blue-400 font-semibold mb-1">
+                      📌 {item.pickLabel ?? item.name} (à escolher)
+                      {!pickedValue && <span className="text-red-400 ml-1">*</span>}
+                      {pickedValue && <span className="text-green-400 ml-2">→ {pickedValue}</span>}
+                    </p>
+                    <WeaponPicker
+                      category={item.pick}
+                      pickKey={pickKey}
+                      currentValue={pickedValue}
+                      weaponsArmor={weaponsArmor}
+                      onPick={setPick}
+                    />
+                  </div>
+                )
+              })}
             </div>
           )}
 
-          {/* Resumo do equipamento selecionado */}
-          {preview.length > 0 && allDone && (
+          {/* Resumo final */}
+          {allDone && preview.length > 0 && (
             <div className="bg-blue-900/15 border border-blue-700/30 rounded-lg px-3 py-2">
               <p className="text-[10px] text-blue-400 mb-1.5 uppercase tracking-widest font-semibold">Equipamento final</p>
               <div className="flex flex-wrap gap-1.5">

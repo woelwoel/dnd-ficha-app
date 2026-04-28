@@ -26,7 +26,7 @@ const INITIAL_DRAFT = {
   spellcastingAbility: null, hitDice: '1d8',
   background: '', backgroundSkills: [], backgroundItems: [],
   backgroundGold: 0,
-  classEquipmentChoice: 'equipment', classEquipmentChoices: {}, classStartingGold: 0,
+  classEquipmentChoice: 'equipment', classEquipmentChoices: {}, classEquipmentPicks: {}, classStartingGold: 0,
   baseAttributes: { str: 0, dex: 0, con: 0, int: 0, wis: 0, cha: 0 },
   rolledScores: [],
   chosenSkills: [],
@@ -125,7 +125,7 @@ export function CharacterWizard({ onBack, onComplete }) {
 
   const {
     races, classes, backgrounds,
-    classChoices, classEquipment, progression: classProgression,
+    classChoices, classEquipment, weaponsArmor, progression: classProgression,
   } = useSrd()
 
   const classData = useMemo(
@@ -234,7 +234,7 @@ export function CharacterWizard({ onBack, onComplete }) {
                 {currentStepId === 'settings'   && <Step0Settings   draft={draft} updateDraft={updateDraft} />}
                 {currentStepId === 'concept'    && <Step1Concept    draft={draft} updateDraft={updateDraft} />}
                 {currentStepId === 'race'       && <Step2Race       draft={draft} updateDraft={updateDraft} races={races} />}
-                {currentStepId === 'class'      && <Step3Class      draft={draft} updateDraft={updateDraft} classes={classes} classChoices={classChoices} classEquipment={classEquipment} classProgression={classProgression} />}
+                {currentStepId === 'class'      && <Step3Class      draft={draft} updateDraft={updateDraft} classes={classes} classChoices={classChoices} classEquipment={classEquipment} weaponsArmor={weaponsArmor} classProgression={classProgression} />}
                 {currentStepId === 'background' && <Step4Background draft={draft} updateDraft={updateDraft} backgrounds={backgrounds} />}
                 {currentStepId === 'attributes' && <Step5Attributes draft={draft} updateDraft={updateDraft} />}
                 {currentStepId === 'skills'     && <Step6Skills     draft={draft} updateDraft={updateDraft} classData={classData} />}
@@ -330,15 +330,33 @@ function resolveClassEquipmentItems(draft, classEquipment) {
   const classData = classEquipment?.[draft.class]
   if (!classData) return []
   const items = []
+
   for (const choice of classData.choices ?? []) {
-    const selected = draft.classEquipmentChoices?.[choice.id]
-    if (!selected) continue
-    const opt = choice.options.find(o => o.value === selected)
-    if (opt) items.push(...(opt.items ?? []).map(i => ({ ...i, source: 'class' })))
+    const selectedOption = draft.classEquipmentChoices?.[choice.id]
+    if (!selectedOption) continue
+    const opt = choice.options.find(o => o.value === selectedOption)
+    if (!opt) continue
+    ;(opt.items ?? []).forEach((item, itemIdx) => {
+      if (item.pick) {
+        const pickKey = `${choice.id}:${selectedOption}:${itemIdx}`
+        const pickedName = draft.classEquipmentPicks?.[pickKey]
+        if (pickedName) items.push({ name: pickedName, qty: 1, source: 'class' })
+      } else {
+        items.push({ name: item.name, qty: item.qty, source: 'class' })
+      }
+    })
   }
+
   for (const item of classData.fixed ?? []) {
-    items.push({ ...item, source: 'class' })
+    if (item.pick) {
+      const pickKey = `fixed:${item.name}`
+      const pickedName = draft.classEquipmentPicks?.[pickKey]
+      if (pickedName) items.push({ name: pickedName, qty: 1, source: 'class' })
+    } else {
+      items.push({ name: item.name, qty: item.qty, source: 'class' })
+    }
   }
+
   return items
 }
 
