@@ -13,7 +13,7 @@ function rollGoldFormula(formula) {
   return total * (Number(m[3]) || 1)
 }
 
-export function Step3Class({ draft, updateDraft, classes, classChoices = {}, classEquipment = {}, weaponsArmor = {}, classProgression = {} }) {
+export function Step3Class({ draft, updateDraft, classes, classChoices = {}, classEquipment = {}, weaponsArmor = {}, classProgression = {}, multiclassData = {} }) {
   const [classModal, setClassModal] = useState(false)
   const [infoModal,  setInfoModal]  = useState(null) // { name, desc, grants? }
 
@@ -315,6 +315,17 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
           selectedClass={selectedClass}
           classEquipmentData={classEquipment[draft.class] ?? null}
           weaponsArmor={weaponsArmor}
+        />
+      )}
+
+      {/* ── Multiclasse ── */}
+      {draft.settings?.allowMulticlass && (
+        <MulticlassSection
+          draft={draft}
+          updateDraft={updateDraft}
+          classes={classes}
+          classChoices={classChoices}
+          multiclassData={multiclassData}
         />
       )}
 
@@ -658,6 +669,236 @@ function ClassEquipmentSection({ draft, updateDraft, selectedClass, classEquipme
           )}
         </div>
       )}
+    </div>
+  )
+}
+
+/* ── Helpers de multiclasse ───────────────────────────────────── */
+const ATTR_LABELS_MC = { str: 'FOR', dex: 'DES', con: 'CON', int: 'INT', wis: 'SAB', cha: 'CAR' }
+
+function meetsPrereqs(prereqs, totalAttrs) {
+  if (!prereqs) return true
+  const { or: orAttr, ...requirements } = prereqs
+  for (const [attr, minVal] of Object.entries(requirements)) {
+    const passes = (totalAttrs[attr] ?? 0) >= minVal
+    if (!passes) {
+      if (orAttr && (totalAttrs[orAttr] ?? 0) >= minVal) continue
+      return false
+    }
+  }
+  return true
+}
+
+function formatPrereqs(prereqs) {
+  const { or: orAttr, ...requirements } = prereqs
+  return Object.entries(requirements).map(([attr, val]) => {
+    const label = ATTR_LABELS_MC[attr] ?? attr.toUpperCase()
+    if (orAttr) return `${label} ${val} ou ${ATTR_LABELS_MC[orAttr] ?? orAttr.toUpperCase()} ${val}`
+    return `${label} ${val}`
+  }).join(' + ')
+}
+
+/* ── Seção de multiclasse ─────────────────────────────────────── */
+function MulticlassSection({ draft, updateDraft, classes, classChoices, multiclassData }) {
+  const [infoModal, setInfoModal] = useState(null)
+
+  const totalAttrs = { ...draft.baseAttributes }
+  for (const [k, v] of Object.entries(draft.racialBonuses ?? {})) {
+    totalAttrs[k] = (totalAttrs[k] ?? 10) + v
+  }
+
+  const takenClasses = new Set([
+    draft.class,
+    ...(draft.multiclasses ?? []).map(mc => mc.class).filter(Boolean),
+  ])
+
+  function addMulticlass() {
+    updateDraft({ multiclasses: [...(draft.multiclasses ?? []), { class: '', level: 1, chosenFeatures: {}, bonusSpells: [], hitDie: 8 }] })
+  }
+
+  function removeMulticlass(idx) {
+    updateDraft({ multiclasses: (draft.multiclasses ?? []).filter((_, i) => i !== idx) })
+  }
+
+  function updateMc(idx, patch) {
+    const updated = (draft.multiclasses ?? []).map((mc, i) => i === idx ? { ...mc, ...patch } : mc)
+    updateDraft({ multiclasses: updated })
+  }
+
+  const primaryLevels = draft.level ?? 1
+  const usedLevels = (draft.multiclasses ?? []).reduce((s, mc) => s + (mc.level ?? 0), 0)
+  const totalLevels = primaryLevels + usedLevels
+
+  const fieldCls = 'bg-gray-800 border border-gray-600 rounded px-2 py-1.5 text-white text-xs focus:outline-none focus:border-amber-400'
+
+  return (
+    <div className="space-y-3 pt-2 border-t border-gray-700/40">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-bold text-amber-400 uppercase tracking-widest">Multiclasse</p>
+        <div className="flex items-center gap-2">
+          {totalLevels > 20 && (
+            <span className="text-[10px] text-red-400 font-semibold">⚠ Total {totalLevels}/20 níveis</span>
+          )}
+          {totalLevels <= 20 && (draft.multiclasses ?? []).length > 0 && (
+            <span className="text-[10px] text-gray-500">{totalLevels}/20 níveis</span>
+          )}
+          <button type="button" onClick={addMulticlass}
+            className="text-xs text-blue-400 hover:text-blue-300 border border-blue-700/50 hover:border-blue-500 px-2.5 py-1 rounded transition-colors">
+            + Adicionar
+          </button>
+        </div>
+      </div>
+
+      {(draft.multiclasses ?? []).length === 0 && (
+        <p className="text-xs text-gray-600 italic">Nenhuma classe secundária adicionada.</p>
+      )}
+
+      {(draft.multiclasses ?? []).map((mc, idx) => {
+        const prereqs = multiclassData[mc.class]?.prerequisites
+        const prereqMet = meetsPrereqs(prereqs, totalAttrs)
+        const mcClass = classes.find(c => c.index === mc.class)
+        const mcChoices = (classChoices[mc.class]?.choices ?? [])
+          .filter(c => c.level <= mc.level)
+          .sort((a, b) => a.level - b.level)
+        const mcChoicesDone = mcChoices.filter(c => {
+          const val = mc.chosenFeatures?.[c.id]
+          if (c.multiSelect) return Array.isArray(val) && val.length >= c.multiSelect
+          return !!val
+        }).length
+        const mcAllDone = mc.class && mcChoicesDone === mcChoices.length
+
+        function handleMcChoice(choiceId, value, multiSelect) {
+          let newFeatures
+          if (multiSelect) {
+            const prev = Array.isArray(mc.chosenFeatures?.[choiceId]) ? mc.chosenFeatures[choiceId] : []
+            const next = prev.includes(value)
+              ? prev.filter(v => v !== value)
+              : prev.length < multiSelect ? [...prev, value] : prev
+            newFeatures = { ...(mc.chosenFeatures ?? {}), [choiceId]: next }
+          } else {
+            newFeatures = { ...(mc.chosenFeatures ?? {}), [choiceId]: value }
+          }
+          updateMc(idx, { chosenFeatures: newFeatures })
+        }
+
+        return (
+          <div key={idx} className={`rounded-xl border p-3 space-y-2 transition-colors ${
+            !mc.class ? 'border-amber-700/50 bg-amber-900/10' :
+            mcAllDone  ? 'border-green-800/50 bg-green-900/10' :
+                         'border-amber-700/50 bg-amber-900/10'
+          }`}>
+            {/* Cabeçalho: seletor de classe + nível + remover */}
+            <div className="flex gap-2 items-center">
+              <select value={mc.class}
+                onChange={e => {
+                  const cls = classes.find(c => c.index === e.target.value)
+                  updateMc(idx, { class: e.target.value, chosenFeatures: {}, bonusSpells: [], hitDie: cls?.hit_die ?? 8 })
+                }}
+                className={`flex-1 ${fieldCls}`}>
+                <option value="">Escolher classe...</option>
+                {classes.map(c => (
+                  <option key={c.index} value={c.index}
+                    disabled={takenClasses.has(c.index) && mc.class !== c.index}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+              <select value={mc.level}
+                onChange={e => updateMc(idx, { level: Number(e.target.value), chosenFeatures: {}, bonusSpells: [] })}
+                className={`w-20 ${fieldCls}`}>
+                {Array.from({ length: 19 }, (_, i) => i + 1).map(n => (
+                  <option key={n} value={n}>Nv.{n}</option>
+                ))}
+              </select>
+              <button type="button" onClick={() => removeMulticlass(idx)}
+                className="text-red-500 hover:text-red-300 text-xs px-2 py-1.5 rounded hover:bg-red-900/20 transition-colors shrink-0">✕</button>
+            </div>
+
+            {/* Stat da classe selecionada */}
+            {mcClass && (
+              <div className="flex gap-3 text-[11px] text-gray-400">
+                <span>d{mcClass.hit_die} PV</span>
+                {mcClass.spellcasting_ability && <span>Magia: {mcClass.spellcasting_ability}</span>}
+              </div>
+            )}
+
+            {/* Verificação de pré-requisito */}
+            {mc.class && prereqs && (
+              <div className={`text-[11px] px-2 py-1.5 rounded flex items-center gap-1.5 ${
+                prereqMet
+                  ? 'text-green-400 bg-green-900/15 border border-green-800/40'
+                  : 'text-red-400 bg-red-900/15 border border-red-800/40'
+              }`}>
+                {prereqMet ? '✓' : '✗'} Pré-requisito: {formatPrereqs(prereqs)}
+              </div>
+            )}
+
+            {/* Status das escolhas */}
+            {mc.class && mcChoices.length > 0 && (
+              <div className={`text-[10px] font-semibold ${mcAllDone ? 'text-green-400' : 'text-amber-400'}`}>
+                {mcAllDone ? '✓ Todas as escolhas feitas' : `⚠ ${mcChoicesDone}/${mcChoices.length} escolha${mcChoices.length !== 1 ? 's' : ''} feita${mcChoicesDone !== 1 ? 's' : ''}`}
+              </div>
+            )}
+
+            {/* Choices da classe secundária */}
+            {mc.class && mcChoices.map(choice => {
+              const raw = mc.chosenFeatures?.[choice.id]
+              const selected = choice.multiSelect ? (Array.isArray(raw) ? raw : []) : (raw ?? '')
+              const isSelected = val => choice.multiSelect ? selected.includes(val) : selected === val
+              const atLimit = choice.multiSelect && selected.length >= choice.multiSelect
+
+              return (
+                <div key={choice.id} className="space-y-1.5 pt-2 border-t border-gray-600/40">
+                  <p className="text-xs font-semibold text-amber-300">
+                    {choice.featureName} <span className="text-red-400">*</span>
+                    {choice.multiSelect && (
+                      <span className={`ml-2 text-[10px] font-normal ${selected.length >= choice.multiSelect ? 'text-green-400' : 'text-amber-500'}`}>
+                        ({selected.length}/{choice.multiSelect} selecionados)
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-[11px] text-gray-400">{choice.prompt}</p>
+                  <div className="flex flex-col gap-1">
+                    {choice.options.map(opt => {
+                      const sel = isSelected(opt.value)
+                      const disabled = choice.multiSelect && !sel && atLimit
+                      return (
+                        <div key={opt.value} className="flex items-center gap-1.5">
+                          <button type="button"
+                            onClick={() => !disabled && handleMcChoice(choice.id, opt.value, choice.multiSelect)}
+                            className={`flex-1 text-left px-2.5 py-1.5 rounded-lg border text-xs transition-colors flex items-center gap-2 ${
+                              sel
+                                ? 'border-amber-500 bg-amber-900/30 text-amber-200'
+                                : disabled
+                                ? 'border-gray-800 bg-gray-900/50 text-gray-600 cursor-not-allowed'
+                                : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
+                            }`}>
+                            {choice.multiSelect ? (
+                              <span className={`w-3 h-3 rounded border-2 shrink-0 flex items-center justify-center ${sel ? 'border-amber-400 bg-amber-500' : 'border-gray-600'}`}>
+                                {sel && <span className="text-white text-[8px]">✓</span>}
+                              </span>
+                            ) : (
+                              <span className={`w-3 h-3 rounded-full border-2 shrink-0 ${sel ? 'border-amber-400 bg-amber-500' : 'border-gray-600'}`} />
+                            )}
+                            <span className="font-medium">{opt.name}</span>
+                          </button>
+                          <button type="button" onClick={() => setInfoModal(opt)}
+                            className="w-6 h-6 rounded-full bg-gray-700 hover:bg-amber-800 text-amber-400 text-[10px] font-bold shrink-0 transition-colors"
+                            title="Ver descrição">ℹ</button>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )
+      })}
+
+      <DetailsModal isOpen={!!infoModal} onClose={() => setInfoModal(null)} title={infoModal?.name ?? ''}>
+        {infoModal && <p className="text-sm text-gray-300 leading-relaxed">{infoModal.desc}</p>}
+      </DetailsModal>
     </div>
   )
 }

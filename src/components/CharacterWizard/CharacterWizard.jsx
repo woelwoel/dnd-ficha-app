@@ -24,6 +24,7 @@ const INITIAL_DRAFT = {
   race: '', subrace: '', racialBonuses: {},
   racialAbilityChoices: [], racialSkills: [], draconicAncestry: '', racialCantrip: '',
   class: '', level: 1, chosenFeatures: {}, savingThrows: [],
+  multiclasses: [],
   spellcastingAbility: null, hitDice: '1d8',
   background: '', backgroundSkills: [], backgroundItems: [],
   backgroundGold: 0,
@@ -127,6 +128,7 @@ export function CharacterWizard({ onBack, onComplete }) {
   const {
     races, classes, backgrounds,
     classChoices, classEquipment, weaponsArmor, progression: classProgression,
+    multiclass: multiclassData,
   } = useSrd()
 
   const classData = useMemo(
@@ -235,7 +237,7 @@ export function CharacterWizard({ onBack, onComplete }) {
                 {currentStepId === 'settings'   && <Step0Settings   draft={draft} updateDraft={updateDraft} />}
                 {currentStepId === 'concept'    && <Step1Concept    draft={draft} updateDraft={updateDraft} />}
                 {currentStepId === 'race'       && <Step2Race       draft={draft} updateDraft={updateDraft} races={races} />}
-                {currentStepId === 'class'      && <Step3Class      draft={draft} updateDraft={updateDraft} classes={classes} classChoices={classChoices} classEquipment={classEquipment} weaponsArmor={weaponsArmor} classProgression={classProgression} />}
+                {currentStepId === 'class'      && <Step3Class      draft={draft} updateDraft={updateDraft} classes={classes} classChoices={classChoices} classEquipment={classEquipment} weaponsArmor={weaponsArmor} classProgression={classProgression} multiclassData={multiclassData ?? {}} />}
                 {currentStepId === 'background' && <Step4Background draft={draft} updateDraft={updateDraft} backgrounds={backgrounds} />}
                 {currentStepId === 'attributes' && <Step5Attributes draft={draft} updateDraft={updateDraft} />}
                 {currentStepId === 'skills'     && <Step6Skills     draft={draft} updateDraft={updateDraft} classData={classData} />}
@@ -319,7 +321,18 @@ function canAdvance(stepId, draft, classChoices = {}, races = [], classData = nu
         const opt = c.options.find(o => o.value === draft.chosenFeatures?.[c.id])
         return sum + (opt?.grants?.bonusCantrips ?? 0)
       }, 0)
-      return (draft.bonusSpells?.length ?? 0) >= bonusCantripsNeeded
+      if ((draft.bonusSpells?.length ?? 0) < bonusCantripsNeeded) return false
+      // Valida escolhas das classes secundárias
+      const allMulticlassChosen = (draft.multiclasses ?? []).every(mc => {
+        if (!mc.class) return false
+        const mcChoices = (classChoices[mc.class]?.choices ?? []).filter(c => c.level <= mc.level)
+        return mcChoices.every(c => {
+          const val = mc.chosenFeatures?.[c.id]
+          if (c.multiSelect) return Array.isArray(val) && val.length >= c.multiSelect
+          return !!val
+        })
+      })
+      return allMulticlassChosen
     }
     case 'background': return !!draft.background
     case 'attributes': return isAttributesComplete(draft)
@@ -412,7 +425,11 @@ function buildCharacter(draft, classData, classEquipment) {
       class:          draft.class,
       subclass:       '',
       level:          draft.level,
-      multiclasses:   [],
+      multiclasses:   (draft.multiclasses ?? []).map(mc => ({
+        class:          mc.class,
+        level:          mc.level,
+        chosenFeatures: mc.chosenFeatures ?? {},
+      })),
       chosenFeatures: draft.chosenFeatures ?? {},
       background:       draft.background,
       alignment:        draft.alignment,
@@ -429,11 +446,15 @@ function buildCharacter(draft, classData, classEquipment) {
       tempHp:      0,
       armorClass:  unarmoredAC,
       speed:       30,
-      hitDice: {
-        pool: {
-          [`d${classData?.hit_die ?? 8}`]: { total: draft.level, used: 0 },
-        },
-      },
+      hitDice: (() => {
+        const pool = { [`d${classData?.hit_die ?? 8}`]: { total: draft.level, used: 0 } }
+        for (const mc of draft.multiclasses ?? []) {
+          const mcHitDie = mc.hitDie ?? 8
+          const key = `d${mcHitDie}`
+          pool[key] = { total: (pool[key]?.total ?? 0) + mc.level, used: pool[key]?.used ?? 0 }
+        }
+        return { pool }
+      })(),
       attacks:     [],
       concentrating: { spellIndex: null, spellName: null },
       deathSaves:  { successes: 0, failures: 0 },
