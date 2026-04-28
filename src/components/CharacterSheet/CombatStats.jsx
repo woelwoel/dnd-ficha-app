@@ -179,7 +179,7 @@ function CombatStatsBase({
           fieldId="field-armorClass"
           errId="err-armorClass"
           error={errors.armorClass}
-          onChange={v => onUpdateCombat('armorClass', Math.max(0, parseInt(v) || 0))}
+          onChange={v => onUpdateCombat('armorClass', parseInt(v) || 0)}
           hint={suggestedAC !== undefined && suggestedAC !== combat.armorClass
             ? { label: `Sug: ${suggestedAC}`, onApply: () => onUpdateCombat('armorClass', suggestedAC) }
             : null}
