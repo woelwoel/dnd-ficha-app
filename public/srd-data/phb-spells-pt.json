@@ -7325,5 +7325,626 @@
       "druida",
       "mago"
     ]
+  },
+  {
+    "index": "identificar",
+    "name": "Identificar",
+    "level": 1,
+    "school": "adivinhação",
+    "ritual": true,
+    "casting_time": "1 minuto",
+    "range": "Toque",
+    "components": "V, S, M",
+    "material": "Uma pérola de 100 po e pena de coruja",
+    "duration": "Instantânea",
+    "concentration": false,
+    "desc": "Você aprende as propriedades mágicas de um objeto tocado: como usá-las, se requer sintonização, cargas e se está amaldiçoado.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "bardo",
+      "clerigo",
+      "mago"
+    ]
+  },
+  {
+    "index": "farol-de-esperanca",
+    "name": "Farol de Esperança",
+    "level": 3,
+    "school": "abjuração",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "9 metros",
+    "components": "V, S",
+    "material": "",
+    "duration": "Concentração, até 1 minuto",
+    "concentration": true,
+    "desc": "Criaturas escolhidas têm vantagem em TR de Sabedoria e contra a morte, e recuperam o máximo de PV de qualquer cura.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "clerigo"
+    ]
+  },
+  {
+    "index": "sentinela-da-morte",
+    "name": "Sentinela da Morte",
+    "level": 4,
+    "school": "abjuração",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "Toque",
+    "components": "V, S",
+    "material": "",
+    "duration": "8 horas",
+    "concentration": false,
+    "desc": "A primeira vez que o alvo seria reduzido a 0 PV por dano, fica com 1 PV e a magia termina.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "clerigo",
+      "paladino"
+    ]
+  },
+  {
+    "index": "ressuscitar",
+    "name": "Ressuscitar",
+    "level": 5,
+    "school": "necromancia",
+    "ritual": false,
+    "casting_time": "1 hora",
+    "range": "Toque",
+    "components": "V, S, M",
+    "material": "Diamante de 500 po consumido",
+    "duration": "Instantânea",
+    "concentration": false,
+    "desc": "Toca humanoide morto há menos de 10 dias. Restaura o corpo, traz de volta à vida com 1 PV, neutralizando doenças.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "bardo",
+      "clerigo",
+      "paladino"
+    ]
+  },
+  {
+    "index": "nao-detectar",
+    "name": "Não Detectar",
+    "level": 3,
+    "school": "abjuração",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "Toque",
+    "components": "V, S, M",
+    "material": "Ametista de 25 po pulverizada",
+    "duration": "8 horas",
+    "concentration": false,
+    "desc": "O alvo fica escondido de magias de adivinhação e sensores mágicos por 8 horas.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "bardo",
+      "clerigo",
+      "mago",
+      "patrulheiro"
+    ]
+  },
+  {
+    "index": "lenda",
+    "name": "Lenda",
+    "level": 5,
+    "school": "adivinhação",
+    "ritual": false,
+    "casting_time": "10 minutos",
+    "range": "Pessoal",
+    "components": "V, S, M",
+    "material": "Incenso de 250 po consumido",
+    "duration": "Instantânea",
+    "concentration": false,
+    "desc": "Nomeie uma pessoa, lugar ou objeto. A magia traz à mente um resumo do conhecimento lendário sobre o tema.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "bardo",
+      "clerigo",
+      "mago"
+    ]
+  },
+  {
+    "index": "escrutinio",
+    "name": "Escrutínio",
+    "level": 5,
+    "school": "adivinhação",
+    "ritual": true,
+    "casting_time": "10 minutos",
+    "range": "Pessoal",
+    "components": "V, S, M",
+    "material": "Foco de adivinhação de 1.000 po",
+    "duration": "Concentração, até 10 minutos",
+    "concentration": true,
+    "desc": "Você vê e ouve uma criatura no mesmo plano. O alvo faz TR de Sabedoria modificado por sua familiaridade com ele.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "bardo",
+      "clerigo",
+      "druida",
+      "mago"
+    ]
+  },
+  {
+    "index": "parede-de-fogo",
+    "name": "Parede de Fogo",
+    "level": 4,
+    "school": "evocação",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "36 metros",
+    "components": "V, S, M",
+    "material": "Fósforo",
+    "duration": "Concentração, até 1 minuto",
+    "concentration": true,
+    "desc": "Parede de fogo de até 18m de comprimento e 9m de altura. Criaturas que a atravessam sofrem 5d8 de dano de fogo (TR Destreza para metade).",
+    "higher_level": "Dano aumenta 1d8 por nível acima do 4°.",
+    "source": "PHB-PT",
+    "classes": [
+      "clerigo",
+      "druida",
+      "feiticeiro",
+      "mago"
+    ]
+  },
+  {
+    "index": "nebulina",
+    "name": "Nuvem de Névoa",
+    "level": 1,
+    "school": "conjuração",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "36 metros",
+    "components": "V, S",
+    "material": "",
+    "duration": "Concentração, até 1 hora",
+    "concentration": true,
+    "desc": "Esfera de névoa de 6m de raio fortemente obscurece a área. Um vento moderado a dispersa.",
+    "higher_level": "Raio aumenta 6m por nível acima do 1°.",
+    "source": "PHB-PT",
+    "classes": [
+      "druida",
+      "feiticeiro",
+      "mago",
+      "patrulheiro"
+    ]
+  },
+  {
+    "index": "rajada-de-vento",
+    "name": "Rajada de Vento",
+    "level": 2,
+    "school": "evocação",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "Pessoal",
+    "components": "V, S, M",
+    "material": "Semente de legume",
+    "duration": "Concentração, até 1 minuto",
+    "concentration": true,
+    "desc": "Linha de vento forte de 18m parte de você. Criaturas no início do turno nessa linha devem ter êxito em TR de Força ou ser empurradas 4,5m.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "clerigo",
+      "druida",
+      "feiticeiro",
+      "mago"
+    ]
+  },
+  {
+    "index": "chamada-do-relampago",
+    "name": "Chamada do Raio",
+    "level": 3,
+    "school": "conjuração",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "36 metros",
+    "components": "V, S",
+    "material": "",
+    "duration": "Concentração, até 10 minutos",
+    "concentration": true,
+    "desc": "Nuvem de tempestade de 18m de raio surge 36m acima. Como ação, chame um raio: criaturas a 1,5m sofrem 3d10 elétrico (TR Destreza para metade).",
+    "higher_level": "Dano aumenta 1d10 por nível acima do 3°.",
+    "source": "PHB-PT",
+    "classes": [
+      "druida"
+    ]
+  },
+  {
+    "index": "tempestade-de-neve",
+    "name": "Tempestade de Neve",
+    "level": 3,
+    "school": "conjuração",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "45 metros",
+    "components": "V, S, M",
+    "material": "Pó e lama",
+    "duration": "Concentração, até 1 minuto",
+    "concentration": true,
+    "desc": "Granizo cai em esfera de 9m de raio (terreno difícil, fortemente obscurecido). Criaturas que entram ou iniciam o turno lá fazem TR de Constituição ou ficam paralisadas.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "druida",
+      "feiticeiro",
+      "mago"
+    ]
+  },
+  {
+    "index": "controlar-agua",
+    "name": "Controlar Água",
+    "level": 4,
+    "school": "transmutação",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "90 metros",
+    "components": "V, S, M",
+    "material": "Cálice de água e areia",
+    "duration": "Concentração, até 10 minutos",
+    "concentration": true,
+    "desc": "Você controla água livre em 30 metros cúbicos: pode inundar, drenar, criar redemoinho ou redirecionar.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "clerigo",
+      "druida",
+      "mago"
+    ]
+  },
+  {
+    "index": "onda-devastadora",
+    "name": "Onda Devastadora",
+    "level": 5,
+    "school": "evocação",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "18 metros",
+    "components": "V",
+    "material": "",
+    "duration": "Instantânea",
+    "concentration": false,
+    "desc": "Criaturas escolhidas a até 18m fazem TR de Constituição: falha = 5d6 trovejante + 5d6 radiante e derrubada; sucesso = metade.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "paladino"
+    ]
+  },
+  {
+    "index": "encanto-pessoal",
+    "name": "Encantar Pessoa",
+    "level": 1,
+    "school": "encantamento",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "9 metros",
+    "components": "V, S",
+    "material": "",
+    "duration": "1 hora",
+    "concentration": false,
+    "desc": "Um humanoide visível faz TR de Sabedoria ou é encantado por você (considera você amigo). A magia termina se você lhe causar dano.",
+    "higher_level": "Pode afetar mais criaturas por nível acima do 1°.",
+    "source": "PHB-PT",
+    "classes": [
+      "bardo",
+      "druida",
+      "feiticeiro",
+      "bruxo",
+      "mago"
+    ]
+  },
+  {
+    "index": "auto-disfarce",
+    "name": "Disfarce",
+    "level": 1,
+    "school": "ilusão",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "Pessoal",
+    "components": "V, S",
+    "material": "",
+    "duration": "1 hora",
+    "concentration": false,
+    "desc": "Você altera sua aparência incluindo roupa e equipamento. Pode parecer até 30cm mais alto ou mais baixo.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "bardo",
+      "feiticeiro",
+      "mago"
+    ]
+  },
+  {
+    "index": "imagem-espelhada",
+    "name": "Imagem Espelhada",
+    "level": 2,
+    "school": "ilusão",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "Pessoal",
+    "components": "V, S",
+    "material": "",
+    "duration": "1 minuto",
+    "concentration": false,
+    "desc": "Três duplicatas ilusórias aparecem no seu espaço. Ataques contra você podem acertar uma duplicata (role 1d20). Duplicatas têm CA 10+DES.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "bruxo",
+      "feiticeiro",
+      "mago"
+    ]
+  },
+  {
+    "index": "passar-sem-rastro",
+    "name": "Passar Sem Rastro",
+    "level": 2,
+    "school": "abjuração",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "Pessoal",
+    "components": "V, S, M",
+    "material": "Cinzas de pinheiro e ramo de visgo",
+    "duration": "Concentração, até 1 hora",
+    "concentration": true,
+    "desc": "Criaturas escolhidas a até 9m ganham +10 nos testes de Furtividade e não podem ser rastreadas por meios não-mágicos.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "druida",
+      "patrulheiro"
+    ]
+  },
+  {
+    "index": "polimorfismo",
+    "name": "Polimorfismo",
+    "level": 4,
+    "school": "transmutação",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "18 metros",
+    "components": "V, S, M",
+    "material": "Casulo de borboleta",
+    "duration": "Concentração, até 1 hora",
+    "concentration": true,
+    "desc": "Transforma uma criatura em uma besta cujo ND seja igual ou menor. Criatura relutante faz TR de Sabedoria. Assume os atributos físicos da forma.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "bardo",
+      "druida",
+      "feiticeiro",
+      "mago"
+    ]
+  },
+  {
+    "index": "favor-divino",
+    "name": "Favor Divino",
+    "level": 1,
+    "school": "evocação",
+    "ritual": false,
+    "casting_time": "1 ação bônus",
+    "range": "Pessoal",
+    "components": "V, S",
+    "material": "",
+    "duration": "Concentração, até 1 minuto",
+    "concentration": true,
+    "desc": "Seus ataques de arma causam 1d4 a mais de dano radiante a cada acerto enquanto a magia persistir.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "paladino"
+    ]
+  },
+  {
+    "index": "manto-de-cruzado",
+    "name": "Manto de Cruzado",
+    "level": 3,
+    "school": "evocação",
+    "ritual": false,
+    "casting_time": "1 ação bônus",
+    "range": "Pessoal",
+    "components": "V",
+    "material": "",
+    "duration": "Concentração, até 1 minuto",
+    "concentration": true,
+    "desc": "Aura de luz sutil em 9m. Criaturas amigas na aura causam 1d4 a mais de dano radiante com ataques de arma bem-sucedidos.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "paladino"
+    ]
+  },
+  {
+    "index": "guardioes-espirituais",
+    "name": "Guardiões Espirituais",
+    "level": 3,
+    "school": "conjuração",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "Pessoal",
+    "components": "V, S, M",
+    "material": "Símbolo sagrado",
+    "duration": "Concentração, até 10 minutos",
+    "concentration": true,
+    "desc": "Espíritos pairam a 4,5m. Criaturas hostis que entram ou iniciam o turno na área fazem TR de Sabedoria ou sofrem 3d8 radiante ou necrótico.",
+    "higher_level": "Dano aumenta 1d8 por nível acima do 3°.",
+    "source": "PHB-PT",
+    "classes": [
+      "clerigo"
+    ]
+  },
+  {
+    "index": "liberdade-de-movimento",
+    "name": "Liberdade de Movimento",
+    "level": 4,
+    "school": "abjuração",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "Toque",
+    "components": "V, S, M",
+    "material": "Pedaço de couro curtido",
+    "duration": "1 hora",
+    "concentration": false,
+    "desc": "O movimento do alvo não é prejudicado por terreno difícil, e magias não podem reduzir sua velocidade nem paralisá-lo magicamente.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "bardo",
+      "clerigo",
+      "druida",
+      "patrulheiro"
+    ]
+  },
+  {
+    "index": "chama-radiante",
+    "name": "Chama Radiante",
+    "level": 5,
+    "school": "evocação",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "9 metros",
+    "components": "V, S",
+    "material": "",
+    "duration": "Instantânea",
+    "concentration": false,
+    "desc": "Coluna de chamas divinas num cilindro de 3m de raio e 9m de altura. TR de Destreza: falha = 4d6 fogo + 4d6 radiante; sucesso = metade.",
+    "higher_level": "Dano aumenta 1d6 por nível acima do 5°.",
+    "source": "PHB-PT",
+    "classes": [
+      "clerigo"
+    ]
+  },
+  {
+    "index": "segurar-monstro",
+    "name": "Segurar Monstro",
+    "level": 5,
+    "school": "encantamento",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "27 metros",
+    "components": "V, S, M",
+    "material": "Ferro",
+    "duration": "Concentração, até 1 minuto",
+    "concentration": true,
+    "desc": "Uma criatura visível faz TR de Sabedoria ou fica paralisada. Não afeta mortos-vivos. No fim de cada turno o alvo pode repetir o TR.",
+    "higher_level": "Pode mirar criaturas adicionais por nível acima do 5°.",
+    "source": "PHB-PT",
+    "classes": [
+      "bardo",
+      "bruxo",
+      "feiticeiro",
+      "mago"
+    ]
+  },
+  {
+    "index": "campo-de-espinhos",
+    "name": "Campo de Espinhos",
+    "level": 2,
+    "school": "transmutação",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "45 metros",
+    "components": "V, S",
+    "material": "",
+    "duration": "Concentração, até 10 minutos",
+    "concentration": true,
+    "desc": "Solo em raio de 6m coberto de espinhos (terreno difícil). Criaturas que se movem nessa área sofrem 2d4 de dano penetrante por 1,5m percorrido.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "druida",
+      "patrulheiro"
+    ]
+  },
+  {
+    "index": "crescimento-de-planta",
+    "name": "Crescimento de Planta",
+    "level": 3,
+    "school": "transmutação",
+    "ritual": false,
+    "casting_time": "1 ação ou 8 horas",
+    "range": "45 metros",
+    "components": "V, S",
+    "material": "",
+    "duration": "Instantânea",
+    "concentration": false,
+    "desc": "Em 1 ação: plantas em raio de 30m tornam-se terreno difícil por 24h. Em 8 horas: fertiliza plantas em raio de 800m para colheitas abundantes por 1 ano.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "bardo",
+      "druida",
+      "patrulheiro"
+    ]
+  },
+  {
+    "index": "barreira-de-vento",
+    "name": "Barreira de Vento",
+    "level": 3,
+    "school": "evocação",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "36 metros",
+    "components": "V, S, M",
+    "material": "Pedaço de tule",
+    "duration": "Concentração, até 1 minuto",
+    "concentration": true,
+    "desc": "Parede de vento de até 15m de comprimento e 4,5m de altura. Projéteis que tentam atravessá-la são automaticamente desviados.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "druida",
+      "patrulheiro"
+    ]
+  },
+  {
+    "index": "videira-agarradora",
+    "name": "Videira Agarradora",
+    "level": 4,
+    "school": "conjuração",
+    "ritual": false,
+    "casting_time": "1 ação bônus",
+    "range": "9 metros",
+    "components": "V, S",
+    "material": "",
+    "duration": "Concentração, até 1 minuto",
+    "concentration": true,
+    "desc": "Uma videira surge do solo. Como ação bônus, pode agarrar uma criatura (TR de Destreza). Criatura agarrada fica imobilizada.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "druida",
+      "patrulheiro"
+    ]
+  },
+  {
+    "index": "parede-de-pedra",
+    "name": "Parede de Pedra",
+    "level": 5,
+    "school": "evocação",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "36 metros",
+    "components": "V, S, M",
+    "material": "Granito",
+    "duration": "Concentração, até 10 minutos",
+    "concentration": true,
+    "desc": "Parede de pedra sólida de dez painéis de 3m x 3m e 15cm de espessura. Pode ser de qualquer forma desde que os painéis se conectem.",
+    "higher_level": "",
+    "source": "PHB-PT",
+    "classes": [
+      "druida",
+      "feiticeiro",
+      "mago"
+    ]
   }
 ]

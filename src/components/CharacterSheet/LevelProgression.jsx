@@ -5,6 +5,7 @@ import { ABILITY_SCORES, getModifier, formatModifier } from '../../utils/calcula
 import { abbrOfKey } from '../../domain/attributes'
 import { calculateMulticlassSpellSlots } from '../../utils/spellcasting'
 import { useSrd } from '../../providers/SrdProvider'
+import { getClericDomainSpellIndices } from '../../domain/rules'
 
 /* ── Helpers ────────────────────────────────────────────────────────── */
 
@@ -260,7 +261,14 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
   const asiReady    = !hasASI || (asiMode === 'asi' ? Object.keys(boosts).length > 0 : chosenFeat !== null && featAttrReady)
 
   const choicesForLevel = (levelChoices ?? []).filter(c => c.level === nextLevel)
-  const choicesReady = choicesForLevel.every(c => !!(newChoices[c.id] ?? currentChosenFeatures?.[c.id]))
+  const choicesReady = choicesForLevel.every(c => {
+    if ((c.multiSelect ?? 0) > 1) {
+      const val = newChoices[c.id] ?? currentChosenFeatures?.[c.id] ?? ''
+      const selected = val ? String(val).split(',').filter(Boolean) : []
+      return selected.length >= c.multiSelect
+    }
+    return !!(newChoices[c.id] ?? currentChosenFeatures?.[c.id])
+  })
 
   // Soma cantrips bônus necessários de todas as choices selecionadas neste nível
   const bonusCantripsNeeded = choicesForLevel.reduce((sum, choice) => {
@@ -312,47 +320,99 @@ function LevelUpPanel({ nextLevel, nextEntry, hitDie, conMod, attributes, onConf
 
       {/* Escolhas de características */}
       {choicesForLevel.map(choice => {
+        const isMulti   = (choice.multiSelect ?? 0) > 1
         const currentVal = newChoices[choice.id] ?? currentChosenFeatures?.[choice.id] ?? ''
+        const selectedVals = isMulti
+          ? (currentVal ? String(currentVal).split(',').filter(Boolean) : [])
+          : null
+
         return (
           <div key={choice.id} className="space-y-2">
-            <h4 className="text-sm font-bold text-amber-300">🎭 {choice.featureName} <span className="text-red-400 font-normal text-xs">*</span></h4>
+            <h4 className="text-sm font-bold text-amber-300">
+              🎭 {choice.featureName}{' '}
+              <span className="text-red-400 font-normal text-xs">*</span>
+              {isMulti && (
+                <span className="ml-2 text-xs font-normal text-gray-400">
+                  ({selectedVals.length}/{choice.multiSelect} escolhidas)
+                </span>
+              )}
+            </h4>
             <p className="text-xs text-gray-400">{choice.prompt}</p>
             <div className="flex flex-col gap-1.5">
-              {choice.options.map(opt => (
-                <div key={opt.value} className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => { setNewChoices(prev => ({ ...prev, [choice.id]: opt.value })); setBonusCantripsChosen([]) }}
-                    className={`flex-1 text-left px-3 py-2 rounded-lg border transition-colors flex items-center gap-2 ${
-                      currentVal === opt.value
-                        ? 'border-amber-500 bg-amber-900/30 text-amber-200'
-                        : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
-                    }`}
-                  >
-                    <span className={`w-3.5 h-3.5 rounded-full border-2 shrink-0 ${currentVal === opt.value ? 'border-amber-400 bg-amber-500' : 'border-gray-600'}`} />
-                    <span className="font-semibold text-sm">{opt.name}</span>
-                    {opt.grants?.bonusCantrips > 0 && (
-                      <span className="text-[10px] bg-blue-900/40 border border-blue-700/50 text-blue-300 px-1.5 py-0.5 rounded-full ml-auto shrink-0">
-                        +{opt.grants.bonusCantrips} truques
-                      </span>
-                    )}
-                    {opt.grants?.spells?.length > 0 && (
-                      <span className="text-[10px] bg-green-900/40 border border-green-700/50 text-green-300 px-1.5 py-0.5 rounded-full ml-auto shrink-0">
-                        +magia
-                      </span>
-                    )}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setInfoModal(opt)}
-                    className="w-7 h-7 rounded-full bg-gray-700 hover:bg-amber-800 text-amber-400 text-xs font-bold shrink-0"
-                    title="Ver descrição"
-                  >ℹ</button>
-                </div>
-              ))}
+              {choice.options.map(opt => {
+                if (isMulti) {
+                  const isSel  = selectedVals.includes(opt.value)
+                  const atMax  = !isSel && selectedVals.length >= choice.multiSelect
+                  return (
+                    <div key={opt.value} className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        disabled={atMax}
+                        onClick={() => setNewChoices(prev => {
+                          const vals = (prev[choice.id] ?? '').split(',').filter(Boolean)
+                          const next = isSel
+                            ? vals.filter(v => v !== opt.value)
+                            : [...vals, opt.value]
+                          return { ...prev, [choice.id]: next.join(',') }
+                        })}
+                        className={`flex-1 text-left px-3 py-2 rounded-lg border transition-colors flex items-center gap-2 ${
+                          atMax
+                            ? 'opacity-40 cursor-not-allowed border-gray-700 bg-gray-800 text-gray-500'
+                            : isSel
+                            ? 'border-amber-500 bg-amber-900/30 text-amber-200'
+                            : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
+                        }`}
+                      >
+                        <span className={`w-3.5 h-3.5 rounded border-2 shrink-0 ${isSel ? 'border-amber-400 bg-amber-500' : 'border-gray-600'}`} />
+                        <span className="font-semibold text-sm">{opt.name}</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setInfoModal(opt)}
+                        className="w-7 h-7 rounded-full bg-gray-700 hover:bg-amber-800 text-amber-400 text-xs font-bold shrink-0"
+                        title="Ver descrição"
+                      >ℹ</button>
+                    </div>
+                  )
+                }
+
+                // Single-select (radio)
+                return (
+                  <div key={opt.value} className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => { setNewChoices(prev => ({ ...prev, [choice.id]: opt.value })); setBonusCantripsChosen([]) }}
+                      className={`flex-1 text-left px-3 py-2 rounded-lg border transition-colors flex items-center gap-2 ${
+                        currentVal === opt.value
+                          ? 'border-amber-500 bg-amber-900/30 text-amber-200'
+                          : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
+                      }`}
+                    >
+                      <span className={`w-3.5 h-3.5 rounded-full border-2 shrink-0 ${currentVal === opt.value ? 'border-amber-400 bg-amber-500' : 'border-gray-600'}`} />
+                      <span className="font-semibold text-sm">{opt.name}</span>
+                      {opt.grants?.bonusCantrips > 0 && (
+                        <span className="text-[10px] bg-blue-900/40 border border-blue-700/50 text-blue-300 px-1.5 py-0.5 rounded-full ml-auto shrink-0">
+                          +{opt.grants.bonusCantrips} truques
+                        </span>
+                      )}
+                      {opt.grants?.spells?.length > 0 && (
+                        <span className="text-[10px] bg-green-900/40 border border-green-700/50 text-green-300 px-1.5 py-0.5 rounded-full ml-auto shrink-0">
+                          +magia
+                        </span>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setInfoModal(opt)}
+                      className="w-7 h-7 rounded-full bg-gray-700 hover:bg-amber-800 text-amber-400 text-xs font-bold shrink-0"
+                      title="Ver descrição"
+                    >ℹ</button>
+                  </div>
+                )
+              })}
             </div>
-            {/* Picker de cantrips bônus */}
-            {bonusCantripsNeeded > 0 && currentVal && (
+            {/* Picker de cantrips bônus (somente single-select) */}
+            {!isMulti && bonusCantripsNeeded > 0 && currentVal && (
               <CantripsGrantPicker
                 needed={bonusCantripsNeeded}
                 chosen={bonusCantripsChosen}
@@ -841,6 +901,9 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
   const conMod       = getModifier(character.attributes.con)
   const hitDie       = classData?.hit_die ?? 8
 
+  // Spells do SRD para resolução de magias de domínio do Clérigo
+  const { spells: srdSpells } = useSrd()
+
   const totalLevel = currentLevel + multiclasses.reduce((s, m) => s + (m.level ?? 0), 0)
 
   useEffect(() => {
@@ -886,6 +949,45 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
   const allPrereqsMet = addMCClass
     ? reqWarnings.every(r => r.met) && orMet
     : false
+
+  // Enriquece o patch de level-up com magias de domínio do Clérigo
+  function enrichedApplyLevelUp(patch) {
+    let enrichedPatch = patch
+    // Somente classe primária (multiclassIndex === null) e quando é Clérigo
+    if (patch.multiclassIndex == null && classIndex === 'clerigo') {
+      const DOMAIN_LEVELS = [1, 3, 5, 7, 9]
+      if (DOMAIN_LEVELS.includes(patch.newLevel)) {
+        const domain = patch.newChoices?.divine_domain ?? chosenFeatures?.divine_domain
+        if (domain) {
+          const indices = getClericDomainSpellIndices(domain, patch.newLevel)
+          const domainSpells = indices
+            .map(idx => srdSpells?.find(s => s.index === idx))
+            .filter(Boolean)
+            .map(s => ({
+              index: s.index,
+              name:  s.name,
+              level: s.level,
+              school: typeof s.school === 'object' ? (s.school?.name ?? '') : (s.school ?? ''),
+              castingTime: s.casting_time ?? '',
+              range:       s.range ?? '',
+              duration:    s.duration ?? '',
+              concentration: s.concentration ?? false,
+              components:  Array.isArray(s.components) ? s.components.join(', ') : (s.components ?? ''),
+              desc:        s.desc ?? '',
+              ritual:      s.ritual ?? false,
+              source:      'domain',
+            }))
+          if (domainSpells.length > 0) {
+            enrichedPatch = {
+              ...patch,
+              bonusSpells: [...(patch.bonusSpells ?? []), ...domainSpells],
+            }
+          }
+        }
+      }
+    }
+    onApplyLevelUp?.(enrichedPatch)
+  }
 
   function handleConfirmAddMC() {
     if (!addMCClass || !allPrereqsMet) return
@@ -1100,7 +1202,7 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
           attributes={character.attributes}
           isMulticlass={false}
           onLevelChange={onLevelChange}
-          onApplyLevelUp={onApplyLevelUp}
+          onApplyLevelUp={enrichedApplyLevelUp}
           multiclassIndex={null}
           levelChoices={classChoices[classIndex]?.choices ?? []}
           chosenFeatures={chosenFeatures}
@@ -1122,7 +1224,7 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
             conMod={conMod}
             attributes={character.attributes}
             isMulticlass={true}
-            onApplyLevelUp={onApplyLevelUp}
+            onApplyLevelUp={enrichedApplyLevelUp}
             multiclassIndex={safeTab}
             levelChoices={classChoices[mc.class]?.choices ?? []}
             chosenFeatures={chosenFeatures}

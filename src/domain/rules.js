@@ -370,6 +370,74 @@ export function removeMulticlass(character, idx) {
  *  - Persistência da escolha em `info.asiOrFeatByLevel`
  *  - Limite de +20 em atributos (PHB p.13)
  */
+/* ── Magias de domínio do Clérigo (PHB p.57–65) ──────────────────────
+ * Cada domínio tem 5 pares de magias (tier 0–4), concedidos nos
+ * níveis de clérigo 1, 3, 5, 7 e 9 respectivamente.
+ */
+const CLERIC_DOMAIN_SPELLS = {
+  conhecimento: [
+    ['identificar',    'comando'],       // nível 1
+    ['augurio',        'sugestao'],      // nível 3
+    ['nao-detectar',   'adivinhacao'],   // nível 5
+    ['olho-arcano',    'confusao'],      // nível 7
+    ['lenda',          'escrutinio'],    // nível 9
+  ],
+  vida: [
+    ['bencao',                   'curar-ferimentos'],
+    ['restauracao-menor',        'arma-espiritual'],
+    ['farol-de-esperanca',       'oracao-curativa'],
+    ['sentinela-da-morte',       'guardiao-da-fe'],
+    ['curar-ferimentos-em-massa','ressuscitar'],
+  ],
+  luz: [
+    ['maos-flamejantes', 'fogo-das-fadas'],
+    ['esfera-flamejante','raio-guiador'],
+    ['bola-de-fogo',     'luz-do-dia'],
+    ['guardiao-da-fe',   'parede-de-fogo'],
+    ['chama-radiante',   'escrutinio'],
+  ],
+  natureza: [
+    ['amizade-animal',        'falar-com-animais'],
+    ['pele-de-arvore',        'crescer-espinhos'],
+    ['crescimento-de-planta', 'barreira-de-vento'],
+    ['dominar-besta',         'videira-agarradora'],
+    ['praga-de-insetos',      'parede-de-pedra'],
+  ],
+  tempestade: [
+    ['nebulina',          'onda-trovejante'],
+    ['lufada-de-vento',   'destruicao-trovejante'],
+    ['chamada-do-relampago','tempestade-de-neve'],
+    ['controlar-agua',    'tempestade-de-gelo'],
+    ['onda-devastadora',  'praga-de-insetos'],
+  ],
+  enganacao: [
+    ['encanto-pessoal',  'auto-disfarce'],
+    ['imagem-espelhada', 'passar-sem-rastro'],
+    ['dissipar-magia',   'nebulina'],
+    ['porta-dimensional','polimorfismo'],
+    ['dominar-pessoa',   'modificar-memoria'],
+  ],
+  guerra: [
+    ['favor-divino',          'escudo-da-fe'],
+    ['arma-magica',           'arma-espiritual'],
+    ['manto-de-cruzado',      'guardioes-espirituais'],
+    ['liberdade-de-movimento','pele-de-pedra'],
+    ['chama-radiante',        'segurar-monstro'],
+  ],
+}
+
+const CLERIC_DOMAIN_LEVELS = [1, 3, 5, 7, 9]
+
+/**
+ * Retorna os índices das magias de domínio para um domínio e nível de clérigo.
+ * Retorna [] se o nível não for um nível de domínio (1,3,5,7,9) ou domínio desconhecido.
+ */
+export function getClericDomainSpellIndices(domain, clericLevel) {
+  const tier = CLERIC_DOMAIN_LEVELS.indexOf(clericLevel)
+  if (tier < 0) return []
+  return CLERIC_DOMAIN_SPELLS[domain]?.[tier] ?? []
+}
+
 /* Proficiências de armadura concedidas por talentos específicos */
 const FEAT_ARMOR_PROFICIENCIES = {
   'protecao-leve':    ['leve'],
@@ -457,6 +525,20 @@ export function applyLevelUp(character, patch) {
       const merged = [...new Set([...currentArmor, ...grantedArmor])]
       proficiencies = { ...proficiencies, armor: merged }
     }
+  }
+
+  // Especialização: choices de expertise aplicam-se a expertiseSkills (PHB p.96, p.117)
+  const EXPERTISE_CHOICE_IDS = ['expertise_skills', 'expertise_skills_2', 'expertise_bard']
+  let expertiseSkills = [...(character.proficiencies?.expertiseSkills ?? [])]
+  for (const id of EXPERTISE_CHOICE_IDS) {
+    const val = newChoices?.[id]
+    if (val) {
+      const chosen = String(val).split(',').filter(Boolean)
+      expertiseSkills = [...new Set([...expertiseSkills, ...chosen])]
+    }
+  }
+  if (expertiseSkills.length > 0) {
+    proficiencies = { ...proficiencies, expertiseSkills }
   }
 
   const mergedSpells = uniqueBy(

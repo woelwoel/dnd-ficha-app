@@ -40,6 +40,33 @@
             "desc": "Bardos do Colégio do Valor são intrépidos que preservam os feitos de grandes heróis. Ao nível 3, você ganha proficiência com armaduras médias, escudos e armas marciais. Você também aprende a Inspiração de Combate: suas Inspirações de Bardo podem ser usadas para adicionar dados a jogadas de ataque e jogadas de dano."
           }
         ]
+      },
+      {
+        "level": 3,
+        "id": "expertise_bard",
+        "featureName": "Especialização",
+        "prompt": "Escolha 2 perícias para dobrar o bônus de proficiência (Especialização)",
+        "multiSelect": 2,
+        "options": [
+          { "value": "acrobatics",      "name": "Acrobacia",        "desc": "Você dobra o bônus de proficiência em testes de Acrobacia." },
+          { "value": "animal-handling", "name": "Adestramento",     "desc": "Você dobra o bônus de proficiência em testes de Adestramento." },
+          { "value": "arcana",          "name": "Arcanismo",        "desc": "Você dobra o bônus de proficiência em testes de Arcanismo." },
+          { "value": "athletics",       "name": "Atletismo",        "desc": "Você dobra o bônus de proficiência em testes de Atletismo." },
+          { "value": "deception",       "name": "Enganação",        "desc": "Você dobra o bônus de proficiência em testes de Enganação." },
+          { "value": "history",         "name": "História",         "desc": "Você dobra o bônus de proficiência em testes de História." },
+          { "value": "insight",         "name": "Intuição",         "desc": "Você dobra o bônus de proficiência em testes de Intuição." },
+          { "value": "intimidation",    "name": "Intimidação",      "desc": "Você dobra o bônus de proficiência em testes de Intimidação." },
+          { "value": "investigation",   "name": "Investigação",     "desc": "Você dobra o bônus de proficiência em testes de Investigação." },
+          { "value": "medicine",        "name": "Medicina",         "desc": "Você dobra o bônus de proficiência em testes de Medicina." },
+          { "value": "nature",          "name": "Natureza",         "desc": "Você dobra o bônus de proficiência em testes de Natureza." },
+          { "value": "perception",      "name": "Percepção",        "desc": "Você dobra o bônus de proficiência em testes de Percepção." },
+          { "value": "performance",     "name": "Atuação",          "desc": "Você dobra o bônus de proficiência em testes de Atuação." },
+          { "value": "persuasion",      "name": "Persuasão",        "desc": "Você dobra o bônus de proficiência em testes de Persuasão." },
+          { "value": "religion",        "name": "Religião",         "desc": "Você dobra o bônus de proficiência em testes de Religião." },
+          { "value": "sleight-of-hand", "name": "Prestidigitação",  "desc": "Você dobra o bônus de proficiência em testes de Prestidigitação." },
+          { "value": "stealth",         "name": "Furtividade",      "desc": "Você dobra o bônus de proficiência em testes de Furtividade." },
+          { "value": "survival",        "name": "Sobrevivência",    "desc": "Você dobra o bônus de proficiência em testes de Sobrevivência." }
+        ]
       }
     ]
   },
@@ -244,6 +271,34 @@
             "name": "Gatuno",
             "desc": "Você aperfeiçoa suas habilidades nas artes do roubo. Ladrões, bandidos, picaretas, trapaceiros — você tem muitos nomes. Além de melhorar suas habilidades físicas, você aprende habilidades úteis para muitas situações diferentes, no mundo criminoso e não."
           }
+        ]
+      },
+      {
+        "level": 6,
+        "id": "expertise_skills_2",
+        "featureName": "Especialização",
+        "prompt": "Escolha mais 2 perícias para dobrar o bônus de proficiência (Especialização)",
+        "multiSelect": 2,
+        "options": [
+          { "value": "acrobatics",      "name": "Acrobacia",        "desc": "Você dobra o bônus de proficiência em testes de Acrobacia." },
+          { "value": "animal-handling", "name": "Adestramento",     "desc": "Você dobra o bônus de proficiência em testes de Adestramento." },
+          { "value": "arcana",          "name": "Arcanismo",        "desc": "Você dobra o bônus de proficiência em testes de Arcanismo." },
+          { "value": "athletics",       "name": "Atletismo",        "desc": "Você dobra o bônus de proficiência em testes de Atletismo." },
+          { "value": "deception",       "name": "Enganação",        "desc": "Você dobra o bônus de proficiência em testes de Enganação." },
+          { "value": "history",         "name": "História",         "desc": "Você dobra o bônus de proficiência em testes de História." },
+          { "value": "insight",         "name": "Intuição",         "desc": "Você dobra o bônus de proficiência em testes de Intuição." },
+          { "value": "intimidation",    "name": "Intimidação",      "desc": "Você dobra o bônus de proficiência em testes de Intimidação." },
+          { "value": "investigation",   "name": "Investigação",     "desc": "Você dobra o bônus de proficiência em testes de Investigação." },
+          { "value": "medicine",        "name": "Medicina",         "desc": "Você dobra o bônus de proficiência em testes de Medicina." },
+          { "value": "nature",          "name": "Natureza",         "desc": "Você dobra o bônus de proficiência em testes de Natureza." },
+          { "value": "perception",      "name": "Percepção",        "desc": "Você dobra o bônus de proficiência em testes de Percepção." },
+          { "value": "performance",     "name": "Atuação",          "desc": "Você dobra o bônus de proficiência em testes de Atuação." },
+          { "value": "persuasion",      "name": "Persuasão",        "desc": "Você dobra o bônus de proficiência em testes de Persuasão." },
+          { "value": "religion",        "name": "Religião",         "desc": "Você dobra o bônus de proficiência em testes de Religião." },
+          { "value": "sleight-of-hand", "name": "Prestidigitação",  "desc": "Você dobra o bônus de proficiência em testes de Prestidigitação." },
+          { "value": "stealth",         "name": "Furtividade",      "desc": "Você dobra o bônus de proficiência em testes de Furtividade." },
+          { "value": "survival",        "name": "Sobrevivência",    "desc": "Você dobra o bônus de proficiência em testes de Sobrevivência." },
+          { "value": "thieves-tools",   "name": "Ferramentas de Ladrão", "desc": "Você dobra o bônus de proficiência ao usar Ferramentas de Ladrão." }
         ]
       }
     ]
