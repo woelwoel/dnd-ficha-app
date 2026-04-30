@@ -41,15 +41,15 @@
       4,
       4,
       4,
+      4,
+      5,
+      5,
+      5,
+      5,
       5,
       6,
       6,
       6,
-      7,
-      7,
-      7,
-      999,
-      999,
       999
     ],
     "rage_damage": [
@@ -169,7 +169,7 @@
         "features": [
           {
             "name": "Característica do Caminho Primitivo",
-            "desc": "Você recebe uma característica do seu Caminho Primitivo escolhido (Berserker: Presença Intimidante; Totêmico: Aspecto do Totêm).",
+            "desc": "Você recebe uma característica do seu Caminho Primitivo escolhido (Berserker: Fúria Irracional — não pode ser encantado/amedrontado em fúria; Totêmico: Aspecto da Besta — bônus passivo do animal escolhido).",
             "subclass": true
           }
         ],
@@ -230,7 +230,7 @@
         "features": [
           {
             "name": "Característica do Caminho Primitivo",
-            "desc": "Você recebe uma nova característica do seu Caminho Primitivo (Berserker: Retaliação; Totêmico: Comunhão Totêmica).",
+            "desc": "Você recebe uma nova característica do seu Caminho Primitivo (Berserker: Presença Intimidante — ação para amedrontar criatura a 9m; Totêmico: Caminhante dos Espíritos — lançar Comungar com a Natureza como ritual).",
             "subclass": true
           }
         ],
@@ -291,7 +291,7 @@
         "features": [
           {
             "name": "Característica do Caminho Primitivo",
-            "desc": "Você recebe uma característica poderosa do seu Caminho Primitivo (Berserker: Retaliação; Totêmico: Aspecto do Totêm).",
+            "desc": "Você recebe a característica final do seu Caminho Primitivo (Berserker: Retaliação — reação para atacar quem o feriu; Totêmico: Sintonia Totêmica — poder supremo do animal escolhido).",
             "subclass": true
           }
         ],
@@ -382,11 +382,7 @@
         "features": [
           {
             "name": "Campeão Primitivo",
-            "desc": "Você é o epitome do poder selvagem e brutal. Seus valores de Força e Constituição aumentam em 4. O máximo para esses valores agora é 24."
-          },
-          {
-            "name": "Fúria Ilimitada",
-            "desc": "Você pode entrar em fúria um número ilimitado de vezes."
+            "desc": "Você é o epítome do poder selvagem e brutal. Seus valores de Força e Constituição aumentam em 4. O máximo para esses atributos agora é 24. Além disso, você pode entrar em fúria um número ilimitado de vezes."
           }
         ],
         "class_specific": {
@@ -698,11 +694,11 @@
         "features": [
           {
             "name": "Conjuração de Bardo",
-            "desc": "Você aprendeu a desatar a magia pela palavra e música. Usa Carisma como habilidade de magia (CD de magia = 8 + bônus de proficiência + mod Carisma). Prepara cantrips e magias conhecidas conforme a tabela do Bardo. Como Bardo, você aprende magias conhecendo-as pelo coração."
+            "desc": "Você desata a magia por meio da palavra cantada, da música e da oratória. Carisma é sua habilidade de magia. CD de magia = 8 + bônus de proficiência + modificador de Carisma. Bônus de ataque mágico = bônus de proficiência + modificador de Carisma. Você aprende magias conhecendo-as de cor — não precisa preparar magias diariamente."
           },
           {
             "name": "Inspiração Bárdica (d6)",
-            "desc": "Como ação bônus, você pode escolher uma criatura que não seja você a até 18 metros que possa ouvi-lo. Ela ganha um dado de Inspiração Bárdica (d6). Por 10 minutos, a criatura pode rolar esse dado e somar o resultado a um teste de habilidade, jogada de ataque ou TR que ela fizer. Pode ser usado depois de ver o resultado, mas antes de saber se foi bem ou mal sucedido. Você tem um número de usos iguais ao seu modificador de Carisma (mínimo 1). Recupera com descanso longo."
+            "desc": "Como ação bônus, escolha uma criatura (não você) a até 18 metros que possa ouvi-lo. Ela recebe um dado de Inspiração Bárdica (d6). Em até 10 minutos, ela pode rolar esse dado e somar ao resultado de um teste de habilidade, jogada de ataque ou TR — depois de ver o d20, mas antes de o Mestre anunciar o desfecho. Um dado por vez por criatura. Você tem usos iguais ao seu modificador de Carisma (mínimo 1). Recupera com descanso longo."
           }
         ]
       },
@@ -712,11 +708,11 @@
         "features": [
           {
             "name": "Faz de Tudo",
-            "desc": "Você pode adicionar metade do seu bônus de proficiência, arredondado para baixo, a qualquer teste de habilidade que não use já o bônus de proficiência."
+            "desc": "Você pode adicionar metade do seu bônus de proficiência (arredondado para baixo) a qualquer teste de habilidade que não inclua já o bônus de proficiência. Isso representa sua aptidão versátil em qualquer campo de conhecimento."
           },
           {
             "name": "Canção de Descanso (d6)",
-            "desc": "Você pode usar música ou oratória para reconfortar aliados durante o descanso curto. Se você ou qualquer criatura amigável que passe o descanso curto ouvindo sua performance gastar Dados de Vida, cada criatura pode recuperar 1d6 pontos de vida adicionais."
+            "desc": "Você pode usar música ou oratória durante um descanso curto para reconfortar aliados feridos. Ao fim do descanso curto, cada criatura amigável que o ouviu e gastou Dados de Vida recupera 1d6 pontos de vida adicionais. Esse dado melhora em níveis mais altos."
           }
         ]
       },
@@ -726,12 +722,13 @@
         "features": [
           {
             "name": "Especialização",
-            "desc": "Escolha duas perícias nas quais você tenha proficiência. Seu bônus de proficiência é dobrado para qualquer teste de habilidade que use essas perícias."
+            "desc": "Escolha duas perícias nas quais você tenha proficiência (ou uma perícia e ferramentas de ladrão). Seu bônus de proficiência é dobrado para qualquer teste feito com essas escolhas."
           },
           {
             "name": "Colégio de Bardos",
-            "desc": "Você mergulha nas técnicas avançadas de um colégio de bardos de sua escolha: Colégio do Conhecimento ou Colégio do Valor. Cada colégio concede características nos níveis 3, 6 e 14.",
-            "choice_id": "bard_college"
+            "desc": "Você se dedica às técnicas avançadas de um colégio de bardos. Escolha entre o Colégio do Conhecimento e o Colégio do Valor. Seu colégio concede características nos níveis 3, 6 e 14.",
+            "choice_id": "bard_college",
+            "subclass": true
           }
         ]
       },
@@ -741,7 +738,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -751,11 +748,11 @@
         "features": [
           {
             "name": "Inspiração Bárdica (d8)",
-            "desc": "Seu dado de Inspiração Bárdica aumenta para d8."
+            "desc": "Seu dado de Inspiração Bárdica aumenta de d6 para d8."
           },
           {
             "name": "Fonte de Inspiração",
-            "desc": "Você recupera todos os seus usos gastos de Inspiração Bárdica quando termina um descanso curto ou longo."
+            "desc": "Você recupera todos os usos gastos de Inspiração Bárdica ao terminar um descanso curto ou longo — não apenas no descanso longo como antes."
           }
         ]
       },
@@ -765,11 +762,11 @@
         "features": [
           {
             "name": "Contrafeitiço",
-            "desc": "Você ganha a habilidade de usar sons ou palavras de poder para interromper efeitos mágicos. Como ação, você pode iniciar uma performance que dura até o fim do seu próximo turno. Durante esse tempo, você e quaisquer criaturas amigáveis a até 9 metros de você que possam ouvi-lo têm vantagem em Testes de Resistência contra magias e outros efeitos mágicos."
+            "desc": "Como ação, você inicia uma performance musical ou verbal que dura até o fim do seu próximo turno. Durante esse tempo, você e criaturas amigáveis a até 9 metros que possam ouvi-lo têm vantagem em Testes de Resistência contra ser encantadas ou amedrontadas. Você não pode lançar magias enquanto mantém a performance."
           },
           {
             "name": "Característica do Colégio de Bardos",
-            "desc": "Você recebe uma característica do seu Colégio de Bardos (Conhecimento: Segredos Mágicos Adicionais; Valor: Ataque Extra).",
+            "desc": "Você recebe a característica de nível 6 do seu Colégio (Conhecimento: Segredos Mágicos Adicionais — aprenda 2 magias de qualquer lista; Valor: Ataque Extra — 2 ataques por ação).",
             "subclass": true
           }
         ]
@@ -785,7 +782,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -795,7 +792,7 @@
         "features": [
           {
             "name": "Canção de Descanso (d8)",
-            "desc": "O dado de cura bônus da Canção de Descanso aumenta para d8."
+            "desc": "O dado de cura bônus da Canção de Descanso aumenta de d6 para d8."
           }
         ]
       },
@@ -804,16 +801,16 @@
         "prof": 4,
         "features": [
           {
-            "name": "Especialização (mais 2)",
-            "desc": "Escolha mais duas perícias para ganhar bônus dobrado de proficiência."
+            "name": "Inspiração Bárdica (d10)",
+            "desc": "Seu dado de Inspiração Bárdica aumenta de d8 para d10."
           },
           {
-            "name": "Inspiração Bárdica (d10)",
-            "desc": "Seu dado de Inspiração Bárdica aumenta para d10."
+            "name": "Especialização (mais 2 perícias)",
+            "desc": "Escolha mais duas perícias nas quais você tenha proficiência. Seu bônus de proficiência passa a ser dobrado para essas perícias também (total: até 4 perícias com bônus dobrado)."
           },
           {
             "name": "Segredos Mágicos",
-            "desc": "Você aprendeu magias de outras classes. Escolha duas magias de qualquer classe, incluindo esta. Uma magia que você escolher deve ser de um nível de magia que você possa lançar, como mostrado na tabela do Bardo. As magias escolhidas contam como magias de bardo para você e são incluídas no número de magias conhecidas."
+            "desc": "Você aprende 2 magias de qualquer lista de classe (não apenas a do Bardo). As magias escolhidas contam como magias de bardo e são incluídas no total de magias conhecidas. Você obtém novas magias por este recurso também nos níveis 14 e 18."
           }
         ]
       },
@@ -828,7 +825,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -838,7 +835,7 @@
         "features": [
           {
             "name": "Canção de Descanso (d10)",
-            "desc": "O dado de cura bônus da Canção de Descanso aumenta para d10."
+            "desc": "O dado de cura bônus da Canção de Descanso aumenta de d8 para d10."
           }
         ]
       },
@@ -848,11 +845,11 @@
         "features": [
           {
             "name": "Segredos Mágicos",
-            "desc": "Escolha mais duas magias de qualquer classe. As magias escolhidas contam como magias de bardo."
+            "desc": "Você aprende mais 2 magias de qualquer lista de classe. Essas magias contam como magias de bardo e entram no total de magias conhecidas."
           },
           {
             "name": "Característica do Colégio de Bardos",
-            "desc": "Você recebe a característica de nível 14 do seu Colégio (Conhecimento: Habilidade Inigualável; Valor: Magia de Batalha).",
+            "desc": "Você recebe a característica de nível 14 do seu Colégio (Conhecimento: Sabedoria Incomparável — use um dado de Inspiração nos seus próprios testes de habilidade; Valor: Magia de Batalha — ao lançar magia, faça um ataque de arma como ação bônus).",
             "subclass": true
           }
         ]
@@ -863,7 +860,7 @@
         "features": [
           {
             "name": "Inspiração Bárdica (d12)",
-            "desc": "Seu dado de Inspiração Bárdica aumenta para d12."
+            "desc": "Seu dado de Inspiração Bárdica aumenta de d10 para d12, o máximo possível."
           }
         ]
       },
@@ -873,7 +870,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -883,7 +880,7 @@
         "features": [
           {
             "name": "Canção de Descanso (d12)",
-            "desc": "O dado de cura bônus da Canção de Descanso aumenta para d12."
+            "desc": "O dado de cura bônus da Canção de Descanso aumenta de d10 para d12."
           }
         ]
       },
@@ -893,7 +890,7 @@
         "features": [
           {
             "name": "Segredos Mágicos",
-            "desc": "Escolha mais duas magias de qualquer classe. As magias escolhidas contam como magias de bardo."
+            "desc": "Você aprende mais 2 magias de qualquer lista de classe. Essas magias contam como magias de bardo e entram no total de magias conhecidas."
           }
         ]
       },
@@ -903,7 +900,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -913,7 +910,7 @@
         "features": [
           {
             "name": "Inspiração Superior",
-            "desc": "Quando você joga para iniciativa e não tem usos de Inspiração Bárdica restantes, você recupera um uso."
+            "desc": "Quando você rola para iniciativa e não tem nenhum uso de Inspiração Bárdica restante, você recupera imediatamente 1 uso. Isso garante que você sempre entre no combate com ao menos uma inspiração para distribuir."
           }
         ]
       }
@@ -1088,10 +1085,10 @@
       5,
       6,
       6,
+      6,
       7,
       7,
       7,
-      8,
       8,
       8,
       8
@@ -1103,12 +1100,13 @@
         "features": [
           {
             "name": "Patrono Sobrenatural",
-            "desc": "Você fechou um pacto com um ser sobrenatural de seu patrono à sua escolha: O Arquifada (Feérico), O Diabo (Infernal) ou O Grande Antigo. Cada patrono concede características nos níveis 1, 6, 10 e 14.",
-            "choice_id": "patron"
+            "desc": "Você fechou um pacto com um ser sobrenatural de poder imenso. Escolha seu patrono: A Arquifada (ser feérico de enorme beleza e poder), O Demônio (entidade infernal do plano do Averno) ou O Grande Antigo (ser além da compreensão mortal). Cada patrono concede magias bônus e características nos níveis 1, 6, 10 e 14.",
+            "choice_id": "patron",
+            "subclass": true
           },
           {
             "name": "Magia de Pacto",
-            "desc": "Seu conhecimento arcano é derivado de magia que você extraiu de seu pacto com um ser sobrenatural. Você tem espaços de magia de Pacto que recupera com descanso curto ou longo. No nível 1: 1 espaço de 1° nível. Usa Carisma como habilidade de magia (CD = 8 + prof + mod Car). Suas magias conhecidas não são preparadas — você as lança a partir das que conhece."
+            "desc": "Você canaliza poder mágico diretamente do seu pacto sobrenatural. Carisma é sua habilidade de magia. CD de magia = 8 + bônus de proficiência + modificador de Carisma. Seus espaços de magia de Pacto se recuperam ao final de um descanso curto ou longo — e todos têm o mesmo nível, que cresce com seus níveis de Bruxo. No nível 1: 1 espaço de 1° nível."
           }
         ],
         "class_specific": {
@@ -1123,7 +1121,7 @@
         "features": [
           {
             "name": "Invocações Eldritch",
-            "desc": "No seu estudo do conhecimento oculto, você descobriu invocações eldritch, fragmentos de conhecimento proibido que imbuem você com uma habilidade arcana duradoura. Você aprende 2 invocações eldritch de sua escolha. Você aprende invocações eldritch adicionais de sua escolha nos níveis mais altos. Sempre que ganhar um nível de bruxo, você pode substituir uma invocação que conhece por outra."
+            "desc": "Você desvenda fragmentos de conhecimento proibido que conferem habilidades arcanas permanentes. Você aprende 2 Invocações Eldritch da lista do Bruxo. Ao subir de nível como Bruxo, você pode substituir uma invocação que conhece por outra para a qual se qualifique. O total de invocações que você conhece cresce conforme a tabela da classe."
           }
         ],
         "class_specific": {
@@ -1138,7 +1136,7 @@
         "features": [
           {
             "name": "Dádiva de Pacto",
-            "desc": "Seu patrono sobrenatural lhe concede um presente por seus serviços leais. Escolha uma das seguintes opções: Pacto da Corrente (familiar especial), Pacto da Lâmina (arma mágica conjurada), Pacto do Tomo (Livro das Sombras com truques extras).",
+            "desc": "Seu patrono sobrenatural lhe concede um dom especial como recompensa pelos seus serviços. Escolha uma das três opções: Pacto da Corrente — obtenha um familiar poderoso (pode ser imp, quasit, sprite ou pseudodragão); Pacto da Lâmina — como ação bônus, invoque uma arma mágica que conta como mágica e pode mudar de forma; Pacto do Tomo — receba o Livro das Sombras com 3 cantrips extras de qualquer lista de classe.",
             "choice_id": "pact_boon"
           }
         ],
@@ -1154,7 +1152,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ],
         "class_specific": {
@@ -1179,7 +1177,7 @@
         "features": [
           {
             "name": "Característica do Patrono Sobrenatural",
-            "desc": "Você recebe a característica de nível 6 do seu Patrono (Feérico: Fuga Fada; Infernal: Sorte do Próprio Diabo; Grande Antigo: Mente Protecionada).",
+            "desc": "Você recebe a característica de nível 6 do seu Patrono (Arquifada: Fuga Mística — reação ao sofrer dano, torne-se invisível e teletransporte 18m; O Demônio: Sorte do Sombrio — adicione d10 a qualquer teste ou TR uma vez entre descansos; O Grande Antigo: Proteção Entrópica — reação para impor desvantagem em ataque contra você).",
             "subclass": true
           }
         ],
@@ -1205,7 +1203,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ],
         "class_specific": {
@@ -1230,7 +1228,7 @@
         "features": [
           {
             "name": "Característica do Patrono Sobrenatural",
-            "desc": "Você recebe a característica de nível 10 do seu Patrono (Feérico: Fuga Fada aprimorada; Infernal: Resistência Infernal; Grande Antigo: Mente de Évola).",
+            "desc": "Você recebe a característica de nível 10 do seu Patrono (Arquifada: Defesas Sedutoras — imunidade a encantamento e pode refletir o efeito de volta ao atacante; O Demônio: Resiliência Demoníaca — após descanso, escolha 1 tipo de dano para ter resistência até o próximo descanso; O Grande Antigo: Pensamentos Blindados — resistência a dano psíquico e mente ilegível magicamente).",
             "subclass": true
           }
         ],
@@ -1246,7 +1244,7 @@
         "features": [
           {
             "name": "Misticismo Arcano (6° nível)",
-            "desc": "Você aprende um segredo de magia de alto nível. Escolha uma magia de 6° nível da lista de bruxo como seu misticismo arcano. Você pode lançá-la uma vez sem gastar espaço de magia. Deve terminar um descanso longo para lançá-la novamente."
+            "desc": "Você aprende um segredo de magia de poder além dos seus espaços de Pacto. Escolha uma magia de 6° nível da lista do Bruxo. Você pode lançá-la uma vez sem gastar um espaço de magia. Deve terminar um descanso longo antes de usá-la desta forma novamente. Ao nível 13, 15 e 17 você aprende magias adicionais de 7°, 8° e 9° nível pelo mesmo método."
           }
         ],
         "class_specific": {
@@ -1261,7 +1259,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ],
         "class_specific": {
@@ -1276,7 +1274,7 @@
         "features": [
           {
             "name": "Misticismo Arcano (7° nível)",
-            "desc": "Você aprende uma magia de 7° nível da lista de bruxo. Lança uma vez por descanso longo sem usar espaço de magia."
+            "desc": "Você aprende uma magia de 7° nível da lista do Bruxo e pode lançá-la uma vez por descanso longo sem gastar espaço de magia."
           }
         ],
         "class_specific": {
@@ -1291,14 +1289,14 @@
         "features": [
           {
             "name": "Característica do Patrono Sobrenatural",
-            "desc": "Você recebe a característica de nível 14 do seu Patrono (Feérico: Encantamento das Fadas; Infernal: Arremesse pelo Inferno; Grande Antigo: Telepatia Criada).",
+            "desc": "Você recebe a característica de nível 14 do seu Patrono (Arquifada: Escuridão Dançante — encantar ou amedrontar criatura a 18m por 1 min, Concentração, 1×/descanso longo; O Demônio: Percussão pelo Inferno — ao acertar ataque, envie o alvo para o inferno brevemente: ele sofre 10d10 de dano psíquico ao retornar, 1×/descanso longo; O Grande Antigo: Criar Servo Mental — encantar permanentemente um humanoide incapacitado pelo seu toque).",
             "subclass": true
           }
         ],
         "class_specific": {
           "pact_slots": 3,
           "pact_slot_level": 5,
-          "invocations": 7
+          "invocations": 6
         }
       },
       {
@@ -1307,7 +1305,7 @@
         "features": [
           {
             "name": "Misticismo Arcano (8° nível)",
-            "desc": "Você aprende uma magia de 8° nível da lista de bruxo. Lança uma vez por descanso longo sem usar espaço de magia."
+            "desc": "Você aprende uma magia de 8° nível da lista do Bruxo e pode lançá-la uma vez por descanso longo sem gastar espaço de magia."
           }
         ],
         "class_specific": {
@@ -1322,7 +1320,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ],
         "class_specific": {
@@ -1337,13 +1335,13 @@
         "features": [
           {
             "name": "Misticismo Arcano (9° nível)",
-            "desc": "Você aprende uma magia de 9° nível da lista de bruxo. Lança uma vez por descanso longo sem usar espaço de magia."
+            "desc": "Você aprende uma magia de 9° nível da lista do Bruxo e pode lançá-la uma vez por descanso longo sem gastar espaço de magia. Este é o ápice do poder eldritch ao seu alcance."
           }
         ],
         "class_specific": {
           "pact_slots": 4,
           "pact_slot_level": 5,
-          "invocations": 8
+          "invocations": 7
         }
       },
       {
@@ -1362,7 +1360,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ],
         "class_specific": {
@@ -1377,7 +1375,7 @@
         "features": [
           {
             "name": "Mestre Eldritch",
-            "desc": "Você pode implorar a seu patrono para recuperar seus recursos gastos. Pode gastar 1 minuto em comunicação com seu patrono e pedir para ele restaurar seus espaços de magia gastos de Pacto. Uma vez feito isso, você não pode usar esta característica novamente até terminar um descanso longo."
+            "desc": "Você pode clamar a seu patrono para recuperar seu poder gasto. Como ação, passe 1 minuto em comunicação com seu patrono pedindo para restaurar todos os seus espaços de Magia de Pacto. Uma vez usado, você não pode usar esta característica novamente até terminar um descanso longo."
           }
         ],
         "class_specific": {
@@ -1667,16 +1665,18 @@
         "features": [
           {
             "name": "Conjuração de Clérigo",
-            "desc": "Como conduto do poder divino, você pode lançar magias de clérigo. Usa Sabedoria como habilidade de magia (CD = 8 + bônus de proficiência + mod Sab). Você prepara uma lista de magias de clérigo disponíveis para uso. Escolha um número de magias igual ao seu mod Sabedoria + seu nível de clérigo (mínimo 1). Para lançar uma magia preparada, use um espaço de magia de nível igual ou maior ao da magia."
+            "desc": "Você canaliza poder divino para lançar magias. Sabedoria é sua habilidade de magia. CD de magia = 8 + bônus de proficiência + modificador de Sabedoria. Você prepara magias após cada descanso longo: escolha magias da lista do Clérigo em número igual ao seu modificador de Sabedoria + nível de Clérigo (mínimo 1). Você pode mudar sua lista de magias preparadas a cada descanso longo."
           },
           {
             "name": "Domínio Divino",
-            "desc": "Escolha um domínio divino relacionado à sua divindade. O domínio escolhido concede magias de domínio e outras características nos níveis 1, 2, 6, 8 e 17. As magias de domínio são sempre preparadas e não contam para o limite de magias preparadas.",
-            "choice_id": "divine_domain"
+            "desc": "Escolha um Domínio Divino relacionado à sua divindade: Vida, Luz, Tempestade, Natureza, Trickery, Guerra, entre outros. Seu Domínio concede magias sempre preparadas (que não contam para o limite) e características especiais nos níveis 1, 2, 6, 8 e 17.",
+            "choice_id": "divine_domain",
+            "subclass": true
           },
           {
             "name": "Magias de Domínio",
-            "desc": "Cada domínio divino concede uma lista de magias especiais, os níveis 1, 3, 5, 7 e 9. Essas magias são sempre consideradas preparadas e não contam para o número de magias que você pode preparar por dia."
+            "desc": "Seu Domínio Divino concede um par de magias bônus (sempre preparadas, não contam para o limite) em cada um dos seguintes níveis de personagem: 1, 3, 5, 7 e 9. As magias específicas dependem do Domínio escolhido.",
+            "subclass": true
           }
         ]
       },
@@ -1686,15 +1686,15 @@
         "features": [
           {
             "name": "Canalizar Divindade (1/descanso)",
-            "desc": "Você ganha a habilidade de canalizar energia divina diretamente da sua divindade 1 vez por descanso curto ou longo. Você começa com dois efeitos: Virar Mortos-Vivos e um efeito determinado pelo seu domínio. Conforme avança de nível, ganha mais usos e efeitos."
+            "desc": "Você pode canalizar energia divina diretamente da sua divindade para alimentar efeitos mágicos. Você começa com dois efeitos: Virar Mortos-Vivos e um efeito do Domínio. Você tem 1 uso que se recupera ao terminar um descanso curto ou longo. O número de usos aumenta para 2 no nível 6 e 3 no nível 18."
           },
           {
             "name": "Canalizar Divindade: Virar Mortos-Vivos",
-            "desc": "Como ação, você apresenta seu símbolo sagrado e profere uma prece que repele os mortos-vivos. Cada morto-vivo que puder vê-lo ou ouvi-lo a até 9 metros deve fazer um TR de Sabedoria. Com falha, a criatura é virada por 1 minuto ou até sofrer dano. Uma criatura virada deve gastar seus turnos tentando se afastar de você e não pode se aproximar voluntariamente."
+            "desc": "Como ação, apresente seu símbolo sagrado e profira uma prece censurando os mortos-vivos. Cada morto-vivo que puder vê-lo ou ouvi-lo a até 9 metros deve fazer um TR de Sabedoria (CD = 8 + prof + mod SAB). Com falha, a criatura é virada por 1 minuto ou até sofrer dano: ela deve gastar seus turnos tentando fugir de você e não pode se aproximar voluntariamente."
           },
           {
             "name": "Característica do Domínio",
-            "desc": "Você recebe a característica do Domínio Divino de nível 2 (ex: Canal da Divindade do domínio).",
+            "desc": "Você recebe o efeito de Canalizar Divindade do seu Domínio (Vida: Preservar a Vida — curar até 5×nível de PV entre criaturas a 9m; Luz: Luz Radiante — dano radiante em área; Tempestade: Rajada Destrutiva — dano máximo com raio/trovão; outros domínios têm seus próprios efeitos).",
             "subclass": true
           }
         ]
@@ -1704,8 +1704,9 @@
         "prof": 2,
         "features": [
           {
-            "name": "Magias de Domínio (nível 3)",
-            "desc": "Você tem acesso às magias de domínio de 2º nível (2 magias de acordo com seu domínio)."
+            "name": "Magias de Domínio (nível de personagem 3)",
+            "desc": "Você passa a ter acesso ao segundo par de magias do seu Domínio (magias de 2° nível). Sempre preparadas e não contam para o limite.",
+            "subclass": true
           }
         ]
       },
@@ -1715,7 +1716,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -1724,12 +1725,13 @@
         "prof": 3,
         "features": [
           {
-            "name": "Magias de Domínio (nível 5)",
-            "desc": "Você tem acesso às magias de domínio de 3º nível."
+            "name": "Destruir Mortos-Vivos (VD ≤ 1/2)",
+            "desc": "Quando um morto-vivo falha no TR contra Virar Mortos-Vivos e seu Valor de Desafio for 1/2 ou menor, ele é destruído instantaneamente em vez de apenas ser virado. Esse limiar cresce com seus níveis de Clérigo."
           },
           {
-            "name": "Destruir Mortos-Vivos (CR ≤1/2)",
-            "desc": "Quando um morto-vivo falha no TR contra Virar Mortos-Vivos, ele é imediatamente destruído se seu valor de desafio for 1/2 ou menor."
+            "name": "Magias de Domínio (nível de personagem 5)",
+            "desc": "Você passa a ter acesso ao terceiro par de magias do seu Domínio (magias de 3° nível). Sempre preparadas e não contam para o limite.",
+            "subclass": true
           }
         ]
       },
@@ -1739,11 +1741,11 @@
         "features": [
           {
             "name": "Canalizar Divindade (2/descanso)",
-            "desc": "Você pode usar Canalizar Divindade duas vezes entre descansos."
+            "desc": "Você agora pode usar Canalizar Divindade duas vezes entre descansos curtos ou longos."
           },
           {
             "name": "Característica do Domínio",
-            "desc": "Você recebe uma característica adicional do seu Domínio Divino.",
+            "desc": "Você recebe a característica de nível 6 do seu Domínio (Vida: Cura Abençoada — ao curar outro, recupere PV = 2 + nível da magia; Luz: Veste de Luz Aprimorada — proteger aliados também; Tempestade: Golpe Trovejante — empurrar criaturas grandes; outros domínios têm recursos equivalentes).",
             "subclass": true
           }
         ]
@@ -1753,8 +1755,9 @@
         "prof": 3,
         "features": [
           {
-            "name": "Magias de Domínio (nível 7)",
-            "desc": "Você tem acesso às magias de domínio de 4º nível."
+            "name": "Magias de Domínio (nível de personagem 7)",
+            "desc": "Você passa a ter acesso ao quarto par de magias do seu Domínio (magias de 4° nível). Sempre preparadas e não contam para o limite.",
+            "subclass": true
           }
         ]
       },
@@ -1764,15 +1767,15 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           },
           {
-            "name": "Destruir Mortos-Vivos (CR ≤1)",
+            "name": "Destruir Mortos-Vivos (VD ≤ 1)",
             "desc": "Mortos-vivos com VD 1 ou menor são destruídos quando falham no TR de Virar Mortos-Vivos."
           },
           {
             "name": "Característica do Domínio",
-            "desc": "Você recebe a característica de nível 8 do seu Domínio (ex: Golpe Divino ou Golpe Abençoado).",
+            "desc": "Você recebe a característica de nível 8 do seu Domínio: a maioria dos domínios concede Golpe Divino — ao acertar com arma, adicione 1d8 de dano do tipo do domínio (2d8 no nível 14); o Domínio da Luz concede Magia Potente — adicione seu modificador de Sabedoria ao dano de cantrips de Clérigo.",
             "subclass": true
           }
         ]
@@ -1782,8 +1785,9 @@
         "prof": 4,
         "features": [
           {
-            "name": "Magias de Domínio (nível 9)",
-            "desc": "Você tem acesso às magias de domínio de 5º nível."
+            "name": "Magias de Domínio (nível de personagem 9)",
+            "desc": "Você passa a ter acesso ao quinto e último par de magias do seu Domínio (magias de 5° nível). Sempre preparadas e não contam para o limite.",
+            "subclass": true
           }
         ]
       },
@@ -1793,7 +1797,7 @@
         "features": [
           {
             "name": "Intervenção Divina",
-            "desc": "Você pode implorar à sua divindade para intervir em seu favor. Rolando d100, se o resultado for igual ou menor ao seu nível de clérigo, sua divindade intervém. O Mestre escolhe a natureza da intervenção. Se ela funcionar, você não pode usá-la novamente por 7 dias. Caso contrário, você pode usá-la novamente após um descanso longo."
+            "desc": "Você pode implorar à sua divindade para intervir em seu favor quando mais precisar. Como ação, descreva a assistência que busca e role d100. Se o resultado for igual ou menor ao seu nível de Clérigo, sua divindade intervém: o Mestre escolhe a natureza da ajuda. Se funcionar, você não pode usá-la de novo por 7 dias. Se não funcionar, pode tentar de novo após descanso longo. No nível 20, funciona automaticamente."
           }
         ]
       },
@@ -1802,8 +1806,8 @@
         "prof": 4,
         "features": [
           {
-            "name": "Destruir Mortos-Vivos (CR ≤2)",
-            "desc": "Mortos-vivos com VD 2 ou menor são destruídos quando falham no TR de Virar."
+            "name": "Destruir Mortos-Vivos (VD ≤ 2)",
+            "desc": "Mortos-vivos com VD 2 ou menor são destruídos quando falham no TR de Virar Mortos-Vivos."
           }
         ]
       },
@@ -1813,7 +1817,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -1827,8 +1831,8 @@
         "prof": 5,
         "features": [
           {
-            "name": "Destruir Mortos-Vivos (CR ≤3)",
-            "desc": "Mortos-vivos com VD 3 ou menor são destruídos quando falham no TR de Virar."
+            "name": "Destruir Mortos-Vivos (VD ≤ 3)",
+            "desc": "Mortos-vivos com VD 3 ou menor são destruídos quando falham no TR de Virar Mortos-Vivos."
           }
         ]
       },
@@ -1843,7 +1847,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -1852,12 +1856,12 @@
         "prof": 6,
         "features": [
           {
-            "name": "Destruir Mortos-Vivos (CR ≤4)",
-            "desc": "Mortos-vivos com VD 4 ou menor são destruídos quando falham no TR de Virar."
+            "name": "Destruir Mortos-Vivos (VD ≤ 4)",
+            "desc": "Mortos-vivos com VD 4 ou menor são destruídos quando falham no TR de Virar Mortos-Vivos."
           },
           {
             "name": "Característica do Domínio",
-            "desc": "Você recebe a característica final (nível 17) do seu Domínio Divino.",
+            "desc": "Você recebe a característica de nível 17 do seu Domínio (Vida: Cura Suprema — usar valor máximo nos dados de cura; Luz: Coroa de Luz — aura de 18m de luz solar por 1 min; Tempestade: Olho da Tempestade — ao ar livre, ganhe velocidade de voo igual ao deslocamento; outros domínios têm poderes finais equivalentes).",
             "subclass": true
           }
         ]
@@ -1868,7 +1872,7 @@
         "features": [
           {
             "name": "Canalizar Divindade (3/descanso)",
-            "desc": "Você pode usar Canalizar Divindade três vezes entre descansos."
+            "desc": "Você agora pode usar Canalizar Divindade três vezes entre descansos curtos ou longos."
           }
         ]
       },
@@ -1878,7 +1882,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -1888,7 +1892,7 @@
         "features": [
           {
             "name": "Melhoria da Intervenção Divina",
-            "desc": "Sua chamada pela intervenção da sua divindade tem sucesso automaticamente, sem precisar fazer a rolagem."
+            "desc": "Sua chamada pela intervenção da sua divindade funciona automaticamente — não há mais necessidade de rolar d100. A divindade sempre responde ao seu pedido. Após usar, aguarde 7 dias para usar novamente."
           }
         ]
       }
@@ -2183,13 +2187,13 @@
     ],
     "wild_shape_cr": [
       null,
-      null,
       "1/4",
       "1/4",
       "1/2",
       "1/2",
       "1/2",
       "1/2",
+      "1",
       "1",
       "1",
       "1",
@@ -2210,11 +2214,11 @@
         "features": [
           {
             "name": "Conjuração de Druida",
-            "desc": "A magia drúidica vem da natureza. Usa Sabedoria como habilidade de magia (CD = 8 + bônus de prof + mod Sab). Você prepara magias após cada descanso longo, escolhendo do número = mod Sabedoria + nível de druida (mín. 1). Você pode lançar magias usando concentração de plantas, pedras ou materiais naturais como foco."
+            "desc": "Sua magia emana da natureza e do mundo selvagem. Sabedoria é sua habilidade de magia. CD de magia = 8 + bônus de proficiência + modificador de Sabedoria. Você prepara magias após cada descanso longo, escolhendo da lista de Druida em número igual ao modificador de Sabedoria + nível de Druida (mínimo 1). Pode usar um foco drúidico (galho, totem, cajado sagrado) no lugar de componentes materiais."
           },
           {
             "name": "Drúidico",
-            "desc": "Você conhece o Drúidico, a linguagem secreta dos druidas. Você pode falar a língua e usá-la para deixar mensagens escondidas. Você e outros que conheçam essa língua notam automaticamente tal mensagem. Outros percebem que há uma mensagem com um TR bem sucedido de Sabedoria (Percepção) CD 15, mas não podem decifrá-la sem magia."
+            "desc": "Você conhece o Drúidico, o idioma secreto dos druidas. Pode usá-lo para deixar mensagens ocultas em qualquer lugar. Você e outros druidas identificam automaticamente essas mensagens. Qualquer outro personagem precisa de um TR de Percepção (Sabedoria) CD 15 para notar que há uma mensagem, mas não consegue decifrá-la sem magia."
           }
         ]
       },
@@ -2224,12 +2228,13 @@
         "features": [
           {
             "name": "Forma Selvagem",
-            "desc": "Você pode usar sua ação para assumir magicamente a forma de uma besta que tenha visto antes. Você pode usar esta característica duas vezes. Recupera com descanso curto ou longo. Seu nível limita as formas disponíveis: nível 2 (CR ≤1/4, sem natação ou velocidade de voo), nível 4 (CR ≤1/2, sem velocidade de voo), nível 8 (CR ≤1). Você mantém seus TRs, PV máximos tomam o PV da besta. Se cair a 0 PV na forma, o dano excedente se aplica na forma humana."
+            "desc": "Como ação, você assume magicamente a forma de uma besta que já viu. Recupera 2 usos com descanso curto ou longo. Você mantém seus TRs mentais, alinhamento e personalidade — e pode concentrar magias. Seus PV ficam substituídos pelos da besta; ao cair a 0 PV na forma, o dano excedente se aplica na forma humana. Nível 2: VD máximo 1/4 (sem voo e sem nado); nível 4: VD 1/2 (sem voo); nível 8: VD 1 (sem restrições)."
           },
           {
             "name": "Círculo Druídico",
-            "desc": "Você se alinha a um Círculo de Druidas: Círculo da Terra ou Círculo da Lua. O círculo concede características nos níveis 2, 6, 10 e 14.",
-            "choice_id": "druid_circle"
+            "desc": "Você se alinha a um Círculo de druidas que compartilha sua visão de mundo: Círculo da Terra (magia e recuperação natural) ou Círculo da Lua (maestria na Forma Selvagem). Seu Círculo concede características nos níveis 2, 6, 10 e 14.",
+            "choice_id": "druid_circle",
+            "subclass": true
           }
         ]
       },
@@ -2243,12 +2248,12 @@
         "prof": 2,
         "features": [
           {
-            "name": "Forma Selvagem (CR ≤1/2)",
-            "desc": "Sua Forma Selvagem agora permite formas de besta com VD 1/2 ou menos, ainda sem velocidade de voo."
+            "name": "Forma Selvagem (VD ≤ 1/2)",
+            "desc": "Sua Forma Selvagem agora permite bestas com Valor de Desafio 1/2 ou menor. Voo ainda não é permitido."
           },
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -2263,7 +2268,7 @@
         "features": [
           {
             "name": "Característica do Círculo Druídico",
-            "desc": "Você recebe uma característica adicional do seu Círculo (Terra: Mente da Terra; Lua: Formas Elementais).",
+            "desc": "Você recebe a característica de nível 6 do seu Círculo (Terra: Passo da Terra — terreno difícil não mágico sem custo extra de movimento, não pode ser paralisado por plantas; Lua: Formas Elementais — gastar 2 usos de Forma Selvagem para assumir a forma de um Elemental de Ar, Terra, Fogo ou Água).",
             "subclass": true
           }
         ]
@@ -2278,12 +2283,12 @@
         "prof": 3,
         "features": [
           {
-            "name": "Forma Selvagem (CR ≤1)",
-            "desc": "Sua Forma Selvagem agora permite formas de besta com VD 1 ou menos."
+            "name": "Forma Selvagem (VD ≤ 1)",
+            "desc": "Sua Forma Selvagem agora permite bestas com Valor de Desafio 1 ou menor. Voo e natação agora estão permitidos — você pode assumir qualquer besta que já tenha visto nesse VD."
           },
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -2298,7 +2303,7 @@
         "features": [
           {
             "name": "Característica do Círculo Druídico",
-            "desc": "Você recebe a característica de nível 10 do seu Círculo (Terra: Natureza Imune; Lua: Formas Planetárias).",
+            "desc": "Você recebe a característica de nível 10 do seu Círculo (Terra: Afinidade com a Natureza — imunidade a veneno e doenças, imune a ser encantado/amedrontado por Fadas ou Elementais; Lua: Golpes Elementares — seus ataques na Forma Selvagem contam como mágicos para fins de superar resistências).",
             "subclass": true
           }
         ]
@@ -2314,7 +2319,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -2329,7 +2334,7 @@
         "features": [
           {
             "name": "Característica do Círculo Druídico",
-            "desc": "Você recebe a característica de nível 14 do seu Círculo (Terra: Santuário da Natureza; Lua: Mais Formas).",
+            "desc": "Você recebe a característica de nível 14 do seu Círculo (Terra: Santuário da Natureza — bestas e plantas devem fazer TR de Sabedoria para atacar você; Lua: Mil Formas — lançar Alterar a Si Mesmo à vontade sem gastar espaço de magia).",
             "subclass": true
           }
         ]
@@ -2345,7 +2350,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -2360,11 +2365,11 @@
         "features": [
           {
             "name": "Corpo Eterno",
-            "desc": "A magia druídica que você canaliza faz você envelhecer mais lentamente. Para cada 10 anos que passam, seu corpo envelhece apenas 1 ano."
+            "desc": "A magia drúidica que você canaliza retarda o envelhecimento do seu corpo. Para cada 10 anos que passam, seu corpo envelhece apenas 1 ano. Você também é imune a envelhecimento mágico causado por magias ou efeitos."
           },
           {
             "name": "Magias de Besta",
-            "desc": "Você pode lançar muitas das suas magias de druida em qualquer forma que usar com Forma Selvagem. Você pode executar componentes somáticos e verbais de uma magia de druida enquanto estiver em forma de besta, mas não pode prover componentes materiais."
+            "desc": "Você pode lançar suas magias de Druida mesmo enquanto estiver na Forma Selvagem, desde que a magia tenha apenas componentes verbais e somáticos. Você não pode fornecer componentes materiais enquanto em forma de besta."
           }
         ]
       },
@@ -2374,7 +2379,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -2384,7 +2389,7 @@
         "features": [
           {
             "name": "Arquidruida",
-            "desc": "Você pode usar sua Forma Selvagem um número ilimitado de vezes. Além disso, você pode ignorar os requisitos verbais e somáticos das suas magias de druida, bem como quaisquer requisitos de componentes materiais que não tenham um custo e não sejam consumidos pela magia."
+            "desc": "Você pode usar sua Forma Selvagem um número ilimitado de vezes. Além disso, você pode ignorar os componentes verbais e somáticos das suas magias de Druida, bem como quaisquer componentes materiais que não tenham custo e não sejam consumidos pela magia — tanto na forma humana quanto na Forma Selvagem."
           }
         ]
       }
