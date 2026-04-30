@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from 'react'
 import { SCHEMA_VERSION } from '../domain/characterSchema'
 import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
 import { getModifier } from '../utils/calculations'
+import { defaultClassFeatureUses, mergeFeatureUses } from '../domain/rules'
 
 const DEFAULT_CHARACTER = {
   id: null,
@@ -384,7 +385,7 @@ export function useCharacter(initialCharacter = null) {
 
   const spendFeatureUse = useCallback(id => {
     setCharacter(prev => {
-      const list = prev.combat?.classFeatureUses ?? []
+      const list = mergeFeatureUses(prev.combat?.classFeatureUses ?? [], defaultClassFeatureUses(prev))
       const next = list.map(u => u.id === id
         ? { ...u, used: Math.min(u.max, (u.used ?? 0) + 1) }
         : u)
@@ -394,7 +395,7 @@ export function useCharacter(initialCharacter = null) {
 
   const regainFeatureUse = useCallback(id => {
     setCharacter(prev => {
-      const list = prev.combat?.classFeatureUses ?? []
+      const list = mergeFeatureUses(prev.combat?.classFeatureUses ?? [], defaultClassFeatureUses(prev))
       const next = list.map(u => u.id === id
         ? { ...u, used: Math.max(0, (u.used ?? 0) - 1) }
         : u)

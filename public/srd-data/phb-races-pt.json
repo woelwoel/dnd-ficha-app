@@ -15,7 +15,7 @@
     "topics": [
       {
         "title": "Aumento no Valor de Habilidade",
-        "desc": "Seu valor de"
+        "desc": "Seu valor de Constituição aumenta em 2."
       },
       {
         "title": "Constituição aumenta em 2",
@@ -65,7 +65,7 @@
     "traits": [
       {
         "name": "Aumento no Valor de Habilidade",
-        "desc": "Seu valor de"
+        "desc": "Seu valor de Constituição aumenta em 2."
       },
       {
         "name": "Constituição aumenta em 2",
@@ -130,7 +130,7 @@
           },
           {
             "title": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "desc": "Seu valor de Sabedoria aumenta em 1."
           },
           {
             "title": "Sabedoria aumenta em 1",
@@ -148,7 +148,7 @@
           },
           {
             "name": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "desc": "Seu valor de Sabedoria aumenta em 1."
           },
           {
             "name": "Sabedoria aumenta em 1",
@@ -177,7 +177,7 @@
           },
           {
             "title": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "desc": "Seu valor de Força aumenta em 2."
           },
           {
             "title": "Força aumenta em 2",
@@ -195,7 +195,7 @@
           },
           {
             "name": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "desc": "Seu valor de Força aumenta em 2."
           },
           {
             "name": "Força aumenta em 2",
@@ -288,7 +288,7 @@
     "topics": [
       {
         "title": "Aumento no Valor de Habilidade",
-        "desc": "Seu valor de"
+        "desc": "Seu valor de Destreza aumenta em 2."
       },
       {
         "title": "Destreza aumenta em 2",
@@ -342,7 +342,7 @@
     "traits": [
       {
         "name": "Aumento no Valor de Habilidade",
-        "desc": "Seu valor de"
+        "desc": "Seu valor de Destreza aumenta em 2."
       },
       {
         "name": "Destreza aumenta em 2",
@@ -411,7 +411,7 @@
           },
           {
             "title": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "desc": "Seu valor de Inteligência aumenta em 1."
           },
           {
             "title": "Inteligência aumenta em 1",
@@ -437,7 +437,7 @@
           },
           {
             "name": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "desc": "Seu valor de Inteligência aumenta em 1."
           },
           {
             "name": "Inteligência aumenta em 1",
@@ -470,7 +470,7 @@
         "topics": [
           {
             "title": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "desc": "Seu valor de Sabedoria aumenta em 1."
           },
           {
             "title": "Sabedoria aumenta em 1",
@@ -492,7 +492,7 @@
         "traits": [
           {
             "name": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "desc": "Seu valor de Sabedoria aumenta em 1."
           },
           {
             "name": "Sabedoria aumenta em 1",
@@ -529,7 +529,7 @@
           },
           {
             "title": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "desc": "Seu valor de Carisma aumenta em 1."
           },
           {
             "title": "Carisma aumenta em 1",
@@ -562,39 +562,39 @@
         ],
         "traits": [
           {
-            "name": "Lolth",
+            "title": "Lolth",
             "desc": "Também conhecidos como elfos negros, os drow possuem pele negra similar a obsidiana polida e cabelos brancos opacos ou amarelo pálido. Normalmente eles possuem olhos muito pálidos (tão pálidos que são confundidos com olhos brancos) com tons de lilás, prata, rosa, vermelho e azul. Eles costumam ser menores e mais magros que a maioria dos elfos. Aventureiros drow são raros e a raça não existe em todo o mundo. Verifique com seu Mestre se a raça drow está disponível como personagem de jogador."
           },
           {
-            "name": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "title": "Aumento no Valor de Habilidade",
+            "desc": "Seu valor de Carisma aumenta em 1."
           },
           {
-            "name": "Carisma aumenta em 1",
+            "title": "Carisma aumenta em 1",
             "desc": ""
           },
           {
-            "name": "Visão no Escuro Superior",
+            "title": "Visão no Escuro Superior",
             "desc": "Sua visão no escuro tem alcance de 36 metros de raio."
           },
           {
-            "name": "Sensibilidade à Luz Solar",
+            "title": "Sensibilidade à Luz Solar",
             "desc": "Você possui desvantagem nas jogadas de ataque e testes de Sabedoria (Percepção) relacionados a visão quando você, o alvo do seu ataque, ou qualquer coisa que você está tentando perceber, esteja sob luz solar direta."
           },
           {
-            "name": "Magia Drow",
+            "title": "Magia Drow",
             "desc": "Você possui o truque globos de luz. Quando você alcança o 3° nível, você pode conjurar a magia fogo das fadas. Quando você alcança o 5° nível, você pode conjurar escuridão. Você precisa terminar um descanso longo para poder conjurar as magias desse traço novamente. Carisma é sua habilidade chave para conjurar essas magias."
           },
           {
-            "name": "Treinamento Drow com Armas",
+            "title": "Treinamento Drow com Armas",
             "desc": "Você possui proficiência com rapieiras, espadas curtas e bestas de mão. A ESCURIDÃO DOS DROW Se não fosse por uma única exceção conhecida, a raça dos drow seria universalmente ultrajada. Sua sociedade é depravada e preocupada com as graças de Lolth, sua deusa-aranha, quem sanciona o assassinato e o extermínio de famílias inteiras quando casas nobres disputam posições sociais. Os drow crescem acreditando que as raças que habitam superfície são inferiores, exceto como seus escravos."
           },
           {
-            "name": "No entanto, pelo menos um drow quebrou esse estereótipo",
+            "title": "No entanto, pelo menos um drow quebrou esse estereótipo",
             "desc": "No mundo dos Reinos Esquecidos, Drizzt Do'Urden, patrulheiro do Norte, provou sua índole de bom coração como um defensor dos fracos e inocentes. Rejeitando sua herança e imergindo num mundo que olha para ele com horror e aversão, Drizzt é um modelo para os poucos drow que seguem seus passos, tentando encontrar uma vida aquém da sociedade maligna da seu lar no"
           },
           {
-            "name": "Subterrâneo",
+            "title": "Subterrâneo",
             "desc": "Drow crescem acreditando que as raças da superfície são inferiores, servindo apenas como escravos. Drow que desenvolvem uma consciência ou acham necessário cooperar com membros de outras raças encontram dificuldade em sobrepujar o preconceito, especialmente quando eles são tão frequentemente recebidos com ódio."
           }
         ]
@@ -617,7 +617,7 @@
     "topics": [
       {
         "title": "Aumento no Valor de Habilidade",
-        "desc": "Seu valor de"
+        "desc": "Seu valor de Destreza aumenta em 2."
       },
       {
         "title": "Destreza aumenta em 2",
@@ -663,7 +663,7 @@
     "traits": [
       {
         "name": "Aumento no Valor de Habilidade",
-        "desc": "Seu valor de"
+        "desc": "Seu valor de Destreza aumenta em 2."
       },
       {
         "name": "Destreza aumenta em 2",
@@ -720,7 +720,7 @@
         "topics": [
           {
             "title": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "desc": "Seu valor de Carisma aumenta em 1."
           },
           {
             "title": "Carisma aumenta em 1",
@@ -734,7 +734,7 @@
         "traits": [
           {
             "name": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "desc": "Seu valor de Carisma aumenta em 1."
           },
           {
             "name": "Carisma aumenta em 1",
@@ -759,7 +759,7 @@
         "topics": [
           {
             "title": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "desc": "Seu valor de Constituição aumenta em 1."
           },
           {
             "title": "Constituição aumenta em 1",
@@ -773,7 +773,7 @@
         "traits": [
           {
             "name": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "desc": "Seu valor de Constituição aumenta em 1."
           },
           {
             "name": "Constituição aumenta em 1",
@@ -1042,7 +1042,7 @@
     "topics": [
       {
         "title": "Aumento no Valor de Habilidade",
-        "desc": "Seu valor de"
+        "desc": "Seu valor de Inteligência aumenta em 2."
       },
       {
         "title": "Inteligência aumenta em 2",
@@ -1088,7 +1088,7 @@
     "traits": [
       {
         "name": "Aumento no Valor de Habilidade",
-        "desc": "Seu valor de"
+        "desc": "Seu valor de Inteligência aumenta em 2."
       },
       {
         "name": "Inteligência aumenta em 2",
@@ -1145,7 +1145,7 @@
         "topics": [
           {
             "title": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "desc": "Seu valor de Destreza aumenta em 1."
           },
           {
             "title": "Destreza aumenta em 1",
@@ -1163,7 +1163,7 @@
         "traits": [
           {
             "name": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "desc": "Seu valor de Destreza aumenta em 1."
           },
           {
             "name": "Destreza aumenta em 1",
@@ -1192,7 +1192,7 @@
         "topics": [
           {
             "title": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "desc": "Seu valor de Constituição aumenta em 1."
           },
           {
             "title": "Constituição aumenta em 1",
@@ -1218,7 +1218,7 @@
         "traits": [
           {
             "name": "Aumento no Valor de Habilidade",
-            "desc": "Seu valor de"
+            "desc": "Seu valor de Constituição aumenta em 1."
           },
           {
             "name": "Constituição aumenta em 1",

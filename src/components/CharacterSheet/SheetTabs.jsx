@@ -4,7 +4,7 @@ import { memo, useCallback, useMemo, useRef } from 'react'
 export const TABS = [
   { id: 'ficha',      label: 'Ficha',      icon: '◆' },  // stats + perícias + combate
   { id: 'magias',     label: 'Magias',     icon: '✧' },  // slots e lista de magias
-  { id: 'acoes',      label: 'Poderes',    icon: '⊛' },  // ações + habilidades de classe/raça
+  { id: 'acoes',      label: 'Habilidades/Ações', icon: '⊛' },  // ações + habilidades de classe/raça
   { id: 'inventario', label: 'Inventário', icon: '◈' },  // itens e moedas
   { id: 'progressao', label: 'Progressão', icon: '▲' },  // evolução de nível
   { id: 'notas',      label: 'Notas',      icon: '≡' },  // anotações e antecedente

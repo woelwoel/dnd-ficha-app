@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { CharacterInfo } from './CharacterInfo'
 import { CombatStats } from './CombatStats'
 import { SavingThrows } from './SavingThrows'
@@ -11,6 +11,7 @@ import { FeaturesTab } from './FeaturesTab'
 import { AttributesSection } from './AttributesSection'
 import { RestActions } from './RestActions'
 import { Attacks } from './Attacks'
+import { defaultClassFeatureUses, mergeFeatureUses } from '../../domain/rules'
 
 /* ── Wrapper de painel de aba ─────────────────────────────── */
 function TabPanel({ id, children }) {
@@ -97,7 +98,11 @@ export function SheetContent({
     handleRemoveMulticlass, handleChosenFeaturesChange,
   } = handlers
 
-  const featureUses = character.combat?.classFeatureUses ?? []
+  const featureUses = useMemo(
+    () => mergeFeatureUses(character.combat?.classFeatureUses ?? [], defaultClassFeatureUses(character)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [character]
+  )
 
   /* ── Aba: Ficha ─────────────────────────────────────────── */
   if (activeTab === 'ficha') {
