@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { ABBR_TO_KEY, ABILITY_SCORES, SKILLS } from '../../../utils/calculations'
 import { DetailsModal } from '../../DetailsModal'
 import { TopicList, FullDescriptionToggle } from '../../TopicList'
+import { DRACONIC_ANCESTORS } from '../../../utils/draconicAncestors'
 
 const MAGO_CANTRIPS = [
   'Amizade', 'Ataque Certeiro', 'Consertar', 'Espirro Ácido',
@@ -12,18 +13,6 @@ const MAGO_CANTRIPS = [
   'Toque Arrepiante', 'Toque Chocante',
 ]
 
-const DRACONIC_ANCESTORS = [
-  { value: 'azul',    label: 'Azul',    damage: 'Elétrico',  breath: 'Linha 1,5m×9m (TR Des)' },
-  { value: 'branco',  label: 'Branco',  damage: 'Frio',      breath: 'Cone de 4,5m (TR Con)' },
-  { value: 'bronze',  label: 'Bronze',  damage: 'Elétrico',  breath: 'Linha 1,5m×9m (TR Des)' },
-  { value: 'cobre',   label: 'Cobre',   damage: 'Ácido',     breath: 'Linha 1,5m×9m (TR Des)' },
-  { value: 'latao',   label: 'Latão',   damage: 'Fogo',      breath: 'Linha 1,5m×9m (TR Des)' },
-  { value: 'negro',   label: 'Negro',   damage: 'Ácido',     breath: 'Linha 1,5m×9m (TR Des)' },
-  { value: 'ouro',    label: 'Ouro',    damage: 'Fogo',      breath: 'Cone de 4,5m (TR Des)' },
-  { value: 'prata',   label: 'Prata',   damage: 'Frio',      breath: 'Cone de 4,5m (TR Con)' },
-  { value: 'verde',   label: 'Verde',   damage: 'Veneno',    breath: 'Cone de 4,5m (TR Con)' },
-  { value: 'vermelho',label: 'Vermelho',damage: 'Fogo',      breath: 'Cone de 4,5m (TR Des)' },
-]
 
 export function Step2Race({ draft, updateDraft, races }) {
   const [modal, setModal] = useState(null) // 'race' | 'subrace' | null
@@ -188,7 +177,7 @@ export function Step2Race({ draft, updateDraft, races }) {
                   }`}
                 >
                   <span className="font-semibold block">{a.label}</span>
-                  <span className="text-[10px] text-gray-500">{a.damage} · {a.breath}</span>
+                  <span className="text-[10px] text-gray-500">{a.damage} · {a.breath} (TR {a.save})</span>
                 </button>
               )
             })}

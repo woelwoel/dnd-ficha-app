@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useSrd } from '../../providers/SrdProvider'
+import { enrichDraconicTopics } from '../../utils/draconicAncestors'
 
 /* ══════════════════════════════════════════════════════════════════
    DETECTOR DE TIPO DE AÇÃO
@@ -313,10 +314,13 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain }) {
     })
 
     /* ── Traços raciais ── */
-    const raceTopics = [
+    const rawTopics = [
       ...(selectedRace?.topics   ?? selectedRace?.traits?.map(t   => ({ title: t.name, desc: t.desc })) ?? []),
       ...(selectedSubrace?.topics ?? selectedSubrace?.traits?.map(t => ({ title: t.name, desc: t.desc })) ?? []),
     ]
+    const raceTopics = info?.race === 'draconato'
+      ? enrichDraconicTopics(rawTopics, info?.draconicAncestry)
+      : rawTopics
     const raceFeatures = raceTopics
       .filter(t => (t.title ?? t.name) && t.desc)
       .map(t => ({
@@ -350,10 +354,8 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain }) {
       }),
     ]
 
-    const raceTraits = [
-      ...(selectedRace?.topics   ?? selectedRace?.traits?.map(t   => ({ title: t.name, desc: t.desc })) ?? []),
-      ...(selectedSubrace?.topics ?? selectedSubrace?.traits?.map(t => ({ title: t.name, desc: t.desc })) ?? []),
-    ].map(t => ({ name: t.title ?? t.name, desc: t.desc, source: selectedRace?.name ?? 'Raça' }))
+    const raceTraits = raceTopics
+      .map(t => ({ name: t.title ?? t.name, desc: t.desc, source: selectedRace?.name ?? 'Raça' }))
 
     const toAction = f => ({
       id:   `${f.source}-${f.name}`.toLowerCase().replace(/\s+/g, '-'),
