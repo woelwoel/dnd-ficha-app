@@ -3818,11 +3818,11 @@
         "features": [
           {
             "name": "Conjuração de Mago",
-            "desc": "Como estudioso da magia arcana, você tem um grimório que contém magias que mostram os primeiros vislumbres do seu verdadeiro poder. Usa Inteligência como habilidade de magia (CD = 8 + prof + mod Int). Você prepara magias do seu grimório após descanso longo: número igual ao mod Inteligência + nível de mago (mín. 1). Você pode mudar suas magias preparadas durante um descanso longo. No nível 1, você conhece 3 cantrips e tem 6 magias de 1° nível no grimório."
+            "desc": "Você estudou os princípios da magia arcana e registrou seu conhecimento em um grimório. Inteligência é sua habilidade de magia. CD de magia = 8 + bônus de proficiência + modificador de Inteligência. Você prepara magias do seu grimório após descanso longo: escolha magias em número igual ao modificador de Inteligência + nível de Mago (mínimo 1). Você começa com 6 magias de 1° nível no grimório e ganha 2 magias por nível. Pode lançar qualquer magia ritual do grimório sem gastar slot (+10 minutos de tempo de conjuração)."
           },
           {
             "name": "Recuperação Arcana",
-            "desc": "Uma vez por dia, quando terminar um descanso curto, você pode recuperar alguns espaços de magia gastos. Você pode recuperar espaços de magia com nível total combinado igual ou menor à metade do seu nível de mago (mínimo 1). Não pode recuperar espaços de magia acima do 5° nível."
+            "desc": "Uma vez por dia, quando terminar um descanso curto, você pode recuperar espaços de magia gastos. Os espaços recuperados têm nível total combinado igual ou menor à metade do seu nível de Mago (arredondado para cima, mínimo 1). Não pode recuperar espaços acima do 5° nível desta forma."
           }
         ]
       },
@@ -3832,8 +3832,9 @@
         "features": [
           {
             "name": "Tradição Arcana",
-            "desc": "Você escolhe uma tradição arcana, moldando sua prática da magia por uma de oito escolas: Abjuração, Conjuração, Adivinhação, Encantamento, Evocação, Ilusão, Invocação, Necromancia ou Transmutação. Sua escolha concede características nos níveis 2, 6, 10 e 14.",
-            "choice_id": "arcane_tradition"
+            "desc": "Você se especializa em uma das oito escolas de magia arcana: Abjuração (proteção e anulação), Conjuração (teleporte e invocação), Adivinhação (conhecimento e presságios), Encantamento (controle mental), Evocação (dano elemental), Ilusão (enganação), Necromancia (mortos-vivos e energia vital) ou Transmutação (transformação). Sua escola concede características nos níveis 2, 6, 10 e 14.",
+            "choice_id": "arcane_tradition",
+            "subclass": true
           }
         ]
       },
@@ -3848,7 +3849,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -3863,7 +3864,7 @@
         "features": [
           {
             "name": "Característica da Tradição Arcana",
-            "desc": "Você recebe uma característica da sua Tradição Arcana.",
+            "desc": "Você recebe a característica de nível 6 da sua escola de magia (ex: Abjuração — Proteção Projetada; Evocação — Cantrig Potente; Adivinhação — Especialista em Adivinhação; Transmutação — Pedra do Transmutador). Consulte sua tradição para detalhes.",
             "subclass": true
           }
         ]
@@ -3879,7 +3880,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -3894,7 +3895,7 @@
         "features": [
           {
             "name": "Característica da Tradição Arcana",
-            "desc": "Você recebe outra característica da sua Tradição Arcana.",
+            "desc": "Você recebe a característica de nível 10 da sua escola de magia (ex: Abjuração — Contra-magia Aprimorada; Evocação — Evocação Empoderada; Adivinhação — A Terceira Vista; Ilusão — Eu Ilusório). Consulte sua tradição para detalhes.",
             "subclass": true
           }
         ]
@@ -3910,7 +3911,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -3925,7 +3926,7 @@
         "features": [
           {
             "name": "Característica da Tradição Arcana",
-            "desc": "Você recebe a característica de nível 14 da sua Tradição Arcana.",
+            "desc": "Você recebe a característica de nível 14 da sua escola de magia (ex: Abjuração — Resistência Mágica; Evocação — Sobrecarregar; Necromancia — Comandar Mortos-Vivos; Ilusão — Realidade Ilusória). Consulte sua tradição para detalhes.",
             "subclass": true
           }
         ]
@@ -3941,7 +3942,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -3956,7 +3957,7 @@
         "features": [
           {
             "name": "Maestria de Magia",
-            "desc": "Você alcançou tal domínio com certos magias que pode lançá-las à vontade. Escolha uma magia de 1° nível e uma magia de 2° nível em seu grimório. Você pode lançar essas magias no nível mais baixo sem gastar um espaço de magia. Se quiser lançá-las em um nível mais alto, deve usar um espaço de magia normalmente."
+            "desc": "Você domina certas magias a ponto de poder lançá-las sem esforço. Escolha uma magia de 1° nível e uma de 2° nível do seu grimório. Você pode lançar cada uma sem gastar espaço de magia. Após usá-las desta forma, deve terminar um descanso curto ou longo antes de repeti-las gratuitamente. Se desejar lançá-las em nível mais alto, gaste um espaço normalmente."
           }
         ]
       },
@@ -3966,7 +3967,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -3976,7 +3977,7 @@
         "features": [
           {
             "name": "Magia Marcante",
-            "desc": "Você domina três magias adicionais e pode lançá-las com pouco esforço. Escolha até três magias de 3° nível ou inferior em seu grimório como suas magias marcantes. Você as lança sem gastar espaço de magia mas não pode lançar a mesma magia marcante duas vezes por turno. Você pode recuperar todos os seus usos quando terminar um descanso longo."
+            "desc": "Você domina duas magias e pode lançá-las com facilidade excepcional. Escolha duas magias de 3° nível do seu grimório como suas magias marcantes. Você pode lançar cada uma sem gastar espaço de magia. Após usá-las desta forma, deve terminar um descanso curto ou longo antes de repeti-las gratuitamente."
           }
         ]
       }
@@ -4062,16 +4063,17 @@
         "features": [
           {
             "name": "Defesa Desarmada",
-            "desc": "Enquanto você não estiver usando armadura e sem escudo, sua Classe de Armadura é igual a 10 + seu modificador de Destreza + seu modificador de Sabedoria."
+            "desc": "Enquanto não estiver usando armadura nem empunhando um escudo, sua CA é igual a 10 + modificador de Destreza + modificador de Sabedoria. Isso torna a Sabedoria diretamente relevante para sua sobrevivência em combate."
           },
           {
             "name": "Artes Marciais (d4)",
-            "desc": "Sua prática das artes marciais lhe dá maestria em combate usando ataques desarmados e armas de monge (espadas curtas e simples sem propriedade de alcance ou de duas mãos). Você ganha os seguintes benefícios: usar Des no lugar de For em ataques desarmados/armas de monge; rolar d4 no lugar do dano normal; atacar desarmado como ação bônus após usar Atacar."
+            "desc": "Você domina estilos de combate que usam ataques desarmados e armas de monge (espadas curtas e armas simples sem propriedade Pesada ou Alcance). Ao usar essas armas ou atacar desarmado: use Destreza em vez de Força para ataque e dano; use o dado de Artes Marciais (d4) se for maior que o dado normal da arma; faça 1 ataque desarmado como ação bônus após usar a ação Atacar. O dado aumenta conforme o nível (d6 no 5°, d8 no 11°, d10 no 17°)."
           }
         ],
         "class_specific": {
           "ki_points": 0,
-          "martial_arts_die": "d4"
+          "martial_arts_die": "d4",
+          "unarmored_movement_bonus": 0
         }
       },
       {
@@ -4079,29 +4081,18 @@
         "prof": 2,
         "features": [
           {
-            "name": "Ki (2 pontos)",
-            "desc": "Seu treinamento permite que você aproveite o fluxo místico de ki dentro de você. Você tem 2 pontos de ki que se recuperam com descanso curto ou longo. Você pode gastá-los nos seguintes poderes:"
+            "name": "Ki",
+            "desc": "Você canaliza a energia mística chamada ki que flui em seu interior. Você tem um número de pontos de Ki igual ao seu nível de Monge (2 pontos agora). Esses pontos se recuperam após um descanso curto ou longo. Você pode gastar Ki para ativar as seguintes habilidades:\n• Rajada de Golpes (1 Ki): ao usar a ação Atacar, realize mais 2 ataques desarmados como ação bônus.\n• Defesa Paciente (1 Ki): use Esquivar como ação bônus.\n• Vento na Corrida (1 Ki): use Desengajar e Corrida como ação bônus."
           },
           {
-            "name": "Rajada de Golpes",
-            "desc": "Imediatamente após usar Atacar no seu turno, você pode gastar 1 ponto de ki para fazer dois ataques desarmados como ação bônus."
-          },
-          {
-            "name": "Defesa Paciente",
-            "desc": "Você pode gastar 1 ponto de ki para usar Esquivar como ação bônus."
-          },
-          {
-            "name": "Vento na Corrida",
-            "desc": "Você pode gastar 1 ponto de ki para usar Disparar ou Desengajar como ação bônus, e seu deslocamento de salto é dobrado até o fim do turno."
-          },
-          {
-            "name": "Movimento Desarmado (+10m)",
-            "desc": "Seu deslocamento aumenta em 3 metros enquanto você não usa armadura ou escudo. No nível 9, você também pode se mover pela água e superfícies verticais sem cair (se terminar o movimento em superfície sólida)."
+            "name": "Movimento Desarmado (+3m)",
+            "desc": "Sua velocidade aumenta em 3 metros enquanto não estiver usando armadura nem empunhando escudo. Esse bônus aumenta conforme você sobe de nível: +4,5m no 5°, +6m no 11°, +7,5m no 16°."
           }
         ],
         "class_specific": {
           "ki_points": 2,
-          "martial_arts_die": "d4"
+          "martial_arts_die": "d4",
+          "unarmored_movement_bonus": 3
         }
       },
       {
@@ -4110,17 +4101,19 @@
         "features": [
           {
             "name": "Tradição Monástica",
-            "desc": "Você se compromete com uma tradição monástica: Caminho da Mão Aberta, Caminho da Sombra ou Caminho dos Quatro Elementos. A tradição concede características nos níveis 3, 6, 11 e 17.",
-            "choice_id": "monastic_tradition"
+            "desc": "Você se compromete com uma tradição monástica: Caminho da Mão Aberta (técnicas avançadas de combate desarmado — derrubar, empurrar, negar reações), Caminho das Sombras (magia sombria e furtividade, movendo-se entre as sombras) ou Caminho dos Quatro Elementos (canalizar elementos através do ki para criar efeitos poderosos). Sua tradição concede características nos níveis 3, 6, 11 e 17.",
+            "choice_id": "monastic_tradition",
+            "subclass": true
           },
           {
             "name": "Defletir Projéteis",
-            "desc": "Você pode usar sua reação para defletir ou pegar o míssil quando for acertado por um ataque de arma de alcance. Quando faz isso, o dano sofrido é reduzido em 1d10 + mod Destreza + nível de monge. Se o dano for reduzido a 0, você pode pegar o projétil se couber na mão. Se pegar, pode gastar 1 ki para fazer um ataque de alcance com a munição ou a arma, com alcance de 6/18 metros, usando proficiência."
+            "desc": "Como reação ao ser acertado por um ataque com arma de projétil, você pode reduzir o dano em 1d10 + modificador de Destreza + nível de Monge. Se reduzir o dano a 0, pode pegar o projétil. Se tiver mãos livres, pode lançá-lo gastando 1 ponto de Ki como parte da mesma reação: faça um ataque à distância (alcance 9m/18m, dano 1d6 + modificador de Destreza)."
           }
         ],
         "class_specific": {
           "ki_points": 3,
-          "martial_arts_die": "d4"
+          "martial_arts_die": "d4",
+          "unarmored_movement_bonus": 3
         }
       },
       {
@@ -4129,16 +4122,17 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           },
           {
             "name": "Queda Lenta",
-            "desc": "Você pode usar sua reação quando cair para reduzir o dano de queda que você sofre em quantidade igual a cinco vezes o seu nível de monge."
+            "desc": "Como reação ao cair, você pode reduzir o dano de queda em 5 × seu nível de Monge. No nível 4, isso significa até 20 pontos de dano reduzido. Você simplesmente pousa com graça excepcional, absorvendo o impacto com seu treinamento."
           }
         ],
         "class_specific": {
           "ki_points": 4,
-          "martial_arts_die": "d4"
+          "martial_arts_die": "d4",
+          "unarmored_movement_bonus": 3
         }
       },
       {
@@ -4147,16 +4141,21 @@
         "features": [
           {
             "name": "Ataque Extra",
-            "desc": "Quando você usa a ação Atacar no seu turno, você pode atacar duas vezes em vez de uma."
+            "desc": "Quando você usa a ação Atacar no seu turno, você pode atacar duas vezes em vez de uma. Combinado com a ação bônus de Artes Marciais e Rajada de Golpes, você pode desferir múltiplos golpes por turno."
           },
           {
             "name": "Golpe Atordoante",
-            "desc": "Você pode interferir no fluxo de ki de um inimigo. Ao acertar outra criatura com um ataque de arma de monge, você pode gastar 1 ki para tentar um golpe atordoante. O alvo deve ter sucesso em um TR de Constituição (CD = 8 + bônus de prof + mod Sab) ou ficará atordoado até o fim do seu próximo turno."
+            "desc": "Quando você acertar uma criatura com um ataque de arma, pode gastar 1 ponto de Ki para tentar atordoá-la. O alvo deve ser bem-sucedido em um TR de Constituição (CD = 8 + bônus de proficiência + modificador de Sabedoria) ou ficará atordoado até o início do seu próximo turno. Criaturas atordoadas perdem reações, não podem se mover nem agir, e ataques contra elas têm vantagem — o que também ativa Ataque Furtivo."
+          },
+          {
+            "name": "Artes Marciais (d6)",
+            "desc": "Seu dado de Artes Marciais aumenta para d6."
           }
         ],
         "class_specific": {
           "ki_points": 5,
-          "martial_arts_die": "d6"
+          "martial_arts_die": "d6",
+          "unarmored_movement_bonus": 4.5
         }
       },
       {
@@ -4165,17 +4164,22 @@
         "features": [
           {
             "name": "Golpes Imbuídos de Ki",
-            "desc": "Seus ataques desarmados são considerados mágicos para fins de superar resistência a dano não mágico."
+            "desc": "Seus ataques desarmados contam como mágicos para fins de superar resistências e imunidades a dano não mágico. Muitos demônios, mortos-vivos e outras criaturas poderosas possuem resistência ou imunidade a dano mundano — seus punhos agora penetram essas defesas."
           },
           {
             "name": "Característica da Tradição Monástica",
-            "desc": "Você recebe uma característica adicional da sua Tradição Monástica.",
+            "desc": "Você recebe a característica de nível 6 da sua Tradição (Mão Aberta: Completude do Ser — ação para curar 3 × nível Monge PV, 1×/descanso longo; Sombras: Passo das Sombras — ação bônus para teleportar até 18m entre sombras com vantagem no próximo ataque; Quatro Elementos: +1 disciplina elemental, totalizando 3).",
             "subclass": true
+          },
+          {
+            "name": "Movimento Desarmado (+4,5m)",
+            "desc": "Seu bônus de deslocamento aumenta para +4,5 metros sem armadura."
           }
         ],
         "class_specific": {
           "ki_points": 6,
-          "martial_arts_die": "d6"
+          "martial_arts_die": "d6",
+          "unarmored_movement_bonus": 4.5
         }
       },
       {
@@ -4184,16 +4188,17 @@
         "features": [
           {
             "name": "Evasão",
-            "desc": "Seu instinto ágil é tão refinado que você pode se esquivar de certas magias. Quando submetido a um efeito que permita TR de Destreza para metade do dano, você sofre nenhum dano com sucesso e metade com falha."
+            "desc": "Seu instinto aguçado permite desviar de explosões com agilidade sobrenatural. Quando um efeito exige um TR de Destreza para sofrer apenas metade do dano, você não sofre nenhum dano com um sucesso, e apenas metade com uma falha. Só funciona se você não estiver incapacitado."
           },
           {
             "name": "Tranquilidade Mental",
-            "desc": "Você pode usar uma ação para terminar um efeito em você mesmo que cause que você esteja assustado ou enfeitiçado."
+            "desc": "Como ação, você pode usar seu treinamento em meditação para encerrar um efeito de encantamento ou medo que esteja afetando você. Sua disciplina mental lhe permite recuperar o controle mesmo sob magia hostil."
           }
         ],
         "class_specific": {
           "ki_points": 7,
-          "martial_arts_die": "d6"
+          "martial_arts_die": "d6",
+          "unarmored_movement_bonus": 4.5
         }
       },
       {
@@ -4202,12 +4207,13 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ],
         "class_specific": {
           "ki_points": 8,
-          "martial_arts_die": "d6"
+          "martial_arts_die": "d6",
+          "unarmored_movement_bonus": 4.5
         }
       },
       {
@@ -4215,13 +4221,14 @@
         "prof": 4,
         "features": [
           {
-            "name": "Movimento Desarmado (escalar e andar sobre água)",
-            "desc": "Você pode se mover por superfícies verticais e sobre líquidos no seu turno sem cair durante o movimento. Você deve terminar seu turno em superfície sólida horizontal."
+            "name": "Movimento Desarmado Aprimorado",
+            "desc": "Seu Movimento Desarmado agora lhe permite escalar superfícies verticais e tetos sem precisar usar as mãos, e correr sobre líquidos (água, lama, gelo) sem afundar, desde que comece e termine o movimento em superfície sólida."
           }
         ],
         "class_specific": {
           "ki_points": 9,
-          "martial_arts_die": "d6"
+          "martial_arts_die": "d6",
+          "unarmored_movement_bonus": 4.5
         }
       },
       {
@@ -4230,12 +4237,13 @@
         "features": [
           {
             "name": "Pureza de Corpo",
-            "desc": "Seu domínio do ki imuniza-o contra doenças e venenos."
+            "desc": "Seu ki expulsou as impurezas de seu corpo. Você se torna imune a doenças e ao estado envenenado, e ao dano de veneno. Décadas de treinamento e meditação purificaram seu sistema a um nível sobre-humano."
           }
         ],
         "class_specific": {
           "ki_points": 10,
-          "martial_arts_die": "d6"
+          "martial_arts_die": "d6",
+          "unarmored_movement_bonus": 4.5
         }
       },
       {
@@ -4244,13 +4252,22 @@
         "features": [
           {
             "name": "Característica da Tradição Monástica",
-            "desc": "Você recebe a característica de nível 11 da sua Tradição Monástica.",
+            "desc": "Você recebe a característica de nível 11 da sua Tradição (Mão Aberta: Serenidade — você tem Santuário permanente com CD baseada em Sabedoria, renovado em cada descanso longo; Sombras: Manto das Sombras — ação para se tornar invisível até atacar, lançar magia ou entrar em luz brilhante; Quatro Elementos: +1 disciplina elemental, totalizando 4).",
             "subclass": true
+          },
+          {
+            "name": "Artes Marciais (d8)",
+            "desc": "Seu dado de Artes Marciais aumenta para d8."
+          },
+          {
+            "name": "Movimento Desarmado (+6m)",
+            "desc": "Seu bônus de deslocamento aumenta para +6 metros sem armadura."
           }
         ],
         "class_specific": {
           "ki_points": 11,
-          "martial_arts_die": "d8"
+          "martial_arts_die": "d8",
+          "unarmored_movement_bonus": 6
         }
       },
       {
@@ -4259,12 +4276,13 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ],
         "class_specific": {
           "ki_points": 12,
-          "martial_arts_die": "d8"
+          "martial_arts_die": "d8",
+          "unarmored_movement_bonus": 6
         }
       },
       {
@@ -4273,12 +4291,13 @@
         "features": [
           {
             "name": "Língua do Sol e da Lua",
-            "desc": "Você aprende a tocar o ki de outras mentes para que você possa se comunicar com qualquer criatura que fale qualquer idioma. Qualquer criatura que possa entender um idioma pode entender o que você diz."
+            "desc": "Você aprende a tocar o ki de outras mentes, estabelecendo compreensão mútua. Você pode se comunicar com qualquer criatura que seja capaz de entender pelo menos um idioma — ela ouvirá sua intenção e você a dela, independentemente de qual idioma cada um fale. Não funciona com criaturas sem capacidade de linguagem."
           }
         ],
         "class_specific": {
           "ki_points": 13,
-          "martial_arts_die": "d8"
+          "martial_arts_die": "d8",
+          "unarmored_movement_bonus": 6
         }
       },
       {
@@ -4287,12 +4306,13 @@
         "features": [
           {
             "name": "Alma de Diamante",
-            "desc": "Seu domínio do ki concede proficiência em todos os Testes de Resistência. Além disso, sempre que você fizer um TR e falhar, você pode gastar 1 ponto de ki para fazê-lo novamente e deve usar o segundo resultado."
+            "desc": "Seu domínio do ki concede proficiência em todos os Testes de Resistência. Além disso, sempre que falhar em um TR, você pode gastar 1 ponto de Ki para rerollar o dado e usar o novo resultado. A disciplina de uma vida inteira torna você quase imparável."
           }
         ],
         "class_specific": {
           "ki_points": 14,
-          "martial_arts_die": "d8"
+          "martial_arts_die": "d8",
+          "unarmored_movement_bonus": 6
         }
       },
       {
@@ -4301,12 +4321,13 @@
         "features": [
           {
             "name": "Corpo Eterno",
-            "desc": "Seu ki preserva seu corpo. Você envelhece mais lentamente. Para cada 10 anos que passam, seu corpo envelhece apenas 1 ano. Você também não pode mais ser envelhecido magicamente."
+            "desc": "Seu ki preserva seu corpo além dos limites naturais. Você envelhece 10 vezes mais devagar que o normal, e não pode ser envelhecido magicamente. Sua aparência e vitalidade permanecem jovens por séculos."
           }
         ],
         "class_specific": {
           "ki_points": 15,
-          "martial_arts_die": "d8"
+          "martial_arts_die": "d8",
+          "unarmored_movement_bonus": 6
         }
       },
       {
@@ -4315,12 +4336,17 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+          },
+          {
+            "name": "Movimento Desarmado (+7,5m)",
+            "desc": "Seu bônus de deslocamento aumenta para +7,5 metros sem armadura."
           }
         ],
         "class_specific": {
           "ki_points": 16,
-          "martial_arts_die": "d8"
+          "martial_arts_die": "d8",
+          "unarmored_movement_bonus": 7.5
         }
       },
       {
@@ -4329,17 +4355,18 @@
         "features": [
           {
             "name": "Característica da Tradição Monástica",
-            "desc": "Você recebe a característica de nível 17 da sua Tradição Monástica.",
+            "desc": "Você recebe a característica de nível 17 da sua Tradição (Mão Aberta: Golpe Trêmulo — gaste 3 Ki ao acertar para iniciar vibração interna; como ação posterior, se o alvo tiver menos de 100 PV reduza a 0, se tiver 100 ou mais PV cause 10d10 de dano psíquico com TR CON para metade; Sombras: Oportunismo — reação para atacar corp-a-corp quando um aliado acertar uma criatura a 1,5m de você; Quatro Elementos: +1 disciplina elemental, totalizando 5).",
             "subclass": true
           },
           {
-            "name": "Golpe Trêmulo",
-            "desc": "Você pode interferir no ki de uma criatura ao atingi-la. Quando você acertar uma criatura com um ataque de arma de monge, você pode gastar 3 ki para iniciar uma vibração no corpo da criatura. Até o final do seu próximo turno, você pode usar sua ação para causar que a criatura fique incapacitada até o final do seu próximo turno, ou para matá-la se ela tiver menos de 100 PV."
+            "name": "Artes Marciais (d10)",
+            "desc": "Seu dado de Artes Marciais aumenta para d10."
           }
         ],
         "class_specific": {
           "ki_points": 17,
-          "martial_arts_die": "d10"
+          "martial_arts_die": "d10",
+          "unarmored_movement_bonus": 7.5
         }
       },
       {
@@ -4348,12 +4375,13 @@
         "features": [
           {
             "name": "Corpo Vazio",
-            "desc": "Você pode gastar 4 ki para lançar invisibilidade em si mesmo, sem componentes. Além disso, você ganha resistência a dano não mágico."
+            "desc": "Você pode usar sua ação e gastar 4 pontos de Ki para se tornar invisível por 1 minuto. Durante esse tempo, você também tem resistência a todo dano não mágico. Alternativamente, você pode gastar 8 pontos de Ki para lançar o feitiço Viajar pelo Éter, sem precisar de componentes, durando 1 minuto."
           }
         ],
         "class_specific": {
           "ki_points": 18,
-          "martial_arts_die": "d10"
+          "martial_arts_die": "d10",
+          "unarmored_movement_bonus": 7.5
         }
       },
       {
@@ -4362,12 +4390,13 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ],
         "class_specific": {
           "ki_points": 19,
-          "martial_arts_die": "d10"
+          "martial_arts_die": "d10",
+          "unarmored_movement_bonus": 7.5
         }
       },
       {
@@ -4376,12 +4405,13 @@
         "features": [
           {
             "name": "Eu Perfeito",
-            "desc": "Quando você jogar para iniciativa e não tiver ki restantes, você recupera 4 pontos de ki."
+            "desc": "Quando rolar a iniciativa e não tiver pontos de Ki, você recupera automaticamente 4 pontos de Ki. O ápice do treinamento monástico garante que você nunca entre em combate completamente sem recursos — mesmo após longas batalhas."
           }
         ],
         "class_specific": {
           "ki_points": 20,
-          "martial_arts_die": "d10"
+          "martial_arts_die": "d10",
+          "unarmored_movement_bonus": 7.5
         }
       }
     ]
@@ -4557,11 +4587,11 @@
         "features": [
           {
             "name": "Sentido Divino",
-            "desc": "A presença de poderes do bem ou do mal é sensível a você. Como ação, você pode abrir sua consciência para detectar tais forças. Até o final do seu próximo turno, você sabe a localização de qualquer celestial, infernal ou morto-vivo a até 18 metros de você que não esteja com cobertura total. Você sabe o tipo mas não a identidade. Nos mesmos alcances, você também detecta a presença de qualquer local ou objeto que foi consagrado ou profanado. Você pode usar esta característica um número de vezes igual a 1 + mod Carisma. Recupera com descanso longo."
+            "desc": "Como ação, você percebe a presença de qualquer celéstio, demônio ou morto-vivo a até 18 metros de você que não esteja atrás de cobertura total. Você sabe o tipo de ser (celéstio, demônio ou morto-vivo) mas não a identidade específica. Dentro de uma magia Consagrar Terra, você sente qualquer lugar profanado ou consagrado. Você pode usar esse sentido um número de vezes igual a 1 + seu modificador de Carisma. Todos os usos são recuperados após um descanso longo."
           },
           {
             "name": "Cura pelas Mãos",
-            "desc": "Seu toque sagrado pode curar feridas. Você tem uma reserva de poder de cura que se repõe com cada descanso longo. Com esta reserva, você pode restaurar PV iguais ao seu nível de paladino × 5. Como ação, pode tocar uma criatura e restaurar qualquer quantidade de PV que reste nessa reserva. Alternativamente, pode gastar 5 PV para curar uma doença ou neutralizar um veneno. Não funciona em mortos-vivos e constructos."
+            "desc": "Você tem um reservatório de poder de cura que se reabastece a cada descanso longo. Com esse reservatório, pode restaurar pontos de vida totais iguais a 5 × seu nível de Paladino por dia. Como ação, você pode tocar uma criatura e curar uma quantidade de PV à sua escolha, desde que não exceda o máximo restante do reservatório. Alternativamente, pode gastar 5 PV do reservatório para curar uma doença ou neutralizar um veneno que afeta o alvo — múltiplas doenças/venenos custam 5 PV cada."
           }
         ]
       },
@@ -4571,16 +4601,16 @@
         "features": [
           {
             "name": "Estilo de Combate",
-            "desc": "Você adota um estilo de combate como especialidade. Escolha: Defesa (+1 CA com armadura), Duelo (+2 dano com arma de 1 mão), Proteção (reação para impor desvantagem em ataque contra aliado), Grande Arma (rolar novamente 1 ou 2 em dano de armas de 2 mãos).",
-            "choice_id": "fighting_style_paladin"
+            "desc": "Adote um dos seguintes estilos como especialidade permanente: Defesa (+1 CA usando armadura), Duelo (+2 dano com arma de uma mão sem outra arma na segunda mão), Grande Arma (rerolar 1 e 2 nos dados de dano de armas de 2 mãos) ou Proteção (reação: impor desvantagem em ataque vs aliado adjacente, requer escudo).",
+            "choice_id": "fighting_style"
           },
           {
             "name": "Conjuração de Paladino",
-            "desc": "Você aprendeu a extrair magia divina através de meditação e oração. A habilidade de magia do paladino é Carisma (CD = 8 + bônus prof + mod Car). Você prepara magias após descanso longo: mod Carisma + metade nível paladino (arredondado para baixo). Para conjurar, use espaço de magia de nível igual ou maior ao da magia. Recupera espaços com descanso longo."
+            "desc": "Você ganhou a habilidade de lançar magias de Paladino. Carisma é sua habilidade de conjuração. CD de magia = 8 + bônus de proficiência + modificador de Carisma. Você prepara magias após cada descanso longo, escolhendo da lista de Paladino uma quantidade igual ao seu modificador de Carisma + metade do nível de Paladino (arredondado para baixo). Você também pode usar uma magia preparada como rituais se ela tiver a propriedade ritual."
           },
           {
             "name": "Golpe Divino",
-            "desc": "Quando você acertar uma criatura com uma arma de ataque corpo a corpo, pode gastar um espaço de magia para causar dano radiante adicional ao alvo, em adição ao dano da arma. O dano extra é 2d8 por nível do espaço usado (máximo 5d8). O dano aumenta em 1d8 se o alvo for um morto-vivo ou infernal."
+            "desc": "Quando você usa a ação Atacar em seu turno, antes de rolar um ataque pode declarar um Golpe Divino. Ao acertar, gaste um espaço de magia para causar +2d8 de dano radiante por nível do espaço (máximo 5d8 de bônus), além do dano normal da arma. Contra mortos-vivos e demônios, cause +1d8 radiante adicional, independente do nível do espaço."
           }
         ]
       },
@@ -4590,20 +4620,13 @@
         "features": [
           {
             "name": "Saúde Divina",
-            "desc": "A magia divina que flui por você o torna imune a doenças."
+            "desc": "A magia divina que flui por você torna você imune a doenças. Sua ligação com uma divindade purifica seu corpo de qualquer enfermidade."
           },
           {
             "name": "Juramento Sagrado",
-            "desc": "Você faz seu juramento que vincula você como um paladino para sempre. Escolha entre Juramento de Devoção, Juramento dos Anciões ou Juramento de Vingança. O juramento concede magias e características nos níveis 3, 7, 15 e 20.",
-            "choice_id": "sacred_oath"
-          },
-          {
-            "name": "Magias do Juramento",
-            "desc": "Cada juramento sagrado tem uma lista de magias associadas. Essas magias de juramento são sempre preparadas e não contam para o número de magias que você pode preparar por dia."
-          },
-          {
-            "name": "Canalizar Divindade",
-            "desc": "Seu juramento lhe permite canalizar energia divina para alimentar efeitos mágicos. Cada opção de Canalizar Divindade é explicada no próprio juramento. Quando usa Canalizar Divindade, escolha qual efeito usar. Você deve terminar um descanso curto ou longo para usar novamente."
+            "desc": "Você faz seu juramento sagrado, comprometendo-se com um conjunto de valores e ideais: Juramento de Devoção (paladino clássico — luz, honra, virtude; Canalizar Divindade: Arma Sagrada e Virar os Ímpios), Juramento dos Anciões (proteção da natureza e vida; Canalizar Divindade: Fúria da Natureza e Virar a Impiedade) ou Juramento de Vingança (caçar o mal com determinação implacável; Canalizar Divindade: Abjurar Inimigo e Voto de Inimizade). Cada juramento concede magias de juramento sempre preparadas e Canalizar Divindade (1 uso/descanso curto ou longo). Características de subclasse em 3, 7, 15 e 20.",
+            "choice_id": "sacred_oath",
+            "subclass": true
           }
         ]
       },
@@ -4613,7 +4636,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -4623,7 +4646,7 @@
         "features": [
           {
             "name": "Ataque Extra",
-            "desc": "Quando você usa a ação Atacar no seu turno, você pode atacar duas vezes em vez de uma."
+            "desc": "Quando você usa a ação Atacar no seu turno, você pode atacar duas vezes em vez de uma. Combine com Golpe Divino para maximizar seu dano em um dos ataques."
           }
         ]
       },
@@ -4633,7 +4656,7 @@
         "features": [
           {
             "name": "Aura de Proteção",
-            "desc": "Sempre que você ou uma criatura amigável a até 1,5 metros de você precisar fazer um TR, a criatura ganha um bônus igual ao seu modificador de Carisma no TR (mínimo +1). Você deve estar consciente para conceder este bônus."
+            "desc": "Você emana uma aura protetora que fortalece os TRs de seus aliados. Você e criaturas amigáveis a até 1,5 metros de você adicionam seu modificador de Carisma (mínimo +1) em todos os Testes de Resistência enquanto você estiver consciente. Quando você cair inconsciente, a aura cessa. No nível 18, o raio da aura aumenta para 9 metros."
           }
         ]
       },
@@ -4642,9 +4665,8 @@
         "prof": 3,
         "features": [
           {
-            "name": "Característica do Juramento Sagrado",
-            "desc": "Você recebe uma característica do seu Juramento Sagrado (ex: Juramento de Devoção: Aura de Devoção; Anciões: Aura de Guardiões; Vingança: Olho por Olho).",
-            "subclass": true
+            "name": "Aura de Coragem",
+            "desc": "Você emana uma aura de coragem que protege seus companheiros do medo. Você e criaturas amigáveis a até 1,5 metros de você não podem ser amedrontados enquanto você estiver consciente. Heróis ao seu redor encontram fortaleza em sua presença. No nível 18, o raio da aura aumenta para 9 metros."
           }
         ]
       },
@@ -4654,7 +4676,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -4668,8 +4690,9 @@
         "prof": 4,
         "features": [
           {
-            "name": "Aura de Coragem",
-            "desc": "Você e criaturas amigáveis a até 1,5 metros de você não podem ficar assustadas enquanto você estiver consciente."
+            "name": "Característica do Juramento Sagrado",
+            "desc": "Você recebe a característica de nível 7 do seu Juramento (Devoção: Aura de Devoção — você e aliados a 1,5m imunes a ser encantados; Anciões: Aura Eterna — você e aliados a 1,5m têm resistência a dano de magias; Vingança: Vingador Implacável — ao acertar um Ataque de Oportunidade, pode mover metade do deslocamento em direção ao alvo como parte da reação).",
+            "subclass": true
           }
         ]
       },
@@ -4679,7 +4702,7 @@
         "features": [
           {
             "name": "Golpe Divino Aprimorado",
-            "desc": "Você é tão imbuído de poder justo que todos os seus ataques com armas corpo a corpo carregam poder divino com eles. Sempre que você acertar uma criatura com uma arma de ataque corpo a corpo, a criatura sofre 1d8 de dano radiante extra."
+            "desc": "Você é tão imbuído de energia justa que todos os seus golpes carregam poder divino. Você causa +1d8 de dano radiante adicional sempre que acertar uma criatura com um ataque de arma corpo a corpo. Esse dano é automático — não requer gastar espaços de magia."
           }
         ]
       },
@@ -4689,7 +4712,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -4704,7 +4727,7 @@
         "features": [
           {
             "name": "Toque Purificador",
-            "desc": "Você pode usar sua ação para pôr fim a uma magia em você mesmo ou em uma criatura amigável a seu toque. Você pode usar esta característica um número de vezes igual ao seu modificador de Carisma (mínimo 1 vez). Você recupera os usos gastos com descanso longo."
+            "desc": "Como ação, você pode usar o poder divino para encerrar uma magia que esteja afetando você ou um aliado que você toque. Para cada magia em efeito sobre o alvo, pode usar um de seus usos para encerrá-la. Você tem um número de usos iguais ao seu modificador de Carisma (mínimo 1). Todos os usos são recuperados após um descanso longo."
           }
         ]
       },
@@ -4714,7 +4737,7 @@
         "features": [
           {
             "name": "Característica do Juramento Sagrado",
-            "desc": "Você recebe a característica de nível 15 do seu Juramento.",
+            "desc": "Você recebe a característica de nível 15 do seu Juramento (Devoção: Pureza de Espírito — você está permanentemente sob o efeito de Proteção do Bem e do Mal; Anciões: Sentinela Imortal — ao cair a 0 PV, fique com 1 PV em vez disso, 1×/descanso longo, não funciona contra mortos-vivos/demônios; Vingança: Alma de Vingança — ao usar Voto de Inimizade e o alvo atacar outro: reação para atacar o alvo corp-a-corp).",
             "subclass": true
           }
         ]
@@ -4725,7 +4748,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -4739,8 +4762,8 @@
         "prof": 6,
         "features": [
           {
-            "name": "Melhoria das Auras (9m)",
-            "desc": "O raio das Auras de Proteção e Coragem aumenta de 1,5 metros para 9 metros."
+            "name": "Melhoria das Auras",
+            "desc": "O raio das suas auras de Paladino (Aura de Proteção e Aura de Coragem, além de auras concedidas por seu juramento) aumenta de 1,5 metros para 9 metros. Agora você protege um campo de batalha inteiro com sua presença divina."
           }
         ]
       },
@@ -4750,7 +4773,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -4760,7 +4783,7 @@
         "features": [
           {
             "name": "Característica do Juramento Sagrado",
-            "desc": "Você recebe a característica final (nível 20) do seu Juramento (ex: Devoção: Campeão Sagrado; Anciões: Ancião Eterno; Vingança: Avatar da Vingança).",
+            "desc": "Você recebe a poderosa característica épica de nível 20 do seu Juramento (Devoção: Nimbo Sagrado — 1 min: aura 9m, demônios/mortos-vivos sofrem 10 radiante/turno e você tem vantagem em TRs vs suas magias, 1×/descanso longo; Anciões: Campeão Ancião — 1 min: plantas crescem, cura 10 PV/turno, magias do juramento como ação bônus 1×/turno, 1×/descanso longo; Vingança: Avatar de Punição — 1 min: voo 18m, aura 9m, inimigos TR SAB ou amedrontados, 1×/descanso longo).",
             "subclass": true
           }
         ]
@@ -4941,11 +4964,13 @@
         "features": [
           {
             "name": "Inimigo Favorito",
-            "desc": "Você tem experiência significativa em estudar, rastrear, caçar e até mesmo falar com um certo tipo de inimigo. Escolha um tipo de inimigo favorito: aberrações, bestas, celestiais, constructos, dragões, elementais, fadas, infernais, gigantes, limos, monstruosidades, mortos-vivos ou plantas. Alternativamente, selecione duas raças de humanóides. Você tem vantagem em testes de Sabedoria (Sobrevivência) para rastrear seus inimigos favoritos, bem como em testes de Inteligência para recordar informações sobre eles."
+            "desc": "Escolha um tipo de inimigo favorito: aberrações, bestas, celestiais, construtos, dragões, elementais, fadas, demônios, gigantes, humanoides (especifique 2 raças), mortos-vivos, limo ou plantas. Você tem vantagem em testes de Sobrevivência para rastrear esses inimigos e em testes de Intuição para lembrá-los. Também aprende 1 idioma associado ao seu inimigo favorito (se aplicável). Você ganha mais tipos de inimigos favoritos nos níveis 6 e 14.",
+            "choice_id": "favored_enemy"
           },
           {
             "name": "Explorador Natural",
-            "desc": "Você é especialmente familiarizado com um tipo de ambiente natural e é habilidoso em viajar e sobreviver em tais regiões. Escolha um tipo de terreno favorito: ártico, costa, deserto, floresta, pântano, montanha, planície ou Subterrâneo. Ao fazer um teste de Inteligência ou Sabedoria relacionado ao terreno favorito onde você tem proficiência, seu bônus de proficiência é dobrado se aplicável."
+            "desc": "Escolha um tipo de terreno favorito: Ártico, Costa, Deserto, Floresta, Pântano, Planície, Montanha ou Subterrâneo. Ao viajar por pelo menos 1 hora nesse terreno: não se perde por meios não mágicos; dobra o bônus de proficiência em Inteligência e Sabedoria para interagir com o terreno; permanece alerta mesmo rastreando ou navegando; pode se mover furtivamente em ritmo normal em grupo; encontra comida/água dupla. Você ganha mais terrenos favoritos nos níveis 6 e 10.",
+            "choice_id": "natural_explorer"
           }
         ]
       },
@@ -4955,12 +4980,12 @@
         "features": [
           {
             "name": "Estilo de Combate",
-            "desc": "Você adota um estilo de combate como especialidade. Escolha: Arqueiro (+2 em ataques à distância), Defesa (+1 CA com armadura), Duelo (+2 dano com arma de 1 mão), Combate com Duas Armas (adicionar mod de atributo ao dano da segunda arma).",
-            "choice_id": "fighting_style_ranger"
+            "desc": "Adote um dos seguintes estilos como especialidade permanente: Arquearia (+2 em jogadas de ataque com armas de alcance), Defesa (+1 CA usando armadura), Duelo (+2 dano com arma de uma mão sem outra arma na segunda mão) ou Combate com Duas Armas (adicionar modificador de atributo ao dano da arma da segunda mão).",
+            "choice_id": "fighting_style"
           },
           {
             "name": "Conjuração de Patrulheiro",
-            "desc": "Você aprendeu a usar a essência mágica da natureza para lançar magias. A habilidade de magia do patrulheiro é Sabedoria (CD = 8 + bônus prof + mod Sab). Você usa espaços de magia de meio lançador: começa a receber no nível 2."
+            "desc": "Você ganhou a habilidade de lançar magias. Sabedoria é sua habilidade de conjuração. CD de magia = 8 + bônus de proficiência + modificador de Sabedoria. Diferente de algumas classes, você conhece magias de cor (não precisa preparar lista diária). Você começa conhecendo 2 magias e aprende mais conforme sobe de nível (máximo 11 magias conhecidas). Espaços de magia seguem a mesma tabela de progressão que o Paladino (meio-conjurador)."
           }
         ]
       },
@@ -4970,12 +4995,13 @@
         "features": [
           {
             "name": "Arquétipo do Patrulheiro",
-            "desc": "Você escolhe um arquétipo que você se esforça para emular: Caçador ou Mestre das Bestas. O arquétipo concede características nos níveis 3, 7, 11 e 15.",
-            "choice_id": "ranger_archetype"
+            "desc": "Escolha o arquétipo que define sua especialidade como patrulheiro: Caçador (habilidades de combate adaptáveis para caçar qualquer tipo de presa — escolha entre Abater Colossos, Matador de Gigantes ou Quebrar a Horda) ou Mestre das Bestas (laço sobrenatural com uma besta companheira que luta ao seu lado). Seu arquétipo concede características nos níveis 3, 7, 11 e 15.",
+            "choice_id": "ranger_archetype",
+            "subclass": true
           },
           {
             "name": "Consciência Primeva",
-            "desc": "Você pode gastar um espaço de magia para focar sua consciência em território circundante. Por 1 minuto por nível do espaço usado, você pode sentir se os seguintes tipos de criaturas estão presentes dentro de 1,5 km: aberrações, celestiais, dragões, elementais, fadas, infernais e mortos-vivos (ou dentro de 9 km se estiver em seu terreno favorito). Esta característica não revela a localização ou número delas."
+            "desc": "Você pode gastar 1 espaço de magia para concentrar-se por até 1 minuto. Durante esse tempo, você detecta a presença (mas não a localização exata) de qualquer criatura dos seguintes tipos dentro de 1,6 km (6,4 km em seu terreno favorito): aberrações, celéstios, dragões, elementais, fadas, demônios e mortos-vivos. Isso não lhe diz quantas são ou o que são exatamente — apenas que existem."
           }
         ]
       },
@@ -4985,7 +5011,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -4995,7 +5021,7 @@
         "features": [
           {
             "name": "Ataque Extra",
-            "desc": "Quando você usa a ação Atacar no seu turno, você pode atacar duas vezes em vez de uma."
+            "desc": "Quando você usa a ação Atacar no seu turno, você pode atacar duas vezes em vez de uma. Fundamental para Patrulheiros que usam combate com duas armas ou arquearia."
           }
         ]
       },
@@ -5004,12 +5030,12 @@
         "prof": 3,
         "features": [
           {
-            "name": "Inimigo Favorito (2 tipos)",
-            "desc": "Você escolhe um inimigo favorito adicional, bem como um idioma adicional associado. Você também aprende um idioma adicional falado pelos seus inimigos favoritos."
+            "name": "Inimigo Favorito (2° tipo)",
+            "desc": "Você ganha um segundo tipo de inimigo favorito. Além disso, o dano que você causa contra seus inimigos favoritos aumenta em +4."
           },
           {
-            "name": "Explorador Natural (2 terrenos)",
-            "desc": "Você escolhe um terreno favorito adicional."
+            "name": "Explorador Natural (2° terreno)",
+            "desc": "Você ganha um segundo tipo de terreno favorito e passa a aplicar todos os benefícios de Explorador Natural nesse terreno também."
           }
         ]
       },
@@ -5019,7 +5045,7 @@
         "features": [
           {
             "name": "Característica do Arquétipo do Patrulheiro",
-            "desc": "Você recebe uma característica do seu Arquétipo (Caçador: Táticas Defensivas; Mestre das Bestas: Ataque Excepcional).",
+            "desc": "Você recebe a característica de nível 7 do seu Arquétipo (Caçador: Táticas Defensivas — escolha 1: Escapar da Horda (sem Ataques de Oportunidade ao sair de alcance), Defesa Múltipla (+4 CA contra o primeiro ataque após receber ataque), ou Vontade de Aço (vantagem em TRs contra medo); Mestre das Bestas: Treinamento Excepcional — ação bônus para ordenar Corrida/Desengajar/Esquivar/Ajudar à besta, e seus ataques passam a ser mágicos).",
             "subclass": true
           }
         ]
@@ -5030,11 +5056,11 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           },
           {
             "name": "Passo da Terra",
-            "desc": "Mover-se por terreno difícil não mágico não custa movimento extra. Você também pode mover-se por plantas não mágicas sem ser retardado por elas e sem sofrer dano se elas tiverem espinhos, pontas ou ameaça similar. Além disso, você tem vantagem nos TR de Destreza contra plantas criadas ou manipuladas magicamente para impedir o movimento."
+            "desc": "Atravessar terreno difícil não mágico não custa movimento extra. Além disso, plantas não mágicas não podem imobilizá-lo — você atravessa trepadeiras, galhos e raízes sem ser preso ou retardado."
           }
         ]
       },
@@ -5048,12 +5074,12 @@
         "prof": 4,
         "features": [
           {
-            "name": "Explorador Natural (3 terrenos)",
-            "desc": "Você escolhe mais um terreno favorito."
+            "name": "Explorador Natural (3° terreno)",
+            "desc": "Você ganha um terceiro tipo de terreno favorito."
           },
           {
             "name": "Ocultar-se às Claras",
-            "desc": "Você pode gastar 1 minuto criando uma toca para se ocultar. Você deve ter água e material de terreno disponíveis. Após criado, você e até seis criaturas amigáveis nela ficam difíceis de detectar. A CD para qualquer criatura que não seja o patrulheiro que perceber você e suas companhias enquanto ocultos é 10 + bônus Sabedoria do patrulheiro."
+            "desc": "Você pode passar 1 minuto se camuflando em seu ambiente natural. Após isso, enquanto permanecer estacionário, você adiciona +10 ao seu total de testes de Furtividade. Moveu-se? Precisa se camuflar de novo."
           }
         ]
       },
@@ -5063,7 +5089,7 @@
         "features": [
           {
             "name": "Característica do Arquétipo do Patrulheiro",
-            "desc": "Você recebe outra característica do seu Arquétipo.",
+            "desc": "Você recebe a característica de nível 11 do seu Arquétipo (Caçador: Múltiplos Ataques — escolha 1: Volei (usando ação Atacar, faça um ataque de arco contra cada criatura em raio de 3m de um ponto dentro do alcance, usando um projétil por alvo) ou Redemoinho (usando ação Atacar, faça um ataque corp-a-corp contra cada criatura ao seu alcance); Mestre das Bestas: Fúria da Besta — ao ordenar à besta que ataque, ela ataca duas vezes).",
             "subclass": true
           }
         ]
@@ -5074,7 +5100,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -5088,12 +5114,12 @@
         "prof": 5,
         "features": [
           {
-            "name": "Inimigo Favorito (3 tipos)",
-            "desc": "Você escolhe mais um inimigo favorito e aprende mais um idioma associado."
+            "name": "Desaparecer",
+            "desc": "Você pode usar Esconder como ação bônus no seu turno. Além disso, você não pode ser rastreado por meios não mágicos, a menos que decida deixar rastros."
           },
           {
-            "name": "Desaparecer",
-            "desc": "Você pode usar a ação Esconder como ação bônus no seu turno. Além disso, você não pode ser rastreado por meios não mágicos, a não ser que você escolha deixar rastros."
+            "name": "Inimigo Favorito (3° tipo)",
+            "desc": "Você ganha um terceiro tipo de inimigo favorito."
           }
         ]
       },
@@ -5103,7 +5129,7 @@
         "features": [
           {
             "name": "Característica do Arquétipo do Patrulheiro",
-            "desc": "Você recebe a característica de nível 15 do seu Arquétipo.",
+            "desc": "Você recebe a característica de nível 15 do seu Arquétipo (Caçador: Defesa Superior — escolha 1: Evasão (TRs DES: sucesso = 0 dano, falha = metade), Resistência de Batalha (quando um ataque te erra, pode usar reação para forçar o atacante a rerolar com desvantagem), ou Esquiva Instintiva (ao ser acertado, reação para reduzir o dano pela metade)); Mestre das Bestas: Compartilhar Magias — ao lançar uma magia em si mesmo, pode afetá-la também à besta a até 9m).",
             "subclass": true
           }
         ]
@@ -5114,7 +5140,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -5129,7 +5155,7 @@
         "features": [
           {
             "name": "Sentidos Ferais",
-            "desc": "Você ganha sentidos sobrenaturais que ajudam a lutar contra criaturas que você não pode ver. Quando atacar uma criatura que não possa ver, sua incapacidade de vê-la não impõe desvantagem nos seus ataques. Você também está ciente da localização de qualquer criatura invisível a até 9 metros, contanto que ela não esteja escondida de você e você não esteja cego ou surdo."
+            "desc": "Você ganha sentidos sobre-humanos que detectam inimigos ocultos. Você está ciente da localização de qualquer criatura invisível a até 9 metros de você, mesmo que não possa vê-la. Além disso, você não tem desvantagem em ataques contra criaturas invisíveis nesse raio."
           }
         ]
       },
@@ -5139,7 +5165,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -5149,7 +5175,7 @@
         "features": [
           {
             "name": "Matador de Inimigos",
-            "desc": "Você se torna um caçador sem paralelo de seus inimigos. Uma vez em cada um dos seus turnos, você pode somar 1d8 adicional ao ataque e ao dano de uma jogada contra um de seus inimigos favoritos."
+            "desc": "Você tornou-se um caçador incomparável de seus inimigos. Uma vez em cada um de seus turnos, quando você fizer uma jogada de ataque ou dano contra um de seus inimigos favoritos, pode adicionar seu modificador de Sabedoria à jogada. O bônus se aplica separadamente ao ataque ou ao dano, à sua escolha — não a ambos na mesma rolagem."
           }
         ]
       }
