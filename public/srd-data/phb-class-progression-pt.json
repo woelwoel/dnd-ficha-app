@@ -2719,12 +2719,13 @@
         "features": [
           {
             "name": "Conjuração de Feiticeiro",
-            "desc": "Um evento em sua passada e a magia que flui em você concede habilidade de conjurar magias. Usa Carisma como habilidade de magia (CD = 8 + bônus prof + mod Car). Você conhece 4 cantrips e 2 magias de 1° nível da lista de feiticeiro. Suas magias não precisam ser preparadas — você as lança a partir das que conhece."
+            "desc": "Sua magia flui de dentro de você, não de livros ou divindades. Carisma é sua habilidade de magia. CD de magia = 8 + bônus de proficiência + modificador de Carisma. Você conhece magias de cor — não precisa preparar lista diária. Você começa conhecendo 4 cantrips e 2 magias de 1° nível."
           },
           {
             "name": "Origem Feiticeira",
-            "desc": "Escolha uma origem feiticeira que descreva a fonte de seu poder mágico inato: Linhagem Dracônica ou Magia Selvagem. Sua escolha concede características nos níveis 1, 6, 14 e 18.",
-            "choice_id": "sorcerous_origin"
+            "desc": "Escolha a fonte do seu poder mágico inato: Linhagem Dracônica (sangue de dragão flui em você, concedendo resistência e poder elemental) ou Magia Selvagem (uma fonte imprevisível e caótica pulsa em seu interior). Sua origem concede características nos níveis 1, 6, 14 e 18.",
+            "choice_id": "sorcerous_origin",
+            "subclass": true
           }
         ],
         "class_specific": {
@@ -2737,11 +2738,7 @@
         "features": [
           {
             "name": "Fonte de Magia",
-            "desc": "Você toca o poder latente em sua alma. Você tem um número de pontos de magia iguais ao seu nível de feiticeiro. Você gasta pontos de magia para criar espaços de magia e vice-versa (1° = 2 pt, 2° = 3 pt, 3° = 5 pt, 4° = 6 pt, 5° = 7 pt). Recupera todos os pontos de magia com descanso longo."
-          },
-          {
-            "name": "Conversão de Pontos de Magia",
-            "desc": "Como ação bônus, você pode transformar espaços de magia em pontos de magia (1 ponto por nível do espaço) ou pontos de magia em espaços. Não pode criar espaços acima do 5° nível desta forma."
+            "desc": "Você descobre o poço de poder arcano que existe dentro de si. Você tem Pontos de Magia iguais ao seu nível de Feiticeiro. Você pode converter espaços de magia em pontos (1 pt por nível do espaço) ou pontos em espaços de magia (1°=2pt, 2°=3pt, 3°=5pt, 4°=6pt, 5°=7pt — máximo 5°). A conversão é uma ação bônus. Todos os pontos se recuperam com descanso longo."
           }
         ],
         "class_specific": {
@@ -2754,7 +2751,7 @@
         "features": [
           {
             "name": "Metamagia",
-            "desc": "Você ganha a habilidade de torcer suas magias para atender às suas necessidades. Escolha 2 opções de Metamagia entre: Magia Cuidadosa, Magia Distante, Magia Potenciada, Magia Expandida, Magia Estendida, Magia Intensificada, Magia Rápida e Magia Sutil. Pode selecionar mais nas progressões subsequentes. Uma Metamagia afeta uma magia a menos que especificado de outra forma.",
+            "desc": "Você aprende a torcer suas magias de formas sutis. Escolha 2 opções de Metamagia: Magia Cuidadosa (1pt — aliados na área passam automaticamente no TR), Magia Distante (1pt — dobrar o alcance ou 9m se toque), Magia Empoderada (1pt — rerolar até mod CAR dados de dano), Magia Estendida (1pt — dobrar duração, máx 24h), Magia Elevada (3pts — forçar rerolagem do TR usando o pior resultado), Magia Sutil (1pt — sem V e S), Magia Gêmea (1pt/nível — magia de 1 alvo atinge 2), Magia Acelerada (2pts — lançar magia de ação como ação bônus). Ganha mais opções nos níveis 10 e 17.",
             "choice_id": "metamagic"
           }
         ],
@@ -2768,7 +2765,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ],
         "class_specific": {
@@ -2789,7 +2786,7 @@
         "features": [
           {
             "name": "Característica da Origem Feiticeira",
-            "desc": "Você recebe uma característica da sua Origem (Linhagem Dracônica: Afinidade Elemental; Magia Selvagem: Ondulação de Magia Selvagem).",
+            "desc": "Você recebe a característica de nível 6 da sua Origem (Linhagem Dracônica: Afinidade Elemental — adicione modificador de Carisma ao dano do tipo do seu ancestral, gaste 1pt para resistência por 1h; Magia Selvagem: Dobra do Destino — gaste 2pts para adicionar ou subtrair 1d4 de qualquer rolagem de uma criatura visível).",
             "subclass": true
           }
         ],
@@ -2811,7 +2808,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ],
         "class_specific": {
@@ -2831,8 +2828,9 @@
         "prof": 4,
         "features": [
           {
-            "name": "Metamagia (mais 1)",
-            "desc": "Você aprende mais uma opção de Metamagia."
+            "name": "Metamagia (3 opções)",
+            "desc": "Você aprende mais uma opção de Metamagia, totalizando 3 opções disponíveis.",
+            "choice_id": "metamagic"
           }
         ],
         "class_specific": {
@@ -2853,7 +2851,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ],
         "class_specific": {
@@ -2874,7 +2872,7 @@
         "features": [
           {
             "name": "Característica da Origem Feiticeira",
-            "desc": "Você recebe a característica de nível 14 da sua Origem (Linhagem Dracônica: Asas Dracônicas; Magia Selvagem: Ondulação Controlada).",
+            "desc": "Você recebe a característica de nível 14 da sua Origem (Linhagem Dracônica: Asas Dracônicas — como ação bônus, brote asas de dragão que concedem velocidade de voo igual ao deslocamento; Magia Selvagem: Caos Controlado — ao ativar uma magia selvagem, role a tabela 2 vezes e escolha o efeito).",
             "subclass": true
           }
         ],
@@ -2896,7 +2894,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ],
         "class_specific": {
@@ -2908,8 +2906,9 @@
         "prof": 6,
         "features": [
           {
-            "name": "Metamagia (mais 1)",
-            "desc": "Você aprende mais uma opção de Metamagia, totalizando 4."
+            "name": "Metamagia (4 opções)",
+            "desc": "Você aprende mais uma opção de Metamagia, totalizando 4 opções disponíveis.",
+            "choice_id": "metamagic"
           }
         ],
         "class_specific": {
@@ -2922,7 +2921,7 @@
         "features": [
           {
             "name": "Característica da Origem Feiticeira",
-            "desc": "Você recebe a característica de nível 18 da sua Origem (Linhagem Dracônica: Presença Dracônica; Magia Selvagem: Ondulação Fortalecida).",
+            "desc": "Você recebe a característica de nível 18 da sua Origem (Linhagem Dracônica: Presença Dracônica — gaste 5pts: aura de 18m, criaturas que falharem no TR de Sabedoria ficam encantadas ou amedrontadas por 1 min, Concentração; Magia Selvagem: Bombardeio de Magias — quando um dado de dano mostrar seu valor máximo, role um dado extra e adicione ao dano).",
             "subclass": true
           }
         ],
@@ -2936,7 +2935,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ],
         "class_specific": {
@@ -2949,7 +2948,7 @@
         "features": [
           {
             "name": "Restauração Feiticeira",
-            "desc": "Você recupera 4 pontos de magia gastos sempre que terminar um descanso curto."
+            "desc": "Você pode recuperar parte de sua energia mágica durante uma pausa breve. Ao terminar um descanso curto, você recupera 4 pontos de magia gastos."
           }
         ],
         "class_specific": {
@@ -2997,12 +2996,12 @@
         "features": [
           {
             "name": "Estilo de Combate",
-            "desc": "Você adota um estilo de combate como especialidade. Escolha uma das opções: Arqueiro (+2 em jogadas de ataque à distância), Defesa (+1 CA usando armadura), Duelo (+2 dano com arma de uma mão sem outra arma), Combate com Duas Armas (adicionar mod de atributo ao dano da segunda arma), Proteção (reação: impor desvantagem em ataque contra aliado adjacente usando escudo), Grande Arma (rolar novamente 1 ou 2 no dano de armas de duas mãos).",
+            "desc": "Adote um dos seguintes estilos como especialidade permanente: Arquearia (+2 em ataques com armas de alcance), Defesa (+1 CA usando armadura), Duelo (+2 dano com arma de uma mão sem outra arma na segunda mão), Grande Arma (rerolar 1 e 2 nos dados de dano de armas de 2 mãos), Proteção (reação: impor desvantagem em ataque vs aliado adjacente, requer escudo), Duas Armas (adicionar modificador de atributo ao dano da segunda arma).",
             "choice_id": "fighting_style"
           },
           {
             "name": "Segunda Rajada",
-            "desc": "Você pode se empurrar além dos seus limites por um momento. No seu turno, pode usar ação bônus para recuperar PV iguais a 1d10 + seu nível de guerreiro. Após usar esta característica, você deve terminar um descanso curto ou longo antes de usá-la novamente."
+            "desc": "Como ação bônus no seu turno, você pode recuperar PV iguais a 1d10 + seu nível de Guerreiro. Recupera o uso ao terminar um descanso curto ou longo. Disponível mesmo em armadura pesada e durante combate."
           }
         ]
       },
@@ -3012,7 +3011,7 @@
         "features": [
           {
             "name": "Surto de Ação (1 uso)",
-            "desc": "No seu turno, você pode tomar uma ação adicional além da sua ação normal e possível ação bônus. Uma vez usado, você deve terminar um descanso curto ou longo antes de usá-lo novamente."
+            "desc": "Uma vez por descanso curto ou longo, você pode realizar uma ação adicional no seu turno além da sua ação normal e possível ação bônus. Surtos de Ação adicionais ao nível 17 permitem até 2 usos por descanso, mas apenas 1 por turno."
           }
         ]
       },
@@ -3022,8 +3021,9 @@
         "features": [
           {
             "name": "Arquétipo Marcial",
-            "desc": "Escolha um arquétipo que reflita seu estilo e técnicas: Campeão, Mestre de Batalha ou Cavaleiro de Batalha. O arquétipo concede características nos níveis 3, 7, 10, 15 e 18.",
-            "choice_id": "martial_archetype"
+            "desc": "Escolha o arquétipo que melhor reflete seu estilo e técnicas de combate: Campeão (foco em acertos críticos e atletismo extremo), Mestre de Batalha (manobras táticas com Dados de Superioridade) ou Cavaleiro Eldritch (combinação de magia e espada). Seu arquétipo concede características nos níveis 3, 7, 10, 15 e 18.",
+            "choice_id": "martial_archetype",
+            "subclass": true
           }
         ]
       },
@@ -3033,7 +3033,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -3043,7 +3043,7 @@
         "features": [
           {
             "name": "Ataque Extra",
-            "desc": "Quando você usa a ação Atacar no seu turno, você pode atacar duas vezes em vez de uma."
+            "desc": "Quando você usa a ação Atacar no seu turno, você pode atacar duas vezes em vez de uma. Este total sobe para 3 ataques no nível 11 e 4 ataques no nível 20."
           }
         ]
       },
@@ -3053,7 +3053,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -3063,7 +3063,7 @@
         "features": [
           {
             "name": "Característica do Arquétipo Marcial",
-            "desc": "Você recebe uma característica do seu Arquétipo Marcial (Campeão: Sentido Sobrenatural; Mestre de Batalha: Reconhecer Adversário; Cavaleiro de Batalha: Magia).",
+            "desc": "Você recebe a característica de nível 7 do seu Arquétipo (Campeão: Atleta Notável — dobrar prof em Atletismo ou Acrobacia, levantar gasta apenas 1,5m; Mestre de Batalha: Conheça seu Inimigo — 1 min observando: compare FOR, DES, CON, CA, PV e nível; Cavaleiro Eldritch: Guerra da Mente — ao lançar cantrig, atacar com arma como ação bônus).",
             "subclass": true
           }
         ]
@@ -3074,7 +3074,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -3084,7 +3084,7 @@
         "features": [
           {
             "name": "Indomável (1 uso)",
-            "desc": "Você pode rolar novamente um TR que falhou. Deve usar o novo resultado. Você não pode usar esta característica novamente até terminar um descanso longo."
+            "desc": "Você pode rerolar um TR que falhou, devendo usar o novo resultado. Você não pode usar esta característica novamente até terminar um descanso longo. O número de usos aumenta: 2 usos no nível 13 e 3 usos no nível 17."
           }
         ]
       },
@@ -3094,7 +3094,7 @@
         "features": [
           {
             "name": "Característica do Arquétipo Marcial",
-            "desc": "Você recebe outra característica do seu Arquétipo Marcial.",
+            "desc": "Você recebe a característica de nível 10 do seu Arquétipo (Campeão: Estilo de Combate Adicional — escolha um segundo estilo permanente; Mestre de Batalha: Superioridade Aprimorada — dados sobem para d10, 6 manobras; Cavaleiro Eldritch: Golpe Eldritch — ao acertar com arma, alvo tem desvantagem no próximo TR vs magia até o próximo turno).",
             "subclass": true
           }
         ]
@@ -3104,8 +3104,8 @@
         "prof": 4,
         "features": [
           {
-            "name": "Ataque Extra (2)",
-            "desc": "Quando você usa a ação Atacar no seu turno, você pode atacar três vezes em vez de uma."
+            "name": "Ataque Extra (3 ataques)",
+            "desc": "Quando você usa a ação Atacar no seu turno, você pode atacar três vezes em vez de duas."
           }
         ]
       },
@@ -3115,7 +3115,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -3135,7 +3135,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -3145,7 +3145,7 @@
         "features": [
           {
             "name": "Característica do Arquétipo Marcial",
-            "desc": "Você recebe outra característica do seu Arquétipo Marcial.",
+            "desc": "Você recebe a característica de nível 15 do seu Arquétipo (Campeão: Crítico Superior — crítico com 18–20; Mestre de Batalha: Implacável — ao rolar iniciativa sem Dados de Superioridade, recuperar 1; Cavaleiro Eldritch: Carga Arcana — ao usar Surto de Ação, teleportar até 9m antes ou depois dos ataques).",
             "subclass": true
           }
         ]
@@ -3156,7 +3156,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -3166,7 +3166,7 @@
         "features": [
           {
             "name": "Surto de Ação (2 usos)",
-            "desc": "Agora você pode usar Surto de Ação duas vezes antes de precisar descansar, mas não mais de uma vez por turno."
+            "desc": "Você pode usar Surto de Ação duas vezes antes de precisar de um descanso curto ou longo, mas apenas uma vez por turno."
           },
           {
             "name": "Indomável (3 usos)",
@@ -3180,7 +3180,7 @@
         "features": [
           {
             "name": "Característica do Arquétipo Marcial",
-            "desc": "Você recebe a característica final do seu Arquétipo Marcial.",
+            "desc": "Você recebe a característica de nível 18 do seu Arquétipo (Campeão: Sobrevivente — ao início do seu turno com PV abaixo da metade, recupere 5 + mod CON PV; Mestre de Batalha: Superioridade Aprimorada II — 6 dados d12, 6 manobras; Cavaleiro Eldritch: Magia de Guerra Aprimorada — ao lançar magia de 1° ou 2° nível, atacar com arma como ação bônus).",
             "subclass": true
           }
         ]
@@ -3191,7 +3191,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -3200,8 +3200,8 @@
         "prof": 6,
         "features": [
           {
-            "name": "Ataque Extra (3)",
-            "desc": "Quando você usa a ação Atacar no seu turno, você pode atacar quatro vezes em vez de uma."
+            "name": "Ataque Extra (4 ataques)",
+            "desc": "Quando você usa a ação Atacar no seu turno, você pode atacar quatro vezes em vez de três. Este é o pico do poder marcial — nenhum guerreiro faz mais ataques do que você."
           }
         ]
       }
@@ -3276,15 +3276,15 @@
         "features": [
           {
             "name": "Especialização",
-            "desc": "Escolha duas das suas perícias com proficiência ou uma perícia e as ferramentas de ladrão. Seu bônus de proficiência é dobrado para qualquer teste de habilidade que use essas proficiências."
+            "desc": "Escolha duas perícias nas quais você tenha proficiência (ou uma perícia e ferramentas de ladrão). Seu bônus de proficiência é dobrado para testes feitos com essas escolhas."
           },
           {
             "name": "Ataque Furtivo (1d6)",
-            "desc": "Uma vez por turno, você pode causar 1d6 de dano extra a uma criatura que acertar com um ataque se tiver vantagem na jogada de ataque. O ataque deve usar uma arma com acuidade ou de alcance. Você não precisa de vantagem se outro inimigo da criatura estiver a 1,5 m dela e esse inimigo não estiver incapacitado."
+            "desc": "Uma vez por turno, você pode causar 1d6 de dano extra se tiver vantagem na jogada de ataque — ou se um aliado capaz de agir estiver a 1,5m do alvo e você não tiver desvantagem. O ataque deve usar uma arma com propriedade Acuidade ou uma arma de Alcance. O dado aumenta a cada nível ímpar (ver tabela)."
           },
           {
             "name": "Gíria dos Ladrões",
-            "desc": "Durante seu treinamento como ladino, você aprendeu a gíria dos ladrões, uma mistura de dialeto, jargão e código que permite que você esconda mensagens em conversas aparentemente normais."
+            "desc": "Você aprendeu a gíria dos ladrões: uma mistura de dialeto, jargão e código que permite ocultar mensagens em conversas normais. Qualquer um que conheça a gíria entende a mensagem; outros precisam de um TR de Percepção (Sabedoria) CD 15 para notar que há uma mensagem escondida."
           }
         ]
       },
@@ -3294,7 +3294,7 @@
         "features": [
           {
             "name": "Ação Ardilosa",
-            "desc": "Sua capacidade de pensar e se mover agilmente permite que você se mova e aja mais rapidamente. Você pode tomar uma ação bônus no seu turno em cada combate. Essa ação pode ser usada somente para Disparar, Desengajar ou Esconder."
+            "desc": "Sua agilidade e astúcia permitem que você se mova e aja rapidamente. Você pode tomar uma ação bônus no seu turno para realizar uma das seguintes: Corrida, Desengajar ou Esconder."
           }
         ]
       },
@@ -3304,8 +3304,9 @@
         "features": [
           {
             "name": "Arquétipo de Gatuno",
-            "desc": "Você escolhe um arquétipo que incorpora seu ideal de gatuno: Assassino, Trapaceiro Arcano ou Gatuno. Seu arquétipo concede características nos níveis 3, 9, 13 e 17.",
-            "choice_id": "roguish_archetype"
+            "desc": "Escolha o arquétipo que define sua especialidade: Ladrão (agilidade urbana e dispositivos mágicos), Assassino (disfarces, venenos e eliminar alvos sem alerta) ou Trapaceiro Arcano (combinação de magia de ilusão/encantamento com habilidades de gatuno). Seu arquétipo concede características nos níveis 3, 9, 13 e 17.",
+            "choice_id": "roguish_archetype",
+            "subclass": true
           },
           {
             "name": "Ataque Furtivo (2d6)",
@@ -3319,7 +3320,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -3329,7 +3330,7 @@
         "features": [
           {
             "name": "Esquiva Instintiva",
-            "desc": "Quando um atacante que você possa ver acertar você com um ataque, você pode usar sua reação para reduzir o dano pela metade."
+            "desc": "Quando um atacante que você possa ver o acertar com um ataque, você pode usar sua reação para reduzir o dano pela metade. Funciona mesmo contra ataques com vantagem."
           },
           {
             "name": "Ataque Furtivo (3d6)",
@@ -3342,12 +3343,12 @@
         "prof": 3,
         "features": [
           {
-            "name": "Especialização (mais 2)",
-            "desc": "Escolha mais duas proficiências de perícia para ganhar bônus dobrado."
+            "name": "Especialização (mais 2 perícias)",
+            "desc": "Escolha mais duas perícias nas quais você tenha proficiência. Seu bônus de proficiência passa a ser dobrado para essas perícias também (total: até 4 perícias com bônus dobrado)."
           },
           {
-            "name": "Ataque Furtivo (4d6)",
-            "desc": "Seu dado de Ataque Furtivo aumenta para 4d6."
+            "name": "Ataque Furtivo (3d6)",
+            "desc": "Mantém 3d6. O dado do Ataque Furtivo só aumenta em níveis ímpares."
           }
         ]
       },
@@ -3357,11 +3358,11 @@
         "features": [
           {
             "name": "Evasão",
-            "desc": "Você pode se esquivar adiantado de certos efeitos de área, como o sopro de fogo de um dragão vermelho ou uma magia relâmpago. Quando você é submetido a um efeito que permite um TR de Destreza para sofrer apenas metade do dano, você sofre nenhum dano com sucesso e apenas metade com falha."
+            "desc": "Você pode desviar de forma sobrenatural de explosões de efeito em área. Quando um efeito exige um TR de Destreza para sofrer apenas metade do dano, você não sofre nenhum dano com sucesso, e apenas metade com falha. Só funciona se você não estiver incapacitado."
           },
           {
             "name": "Ataque Furtivo (4d6)",
-            "desc": "Mantém 4d6."
+            "desc": "Seu dado de Ataque Furtivo aumenta para 4d6."
           }
         ]
       },
@@ -3371,7 +3372,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -3381,7 +3382,7 @@
         "features": [
           {
             "name": "Característica do Arquétipo de Gatuno",
-            "desc": "Você recebe uma característica do seu Arquétipo (Assassino: Infiltrador; Trapaceiro Arcano: Conjurar Magia; Gatuno: Mãos Rápidas / Andar em Paredes).",
+            "desc": "Você recebe a característica de nível 9 do seu Arquétipo (Ladrão: Furtividade Suprema — vantagem em Furtividade ao mover metade do deslocamento ou menos; Assassino: Especialista em Infiltração — criar identidade falsa completa em 7 dias e 25po; Trapaceiro Arcano: Emboscada Mágica — estando oculto, o alvo tem desvantagem no TR contra suas magias).",
             "subclass": true
           },
           {
@@ -3396,11 +3397,11 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           },
           {
-            "name": "Ataque Furtivo (6d6)",
-            "desc": "Seu dado de Ataque Furtivo aumenta para 6d6."
+            "name": "Ataque Furtivo (5d6)",
+            "desc": "Mantém 5d6. O dado do Ataque Furtivo só aumenta em níveis ímpares."
           }
         ]
       },
@@ -3410,11 +3411,11 @@
         "features": [
           {
             "name": "Talento Confiável",
-            "desc": "Você aperfeiçoou suas habilidades escolhidas ao ponto da excelência. Sempre que você fizer um teste de habilidade que permita adicionar seu bônus de proficiência, você pode tratar um resultado de 9 ou menos no d20 como um 10."
+            "desc": "Você aperfeiçoou suas habilidades escolhidas ao ponto da excelência. Sempre que fizer um teste de habilidade que inclua seu bônus de proficiência, trate qualquer resultado de 9 ou menos no d20 como um 10. Combinado com Especialização, você raramente falha nas suas áreas de destaque."
           },
           {
             "name": "Ataque Furtivo (6d6)",
-            "desc": "Mantém 6d6."
+            "desc": "Seu dado de Ataque Furtivo aumenta para 6d6."
           }
         ]
       },
@@ -3424,7 +3425,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -3434,7 +3435,7 @@
         "features": [
           {
             "name": "Característica do Arquétipo de Gatuno",
-            "desc": "Você recebe outra característica do seu Arquétipo.",
+            "desc": "Você recebe a característica de nível 13 do seu Arquétipo (Ladrão: Usar Dispositivos Mágicos — ignore requisitos de classe, raça e nível para usar itens mágicos; Assassino: Impostor — após 3h estudando alguém, imitar voz, escrita e comportamento perfeitamente; Trapaceiro Arcano: Ladrão Versátil — como ação bônus, Mão Arcana distrai criatura para você ter vantagem em ataques contra ela).",
             "subclass": true
           },
           {
@@ -3449,11 +3450,11 @@
         "features": [
           {
             "name": "Sentido Cego",
-            "desc": "Se você consegue ouvir, você está ciente da localização de qualquer criatura invisível ou ocultada a até 3 metros de você."
+            "desc": "Se você consegue ouvir, você está ciente da localização de qualquer criatura invisível ou oculta a até 3 metros de você, mesmo que não possa vê-la."
           },
           {
-            "name": "Ataque Furtivo (8d6)",
-            "desc": "Seu dado de Ataque Furtivo aumenta para 8d6."
+            "name": "Ataque Furtivo (7d6)",
+            "desc": "Mantém 7d6. O dado do Ataque Furtivo só aumenta em níveis ímpares."
           }
         ]
       },
@@ -3463,11 +3464,11 @@
         "features": [
           {
             "name": "Mente Escorregadia",
-            "desc": "Você ganhou uma maior força de mente. Você ganha proficiência em Testes de Resistência de Sabedoria."
+            "desc": "Você ganhou maior resistência mental. Você agora tem proficiência em Testes de Resistência de Sabedoria — tornando muito mais difícil para inimigos encantarem ou amedrontarem você."
           },
           {
             "name": "Ataque Furtivo (8d6)",
-            "desc": "Mantém 8d6."
+            "desc": "Seu dado de Ataque Furtivo aumenta para 8d6."
           }
         ]
       },
@@ -3477,7 +3478,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -3487,7 +3488,7 @@
         "features": [
           {
             "name": "Característica do Arquétipo de Gatuno",
-            "desc": "Você recebe a característica final do seu Arquétipo.",
+            "desc": "Você recebe a característica de nível 17 do seu Arquétipo (Ladrão: Reflexos de Ladrão — no 1° round de combate, age duas vezes: turno normal + ação extra no início com iniciativa -10; Assassino: Golpe Mortal — ao acertar criatura surpresa, TR CON (CD = 8+prof+mod DES) ou sofrer dano duplo; Trapaceiro Arcano: Ladrão de Magias — reação ao ser alvo de magia, fazer TR de Inteligência contra a CD do conjurador para roubar a magia).",
             "subclass": true
           },
           {
@@ -3502,11 +3503,11 @@
         "features": [
           {
             "name": "Ilusório",
-            "desc": "Você é tão evasivo que os atacantes raramente conseguem vantagem contra você. Nenhum ataque pode ter vantagem contra você enquanto você não estiver incapacitado."
+            "desc": "Você é tão evasivo que inimigos raramente conseguem ganhar vantagem sobre você. Nenhum ataque pode ter vantagem contra você enquanto você não estiver incapacitado."
           },
           {
             "name": "Ataque Furtivo (9d6)",
-            "desc": "Mantém 9d6."
+            "desc": "Mantém 9d6. O dado do Ataque Furtivo só aumenta em níveis ímpares."
           }
         ]
       },
@@ -3516,7 +3517,7 @@
         "features": [
           {
             "name": "Aumento de Atributo",
-            "desc": "Aumente um valor de habilidade à sua escolha por 2, ou dois valores de habilidade diferentes por 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
           }
         ]
       },
@@ -3526,11 +3527,11 @@
         "features": [
           {
             "name": "Golpe de Sorte",
-            "desc": "Você tem um dom inexplicável para ter sucesso quando você mais precisa. Se seu ataque errar um alvo a alcance, você pode transformar o erro em acerto. Alternativamente, se você falhar em um teste de habilidade, você pode tratar o d20 como 20. Ao usar essa característica, você não pode usá-la novamente até terminar um descanso curto ou longo."
+            "desc": "Você tem um dom inexplicável para ter sucesso quando mais precisa. Se um ataque seu errar um alvo que você possa alcançar, você pode transformar o erro em acerto. Alternativamente, se você falhar em um teste de habilidade, pode tratar o d20 como se mostrasse 20. Uma vez usado, você não pode usá-lo novamente até terminar um descanso curto ou longo."
           },
           {
             "name": "Ataque Furtivo (10d6)",
-            "desc": "Seu dado de Ataque Furtivo aumenta para 10d6."
+            "desc": "Seu dado de Ataque Furtivo atinge o máximo: 10d6."
           }
         ]
       }
