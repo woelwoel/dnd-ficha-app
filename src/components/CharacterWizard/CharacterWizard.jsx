@@ -24,6 +24,7 @@ const INITIAL_DRAFT = {
   race: '', subrace: '', racialBonuses: {},
   racialAbilityChoices: [], racialSkills: [], draconicAncestry: '', racialCantrip: '',
   class: '', level: 1, chosenFeatures: {}, savingThrows: [],
+  asiChoices: {},
   multiclasses: [],
   spellcastingAbility: null, hitDice: '1d8',
   background: '', backgroundSkills: [], backgroundItems: [],
@@ -128,7 +129,7 @@ export function CharacterWizard({ onBack, onComplete }) {
   const {
     races, classes, backgrounds,
     classChoices, classEquipment, weaponsArmor, progression: classProgression,
-    multiclass: multiclassData,
+    multiclass: multiclassData, feats,
   } = useSrd()
 
   const classData = useMemo(
@@ -160,7 +161,7 @@ export function CharacterWizard({ onBack, onComplete }) {
   }
 
   const currentStepId = steps[step]?.id
-  const canGoNext = canAdvance(currentStepId, draft, classChoices, races, classData)
+  const canGoNext = canAdvance(currentStepId, draft, classChoices, races, classData, classProgression)
 
   function handleNext() {
     if (canGoNext) setStep(s => Math.min(s + 1, steps.length - 1))
@@ -237,7 +238,7 @@ export function CharacterWizard({ onBack, onComplete }) {
                 {currentStepId === 'settings'   && <Step0Settings   draft={draft} updateDraft={updateDraft} />}
                 {currentStepId === 'concept'    && <Step1Concept    draft={draft} updateDraft={updateDraft} />}
                 {currentStepId === 'race'       && <Step2Race       draft={draft} updateDraft={updateDraft} races={races} />}
-                {currentStepId === 'class'      && <Step3Class      draft={draft} updateDraft={updateDraft} classes={classes} classChoices={classChoices} classEquipment={classEquipment} weaponsArmor={weaponsArmor} classProgression={classProgression} multiclassData={multiclassData ?? {}} />}
+                {currentStepId === 'class'      && <Step3Class      draft={draft} updateDraft={updateDraft} classes={classes} classChoices={classChoices} classEquipment={classEquipment} weaponsArmor={weaponsArmor} classProgression={classProgression} multiclassData={multiclassData ?? {}} feats={feats ?? []} />}
                 {currentStepId === 'background' && <Step4Background draft={draft} updateDraft={updateDraft} backgrounds={backgrounds} />}
                 {currentStepId === 'attributes' && <Step5Attributes draft={draft} updateDraft={updateDraft} />}
                 {currentStepId === 'skills'     && <Step6Skills     draft={draft} updateDraft={updateDraft} classData={classData} />}
@@ -281,8 +282,26 @@ export function CharacterWizard({ onBack, onComplete }) {
   )
 }
 
+/* ── Helpers ASI ─────────────────────────────────────────────── */
+function isASIChoiceComplete(choice) {
+  if (!choice) return false
+  if (choice.type === 'asi') {
+    const total = Object.values(choice.bonuses ?? {}).reduce((s, v) => s + v, 0)
+    return total === 2
+  }
+  if (choice.type === 'feat') return !!choice.featIndex
+  return false
+}
+
+function getASILevels(classIndex, level, classProgression) {
+  const levels = (classProgression[classIndex]?.levels ?? []).filter(l => l.level <= level)
+  return levels
+    .filter(l => l.features?.some(f => f.name === 'Aumento de Atributo'))
+    .map(l => l.level)
+}
+
 /* ── Validação de avanço por passo ───────────────────────────── */
-function canAdvance(stepId, draft, classChoices = {}, races = [], classData = null) {
+function canAdvance(stepId, draft, classChoices = {}, races = [], classData = null, classProgression = {}) {
   switch (stepId) {
     case 'settings':   return true
     case 'concept':    return !!draft.name?.trim()
@@ -322,6 +341,10 @@ function canAdvance(stepId, draft, classChoices = {}, races = [], classData = nu
         return sum + (opt?.grants?.bonusCantrips ?? 0)
       }, 0)
       if ((draft.bonusSpells?.length ?? 0) < bonusCantripsNeeded) return false
+      // Valida ASI/Feats pendentes
+      const asiLevels = getASILevels(draft.class, draft.level, classProgression)
+      const allASIDone = asiLevels.every(lvl => isASIChoiceComplete(draft.asiChoices?.[lvl]))
+      if (!allASIDone) return false
       // Valida escolhas das classes secundárias
       const allMulticlassChosen = (draft.multiclasses ?? []).every(mc => {
         if (!mc.class) return false
@@ -400,6 +423,14 @@ function buildCharacter(draft, classData, classEquipment) {
   for (const [k, v] of Object.entries(draft.racialBonuses)) {
     attrs[k] = Math.min(30, (attrs[k] ?? 10) + v)
   }
+  // Aplica bônus de ASI por nível
+  for (const choice of Object.values(draft.asiChoices ?? {})) {
+    if (choice?.type === 'asi') {
+      for (const [attr, bonus] of Object.entries(choice.bonuses ?? {})) {
+        attrs[attr] = Math.min(20, (attrs[attr] ?? 10) + bonus)
+      }
+    }
+  }
 
   const dexMod = getModifier(attrs.dex ?? 10)
   const maxHp  = calculateMaxHp(classData, draft.level, attrs.con ?? 10)
@@ -431,6 +462,9 @@ function buildCharacter(draft, classData, classEquipment) {
         chosenFeatures: mc.chosenFeatures ?? {},
       })),
       chosenFeatures: draft.chosenFeatures ?? {},
+      feats: Object.entries(draft.asiChoices ?? {})
+        .filter(([, c]) => c?.type === 'feat' && c.featIndex)
+        .map(([lvl, c]) => ({ index: c.featIndex, name: c.featName, takenAtLevel: Number(lvl) })),
       background:       draft.background,
       alignment:        draft.alignment,
       appearance:       draft.appearance ?? '',

@@ -13,7 +13,20 @@ function rollGoldFormula(formula) {
   return total * (Number(m[3]) || 1)
 }
 
-export function Step3Class({ draft, updateDraft, classes, classChoices = {}, classEquipment = {}, weaponsArmor = {}, classProgression = {}, multiclassData = {} }) {
+const ATTR_ABR  = { str: 'FOR', dex: 'DES', con: 'CON', int: 'INT', wis: 'SAB', cha: 'CAR' }
+const ATTRS_ORDER = ['str', 'dex', 'con', 'int', 'wis', 'cha']
+
+function isASIChoiceComplete(choice) {
+  if (!choice) return false
+  if (choice.type === 'asi') {
+    const total = Object.values(choice.bonuses ?? {}).reduce((s, v) => s + v, 0)
+    return total === 2
+  }
+  if (choice.type === 'feat') return !!choice.featIndex
+  return false
+}
+
+export function Step3Class({ draft, updateDraft, classes, classChoices = {}, classEquipment = {}, weaponsArmor = {}, classProgression = {}, multiclassData = {}, feats = [] }) {
   const [classModal, setClassModal] = useState(false)
   const [infoModal,  setInfoModal]  = useState(null) // { name, desc, grants? }
 
@@ -41,26 +54,36 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
     return !!val
   }
 
-  const choicesDone     = leveledChoices.filter(c => isChoiceDone(c)).length
-  const allChoicesDone  = choicesDone === leveledChoices.length
-  const cantripsReady   = (draft.bonusSpells?.length ?? 0) >= bonusCantripsNeeded
-  const allComplete     = allChoicesDone && cantripsReady
-
   // Níveis 1..draft.level da progressão desta classe
   const progressionLevels = (classProgression[draft.class]?.levels ?? [])
     .filter(l => l.level <= draft.level)
     .sort((a, b) => a.level - b.level)
+
+  // Níveis com Aumento de Atributo
+  const asiLevels = progressionLevels
+    .filter(l => l.features?.some(f => f.name === 'Aumento de Atributo'))
+    .map(l => l.level)
+
+  const asiDoneCount   = asiLevels.filter(lvl => isASIChoiceComplete(draft.asiChoices?.[lvl])).length
+  const allASIDone     = asiDoneCount === asiLevels.length
+
+  const choicesDone     = leveledChoices.filter(c => isChoiceDone(c)).length
+  const allChoicesDone  = choicesDone === leveledChoices.length
+  const cantripsReady   = (draft.bonusSpells?.length ?? 0) >= bonusCantripsNeeded
+  const totalChoices    = leveledChoices.length + asiLevels.length
+  const totalDone       = choicesDone + asiDoneCount
+  const allComplete     = allChoicesDone && cantripsReady && allASIDone
 
   function handleClassChange(classIndex) {
     const cls      = classes.find(c => c.index === classIndex) ?? null
     const saveKeys = (cls?.saving_throws ?? []).map(n => ATTR_NAME_TO_KEY[n]).filter(Boolean)
     const spellKey = SPELL_ABILITY_PT_TO_KEY[cls?.spellcasting_ability] ?? null
     const hitDice  = cls?.hit_die ? `1d${cls.hit_die}` : '1d8'
-    updateDraft({ class: classIndex, chosenFeatures: {}, bonusSpells: [], classEquipmentChoices: {}, classEquipmentPicks: {}, savingThrows: saveKeys, spellcastingAbility: spellKey, hitDice })
+    updateDraft({ class: classIndex, chosenFeatures: {}, bonusSpells: [], asiChoices: {}, classEquipmentChoices: {}, classEquipmentPicks: {}, savingThrows: saveKeys, spellcastingAbility: spellKey, hitDice })
   }
 
   function handleLevelChange(lvl) {
-    updateDraft({ level: lvl, chosenFeatures: {}, bonusSpells: [] })
+    updateDraft({ level: lvl, chosenFeatures: {}, bonusSpells: [], asiChoices: {} })
   }
 
   function handleFeatureChoice(choiceId, value, multiSelect) {
@@ -73,6 +96,10 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
     } else {
       updateDraft({ chosenFeatures: { ...(draft.chosenFeatures ?? {}), [choiceId]: value }, bonusSpells: [] })
     }
+  }
+
+  function handleASIChoice(level, choice) {
+    updateDraft({ asiChoices: { ...(draft.asiChoices ?? {}), [level]: choice } })
   }
 
   const hpPreview = selectedClass
@@ -125,13 +152,13 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
             <p className="text-xs font-bold text-amber-400 uppercase tracking-widest">
               {draft.level === 1 ? 'Características da Classe' : `Progressão — Níveis 1 a ${draft.level}`}
             </p>
-            {leveledChoices.length > 0 && (
+            {totalChoices > 0 && (
               <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${
                 allComplete
                   ? 'text-green-300 border-green-700/50 bg-green-900/20'
                   : 'text-amber-300 border-amber-700/50 bg-amber-900/20'
               }`}>
-                {allComplete ? '✓ Completo' : `${choicesDone}/${leveledChoices.length} escolha${leveledChoices.length > 1 ? 's' : ''}`}
+                {allComplete ? '✓ Completo' : `${totalDone}/${totalChoices} escolha${totalChoices > 1 ? 's' : ''}`}
               </span>
             )}
           </div>
@@ -139,12 +166,18 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
           {/* Entrada por nível */}
           <div className="space-y-2 max-h-[55vh] overflow-y-auto pr-1">
             {Array.from({ length: draft.level }, (_, i) => i + 1).map(lvl => {
-              const lvlData   = progressionLevels.find(l => l.level === lvl)
-              const features  = lvlData?.features ?? []
+              const lvlData    = progressionLevels.find(l => l.level === lvl)
+              const features   = lvlData?.features ?? []
               const lvlChoices = leveledChoices.filter(c => c.level === lvl)
+              const hasASI     = features.some(f => f.name === 'Aumento de Atributo')
+              const asiChoice  = draft.asiChoices?.[lvl]
+              const asiDone    = hasASI && isASIChoiceComplete(asiChoice)
+              const asiPending = hasASI && !asiDone
               const hasContent = features.length > 0 || lvlChoices.length > 0
-              const lvlDone   = lvlChoices.length > 0 && lvlChoices.every(c => isChoiceDone(c))
-              const lvlPending= lvlChoices.length > 0 && !lvlDone
+              const lvlChoicesDone   = lvlChoices.length > 0 && lvlChoices.every(c => isChoiceDone(c))
+              const lvlChoicesPending= lvlChoices.length > 0 && !lvlChoicesDone
+              const lvlPending = lvlChoicesPending || asiPending
+              const lvlDone    = (lvlChoices.length === 0 || lvlChoicesDone) && (!hasASI || asiDone) && (lvlChoices.length > 0 || hasASI)
 
               if (!hasContent) return (
                 <div key={lvl} className="flex items-center gap-2 px-3 py-1 rounded bg-gray-800/20 border border-gray-700/30">
@@ -168,10 +201,10 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
                     {lvlDone   && <span className="text-[10px] text-green-400 font-semibold">✓ Feito</span>}
                   </div>
 
-                  {/* Badges de características */}
-                  {features.length > 0 && (
+                  {/* Badges de características (exceto ASI — tem UI própria) */}
+                  {features.filter(f => f.name !== 'Aumento de Atributo').length > 0 && (
                     <div className="flex flex-wrap gap-1">
-                      {features.map((f, fi) => (
+                      {features.filter(f => f.name !== 'Aumento de Atributo').map((f, fi) => (
                         <button key={fi} type="button" onClick={() => setInfoModal(f)}
                           className="text-[10px] bg-gray-700/80 hover:bg-gray-600 px-2 py-0.5 rounded-full text-gray-300 transition-colors flex items-center gap-1">
                           {f.name}
@@ -179,6 +212,17 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
                         </button>
                       ))}
                     </div>
+                  )}
+
+                  {/* ASI / Talento picker */}
+                  {hasASI && (
+                    <ASIOrFeatPicker
+                      level={lvl}
+                      currentChoice={asiChoice}
+                      allowFeats={draft.settings?.allowFeats ?? false}
+                      feats={feats}
+                      onChoose={choice => handleASIChoice(lvl, choice)}
+                    />
                   )}
 
                   {/* Choices inline para este nível */}
@@ -352,6 +396,154 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
           </div>
         )}
       </DetailsModal>
+    </div>
+  )
+}
+
+/* ── ASI ou Talento por nível ─────────────────────────────────── */
+function ASIOrFeatPicker({ level, currentChoice, allowFeats, feats, onChoose }) {
+  const [featSearch, setFeatSearch] = useState('')
+
+  const mode    = currentChoice?.type ?? 'asi'
+  const bonuses = (mode === 'asi' ? currentChoice?.bonuses : null) ?? {}
+  const totalSpent = Object.values(bonuses).reduce((s, v) => s + v, 0)
+  const remaining  = 2 - totalSpent
+  const isDone = isASIChoiceComplete(currentChoice)
+
+  function switchMode(newMode) {
+    if (newMode === 'asi') onChoose({ type: 'asi', bonuses: {} })
+    else onChoose({ type: 'feat', featIndex: null, featName: null })
+  }
+
+  function adjustBonus(attr, delta) {
+    const cur  = bonuses[attr] ?? 0
+    const next = cur + delta
+    if (next < 0) return
+    if (next > 2) return
+    if (delta > 0 && remaining <= 0) return
+    const nb = { ...bonuses }
+    if (next === 0) delete nb[attr]
+    else nb[attr] = next
+    onChoose({ type: 'asi', bonuses: nb })
+  }
+
+  const filteredFeats = feats.filter(f =>
+    f.name.toLowerCase().includes(featSearch.toLowerCase())
+  )
+
+  return (
+    <div className="space-y-2 pt-2 border-t border-gray-600/40">
+      {/* Cabeçalho da seção */}
+      <div className="flex items-center gap-2">
+        <p className="text-xs font-semibold text-amber-300 flex-1">
+          Aumento de Atributo {allowFeats ? 'ou Talento' : ''} <span className="text-red-400">*</span>
+        </p>
+        {isDone && <span className="text-[10px] text-green-400 font-semibold">✓</span>}
+      </div>
+
+      {/* Toggle ASI / Talento */}
+      {allowFeats && (
+        <div className="flex gap-1.5">
+          <button type="button" onClick={() => switchMode('asi')}
+            className={`flex-1 py-1 text-[10px] rounded border transition-colors ${
+              mode === 'asi'
+                ? 'border-amber-600 bg-amber-900/30 text-amber-300'
+                : 'border-gray-700 text-gray-500 hover:border-gray-500 hover:text-gray-400'
+            }`}>
+            +2 Atributos
+          </button>
+          <button type="button" onClick={() => switchMode('feat')}
+            className={`flex-1 py-1 text-[10px] rounded border transition-colors ${
+              mode === 'feat'
+                ? 'border-amber-600 bg-amber-900/30 text-amber-300'
+                : 'border-gray-700 text-gray-500 hover:border-gray-500 hover:text-gray-400'
+            }`}>
+            Talento
+          </button>
+        </div>
+      )}
+
+      {/* Modo ASI */}
+      {mode === 'asi' && (
+        <div className="space-y-1.5">
+          <p className="text-[10px] text-gray-500">
+            Pontos restantes:{' '}
+            <span className={remaining === 0 ? 'text-green-400 font-bold' : 'text-amber-400 font-bold'}>
+              {remaining}
+            </span>
+            {' '}/ 2 — distribua +2 em um atributo ou +1/+1 em dois
+          </p>
+          <div className="grid grid-cols-3 gap-1.5">
+            {ATTRS_ORDER.map(attr => {
+              const bonus  = bonuses[attr] ?? 0
+              const canInc = remaining > 0 && bonus < 2
+              const canDec = bonus > 0
+              return (
+                <div key={attr} className={`flex items-center gap-1 px-2 py-1.5 rounded border ${
+                  bonus > 0
+                    ? 'border-amber-600/60 bg-amber-900/20'
+                    : 'border-gray-700/50 bg-gray-800/30'
+                }`}>
+                  <span className="text-[10px] text-gray-400 w-6 shrink-0">{ATTR_ABR[attr]}</span>
+                  <button type="button" onClick={() => adjustBonus(attr, -1)} disabled={!canDec}
+                    className="w-4 h-4 rounded flex items-center justify-center text-[11px] bg-gray-700 hover:bg-gray-600 disabled:opacity-25 disabled:cursor-not-allowed transition-colors shrink-0">
+                    −
+                  </button>
+                  <span className={`text-[11px] font-bold flex-1 text-center ${bonus > 0 ? 'text-amber-300' : 'text-gray-600'}`}>
+                    {bonus > 0 ? `+${bonus}` : '0'}
+                  </span>
+                  <button type="button" onClick={() => adjustBonus(attr, 1)} disabled={!canInc}
+                    className="w-4 h-4 rounded flex items-center justify-center text-[11px] bg-gray-700 hover:bg-gray-600 disabled:opacity-25 disabled:cursor-not-allowed transition-colors shrink-0">
+                    +
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Modo Talento */}
+      {mode === 'feat' && (
+        <div className="space-y-1.5">
+          <input
+            type="text"
+            placeholder="Buscar talento..."
+            value={featSearch}
+            onChange={e => setFeatSearch(e.target.value)}
+            className="w-full bg-gray-800 border border-gray-600 rounded px-2.5 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-amber-500"
+          />
+          <div className="max-h-44 overflow-y-auto space-y-1 pr-0.5">
+            {filteredFeats.length === 0 && (
+              <p className="text-[10px] text-gray-600 italic text-center py-3">Nenhum talento encontrado.</p>
+            )}
+            {filteredFeats.map(feat => {
+              const isSelected = currentChoice?.type === 'feat' && currentChoice.featIndex === feat.index
+              return (
+                <button key={feat.index} type="button"
+                  onClick={() => onChoose({ type: 'feat', featIndex: feat.index, featName: feat.name })}
+                  className={`w-full text-left px-2.5 py-1.5 rounded border text-xs transition-colors flex items-start gap-2 ${
+                    isSelected
+                      ? 'border-amber-500 bg-amber-900/30 text-amber-200'
+                      : 'border-gray-700 bg-gray-900/50 text-gray-300 hover:border-amber-700/60'
+                  }`}>
+                  <span className={`w-3 h-3 rounded-full border-2 shrink-0 mt-0.5 ${
+                    isSelected ? 'border-amber-400 bg-amber-500' : 'border-gray-600'
+                  }`} />
+                  <span className="flex-1 min-w-0">
+                    <span className="font-medium block">{feat.name}</span>
+                    {feat.prereq && (
+                      <span className="text-[9px] text-gray-500">
+                        Req: {feat.prereq.type === 'spellcasting' ? 'conjurador' : JSON.stringify(feat.prereq)}
+                      </span>
+                    )}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
