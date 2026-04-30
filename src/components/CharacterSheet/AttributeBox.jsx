@@ -4,11 +4,11 @@ import { FormFieldError } from '../FormFieldError'
 import { Tooltip } from '../Tooltip'
 
 function scoreColor(value) {
-  if (value <= 8)  return { border: 'border-red-700',   text: 'text-red-300',   ring: 'border-red-600'   }
-  if (value <= 11) return { border: 'border-gray-600',  text: 'text-gray-100',  ring: 'border-gray-500'  }
-  if (value <= 13) return { border: 'border-sky-700',   text: 'text-sky-200',   ring: 'border-sky-500'   }
-  if (value <= 15) return { border: 'border-green-700', text: 'text-green-200', ring: 'border-green-500' }
-  return              { border: 'border-amber-500',  text: 'text-amber-200', ring: 'border-amber-400' }
+  if (value <= 8)  return { border: 'border-red-800',   text: 'text-red-400',   ring: 'border-red-700'   }
+  if (value <= 11) return { border: 'border-gray-700',  text: 'text-gray-300',  ring: 'border-gray-600'  }
+  if (value <= 13) return { border: 'border-sky-800',   text: 'text-sky-300',   ring: 'border-sky-700'   }
+  if (value <= 15) return { border: 'border-green-700', text: 'text-green-300', ring: 'border-green-600' }
+  return              { border: 'border-amber-600',  text: 'text-amber-300', ring: 'border-amber-500' }
 }
 
 function AttributeBoxBase({
@@ -43,8 +43,8 @@ function AttributeBoxBase({
   }
 
   return (
-    <div className={`relative flex flex-col items-center bg-gray-800 border rounded-lg p-3 min-w-[90px] ${
-      error ? 'border-red-500' : col.border
+    <div className={`relative flex flex-col items-center bg-gray-800 border rounded p-3 min-w-[90px] ${
+      error ? 'border-red-600' : col.border
     }`}>
       {/* Abreviação */}
       <span className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-1">{abbr}</span>
@@ -134,8 +134,8 @@ function AttributeBoxBase({
 
       {/* Círculo de modificador */}
       <Tooltip content={`floor((${value} − 10) / 2) = ${formatModifier(mod)}`} position="bottom">
-        <div className={`mt-2 w-10 h-10 flex items-center justify-center rounded-full border-2 bg-gray-900 cursor-help ${
-          error ? 'border-red-500' : col.ring
+        <div className={`mt-2 w-10 h-10 flex items-center justify-center rounded border-2 bg-gray-900 cursor-help ${
+          error ? 'border-red-600' : col.ring
         }`}>
           <span className={`text-sm font-bold ${error ? 'text-red-300' : 'text-amber-300'}`}>
             {formatModifier(mod)}

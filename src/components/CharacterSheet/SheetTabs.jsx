@@ -92,16 +92,16 @@ function SheetTabsBase({ activeTab, onChange }) {
               'gap-1.5 px-3 py-2.5 text-xs whitespace-nowrap',
               /* desktop */
               'lg:gap-3 lg:px-5 lg:py-3 lg:text-sm lg:whitespace-normal lg:w-full',
-              'transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400',
+              'transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600',
               isActive
                 ? 'text-amber-300'
-                : 'text-gray-500 hover:text-gray-200 hover:bg-gray-800/40',
+                : 'text-gray-500 hover:text-gray-200 hover:bg-gray-800/50',
             ].join(' ')}
           >
             {/* Indicador mobile: barra embaixo */}
             {isActive && (
               <span
-                className="lg:hidden absolute bottom-0 inset-x-1 h-0.5 rounded-full bg-gradient-to-r from-blue-500 via-blue-400 to-amber-400"
+                className="lg:hidden absolute bottom-0 inset-x-1 h-0.5 bg-gradient-to-r from-red-800 via-red-500 to-amber-400"
                 aria-hidden
               />
             )}
@@ -109,11 +109,11 @@ function SheetTabsBase({ activeTab, onChange }) {
             {isActive && (
               <>
                 <span
-                  className="hidden lg:block absolute left-0 inset-y-1.5 w-0.5 rounded-r-full bg-gradient-to-b from-blue-400 to-amber-400"
+                  className="hidden lg:block absolute left-0 inset-y-0 w-0.5 bg-gradient-to-b from-amber-400 via-red-500 to-red-900"
                   aria-hidden
                 />
                 <span
-                  className="hidden lg:block absolute inset-0 bg-blue-950/40 rounded-none"
+                  className="hidden lg:block absolute inset-0 bg-red-950/50"
                   aria-hidden
                 />
               </>

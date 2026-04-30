@@ -23,13 +23,13 @@ function ArcaneCircle() {
       className="absolute left-1/2 -translate-x-1/2 -top-12 w-72 h-72 pointer-events-none select-none"
       aria-hidden
     >
-      <svg className="w-full h-full opacity-[0.13]" viewBox="0 0 288 288">
-        {/* Anéis */}
-        <circle cx="144" cy="144" r="135" fill="none" stroke="#4080c8" strokeWidth="1" />
-        <circle cx="144" cy="144" r="100" fill="none" stroke="#4080c8" strokeWidth="1" strokeDasharray="3 7" />
-        <circle cx="144" cy="144" r="64" fill="none" stroke="#c49030" strokeWidth="1" />
-        <circle cx="144" cy="144" r="30" fill="none" stroke="#4080c8" strokeWidth="1" strokeDasharray="2 5" />
-        {/* Pontos cardinais externos */}
+      <svg className="w-full h-full opacity-[0.15]" viewBox="0 0 288 288">
+        {/* Anéis de pedra */}
+        <circle cx="144" cy="144" r="135" fill="none" stroke="#5272a0" strokeWidth="0.8" />
+        <circle cx="144" cy="144" r="100" fill="none" stroke="#5272a0" strokeWidth="0.8" strokeDasharray="3 7" />
+        <circle cx="144" cy="144" r="64"  fill="none" stroke="#de3e3e" strokeWidth="1" />
+        <circle cx="144" cy="144" r="30"  fill="none" stroke="#5272a0" strokeWidth="0.8" strokeDasharray="2 5" />
+        {/* Pontos cardinais — sangue */}
         {[0, 60, 120, 180, 240, 300].map(a => {
           const r = (a - 90) * Math.PI / 180
           return (
@@ -38,28 +38,31 @@ function ArcaneCircle() {
               cx={144 + Math.cos(r) * 135}
               cy={144 + Math.sin(r) * 135}
               r="3.5"
-              fill="#4080c8"
+              fill="#de3e3e"
             />
           )
         })}
-        {/* Marcações intermediárias */}
+        {/* Marcações — sangue */}
         {[30, 90, 150, 210, 270, 330].map(a => {
           const r = (a - 90) * Math.PI / 180
           const x1 = 144 + Math.cos(r) * 92
           const y1 = 144 + Math.sin(r) * 92
           const x2 = 144 + Math.cos(r) * 108
           const y2 = 144 + Math.sin(r) * 108
-          return <line key={a} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#c49030" strokeWidth="1.2" />
+          return <line key={a} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#de3e3e" strokeWidth="1.2" />
         })}
-        {/* Linhas diagonais internas */}
+        {/* Linhas internas — aço */}
         {[45, 135, 225, 315].map(a => {
           const r = (a - 90) * Math.PI / 180
           const x1 = 144 + Math.cos(r) * 30
           const y1 = 144 + Math.sin(r) * 30
           const x2 = 144 + Math.cos(r) * 62
           const y2 = 144 + Math.sin(r) * 62
-          return <line key={a} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#4080c8" strokeWidth="0.8" />
+          return <line key={a} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#5272a0" strokeWidth="0.8" />
         })}
+        {/* Cruz central */}
+        <line x1="144" y1="114" x2="144" y2="174" stroke="#de3e3e" strokeWidth="1" opacity="0.6" />
+        <line x1="114" y1="144" x2="174" y2="144" stroke="#de3e3e" strokeWidth="1" opacity="0.6" />
       </svg>
     </div>
   )
@@ -69,14 +72,14 @@ function ArcaneCircle() {
 function EmptyState() {
   return (
     <div className="text-center py-24">
-      <div className="w-20 h-20 rounded-full bg-blue-950/40 border border-blue-800/30 flex items-center justify-center text-4xl mx-auto mb-6">
-        🐉
+      <div className="w-20 h-20 rounded bg-red-950/40 border border-red-900/40 flex items-center justify-center text-4xl mx-auto mb-6">
+        ⚔️
       </div>
-      <p className="text-amber-400 font-display text-xl mb-3 tracking-wide">
-        Grimório Vazio
+      <p className="text-amber-400 font-display text-xl mb-3 tracking-widest uppercase">
+        Nenhum Guerreiro
       </p>
-      <p className="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto italic">
-        As páginas aguardam. Crie sua primeira ficha e que a aventura comece.
+      <p className="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto">
+        A forja aguarda. Crie sua primeira ficha e que a batalha comece.
       </p>
     </div>
   )
@@ -93,12 +96,12 @@ function CharacterCard({ character: c, onSelect, confirmDelete, setConfirmDelete
   ].filter(Boolean).join(' · ')
 
   return (
-    <div className="group relative flex items-stretch border border-gray-700/80 hover:border-blue-700/60 rounded-lg overflow-hidden transition-all duration-200 hover:shadow-[0_0_24px_rgba(40,90,152,0.13)] arcane-card">
-      {/* Barra lateral de acento */}
-      <div className="w-0.5 shrink-0 bg-gradient-to-b from-blue-600/50 via-blue-700/20 to-transparent group-hover:from-blue-400/70 transition-colors duration-300" />
+    <div className="group relative flex items-stretch border border-gray-700/60 hover:border-red-900/60 rounded overflow-hidden transition-all duration-200 hover:shadow-[0_0_20px_rgba(158,18,20,0.15)] arcane-card">
+      {/* Barra lateral de sangue */}
+      <div className="w-0.5 shrink-0 bg-gradient-to-b from-red-700/60 via-red-900/20 to-transparent group-hover:from-red-500/80 transition-colors duration-300" />
 
       {/* Ícone da classe */}
-      <div className="flex items-center justify-center w-14 bg-gray-900/60 group-hover:bg-blue-950/40 transition-colors text-2xl py-4 shrink-0 border-r border-gray-700/50">
+      <div className="flex items-center justify-center w-14 bg-gray-900/60 group-hover:bg-red-950/30 transition-colors text-2xl py-4 shrink-0 border-r border-gray-700/40">
         {icon}
       </div>
 
@@ -163,10 +166,10 @@ export function CharacterList({ onSelect, onCreate }) {
   return (
     <div className="min-h-screen flex flex-col items-center px-4 pb-24 relative overflow-hidden">
 
-      {/* Névoa de atmosfera arcana */}
+      {/* Névoa de guerra — sangue e fumaça */}
       <div className="fixed inset-0 pointer-events-none" aria-hidden>
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full bg-blue-900/20 blur-[140px]" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full bg-purple-900/12 blur-[120px]" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] rounded-full bg-red-950/25 blur-[160px]" />
+        <div className="absolute top-0 right-1/4 w-[400px] h-[300px] rounded-full bg-gray-800/40 blur-[100px]" />
       </div>
 
       <div className="relative w-full max-w-xl pt-20">
@@ -176,26 +179,26 @@ export function CharacterList({ onSelect, onCreate }) {
           <ArcaneCircle />
 
           <div className="relative pt-4">
-            <p className="text-blue-400/50 text-xs tracking-[0.4em] uppercase mb-5 font-display">
+            <p className="text-red-800/70 text-xs tracking-[0.4em] uppercase mb-5 font-display">
               D&D 5e · Sistema de Referência
             </p>
 
             <h1 className="text-6xl font-bold text-amber-400 font-display tracking-wider leading-none mb-1">
-              Grimório
+              FORJA
             </h1>
-            <p className="text-gray-500 text-base font-display tracking-[0.2em]">
-              de Personagens
+            <p className="text-gray-500 text-base font-display tracking-[0.25em] uppercase">
+              de Heróis
             </p>
 
             {/* Divisor decorativo */}
             <div className="flex items-center gap-3 justify-center mt-7">
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-blue-800/50 to-blue-700/30" />
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-red-900/50 to-red-800/30" />
               <div className="flex gap-2 items-center">
                 <div className="w-1.5 h-1.5 rotate-45 bg-amber-600/80" />
-                <div className="w-2 h-2 rotate-45 bg-blue-500/60" />
+                <div className="w-2.5 h-2.5 rotate-45 bg-red-700/60" />
                 <div className="w-1.5 h-1.5 rotate-45 bg-amber-600/80" />
               </div>
-              <div className="h-px flex-1 bg-gradient-to-l from-transparent via-blue-800/50 to-blue-700/30" />
+              <div className="h-px flex-1 bg-gradient-to-l from-transparent via-red-900/50 to-red-800/30" />
             </div>
           </div>
         </div>

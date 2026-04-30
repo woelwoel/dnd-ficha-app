@@ -1,73 +1,84 @@
 @import "tailwindcss";
 
-/* ── Paleta Grimório Arcano (azul-preto profundo + índigo + ouro) ── */
+/* ── Paleta Pedra e Sangue ── */
 @theme {
-  /* Fundos: azul-preto profundo */
-  --color-gray-950: #03050d;
-  --color-gray-900: #060918;
-  --color-gray-800: #0d1428;
-  --color-gray-700: #162035;
-  --color-gray-600: #1e2e48;
-  --color-gray-500: #304a68;
-  --color-gray-400: #5880a0;
-  --color-gray-300: #88aac8;
-  --color-gray-200: #b8cfe0;
-  --color-gray-100: #deeaf8;
+  /* Pedra escura (fundos — fria, opressiva) */
+  --color-gray-950: #080809;
+  --color-gray-900: #0f0f12;
+  --color-gray-800: #18181e;
+  --color-gray-700: #222228;
+  --color-gray-600: #333340;
+  --color-gray-500: #52525e;
+  --color-gray-400: #7a7a8a;
+  --color-gray-300: #a0a0ae;
+  --color-gray-200: #c8c8d5;
+  --color-gray-100: #e5e5ec;
 
-  /* Ouro arcano */
-  --color-amber-950: #120b00;
-  --color-amber-900: #231500;
-  --color-amber-800: #382200;
-  --color-amber-700: #563400;
-  --color-amber-600: #7a4e00;
-  --color-amber-500: #9e7010;
-  --color-amber-400: #c49030;
-  --color-amber-300: #dcb050;
-  --color-amber-200: #eece78;
+  /* Sangue (acento principal — vermelho vivo) */
+  --color-amber-950: #160000;
+  --color-amber-900: #2d0002;
+  --color-amber-800: #500406;
+  --color-amber-700: #76080c;
+  --color-amber-600: #9e1214;
+  --color-amber-500: #c42020;
+  --color-amber-400: #de3e3e;
+  --color-amber-300: #ec6868;
+  --color-amber-200: #f4a0a0;
 
-  /* Azul arcano (interativo, destaque) */
-  --color-blue-950: #020510;
-  --color-blue-900: #050c20;
-  --color-blue-800: #0a1838;
-  --color-blue-700: #102650;
-  --color-blue-600: #1a3c6c;
-  --color-blue-500: #285a98;
-  --color-blue-400: #4080c8;
-  --color-blue-300: #68a4e0;
-  --color-blue-200: #98c4f0;
+  /* Aço frio (interativo, ações de combate) */
+  --color-blue-950: #060810;
+  --color-blue-900: #0c1020;
+  --color-blue-800: #141828;
+  --color-blue-700: #1e2438;
+  --color-blue-600: #283450;
+  --color-blue-500: #384e72;
+  --color-blue-400: #5272a0;
+  --color-blue-300: #7898c0;
+  --color-blue-200: #a0bcdc;
 
-  /* Violeta mágico */
-  --color-purple-950: #080412;
-  --color-purple-900: #100820;
-  --color-purple-800: #1e1038;
-  --color-purple-700: #2e1a52;
-  --color-purple-600: #422870;
-  --color-purple-500: #5c3c90;
-  --color-purple-400: #8060b8;
-  --color-purple-300: #a888d8;
+  /* Carmesim sombrio (reações/magia sombria) */
+  --color-purple-950: #100808;
+  --color-purple-900: #1c0c10;
+  --color-purple-800: #2e1418;
+  --color-purple-700: #461e24;
+  --color-purple-600: #642834;
+  --color-purple-500: #803848;
+  --color-purple-400: #a04e60;
+  --color-purple-300: #c07280;
 
-  /* Vermelho perigo / HP baixo */
-  --color-red-950: #0c0005;
-  --color-red-900: #1a0010;
-  --color-red-800: #380818;
-  --color-red-700: #541428;
-  --color-red-600: #742038;
-  --color-red-500: #9c3050;
-  --color-red-400: #c84868;
-  --color-red-300: #e07088;
+  /* Vermelho perigo / HP crítico */
+  --color-red-950: #0e0202;
+  --color-red-900: #200404;
+  --color-red-800: #3e0808;
+  --color-red-700: #601010;
+  --color-red-600: #841818;
+  --color-red-500: #ac2020;
+  --color-red-400: #cc3030;
+  --color-red-300: #e06060;
 
-  /* Verde vida */
-  --color-green-900: #040c06;
-  --color-green-800: #081a08;
-  --color-green-700: #0e2c10;
-  --color-green-600: #184418;
-  --color-green-500: #246024;
-  --color-green-400: #388040;
+  /* Verde vida (desbotado, batalhado) */
+  --color-green-900: #040a04;
+  --color-green-800: #081408;
+  --color-green-700: #0e2210;
+  --color-green-600: #183018;
+  --color-green-500: #244820;
+  --color-green-400: #3c6c30;
 
-  /* Tipografia */
-  --font-display: 'Cinzel', 'Georgia', serif;
-  --font-body: 'Crimson Pro', 'Georgia', serif;
-  --font-sans: 'Crimson Pro', 'Georgia', serif;
+  /* Aço (descanso curto / sky → azul aço) */
+  --color-sky-950: #060a10;
+  --color-sky-900: #0a1020;
+  --color-sky-800: #10182c;
+  --color-sky-700: #182438;
+  --color-sky-600: #243450;
+  --color-sky-500: #344a70;
+  --color-sky-400: #4c6898;
+  --color-sky-300: #6c8ab8;
+  --color-sky-200: #96b2d8;
+
+  /* Tipografia brutal */
+  --font-display: 'Oswald', 'Impact', sans-serif;
+  --font-body:    'Barlow', 'Inter', system-ui, sans-serif;
+  --font-sans:    'Barlow', 'Inter', system-ui, sans-serif;
 }
 
 /* ── Base global ─────────────────────────────────────────────── */
@@ -79,37 +90,37 @@ html {
 }
 
 body {
-  font-family: 'Crimson Pro', Georgia, serif;
+  font-family: 'Barlow', Inter, system-ui, sans-serif;
   background-color: var(--color-gray-950);
   color: var(--color-gray-100);
   -webkit-font-smoothing: antialiased;
   line-height: 1.5;
-  /* Névoa arcana subtil no fundo */
+  /* Vinheta de sangue nas bordas inferiores */
   background-image:
-    radial-gradient(ellipse 70% 50% at 15% 10%, rgba(40, 90, 152, 0.07) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 85% 90%, rgba(92, 60, 144, 0.05) 0%, transparent 60%);
+    radial-gradient(ellipse 120% 35% at 50% 100%, rgba(158, 18, 20, 0.09) 0%, transparent 70%),
+    radial-gradient(ellipse 120% 25% at 50% 0%, rgba(8, 8, 9, 0.7) 0%, transparent 100%);
   background-attachment: fixed;
 }
 
-/* ── Tipografia ──────────────────────────────────────────────── */
+/* ── Tipografia brutal ───────────────────────────────────────── */
 h1, h2, h3,
 .font-display,
 [class*="tracking-widest"],
 [class*="uppercase"][class*="font-bold"] {
-  font-family: 'Cinzel', Georgia, serif;
-  letter-spacing: 0.04em;
+  font-family: 'Oswald', Impact, sans-serif;
+  letter-spacing: 0.06em;
 }
 
-/* ── Scrollbar arcana ─────────────────────────────────────────── */
+/* ── Scrollbar de pedra ──────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: var(--color-gray-900); }
-::-webkit-scrollbar-thumb { background: var(--color-gray-600); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--color-blue-500); }
+::-webkit-scrollbar-thumb { background: var(--color-gray-700); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-amber-700); }
 
-/* ── Seleção ─────────────────────────────────────────────────── */
+/* ── Seleção sangue ──────────────────────────────────────────── */
 ::selection {
-  background: rgba(64, 128, 200, 0.3);
-  color: var(--color-blue-200);
+  background: rgba(222, 62, 62, 0.3);
+  color: var(--color-amber-200);
 }
 
 /* ── Scrollbar oculta ────────────────────────────────────────── */
@@ -122,7 +133,6 @@ h1, h2, h3,
     min-height: 36px;
     min-width: 36px;
   }
-  /* Exceção: checkboxes inline em listas densas */
   .skill-check, .saving-check {
     min-height: unset;
     min-width: unset;
@@ -137,7 +147,7 @@ h1, h2, h3,
   html { font-size: 17px; }
 }
 
-/* ── Cartão arcano: gradiente interno + linha de luz no topo ─── */
+/* ── Card de pedra: gradiente + linha de sangue no topo ─────── */
 .arcane-card {
   position: relative;
   background: linear-gradient(160deg, var(--color-gray-800) 0%, var(--color-gray-900) 100%);
@@ -145,18 +155,17 @@ h1, h2, h3,
 .arcane-card::before {
   content: '';
   position: absolute;
-  top: 0; left: 15%; right: 15%; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(64, 128, 200, 0.35), transparent);
-  border-radius: 1px;
+  top: 0; left: 10%; right: 10%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(222, 62, 62, 0.45), transparent);
   pointer-events: none;
 }
 
-/* ── Brilho azul arcano (sombra externa) ─────────────────────── */
+/* ── Brilho de ferro ensanguentado ───────────────────────────── */
 .arcane-glow {
   box-shadow:
-    0 0 0 1px rgba(40, 90, 152, 0.35),
-    0 0 24px rgba(40, 90, 152, 0.15),
-    0 8px 40px rgba(3, 5, 13, 0.7);
+    0 0 0 1px rgba(158, 18, 20, 0.3),
+    0 0 20px rgba(158, 18, 20, 0.12),
+    0 8px 40px rgba(8, 8, 9, 0.85);
 }
 
 /* ── Impressão / Exportar PDF ────────────────────────────────── */
@@ -166,17 +175,14 @@ h1, h2, h3,
 }
 
 @media print {
-  /* Oculta toda a aplicação */
   body > *       { display: none !important; }
   #root > *      { display: none !important; }
 
-  /* Garante que cores e fundos sejam impressos */
   *, *::before, *::after {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
-  /* Mostra apenas a ficha de impressão */
   #print-character-view {
     display: block !important;
     position: relative;
@@ -189,7 +195,6 @@ h1, h2, h3,
     color: #1a1209;
   }
 
-  /* Cada página da ficha quebra corretamente */
   #print-character-view > div {
     page-break-after: always;
     break-after: page;
