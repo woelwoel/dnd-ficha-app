@@ -211,7 +211,7 @@ export function HabilitiesTab({ character, featureUses, onSpend, onRegain }) {
     })
 
     return { classFeatures, multiFeatures, raceFeatures, featFeatures }
-  }, [progression, classIndex, level, info?.multiclasses, info?.feats, selectedRace, selectedSubrace, allFeats])
+  }, [progression, classIndex, level, info?.multiclasses, info?.feats, info?.race, info?.draconicAncestry, selectedRace, selectedSubrace, allFeats])
 
   /* Estatísticas rápidas */
   const totalFeatures  = classFeatures.length + multiFeatures.length + raceFeatures.length + featFeatures.length

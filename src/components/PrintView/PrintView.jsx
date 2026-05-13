@@ -150,7 +150,7 @@ function SkillsColumn({ attributes, proficiencies, profBonus, passivePerception 
         display: 'grid', gridTemplateColumns: '1fr 1fr',
         gap: '1px 10px', marginBottom: '8px',
       }}>
-        {SKILLS.map(({ key, name, ability, abbr }) => {
+        {SKILLS.map(({ key, name, ability }) => {
           const isClass  = proficiencies.skills.includes(key)
           const isBg     = bgSkills.includes(key)
           const prof     = isClass || isBg
@@ -475,7 +475,7 @@ function PersonalitySection({ traits }) {
 /* ══════════════════════════════════════════════════════════════════
    Página 3: Magias
    ══════════════════════════════════════════════════════════════════ */
-function SpellsPage({ character, classData, profBonus }) {
+function SpellsPage({ character, profBonus }) {
   const { spellcasting = {}, attributes } = character
 
   const ability      = spellcasting?.ability
@@ -484,8 +484,8 @@ function SpellsPage({ character, classData, profBonus }) {
   const attackBonus  = profBonus + getModifier(abilityScore)
   const saveDC       = 8 + profBonus + getModifier(abilityScore)
 
-  const spells = spellcasting?.spells ?? []
   const byLevel = useMemo(() => {
+    const spells = spellcasting?.spells ?? []
     const map = {}
     for (const sp of spells) {
       const lvl = sp.level ?? 0
@@ -493,7 +493,7 @@ function SpellsPage({ character, classData, profBonus }) {
       map[lvl].push(sp)
     }
     return map
-  }, [spells])
+  }, [spellcasting?.spells])
 
   const slots  = spellcasting?.slots ?? []
   const LEVEL_LABELS = ['Truques', 'Nível 1', 'Nível 2', 'Nível 3', 'Nível 4', 'Nível 5', 'Nível 6', 'Nível 7', 'Nível 8', 'Nível 9']
@@ -704,7 +704,7 @@ export function PrintView({ character, calc, classData, backgrounds }) {
           }}>
             {info.name || 'Personagem'} — Magias
           </h2>
-          <SpellsPage character={character} classData={classData} profBonus={calc.profBonus} />
+          <SpellsPage character={character} profBonus={calc.profBonus} />
         </div>
       )}
 

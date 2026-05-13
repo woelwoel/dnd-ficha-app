@@ -42,7 +42,7 @@ export function SheetHeader({
     reader.readAsText(file)
   }
 
-  const { currentHp, maxHp, armorClass, initiative, hpPercent, hpColor } = quickStats ?? {}
+  const { currentHp, maxHp, armorClass, initiative, hpPercent } = quickStats ?? {}
   const showStats = quickStats && (maxHp ?? 0) > 0
 
   return (

@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { useDiceRoller } from '../../context/DiceRollerContext'
+import { useDiceRoller } from '../../context/useDiceRoller'
 
 function timeAgo(ts) {
   const diff = Math.floor((Date.now() - ts) / 1000)

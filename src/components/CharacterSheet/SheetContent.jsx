@@ -101,7 +101,6 @@ export function SheetContent({
 
   const featureUses = useMemo(
     () => mergeFeatureUses(character.combat?.classFeatureUses ?? [], defaultClassFeatureUses(character)),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [character]
   )
 

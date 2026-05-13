@@ -270,7 +270,6 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain }) {
 
   const classIndex      = info?.class ?? ''
   const level           = info?.level ?? 1
-  const chosenFeatures  = info?.chosenFeatures ?? {}
   const selectedRace    = races.find(r => r.index === info?.race)
   const selectedSubrace = selectedRace?.subraces?.find(sr => sr.index === info?.subrace)
 
@@ -278,6 +277,7 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain }) {
     classActions, classBonusActions, classReactions, raceActions,
     classFeatures, multiFeatures, raceFeatures, featFeatures,
   } = useMemo(() => {
+    const chosenFeatures = info?.chosenFeatures ?? {}
     const classData  = progression?.[classIndex]
     const levelsUpTo = classData?.levels?.filter(l => l.level <= level) ?? []
 
@@ -375,9 +375,9 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain }) {
     }
   }, [
     progression, classIndex, level,
-    info?.multiclasses, info?.feats,
+    info?.multiclasses, info?.feats, info?.race, info?.draconicAncestry, info?.chosenFeatures,
     selectedRace, selectedSubrace, allFeats,
-    chosenFeatures, classChoices,
+    classChoices,
   ])
 
   const totalActions  = classActions.length + classBonusActions.length + classReactions.length + raceActions.length
