@@ -463,6 +463,27 @@ export function useCharacter(initialCharacter = null) {
   }, [setCharacter])
 
   /**
+   * Liga/desliga o estado de Fúria (Bárbaro, PHB p.48). O consumo do uso
+   * é feito separadamente via spendFeatureUse — esta ação só persiste o
+   * flag visual/mecânico no combat state.
+   */
+  const setRageActive = useCallback(active => {
+    setCharacter(prev => ({ ...prev, combat: { ...prev.combat, rageActive: !!active } }))
+  }, [setCharacter])
+
+  /**
+   * Atualiza o estado de Forma Selvagem (Druida, PHB p.66).
+   * Estrutura: { active, beastName, currentHp, maxHp }.
+   * Passar null reseta o estado.
+   */
+  const setWildShape = useCallback(wildShape => {
+    setCharacter(prev => ({
+      ...prev,
+      combat: { ...prev.combat, wildShape: wildShape ?? { active: false, beastName: '', currentHp: 0, maxHp: 0 } },
+    }))
+  }, [setCharacter])
+
+  /**
    * Define a magia em concentração (PHB p.203). Passar null/''  encerra.
    * Substituição é intencional: apenas uma magia de concentração por vez.
    */
@@ -514,6 +535,8 @@ export function useCharacter(initialCharacter = null) {
     toggleCondition,
     setInspiration,
     setExhaustion,
+    setRageActive,
+    setWildShape,
   }), [
     character, setCharacter,
     updateInfo, updateAttribute, updateCombat, updateTraits,
@@ -526,6 +549,6 @@ export function useCharacter(initialCharacter = null) {
     toggleLanguage,
     addAttack, removeAttack, updateAttack,
     setClassFeatureUses, spendFeatureUse, regainFeatureUse,
-    updateDeathSaves, toggleCondition, setInspiration, setExhaustion,
+    updateDeathSaves, toggleCondition, setInspiration, setExhaustion, setRageActive, setWildShape,
   ])
 }

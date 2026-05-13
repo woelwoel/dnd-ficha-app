@@ -11,6 +11,7 @@ import { FeaturesTab } from './FeaturesTab'
 import { AttributesSection } from './AttributesSection'
 import { RestActions } from './RestActions'
 import { Attacks } from './Attacks'
+import { CombatClassActions } from './CombatClassActions'
 import { defaultClassFeatureUses, mergeFeatureUses } from '../../domain/rules'
 
 /* ── Wrapper de painel de aba ─────────────────────────────── */
@@ -90,7 +91,7 @@ export function SheetContent({
     toggleLanguage,
     addAttack, removeAttack, updateAttack,
     spendFeatureUse, regainFeatureUse,
-    updateDeathSaves, toggleCondition, setInspiration, setExhaustion,
+    updateDeathSaves, toggleCondition, setInspiration, setExhaustion, setRageActive, setWildShape,
   } = updaters
 
   const {
@@ -194,6 +195,16 @@ export function SheetContent({
             onAdd={addAttack}
             onRemove={removeAttack}
             onUpdate={updateAttack}
+          />
+
+          {/* ④.5  Recursos de combate específicos de classe */}
+          <CombatClassActions
+            character={character}
+            onToggleRage={setRageActive}
+            onSpendFeatureUse={spendFeatureUse}
+            onRegainFeatureUse={regainFeatureUse}
+            onToggleSlot={toggleSlot}
+            onSetWildShape={setWildShape}
           />
 
           {/* ⑤  Descansos */}
