@@ -161,3 +161,69 @@
 }
 .marginalLeft { left: -1.5rem; }
 .marginalRight { right: -1.5rem; }
+
+/* Ink field */
+.inkField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0.75rem 0;
+}
+.inkLabel {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-200);
+}
+.inkInput {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-ink-500);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-ink-200);
+  padding: 0.35rem 0.25rem;
+  outline: none;
+  transition: border-color 120ms, box-shadow 120ms;
+}
+.inkInput:focus {
+  border-bottom-color: var(--color-ink-500);
+  box-shadow: 0 2px 0 -1px var(--color-ink-500);
+}
+.inkInput::placeholder {
+  color: var(--color-ink-50);
+  font-style: italic;
+}
+
+/* Tome button */
+.tomeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: transparent;
+  border: none;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-500);
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+  position: relative;
+}
+.tomeBtn::after {
+  content: '';
+  position: absolute;
+  left: 10%; right: 10%; bottom: 0;
+  border-top: 1px solid var(--color-ink-500);
+  box-shadow: 0 3px 0 -2px var(--color-ink-500);
+  transition: left 160ms, right 160ms;
+}
+.tomeBtn:hover::after { left: 0; right: 0; }
+.tomeBtn:disabled { color: var(--color-ink-50); cursor: not-allowed; }
+.tomeBtn:disabled::after {
+  border-top-color: var(--color-ink-50);
+  box-shadow: 0 3px 0 -2px var(--color-ink-50);
+}
+
+.tomeBtnPrimary { font-weight: 600; }
+.tomeBtnDanger  { font-style: italic; }
