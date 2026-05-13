@@ -175,7 +175,7 @@ html, body, #root {
   background-color: var(--color-parchment-200);
   color: var(--color-ink-500);
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.55;
 }
 
@@ -258,10 +258,10 @@ body {
 
 /* Fonte base menor em telas pequenas */
 @media (max-width: 375px) {
-  html { font-size: 15px; }
+  html { font-size: 16.5px; }
 }
 @media (min-width: 376px) and (max-width: 639px) {
-  html { font-size: 15.5px; }
+  html { font-size: 17px; }
 }
 
 /* ── Impressão / Exportar PDF (mantém infraestrutura existente da PrintView) ── */
