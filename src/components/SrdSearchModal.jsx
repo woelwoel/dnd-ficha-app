@@ -39,14 +39,15 @@ export function SrdSearchModal({ isOpen, onClose, title, items, onSelect, render
 
   return (
     <div
-      className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-ink-700/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       onClick={e => e.target === e.currentTarget && onClose()}
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="bg-gray-800 border border-gray-600 rounded-xl w-full max-w-lg max-h-[80vh] flex flex-col shadow-xl"
+        className="bg-parchment-50 border-2 border-parchment-600 rounded-sm w-full max-w-lg max-h-[80vh] flex flex-col"
+        style={{ boxShadow: 'var(--shadow-parchment-lg)' }}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700">

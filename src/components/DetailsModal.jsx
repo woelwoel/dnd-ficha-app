@@ -24,43 +24,45 @@ export function DetailsModal({ isOpen, onClose, children, title }) {
       onClick={onClose}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/85 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-ink-700/70 backdrop-blur-sm" />
 
-      {/* Modal */}
+      {/* Modal — pergaminho desenrolado */}
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="details-modal-title"
-        className="relative z-10 bg-gray-900 border border-amber-800 rounded-xl shadow-2xl shadow-black/60 w-full max-w-2xl max-h-[85vh] flex flex-col"
+        className="relative z-10 bg-parchment-50 border-2 border-parchment-600 rounded-sm w-full max-w-2xl max-h-[85vh] flex flex-col"
         onClick={e => e.stopPropagation()}
-        style={{ boxShadow: '0 0 0 1px rgba(212,168,67,0.12), 0 25px 60px rgba(0,0,0,0.7)' }}
+        style={{ boxShadow: 'var(--shadow-parchment-lg)' }}
       >
-        {/* Linha ornamental superior */}
-        <div className="h-0.5 w-full rounded-t-xl bg-gradient-to-r from-transparent via-amber-600 to-transparent" />
+        {/* Filete duplo superior */}
+        <div className="h-1 w-full bg-ink-300" />
+        <div className="h-px w-full bg-ink-300 mt-0.5" />
 
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-700">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-parchment-600 bg-parchment-100">
           <div className="flex items-center gap-2">
-            <span className="text-amber-700 text-sm" aria-hidden="true">✦</span>
-            <h2 id="details-modal-title" className="text-lg font-bold text-amber-400 font-display tracking-wide">{title}</h2>
+            <span className="text-gilt-500 text-sm" aria-hidden="true">✦</span>
+            <h2 id="details-modal-title" className="text-lg font-display text-ink-500 tracking-wide uppercase">{title}</h2>
           </div>
           <button
             ref={closeRef}
             onClick={onClose}
             aria-label="Fechar"
-            className="text-gray-500 hover:text-amber-400 transition-colors text-xl leading-none w-7 h-7 flex items-center justify-center rounded hover:bg-gray-800"
+            className="text-ink-200 hover:text-ink-500 transition-colors text-xl leading-none w-7 h-7 flex items-center justify-center rounded hover:bg-parchment-200"
           >
             ✕
           </button>
         </div>
 
         {/* Scrollable content */}
-        <div className="overflow-y-auto flex-1 px-5 py-4 space-y-4">
+        <div className="overflow-y-auto flex-1 px-5 py-4 space-y-4 text-ink-500">
           {children}
         </div>
 
-        {/* Linha ornamental inferior */}
-        <div className="h-0.5 w-full rounded-b-xl bg-gradient-to-r from-transparent via-amber-800 to-transparent" />
+        {/* Filete duplo inferior */}
+        <div className="h-px w-full bg-ink-300 mb-0.5" />
+        <div className="h-1 w-full bg-ink-300" />
       </div>
     </div>
   )
