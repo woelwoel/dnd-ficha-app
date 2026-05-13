@@ -5,7 +5,7 @@ import { getSpellcastingRules } from '../../utils/spellcasting'
 import { useClassSpells } from '../../hooks/useClassSpells'
 import { SpellDetailModal } from '../SpellDetailModal'
 
-export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onToggleSlot, onSetConcentration }) {
+export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onTogglePrepared, onToggleSlot, onSetConcentration }) {
   const [activeTab, setActiveTab] = useState(0)
   const [search, setSearch] = useState('')
   const [pickerOpen, setPickerOpen] = useState(false)
@@ -32,13 +32,22 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
     () => getSpellcastingRules(classIndex, level, attributes, levelData),
     [classIndex, level, attributes, levelData]
   )
-  const { type: castType, spellsLimit, cantripsLimit, spellsLabel } = rules
+  const { type: castType, spellsLimit, cantripsLimit, spellsLabel, spellbookSize, hasSpellbook } = rules
 
   const usedSlots   = character.spellcasting.usedSlots || {}
   const mySpells    = character.spellcasting.spells || []
   const myCantrips  = mySpells.filter(s => s.level === 0)
   const myLeveled   = mySpells.filter(s => s.level > 0)
+  // Conta como "preparada" qualquer magia leveled cujo flag não seja false
+  // (undefined ou true = preparada — assim toda magia antiga já é castável)
+  const myPrepared  = myLeveled.filter(s => s.prepared !== false)
   const concentrating = character.combat?.concentrating ?? null
+
+  const isPrepared    = castType === 'prepared'
+  const isMagoStyle   = isPrepared && hasSpellbook      // só o Mago tem grimório
+  // Limite que o picker respeita: grimório p/ Mago, preparedas p/ C/D/P, conhecidas p/ known
+  const pickerLimit   = isMagoStyle ? spellbookSize : spellsLimit
+  const pickerLabel   = isMagoStyle ? 'Grimório' : spellsLabel
 
   // Picker filtrado
   const filteredPicker = useMemo(() => {
@@ -56,6 +65,12 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
 
   function addSpell(spell) {
     if (mySpellIds.has(spell.index)) return
+    // Mago: adicionar = escrever no grimório (não prepara automaticamente).
+    // Clérigo/Druida/Paladino: adicionar = preparar diretamente.
+    // Truques: o flag é ignorado, mas evitamos defini-lo.
+    const preparedFlag = spell.level === 0
+      ? undefined
+      : (isMagoStyle ? false : true)
     onAddSpell({
       index: spell.index,
       name: spell.name,
@@ -70,6 +85,7 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
       higherLevel: spell.higher_level,
       ritual: spell.ritual || false,
       source: spell.source || 'PHB-PT',
+      ...(preparedFlag !== undefined ? { prepared: preparedFlag } : {}),
     })
   }
 
@@ -118,16 +134,34 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
                 </span>
               </span>
             )}
-            {spellsLimit != null && (
+            {/* Mago: dois contadores (Grimório + Preparadas) */}
+            {isMagoStyle && spellbookSize != null && (
+              <span>
+                Grimório: <span className={myLeveled.length > spellbookSize ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
+                  {myLeveled.length}/{spellbookSize}
+                </span>
+              </span>
+            )}
+            {isPrepared && spellsLimit != null && (
+              <span>
+                Preparadas: <span className={myPrepared.length > spellsLimit ? 'text-red-400 font-bold' : myPrepared.length === spellsLimit ? 'text-green-400 font-semibold' : 'text-amber-300 font-semibold'}>
+                  {myPrepared.length}/{spellsLimit}
+                </span>
+              </span>
+            )}
+            {/* Conhecidas (bardo/feiticeiro/bruxo/patrulheiro) */}
+            {!isPrepared && spellsLimit != null && (
               <span>
                 {spellsLabel}: <span className={myLeveled.length > spellsLimit ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
                   {myLeveled.length}/{spellsLimit}
                 </span>
               </span>
             )}
-            {castType === 'prepared' && (
+            {isPrepared && (
               <span className="text-gray-600 italic">
-                Escolha entre a lista da classe ({rules.ability.toUpperCase()} mod + nível)
+                {isMagoStyle
+                  ? 'Adicione magias ao grimório (custo: 50 po/nível, 2h por nível). Prepare ao terminar descanso longo.'
+                  : `Preparadas = ${rules.ability.toUpperCase()} mod + nível · troque ao terminar descanso longo`}
               </span>
             )}
           </div>
@@ -194,6 +228,9 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
                 <SpellRow
                   key={spell.id}
                   spell={spell}
+                  isPrepared={spell.level === 0 || spell.prepared !== false}
+                  showPreparedToggle={isPrepared && spell.level > 0 && !!onTogglePrepared}
+                  onTogglePrepared={() => onTogglePrepared?.(spell.id)}
                   isConcentrating={concentrating?.spellIndex === spell.index}
                   canConcentrate={!!spell.concentration && !!onSetConcentration}
                   onToggleConcentration={() =>
@@ -216,7 +253,13 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
           onClick={() => setPickerOpen(!pickerOpen)}
           className="w-full py-2.5 rounded-lg border-2 border-dashed border-gray-600 hover:border-amber-600 text-gray-500 hover:text-amber-400 text-sm font-medium transition-colors"
         >
-          {pickerOpen ? '− Fechar catálogo' : '+ Adicionar magia'}
+          {pickerOpen
+            ? '− Fechar catálogo'
+            : isMagoStyle
+              ? '+ Adicionar ao grimório'
+              : isPrepared
+                ? '+ Preparar magia'
+                : '+ Adicionar magia'}
         </button>
       )}
 
@@ -234,8 +277,8 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
           onDetail={setDetailSpell}
           classIndex={classIndex}
           cantripsLimit={cantripsLimit}
-          spellsLimit={spellsLimit}
-          spellsLabel={spellsLabel}
+          spellsLimit={pickerLimit}
+          spellsLabel={pickerLabel}
           myCantripsCount={myCantrips.length}
           myLeveledCount={myLeveled.length}
         />
@@ -247,10 +290,25 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   )
 }
 
-function SpellRow({ spell, onDetail, onRemove, isConcentrating, canConcentrate, onToggleConcentration }) {
+function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedToggle, onTogglePrepared, isConcentrating, canConcentrate, onToggleConcentration }) {
   const schoolAbbr = SCHOOL_ABBR[(spell.school || '').toLowerCase()] || (spell.school || '').slice(0, 3)
+  const dimmed = showPreparedToggle && !isPrepared
   return (
-    <div className={`bg-gray-900 rounded-lg flex items-center gap-2 px-3 py-2 hover:bg-gray-800 transition-colors ${isConcentrating ? 'ring-1 ring-blue-500/60' : ''}`}>
+    <div className={`bg-gray-900 rounded-lg flex items-center gap-2 px-3 py-2 hover:bg-gray-800 transition-colors ${isConcentrating ? 'ring-1 ring-blue-500/60' : ''} ${dimmed ? 'opacity-50' : ''}`}>
+      {showPreparedToggle && (
+        <button
+          onClick={onTogglePrepared}
+          title={isPrepared ? 'Despreparar (não conjurável)' : 'Preparar (conjurável hoje)'}
+          aria-label={isPrepared ? 'Despreparar magia' : 'Preparar magia'}
+          className={`flex-shrink-0 w-6 h-6 rounded flex items-center justify-center text-base transition-colors ${
+            isPrepared
+              ? 'text-amber-400 hover:text-amber-300 hover:bg-amber-900/30'
+              : 'text-gray-600 hover:text-amber-400 hover:bg-gray-800'
+          }`}
+        >
+          {isPrepared ? '★' : '☆'}
+        </button>
+      )}
       <button
         onClick={onDetail}
         className="text-sm font-medium text-white flex-1 text-left hover:text-amber-300 transition-colors"

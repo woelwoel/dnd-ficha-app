@@ -85,7 +85,7 @@ export function SheetContent({
     updateInfo, updateTraits, updateAttribute, updateCombat,
     toggleSkillProficiency, toggleExpertiseSkill,
     updateCurrency, addItem, removeItem, updateItem,
-    updateSpellcasting, addSpell, removeSpell, toggleSlot,
+    updateSpellcasting, addSpell, removeSpell, togglePrepared, toggleSlot,
     setConcentration,
     toggleLanguage,
     addAttack, removeAttack, updateAttack,
@@ -216,6 +216,7 @@ export function SheetContent({
           onUpdateSpellcasting={updateSpellcasting}
           onAddSpell={addSpell}
           onRemoveSpell={removeSpell}
+          onTogglePrepared={togglePrepared}
           onToggleSlot={toggleSlot}
           onSetConcentration={setConcentration}
         />

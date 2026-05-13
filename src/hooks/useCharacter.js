@@ -295,6 +295,25 @@ export function useCharacter(initialCharacter = null) {
   }, [setCharacter])
 
   /**
+   * Alterna o flag `prepared` de uma magia (Mago/Clérigo/Druida/Paladino).
+   * Truques são sempre conjuráveis — o toggle só faz sentido em magias com
+   * nível ≥ 1. PHB p.114 (Mago) / p.58 (Clérigo) etc.
+   */
+  const togglePrepared = useCallback(spellId => {
+    setCharacter(prev => ({
+      ...prev,
+      spellcasting: {
+        ...prev.spellcasting,
+        spells: prev.spellcasting.spells.map(s =>
+          s.id === spellId && s.level > 0
+            ? { ...s, prepared: s.prepared === false ? true : false }
+            : s
+        ),
+      },
+    }))
+  }, [setCharacter])
+
+  /**
    * Define `usedSlots[level]`. Aceita `maxSlots` opcional para clampar
    * automaticamente (`Math.min(max, value)`), evitando estado inválido.
    */
@@ -475,6 +494,7 @@ export function useCharacter(initialCharacter = null) {
     updateSpellcasting,
     addSpell,
     removeSpell,
+    togglePrepared,
     toggleSlot,
     spendSlot,
     regainSlot,
@@ -499,7 +519,7 @@ export function useCharacter(initialCharacter = null) {
     updateInfo, updateAttribute, updateCombat, updateTraits,
     toggleSkillProficiency, toggleExpertiseSkill,
     updateCurrency, addItem, removeItem, updateItem,
-    updateSpellcasting, addSpell, removeSpell,
+    updateSpellcasting, addSpell, removeSpell, togglePrepared,
     toggleSlot, spendSlot, regainSlot, restoreAllSlots,
     spendPactSlot, regainPactSlot,
     setConcentration,
