@@ -69,6 +69,10 @@ export function useCharacterCalculations(character, classData = null, classDataM
       mods,
       attributes,
       classIndex,
+      classes: [
+        { class: classIndex, level },
+        ...mcs,
+      ],
       armor,
       hasShield,
       armorProficiencies: armorProfs ?? [],

@@ -229,6 +229,10 @@ export function useCharacter(initialCharacter = null) {
           mods,
           attributes: attrs,
           classIndex: prev.info?.class ?? '',
+          classes: [
+            { class: prev.info?.class, level: prev.info?.level ?? 0 },
+            ...(prev.info?.multiclasses ?? []),
+          ],
           armor,
           hasShield,
           armorProficiencies: prev.proficiencies?.armor ?? [],

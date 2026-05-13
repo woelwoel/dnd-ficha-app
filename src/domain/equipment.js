@@ -125,6 +125,7 @@ export function calculateArmorClass({
   mods,
   attributes = null,
   classIndex,
+  classes = null,            // [{ class, level }] — opcional, prioritário em multiclasse
   armor,
   hasShield,
   armorProficiencies = [],
@@ -135,12 +136,21 @@ export function calculateArmorClass({
   const warnings = []
   let speedPenalty = 0
 
+  // Conjunto de classes que o personagem TEM (primária + multi).
+  // Em multiclasse, basta TER a classe para herdar Defesa Sem Armadura
+  // — não importa qual é a primária (PHB p.48 Bárbaro / p.78 Monge).
+  const classSet = new Set(
+    classes && classes.length
+      ? classes.map(c => c?.class).filter(Boolean)
+      : [classIndex].filter(Boolean)
+  )
+
   let base
   if (!armor) {
-    if (classIndex === 'barbaro') {
+    if (classSet.has('barbaro')) {
       // Bárbaro mantém Unarmored Defense mesmo com escudo (PHB p.48).
       base = 10 + dexMod + conMod
-    } else if (classIndex === 'monge' && !hasShield) {
+    } else if (classSet.has('monge') && !hasShield) {
       base = 10 + dexMod + wisMod
     } else {
       base = 10 + dexMod

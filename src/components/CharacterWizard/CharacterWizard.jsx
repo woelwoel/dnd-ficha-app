@@ -448,9 +448,15 @@ function buildCharacter(draft, classData, classEquipment) {
 
   const dexMod = getModifier(attrs.dex ?? 10)
   const maxHp  = calculateMaxHp(classData, draft.level, attrs.con ?? 10)
+  // Defesa Sem Armadura (PHB p.48 Bárbaro / p.78 Monge): basta TER a classe,
+  // não importa se é primária ou multiclasse.
+  const allClasses = new Set([
+    draft.class,
+    ...((draft.multiclasses ?? []).map(mc => mc.class).filter(Boolean)),
+  ])
   let unarmoredAC = 10 + dexMod
-  if (draft.class === 'barbaro') unarmoredAC += getModifier(attrs.con ?? 10)
-  if (draft.class === 'monge')   unarmoredAC += getModifier(attrs.wis ?? 10)
+  if (allClasses.has('barbaro')) unarmoredAC += getModifier(attrs.con ?? 10)
+  else if (allClasses.has('monge')) unarmoredAC += getModifier(attrs.wis ?? 10)
 
   return {
     id: generateId(),

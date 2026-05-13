@@ -1,11 +1,11 @@
 import { useState, useMemo } from 'react'
 import { ABILITY_SCORES, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus, getProficiencyBonus } from '../../utils/calculations'
 import { abbrOfKey } from '../../domain/attributes'
-import { getSpellcastingRules } from '../../utils/spellcasting'
+import { getSpellcastingRules, getWarlockPactSlots, getClassSpellMath } from '../../utils/spellcasting'
 import { useClassSpells } from '../../hooks/useClassSpells'
 import { SpellDetailModal } from '../SpellDetailModal'
 
-export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onTogglePrepared, onToggleSlot, onSetConcentration }) {
+export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onTogglePrepared, onToggleSlot, onSetConcentration, onSpendPactSlot, onRegainPactSlot }) {
   const [activeTab, setActiveTab] = useState(0)
   const [search, setSearch] = useState('')
   const [pickerOpen, setPickerOpen] = useState(false)
@@ -48,6 +48,22 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   // Limite que o picker respeita: grimório p/ Mago, preparedas p/ C/D/P, conhecidas p/ known
   const pickerLimit   = isMagoStyle ? spellbookSize : spellsLimit
   const pickerLabel   = isMagoStyle ? 'Grimório' : spellsLabel
+
+  // Pact Magic do Bruxo (PHB p.107) — slots separados, recarregam em descanso curto.
+  // Soma nível de bruxo primário + multiclasse.
+  const warlockLevel = (classIndex === 'bruxo' ? level : 0)
+    + mcs.filter(m => m?.class === 'bruxo').reduce((s, m) => s + (m.level ?? 0), 0)
+  const pactSlots = warlockLevel > 0 ? getWarlockPactSlots(warlockLevel) : null
+  const pactUsed  = character.spellcasting?.pactSlotsUsed ?? 0
+
+  // Matemática mágica por classe (multiclasse híbrida — PHB p.164)
+  const spellcastingClasses = [classIndex, ...mcs.map(m => m.class)]
+    .filter(c => c && getSpellcastingRules(c, 1, attributes, null).type !== 'none')
+  const spellMathByClass = spellcastingClasses.length > 1
+    ? Object.fromEntries(
+        spellcastingClasses.map(cls => [cls, getClassSpellMath(cls, profBonus, attributes)])
+      )
+    : null
 
   // Picker filtrado
   const filteredPicker = useMemo(() => {
@@ -204,7 +220,73 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
           </div>
         )}
 
-        {classIndex && !isSpellcaster && (
+        {/* ── Pact Magic (Bruxo) — slots separados, recarregam em descanso curto */}
+        {pactSlots && (
+          <div className="mt-3 pt-3 border-t border-gray-700">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-purple-300 uppercase tracking-wide font-semibold">
+                Pact Magic <span className="text-gray-500 font-normal normal-case">(Bruxo Nv {warlockLevel} — desc. curto)</span>
+              </span>
+              <button
+                onClick={() => onRegainPactSlot?.()}
+                className="text-xs text-purple-400 hover:text-purple-300"
+                title="Recuperar todos os Pact Slots"
+              >
+                Restaurar
+              </button>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-gray-400 w-14">Nv {pactSlots.slotLevel}</span>
+              <div className="flex gap-1">
+                {Array.from({ length: pactSlots.qty }, (_, i) => {
+                  const isUsed = i < pactUsed
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => isUsed
+                        ? onRegainPactSlot?.()
+                        : onSpendPactSlot?.(pactSlots.qty)
+                      }
+                      className={`w-5 h-5 rounded-full border-2 transition-colors ${
+                        isUsed ? 'bg-gray-700 border-gray-600' : 'bg-purple-500 border-purple-400'
+                      }`}
+                      title={isUsed ? 'Recuperar Pact Slot' : 'Gastar Pact Slot'}
+                    />
+                  )
+                })}
+              </div>
+              <span className="text-xs text-gray-500">{pactSlots.qty - pactUsed}/{pactSlots.qty}</span>
+              <span className="text-[10px] text-purple-400/70 italic ml-auto">
+                Sempre no nível mais alto disponível
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* ── Matemática mágica por classe — multiclasse híbrida ── */}
+        {spellMathByClass && (
+          <div className="mt-3 pt-3 border-t border-gray-700">
+            <p className="text-xs text-amber-300 uppercase tracking-wide font-semibold mb-2">
+              CD/Ataque por classe (multiclasse — PHB p.164)
+            </p>
+            <div className="space-y-1">
+              {Object.entries(spellMathByClass).map(([cls, math]) => (
+                <div key={cls} className="flex items-center gap-3 text-xs">
+                  <span className="text-gray-300 capitalize w-20">{cls}</span>
+                  <span className="text-gray-500">
+                    CD <span className="text-amber-300 font-bold">{math.save}</span>
+                  </span>
+                  <span className="text-gray-500">
+                    Ataque <span className="text-amber-300 font-bold">{formatModifier(math.attack)}</span>
+                  </span>
+                  <span className="text-gray-600 uppercase">({math.ability})</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {classIndex && !isSpellcaster && !pactSlots && (
           <p className="text-xs text-gray-500">{classData?.name ?? classIndex} não possui conjuração.</p>
         )}
         {!classIndex && (

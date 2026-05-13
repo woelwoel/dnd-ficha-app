@@ -84,7 +84,8 @@ export function calculateMaxHp(classData, level, conScore) {
  */
 export function calculateInitiative(dexScore, { feats = [], miscBonus = 0 } = {}) {
   let bonus = 0
-  if (hasFeat(feats, 'alert')) bonus += 5  // PHB p.165
+  // PHB p.165 — Alerta (PT-BR) / Alert (EN)
+  if (hasFeat(feats, ['alerta', 'alert'])) bonus += 5
   return getModifier(dexScore) + bonus + miscBonus
 }
 
@@ -102,21 +103,30 @@ export function calculateInitiative(dexScore, { feats = [], miscBonus = 0 } = {}
  */
 export function calculatePassivePerception(wisScore, profBonus, isProficient, isExpert = false, { feats = [] } = {}) {
   const wisMod = getModifier(wisScore)
-  const observant = hasFeat(feats, 'observant') ? 5 : 0
+  // PHB p.169 — Observador (PT-BR) / Observant (EN)
+  const observant = hasFeat(feats, ['observador', 'observant']) ? 5 : 0
   return 10 + wisMod
     + (isProficient ? profBonus : 0)
     + (isExpert ? profBonus : 0)
     + observant
 }
 
-/** Helper interno: detecta feat por index ou nome (case-insensitive). */
-function hasFeat(feats, key) {
+/**
+ * Helper interno: detecta feat por uma OU mais chaves (index ou nome
+ * exato, case-insensitive). Aceita string ou array de strings — útil
+ * para feats com ambos os nomes PT-BR e EN.
+ *
+ * Compara apenas igualdade exata (não substring) para evitar falsos
+ * positivos do tipo 'alert' casando com 'alerta'.
+ */
+function hasFeat(feats, keys) {
   if (!Array.isArray(feats)) return false
-  const norm = String(key).toLowerCase()
+  const keyList = (Array.isArray(keys) ? keys : [keys])
+    .map(k => String(k).toLowerCase())
   return feats.some(f => {
     const idx = String(f?.index ?? '').toLowerCase()
     const nm  = String(f?.name  ?? '').toLowerCase()
-    return idx === norm || nm.includes(norm)
+    return keyList.some(k => idx === k || nm === k)
   })
 }
 

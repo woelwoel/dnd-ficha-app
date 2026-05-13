@@ -87,6 +87,7 @@ export function SheetContent({
     toggleSkillProficiency, toggleExpertiseSkill,
     updateCurrency, addItem, removeItem, updateItem,
     updateSpellcasting, addSpell, removeSpell, togglePrepared, toggleSlot,
+    spendPactSlot, regainPactSlot,
     setConcentration,
     toggleLanguage,
     addAttack, removeAttack, updateAttack,
@@ -229,6 +230,8 @@ export function SheetContent({
           onRemoveSpell={removeSpell}
           onTogglePrepared={togglePrepared}
           onToggleSlot={toggleSlot}
+          onSpendPactSlot={spendPactSlot}
+          onRegainPactSlot={regainPactSlot}
           onSetConcentration={setConcentration}
         />
       </TabPanel>
