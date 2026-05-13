@@ -2,22 +2,20 @@
 import { memo, useCallback, useMemo, useRef } from 'react'
 
 export const TABS = [
-  { id: 'ficha',      label: 'Ficha',      icon: '◆' },  // stats + perícias + combate
-  { id: 'magias',     label: 'Magias',     icon: '✧' },  // slots e lista de magias
-  { id: 'acoes',      label: 'Habilidades/Ações', icon: '⊛' },  // ações + habilidades de classe/raça
-  { id: 'inventario', label: 'Inventário', icon: '◈' },  // itens e moedas
-  { id: 'progressao', label: 'Progressão', icon: '▲' },  // evolução de nível
-  { id: 'notas',      label: 'Notas',      icon: '≡' },  // anotações e antecedente
+  { id: 'ficha',      label: 'Ficha',      icon: '◆' },
+  { id: 'magias',     label: 'Magias',     icon: '✧' },
+  { id: 'acoes',      label: 'Habilidades/Ações', icon: '⊛' },
+  { id: 'inventario', label: 'Inventário', icon: '◈' },
+  { id: 'progressao', label: 'Progressão', icon: '▲' },
+  { id: 'notas',      label: 'Notas',      icon: '≡' },
 ]
 
 /**
- * Navegação responsiva da ficha.
+ * Navegação como "marcadores de livro" — sépia, fonte serifada display,
+ * indicador ornamental para aba ativa.
  *
  * Mobile  → barra horizontal scrollável (topo)
- * Desktop → sidebar vertical (esquerda)
- *
- * Acessibilidade: role="tablist" / role="tab" / aria-selected / aria-controls.
- * Teclado: ←/→ (mobile) ou ↑/↓ (desktop) + Home/End.
+ * Desktop → coluna lateral (esquerda) imitando guias de pergaminho
  */
 function SheetTabsBase({ activeTab, onChange }) {
   const btnRefs = useRef({})
@@ -63,14 +61,14 @@ function SheetTabsBase({ activeTab, onChange }) {
       aria-label="Seções da ficha"
       onKeyDown={handleKeyDown}
       className={[
-        /* base */
-        'flex shrink-0 bg-gray-900/50',
-        /* mobile: linha horizontal */
-        'flex-row overflow-x-auto scrollbar-none border-b border-gray-700/70',
-        /* desktop: coluna lateral */
+        'flex shrink-0',
+        /* mobile: linha horizontal de guias */
+        'flex-row overflow-x-auto scrollbar-none',
+        'border-b border-parchment-600 bg-parchment-300',
+        /* desktop: coluna lateral, guias de pergaminho */
         'lg:flex-col lg:overflow-x-hidden lg:overflow-y-auto',
-        'lg:w-44 lg:border-b-0 lg:border-r lg:border-gray-700/70',
-        'lg:py-3 lg:gap-px',
+        'lg:w-48 lg:border-b-0 lg:border-r-2 lg:border-parchment-600',
+        'lg:bg-parchment-100 lg:py-4 lg:gap-1',
       ].join(' ')}
     >
       {TABS.map(tab => {
@@ -88,44 +86,29 @@ function SheetTabsBase({ activeTab, onChange }) {
             onClick={() => onChange(tab.id)}
             className={[
               'relative flex items-center shrink-0',
-              /* mobile */
-              'gap-1.5 px-3 py-2.5 text-xs whitespace-nowrap',
-              /* desktop */
-              'lg:gap-3 lg:px-5 lg:py-3 lg:text-sm lg:whitespace-normal lg:w-full',
-              'transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600',
+              'gap-2 px-4 py-2.5 whitespace-nowrap',
+              'lg:gap-3 lg:px-5 lg:py-3 lg:w-full',
+              'font-display tracking-wider',
+              'transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-200',
               isActive
-                ? 'text-amber-300'
-                : 'text-gray-500 hover:text-gray-200 hover:bg-gray-800/50',
+                ? 'text-ink-500 bg-parchment-50 border border-parchment-600 lg:border-r-0 lg:border-l-4 lg:border-l-ink-500 -mb-px lg:-mr-0.5'
+                : 'text-ink-200 hover:text-ink-500 hover:bg-parchment-200 border border-transparent',
             ].join(' ')}
           >
-            {/* Indicador mobile: barra embaixo */}
-            {isActive && (
-              <span
-                className="lg:hidden absolute bottom-0 inset-x-1 h-0.5 bg-gradient-to-r from-red-800 via-red-500 to-amber-400"
-                aria-hidden
-              />
-            )}
-            {/* Indicador desktop: barra à esquerda + fundo */}
-            {isActive && (
-              <>
-                <span
-                  className="hidden lg:block absolute left-0 inset-y-0 w-0.5 bg-gradient-to-b from-amber-400 via-red-500 to-red-900"
-                  aria-hidden
-                />
-                <span
-                  className="hidden lg:block absolute inset-0 bg-red-950/50"
-                  aria-hidden
-                />
-              </>
-            )}
-
-            {/* Conteúdo do botão */}
-            <span className="relative text-sm lg:text-base" aria-hidden>
+            <span className="text-base" aria-hidden>
               {tab.icon}
             </span>
-            <span className="relative font-display tracking-wide">
+            <span className="text-sm">
               {tab.label}
             </span>
+            {isActive && (
+              <span
+                className="hidden lg:inline ml-auto text-gilt-500 text-xs"
+                aria-hidden
+              >
+                ❧
+              </span>
+            )}
           </button>
         )
       })}
@@ -141,20 +124,18 @@ export const NavBlockedBanner = memo(function NavBlockedBanner({ onReview, onDis
   return (
     <div
       role="alert"
-      className="flex items-center justify-between gap-3 bg-red-900/30 border border-red-700/60 rounded-lg px-4 py-3 text-sm"
+      className="flex items-center justify-between gap-3 bg-parchment-50 border border-ink-200 rounded-lg px-4 py-3 text-sm"
     >
-      <div className="flex items-center gap-2 text-red-300">
-        <svg aria-hidden className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-        </svg>
+      <div className="flex items-center gap-2 ink-italic">
+        <span aria-hidden className="text-base">◆</span>
         Corrija os erros antes de avançar.
       </div>
       <div className="flex items-center gap-2">
-        <button onClick={onReview} className="text-xs text-red-300 hover:text-white underline whitespace-nowrap">
+        <button onClick={onReview} className="text-xs ink-italic hover:text-ink-500 underline whitespace-nowrap">
           Revisar
         </button>
         {onDismiss && (
-          <button onClick={onDismiss} className="text-red-400 hover:text-white text-lg leading-none" aria-label="Fechar">
+          <button onClick={onDismiss} className="text-ink-200 hover:text-ink-500 text-lg leading-none" aria-label="Fechar">
             ✕
           </button>
         )}
@@ -165,9 +146,9 @@ export const NavBlockedBanner = memo(function NavBlockedBanner({ onReview, onDis
 
 export const ImportErrorBanner = memo(function ImportErrorBanner({ message, onDismiss }) {
   return (
-    <div role="alert" className="flex items-center justify-between gap-3 bg-red-900/30 border border-red-700/60 rounded-lg px-4 py-3 text-sm">
-      <span className="text-red-300">{message}</span>
-      <button onClick={onDismiss} className="text-red-400 hover:text-white text-lg leading-none" aria-label="Fechar">✕</button>
+    <div role="alert" className="flex items-center justify-between gap-3 bg-parchment-50 border border-ink-200 rounded-lg px-4 py-3 text-sm">
+      <span className="ink-italic">{message}</span>
+      <button onClick={onDismiss} className="text-ink-200 hover:text-ink-500 text-lg leading-none" aria-label="Fechar">✕</button>
     </div>
   )
 })

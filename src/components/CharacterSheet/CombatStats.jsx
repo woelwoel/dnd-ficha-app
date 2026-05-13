@@ -46,17 +46,17 @@ function DeathSavesTracker({ deathSaves, onUpdate }) {
 
   return (
     <div className="space-y-1.5">
-      <p className="text-xs text-gray-400 font-semibold uppercase tracking-widest">
+      <p className="text-xs text-ink-200 font-semibold uppercase tracking-widest">
         Testes de Morte
       </p>
       {[
-        { key: 'successes', label: 'Sucesso', color: 'bg-green-500 border-green-400' },
-        { key: 'failures',  label: 'Falha',   color: 'bg-red-500 border-red-400'   },
+        { key: 'successes', label: 'Sucesso', color: 'bg-ink-300 border-ink-500' },
+        { key: 'failures',  label: 'Falha',   color: 'bg-ink-600 border-ink-700'   },
       ].map(({ key, label, color }) => {
         const count = key === 'successes' ? successes : failures
         return (
           <div key={key} className="flex items-center gap-2">
-            <span className="text-xs text-gray-500 w-14 shrink-0">{label}</span>
+            <span className="text-xs text-ink-200 w-14 shrink-0">{label}</span>
             <div className="flex gap-1.5">
               {[0, 1, 2].map(i => (
                 <button
@@ -66,7 +66,7 @@ function DeathSavesTracker({ deathSaves, onUpdate }) {
                   className={`w-5 h-5 rounded-full border-2 transition-colors ${
                     i < count
                       ? color
-                      : 'bg-gray-800 border-gray-600 hover:border-gray-400'
+                      : 'bg-parchment-50 border-parchment-600 hover:border-ink-300'
                   }`}
                   aria-label={`${label} ${i + 1}`}
                 />
@@ -90,15 +90,15 @@ function ConditionsTracker({ conditions = [], onToggle }) {
         onClick={() => setExpanded(v => !v)}
         className="flex items-center gap-2 w-full text-left mb-2"
       >
-        <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">
+        <span className="text-xs font-display text-ink-500 uppercase tracking-widest">
           Condições
         </span>
         {active.length > 0 && (
-          <span className="text-[10px] bg-red-900/40 border border-red-700 text-red-300 px-1.5 py-0.5 rounded-full">
+          <span className="text-[10px] bg-parchment-300 border border-ink-300 text-ink-500 px-1.5 py-0.5 rounded-full">
             {active.length} ativa{active.length > 1 ? 's' : ''}
           </span>
         )}
-        <span className="ml-auto text-gray-600 text-xs">{expanded ? '▾' : '▸'}</span>
+        <span className="ml-auto text-ink-200 text-xs">{expanded ? '▾' : '▸'}</span>
       </button>
 
       {/* Chips das condições ativas — sempre visíveis */}
@@ -109,8 +109,8 @@ function ConditionsTracker({ conditions = [], onToggle }) {
               key={c.id}
               onClick={() => onToggle(c.id)}
               title="Remover condição"
-              className="text-[11px] bg-red-900/30 border border-red-700/60 text-red-300
-                px-2 py-0.5 rounded-full hover:bg-red-900/60 transition-colors"
+              className="text-[11px] bg-parchment-300 border border-ink-300 text-ink-500
+                px-2 py-0.5 rounded-full hover:bg-parchment-400 transition-colors"
             >
               {c.icon} {c.label} ×
             </button>
@@ -120,7 +120,7 @@ function ConditionsTracker({ conditions = [], onToggle }) {
 
       {/* Painel expandido com todas as condições */}
       {expanded && (
-        <div className="grid grid-cols-2 gap-1 p-2 bg-gray-900 rounded-lg">
+        <div className="grid grid-cols-2 gap-1 p-2 bg-parchment-50 border border-parchment-600 rounded-lg">
           {CONDITIONS.map(c => {
             const isActive = conditions.includes(c.id)
             return (
@@ -129,13 +129,13 @@ function ConditionsTracker({ conditions = [], onToggle }) {
                 onClick={() => onToggle(c.id)}
                 className={`flex items-center gap-1.5 px-2 py-1.5 rounded text-xs text-left transition-colors ${
                   isActive
-                    ? 'bg-red-900/40 border border-red-700 text-red-300'
-                    : 'bg-gray-800 border border-gray-700 text-gray-400 hover:border-gray-500 hover:text-gray-200'
+                    ? 'bg-ink-500 border border-ink-600 text-parchment-50'
+                    : 'bg-parchment-100 border border-parchment-600 text-ink-200 hover:border-ink-300 hover:text-ink-500'
                 }`}
               >
                 <span>{c.icon}</span>
                 <span>{c.label}</span>
-                {isActive && <span className="ml-auto text-red-500 text-[10px]">✕</span>}
+                {isActive && <span className="ml-auto text-parchment-50 text-[10px]">✕</span>}
               </button>
             )
           })}
@@ -170,8 +170,9 @@ function CombatStatsBase({
   const isDowned = (combat.currentHp ?? 0) <= 0
 
   return (
-    <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 space-y-4">
-      <h3 className="text-sm font-bold text-amber-400 uppercase tracking-widest">Combate</h3>
+    <div className="bg-parchment-100 border border-parchment-600 rounded-lg p-4 space-y-4"
+      style={{ boxShadow: 'var(--shadow-parchment-sm)' }}>
+      <h3 className="text-sm font-display text-ink-500 uppercase tracking-widest border-b border-parchment-600 pb-1">Combate</h3>
 
       {/* Linha 1: CA / Iniciativa / Velocidade */}
       <div className="grid grid-cols-3 gap-2 sm:gap-3">
@@ -213,18 +214,18 @@ function CombatStatsBase({
             title={combat.inspiration ? 'Remover Inspiração' : 'Ganhar Inspiração'}
             className={`w-6 h-6 rounded-full border-2 transition-colors flex items-center justify-center text-sm ${
               combat.inspiration
-                ? 'bg-amber-500 border-amber-400 text-white'
-                : 'bg-gray-800 border-gray-600 hover:border-amber-500 text-gray-600'
+                ? 'bg-ink-500 border-ink-600 text-parchment-50'
+                : 'bg-parchment-50 border-parchment-600 hover:border-ink-300 text-ink-200'
             }`}
           >
             {combat.inspiration ? '✦' : ''}
           </button>
-          <span className="text-xs text-gray-400">Inspiração</span>
+          <span className="text-xs text-ink-200">Inspiração</span>
         </label>
 
         {/* Exaustão */}
         <div className="flex items-center gap-2 flex-1">
-          <span className="text-xs text-gray-400 shrink-0">Exaustão</span>
+          <span className="text-xs text-ink-200 shrink-0">Exaustão</span>
           <div className="flex gap-1">
             {[1, 2, 3, 4, 5, 6].map(lvl => (
               <button
@@ -235,10 +236,8 @@ function CombatStatsBase({
                 title={`Nível ${lvl}: ${EXHAUSTION_EFFECTS[lvl]}`}
                 className={`w-4 h-4 rounded-sm text-[10px] font-bold border transition-colors ${
                   (combat.exhaustion ?? 0) >= lvl
-                    ? lvl >= 5 ? 'bg-red-700 border-red-500 text-white'
-                      : lvl >= 3 ? 'bg-orange-700 border-orange-500 text-white'
-                      : 'bg-yellow-700 border-yellow-500 text-white'
-                    : 'bg-gray-800 border-gray-600 text-gray-600 hover:border-gray-500'
+                    ? 'bg-ink-500 border-ink-600 text-parchment-50'
+                    : 'bg-parchment-50 border-parchment-600 text-ink-200 hover:border-ink-300'
                 }`}
               >
                 {lvl}
@@ -246,7 +245,7 @@ function CombatStatsBase({
             ))}
           </div>
           {(combat.exhaustion ?? 0) > 0 && (
-            <span className="text-[10px] text-orange-400 truncate">
+            <span className="text-[10px] ink-italic truncate">
               {EXHAUSTION_EFFECTS[combat.exhaustion ?? 0]}
             </span>
           )}
@@ -257,13 +256,13 @@ function CombatStatsBase({
       <div className="space-y-2">
         <div>
           <div className="flex justify-between items-center mb-1">
-            <label className="text-xs text-gray-400">Pontos de Vida</label>
-            <span className="text-xs text-gray-500">Máx: {combat.maxHp}</span>
+            <label className="text-xs text-ink-200">Pontos de Vida</label>
+            <span className="text-xs text-ink-200">Máx: {combat.maxHp}</span>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => handleHpChange('currentHp', combat.currentHp - 1)}
-              className="w-8 h-8 rounded bg-red-900 hover:bg-red-700 text-white font-bold text-lg flex items-center justify-center"
+              className="w-8 h-8 rounded bg-parchment-300 hover:bg-parchment-400 border border-parchment-600 text-ink-500 font-bold text-lg flex items-center justify-center"
             >−</button>
             <input
               id="field-currentHp"
@@ -272,26 +271,25 @@ function CombatStatsBase({
               onChange={e => handleHpChange('currentHp', e.target.value)}
               onWheel={e => e.currentTarget.blur()}
               aria-describedby={errors.currentHp ? 'err-currentHp' : undefined}
-              className={`flex-1 text-center bg-gray-700 border rounded px-2 py-1 text-white font-bold text-xl focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+              className={`flex-1 text-center bg-parchment-100 border rounded px-2 py-1 text-ink-500 font-bold text-xl focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                 errors.currentHp
                   ? 'border-red-500 focus:border-red-400'
-                  : 'border-gray-500 focus:border-amber-400'
+                  : 'border-parchment-600 focus:border-ink-300'
               }`}
             />
             <button
               onClick={() => handleHpChange('currentHp', combat.currentHp + 1)}
-              className="w-8 h-8 rounded bg-green-900 hover:bg-green-700 text-white font-bold text-lg flex items-center justify-center"
+              className="w-8 h-8 rounded bg-parchment-300 hover:bg-parchment-400 border border-parchment-600 text-ink-500 font-bold text-lg flex items-center justify-center"
             >+</button>
           </div>
           <FormFieldError id="err-currentHp" message={errors.currentHp} />
           {/* HP Bar */}
-          <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
+          <div className="w-full bg-parchment-300 rounded-full h-2 mt-2 border border-parchment-600">
             <div
               className="h-2 rounded-full transition-all"
               style={{
                 width: `${combat.maxHp > 0 ? Math.min(100, (combat.currentHp / combat.maxHp) * 100) : 0}%`,
-                backgroundColor: combat.currentHp > combat.maxHp * 0.5 ? '#22c55e'
-                  : combat.currentHp > combat.maxHp * 0.25 ? '#f59e0b' : '#ef4444',
+                backgroundColor: 'var(--color-ink-300)',
               }}
             />
           </div>
@@ -299,11 +297,11 @@ function CombatStatsBase({
 
         <div>
           <div className="flex items-center justify-between">
-            <label className="text-xs text-gray-400" title="PHB p.198 — HP Temporário não empilha">PV Temporários</label>
+            <label className="text-xs text-ink-200" title="PHB p.198 — HP Temporário não empilha">PV Temporários</label>
             {(combat.tempHp ?? 0) > 0 && (
               <button
                 onClick={() => onUpdateCombat('tempHp', 0)}
-                className="text-[10px] text-gray-500 hover:text-red-400 underline"
+                className="text-[10px] text-ink-200 hover:text-red-400 underline"
                 title="Zerar PV temporários"
               >
                 zerar
@@ -317,13 +315,13 @@ function CombatStatsBase({
             onChange={e => handleTempHpChange(e.target.value)}
             onWheel={e => e.currentTarget.blur()}
             title="Nova fonte de PV temporário apenas substitui se for maior (PHB p.198)"
-            className="w-full mt-1 text-center bg-gray-700 border border-gray-500 rounded px-2 py-1 text-white focus:outline-none focus:border-amber-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="w-full mt-1 text-center bg-parchment-100 border border-parchment-600 rounded px-2 py-1 text-ink-500 focus:outline-none focus:border-ink-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
 
         <div>
           <div className="flex items-center justify-between mb-1">
-            <label className="text-xs text-gray-400">PV Máximo</label>
+            <label className="text-xs text-ink-200">PV Máximo</label>
             {suggestedMaxHp != null && suggestedMaxHp !== combat.maxHp && (
               <button
                 onClick={() => onUpdateCombat('maxHp', suggestedMaxHp)}
@@ -340,14 +338,14 @@ function CombatStatsBase({
             value={combat.maxHp}
             onChange={e => onUpdateCombat('maxHp', Math.max(1, parseInt(e.target.value) || 1))}
             onWheel={e => e.currentTarget.blur()}
-            className="w-full text-center bg-gray-700 border border-gray-500 rounded px-2 py-1 text-white focus:outline-none focus:border-amber-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="w-full text-center bg-parchment-100 border border-parchment-600 rounded px-2 py-1 text-ink-500 focus:outline-none focus:border-ink-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
       </div>
 
       {/* Death Saves — visíveis quando desmaiado */}
       {isDowned && (
-        <div className="p-3 bg-gray-900/60 border border-red-900/40 rounded-lg">
+        <div className="p-3 bg-parchment-50 border border-parchment-600 rounded-lg">
           <DeathSavesTracker
             deathSaves={combat.deathSaves}
             onUpdate={(type, val) => onUpdateDeathSaves?.(type, val)}
@@ -368,8 +366,8 @@ export const CombatStats = memo(CombatStatsBase)
 
 const StatBox = memo(function StatBox({ label, value, editable, onChange, hint, fieldId, errId, error, action }) {
   return (
-    <div className="flex flex-col items-center bg-gray-900 rounded p-2">
-      <span className="text-xs text-gray-400 text-center mb-1 leading-tight">{label}</span>
+    <div className="flex flex-col items-center bg-parchment-50 border border-parchment-600 rounded p-2">
+      <span className="text-xs font-display text-ink-500 text-center mb-1 leading-tight uppercase tracking-wide">{label}</span>
       {editable ? (
         <input
           id={fieldId}
@@ -379,11 +377,11 @@ const StatBox = memo(function StatBox({ label, value, editable, onChange, hint, 
           onWheel={e => e.currentTarget.blur()}
           aria-describedby={error ? errId : undefined}
           className={`w-full text-center text-xl font-bold bg-transparent focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-            error ? 'text-red-300' : 'text-white'
+            error ? 'text-red-300' : 'text-ink-500'
           }`}
         />
       ) : (
-        <span className="text-xl font-bold text-white">{value}</span>
+        <span className="text-xl font-bold text-ink-500">{value}</span>
       )}
       {action && <div className="mt-0.5">{action}</div>}
       {hint && (

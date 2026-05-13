@@ -22,14 +22,14 @@ export function Tooltip({ content, children, position = 'top' }) {
         className={`
           pointer-events-none absolute ${posClass} left-1/2 -translate-x-1/2
           z-50 hidden group-hover:flex
-          bg-gray-900 border border-gray-600 rounded px-2 py-1
-          text-xs text-gray-200 whitespace-nowrap shadow-lg
+          bg-ink-500 border border-ink-600 rounded px-2 py-1
+          text-xs text-parchment-50 whitespace-nowrap shadow-lg
           flex-col items-center gap-0.5
         `}
       >
         {content}
         {/* Seta */}
-        <span className={`absolute ${position === 'bottom' ? '-top-1.5 border-b-gray-600' : '-bottom-1.5 border-t-gray-600'} left-1/2 -translate-x-1/2 w-0 h-0 border-x-4 border-x-transparent ${position === 'bottom' ? 'border-b-4' : 'border-t-4'}`} />
+        <span className={`absolute ${position === 'bottom' ? '-top-1.5 border-b-ink-600' : '-bottom-1.5 border-t-ink-600'} left-1/2 -translate-x-1/2 w-0 h-0 border-x-4 border-x-transparent ${position === 'bottom' ? 'border-b-4' : 'border-t-4'}`} />
       </span>
     </span>
   )

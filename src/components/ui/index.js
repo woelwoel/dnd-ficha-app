@@ -1,0 +1,11 @@
+export { default as BookSpread } from './BookSpread.jsx';
+export { default as Page } from './Page.jsx';
+export { default as OrnateFrame } from './OrnateFrame.jsx';
+export { default as IlluminatedHeading } from './IlluminatedHeading.jsx';
+export { default as DropCap } from './DropCap.jsx';
+export { default as Cartouche } from './Cartouche.jsx';
+export { default as Divider } from './Divider.jsx';
+export { default as MarginalIcon } from './MarginalIcon.jsx';
+export { default as InkField } from './InkField.jsx';
+export { default as TomeButton } from './TomeButton.jsx';
+export * as Ornaments from './ornaments/index.js';

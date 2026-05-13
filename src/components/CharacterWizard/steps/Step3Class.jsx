@@ -217,7 +217,6 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
                   {/* ASI / Talento picker */}
                   {hasASI && (
                     <ASIOrFeatPicker
-                      level={lvl}
                       currentChoice={asiChoice}
                       allowFeats={draft.settings?.allowFeats ?? false}
                       feats={feats}
@@ -401,7 +400,7 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
 }
 
 /* ── ASI ou Talento por nível ─────────────────────────────────── */
-function ASIOrFeatPicker({ level, currentChoice, allowFeats, feats, onChoose }) {
+function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) {
   const [featSearch, setFeatSearch] = useState('')
 
   const mode    = currentChoice?.type ?? 'asi'

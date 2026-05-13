@@ -51,14 +51,15 @@ export function SpellDetailModal({ spell, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-700/70 backdrop-blur-sm"
       onClick={e => { if (e.target === e.currentTarget) onClose() }}
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby={SPELL_DETAIL_TITLE_ID}
-        className="bg-gray-900 border border-amber-700/50 rounded-xl shadow-2xl w-full max-w-md max-h-[85vh] flex flex-col"
+        className="bg-parchment-50 border-2 border-parchment-600 rounded-sm w-full max-w-md max-h-[85vh] flex flex-col"
+        style={{ boxShadow: 'var(--shadow-parchment-lg)' }}
       >
         {/* Header */}
         <div className="flex items-start gap-3 p-4 border-b border-gray-700">

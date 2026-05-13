@@ -1,133 +1,250 @@
 @import "tailwindcss";
 
-/* ── Paleta Pedra e Sangue ── */
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IM+Fell+English+SC&display=swap');
+
+/* ── Paleta Ficha Clássica (tinta única sépia, papel envelhecido moderado) ── */
 @theme {
-  /* Pedra escura (fundos — fria, opressiva) */
-  --color-gray-950: #080809;
-  --color-gray-900: #0f0f12;
-  --color-gray-800: #18181e;
-  --color-gray-700: #222228;
-  --color-gray-600: #333340;
-  --color-gray-500: #52525e;
-  --color-gray-400: #7a7a8a;
-  --color-gray-300: #a0a0ae;
-  --color-gray-200: #c8c8d5;
-  --color-gray-100: #e5e5ec;
+  /* Papel (fundos) */
+  --color-parchment-50:  #f4ead3;
+  --color-parchment-100: #ede0c2;
+  --color-parchment-200: #e8dcc0;  /* base */
+  --color-parchment-300: #dccaa3;
+  --color-parchment-400: #c9b896;  /* shadow */
+  --color-parchment-500: #b8a47e;
+  --color-parchment-600: #a8956f;  /* edge */
+  --color-parchment-700: #8a7456;
+  --color-parchment-800: #5a4530;
+  --color-parchment-900: #2a1f14;
 
-  /* Sangue (acento principal — vermelho vivo) */
-  --color-amber-950: #160000;
-  --color-amber-900: #2d0002;
-  --color-amber-800: #500406;
-  --color-amber-700: #76080c;
-  --color-amber-600: #9e1214;
-  --color-amber-500: #c42020;
-  --color-amber-400: #de3e3e;
-  --color-amber-300: #ec6868;
-  --color-amber-200: #f4a0a0;
+  /* Tinta (texto) */
+  --color-ink-50:  #8a7456;  /* faded */
+  --color-ink-100: #6b5640;
+  --color-ink-200: #5a4530;  /* secondary */
+  --color-ink-300: #4a3826;
+  --color-ink-400: #3a2b1c;
+  --color-ink-500: #2a1f14;  /* primary */
+  --color-ink-600: #1f1610;
+  --color-ink-700: #15100a;
 
-  /* Aço frio (interativo, ações de combate) */
-  --color-blue-950: #060810;
-  --color-blue-900: #0c1020;
-  --color-blue-800: #141828;
-  --color-blue-700: #1e2438;
-  --color-blue-600: #283450;
-  --color-blue-500: #384e72;
-  --color-blue-400: #5272a0;
-  --color-blue-300: #7898c0;
-  --color-blue-200: #a0bcdc;
+  /* Ornamento sépia-dourado escuro (apenas para SVG decorativo) */
+  --color-gilt-400: #a88a4a;
+  --color-gilt-500: #8b6f3a;
+  --color-gilt-600: #6e572b;
 
-  /* Carmesim sombrio (reações/magia sombria) */
-  --color-purple-950: #100808;
-  --color-purple-900: #1c0c10;
-  --color-purple-800: #2e1418;
-  --color-purple-700: #461e24;
-  --color-purple-600: #642834;
-  --color-purple-500: #803848;
-  --color-purple-400: #a04e60;
-  --color-purple-300: #c07280;
+  /* Tipografia */
+  --font-display: 'IM Fell English SC', 'EB Garamond', serif;
+  --font-body: 'EB Garamond', 'Garamond', 'Times New Roman', serif;
+  --font-sans: 'EB Garamond', 'Garamond', 'Times New Roman', serif;
 
-  /* Vermelho perigo / HP crítico */
-  --color-red-950: #0e0202;
-  --color-red-900: #200404;
-  --color-red-800: #3e0808;
-  --color-red-700: #601010;
-  --color-red-600: #841818;
-  --color-red-500: #ac2020;
-  --color-red-400: #cc3030;
-  --color-red-300: #e06060;
+  /* Sombras quentes (sem azul) */
+  --shadow-parchment-sm: 0 1px 2px rgba(42,31,20,0.10);
+  --shadow-parchment:    0 2px 6px rgba(42,31,20,0.15);
+  --shadow-parchment-lg: 0 8px 24px rgba(42,31,20,0.25);
 
-  /* Verde vida (desbotado, batalhado) */
-  --color-green-900: #040a04;
-  --color-green-800: #081408;
-  --color-green-700: #0e2210;
-  --color-green-600: #183018;
-  --color-green-500: #244820;
-  --color-green-400: #3c6c30;
+  /* ─────────────────────────────────────────────────────────────
+     Remap das paletas Tailwind antigas (gray/amber/red/blue/sky/
+     purple/green) para sépia, para que classes herdadas dos
+     componentes continuem coerentes com o tema "ficha clássica"
+     sem necessidade de reescrever cada `text-gray-700` etc.
+     ───────────────────────────────────────────────────────────── */
 
-  /* Aço (descanso curto / sky → azul aço) */
-  --color-sky-950: #060a10;
-  --color-sky-900: #0a1020;
-  --color-sky-800: #10182c;
-  --color-sky-700: #182438;
-  --color-sky-600: #243450;
-  --color-sky-500: #344a70;
-  --color-sky-400: #4c6898;
-  --color-sky-300: #6c8ab8;
-  --color-sky-200: #96b2d8;
+  /* Cinzas: INVERTIDOS para o tema pergaminho — tons "claros" do dark
+     (gray-50..400) viram tinta escura (texto sobre papel); tons "escuros"
+     (gray-600..950) viram tons de pergaminho (fundos/bordas claras).
+     Assim componentes legados com `bg-gray-800 text-gray-300` automaticamente
+     ficam "papel claro com texto sépia escuro". */
+  --color-gray-50:  #2a1f14;  /* ink-500 — texto */
+  --color-gray-100: #3a2b1c;  /* ink-400 */
+  --color-gray-200: #4a3826;  /* ink-300 */
+  --color-gray-300: #5a4530;  /* ink-200 — texto secundário */
+  --color-gray-400: #6b5640;  /* ink-100 */
+  --color-gray-500: #8a7456;  /* ink-50 — médio */
+  --color-gray-600: #a8956f;  /* parchment-600 — borda forte */
+  --color-gray-700: #b8a47e;  /* parchment-500 — borda média */
+  --color-gray-800: #ede0c2;  /* parchment-100 — fundo card */
+  --color-gray-900: #f4ead3;  /* parchment-50 — fundo mais claro */
+  --color-gray-950: #f4ead3;
 
-  /* Tipografia brutal */
-  --font-display: 'Oswald', 'Impact', sans-serif;
-  --font-body:    'Barlow', 'Inter', system-ui, sans-serif;
-  --font-sans:    'Barlow', 'Inter', system-ui, sans-serif;
+  /* Âmbar (era destaque vermelho-sangue) → sépia-escuro / tinta */
+  --color-amber-50:  #ede0c2;
+  --color-amber-100: #dccaa3;
+  --color-amber-200: #c9b896;
+  --color-amber-300: #a88a4a;
+  --color-amber-400: #8b6f3a;
+  --color-amber-500: #6e572b;
+  --color-amber-600: #5a4530;
+  --color-amber-700: #4a3826;
+  --color-amber-800: #3a2b1c;
+  --color-amber-900: #2a1f14;
+  --color-amber-950: #15100a;
+
+  /* Vermelho (perigo/HP) → mantém leve diferenciação como sépia-escuro com tom mais quente */
+  --color-red-50:  #ede0c2;
+  --color-red-100: #dccaa3;
+  --color-red-200: #c9b896;
+  --color-red-300: #a88a4a;
+  --color-red-400: #8b6f3a;
+  --color-red-500: #6e572b;
+  --color-red-600: #5a4530;
+  --color-red-700: #4a3826;
+  --color-red-800: #3a2b1c;
+  --color-red-900: #2a1f14;
+  --color-red-950: #15100a;
+
+  /* Azul (ações de combate) → sépia */
+  --color-blue-50:  #ede0c2;
+  --color-blue-100: #dccaa3;
+  --color-blue-200: #c9b896;
+  --color-blue-300: #a88a4a;
+  --color-blue-400: #8b6f3a;
+  --color-blue-500: #6e572b;
+  --color-blue-600: #5a4530;
+  --color-blue-700: #4a3826;
+  --color-blue-800: #3a2b1c;
+  --color-blue-900: #2a1f14;
+  --color-blue-950: #15100a;
+
+  /* Sky (descanso curto) → sépia */
+  --color-sky-50:  #ede0c2;
+  --color-sky-100: #dccaa3;
+  --color-sky-200: #c9b896;
+  --color-sky-300: #a88a4a;
+  --color-sky-400: #8b6f3a;
+  --color-sky-500: #6e572b;
+  --color-sky-600: #5a4530;
+  --color-sky-700: #4a3826;
+  --color-sky-800: #3a2b1c;
+  --color-sky-900: #2a1f14;
+  --color-sky-950: #15100a;
+
+  /* Purple (magia sombria) → sépia */
+  --color-purple-50:  #ede0c2;
+  --color-purple-100: #dccaa3;
+  --color-purple-200: #c9b896;
+  --color-purple-300: #a88a4a;
+  --color-purple-400: #8b6f3a;
+  --color-purple-500: #6e572b;
+  --color-purple-600: #5a4530;
+  --color-purple-700: #4a3826;
+  --color-purple-800: #3a2b1c;
+  --color-purple-900: #2a1f14;
+  --color-purple-950: #15100a;
+
+  /* Green (vida) → sépia */
+  --color-green-50:  #ede0c2;
+  --color-green-100: #dccaa3;
+  --color-green-200: #c9b896;
+  --color-green-300: #a88a4a;
+  --color-green-400: #8b6f3a;
+  --color-green-500: #6e572b;
+  --color-green-600: #5a4530;
+  --color-green-700: #4a3826;
+  --color-green-800: #3a2b1c;
+  --color-green-900: #2a1f14;
+  --color-green-950: #15100a;
+
+  /* Yellow (inspiração) → dourado-sépia */
+  --color-yellow-50:  #f4ead3;
+  --color-yellow-100: #ede0c2;
+  --color-yellow-200: #dccaa3;
+  --color-yellow-300: #c9a86a;
+  --color-yellow-400: #a88a4a;
+  --color-yellow-500: #8b6f3a;
+  --color-yellow-600: #6e572b;
+  --color-yellow-700: #5a4530;
+  --color-yellow-800: #3a2b1c;
+  --color-yellow-900: #2a1f14;
+
+  /* Orange → sépia-quente */
+  --color-orange-50:  #ede0c2;
+  --color-orange-100: #dccaa3;
+  --color-orange-200: #c9a86a;
+  --color-orange-300: #a88a4a;
+  --color-orange-400: #8b6f3a;
+  --color-orange-500: #6e572b;
+  --color-orange-600: #5a4530;
+  --color-orange-700: #4a3826;
+  --color-orange-800: #3a2b1c;
+  --color-orange-900: #2a1f14;
 }
 
-/* ── Base global ─────────────────────────────────────────────── */
+/* ── Base global ── */
 *, *::before, *::after { box-sizing: border-box; }
 
-html {
-  font-size: 18px;
-  scroll-behavior: smooth;
+html, body, #root {
+  background-color: var(--color-parchment-200);
+  color: var(--color-ink-500);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
 }
 
 body {
-  font-family: 'Barlow', Inter, system-ui, sans-serif;
-  background-color: var(--color-gray-950);
-  color: var(--color-gray-100);
-  -webkit-font-smoothing: antialiased;
-  line-height: 1.5;
-  /* Vinheta de sangue nas bordas inferiores */
   background-image:
-    radial-gradient(ellipse 120% 35% at 50% 100%, rgba(158, 18, 20, 0.09) 0%, transparent 70%),
-    radial-gradient(ellipse 120% 25% at 50% 0%, rgba(8, 8, 9, 0.7) 0%, transparent 100%);
+    radial-gradient(ellipse at 20% 15%, rgba(168, 149, 111, 0.18) 0%, transparent 45%),
+    radial-gradient(ellipse at 75% 80%, rgba(168, 149, 111, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(201, 184, 150, 0.10) 0%, transparent 70%);
   background-attachment: fixed;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ── Tipografia brutal ───────────────────────────────────────── */
-h1, h2, h3,
-.font-display,
-[class*="tracking-widest"],
-[class*="uppercase"][class*="font-bold"] {
-  font-family: 'Oswald', Impact, sans-serif;
-  letter-spacing: 0.06em;
+/* Versalete para labels e títulos pequenos */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
 }
 
-/* ── Scrollbar de pedra ──────────────────────────────────────── */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: var(--color-gray-900); }
-::-webkit-scrollbar-thumb { background: var(--color-gray-700); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--color-amber-700); }
+/* Override de utilitários legados — força text-white para tinta sépia,
+   já que componentes assumiam fundo escuro. bg-white permanece branco
+   (usado em inputs e fundos neutros). */
+.text-white { color: var(--color-ink-500); }
 
-/* ── Seleção sangue ──────────────────────────────────────────── */
+/* Itálico de tinta para texto secundário */
+.ink-italic {
+  font-style: italic;
+  color: var(--color-ink-200);
+}
+
+/* Filete duplo (borda dupla sépia) */
+.rule-double {
+  border-top: 1px solid var(--color-ink-200);
+  box-shadow: 0 3px 0 -2px var(--color-ink-200);
+}
+.rule-double-b {
+  border-bottom: 1px solid var(--color-ink-200);
+  box-shadow: 0 -3px 0 -2px var(--color-ink-200) inset;
+}
+
+/* Foco visível mantido (acessibilidade) — sépia em vez de azul */
+*:focus-visible {
+  outline: 2px solid var(--color-ink-200);
+  outline-offset: 2px;
+}
+
+/* Scrollbar sépia */
+* {
+  scrollbar-color: var(--color-parchment-600) var(--color-parchment-100);
+}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--color-parchment-100); }
+::-webkit-scrollbar-thumb {
+  background: var(--color-parchment-600);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-parchment-700); }
+
+/* Seleção sépia */
 ::selection {
-  background: rgba(222, 62, 62, 0.3);
-  color: var(--color-amber-200);
+  background: rgba(138, 116, 86, 0.35);
+  color: var(--color-ink-500);
 }
 
-/* ── Scrollbar oculta ────────────────────────────────────────── */
+/* Scrollbar oculta utilitária */
 .scrollbar-none::-webkit-scrollbar { display: none; }
 .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* ── Touch targets mínimos (WCAG 2.5.5 / iOS guidelines) ───────── */
+/* Touch targets mínimos */
 @media (pointer: coarse) {
   button, [role="button"], input[type="checkbox"], input[type="radio"] {
     min-height: 36px;
@@ -139,36 +256,15 @@ h1, h2, h3,
   }
 }
 
-/* ── Fonte base menor em telas muito pequenas ───────────────────── */
+/* Fonte base menor em telas pequenas */
 @media (max-width: 375px) {
-  html { font-size: 16px; }
+  html { font-size: 15px; }
 }
 @media (min-width: 376px) and (max-width: 639px) {
-  html { font-size: 17px; }
+  html { font-size: 15.5px; }
 }
 
-/* ── Card de pedra: gradiente + linha de sangue no topo ─────── */
-.arcane-card {
-  position: relative;
-  background: linear-gradient(160deg, var(--color-gray-800) 0%, var(--color-gray-900) 100%);
-}
-.arcane-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 10%; right: 10%; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(222, 62, 62, 0.45), transparent);
-  pointer-events: none;
-}
-
-/* ── Brilho de ferro ensanguentado ───────────────────────────── */
-.arcane-glow {
-  box-shadow:
-    0 0 0 1px rgba(158, 18, 20, 0.3),
-    0 0 20px rgba(158, 18, 20, 0.12),
-    0 8px 40px rgba(8, 8, 9, 0.85);
-}
-
-/* ── Impressão / Exportar PDF ────────────────────────────────── */
+/* ── Impressão / Exportar PDF (mantém infraestrutura existente da PrintView) ── */
 @page {
   size: A4 portrait;
   margin: 0;
@@ -189,16 +285,16 @@ h1, h2, h3,
     width: 100%;
     margin: 0;
     padding: 0;
-    background: #f2e8c8 !important;
+    background: #f4ead3 !important;
     overflow: visible;
-    font-family: Georgia, serif;
-    color: #1a1209;
+    font-family: var(--font-body);
+    color: var(--color-ink-500);
   }
 
   #print-character-view > div {
     page-break-after: always;
     break-after: page;
-    background: #f2e8c8 !important;
+    background: #f4ead3 !important;
     min-height: 100vh;
     overflow: visible;
   }

@@ -18,7 +18,7 @@ export function CantripsGrantPicker({ needed, chosen, onChosenChange }) {
   )
 
   return (
-    <div className="bg-gray-900 border border-blue-800/50 rounded-lg p-3 space-y-2">
+    <div className="bg-parchment-100 border border-parchment-600 rounded-lg p-3 space-y-2">
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold text-blue-300">
           Escolha {needed} truque{needed > 1 ? 's' : ''} de qualquer lista

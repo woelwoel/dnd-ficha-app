@@ -51,10 +51,10 @@ function WizardStepSidebar({ steps, current }) {
             <div className="flex flex-col items-center min-w-[28px]">
               {/* Círculo */}
               <div className={[
-                'w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 border transition-all duration-200',
-                done    ? 'border-blue-600/80 bg-blue-900/50 text-blue-300'                                         : '',
-                active  ? 'border-amber-400 bg-amber-900/30 text-amber-300 shadow-[0_0_14px_rgba(196,144,48,0.35)]' : '',
-                pending ? 'border-gray-700 bg-gray-900 text-gray-700'                                               : '',
+                'w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 border-2 transition-all duration-200',
+                done    ? 'border-ink-300 bg-parchment-200 text-ink-500'   : '',
+                active  ? 'border-ink-500 bg-parchment-300 text-ink-600 font-display' : '',
+                pending ? 'border-parchment-600 bg-parchment-50 text-ink-200' : '',
               ].join(' ')}>
                 {done ? '✓' : i + 1}
               </div>
@@ -62,17 +62,17 @@ function WizardStepSidebar({ steps, current }) {
               {i < steps.length - 1 && (
                 <div className={[
                   'w-px flex-1 min-h-[24px] mt-0.5 mb-0.5',
-                  done ? 'bg-blue-700/50' : 'bg-gray-800',
+                  done ? 'bg-ink-300' : 'bg-parchment-600',
                 ].join(' ')} />
               )}
             </div>
 
             {/* Rótulo */}
             <div className={[
-              'pt-1 text-sm leading-tight transition-colors duration-150',
-              active  ? 'text-amber-300 font-display font-semibold tracking-wide' : '',
-              done    ? 'text-gray-500'                                            : '',
-              pending ? 'text-gray-700'                                            : '',
+              'pt-1 text-sm leading-tight transition-colors duration-150 font-display tracking-wide',
+              active  ? 'text-ink-500 font-semibold' : '',
+              done    ? 'text-ink-300'              : '',
+              pending ? 'text-ink-200'              : '',
             ].join(' ')}>
               {s.label}
             </div>
@@ -91,29 +91,29 @@ function MobileStepIndicator({ steps, current }) {
         {steps.map((s, i) => (
           <div key={s.id} className="flex items-center shrink-0">
             <div className={[
-              'flex items-center gap-1 px-2 py-0.5 rounded text-xs whitespace-nowrap transition-colors',
-              i === current ? 'text-amber-300' : i < current ? 'text-gray-600' : 'text-gray-700',
+              'flex items-center gap-1 px-2 py-0.5 rounded text-xs whitespace-nowrap transition-colors font-display tracking-wide',
+              i === current ? 'text-ink-500 font-semibold' : i < current ? 'text-ink-300' : 'text-ink-200',
             ].join(' ')}>
               <span className={[
-                'w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold border shrink-0 transition-all',
-                i === current ? 'border-amber-400 bg-amber-900/40 text-amber-300 shadow-[0_0_8px_rgba(196,144,48,0.3)]'
-                : i < current  ? 'border-blue-700/70 bg-blue-950/40 text-gray-500'
-                :                'border-gray-800 bg-gray-900 text-gray-700',
+                'w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold border-2 shrink-0 transition-all',
+                i === current ? 'border-ink-500 bg-parchment-300 text-ink-600'
+                : i < current  ? 'border-ink-300 bg-parchment-200 text-ink-500'
+                :                'border-parchment-600 bg-parchment-50 text-ink-200',
               ].join(' ')}>
                 {i < current ? '✓' : i + 1}
               </span>
               {s.label}
             </div>
             {i < steps.length - 1 && (
-              <div className={`w-2 h-px mx-0.5 ${i < current ? 'bg-gray-600' : 'bg-gray-800'}`} />
+              <div className={`w-2 h-px mx-0.5 ${i < current ? 'bg-ink-300' : 'bg-parchment-600'}`} />
             )}
           </div>
         ))}
       </div>
       {/* Barra de progresso */}
-      <div className="h-0.5 bg-gray-800 rounded-full mt-2">
+      <div className="h-0.5 bg-parchment-300 rounded-full mt-2">
         <div
-          className="h-0.5 bg-gradient-to-r from-blue-500 to-amber-400 rounded-full transition-all duration-300"
+          className="h-0.5 bg-ink-500 rounded-full transition-all duration-300"
           style={{ width: `${steps.length > 1 ? (current / (steps.length - 1)) * 100 : 0}%` }}
         />
       </div>
@@ -180,26 +180,21 @@ export function CharacterWizard({ onBack, onComplete }) {
   return (
     <div className="h-screen flex flex-col overflow-hidden relative">
 
-      {/* Névoa de fundo */}
-      <div className="fixed inset-0 pointer-events-none" aria-hidden>
-        <div className="absolute top-0 left-1/3 w-[600px] h-[500px] rounded-full bg-blue-900/15 blur-[130px]" />
-        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] rounded-full bg-purple-900/10 blur-[110px]" />
-      </div>
-
       {/* ── Header ─────────────────────────────────────────── */}
-      <header className="relative z-10 flex items-center gap-4 px-6 py-3.5 border-b border-gray-700/60 bg-gray-900/60 backdrop-blur-sm shrink-0">
+      <header className="relative z-10 flex items-center gap-4 px-6 py-3.5 border-b-2 border-parchment-600 bg-parchment-100 shrink-0"
+        style={{ boxShadow: 'var(--shadow-parchment)' }}>
         <button
           onClick={onBack}
-          className="text-gray-500 hover:text-amber-400 text-sm transition-colors"
+          className="text-ink-200 hover:text-ink-500 text-sm transition-colors font-display tracking-wide"
         >
           ← Personagens
         </button>
-        <div className="w-px h-4 bg-gray-700/60" />
-        <h1 className="text-sm font-bold text-amber-400 font-display tracking-widest uppercase">
+        <div className="w-px h-4 bg-parchment-600" />
+        <h1 className="text-sm font-display text-ink-500 tracking-widest uppercase">
           Criar Personagem
         </h1>
         {/* Contagem de passo mobile */}
-        <span className="ml-auto md:hidden text-xs text-gray-600 font-display">
+        <span className="ml-auto md:hidden text-xs ink-italic font-display">
           {step + 1} / {steps.length}
         </span>
       </header>
@@ -208,7 +203,7 @@ export function CharacterWizard({ onBack, onComplete }) {
       <div className="relative flex flex-1 min-h-0">
 
         {/* Sidebar de passos (somente desktop) */}
-        <aside className="hidden md:flex flex-col w-52 shrink-0 border-r border-gray-700/50 bg-gray-900/30 overflow-y-auto py-6 px-4">
+        <aside className="hidden md:flex flex-col w-52 shrink-0 border-r-2 border-parchment-600 bg-parchment-100 overflow-y-auto py-6 px-4">
           <WizardStepSidebar steps={steps} current={step} />
         </aside>
 
@@ -222,13 +217,14 @@ export function CharacterWizard({ onBack, onComplete }) {
             </div>
 
             {/* Card do passo */}
-            <div className="bg-gray-800/60 border border-gray-700/60 rounded-xl overflow-hidden arcane-card">
+            <div className="bg-parchment-50 border-2 border-parchment-600 rounded-sm overflow-hidden"
+              style={{ boxShadow: 'var(--shadow-parchment-lg)' }}>
               {/* Título do passo */}
-              <div className="px-6 pt-5 pb-4 border-b border-gray-700/40">
-                <p className="text-[10px] text-gray-600 font-display tracking-[0.3em] uppercase mb-0.5">
+              <div className="px-6 pt-5 pb-4 border-b-2 border-parchment-600 bg-parchment-100 text-center">
+                <p className="text-[10px] ink-italic tracking-[0.3em] uppercase mb-0.5">
                   Passo {step + 1} de {steps.length}
                 </p>
-                <h2 className="text-base font-bold text-amber-400 font-display tracking-widest uppercase">
+                <h2 className="text-xl font-display text-ink-500 tracking-widest uppercase">
                   {steps[step]?.label}
                 </h2>
               </div>
@@ -252,7 +248,7 @@ export function CharacterWizard({ onBack, onComplete }) {
               <button
                 onClick={handlePrev}
                 disabled={step === 0}
-                className="px-5 py-2 rounded-lg border border-gray-700/80 hover:border-gray-500 text-gray-400 hover:text-gray-100 text-sm disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
+                className="px-5 py-2 rounded-sm border-2 border-parchment-600 hover:border-ink-300 text-ink-200 hover:text-ink-500 text-sm font-display tracking-wide bg-parchment-50 hover:bg-parchment-100 disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
               >
                 ← Anterior
               </button>
@@ -261,7 +257,7 @@ export function CharacterWizard({ onBack, onComplete }) {
                 <button
                   onClick={handleNext}
                   disabled={!canGoNext}
-                  className="px-6 py-2 rounded-lg bg-blue-700/50 hover:bg-blue-600/60 border border-blue-600/60 hover:border-blue-400/70 text-blue-100 text-sm font-semibold disabled:opacity-35 disabled:cursor-not-allowed transition-all hover:shadow-[0_0_16px_rgba(40,90,152,0.3)]"
+                  className="px-6 py-2 rounded-sm bg-parchment-100 hover:bg-parchment-200 border-2 border-ink-300 hover:border-ink-500 text-ink-500 text-sm font-display tracking-wide disabled:opacity-35 disabled:cursor-not-allowed transition-colors"
                 >
                   Próximo →
                 </button>
@@ -269,9 +265,9 @@ export function CharacterWizard({ onBack, onComplete }) {
                 <button
                   onClick={handleFinish}
                   disabled={!draft.name?.trim()}
-                  className="px-6 py-2 rounded-lg bg-amber-700/50 hover:bg-amber-600/60 border border-amber-600/60 hover:border-amber-400/70 text-amber-100 text-sm font-semibold disabled:opacity-35 disabled:cursor-not-allowed transition-all hover:shadow-[0_0_16px_rgba(196,144,48,0.3)]"
+                  className="px-6 py-2 rounded-sm bg-ink-500 hover:bg-ink-600 border-2 border-ink-600 text-parchment-50 text-sm font-display tracking-wide disabled:opacity-35 disabled:cursor-not-allowed transition-colors"
                 >
-                  Criar Personagem ✦
+                  ✦ Inscrever Herói ✦
                 </button>
               )}
             </div>

@@ -11,11 +11,12 @@ function SavingThrowsBase({ attributes, profBonus, classData }) {
     .filter(Boolean)
 
   return (
-    <div className="bg-gray-800 border border-gray-600 rounded-lg p-4">
-      <h3 className="text-sm font-bold text-amber-400 uppercase tracking-widest mb-1">
+    <div className="bg-parchment-100 border border-parchment-600 rounded-lg p-4"
+      style={{ boxShadow: 'var(--shadow-parchment-sm)' }}>
+      <h3 className="text-sm font-display text-ink-500 uppercase tracking-widest mb-1 border-b border-parchment-600 pb-1">
         Salvaguardas
       </h3>
-      <p className="text-[10px] text-gray-600 mb-3">Definidas pela classe — 🔒 proficiente</p>
+      <p className="text-[10px] ink-italic mb-3 mt-1">Definidas pela classe — 🔒 proficiente</p>
       <div className="space-y-1">
         {ABILITY_SCORES.map(({ key, abbr, name }) => {
           const proficient   = classGranted.includes(key)
@@ -34,10 +35,10 @@ function SavingThrowsBase({ attributes, profBonus, classData }) {
                 checked={proficient}
                 disabled
                 readOnly
-                className={`${proficient ? 'accent-amber-600' : ''} cursor-not-allowed opacity-70`}
+                className={`${proficient ? 'accent-ink-500' : ''} cursor-not-allowed opacity-70`}
               />
               <Tooltip content={tooltip} position="top">
-                <span className={`w-8 text-sm font-bold cursor-help ${proficient ? 'text-amber-300' : 'text-gray-500'}`}>
+                <span className={`w-8 text-sm font-bold cursor-help ${proficient ? 'text-ink-500' : 'text-ink-200'}`}>
                   {formatModifier(mod)}
                 </span>
               </Tooltip>
@@ -46,10 +47,10 @@ function SavingThrowsBase({ attributes, profBonus, classData }) {
                 label={`Salvaguarda — ${abbr}`}
                 size="xs"
               />
-              <span className={`text-sm ${proficient ? 'text-gray-200' : 'text-gray-500'}`}>
+              <span className={`text-sm ${proficient ? 'text-ink-500 font-semibold' : 'text-ink-200'}`}>
                 {abbr}{' '}
-                <span className="text-xs opacity-60">({name})</span>
-                {proficient && <span className="ml-1 text-amber-600 text-xs">🔒</span>}
+                <span className="text-xs ink-italic">({name})</span>
+                {proficient && <span className="ml-1 text-ink-300 text-xs">🔒</span>}
               </span>
             </div>
           )
