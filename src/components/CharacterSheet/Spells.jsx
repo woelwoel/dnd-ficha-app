@@ -228,6 +228,11 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
                 <SpellRow
                   key={spell.id}
                   spell={spell}
+                  slotLevels={slotLevels}
+                  slotMax={(slotLevel) => levelData?.[`spell_slots_level_${slotLevel}`] ?? 0}
+                  usedSlots={usedSlots}
+                  onCastAtLevel={(slotLevel) => onToggleSlot?.(slotLevel, (usedSlots[slotLevel] || 0) + 1)}
+                  canCast={spell.level === 0 || (isPrepared ? spell.prepared !== false : true)}
                   isPrepared={spell.level === 0 || spell.prepared !== false}
                   showPreparedToggle={isPrepared && spell.level > 0 && !!onTogglePrepared}
                   onTogglePrepared={() => onTogglePrepared?.(spell.id)}
@@ -290,11 +295,27 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   )
 }
 
-function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedToggle, onTogglePrepared, isConcentrating, canConcentrate, onToggleConcentration }) {
+function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedToggle, onTogglePrepared, isConcentrating, canConcentrate, onToggleConcentration, slotLevels = [], slotMax, usedSlots = {}, onCastAtLevel, canCast = true }) {
   const schoolAbbr = SCHOOL_ABBR[(spell.school || '').toLowerCase()] || (spell.school || '').slice(0, 3)
   const dimmed = showPreparedToggle && !isPrepared
+  const [castOpen, setCastOpen] = useState(false)
+  const [castedAt, setCastedAt] = useState(null)
+  // Slots disponíveis para esta magia: nível ≥ nível da magia E sobrando ≥ 1
+  const availableSlots = spell.level > 0 && canCast
+    ? slotLevels.filter(sl => sl >= spell.level && ((slotMax?.(sl) ?? 0) - (usedSlots[sl] || 0)) > 0)
+    : []
+
+  function castAt(slotLevel) {
+    onCastAtLevel?.(slotLevel)
+    setCastOpen(false)
+    setCastedAt(slotLevel)
+    // Pisca o badge "conjurada no nv X" e some
+    setTimeout(() => setCastedAt(null), 1800)
+  }
+
   return (
-    <div className={`bg-gray-900 rounded-lg flex items-center gap-2 px-3 py-2 hover:bg-gray-800 transition-colors ${isConcentrating ? 'ring-1 ring-blue-500/60' : ''} ${dimmed ? 'opacity-50' : ''}`}>
+    <div className={`bg-gray-900 rounded-lg flex flex-col gap-1 px-3 py-2 hover:bg-gray-800 transition-colors ${isConcentrating ? 'ring-1 ring-blue-500/60' : ''} ${dimmed ? 'opacity-50' : ''}`}>
+    <div className="flex items-center gap-2">
       {showPreparedToggle && (
         <button
           onClick={onTogglePrepared}
@@ -341,12 +362,71 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
       >
         ℹ
       </button>
+      {spell.level > 0 && (
+        <button
+          onClick={() => availableSlots.length > 0 && setCastOpen(v => !v)}
+          disabled={!canCast || availableSlots.length === 0}
+          title={
+            !canCast
+              ? 'Magia não está preparada'
+              : availableSlots.length === 0
+                ? 'Sem espaços disponíveis'
+                : 'Conjurar (escolher nível do espaço)'
+          }
+          className={`flex-shrink-0 text-xs px-1.5 py-0.5 rounded border transition-colors ${
+            availableSlots.length > 0 && canCast
+              ? 'border-amber-700 bg-amber-900/20 text-amber-300 hover:bg-amber-900/40'
+              : 'border-gray-700 text-gray-600 cursor-not-allowed'
+          }`}
+        >
+          ⚡
+        </button>
+      )}
+      {castedAt && (
+        <span className="flex-shrink-0 text-[10px] text-emerald-400 font-bold animate-pulse">
+          ✓ Nv {castedAt}
+        </span>
+      )}
       <button
         onClick={onRemove}
         className="text-red-500 hover:text-red-400 text-lg leading-none flex-shrink-0"
       >
         ×
       </button>
+    </div>
+    {castOpen && availableSlots.length > 0 && (
+      <div className="flex flex-wrap gap-1 mt-1 pt-1.5 border-t border-gray-700/60">
+        <span className="text-[10px] text-gray-500 self-center mr-1">Conjurar em:</span>
+        {availableSlots.map(sl => {
+          const remaining = (slotMax?.(sl) ?? 0) - (usedSlots[sl] || 0)
+          const isUpcast  = sl > spell.level
+          return (
+            <button
+              key={sl}
+              onClick={() => castAt(sl)}
+              title={isUpcast ? `Espaço de nível ${sl} (efeito de nível superior)` : `Espaço de nível ${sl}`}
+              className={`text-[10px] px-2 py-0.5 rounded border font-mono transition-colors ${
+                isUpcast
+                  ? 'border-amber-600 bg-amber-900/20 text-amber-300 hover:bg-amber-900/40'
+                  : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
+              }`}
+            >
+              Nv {sl} ({remaining})
+              {isUpcast && <span className="ml-0.5 text-amber-500">↑</span>}
+            </button>
+          )
+        })}
+        {spell.higherLevel && (
+          <button
+            onClick={onDetail}
+            title="Ver efeito em nível superior"
+            className="text-[10px] text-blue-400 hover:text-blue-300 underline self-center"
+          >
+            ver efeito ↑
+          </button>
+        )}
+      </div>
+    )}
     </div>
   )
 }

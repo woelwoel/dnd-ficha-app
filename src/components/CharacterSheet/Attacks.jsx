@@ -200,6 +200,7 @@ export function Attacks({ attacks = [], attributes, profBonus, onAdd, onRemove, 
                       <span className="text-sm text-gray-200">{damage.expression}</span>
                       {atk.damageType && <span className="text-xs text-gray-500">{atk.damageType}</span>}
                       <RollButton notation={dmgNotation} label={`Dano — ${atk.name}`} size="xs" />
+                      <RollButton notation={dmgNotation} label={`Dano CRÍTICO — ${atk.name}`} size="xs" crit icon="✦" />
                     </div>
                   </div>
                   {/* Sub-info */}
@@ -247,6 +248,7 @@ export function Attacks({ attacks = [], attributes, profBonus, onAdd, onRemove, 
                       <span>{damage.expression}</span>
                       {atk.damageType && <span className="text-gray-500">{atk.damageType}</span>}
                       <RollButton notation={dmgNotation} label={`Dano — ${atk.name}`} size="xs" />
+                      <RollButton notation={dmgNotation} label={`Dano CRÍTICO — ${atk.name}`} size="xs" crit icon="✦" />
                     </div>
                     {atk.versatileDice && (
                       <div className="text-gray-500">

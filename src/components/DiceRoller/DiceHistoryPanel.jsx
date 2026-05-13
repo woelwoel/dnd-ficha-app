@@ -12,15 +12,37 @@ function timeAgo(ts) {
 function RollEntry({ entry }) {
   const isCrit   = entry.sides === 20 && entry.rolls?.length > 0 && Math.max(...entry.rolls) === 20
   const isFumble = entry.sides === 20 && entry.rolls?.length === 1 && entry.rolls[0] === 1
+  const isAdvDis = entry.mode === 'adv' || entry.mode === 'dis'
 
   return (
     <div className="flex items-start justify-between gap-2 py-2 border-b border-dotted border-parchment-600/60 last:border-0">
       <div className="min-w-0 flex-1">
         {entry.label && (
-          <p className="text-xs text-ink-500 font-display tracking-wide truncate leading-tight">{entry.label}</p>
+          <p className="text-xs text-ink-500 font-display tracking-wide truncate leading-tight">
+            {entry.label}
+            {isAdvDis && (
+              <span className={`ml-1.5 text-[9px] font-bold ${entry.mode === 'adv' ? 'text-emerald-700' : 'text-rose-700'}`}>
+                {entry.mode === 'adv' ? '↑VANT' : '↓DESV'}
+              </span>
+            )}
+            {entry.crit && <span className="ml-1.5 text-[9px] font-bold text-amber-700">✦CRIT</span>}
+          </p>
         )}
         <p className="text-[11px] ink-italic font-mono">{entry.notation}</p>
-        {entry.rolls?.length > 0 && (
+        {isAdvDis && entry.allRolls?.length === 2 ? (
+          <p className="text-[11px] ink-italic font-mono">
+            [
+            <span className={entry.keptIndex === 0 ? 'font-bold text-ink-600' : 'line-through opacity-50'}>
+              {entry.allRolls[0]}
+            </span>
+            ,{' '}
+            <span className={entry.keptIndex === 1 ? 'font-bold text-ink-600' : 'line-through opacity-50'}>
+              {entry.allRolls[1]}
+            </span>
+            ]
+            {entry.modifier !== 0 ? ` ${entry.modifier > 0 ? '+' : ''}${entry.modifier}` : ''}
+          </p>
+        ) : entry.rolls?.length > 0 && (
           <p className="text-[11px] ink-italic">
             [{entry.rolls.join(', ')}]
             {entry.modifier !== 0 ? ` ${entry.modifier > 0 ? '+' : ''}${entry.modifier}` : ''}
@@ -53,7 +75,7 @@ function RollEntry({ entry }) {
  * Aberto  → mini-janela arrastável (arraste pelo cabeçalho).
  */
 export function DiceHistoryPanel() {
-  const { history, clearHistory, open, togglePanel } = useDiceRoller()
+  const { history, clearHistory, open, togglePanel, mode = 'normal', setMode } = useDiceRoller()
 
   // null = posição padrão (canto inferior direito)
   // {x, y} = posição após arrasto (left/top do viewport)
@@ -141,15 +163,26 @@ export function DiceHistoryPanel() {
   const button = !open ? (
     <button
       onClick={togglePanel}
-      style={{ position: 'fixed', bottom: '1.25rem', right: '1.25rem', zIndex: 50 }}
-      className="w-12 h-12 rounded-full
-        bg-parchment-100 hover:bg-parchment-200 border-2 border-ink-300 hover:border-ink-500
-        text-xl flex items-center justify-center transition-all duration-200"
-      style={{ boxShadow: 'var(--shadow-parchment)' }}
-      title="Histórico de dados (🎲)"
+      title={`Histórico de dados${mode !== 'normal' ? ` (próxima: ${mode === 'adv' ? 'vantagem' : 'desvantagem'})` : ''}`}
       aria-label="Abrir histórico de rolagens"
+      style={{
+        position: 'fixed', bottom: '1.25rem', right: '1.25rem', zIndex: 50,
+        boxShadow: 'var(--shadow-parchment)',
+      }}
+      className={`relative w-12 h-12 rounded-full text-xl flex items-center justify-center transition-all duration-200 border-2 ${
+        mode === 'adv' ? 'bg-emerald-100 border-emerald-700' :
+        mode === 'dis' ? 'bg-rose-100 border-rose-700' :
+        'bg-parchment-100 hover:bg-parchment-200 border-ink-300 hover:border-ink-500'
+      }`}
     >
       🎲
+      {mode !== 'normal' && (
+        <span className={`absolute -top-1 -right-1 w-5 h-5 rounded-full border-2 border-parchment-50 text-[10px] font-bold flex items-center justify-center ${
+          mode === 'adv' ? 'bg-emerald-700 text-white' : 'bg-rose-700 text-white'
+        }`}>
+          {mode === 'adv' ? '↑' : '↓'}
+        </span>
+      )}
     </button>
   ) : null
 
@@ -196,6 +229,31 @@ export function DiceHistoryPanel() {
         >
           ✕
         </button>
+      </div>
+
+      {/* ── Modo da próxima rolagem (vantagem/desvantagem) ────── */}
+      <div className="flex items-center gap-1 px-3 py-1.5 border-b border-parchment-600 bg-parchment-100 shrink-0">
+        <span className="text-[10px] ink-italic uppercase tracking-widest shrink-0 mr-1">Próxima:</span>
+        {[
+          { v: 'normal', lbl: 'Normal', cls: 'border-ink-300 bg-parchment-50 text-ink-500' },
+          { v: 'adv',    lbl: '↑ Vant.', cls: 'border-emerald-700 bg-emerald-100 text-emerald-800' },
+          { v: 'dis',    lbl: '↓ Desv.', cls: 'border-rose-700 bg-rose-100 text-rose-800' },
+        ].map(opt => {
+          const active = mode === opt.v
+          return (
+            <button
+              key={opt.v}
+              onClick={() => setMode?.(opt.v)}
+              className={`flex-1 text-[10px] font-bold py-0.5 rounded border transition-all ${
+                active
+                  ? opt.cls + ' shadow-inner'
+                  : 'border-parchment-600 text-ink-200 hover:border-ink-300 hover:text-ink-500'
+              }`}
+            >
+              {opt.lbl}
+            </button>
+          )
+        })}
       </div>
 
       {/* ── Histórico ─────────────────────────────────────────── */}
