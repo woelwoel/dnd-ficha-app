@@ -1,0 +1,105 @@
+/* Layout livro aberto */
+.spread {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  background: linear-gradient(
+    to right,
+    var(--color-parchment-200) 0%,
+    var(--color-parchment-300) 49%,
+    var(--color-parchment-400) 50%,
+    var(--color-parchment-300) 51%,
+    var(--color-parchment-200) 100%
+  );
+  border-radius: 6px;
+  box-shadow: var(--shadow-parchment-lg);
+  position: relative;
+  min-height: 600px;
+}
+.spread::before, .spread::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 12px;
+  pointer-events: none;
+}
+.spread::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-parchment-600), transparent);
+  border-radius: 6px 0 0 6px;
+}
+.spread::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-parchment-600), transparent);
+  border-radius: 0 6px 6px 0;
+}
+@media (max-width: 768px) {
+  .spread {
+    grid-template-columns: 1fr;
+    background: var(--color-parchment-200);
+  }
+  .spread::before, .spread::after { display: none; }
+}
+
+/* Página individual */
+.page {
+  padding: 3rem 2.5rem;
+  position: relative;
+  background-image:
+    radial-gradient(circle at 15% 25%, rgba(168, 149, 111, 0.10) 0%, transparent 30%),
+    radial-gradient(circle at 80% 70%, rgba(168, 149, 111, 0.08) 0%, transparent 35%);
+  min-height: 100%;
+}
+.pageLeft {
+  border-right: 1px solid var(--color-parchment-500);
+  box-shadow: inset -8px 0 12px -6px rgba(42,31,20,0.18);
+}
+.pageRight {
+  border-left: 1px solid var(--color-parchment-500);
+  box-shadow: inset 8px 0 12px -6px rgba(42,31,20,0.18);
+}
+@media (max-width: 768px) {
+  .page { padding: 1.5rem 1rem; box-shadow: none; border: none; }
+}
+
+/* Heading iluminado */
+.headingWrap {
+  text-align: center;
+  margin: 1.5rem 0;
+}
+.headingText {
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
+  color: var(--color-ink-500);
+  display: inline-block;
+  padding: 0 1rem;
+}
+.headingL1 { font-size: 2rem; }
+.headingL2 { font-size: 1.5rem; }
+.headingL3 { font-size: 1.15rem; }
+.headingRule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+.headingLine {
+  flex: 1;
+  height: 0;
+  border-top: 1px solid var(--color-ink-200);
+  box-shadow: 0 3px 0 -2px var(--color-ink-200);
+  max-width: 280px;
+}
+
+/* Divider */
+.dividerLine {
+  border: 0;
+  border-top: 1px solid var(--color-ink-200);
+  box-shadow: 0 3px 0 -2px var(--color-ink-200);
+  margin: 1.25rem 0;
+}
+.dividerFlourish {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
