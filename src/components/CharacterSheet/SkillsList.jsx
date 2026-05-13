@@ -15,21 +15,22 @@ export function SkillsList({ attributes, proficiencies, profBonus, onToggle, onT
   const backgroundSkills = proficiencies.backgroundSkills ?? []
 
   return (
-    <div className="bg-gray-800 border border-gray-600 rounded-lg p-4">
-      <h3 className="text-sm font-bold text-amber-400 uppercase tracking-widest mb-1">
+    <div className="bg-parchment-100 border border-parchment-600 rounded-lg p-4"
+      style={{ boxShadow: 'var(--shadow-parchment-sm)' }}>
+      <h3 className="text-sm font-display text-ink-500 uppercase tracking-widest mb-1 border-b border-parchment-600 pb-1">
         Perícias
       </h3>
-      <div className="flex flex-wrap gap-x-4 gap-y-0.5 mb-3 text-xs text-gray-500">
+      <div className="flex flex-wrap gap-x-4 gap-y-0.5 mb-3 text-xs ink-italic mt-1">
         <span>Prof: {formatModifier(profBonus)}</span>
         {skillLimit !== null && (
-          <span className={selectedCount >= skillLimit ? 'text-amber-500' : ''}>
+          <span className={selectedCount >= skillLimit ? 'text-ink-500 font-semibold' : ''}>
             {selectedCount}/{skillLimit} selecionadas
-            {selectedCount > skillLimit && <span className="text-red-400 ml-1">(excedido)</span>}
+            {selectedCount > skillLimit && <span className="text-ink-600 ml-1 font-bold">(excedido)</span>}
           </span>
         )}
-        <span className="text-gray-600">★ = Especialização (×2 Prof)</span>
+        <span>★ = Especialização (×2 Prof)</span>
         {backgroundSkills.length > 0 && (
-          <span className="text-gray-600">🎒 = Antecedente</span>
+          <span>🎒 = Antecedente</span>
         )}
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-1">
@@ -56,7 +57,7 @@ export function SkillsList({ attributes, proficiencies, profBonus, onToggle, onT
               {/* Checkbox: travado para perícias do antecedente */}
               {isBackgroundSkill && !isClassSkill ? (
                 <span
-                  className="flex-shrink-0 w-4 h-4 flex items-center justify-center text-[10px] text-amber-600"
+                  className="flex-shrink-0 w-4 h-4 flex items-center justify-center text-[10px] text-ink-300"
                   title="Proficiência do antecedente"
                 >
                   🎒
@@ -67,7 +68,7 @@ export function SkillsList({ attributes, proficiencies, profBonus, onToggle, onT
                   checked={isClassSkill}
                   disabled={limitReached}
                   onChange={() => !limitReached && onToggle(key)}
-                  className={`flex-shrink-0 ${limitReached ? 'cursor-not-allowed opacity-60' : 'accent-amber-400 cursor-pointer'}`}
+                  className={`flex-shrink-0 ${limitReached ? 'cursor-not-allowed opacity-60' : 'accent-ink-500 cursor-pointer'}`}
                 />
               )}
               {/* Botão de especialização — invisível quando não proficiente para manter alinhamento */}
@@ -78,23 +79,23 @@ export function SkillsList({ attributes, proficiencies, profBonus, onToggle, onT
                 title={expert ? 'Remover Especialização' : 'Adicionar Especialização (requer proficiência)'}
                 className={`w-4 h-4 flex items-center justify-center rounded shrink-0 text-[11px] leading-none transition-colors ${
                   expert
-                    ? 'text-amber-400 hover:text-amber-300 cursor-pointer'
+                    ? 'text-ink-500 hover:text-ink-600 cursor-pointer'
                     : proficient
-                      ? 'text-gray-600 hover:text-gray-400 cursor-pointer'
+                      ? 'text-ink-200 hover:text-ink-500 cursor-pointer'
                       : 'opacity-0 pointer-events-none'
                 }`}
               >
                 ★
               </button>
               <Tooltip content={tooltip} position="top">
-                <span className={`w-8 text-sm font-bold text-right flex-shrink-0 cursor-help ${expert ? 'text-amber-200' : proficient ? 'text-amber-300' : 'text-gray-400'}`}>
+                <span className={`w-8 text-sm font-bold text-right flex-shrink-0 cursor-help ${expert ? 'text-ink-600' : proficient ? 'text-ink-500' : 'text-ink-200'}`}>
                   {formatModifier(mod)}
                 </span>
               </Tooltip>
               <RollButton notation={notation} label={name} size="xs" />
-              <span className="text-sm text-gray-300 leading-tight">
+              <span className="text-sm text-ink-500 leading-tight">
                 {name}{' '}
-                <span className="text-gray-500 text-xs">({abbr})</span>
+                <span className="text-ink-200 text-xs">({abbr})</span>
               </span>
             </div>
           )

@@ -46,7 +46,7 @@ export function AttributesSection({
   return (
     <section>
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-        <h2 className="text-sm font-bold text-amber-400 uppercase tracking-widest">Atributos</h2>
+        <h2 className="text-base font-display text-ink-500 uppercase tracking-widest border-b-2 border-parchment-600 pb-1 flex-1">Atributos</h2>
         <div className="flex gap-1 text-xs">
           {[
             { id: 'manual',         label: 'Manual'         },
@@ -56,10 +56,10 @@ export function AttributesSection({
             <button
               key={m.id}
               onClick={() => onChangeMethod(m.id)}
-              className={`px-2 py-1 rounded border transition-colors ${
+              className={`px-2 py-1 rounded border font-display tracking-wide transition-colors ${
                 scoreMethod === m.id
-                  ? 'bg-amber-700 border-amber-500 text-white'
-                  : 'bg-gray-800 border-gray-600 text-gray-400 hover:text-white'
+                  ? 'bg-ink-500 border-ink-600 text-parchment-50'
+                  : 'bg-parchment-100 border-parchment-600 text-ink-200 hover:text-ink-500 hover:bg-parchment-200'
               }`}
             >
               {m.label}

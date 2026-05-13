@@ -33,23 +33,24 @@ function CollapsibleSection({ title, summary, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen)
 
   return (
-    <div className="border border-gray-700/60 rounded-lg overflow-hidden">
+    <div className="border border-parchment-600 rounded-lg overflow-hidden bg-parchment-100"
+      style={{ boxShadow: 'var(--shadow-parchment-sm)' }}>
       <button
         type="button"
         onClick={() => setOpen(v => !v)}
-        className="w-full flex items-center justify-between gap-3 px-4 py-2.5 bg-gray-800/50 hover:bg-gray-800/80 transition-colors text-left"
+        className="w-full flex items-center justify-between gap-3 px-4 py-2.5 bg-parchment-200 hover:bg-parchment-300 transition-colors text-left"
         aria-expanded={open}
       >
         <div className="flex items-center gap-3 min-w-0">
-          <span className="text-xs font-bold text-amber-400 font-display tracking-widest uppercase shrink-0">
+          <span className="text-xs font-bold text-ink-500 font-display tracking-widest uppercase shrink-0">
             {title}
           </span>
           {!open && summary && (
-            <span className="text-xs text-gray-500 truncate">{summary}</span>
+            <span className="text-xs ink-italic truncate">{summary}</span>
           )}
         </div>
         <span
-          className={`text-gray-500 text-xs transition-transform duration-200 shrink-0 ${open ? 'rotate-180' : ''}`}
+          className={`text-ink-200 text-xs transition-transform duration-200 shrink-0 ${open ? 'rotate-180' : ''}`}
           aria-hidden
         >
           ▼
@@ -57,7 +58,7 @@ function CollapsibleSection({ title, summary, children, defaultOpen = false }) {
       </button>
 
       {open && (
-        <div className="border-t border-gray-700/40">
+        <div className="border-t border-parchment-600">
           {children}
         </div>
       )}
