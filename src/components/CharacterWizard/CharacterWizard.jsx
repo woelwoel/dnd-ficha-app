@@ -285,7 +285,12 @@ function isASIChoiceComplete(choice) {
     const total = Object.values(choice.bonuses ?? {}).reduce((s, v) => s + v, 0)
     return total === 2
   }
-  if (choice.type === 'feat') return !!choice.featIndex
+  if (choice.type === 'feat') {
+    if (!choice.featIndex) return false
+    const choices = choice.featAttrBonus?.choices ?? []
+    if (choices.length > 1) return !!choice.featChosenAttr
+    return true
+  }
   return false
 }
 
@@ -345,11 +350,15 @@ function canAdvance(stepId, draft, classChoices = {}, races = [], classData = nu
       const allMulticlassChosen = (draft.multiclasses ?? []).every(mc => {
         if (!mc.class) return false
         const mcChoices = (classChoices[mc.class]?.choices ?? []).filter(c => c.level <= mc.level)
-        return mcChoices.every(c => {
+        const choicesOK = mcChoices.every(c => {
           const val = mc.chosenFeatures?.[c.id]
           if (c.multiSelect) return Array.isArray(val) && val.length >= c.multiSelect
           return !!val
         })
+        if (!choicesOK) return false
+        // ASIs da multiclasse
+        const mcAsiLevels = getASILevels(mc.class, mc.level, classProgression)
+        return mcAsiLevels.every(lvl => isASIChoiceComplete(mc.asiChoices?.[lvl]))
       })
       return allMulticlassChosen
     }
@@ -419,11 +428,20 @@ function buildCharacter(draft, classData, classEquipment) {
   for (const [k, v] of Object.entries(draft.racialBonuses)) {
     attrs[k] = Math.min(30, (attrs[k] ?? 10) + v)
   }
-  // Aplica bônus de ASI por nível
-  for (const choice of Object.values(draft.asiChoices ?? {})) {
+  // Aplica bônus de ASI/Feat por nível (classe primária + multiclasses)
+  const allAsiChoices = [
+    ...Object.values(draft.asiChoices ?? {}),
+    ...((draft.multiclasses ?? []).flatMap(mc => Object.values(mc.asiChoices ?? {}))),
+  ]
+  for (const choice of allAsiChoices) {
     if (choice?.type === 'asi') {
       for (const [attr, bonus] of Object.entries(choice.bonuses ?? {})) {
         attrs[attr] = Math.min(20, (attrs[attr] ?? 10) + bonus)
+      }
+    } else if (choice?.type === 'feat' && choice.featAttrBonus) {
+      const targetAttr = choice.featChosenAttr ?? choice.featAttrBonus.choices?.[0]
+      if (targetAttr) {
+        attrs[targetAttr] = Math.min(20, (attrs[targetAttr] ?? 10) + (choice.featAttrBonus.amount ?? 1))
       }
     }
   }
@@ -456,11 +474,25 @@ function buildCharacter(draft, classData, classEquipment) {
         class:          mc.class,
         level:          mc.level,
         chosenFeatures: mc.chosenFeatures ?? {},
+        asiChoices:     mc.asiChoices ?? {},
       })),
       chosenFeatures: draft.chosenFeatures ?? {},
-      feats: Object.entries(draft.asiChoices ?? {})
-        .filter(([, c]) => c?.type === 'feat' && c.featIndex)
-        .map(([lvl, c]) => ({ index: c.featIndex, name: c.featName, takenAtLevel: Number(lvl) })),
+      feats: [
+        ...Object.entries(draft.asiChoices ?? {})
+          .filter(([, c]) => c?.type === 'feat' && c.featIndex)
+          .map(([lvl, c]) => ({
+            index: c.featIndex, name: c.featName, takenAtLevel: Number(lvl),
+            ...(c.featAttrBonus ? { chosenAttr: c.featChosenAttr ?? c.featAttrBonus.choices?.[0] ?? null } : {}),
+          })),
+        ...((draft.multiclasses ?? []).flatMap(mc =>
+          Object.entries(mc.asiChoices ?? {})
+            .filter(([, c]) => c?.type === 'feat' && c.featIndex)
+            .map(([lvl, c]) => ({
+              index: c.featIndex, name: c.featName, takenAtLevel: Number(lvl), fromClass: mc.class,
+              ...(c.featAttrBonus ? { chosenAttr: c.featChosenAttr ?? c.featAttrBonus.choices?.[0] ?? null } : {}),
+            }))
+        )),
+      ],
       background:       draft.background,
       alignment:        draft.alignment,
       appearance:       draft.appearance ?? '',

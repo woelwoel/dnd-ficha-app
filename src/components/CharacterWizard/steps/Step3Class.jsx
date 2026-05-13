@@ -22,7 +22,13 @@ function isASIChoiceComplete(choice) {
     const total = Object.values(choice.bonuses ?? {}).reduce((s, v) => s + v, 0)
     return total === 2
   }
-  if (choice.type === 'feat') return !!choice.featIndex
+  if (choice.type === 'feat') {
+    if (!choice.featIndex) return false
+    // Talento com attrBonus de múltiplas escolhas exige picker secundário
+    const choices = choice.featAttrBonus?.choices ?? []
+    if (choices.length > 1) return !!choice.featChosenAttr
+    return true
+  }
   return false
 }
 
@@ -369,6 +375,8 @@ export function Step3Class({ draft, updateDraft, classes, classChoices = {}, cla
           classes={classes}
           classChoices={classChoices}
           multiclassData={multiclassData}
+          classProgression={classProgression}
+          feats={feats}
         />
       )}
 
@@ -520,7 +528,20 @@ function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) {
               const isSelected = currentChoice?.type === 'feat' && currentChoice.featIndex === feat.index
               return (
                 <button key={feat.index} type="button"
-                  onClick={() => onChoose({ type: 'feat', featIndex: feat.index, featName: feat.name })}
+                  onClick={() => {
+                    const attrBonus = feat.attrBonus ?? null
+                    // Auto-seleciona atributo se houver só uma opção
+                    const autoAttr = attrBonus && (attrBonus.choices?.length === 1)
+                      ? attrBonus.choices[0]
+                      : null
+                    onChoose({
+                      type: 'feat',
+                      featIndex: feat.index,
+                      featName: feat.name,
+                      featAttrBonus: attrBonus,
+                      featChosenAttr: autoAttr,
+                    })
+                  }}
                   className={`w-full text-left px-2.5 py-1.5 rounded border text-xs transition-colors flex items-start gap-2 ${
                     isSelected
                       ? 'border-amber-500 bg-amber-900/30 text-amber-200'
@@ -530,7 +551,14 @@ function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) {
                     isSelected ? 'border-amber-400 bg-amber-500' : 'border-gray-600'
                   }`} />
                   <span className="flex-1 min-w-0">
-                    <span className="font-medium block">{feat.name}</span>
+                    <span className="font-medium block">
+                      {feat.name}
+                      {feat.attrBonus && (
+                        <span className="ml-1.5 text-[9px] text-amber-400 font-normal">
+                          +{feat.attrBonus.amount} {feat.attrBonus.choices.map(c => ATTR_ABR[c]).join('/')}
+                        </span>
+                      )}
+                    </span>
                     {feat.prereq && (
                       <span className="text-[9px] text-gray-500">
                         Req: {feat.prereq.type === 'spellcasting' ? 'conjurador' : JSON.stringify(feat.prereq)}
@@ -541,6 +569,31 @@ function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) {
               )
             })}
           </div>
+
+          {/* Picker secundário de atributo (quando talento dá +1 à escolha) */}
+          {currentChoice?.type === 'feat' && currentChoice.featAttrBonus && (currentChoice.featAttrBonus.choices?.length ?? 0) > 1 && (
+            <div className="mt-2 pt-2 border-t border-gray-600/40 space-y-1.5">
+              <p className="text-[10px] text-amber-300 font-semibold">
+                Onde aplicar +{currentChoice.featAttrBonus.amount}? <span className="text-red-400">*</span>
+              </p>
+              <div className="flex gap-1.5 flex-wrap">
+                {currentChoice.featAttrBonus.choices.map(attrKey => {
+                  const isSel = currentChoice.featChosenAttr === attrKey
+                  return (
+                    <button key={attrKey} type="button"
+                      onClick={() => onChoose({ ...currentChoice, featChosenAttr: attrKey })}
+                      className={`px-2.5 py-1 text-[11px] rounded border font-bold transition-colors ${
+                        isSel
+                          ? 'border-amber-500 bg-amber-900/30 text-amber-200'
+                          : 'border-gray-700 bg-gray-900/50 text-gray-400 hover:border-amber-700/60'
+                      }`}>
+                      {ATTR_ABR[attrKey]}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -890,7 +943,7 @@ function formatPrereqs(prereqs) {
 }
 
 /* ── Seção de multiclasse ─────────────────────────────────────── */
-function MulticlassSection({ draft, updateDraft, classes, classChoices, multiclassData }) {
+function MulticlassSection({ draft, updateDraft, classes, classChoices, multiclassData, classProgression = {}, feats = [] }) {
   const [infoModal, setInfoModal] = useState(null)
 
   const totalAttrs = { ...draft.baseAttributes }
@@ -904,7 +957,7 @@ function MulticlassSection({ draft, updateDraft, classes, classChoices, multicla
   ])
 
   function addMulticlass() {
-    updateDraft({ multiclasses: [...(draft.multiclasses ?? []), { class: '', level: 1, chosenFeatures: {}, bonusSpells: [], hitDie: 8 }] })
+    updateDraft({ multiclasses: [...(draft.multiclasses ?? []), { class: '', level: 1, chosenFeatures: {}, asiChoices: {}, bonusSpells: [], hitDie: 8 }] })
   }
 
   function removeMulticlass(idx) {
@@ -956,7 +1009,20 @@ function MulticlassSection({ draft, updateDraft, classes, classChoices, multicla
           if (c.multiSelect) return Array.isArray(val) && val.length >= c.multiSelect
           return !!val
         }).length
-        const mcAllDone = mc.class && mcChoicesDone === mcChoices.length
+
+        // Níveis de ASI da multiclasse (igual primária)
+        const mcAsiLevels = (classProgression[mc.class]?.levels ?? [])
+          .filter(l => l.level <= mc.level)
+          .filter(l => l.features?.some(f => f.name === 'Aumento de Atributo'))
+          .map(l => l.level)
+        const mcAsiDone = mcAsiLevels.filter(lvl => isASIChoiceComplete(mc.asiChoices?.[lvl])).length
+        const mcTotalChoices = mcChoices.length + mcAsiLevels.length
+        const mcTotalDone    = mcChoicesDone + mcAsiDone
+        const mcAllDone = mc.class && mcTotalDone === mcTotalChoices
+
+        function handleMcAsiChoice(level, choice) {
+          updateMc(idx, { asiChoices: { ...(mc.asiChoices ?? {}), [level]: choice } })
+        }
 
         function handleMcChoice(choiceId, value, multiSelect) {
           let newFeatures
@@ -983,7 +1049,7 @@ function MulticlassSection({ draft, updateDraft, classes, classChoices, multicla
               <select value={mc.class}
                 onChange={e => {
                   const cls = classes.find(c => c.index === e.target.value)
-                  updateMc(idx, { class: e.target.value, chosenFeatures: {}, bonusSpells: [], hitDie: cls?.hit_die ?? 8 })
+                  updateMc(idx, { class: e.target.value, chosenFeatures: {}, asiChoices: {}, bonusSpells: [], hitDie: cls?.hit_die ?? 8 })
                 }}
                 className={`flex-1 ${fieldCls}`}>
                 <option value="">Escolher classe...</option>
@@ -995,7 +1061,7 @@ function MulticlassSection({ draft, updateDraft, classes, classChoices, multicla
                 ))}
               </select>
               <select value={mc.level}
-                onChange={e => updateMc(idx, { level: Number(e.target.value), chosenFeatures: {}, bonusSpells: [] })}
+                onChange={e => updateMc(idx, { level: Number(e.target.value), chosenFeatures: {}, asiChoices: {}, bonusSpells: [] })}
                 className={`w-20 ${fieldCls}`}>
                 {Array.from({ length: 19 }, (_, i) => i + 1).map(n => (
                   <option key={n} value={n}>Nv.{n}</option>
@@ -1025,11 +1091,26 @@ function MulticlassSection({ draft, updateDraft, classes, classChoices, multicla
             )}
 
             {/* Status das escolhas */}
-            {mc.class && mcChoices.length > 0 && (
+            {mc.class && mcTotalChoices > 0 && (
               <div className={`text-[10px] font-semibold ${mcAllDone ? 'text-green-400' : 'text-amber-400'}`}>
-                {mcAllDone ? '✓ Todas as escolhas feitas' : `⚠ ${mcChoicesDone}/${mcChoices.length} escolha${mcChoices.length !== 1 ? 's' : ''} feita${mcChoicesDone !== 1 ? 's' : ''}`}
+                {mcAllDone ? '✓ Todas as escolhas feitas' : `⚠ ${mcTotalDone}/${mcTotalChoices} escolha${mcTotalChoices !== 1 ? 's' : ''} feita${mcTotalDone !== 1 ? 's' : ''}`}
               </div>
             )}
+
+            {/* ASI / Talento por nível da multiclasse */}
+            {mc.class && mcAsiLevels.map(lvl => (
+              <div key={`asi-${lvl}`} className="space-y-1.5 pt-2 border-t border-gray-600/40">
+                <p className="text-[10px] text-gray-500 font-display tracking-wide">
+                  Nível {lvl} da multiclasse
+                </p>
+                <ASIOrFeatPicker
+                  currentChoice={mc.asiChoices?.[lvl]}
+                  allowFeats={draft.settings?.allowFeats ?? false}
+                  feats={feats}
+                  onChoose={choice => handleMcAsiChoice(lvl, choice)}
+                />
+              </div>
+            ))}
 
             {/* Choices da classe secundária */}
             {mc.class && mcChoices.map(choice => {
