@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { ABILITY_SCORES, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus, getProficiencyBonus } from '../../utils/calculations'
 import { abbrOfKey } from '../../domain/attributes'
-import { getSpellcastingRules, getWarlockPactSlots, getClassSpellMath } from '../../utils/spellcasting'
+import { getSpellcastingRules, getWarlockPactSlots, getClassSpellMath, getSpellSlots } from '../../utils/spellcasting'
 import { useClassSpells } from '../../hooks/useClassSpells'
 import { SpellDetailModal } from '../SpellDetailModal'
 
@@ -18,14 +18,14 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   const isSpellcaster = classAbility !== null
   const spellAbility  = character.spellcasting.ability ?? classAbility
   // Usa profBonus passado pelo pai (nível total); fallback calcula pelo nível total internamente
-  const mcs        = character.info?.multiclasses ?? []
+  const mcs        = useMemo(() => character.info?.multiclasses ?? [], [character.info?.multiclasses])
   const totalLevel = level + mcs.reduce((s, m) => s + (m.level ?? 0), 0)
   const profBonus  = profBonusProp ?? getProficiencyBonus(totalLevel)
   const abilityScore  = spellAbility ? attributes[spellAbility] : 10
   const spellSaveDC   = calculateSpellSaveDC(abilityScore, profBonus)
   const spellAttack   = calculateSpellAttackBonus(abilityScore, profBonus)
 
-  const { classSpells, levelData, slotLevels, availableTabs } =
+  const { classSpells, levelData, availableTabs } =
     useClassSpells(classIndex, level)
 
   const rules = useMemo(
@@ -48,6 +48,18 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   // Limite que o picker respeita: grimório p/ Mago, preparedas p/ C/D/P, conhecidas p/ known
   const pickerLimit   = isMagoStyle ? spellbookSize : spellsLimit
   const pickerLabel   = isMagoStyle ? 'Grimório' : spellsLabel
+
+  // Slots regulares — tabela unificada PHB p.165 (single ou multiclasse).
+  // getSpellSlots ignora o nível de Bruxo (Pact Magic é separado), então
+  // Bruxo primário + Mago MC mostra os slots do Mago aqui corretamente.
+  const unifiedSlots = useMemo(
+    () => getSpellSlots(classIndex, level, mcs) ?? {},
+    [classIndex, level, mcs]
+  )
+  const unifiedSlotLevels = useMemo(
+    () => Object.keys(unifiedSlots).map(Number).sort((a, b) => a - b),
+    [unifiedSlots]
+  )
 
   // Pact Magic do Bruxo (PHB p.107) — slots separados, recarregam em descanso curto.
   // Soma nível de bruxo primário + multiclasse.
@@ -183,8 +195,8 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
           </div>
         )}
 
-        {/* Tracker de slots */}
-        {slotLevels.length > 0 && (
+        {/* Tracker de slots regulares (multiclasse unificada — PHB p.164) */}
+        {unifiedSlotLevels.length > 0 && (
           <div>
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-gray-400 uppercase tracking-wide">Espaços de Magia</span>
@@ -193,8 +205,8 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
               </button>
             </div>
             <div className="space-y-1.5">
-              {slotLevels.map(sl => {
-                const max = levelData[`spell_slots_level_${sl}`]
+              {unifiedSlotLevels.map(sl => {
+                const max = unifiedSlots[sl]
                 const used = usedSlots[sl] || 0
                 return (
                   <div key={sl} className="flex items-center gap-3">
@@ -310,8 +322,8 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
                 <SpellRow
                   key={spell.id}
                   spell={spell}
-                  slotLevels={slotLevels}
-                  slotMax={(slotLevel) => levelData?.[`spell_slots_level_${slotLevel}`] ?? 0}
+                  slotLevels={unifiedSlotLevels}
+                  slotMax={(slotLevel) => unifiedSlots[slotLevel] ?? 0}
                   usedSlots={usedSlots}
                   onCastAtLevel={(slotLevel) => onToggleSlot?.(slotLevel, (usedSlots[slotLevel] || 0) + 1)}
                   canCast={spell.level === 0 || (isPrepared ? spell.prepared !== false : true)}
