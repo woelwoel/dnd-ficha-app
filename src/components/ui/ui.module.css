@@ -103,3 +103,61 @@
   justify-content: center;
   margin: 1.5rem 0;
 }
+
+/* Frames ornamentais */
+.frame {
+  position: relative;
+  border: 1px solid var(--color-ink-200);
+  box-shadow:
+    0 0 0 2px var(--color-parchment-200) inset,
+    0 0 0 3px var(--color-ink-200) inset;
+  padding: 1.5rem;
+  background: var(--color-parchment-100);
+}
+.frameSimple {
+  border: 1px solid var(--color-ink-200);
+  padding: 1.25rem;
+  background: var(--color-parchment-100);
+}
+.frameCartouche {
+  display: inline-block;
+  padding: 0.75rem 2.5rem;
+  background: var(--color-parchment-100);
+  border: 1px solid var(--color-ink-200);
+  border-radius: 999px;
+  box-shadow: 0 0 0 3px var(--color-parchment-200), 0 0 0 4px var(--color-ink-200);
+  position: relative;
+}
+.frameCorner {
+  position: absolute;
+  width: 48px; height: 48px;
+}
+.frameCornerTL { top: -10px; left: -10px; }
+.frameCornerTR { top: -10px; right: -10px; }
+.frameCornerBL { bottom: -10px; left: -10px; }
+.frameCornerBR { bottom: -10px; right: -10px; }
+
+.cartoucheShield {
+  display: inline-block;
+  padding: 0.6rem 2rem;
+  background: var(--color-parchment-100);
+  border: 1px solid var(--color-ink-200);
+  clip-path: polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0 50%);
+  text-align: center;
+}
+.cartoucheOval {
+  display: inline-block;
+  padding: 0.6rem 2.5rem;
+  background: var(--color-parchment-100);
+  border: 1px solid var(--color-ink-200);
+  border-radius: 999px;
+  text-align: center;
+}
+
+.marginalIcon {
+  position: absolute;
+  opacity: 0.65;
+  pointer-events: none;
+}
+.marginalLeft { left: -1.5rem; }
+.marginalRight { right: -1.5rem; }
