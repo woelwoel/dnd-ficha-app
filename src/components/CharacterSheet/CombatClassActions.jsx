@@ -533,6 +533,201 @@ function WildShapePanel({ druidaLevel, wsUse, usesRemaining, onSpend, character,
   )
 }
 
+/* ── Painel de Ki (Monge) ─────────────────────────────────────── */
+
+const KI_FEATURES = [
+  { name: 'Rajada de Golpes',  cost: 1, desc: 'Após Atacar, gaste 1 ki para 2 ataques desarmados como ação bônus.' },
+  { name: 'Defesa Paciente',   cost: 1, desc: 'Gaste 1 ki para usar Esquiva como ação bônus.' },
+  { name: 'Vento Veloz',       cost: 1, desc: 'Gaste 1 ki para Disengage/Correr como ação bônus; pulo dobrado.' },
+  { name: 'Atordoar Golpe',    cost: 2, desc: 'Ao acertar c/c (lvl 5+): CD Sab. Falha = atordoado até fim do próx turno.' },
+  { name: 'Defletir Projétil', cost: 1, desc: 'Reação ao reduzir dano à distância a 0: arremessa de volta como ação.' },
+]
+
+function KiPanel({ monkLevel, kiUse, onSpend }) {
+  const remaining = kiUse ? kiUse.max - (kiUse.used ?? 0) : 0
+
+  function spend(n) {
+    if (!kiUse || remaining < n) return
+    for (let i = 0; i < n; i++) onSpend(kiUse.id)
+  }
+
+  return (
+    <div className="bg-ink-700/10 border border-ink-300 rounded-lg p-3">
+      <div className="flex items-center gap-3">
+        <span className="text-xl shrink-0" aria-hidden>☯️</span>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-display text-ink-500 tracking-wide">
+            Ki · <span className="font-mono">{remaining}/{kiUse?.max ?? 0}</span>
+          </p>
+          <p className="text-[11px] ink-italic">
+            Pontos recarregam em descanso curto. Nível {monkLevel} de Monge.
+          </p>
+        </div>
+      </div>
+      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-1">
+        {KI_FEATURES.map(opt => {
+          const disabled = remaining < opt.cost
+          return (
+            <button
+              key={opt.name}
+              onClick={() => spend(opt.cost)}
+              disabled={disabled}
+              title={opt.desc}
+              className={`text-left text-[10px] px-2 py-1 rounded border transition-colors ${
+                disabled
+                  ? 'border-parchment-600 bg-parchment-100 text-ink-200 cursor-not-allowed'
+                  : 'border-ink-300 bg-parchment-50 text-ink-500 hover:bg-parchment-200'
+              }`}
+            >
+              <span className="font-bold">{opt.name}</span>
+              <span className="ml-1 font-mono text-[9px]">({opt.cost} ki)</span>
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+/* ── Painel de Imposição das Mãos (Paladino) ──────────────────── */
+
+function LayOnHandsPanel({ paladinoLevel, lohUse, onSpend }) {
+  const [draft, setDraft] = useState('')
+  const remaining = lohUse ? lohUse.max - (lohUse.used ?? 0) : 0
+
+  function spend(n) {
+    if (!lohUse || n <= 0 || n > remaining) return
+    for (let i = 0; i < n; i++) onSpend(lohUse.id)
+  }
+
+  function handleCustom() {
+    const n = parseInt(draft, 10) || 0
+    if (n > 0) spend(n)
+    setDraft('')
+  }
+
+  return (
+    <div className="bg-ink-700/10 border border-ink-300 rounded-lg p-3">
+      <div className="flex items-center gap-3">
+        <span className="text-xl shrink-0" aria-hidden>✋</span>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-display text-ink-500 tracking-wide">
+            Imposição das Mãos · <span className="font-mono">{remaining}/{lohUse?.max ?? 0} PV</span>
+          </p>
+          <p className="text-[11px] ink-italic">
+            Pool de cura: gaste N pontos para curar N PV (ação). 5 pontos cura doença ou veneno. Nv {paladinoLevel}.
+          </p>
+        </div>
+      </div>
+      <div className="mt-2 flex items-center gap-1 flex-wrap">
+        {[1, 5, 10].map(n => (
+          <button
+            key={n}
+            onClick={() => spend(n)}
+            disabled={remaining < n}
+            className={`text-[10px] px-2 py-1 rounded border font-bold transition-colors ${
+              remaining < n
+                ? 'border-parchment-600 bg-parchment-100 text-ink-200 cursor-not-allowed'
+                : 'border-ink-300 bg-parchment-50 text-ink-500 hover:bg-parchment-200'
+            }`}
+          >
+            Gastar {n}
+          </button>
+        ))}
+        <input
+          type="number"
+          value={draft}
+          onChange={e => setDraft(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && handleCustom()}
+          placeholder="N"
+          className="w-14 bg-parchment-50 border border-parchment-600 rounded px-2 py-0.5 text-[10px] text-ink-500 placeholder:text-ink-200 focus:outline-none focus:border-ink-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        />
+        <button
+          onClick={handleCustom}
+          disabled={!draft || (parseInt(draft, 10) || 0) > remaining || (parseInt(draft, 10) || 0) <= 0}
+          className="text-[10px] px-2 py-1 rounded border border-ink-300 bg-parchment-50 text-ink-500 hover:bg-parchment-200 disabled:border-parchment-600 disabled:bg-parchment-100 disabled:text-ink-200 disabled:cursor-not-allowed font-bold transition-colors"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  )
+}
+
+/* ── Painel de Surto de Ação + Retomar o Fôlego (Guerreiro) ──── */
+
+function FighterPanel({ fighterLevel, surgeUse, secondWindUse, onSpendSurge, onSpendSecondWind }) {
+  const { roll, openPanel } = useDiceRoller()
+  const surgeRem  = surgeUse ? surgeUse.max - (surgeUse.used ?? 0) : 0
+  const swRem     = secondWindUse ? secondWindUse.max - (secondWindUse.used ?? 0) : 0
+  const swDie     = `1d10+${fighterLevel}`
+
+  function useSecondWind() {
+    if (swRem <= 0 || !secondWindUse) return
+    roll(swDie, 'Retomar o Fôlego (cura)')
+    onSpendSecondWind(secondWindUse.id)
+    openPanel()
+  }
+
+  function useSurge() {
+    if (surgeRem <= 0 || !surgeUse) return
+    onSpendSurge(surgeUse.id)
+  }
+
+  return (
+    <div className="bg-ink-700/10 border border-ink-300 rounded-lg p-3 space-y-2">
+      <div className="flex items-center gap-3">
+        <span className="text-xl shrink-0" aria-hidden>⚔️</span>
+        <p className="text-sm font-display text-ink-500 tracking-wide flex-1">
+          Guerreiro · Nv {fighterLevel}
+        </p>
+      </div>
+      {secondWindUse && (
+        <div className="flex items-center gap-2">
+          <div className="flex-1">
+            <p className="text-[11px] text-ink-500 font-bold">Retomar o Fôlego</p>
+            <p className="text-[10px] ink-italic">
+              Ação bônus: cura {swDie} PV. Restantes: <strong>{swRem}/{secondWindUse.max}</strong>.
+            </p>
+          </div>
+          <button
+            onClick={useSecondWind}
+            disabled={swRem <= 0}
+            className={`text-xs px-3 py-1 rounded border-2 font-display tracking-wide transition-all ${
+              swRem <= 0
+                ? 'border-parchment-600 bg-parchment-100 text-ink-200 cursor-not-allowed'
+                : 'border-ink-300 bg-parchment-100 text-ink-500 hover:bg-parchment-200'
+            }`}
+          >
+            Curar
+          </button>
+        </div>
+      )}
+      {surgeUse && (
+        <div className="flex items-center gap-2 pt-2 border-t border-parchment-600/50">
+          <div className="flex-1">
+            <p className="text-[11px] text-ink-500 font-bold">Surto de Ação</p>
+            <p className="text-[10px] ink-italic">
+              No seu turno, tome uma ação adicional. Restantes: <strong>{surgeRem}/{surgeUse.max}</strong>.
+            </p>
+          </div>
+          <button
+            onClick={useSurge}
+            disabled={surgeRem <= 0}
+            className={`text-xs px-3 py-1 rounded border-2 font-display tracking-wide transition-all ${
+              surgeRem <= 0
+                ? 'border-parchment-600 bg-parchment-100 text-ink-200 cursor-not-allowed'
+                : 'border-ink-300 bg-parchment-100 text-ink-500 hover:bg-parchment-200'
+            }`}
+          >
+            Usar
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
 /* ── Painel de Fúria (Bárbaro) ────────────────────────────────── */
 
 function RagePanel({ character, barbLevel, attributes, onToggleRage, ragesRemaining }) {
@@ -610,6 +805,8 @@ export function CombatClassActions({ character, onToggleRage, onSpendFeatureUse,
   const bardLevel       = levelInClass(character, 'bardo')
   const feiticeiroLevel = levelInClass(character, 'feiticeiro')
   const druidaLevel     = levelInClass(character, 'druida')
+  const monkLevel       = levelInClass(character, 'monge')
+  const fighterLevel    = levelInClass(character, 'guerreiro')
 
   // Recurso de Fúria (já gerado por defaultClassFeatureUses)
   const rageUse = (character.combat?.classFeatureUses ?? []).find(u => u.id === 'barbaro-rage')
@@ -625,6 +822,12 @@ export function CombatClassActions({ character, onToggleRage, onSpendFeatureUse,
   // Recurso de Forma Selvagem
   const wsUse = (character.combat?.classFeatureUses ?? []).find(u => u.id === 'druida-wild-shape')
   const wsRemaining = wsUse ? wsUse.max - (wsUse.used ?? 0) : null
+
+  // Recursos do Monge, Paladino LoH, Guerreiro
+  const kiUse        = (character.combat?.classFeatureUses ?? []).find(u => u.id === 'monge-ki')
+  const lohUse       = (character.combat?.classFeatureUses ?? []).find(u => u.id === 'paladino-lay-on-hands')
+  const surgeUse     = (character.combat?.classFeatureUses ?? []).find(u => u.id === 'guerreiro-action-surge')
+  const secondWindUse= (character.combat?.classFeatureUses ?? []).find(u => u.id === 'guerreiro-second-wind')
 
   // Slots disponíveis para Golpe Divino — sem importar a classe primária
   const slotsMax = getSpellSlots(
@@ -653,7 +856,8 @@ export function CombatClassActions({ character, onToggleRage, onSpendFeatureUse,
   }
 
   // Não renderiza nada se não há nenhuma ação relevante
-  if (rogueLevel < 1 && barbLevel < 1 && paladinoLevel < 2 && bardLevel < 1 && feiticeiroLevel < 2 && druidaLevel < 2) return null
+  if (rogueLevel < 1 && barbLevel < 1 && paladinoLevel < 1 && bardLevel < 1
+      && feiticeiroLevel < 2 && druidaLevel < 2 && monkLevel < 2 && fighterLevel < 1) return null
 
   return (
     <div className="space-y-2">
@@ -666,6 +870,29 @@ export function CombatClassActions({ character, onToggleRage, onSpendFeatureUse,
           paladinoLevel={paladinoLevel}
           slotsAvailable={slotsAvailable}
           onConsumeSlot={handleConsumeSlot}
+        />
+      )}
+      {paladinoLevel >= 1 && lohUse && (
+        <LayOnHandsPanel
+          paladinoLevel={paladinoLevel}
+          lohUse={lohUse}
+          onSpend={onSpendFeatureUse}
+        />
+      )}
+      {monkLevel >= 2 && kiUse && (
+        <KiPanel
+          monkLevel={monkLevel}
+          kiUse={kiUse}
+          onSpend={onSpendFeatureUse}
+        />
+      )}
+      {fighterLevel >= 1 && (secondWindUse || surgeUse) && (
+        <FighterPanel
+          fighterLevel={fighterLevel}
+          surgeUse={surgeUse}
+          secondWindUse={secondWindUse}
+          onSpendSurge={onSpendFeatureUse}
+          onSpendSecondWind={onSpendFeatureUse}
         />
       )}
       {bardLevel >= 1 && bardicUse && (
