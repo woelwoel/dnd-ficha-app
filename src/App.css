@@ -1,1 +1,12 @@
-/* App.css — limpo; estilos globais estão em index.css */
+/* Layout genérico — sem cores temáticas. Tudo de cor vem dos tokens em index.css. */
+#root {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+@media (max-width: 768px) {
+  #root {
+    padding: 0.5rem;
+  }
+}
