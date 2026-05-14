@@ -133,8 +133,28 @@ export function computeEffectiveCasterLevel(primaryClass, primaryLevel, multicla
  * @returns {Object<number, number>|null}  { 1: 4, 2: 3, ... } ou null
  */
 export function getSpellSlots(primaryClass, primaryLevel, multiclasses = []) {
+  const mcs = multiclasses ?? []
+  const t = CASTER_TYPE[primaryClass]
+
+  // Solo half-caster (Paladino/Patrulheiro): usa a tabela PUBLICADA da
+  // classe (PHB p.84/p.91), que equivale a `effectiveLevel = ceil(level/2)`
+  // na tabela unificada. A regra `floor(level/2)` so vale em MULTICLASSE
+  // (PHB p.165). Sem essa exceção, um Paladino 5 solo veria 3 slots
+  // de nv 1 em vez dos 4+2 corretos.
+  const isSoloHalfCaster = t === 'half' && mcs.length === 0
+  if (isSoloHalfCaster) {
+    if (primaryLevel < 2) return null
+    const eff = Math.ceil(primaryLevel / 2)
+    const row = SPELL_SLOTS_TABLE[Math.min(20, eff) - 1]
+    const result = {}
+    for (let i = 0; i < 9; i++) {
+      if (row[i] > 0) result[i + 1] = row[i]
+    }
+    return Object.keys(result).length > 0 ? result : null
+  }
+
   const { effectiveLevel, hasUnifiedCaster } = computeEffectiveCasterLevel(
-    primaryClass, primaryLevel, multiclasses
+    primaryClass, primaryLevel, mcs
   )
   if (!hasUnifiedCaster || effectiveLevel < 1) return null
   const row = SPELL_SLOTS_TABLE[Math.min(20, effectiveLevel) - 1]
