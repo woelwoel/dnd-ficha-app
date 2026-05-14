@@ -18,6 +18,7 @@ import {
   getClassSpellMath,
   getWarlockPactSlots,
 } from '../utils/spellcasting'
+import { getActiveMagicEffects, getEffectiveAttributes } from '../domain/magicItems'
 
 /**
  * Hook de cálculos reativos da ficha.
@@ -54,20 +55,30 @@ export function useCharacterCalculations(character, classData = null, classDataM
     const totalLevel = level + mcs.reduce((s, m) => s + (m.level ?? 0), 0)
     const profBonus = getProficiencyBonus(totalLevel)
 
+    // Efeitos mágicos agregados (itens atunados/equipados).
+    const magicEffects = getActiveMagicEffects(items ?? [])
+
+    // Atributos efetivos: base → attrSet → attrBonus (respeita max).
+    // A partir daqui, todos os cálculos derivados usam estes valores.
+    const effectiveAttrs = getEffectiveAttributes(
+      { str, dex, con, int: intel, wis, cha },
+      magicEffects
+    )
+
     const mods = {
-      str: getModifier(str),
-      dex: getModifier(dex),
-      con: getModifier(con),
-      int: getModifier(intel),
-      wis: getModifier(wis),
-      cha: getModifier(cha),
+      str: getModifier(effectiveAttrs.str),
+      dex: getModifier(effectiveAttrs.dex),
+      con: getModifier(effectiveAttrs.con),
+      int: getModifier(effectiveAttrs.int),
+      wis: getModifier(effectiveAttrs.wis),
+      cha: getModifier(effectiveAttrs.cha),
     }
 
     // CA sugerida (PHB p.144–145) — agora retorna objeto rico com avisos.
     const { armor, hasShield } = getEquippedArmor(items)
     const acResult = calculateArmorClass({
       mods,
-      attributes,
+      attributes: effectiveAttrs,
       classIndex,
       classes: [
         { class: classIndex, level },
@@ -76,6 +87,7 @@ export function useCharacterCalculations(character, classData = null, classDataM
       armor,
       hasShield,
       armorProficiencies: armorProfs ?? [],
+      magicEffects,
     })
     const suggestedAC   = acResult.ac
     const acWarnings    = acResult.warnings
@@ -129,7 +141,10 @@ export function useCharacterCalculations(character, classData = null, classDataM
     const savingThrows = {}
     for (const key of ['str', 'dex', 'con', 'int', 'wis', 'cha']) {
       const isProficient = saves?.includes(key) ?? false
+      const magicGeneral  = magicEffects.saves ?? 0
+      const magicSpecific = magicEffects.saveAbility?.[key] ?? 0
       savingThrows[key] = mods[key] + (isProficient ? profBonus : 0)
+                        + magicGeneral + magicSpecific
     }
 
     const isPerceptionProficient = skills?.includes('perception') ?? false
@@ -151,6 +166,8 @@ export function useCharacterCalculations(character, classData = null, classDataM
     return {
       profBonus,
       mods,
+      effectiveAttrs,
+      magicEffects,
       suggestedAC,
       acWarnings,
       speedPenalty,
