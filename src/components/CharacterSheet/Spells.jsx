@@ -4,12 +4,14 @@ import { abbrOfKey } from '../../domain/attributes'
 import { getSpellcastingRules, getWarlockPactSlots, getClassSpellMath, getSpellSlots } from '../../utils/spellcasting'
 import { useClassSpells } from '../../hooks/useClassSpells'
 import { SpellDetailModal } from '../SpellDetailModal'
+import { matchesFilters, EMPTY_FILTERS } from '../../utils/spellFilters'
 
 export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onTogglePrepared, onToggleSlot, onSetConcentration, onSpendPactSlot, onRegainPactSlot }) {
   const [activeTab, setActiveTab] = useState(0)
   const [search, setSearch] = useState('')
   const [pickerOpen, setPickerOpen] = useState(false)
   const [detailSpell, setDetailSpell] = useState(null)
+  const [filters, setFilters] = useState(EMPTY_FILTERS)
 
   const classIndex   = character.info?.class || ''
   const classAbility = classData?.spellcasting_ability
@@ -79,7 +81,10 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
 
   // Picker filtrado
   const filteredPicker = useMemo(() => {
-    const base = classSpells.filter(s => s.level === activeTab)
+    let base = classSpells.filter(s => s.level === activeTab)
+    // Filtros estruturados (escola/ritual/concentração/componentes/tempo)
+    base = base.filter(s => matchesFilters(s, filters))
+    // Busca textual livre
     if (!search.trim()) return base
     const q = search.toLowerCase()
     return base.filter(s =>
@@ -87,7 +92,7 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
       (s.school || '').toLowerCase().includes(q) ||
       (s.casting_time || '').toLowerCase().includes(q)
     )
-  }, [classSpells, activeTab, search])
+  }, [classSpells, activeTab, search, filters])
 
   const mySpellIds = new Set(mySpells.map(s => s.index))
 
@@ -380,6 +385,8 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
           spellsLabel={pickerLabel}
           myCantripsCount={myCantrips.length}
           myLeveledCount={myLeveled.length}
+          filters={filters}
+          onFiltersChange={setFilters}
         />
       )}
 
