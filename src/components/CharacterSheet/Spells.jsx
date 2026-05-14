@@ -4,7 +4,13 @@ import { abbrOfKey } from '../../domain/attributes'
 import { getSpellcastingRules, getWarlockPactSlots, getClassSpellMath, getSpellSlots } from '../../utils/spellcasting'
 import { useClassSpells } from '../../hooks/useClassSpells'
 import { SpellDetailModal } from '../SpellDetailModal'
-import { matchesFilters, EMPTY_FILTERS } from '../../utils/spellFilters'
+import {
+  matchesFilters,
+  EMPTY_FILTERS,
+  countActiveFilters,
+  SCHOOL_LABELS,
+  CASTING_TIME_LABELS,
+} from '../../utils/spellFilters'
 
 export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onTogglePrepared, onToggleSlot, onSetConcentration, onSpendPactSlot, onRegainPactSlot }) {
   const [activeTab, setActiveTab] = useState(0)
@@ -532,9 +538,18 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
   )
 }
 
-function SpellPicker({ tabs, activeTab, onTabChange, search, onSearch, spells, mySpellIds, onAdd, onDetail, cantripsLimit, spellsLimit, spellsLabel, myCantripsCount, myLeveledCount }) {
+function SpellPicker({
+  tabs, activeTab, onTabChange,
+  search, onSearch,
+  spells, mySpellIds, onAdd, onDetail,
+  cantripsLimit, spellsLimit, spellsLabel,
+  myCantripsCount, myLeveledCount,
+  filters, onFiltersChange,
+}) {
   const atCantripLimit = cantripsLimit != null && myCantripsCount >= cantripsLimit && activeTab === 0
   const atSpellLimit   = spellsLimit   != null && myLeveledCount >= spellsLimit   && activeTab > 0
+  const [panelOpen, setPanelOpen] = useState(false)
+  const activeCount = countActiveFilters(filters ?? EMPTY_FILTERS)
 
   return (
     <div className="bg-gray-800 border border-amber-700/40 rounded-lg overflow-hidden">
@@ -555,15 +570,39 @@ function SpellPicker({ tabs, activeTab, onTabChange, search, onSearch, spells, m
         ))}
       </div>
 
-      {/* Busca */}
-      <div className="p-3 border-b border-gray-700">
-        <input
-          type="text"
-          value={search}
-          onChange={e => onSearch(e.target.value)}
-          placeholder="Buscar magia..."
-          className="w-full bg-gray-900 border border-gray-700 rounded px-3 py-1.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-amber-600"
-        />
+      {/* Busca + Filtros */}
+      <div className="p-3 border-b border-gray-700 space-y-2">
+        <div className="flex gap-2 items-center">
+          <input
+            type="text"
+            value={search}
+            onChange={e => onSearch(e.target.value)}
+            placeholder="Buscar magia..."
+            className="flex-1 bg-gray-900 border border-gray-700 rounded px-3 py-1.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-amber-600"
+          />
+          <button
+            type="button"
+            onClick={() => setPanelOpen(v => !v)}
+            className={`flex-shrink-0 text-xs px-3 py-1.5 rounded border font-semibold transition-colors ${
+              activeCount > 0
+                ? 'border-amber-500 bg-amber-900/40 text-amber-200'
+                : 'border-gray-600 text-gray-300 hover:border-gray-500'
+            }`}
+          >
+            Filtros{activeCount > 0 ? ` · ${activeCount}` : ''}
+          </button>
+          <span className="text-[11px] text-gray-500 flex-shrink-0">
+            {spells.length} magia{spells.length === 1 ? '' : 's'}
+          </span>
+        </div>
+
+        {panelOpen && (
+          <FilterPanel
+            filters={filters ?? EMPTY_FILTERS}
+            onChange={onFiltersChange}
+          />
+        )}
+
         {(atCantripLimit || atSpellLimit) && (
           <p className="text-xs text-amber-500 mt-1.5">
             ⚠ Limite atingido {activeTab === 0
@@ -628,6 +667,142 @@ function SpellPicker({ tabs, activeTab, onTabChange, search, onSearch, spells, m
             </div>
           )
         })}
+      </div>
+    </div>
+  )
+}
+
+function FilterPanel({ filters, onChange }) {
+  function toggleSchool(school) {
+    const next = new Set(filters.schools)
+    if (next.has(school)) next.delete(school)
+    else next.add(school)
+    onChange({ ...filters, schools: next })
+  }
+  function toggleCastingTime(key) {
+    const next = new Set(filters.castingTimes)
+    if (next.has(key)) next.delete(key)
+    else next.add(key)
+    onChange({ ...filters, castingTimes: next })
+  }
+  function setComponent(letter, mode) {
+    onChange({ ...filters, components: { ...filters.components, [letter]: mode } })
+  }
+  function reset() {
+    onChange({
+      schools: new Set(),
+      concentration: 'any',
+      ritual: 'any',
+      components: { v: 'any', s: 'any', m: 'any' },
+      castingTimes: new Set(),
+    })
+  }
+
+  const chip = (active) =>
+    `text-[11px] px-2 py-1 rounded border transition-colors ${
+      active
+        ? 'border-amber-500 bg-amber-900/40 text-amber-200'
+        : 'border-gray-700 text-gray-400 hover:border-gray-500 hover:text-gray-200'
+    }`
+
+  const selectCls = `text-[11px] bg-gray-900 border border-gray-700 rounded px-1.5 py-0.5 text-gray-200`
+
+  return (
+    <div className="bg-gray-900/60 border border-gray-700 rounded-lg p-2.5 space-y-2.5">
+      {/* Escolas */}
+      <div>
+        <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Escolas</div>
+        <div className="flex flex-wrap gap-1">
+          {SCHOOL_LABELS.map(s => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => toggleSchool(s)}
+              className={chip(filters.schools.has(s))}
+            >
+              {s.charAt(0).toUpperCase() + s.slice(1)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Tempo de conjuração */}
+      <div>
+        <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Tempo</div>
+        <div className="flex flex-wrap gap-1">
+          {CASTING_TIME_LABELS.map(ct => (
+            <button
+              key={ct.key}
+              type="button"
+              onClick={() => toggleCastingTime(ct.key)}
+              className={chip(filters.castingTimes.has(ct.key))}
+            >
+              {ct.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Componentes V/S/M */}
+      <div>
+        <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Componentes</div>
+        <div className="flex flex-wrap gap-3">
+          {['v', 's', 'm'].map(letter => (
+            <label key={letter} className="flex items-center gap-1.5 text-[11px] text-gray-300">
+              <span className="font-semibold w-3">{letter.toUpperCase()}</span>
+              <select
+                value={filters.components[letter]}
+                onChange={e => setComponent(letter, e.target.value)}
+                className={selectCls}
+              >
+                <option value="any">qualquer</option>
+                <option value="yes">com</option>
+                <option value="no">sem</option>
+              </select>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Outros */}
+      <div>
+        <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Outros</div>
+        <div className="flex flex-wrap gap-3">
+          <label className="flex items-center gap-1.5 text-[11px] text-gray-300">
+            <span>Concentração</span>
+            <select
+              value={filters.concentration}
+              onChange={e => onChange({ ...filters, concentration: e.target.value })}
+              className={selectCls}
+            >
+              <option value="any">qualquer</option>
+              <option value="yes">sim</option>
+              <option value="no">não</option>
+            </select>
+          </label>
+          <label className="flex items-center gap-1.5 text-[11px] text-gray-300">
+            <span>Ritual</span>
+            <select
+              value={filters.ritual}
+              onChange={e => onChange({ ...filters, ritual: e.target.value })}
+              className={selectCls}
+            >
+              <option value="any">qualquer</option>
+              <option value="yes">só ritual</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="flex justify-end pt-1 border-t border-gray-700/50">
+        <button
+          type="button"
+          onClick={reset}
+          className="text-[11px] text-gray-500 hover:text-amber-400 transition-colors"
+        >
+          Limpar filtros
+        </button>
       </div>
     </div>
   )
