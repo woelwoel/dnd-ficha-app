@@ -1,4 +1,9 @@
 import { formatCR } from '../../utils/monsters'
+import {
+  translateLabel,
+  translateSpeedKey,
+  translateSenseKey,
+} from '../../utils/monsters-i18n'
 
 const ABILITY_LABELS = [
   { key: 'strength',     label: 'FOR' },
@@ -23,17 +28,17 @@ function joinACs(armor_class) {
   }).join(', ')
 }
 
-function joinSpeed(speed) {
+function joinSpeed(speed, lang) {
   if (!speed || typeof speed !== 'object') return '—'
   return Object.entries(speed)
-    .map(([k, v]) => k === 'walk' ? v : `${k} ${v}`)
+    .map(([k, v]) => k === 'walk' ? v : `${translateSpeedKey(k, lang)} ${v}`)
     .join(', ')
 }
 
-function joinSenses(senses) {
+function joinSenses(senses, lang) {
   if (!senses || typeof senses !== 'object') return '—'
   return Object.entries(senses)
-    .map(([k, v]) => `${k.replace(/_/g, ' ')} ${v}`)
+    .map(([k, v]) => `${translateSenseKey(k, lang)} ${v}`)
     .join(', ')
 }
 
@@ -79,11 +84,12 @@ function Block({ title, items }) {
   )
 }
 
-export function MonsterStatBlock({ monster }) {
+export function MonsterStatBlock({ monster, lang = 'en' }) {
   if (!monster) return null
   const cr = formatCR(monster.challenge_rating)
   const xp = monster.xp != null ? ` (${monster.xp.toLocaleString()} XP)` : ''
   const subtypeText = monster.subtype ? ` (${monster.subtype})` : ''
+  const t = (label) => translateLabel(label, lang)
 
   const savingThrows = getProfs(monster, 'Saving Throw')
   const skills       = getProfs(monster, 'Skill')
@@ -98,9 +104,9 @@ export function MonsterStatBlock({ monster }) {
       </div>
 
       <div className="space-y-1 border-y border-amber-700/40 py-3">
-        <Section label="Armor Class"  value={joinACs(monster.armor_class)} />
-        <Section label="Hit Points"   value={`${monster.hit_points}${monster.hit_dice ? ` (${monster.hit_dice})` : ''}`} />
-        <Section label="Speed"        value={joinSpeed(monster.speed)} />
+        <Section label={t('Armor Class')}  value={joinACs(monster.armor_class)} />
+        <Section label={t('Hit Points')}   value={`${monster.hit_points}${monster.hit_dice ? ` (${monster.hit_dice})` : ''}`} />
+        <Section label={t('Speed')}        value={joinSpeed(monster.speed, lang)} />
       </div>
 
       <div className="grid grid-cols-6 gap-2 text-center border-b border-amber-700/40 pb-3">
@@ -114,21 +120,21 @@ export function MonsterStatBlock({ monster }) {
       </div>
 
       <div className="space-y-1">
-        <Section label="Saving Throws"           value={savingThrows} />
-        <Section label="Skills"                  value={skills} />
-        <Section label="Damage Vulnerabilities"  value={joinList(monster.damage_vulnerabilities)} />
-        <Section label="Damage Resistances"      value={joinList(monster.damage_resistances)} />
-        <Section label="Damage Immunities"       value={joinList(monster.damage_immunities)} />
-        <Section label="Condition Immunities"    value={joinList(monster.condition_immunities)} />
-        <Section label="Senses"                  value={joinSenses(monster.senses)} />
-        <Section label="Languages"               value={monster.languages || '—'} />
-        <Section label="Challenge"               value={`${cr}${xp}`} />
+        <Section label={t('Saving Throws')}           value={savingThrows} />
+        <Section label={t('Skills')}                  value={skills} />
+        <Section label={t('Damage Vulnerabilities')}  value={joinList(monster.damage_vulnerabilities)} />
+        <Section label={t('Damage Resistances')}      value={joinList(monster.damage_resistances)} />
+        <Section label={t('Damage Immunities')}       value={joinList(monster.damage_immunities)} />
+        <Section label={t('Condition Immunities')}    value={joinList(monster.condition_immunities)} />
+        <Section label={t('Senses')}                  value={joinSenses(monster.senses, lang)} />
+        <Section label={t('Languages')}               value={monster.languages || '—'} />
+        <Section label={t('Challenge')}               value={`${cr}${xp}`} />
       </div>
 
-      <Block title="Special Abilities" items={monster.special_abilities} />
-      <Block title="Actions"           items={monster.actions} />
-      <Block title="Reactions"         items={monster.reactions} />
-      <Block title="Legendary Actions" items={monster.legendary_actions} />
+      <Block title={t('Special Abilities')} items={monster.special_abilities} />
+      <Block title={t('Actions')}           items={monster.actions} />
+      <Block title={t('Reactions')}         items={monster.reactions} />
+      <Block title={t('Legendary Actions')} items={monster.legendary_actions} />
     </div>
   )
 }

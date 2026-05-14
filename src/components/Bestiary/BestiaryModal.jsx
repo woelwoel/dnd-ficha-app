@@ -10,22 +10,47 @@ import {
   MONSTER_SIZES,
   ALIGNMENTS,
 } from '../../utils/monsters'
+import { useLanguage } from '../../utils/useLanguage'
+import { mergeMonster, indexOverrides } from '../../utils/monsters-i18n'
 import { MonsterStatBlock } from './MonsterStatBlock'
 
 export function BestiaryModal({ isOpen, onClose }) {
-  const [monsters, setMonsters] = useState([])
+  const [monstersEn, setMonstersEn] = useState([])
+  const [ptOverrides, setPtOverrides] = useState(null) // Map<index, override>
   const [search, setSearch] = useState('')
   const [filters, setFilters] = useState(EMPTY_MONSTER_FILTERS)
   const [panelOpen, setPanelOpen] = useState(false)
-  const [selected, setSelected] = useState(null)
+  const [selectedIndex, setSelectedIndex] = useState(null)
+  const { lang, toggle: toggleLang } = useLanguage()
 
   useEffect(() => {
-    if (!isOpen || monsters.length > 0) return
+    if (!isOpen || monstersEn.length > 0) return
     fetch('/srd-data/5e-SRD-Monsters.json')
       .then(r => r.json())
-      .then(data => setMonsters(Array.isArray(data) ? data : []))
-      .catch(() => setMonsters([]))
-  }, [isOpen, monsters.length])
+      .then(data => setMonstersEn(Array.isArray(data) ? data : []))
+      .catch(() => setMonstersEn([]))
+  }, [isOpen, monstersEn.length])
+
+  // Carrega overrides PT-BR sob demanda (apenas uma vez)
+  useEffect(() => {
+    if (!isOpen || ptOverrides !== null) return
+    fetch('/srd-data/5e-SRD-Monsters-pt.json')
+      .then(r => r.json())
+      .then(data => setPtOverrides(indexOverrides(data)))
+      .catch(() => setPtOverrides(new Map()))
+  }, [isOpen, ptOverrides])
+
+  // Lista de monstros com tradução aplicada conforme o idioma escolhido
+  const monsters = useMemo(() => {
+    if (lang !== 'pt' || !ptOverrides || ptOverrides.size === 0) return monstersEn
+    return monstersEn.map(m => mergeMonster(m, ptOverrides.get(m.index)))
+  }, [monstersEn, ptOverrides, lang])
+
+  // Monstro selecionado derivado da lista já traduzida (mantém sincronia com toggle)
+  const selected = useMemo(() => {
+    if (!selectedIndex) return null
+    return monsters.find(m => m.index === selectedIndex) || null
+  }, [monsters, selectedIndex])
 
   useEffect(() => {
     if (!isOpen) return
@@ -64,14 +89,25 @@ export function BestiaryModal({ isOpen, onClose }) {
               {filtered.length} de {monsters.length} monstros
             </span>
           </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded text-gray-400 hover:text-amber-400 hover:bg-gray-800"
-            aria-label="Fechar"
-          >
-            ✕
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={toggleLang}
+              aria-label={lang === 'pt' ? 'Mostrar nomes em inglês' : 'Mostrar nomes em português'}
+              title={lang === 'pt' ? 'Mostrar nomes em inglês (original)' : 'Mostrar nomes em português'}
+              className="text-xs font-semibold border border-amber-700/50 rounded px-2 py-1 text-amber-300 hover:bg-amber-900/30 transition-colors"
+            >
+              {lang === 'pt' ? 'PT' : 'EN'}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-8 h-8 flex items-center justify-center rounded text-gray-400 hover:text-amber-400 hover:bg-gray-800"
+              aria-label="Fechar"
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
         {/* Busca + filtros */}
@@ -114,9 +150,9 @@ export function BestiaryModal({ isOpen, onClose }) {
                 <button
                   key={m.index}
                   type="button"
-                  onClick={() => setSelected(m)}
+                  onClick={() => setSelectedIndex(m.index)}
                   className={`w-full text-left px-3 py-2 transition-colors flex items-center gap-2 ${
-                    selected?.index === m.index
+                    selectedIndex === m.index
                       ? 'bg-amber-900/30 border-l-4 border-amber-500'
                       : 'hover:bg-gray-800'
                   }`}
@@ -139,12 +175,12 @@ export function BestiaryModal({ isOpen, onClose }) {
               <div className="flex-1 overflow-y-auto p-4">
                 <button
                   type="button"
-                  onClick={() => setSelected(null)}
+                  onClick={() => setSelectedIndex(null)}
                   className="sm:hidden mb-3 text-xs text-amber-400 hover:text-amber-300"
                 >
                   ← Voltar à lista
                 </button>
-                <MonsterStatBlock monster={selected} />
+                <MonsterStatBlock monster={selected} lang={lang} />
               </div>
             ) : (
               <div className="flex-1 flex items-center justify-center text-sm text-gray-500">

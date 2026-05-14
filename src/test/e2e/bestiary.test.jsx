@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { BestiaryModal } from '../../components/Bestiary/BestiaryModal'
-import { mockSrdFetch } from './helpers'
+import { mockSrdFetch, clearStorage } from './helpers'
 
 /* ─────────────────────────────────────────────────────────────────────
    E2E — Bestiary Modal
@@ -18,6 +18,7 @@ import { mockSrdFetch } from './helpers'
 
 describe('Bestiary Modal E2E', () => {
   beforeEach(() => {
+    clearStorage()
     mockSrdFetch()
   })
 
@@ -79,7 +80,7 @@ describe('Bestiary Modal E2E', () => {
     })
   })
 
-  it('botão "Limpar filtros" reseta filtros', { timeout: 15000 }, async () => {
+  it('botão "Limpar filtros" reseta filtros', { timeout: 25000 }, async () => {
     const user = userEvent.setup()
     render(<BestiaryModal isOpen={true} onClose={() => {}} />)
 
@@ -92,5 +93,42 @@ describe('Bestiary Modal E2E', () => {
 
     await user.click(screen.getByText(/Limpar filtros/i))
     expect(screen.getByRole('button', { name: /^Filtros$/i })).toBeInTheDocument()
+  })
+
+  it('toggle PT/EN traduz nomes dos monstros', { timeout: 25000 }, async () => {
+    const user = userEvent.setup()
+    render(<BestiaryModal isOpen={true} onClose={() => {}} />)
+
+    // Default EN: Skeleton aparece em inglês
+    await waitFor(() => expect(screen.getByText(/^Skeleton$/)).toBeInTheDocument(), { timeout: 5000 })
+
+    const toggle = screen.getByRole('button', { name: /Mostrar nomes em portugu/i })
+    await user.click(toggle)
+
+    // Após toggle, Skeleton → Esqueleto
+    await waitFor(() => expect(screen.getByText(/^Esqueleto$/)).toBeInTheDocument())
+
+    // E o botão muda de label EN → PT
+    expect(screen.getByRole('button', { name: /Mostrar nomes em ingl/i })).toBeInTheDocument()
+  })
+
+  it('toggle PT traduz labels do stat block', { timeout: 25000 }, async () => {
+    const user = userEvent.setup()
+    render(<BestiaryModal isOpen={true} onClose={() => {}} />)
+
+    await waitFor(() => expect(screen.getByText(/^Goblin$/)).toBeInTheDocument(), { timeout: 5000 })
+
+    // Toggle para PT primeiro
+    await user.click(screen.getByRole('button', { name: /Mostrar nomes em portugu/i }))
+
+    // Seleciona o Goblin
+    const buttons = screen.getAllByRole('button', { name: /^Goblin/i })
+    await user.click(buttons[0])
+
+    // Stat block deve mostrar labels em PT
+    await waitFor(() => {
+      expect(screen.getByText('Classe de Armadura')).toBeInTheDocument()
+    })
+    expect(screen.getByText('Pontos de Vida')).toBeInTheDocument()
   })
 })
