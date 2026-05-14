@@ -105,3 +105,55 @@ describe('getEquippedArmor', () => {
     expect(r.armor?.category).toBe('light')
   })
 })
+
+describe('calculateArmorClass — magicEffects', () => {
+  const baseMods = { dex: 2, con: 0, wis: 0 }
+  const allProfs = ['light', 'medium', 'heavy', 'shield']
+
+  it('soma effects.ac no resultado final', () => {
+    const r = calculateArmorClass({
+      mods: baseMods,
+      classIndex: 'guerreiro',
+      armor: null,
+      hasShield: false,
+      armorProficiencies: allProfs,
+      magicEffects: { ac: 1, armorAc: 0 },
+    })
+    expect(r.ac).toBe(10 + 2 + 1)
+  })
+
+  it('soma effects.armorAc na base da armadura equipada', () => {
+    const r = calculateArmorClass({
+      mods: baseMods,
+      classIndex: 'guerreiro',
+      armor: { type: 'armor', category: 'medium', baseAC: 14, maxDex: 2 },
+      hasShield: false,
+      armorProficiencies: allProfs,
+      magicEffects: { ac: 0, armorAc: 1 },
+    })
+    expect(r.ac).toBe(14 + 1 + 2)
+  })
+
+  it('combina ac e armorAc', () => {
+    const r = calculateArmorClass({
+      mods: baseMods,
+      classIndex: 'guerreiro',
+      armor: { type: 'armor', category: 'medium', baseAC: 14, maxDex: 2 },
+      hasShield: false,
+      armorProficiencies: allProfs,
+      magicEffects: { ac: 1, armorAc: 1 },
+    })
+    expect(r.ac).toBe(14 + 1 + 2 + 1)
+  })
+
+  it('sem magicEffects (default) — comportamento antigo preservado', () => {
+    const r = calculateArmorClass({
+      mods: baseMods,
+      classIndex: 'guerreiro',
+      armor: null,
+      hasShield: false,
+      armorProficiencies: allProfs,
+    })
+    expect(r.ac).toBe(12)
+  })
+})

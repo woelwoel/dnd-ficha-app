@@ -129,12 +129,18 @@ export function calculateArmorClass({
   armor,
   hasShield,
   armorProficiencies = [],
+  magicEffects = null,       // efeitos agregados de itens mágicos atunados/equipados
 }) {
   const dexMod = mods?.dex ?? 0
   const conMod = mods?.con ?? 0
   const wisMod = mods?.wis ?? 0
   const warnings = []
   let speedPenalty = 0
+
+  // Bônus mágicos: armorAc soma ao baseAC da armadura (Armadura +1/+2/+3);
+  // ac é genérico e soma no final (Anel de Proteção, Bracelete, Pedra Ioun, Escudo +N).
+  const armorAcBonus = magicEffects?.armorAc ?? 0
+  const acBonus      = magicEffects?.ac ?? 0
 
   // Conjunto de classes que o personagem TEM (primária + multi).
   // Em multiclasse, basta TER a classe para herdar Defesa Sem Armadura
@@ -156,17 +162,19 @@ export function calculateArmorClass({
       base = 10 + dexMod
     }
   } else if (armor.category === 'light') {
-    base = armor.baseAC + dexMod
+    base = (armor.baseAC + armorAcBonus) + dexMod
   } else if (armor.category === 'medium') {
     const cappedDex = armor.maxDex == null ? dexMod : Math.min(dexMod, armor.maxDex)
-    base = armor.baseAC + cappedDex
+    base = (armor.baseAC + armorAcBonus) + cappedDex
   } else if (armor.category === 'heavy') {
-    base = armor.baseAC
+    base = armor.baseAC + armorAcBonus
   } else {
     base = 10 + dexMod
   }
 
   if (hasShield) base += ARMOR_TABLE.shield.baseAC
+
+  base += acBonus
 
   // ── Avisos de regra (não modificam CA) ─────────────────────
   let noProficiency = false
