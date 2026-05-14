@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { SrdSearchModal } from '../SrdSearchModal'
 import { findArmorByName, ARMOR_TABLE } from '../../domain/equipment'
-import { getRarityInfo } from '../../domain/magicItems'
+import { getRarityInfo, getActiveMagicEffects } from '../../domain/magicItems'
 
 const CURRENCY_CONFIG = [
   { key: 'pp', label: 'PPl', title: 'Platina',  color: 'text-purple-300' },
@@ -74,6 +74,28 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
   const attunedCount   = inventory.items.filter(i => i.attuned).length
   const MAX_ATTUNED    = 3
 
+  // Efeitos mágicos agregados (mesma engine pura usada pelo hook central).
+  const magicEffects = getActiveMagicEffects(inventory.items ?? [])
+  const effectSummary = []
+  if (magicEffects.ac)        effectSummary.push(`CA +${magicEffects.ac}`)
+  if (magicEffects.armorAc)   effectSummary.push(`Armadura +${magicEffects.armorAc}`)
+  if (magicEffects.attack)    effectSummary.push(`ATK +${magicEffects.attack}`)
+  if (magicEffects.damage)    effectSummary.push(`DAN +${magicEffects.damage}`)
+  if (magicEffects.saves)     effectSummary.push(`Saves +${magicEffects.saves}`)
+  for (const ab of ['str','dex','con','int','wis','cha']) {
+    if (magicEffects.saveAbility[ab])
+      effectSummary.push(`Save ${ab.toUpperCase()} +${magicEffects.saveAbility[ab]}`)
+    if (magicEffects.attrSet[ab] != null)
+      effectSummary.push(`${ab.toUpperCase()} ${magicEffects.attrSet[ab]}`)
+    if (magicEffects.attrBonus[ab].value)
+      effectSummary.push(`${ab.toUpperCase()} +${magicEffects.attrBonus[ab].value}`)
+  }
+  if (magicEffects.speed)      effectSummary.push(`Velocidade +${magicEffects.speed} ft`)
+  if (magicEffects.darkvision) effectSummary.push(`Visão no Escuro ${magicEffects.darkvision} ft`)
+  if (magicEffects.resistances.length)
+    effectSummary.push(`Resistência: ${magicEffects.resistances.join(', ')}`)
+  if (magicEffects.advSaves)   effectSummary.push('Vantagem em saves')
+
   return (
     <div className="space-y-4">
       {/* Currency */}
@@ -143,6 +165,25 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
           <p className="text-[10px] text-gray-600">Máx. 3 itens mágicos (PHB p.136)</p>
         </div>
       </div>
+
+      {/* Efeitos Mágicos Ativos */}
+      {effectSummary.length > 0 && (
+        <div className="bg-purple-950/30 border border-purple-700/50 rounded-lg p-3">
+          <h3 className="text-sm font-bold text-purple-300 uppercase tracking-widest mb-2">
+            Efeitos Mágicos Ativos
+          </h3>
+          <div className="flex flex-wrap gap-1.5">
+            {effectSummary.map((e, i) => (
+              <span
+                key={i}
+                className="text-xs px-2 py-0.5 rounded bg-purple-900/50 border border-purple-700/40 text-purple-200"
+              >
+                {e}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Items */}
       <div className="bg-gray-800 border border-gray-600 rounded-lg p-4">
@@ -369,20 +410,27 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
                 const canAtune        = !!item.requiresAttunement
                 const isAttuned       = !!item.attuned
                 const canAddAtunement = !isAttuned && attunedCount < MAX_ATTUNED
+                const rarInfo         = item.rarity ? getRarityInfo(item.rarity) : null
+                const rarityBorder    = rarInfo ? rarInfo.border : 'border-gray-700/50'
 
                 return (
                   <div
                     key={item.id}
                     className={`rounded-lg px-3 py-2.5 ${
-                      item.source === 'background' ? 'bg-amber-950/30 border border-amber-900/40' : 'bg-gray-900 border border-gray-700/50'
+                      item.source === 'background' ? 'bg-amber-950/30 border border-amber-900/40' : `bg-gray-900 border ${rarityBorder}`
                     } ${isEquipped ? 'ring-1 ring-amber-600/50' : ''} ${isAttuned ? 'ring-1 ring-purple-600/50' : ''}`}
                   >
                     {/* Linha 1: nome + ações */}
                     <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 min-w-0 flex-1 flex-wrap">
                         {item.source === 'background' && <span className="text-[11px] shrink-0">🎒</span>}
                         {isAttuned && <span className="text-[11px] shrink-0">💎</span>}
                         <span className="text-sm text-white font-medium truncate">{item.name}</span>
+                        {rarInfo && (
+                          <span className={`text-[9px] uppercase tracking-wider px-1 rounded border shrink-0 ${rarInfo.text} ${rarInfo.border}`}>
+                            {rarInfo.label}
+                          </span>
+                        )}
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {canAtune && (
@@ -451,12 +499,14 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
                 const canAtune        = !!item.requiresAttunement
                 const isAttuned       = !!item.attuned
                 const canAddAtunement = !isAttuned && attunedCount < MAX_ATTUNED
+                const rarInfo         = item.rarity ? getRarityInfo(item.rarity) : null
+                const rarityBorder    = rarInfo ? `border ${rarInfo.border}` : ''
 
                 return (
                   <div
                     key={item.id}
                     className={`grid grid-cols-[1fr_3rem_4rem_1fr_auto_2rem] gap-2 items-center rounded px-2 py-1.5 ${
-                      item.source === 'background' ? 'bg-amber-950/30 border border-amber-900/40' : 'bg-gray-900'
+                      item.source === 'background' ? 'bg-amber-950/30 border border-amber-900/40' : `bg-gray-900 ${rarityBorder}`
                     } ${isEquipped ? 'ring-1 ring-amber-600/50' : ''} ${isAttuned ? 'ring-1 ring-purple-600/50' : ''}`}
                   >
                     <span className="text-sm text-white truncate flex items-center gap-1.5">
@@ -479,6 +529,11 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
                         </span>
                       )}
                       <span className="truncate">{item.name}</span>
+                      {rarInfo && (
+                        <span className={`text-[9px] uppercase tracking-wider px-1 rounded border shrink-0 ${rarInfo.text} ${rarInfo.border}`}>
+                          {rarInfo.label}
+                        </span>
+                      )}
                     </span>
                     <span className="text-sm text-gray-300 text-center">{item.qty}</span>
                     <span className="text-sm text-gray-400 text-center">{item.weight || '—'}</span>
