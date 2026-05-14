@@ -3,6 +3,7 @@ import { ErrorBoundary } from './ErrorBoundary'
 import { SrdProvider } from './providers/SrdProvider'
 import { DiceRollerProvider } from './context/DiceRollerContext'
 import { DiceHistoryPanel } from './components/DiceRoller/DiceHistoryPanel'
+import { BestiaryButton } from './components/Bestiary/BestiaryButton'
 import { CharacterList } from './components/CharacterList'
 import './index.css'
 
@@ -48,6 +49,7 @@ function App() {
               )}
             </Suspense>
             <DiceHistoryPanel />
+            <BestiaryButton />
           </div>
         </DiceRollerProvider>
       </SrdProvider>
