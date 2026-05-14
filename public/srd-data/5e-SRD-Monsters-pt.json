@@ -1,0 +1,607 @@
+[
+  {
+    "index": "goblin",
+    "name": "Goblin",
+    "size": "Pequeno",
+    "type": "humanoide",
+    "subtype": "goblinoide",
+    "alignment": "neutro mau",
+    "languages": "Comum, Goblin",
+    "special_abilities": [
+      { "name_en": "Nimble Escape", "name": "Fuga Ágil", "desc": "O goblin pode usar a ação Disparada ou Esconder-se como ação bônus em cada um dos seus turnos." }
+    ],
+    "actions": [
+      { "name_en": "Scimitar", "name": "Cimitarra", "desc": "Ataque corpo a corpo com arma: +4 para acertar, alcance 1,5m, um alvo. Dano: 5 (1d6 + 2) cortante." },
+      { "name_en": "Shortbow", "name": "Arco Curto", "desc": "Ataque à distância com arma: +4 para acertar, alcance 24/96m, um alvo. Dano: 5 (1d6 + 2) perfurante." }
+    ]
+  },
+  {
+    "index": "hobgoblin",
+    "name": "Hobgoblin",
+    "size": "Médio",
+    "type": "humanoide",
+    "subtype": "goblinoide",
+    "alignment": "leal mau",
+    "languages": "Comum, Goblin",
+    "special_abilities": [
+      { "name_en": "Martial Advantage", "name": "Vantagem Marcial", "desc": "Uma vez por turno, o hobgoblin pode causar 7 (2d6) de dano adicional a uma criatura que ele acertou com um ataque, se essa criatura estiver a 1,5m de um aliado capaz do hobgoblin que não esteja incapacitado." }
+    ],
+    "actions": [
+      { "name_en": "Longsword", "name": "Espada Longa", "desc": "Ataque corpo a corpo com arma: +3 para acertar, alcance 1,5m, um alvo. Dano: 5 (1d8 + 1) cortante, ou 6 (1d10 + 1) cortante se usada com duas mãos." },
+      { "name_en": "Longbow", "name": "Arco Longo", "desc": "Ataque à distância com arma: +3 para acertar, alcance 45/180m, um alvo. Dano: 5 (1d8 + 1) perfurante." }
+    ]
+  },
+  {
+    "index": "bugbear",
+    "name": "Bugbear",
+    "size": "Médio",
+    "type": "humanoide",
+    "subtype": "goblinoide",
+    "alignment": "caótico mau",
+    "languages": "Comum, Goblin"
+  },
+  {
+    "index": "orc",
+    "name": "Orc",
+    "size": "Médio",
+    "type": "humanoide",
+    "subtype": "orc",
+    "alignment": "caótico mau",
+    "languages": "Comum, Orc",
+    "special_abilities": [
+      { "name_en": "Aggressive", "name": "Agressivo", "desc": "Como ação bônus, o orc pode se mover até seu deslocamento em direção a um inimigo hostil que ele possa ver." }
+    ],
+    "actions": [
+      { "name_en": "Greataxe", "name": "Machado Grande", "desc": "Ataque corpo a corpo com arma: +5 para acertar, alcance 1,5m, um alvo. Dano: 9 (1d12 + 3) cortante." },
+      { "name_en": "Javelin", "name": "Azagaia", "desc": "Ataque corpo a corpo ou à distância com arma: +5 para acertar, alcance 1,5m ou 9/36m, um alvo. Dano: 6 (1d6 + 3) perfurante." }
+    ]
+  },
+  {
+    "index": "kobold",
+    "name": "Kobold",
+    "size": "Pequeno",
+    "type": "humanoide",
+    "subtype": "kobold",
+    "alignment": "leal mau",
+    "languages": "Comum, Dracônico",
+    "special_abilities": [
+      { "name_en": "Sunlight Sensitivity", "name": "Sensibilidade à Luz Solar", "desc": "Sob luz do sol, o kobold tem desvantagem em jogadas de ataque, bem como em testes de Sabedoria (Percepção) que dependam da visão." },
+      { "name_en": "Pack Tactics", "name": "Táticas de Matilha", "desc": "O kobold tem vantagem em uma jogada de ataque contra uma criatura se ao menos um aliado do kobold estiver a 1,5m da criatura e o aliado não estiver incapacitado." }
+    ],
+    "actions": [
+      { "name_en": "Dagger", "name": "Adaga", "desc": "Ataque corpo a corpo com arma: +4 para acertar, alcance 1,5m, um alvo. Dano: 4 (1d4 + 2) perfurante." },
+      { "name_en": "Sling", "name": "Funda", "desc": "Ataque à distância com arma: +4 para acertar, alcance 9/36m, um alvo. Dano: 4 (1d4 + 2) contundente." }
+    ]
+  },
+  {
+    "index": "skeleton",
+    "name": "Esqueleto",
+    "size": "Médio",
+    "type": "morto-vivo",
+    "alignment": "leal mau",
+    "languages": "entende os idiomas que sabia em vida mas não fala"
+  },
+  {
+    "index": "zombie",
+    "name": "Zumbi",
+    "size": "Médio",
+    "type": "morto-vivo",
+    "alignment": "neutro mau",
+    "languages": "entende os idiomas que sabia em vida mas não fala"
+  },
+  {
+    "index": "ghoul",
+    "name": "Carniçal",
+    "size": "Médio",
+    "type": "morto-vivo",
+    "alignment": "caótico mau",
+    "languages": "Comum"
+  },
+  {
+    "index": "wight",
+    "name": "Wight",
+    "size": "Médio",
+    "type": "morto-vivo",
+    "alignment": "neutro mau",
+    "languages": "os idiomas que sabia em vida"
+  },
+  {
+    "index": "wraith",
+    "name": "Aparição",
+    "size": "Médio",
+    "type": "morto-vivo",
+    "alignment": "neutro mau",
+    "languages": "os idiomas que sabia em vida"
+  },
+  {
+    "index": "vampire-vampire",
+    "name": "Vampiro",
+    "size": "Médio",
+    "type": "morto-vivo",
+    "subtype": "transformista",
+    "alignment": "leal mau",
+    "languages": "os idiomas que sabia em vida",
+    "special_abilities": [
+      { "name_en": "Shapechanger", "name": "Transformista", "desc": "Se o vampiro não estiver à luz solar ou em água corrente, ele pode usar sua ação para se transformar em Minúsculo morcego ou em uma nuvem de névoa, ou retornar à sua forma verdadeira." },
+      { "name_en": "Legendary Resistance (3/Day)", "name": "Resistência Lendária (3/Dia)", "desc": "Se o vampiro falhar em um teste de resistência, ele pode optar por ser bem-sucedido em vez disso." },
+      { "name_en": "Misty Escape", "name": "Fuga Enevoada", "desc": "Quando reduzido a 0 pontos de vida fora de seu repouso, o vampiro se transforma em nuvem de névoa em vez de cair inconsciente, desde que não esteja sob luz solar ou em água corrente." },
+      { "name_en": "Regeneration", "name": "Regeneração", "desc": "O vampiro recupera 20 pontos de vida no início de seu turno se tiver ao menos 1 ponto de vida e não estiver sob luz solar ou em água corrente. Se sofrer dano radiante ou dano de água benta, esse traço não funciona no início do próximo turno do vampiro." },
+      { "name_en": "Spider Climb", "name": "Aderência de Aranha", "desc": "O vampiro pode escalar superfícies difíceis, incluindo de cabeça para baixo em tetos, sem precisar fazer um teste de habilidade." },
+      { "name_en": "Vampire Weaknesses", "name": "Fraquezas do Vampiro", "desc": "O vampiro tem as seguintes fraquezas: Repulsa por Alho, Repulsa pelo Símbolo Sagrado, Estaca no Coração, Luz do Sol." }
+    ]
+  },
+  {
+    "index": "vampire-spawn",
+    "name": "Cria de Vampiro",
+    "size": "Médio",
+    "type": "morto-vivo",
+    "alignment": "neutro mau",
+    "languages": "os idiomas que sabia em vida"
+  },
+  {
+    "index": "lich",
+    "name": "Lich",
+    "size": "Médio",
+    "type": "morto-vivo",
+    "alignment": "qualquer mau",
+    "languages": "Comum e até cinco outros idiomas",
+    "special_abilities": [
+      { "name_en": "Legendary Resistance (3/Day)", "name": "Resistência Lendária (3/Dia)", "desc": "Se o lich falhar em um teste de resistência, ele pode optar por ser bem-sucedido em vez disso." },
+      { "name_en": "Rejuvenation", "name": "Rejuvenescimento", "desc": "Se tiver um filactério, um lich destruído ganha um novo corpo em 1d10 dias, recuperando todos os seus pontos de vida e tornando-se ativo novamente. O novo corpo aparece a 1,5m do filactério." },
+      { "name_en": "Spellcasting", "name": "Conjuração", "desc": "O lich é um conjurador de 18º nível. Seu atributo de conjuração é Inteligência (CD de resistência 20, +12 para acertar com ataques de magia). O lich tem as seguintes magias de mago preparadas." },
+      { "name_en": "Turn Resistance", "name": "Resistência ao Expulsar", "desc": "O lich tem vantagem em testes de resistência contra qualquer efeito que expulsa mortos-vivos." }
+    ]
+  },
+  {
+    "index": "mummy",
+    "name": "Múmia",
+    "size": "Médio",
+    "type": "morto-vivo",
+    "alignment": "leal mau",
+    "languages": "os idiomas que sabia em vida"
+  },
+  {
+    "index": "mummy-lord",
+    "name": "Senhor das Múmias",
+    "size": "Médio",
+    "type": "morto-vivo",
+    "alignment": "leal mau",
+    "languages": "os idiomas que sabia em vida"
+  },
+  {
+    "index": "wolf",
+    "name": "Lobo",
+    "size": "Médio",
+    "type": "besta",
+    "alignment": "sem alinhamento",
+    "special_abilities": [
+      { "name_en": "Keen Hearing and Smell", "name": "Audição e Olfato Aguçados", "desc": "O lobo tem vantagem em testes de Sabedoria (Percepção) que dependam de audição ou olfato." },
+      { "name_en": "Pack Tactics", "name": "Táticas de Matilha", "desc": "O lobo tem vantagem em uma jogada de ataque contra uma criatura se ao menos um aliado do lobo estiver a 1,5m da criatura e o aliado não estiver incapacitado." }
+    ],
+    "actions": [
+      { "name_en": "Bite", "name": "Mordida", "desc": "Ataque corpo a corpo com arma: +4 para acertar, alcance 1,5m, um alvo. Dano: 7 (2d4 + 2) perfurante. Se o alvo for uma criatura, ela deve ter sucesso em um teste de resistência de Força CD 11 ou será derrubada e ficará caída." }
+    ]
+  },
+  {
+    "index": "dire-wolf",
+    "name": "Lobo Atroz",
+    "size": "Grande",
+    "type": "besta",
+    "alignment": "sem alinhamento"
+  },
+  {
+    "index": "giant-spider",
+    "name": "Aranha Gigante",
+    "size": "Grande",
+    "type": "besta",
+    "alignment": "sem alinhamento"
+  },
+  {
+    "index": "owlbear",
+    "name": "Ursocoruja",
+    "size": "Grande",
+    "type": "monstruosidade",
+    "alignment": "sem alinhamento",
+    "special_abilities": [
+      { "name_en": "Keen Sight and Smell", "name": "Visão e Olfato Aguçados", "desc": "O ursocoruja tem vantagem em testes de Sabedoria (Percepção) que dependam de visão ou olfato." }
+    ],
+    "actions": [
+      { "name_en": "Multiattack", "name": "Ataque Múltiplo", "desc": "O ursocoruja faz dois ataques: um com seu bico e um com suas garras." },
+      { "name_en": "Beak", "name": "Bico", "desc": "Ataque corpo a corpo com arma: +7 para acertar, alcance 1,5m, uma criatura. Dano: 10 (1d10 + 5) perfurante." },
+      { "name_en": "Claws", "name": "Garras", "desc": "Ataque corpo a corpo com arma: +7 para acertar, alcance 1,5m, um alvo. Dano: 14 (2d8 + 5) cortante." }
+    ]
+  },
+  {
+    "index": "rust-monster",
+    "name": "Monstro Ferrugem",
+    "size": "Médio",
+    "type": "monstruosidade",
+    "alignment": "sem alinhamento"
+  },
+  {
+    "index": "mimic",
+    "name": "Mímico",
+    "size": "Médio",
+    "type": "monstruosidade",
+    "subtype": "transformista",
+    "alignment": "neutro",
+    "special_abilities": [
+      { "name_en": "Shapechanger", "name": "Transformista", "desc": "O mímico pode usar sua ação para se transformar em um objeto ou retornar à sua forma verdadeira amorfa. Suas estatísticas são as mesmas em cada forma. Qualquer equipamento que ele esteja usando ou carregando não se transforma. Ele retorna à sua forma verdadeira se morrer." },
+      { "name_en": "Adhesive (Object Form Only)", "name": "Adesivo (Apenas na Forma de Objeto)", "desc": "O mímico gruda em qualquer coisa que toca. Uma criatura Enorme ou menor presa ao mímico também fica agarrada por ele (escape CD 13). Testes de habilidade feitos para escapar dessa pega têm desvantagem." },
+      { "name_en": "False Appearance (Object Form Only)", "name": "Aparência Falsa (Apenas na Forma de Objeto)", "desc": "Enquanto o mímico permanece imóvel, é indistinguível de um objeto comum." },
+      { "name_en": "Grappler", "name": "Agarrador", "desc": "O mímico tem vantagem em jogadas de ataque contra qualquer criatura agarrada por ele." }
+    ],
+    "actions": [
+      { "name_en": "Pseudopod", "name": "Pseudópode", "desc": "Ataque corpo a corpo com arma: +5 para acertar, alcance 1,5m, um alvo. Dano: 7 (1d8 + 3) contundente. Se o mímico estiver em sua forma de objeto, o alvo fica grudado no mímico." },
+      { "name_en": "Bite", "name": "Mordida", "desc": "Ataque corpo a corpo com arma: +5 para acertar, alcance 1,5m, um alvo. Dano: 7 (1d8 + 3) perfurante mais 4 (1d8) ácido." }
+    ]
+  },
+  {
+    "index": "gelatinous-cube",
+    "name": "Cubo Gelatinoso",
+    "size": "Grande",
+    "type": "limo",
+    "alignment": "sem alinhamento"
+  },
+  {
+    "index": "aboleth",
+    "name": "Aboleth",
+    "size": "Grande",
+    "type": "aberração",
+    "alignment": "leal mau",
+    "languages": "Aquan profundo, Telepatia 36m"
+  },
+  {
+    "index": "tarrasque",
+    "name": "Tarrasque",
+    "size": "Colossal",
+    "type": "monstruosidade",
+    "subtype": "titã",
+    "alignment": "sem alinhamento",
+    "languages": "—"
+  },
+  {
+    "index": "young-red-dragon",
+    "name": "Dragão Vermelho Jovem",
+    "size": "Grande",
+    "type": "dragão",
+    "alignment": "caótico mau",
+    "languages": "Comum, Dracônico"
+  },
+  {
+    "index": "adult-red-dragon",
+    "name": "Dragão Vermelho Adulto",
+    "size": "Enorme",
+    "type": "dragão",
+    "alignment": "caótico mau",
+    "languages": "Comum, Dracônico"
+  },
+  {
+    "index": "ancient-red-dragon",
+    "name": "Dragão Vermelho Ancião",
+    "size": "Colossal",
+    "type": "dragão",
+    "alignment": "caótico mau",
+    "languages": "Comum, Dracônico",
+    "special_abilities": [
+      { "name_en": "Legendary Resistance (3/Day)", "name": "Resistência Lendária (3/Dia)", "desc": "Se o dragão falhar em um teste de resistência, ele pode optar por ser bem-sucedido em vez disso." }
+    ],
+    "actions": [
+      { "name_en": "Multiattack", "name": "Ataque Múltiplo", "desc": "O dragão pode usar sua Presença Aterradora. Ele então faz três ataques: um com sua mordida e dois com suas garras." },
+      { "name_en": "Bite", "name": "Mordida", "desc": "Ataque corpo a corpo com arma: +17 para acertar, alcance 4,5m, um alvo. Dano: 19 (2d10 + 8) perfurante mais 14 (4d6) de fogo." },
+      { "name_en": "Claw", "name": "Garra", "desc": "Ataque corpo a corpo com arma: +17 para acertar, alcance 3m, um alvo. Dano: 15 (2d6 + 8) cortante." },
+      { "name_en": "Tail", "name": "Cauda", "desc": "Ataque corpo a corpo com arma: +17 para acertar, alcance 6m, um alvo. Dano: 18 (2d8 + 8) contundente." },
+      { "name_en": "Frightful Presence", "name": "Presença Aterradora", "desc": "Cada criatura escolhida pelo dragão a até 36m e ciente dele deve ter sucesso em um teste de resistência de Sabedoria CD 21 ou ficará amedrontada por 1 minuto." },
+      { "name_en": "Fire Breath (Recharge 5-6)", "name": "Sopro de Fogo (Recarga 5-6)", "desc": "O dragão exala fogo em uma linha de 27m. Cada criatura na linha deve fazer um teste de resistência de Destreza CD 24, recebendo 91 (26d6) de dano de fogo em uma falha, ou metade em um sucesso." }
+    ]
+  },
+  {
+    "index": "red-dragon-wyrmling",
+    "name": "Dragão Vermelho Filhote",
+    "size": "Médio",
+    "type": "dragão",
+    "alignment": "caótico mau",
+    "languages": "Dracônico"
+  },
+  {
+    "index": "ancient-gold-dragon",
+    "name": "Dragão Dourado Ancião",
+    "size": "Colossal",
+    "type": "dragão",
+    "alignment": "leal bom",
+    "languages": "Comum, Dracônico"
+  },
+  {
+    "index": "ancient-black-dragon",
+    "name": "Dragão Negro Ancião",
+    "size": "Gigantesco",
+    "type": "dragão",
+    "alignment": "caótico mau",
+    "languages": "Comum, Dracônico"
+  },
+  {
+    "index": "ancient-blue-dragon",
+    "name": "Dragão Azul Ancião",
+    "size": "Colossal",
+    "type": "dragão",
+    "alignment": "leal mau",
+    "languages": "Comum, Dracônico"
+  },
+  {
+    "index": "ancient-green-dragon",
+    "name": "Dragão Verde Ancião",
+    "size": "Colossal",
+    "type": "dragão",
+    "alignment": "leal mau",
+    "languages": "Comum, Dracônico"
+  },
+  {
+    "index": "ancient-white-dragon",
+    "name": "Dragão Branco Ancião",
+    "size": "Colossal",
+    "type": "dragão",
+    "alignment": "caótico mau",
+    "languages": "Comum, Dracônico"
+  },
+  {
+    "index": "balor",
+    "name": "Balor",
+    "size": "Enorme",
+    "type": "demônio",
+    "subtype": "demônio",
+    "alignment": "caótico mau",
+    "languages": "Abissal, telepatia 36m"
+  },
+  {
+    "index": "pit-fiend",
+    "name": "Diabo do Fosso",
+    "size": "Grande",
+    "type": "demônio",
+    "subtype": "diabo",
+    "alignment": "leal mau",
+    "languages": "Infernal, telepatia 36m"
+  },
+  {
+    "index": "marilith",
+    "name": "Marilith",
+    "size": "Grande",
+    "type": "demônio",
+    "subtype": "demônio",
+    "alignment": "caótico mau",
+    "languages": "Abissal, telepatia 36m"
+  },
+  {
+    "index": "imp",
+    "name": "Diabrete",
+    "size": "Minúsculo",
+    "type": "demônio",
+    "subtype": "diabo, transformista",
+    "alignment": "leal mau",
+    "languages": "Infernal, Comum"
+  },
+  {
+    "index": "quasit",
+    "name": "Quasit",
+    "size": "Minúsculo",
+    "type": "demônio",
+    "subtype": "demônio, transformista",
+    "alignment": "caótico mau",
+    "languages": "Abissal, Comum"
+  },
+  {
+    "index": "succubus-incubus",
+    "name": "Súcubo/Íncubo",
+    "size": "Médio",
+    "type": "demônio",
+    "subtype": "transformista",
+    "alignment": "neutro mau",
+    "languages": "Abissal, Comum, Infernal, telepatia 18m"
+  },
+  {
+    "index": "solar",
+    "name": "Solar",
+    "size": "Grande",
+    "type": "celestial",
+    "alignment": "leal bom",
+    "languages": "todos, telepatia 36m"
+  },
+  {
+    "index": "planetar",
+    "name": "Planetar",
+    "size": "Grande",
+    "type": "celestial",
+    "alignment": "leal bom",
+    "languages": "todos, telepatia 36m"
+  },
+  {
+    "index": "deva",
+    "name": "Deva",
+    "size": "Médio",
+    "type": "celestial",
+    "alignment": "leal bom",
+    "languages": "todos, telepatia 36m"
+  },
+  {
+    "index": "dryad",
+    "name": "Dríade",
+    "size": "Médio",
+    "type": "fada",
+    "alignment": "neutro",
+    "languages": "Élfico, Silvestre, Sylvan"
+  },
+  {
+    "index": "satyr",
+    "name": "Sátiro",
+    "size": "Médio",
+    "type": "fada",
+    "alignment": "caótico neutro",
+    "languages": "Comum, Élfico, Silvestre"
+  },
+  {
+    "index": "centaur",
+    "name": "Centauro",
+    "size": "Grande",
+    "type": "monstruosidade",
+    "alignment": "neutro bom",
+    "languages": "Élfico, Silvestre"
+  },
+  {
+    "index": "minotaur",
+    "name": "Minotauro",
+    "size": "Grande",
+    "type": "monstruosidade",
+    "alignment": "caótico mau",
+    "languages": "Abissal"
+  },
+  {
+    "index": "medusa",
+    "name": "Medusa",
+    "size": "Médio",
+    "type": "monstruosidade",
+    "alignment": "leal mau",
+    "languages": "Comum"
+  },
+  {
+    "index": "gorgon",
+    "name": "Górgona",
+    "size": "Grande",
+    "type": "monstruosidade",
+    "alignment": "sem alinhamento"
+  },
+  {
+    "index": "hill-giant",
+    "name": "Gigante das Colinas",
+    "size": "Enorme",
+    "type": "gigante",
+    "alignment": "caótico mau",
+    "languages": "Gigante"
+  },
+  {
+    "index": "stone-giant",
+    "name": "Gigante da Pedra",
+    "size": "Enorme",
+    "type": "gigante",
+    "alignment": "neutro",
+    "languages": "Gigante"
+  },
+  {
+    "index": "fire-giant",
+    "name": "Gigante do Fogo",
+    "size": "Enorme",
+    "type": "gigante",
+    "alignment": "leal mau",
+    "languages": "Gigante"
+  },
+  {
+    "index": "frost-giant",
+    "name": "Gigante do Gelo",
+    "size": "Enorme",
+    "type": "gigante",
+    "alignment": "neutro mau",
+    "languages": "Gigante"
+  },
+  {
+    "index": "cloud-giant",
+    "name": "Gigante das Nuvens",
+    "size": "Enorme",
+    "type": "gigante",
+    "alignment": "neutro bom (50%) ou neutro mau (50%)",
+    "languages": "Comum, Gigante"
+  },
+  {
+    "index": "storm-giant",
+    "name": "Gigante das Tempestades",
+    "size": "Enorme",
+    "type": "gigante",
+    "alignment": "caótico bom",
+    "languages": "Comum, Gigante"
+  },
+  {
+    "index": "ogre",
+    "name": "Ogro",
+    "size": "Grande",
+    "type": "gigante",
+    "alignment": "caótico mau",
+    "languages": "Comum, Gigante"
+  },
+  {
+    "index": "troll",
+    "name": "Trol",
+    "size": "Grande",
+    "type": "gigante",
+    "alignment": "caótico mau",
+    "languages": "Gigante",
+    "special_abilities": [
+      { "name_en": "Keen Smell", "name": "Olfato Aguçado", "desc": "O trol tem vantagem em testes de Sabedoria (Percepção) que dependam de olfato." },
+      { "name_en": "Regeneration", "name": "Regeneração", "desc": "O trol recupera 10 pontos de vida no início de seu turno. Se sofrer dano de ácido ou de fogo, esse traço não funciona no início do próximo turno. O trol só morre se começar seu turno com 0 pontos de vida e não regenerar." }
+    ],
+    "actions": [
+      { "name_en": "Multiattack", "name": "Ataque Múltiplo", "desc": "O trol faz três ataques: um com sua mordida e dois com suas garras." },
+      { "name_en": "Bite", "name": "Mordida", "desc": "Ataque corpo a corpo com arma: +7 para acertar, alcance 1,5m, um alvo. Dano: 7 (1d6 + 4) perfurante." },
+      { "name_en": "Claw", "name": "Garra", "desc": "Ataque corpo a corpo com arma: +7 para acertar, alcance 1,5m, um alvo. Dano: 11 (2d6 + 4) cortante." }
+    ]
+  },
+  {
+    "index": "knight",
+    "name": "Cavaleiro",
+    "size": "Médio",
+    "type": "humanoide",
+    "subtype": "qualquer raça",
+    "alignment": "qualquer alinhamento",
+    "languages": "qualquer um idioma (usualmente Comum)"
+  },
+  {
+    "index": "bandit",
+    "name": "Bandido",
+    "size": "Médio",
+    "type": "humanoide",
+    "subtype": "qualquer raça",
+    "alignment": "qualquer alinhamento não-leal",
+    "languages": "qualquer um idioma (usualmente Comum)"
+  },
+  {
+    "index": "bandit-captain",
+    "name": "Capitão Bandido",
+    "size": "Médio",
+    "type": "humanoide",
+    "subtype": "qualquer raça",
+    "alignment": "qualquer alinhamento não-leal",
+    "languages": "quaisquer dois idiomas"
+  },
+  {
+    "index": "guard",
+    "name": "Guarda",
+    "size": "Médio",
+    "type": "humanoide",
+    "subtype": "qualquer raça",
+    "alignment": "qualquer alinhamento",
+    "languages": "qualquer um idioma (usualmente Comum)"
+  },
+  {
+    "index": "priest",
+    "name": "Sacerdote",
+    "size": "Médio",
+    "type": "humanoide",
+    "subtype": "qualquer raça",
+    "alignment": "qualquer alinhamento",
+    "languages": "qualquer dois idiomas"
+  },
+  {
+    "index": "cult-fanatic",
+    "name": "Fanático de Culto",
+    "size": "Médio",
+    "type": "humanoide",
+    "subtype": "qualquer raça",
+    "alignment": "qualquer alinhamento não-bom",
+    "languages": "qualquer um idioma (usualmente Comum)"
+  },
+  {
+    "index": "commoner",
+    "name": "Plebeu",
+    "size": "Médio",
+    "type": "humanoide",
+    "subtype": "qualquer raça",
+    "alignment": "qualquer alinhamento",
+    "languages": "qualquer um idioma (usualmente Comum)"
+  }
+]
