@@ -1,0 +1,530 @@
+[
+  {
+    "index": "anel-protecao",
+    "name": "Anel de Proteção",
+    "category": "anel",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Você ganha +1 de bônus em CA e em testes de resistência enquanto usar este anel.",
+    "effects": [
+      { "type": "ac", "value": 1 },
+      { "type": "saves", "value": 1 }
+    ]
+  },
+  {
+    "index": "anel-resistencia-fogo",
+    "name": "Anel de Resistência (Fogo)",
+    "category": "anel",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Você tem resistência a dano de fogo enquanto usar este anel.",
+    "effects": [
+      { "type": "resistance", "damage": "fogo" }
+    ]
+  },
+  {
+    "index": "anel-resistencia-frio",
+    "name": "Anel de Resistência (Frio)",
+    "category": "anel",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Você tem resistência a dano de frio enquanto usar este anel.",
+    "effects": [
+      { "type": "resistance", "damage": "frio" }
+    ]
+  },
+  {
+    "index": "anel-resistencia-eletricidade",
+    "name": "Anel de Resistência (Eletricidade)",
+    "category": "anel",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Você tem resistência a dano de eletricidade enquanto usar este anel.",
+    "effects": [
+      { "type": "resistance", "damage": "eletricidade" }
+    ]
+  },
+  {
+    "index": "anel-resistencia-acido",
+    "name": "Anel de Resistência (Ácido)",
+    "category": "anel",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Você tem resistência a dano de ácido enquanto usar este anel.",
+    "effects": [
+      { "type": "resistance", "damage": "acido" }
+    ]
+  },
+  {
+    "index": "anel-resistencia-veneno",
+    "name": "Anel de Resistência (Veneno)",
+    "category": "anel",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Você tem resistência a dano de veneno enquanto usar este anel.",
+    "effects": [
+      { "type": "resistance", "damage": "veneno" }
+    ]
+  },
+  {
+    "index": "anel-mente-blindada",
+    "name": "Anel da Mente Blindada",
+    "category": "anel",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Enquanto usar este anel, você é imune a magia que permita criaturas lerem seus pensamentos.",
+    "effects": []
+  },
+  {
+    "index": "manto-protecao",
+    "name": "Manto de Proteção",
+    "category": "manto",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Você ganha +1 de bônus em CA e em testes de resistência enquanto usar este manto.",
+    "effects": [
+      { "type": "ac", "value": 1 },
+      { "type": "saves", "value": 1 }
+    ]
+  },
+  {
+    "index": "manto-resistencia",
+    "name": "Manto da Resistência",
+    "category": "manto",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Você ganha +1 de bônus em testes de resistência de Constituição enquanto usar este manto.",
+    "effects": [
+      { "type": "saveAbility", "ability": "con", "value": 1 }
+    ]
+  },
+  {
+    "index": "manto-elfico",
+    "name": "Capa Élfica",
+    "category": "manto",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Você tem vantagem em testes de Furtividade e criaturas têm desvantagem em testes para perceber você enquanto usar esta capa com capuz.",
+    "effects": []
+  },
+  {
+    "index": "manto-carismatico",
+    "name": "Manto de Carismático",
+    "category": "manto",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Seu Carisma é 18 enquanto usar este manto. Se já for 18 ou maior, o item não tem efeito.",
+    "effects": [
+      { "type": "attrSet", "ability": "cha", "value": 18 }
+    ]
+  },
+  {
+    "index": "arma-mais-1",
+    "name": "Arma +1",
+    "category": "arma",
+    "rarity": "incomum",
+    "requiresAttunement": false,
+    "description": "Você ganha +1 de bônus em rolagens de ataque e dano feitas com esta arma mágica.",
+    "effects": [
+      { "type": "attack", "value": 1 },
+      { "type": "damage", "value": 1 }
+    ]
+  },
+  {
+    "index": "arma-mais-2",
+    "name": "Arma +2",
+    "category": "arma",
+    "rarity": "raro",
+    "requiresAttunement": false,
+    "description": "Você ganha +2 de bônus em rolagens de ataque e dano feitas com esta arma mágica.",
+    "effects": [
+      { "type": "attack", "value": 2 },
+      { "type": "damage", "value": 2 }
+    ]
+  },
+  {
+    "index": "arma-mais-3",
+    "name": "Arma +3",
+    "category": "arma",
+    "rarity": "muito-raro",
+    "requiresAttunement": false,
+    "description": "Você ganha +3 de bônus em rolagens de ataque e dano feitas com esta arma mágica.",
+    "effects": [
+      { "type": "attack", "value": 3 },
+      { "type": "damage", "value": 3 }
+    ]
+  },
+  {
+    "index": "armadura-mais-1",
+    "name": "Armadura +1",
+    "category": "armadura",
+    "rarity": "raro",
+    "requiresAttunement": false,
+    "description": "Você ganha +1 de bônus em CA enquanto usar esta armadura.",
+    "effects": [
+      { "type": "armorAc", "value": 1 }
+    ]
+  },
+  {
+    "index": "armadura-mais-2",
+    "name": "Armadura +2",
+    "category": "armadura",
+    "rarity": "muito-raro",
+    "requiresAttunement": false,
+    "description": "Você ganha +2 de bônus em CA enquanto usar esta armadura.",
+    "effects": [
+      { "type": "armorAc", "value": 2 }
+    ]
+  },
+  {
+    "index": "armadura-mais-3",
+    "name": "Armadura +3",
+    "category": "armadura",
+    "rarity": "lendario",
+    "requiresAttunement": false,
+    "description": "Você ganha +3 de bônus em CA enquanto usar esta armadura.",
+    "effects": [
+      { "type": "armorAc", "value": 3 }
+    ]
+  },
+  {
+    "index": "escudo-mais-1",
+    "name": "Escudo +1",
+    "category": "armadura",
+    "rarity": "incomum",
+    "requiresAttunement": false,
+    "description": "Você ganha +1 de bônus em CA enquanto empunhar este escudo.",
+    "effects": [
+      { "type": "ac", "value": 1 }
+    ]
+  },
+  {
+    "index": "escudo-mais-2",
+    "name": "Escudo +2",
+    "category": "armadura",
+    "rarity": "raro",
+    "requiresAttunement": false,
+    "description": "Você ganha +2 de bônus em CA enquanto empunhar este escudo.",
+    "effects": [
+      { "type": "ac", "value": 2 }
+    ]
+  },
+  {
+    "index": "escudo-mais-3",
+    "name": "Escudo +3",
+    "category": "armadura",
+    "rarity": "muito-raro",
+    "requiresAttunement": false,
+    "description": "Você ganha +3 de bônus em CA enquanto empunhar este escudo.",
+    "effects": [
+      { "type": "ac", "value": 3 }
+    ]
+  },
+  {
+    "index": "cinto-forca-gigante-colina",
+    "name": "Cinto de Força do Gigante da Colina",
+    "category": "cinto",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Enquanto usar este cinto, seu valor de Força é 21. Se sua Força já for igual ou maior, o item não tem efeito.",
+    "effects": [
+      { "type": "attrSet", "ability": "str", "value": 21 }
+    ]
+  },
+  {
+    "index": "cinto-forca-gigante-pedra",
+    "name": "Cinto de Força do Gigante da Pedra/Gelo",
+    "category": "cinto",
+    "rarity": "muito-raro",
+    "requiresAttunement": true,
+    "description": "Enquanto usar este cinto, seu valor de Força é 23.",
+    "effects": [
+      { "type": "attrSet", "ability": "str", "value": 23 }
+    ]
+  },
+  {
+    "index": "cinto-forca-gigante-fogo",
+    "name": "Cinto de Força do Gigante do Fogo",
+    "category": "cinto",
+    "rarity": "muito-raro",
+    "requiresAttunement": true,
+    "description": "Enquanto usar este cinto, seu valor de Força é 25.",
+    "effects": [
+      { "type": "attrSet", "ability": "str", "value": 25 }
+    ]
+  },
+  {
+    "index": "cinto-forca-gigante-nuvem",
+    "name": "Cinto de Força do Gigante das Nuvens",
+    "category": "cinto",
+    "rarity": "lendario",
+    "requiresAttunement": true,
+    "description": "Enquanto usar este cinto, seu valor de Força é 27.",
+    "effects": [
+      { "type": "attrSet", "ability": "str", "value": 27 }
+    ]
+  },
+  {
+    "index": "cinto-forca-gigante-tempestade",
+    "name": "Cinto de Força do Gigante da Tempestade",
+    "category": "cinto",
+    "rarity": "lendario",
+    "requiresAttunement": true,
+    "description": "Enquanto usar este cinto, seu valor de Força é 29.",
+    "effects": [
+      { "type": "attrSet", "ability": "str", "value": 29 }
+    ]
+  },
+  {
+    "index": "amuleto-saude",
+    "name": "Amuleto da Saúde",
+    "category": "amuleto",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Sua Constituição é 19 enquanto usar este amuleto. Se sua Constituição já for 19 ou maior, o item não tem efeito.",
+    "effects": [
+      { "type": "attrSet", "ability": "con", "value": 19 }
+    ]
+  },
+  {
+    "index": "manual-saude-corporal",
+    "name": "Manual da Saúde Corporal",
+    "category": "tomo",
+    "rarity": "muito-raro",
+    "requiresAttunement": false,
+    "description": "Após estudar o livro por 48 horas em 6 dias, você ganha +2 em Constituição (máx. 22). O livro perde a magia.",
+    "effects": [
+      { "type": "attrBonus", "ability": "con", "value": 2, "max": 22 }
+    ]
+  },
+  {
+    "index": "manual-atletismo-ganho",
+    "name": "Manual do Atletismo Ganho",
+    "category": "tomo",
+    "rarity": "muito-raro",
+    "requiresAttunement": false,
+    "description": "Após estudar o livro por 48 horas em 6 dias, você ganha +2 em Força (máx. 22). O livro perde a magia.",
+    "effects": [
+      { "type": "attrBonus", "ability": "str", "value": 2, "max": 22 }
+    ]
+  },
+  {
+    "index": "tomo-compreensao",
+    "name": "Tomo da Compreensão",
+    "category": "tomo",
+    "rarity": "muito-raro",
+    "requiresAttunement": false,
+    "description": "Após estudar o livro por 48 horas em 6 dias, você ganha +2 em Sabedoria (máx. 22). O livro perde a magia.",
+    "effects": [
+      { "type": "attrBonus", "ability": "wis", "value": 2, "max": 22 }
+    ]
+  },
+  {
+    "index": "tomo-lideranca",
+    "name": "Tomo da Liderança e Influência",
+    "category": "tomo",
+    "rarity": "muito-raro",
+    "requiresAttunement": false,
+    "description": "Após estudar o livro por 48 horas em 6 dias, você ganha +2 em Carisma (máx. 22). O livro perde a magia.",
+    "effects": [
+      { "type": "attrBonus", "ability": "cha", "value": 2, "max": 22 }
+    ]
+  },
+  {
+    "index": "botas-aladas",
+    "name": "Botas Aladas",
+    "category": "botas",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Enquanto usar estas botas, você tem velocidade de voo igual à sua velocidade de caminhada (até 4 horas por dia).",
+    "effects": []
+  },
+  {
+    "index": "botas-velocidade",
+    "name": "Botas da Velocidade",
+    "category": "botas",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Enquanto usar estas botas, você pode usar uma ação bônus para clicar os calcanhares. Sua velocidade dobra e ataques contra você têm desvantagem (até 10 minutos por dia).",
+    "effects": []
+  },
+  {
+    "index": "botas-elficas",
+    "name": "Botas Élficas",
+    "category": "botas",
+    "rarity": "incomum",
+    "requiresAttunement": false,
+    "description": "Enquanto usar estas botas, seus passos não fazem som, qualquer que seja a superfície. Você também tem vantagem em testes de Furtividade.",
+    "effects": []
+  },
+  {
+    "index": "botas-terras-invernais",
+    "name": "Botas das Terras Invernais",
+    "category": "botas",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Você tem resistência a dano de frio e ignora terreno difícil de neve/gelo enquanto usar estas botas.",
+    "effects": [
+      { "type": "resistance", "damage": "frio" }
+    ]
+  },
+  {
+    "index": "pedra-boa-sorte",
+    "name": "Pedra da Boa Sorte",
+    "category": "bugiganga",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Enquanto a pedra estiver com você, você ganha +1 em testes de habilidade e em testes de resistência.",
+    "effects": [
+      { "type": "saves", "value": 1 }
+    ]
+  },
+  {
+    "index": "bracelete-defesa",
+    "name": "Bracelete de Defesa",
+    "category": "bugiganga",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Enquanto usar estes braceletes (sem armadura/escudo), seu CA = 13 + DES. Não funciona com armadura.",
+    "effects": []
+  },
+  {
+    "index": "gema-visao-noturna",
+    "name": "Gema da Visão Noturna",
+    "category": "bugiganga",
+    "rarity": "incomum",
+    "requiresAttunement": false,
+    "description": "Enquanto segurar esta gema, você tem visão no escuro até 18m.",
+    "effects": [
+      { "type": "darkvision", "value": 60 }
+    ]
+  },
+  {
+    "index": "oculos-visao-noturna",
+    "name": "Óculos da Visão Noturna",
+    "category": "bugiganga",
+    "rarity": "incomum",
+    "requiresAttunement": false,
+    "description": "Enquanto usar estes óculos, você tem visão no escuro até 18m.",
+    "effects": [
+      { "type": "darkvision", "value": 60 }
+    ]
+  },
+  {
+    "index": "varinha-mageletes",
+    "name": "Varinha de Mageletes",
+    "category": "varinha",
+    "rarity": "incomum",
+    "requiresAttunement": false,
+    "description": "A varinha tem 7 cargas. Use 1 carga para lançar mageletes. Recupera 1d6+1 cargas ao amanhecer.",
+    "effects": []
+  },
+  {
+    "index": "cajado-cura",
+    "name": "Cajado da Cura",
+    "category": "cajado",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Conjurador apenas. 10 cargas para lançar Curar Ferimentos, Cura Acelerada Maior e Cura em Massa. Recupera 1d6+4 cargas ao amanhecer.",
+    "effects": []
+  },
+  {
+    "index": "pocao-cura",
+    "name": "Poção de Cura",
+    "category": "pocao",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Beba para recuperar 2d4+2 pontos de vida.",
+    "effects": []
+  },
+  {
+    "index": "pocao-cura-maior",
+    "name": "Poção de Cura Maior",
+    "category": "pocao",
+    "rarity": "incomum",
+    "requiresAttunement": false,
+    "description": "Beba para recuperar 4d4+4 pontos de vida.",
+    "effects": []
+  },
+  {
+    "index": "pocao-resistencia-fogo",
+    "name": "Poção de Resistência (Fogo)",
+    "category": "pocao",
+    "rarity": "incomum",
+    "requiresAttunement": false,
+    "description": "Beba para ter resistência a dano de fogo por 1 hora.",
+    "effects": []
+  },
+  {
+    "index": "pergaminho-bola-de-fogo",
+    "name": "Pergaminho de Bola de Fogo",
+    "category": "pergaminho",
+    "rarity": "raro",
+    "requiresAttunement": false,
+    "description": "Conjure Bola de Fogo (3º nível). Pergaminho é consumido no uso.",
+    "effects": []
+  },
+  {
+    "index": "bola-cristal",
+    "name": "Bola de Cristal",
+    "category": "bugiganga",
+    "rarity": "muito-raro",
+    "requiresAttunement": true,
+    "description": "Conjurador apenas. Você pode lançar Escrutínio através da bola.",
+    "effects": []
+  },
+  {
+    "index": "ioun-stone-prudencia",
+    "name": "Pedra Ioun (Prudência)",
+    "category": "bugiganga",
+    "rarity": "muito-raro",
+    "requiresAttunement": true,
+    "description": "Enquanto esta pedra orbita sua cabeça, sua Sabedoria aumenta em 2 (máx. 20).",
+    "effects": [
+      { "type": "attrBonus", "ability": "wis", "value": 2, "max": 20 }
+    ]
+  },
+  {
+    "index": "ioun-stone-fortitude",
+    "name": "Pedra Ioun (Fortitude)",
+    "category": "bugiganga",
+    "rarity": "muito-raro",
+    "requiresAttunement": true,
+    "description": "Enquanto esta pedra orbita sua cabeça, sua Constituição aumenta em 2 (máx. 20).",
+    "effects": [
+      { "type": "attrBonus", "ability": "con", "value": 2, "max": 20 }
+    ]
+  },
+  {
+    "index": "ioun-stone-protecao",
+    "name": "Pedra Ioun (Proteção)",
+    "category": "bugiganga",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Enquanto esta pedra orbita sua cabeça, você ganha +1 de bônus em CA.",
+    "effects": [
+      { "type": "ac", "value": 1 }
+    ]
+  },
+  {
+    "index": "talisma-sorte",
+    "name": "Talismã da Sorte",
+    "category": "bugiganga",
+    "rarity": "lendario",
+    "requiresAttunement": true,
+    "description": "Enquanto usar este talismã, você pode rolar novamente um teste falho 1 vez por dia.",
+    "effects": []
+  },
+  {
+    "index": "machado-berserker",
+    "name": "Machado do Berserker",
+    "category": "arma",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Você ganha +1 em ataque/dano com este machado. HP máximo aumenta em 1 por nível enquanto atunado.",
+    "effects": [
+      { "type": "attack", "value": 1 },
+      { "type": "damage", "value": 1 }
+    ]
+  }
+]
