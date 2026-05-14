@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { SrdSearchModal } from '../SrdSearchModal'
 import { findArmorByName, ARMOR_TABLE } from '../../domain/equipment'
+import { getRarityInfo } from '../../domain/magicItems'
 
 const CURRENCY_CONFIG = [
   { key: 'pp', label: 'PPl', title: 'Platina',  color: 'text-purple-300' },
@@ -29,11 +30,20 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
   const [showForm, setShowForm] = useState(false)
   const [srdEquipment, setSrdEquipment] = useState([])
   const [searchOpen, setSearchOpen] = useState(false)
+  const [magicCatalog, setMagicCatalog] = useState([])
+  const [magicSearchOpen, setMagicSearchOpen] = useState(false)
 
   useEffect(() => {
     fetch('/srd-data/5e-SRD-Equipment.json')
       .then(r => r.json())
       .then(setSrdEquipment)
+      .catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    fetch('/srd-data/phb-magic-items-pt.json')
+      .then(r => r.json())
+      .then(setMagicCatalog)
       .catch(() => {})
   }, [])
 
@@ -144,6 +154,12 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
             </span>
           </h3>
           <div className="flex gap-2">
+            <button
+              onClick={() => setMagicSearchOpen(true)}
+              className="text-xs px-3 py-1 rounded bg-purple-700 hover:bg-purple-600 text-white font-semibold"
+            >
+              Buscar Mágico
+            </button>
             <button
               onClick={() => setSearchOpen(true)}
               className="text-xs px-3 py-1 rounded bg-gray-600 hover:bg-gray-500 text-white font-semibold"
@@ -279,6 +295,60 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
               </div>
             </div>
           )}
+        />
+
+        {/* Magic item search */}
+        <SrdSearchModal
+          isOpen={magicSearchOpen}
+          onClose={() => setMagicSearchOpen(false)}
+          title="Buscar Item Mágico"
+          items={magicCatalog}
+          categories={[
+            { key: 'arma',       label: 'Armas',         match: it => it.category === 'arma' },
+            { key: 'armadura',   label: 'Armaduras',     match: it => it.category === 'armadura' },
+            { key: 'anel',       label: 'Anéis',         match: it => it.category === 'anel' },
+            { key: 'manto',      label: 'Mantos/Capas',  match: it => it.category === 'manto' },
+            { key: 'cinto',      label: 'Cintos',        match: it => it.category === 'cinto' },
+            { key: 'amuleto',    label: 'Amuletos',      match: it => it.category === 'amuleto' },
+            { key: 'botas',      label: 'Botas',         match: it => it.category === 'botas' },
+            { key: 'varinha',    label: 'Varinhas/Cajados', match: it => it.category === 'varinha' || it.category === 'cajado' },
+            { key: 'tomo',       label: 'Tomos/Manuais', match: it => it.category === 'tomo' },
+            { key: 'pocao',      label: 'Poções/Pergaminhos', match: it => it.category === 'pocao' || it.category === 'pergaminho' },
+            { key: 'bugiganga',  label: 'Bugigangas',    match: it => it.category === 'bugiganga' },
+          ]}
+          onSelect={mag => {
+            onAddItem({
+              name: mag.name,
+              qty: 1,
+              weight: '',
+              notes: mag.description ?? '',
+              requiresAttunement: !!mag.requiresAttunement,
+              attuned: false,
+              magicItemIndex: mag.index,
+              rarity: mag.rarity,
+              effects: mag.effects ?? [],
+            })
+            setMagicSearchOpen(false)
+          }}
+          renderItem={mag => {
+            const rar = getRarityInfo(mag.rarity)
+            return (
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-sm font-medium text-white">{mag.name}</span>
+                  <span className={`text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded border ${rar.text} ${rar.border} ${rar.bg}`}>
+                    {rar.label}
+                  </span>
+                  {mag.requiresAttunement && (
+                    <span className="text-[10px] text-purple-300">💎 atunamento</span>
+                  )}
+                </div>
+                {mag.description && (
+                  <div className="text-xs text-gray-400 mt-0.5 line-clamp-2">{mag.description}</div>
+                )}
+              </div>
+            )
+          }}
         />
 
         {/* Items list */}
