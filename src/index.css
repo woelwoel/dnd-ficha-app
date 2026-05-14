@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IM+Fell+English+SC&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IM+Fell+English+SC&family=Inter:wght@400;500;600;700&display=swap');
 
 /* ── Paleta Ficha Clássica (tinta única sépia, papel envelhecido moderado) ── */
 @theme {
@@ -166,6 +166,56 @@
   --color-orange-700: #4a3826;
   --color-orange-800: #3a2b1c;
   --color-orange-900: #2a1f14;
+
+  /* ─────────────────────────────────────────────────────────────
+     Redesign tokens — paleta clara híbrida (B), introduzida com
+     CharacterList "Mapa da Campanha". Convive com paleta sépia
+     legada acima durante a transição tela-por-tela.
+     ───────────────────────────────────────────────────────────── */
+
+  /* Base clara */
+  --color-bg-canvas:    #faf7f1;
+  --color-bg-surface:   #ffffff;
+  --color-bg-elevated:  #f4ead3;
+  --color-bg-overlay:   rgba(15, 10, 5, 0.55);
+
+  /* Tinta */
+  --color-ink-primary:   #1f1a14;
+  --color-ink-secondary: #6b6356;
+  --color-ink-muted:     #8a7456;
+  --color-ink-inverse:   #faf7f1;
+
+  /* Acentos sépia (novos aliases — não conflita com gilt-* legado) */
+  --color-accent-50:  #fcf3da;
+  --color-accent-100: #f4ead3;
+  --color-accent-300: #d6c39f;
+  --color-accent-500: #8b6f3a;
+  --color-accent-700: #5a4530;
+  --color-accent-900: #2a1f14;
+
+  /* Dourado (heróico) */
+  --color-gold-400: #d4ad6a;
+  --color-gold-500: #b89855;
+  --color-gold-700: #6e572b;
+
+  /* Semânticas */
+  --color-blood:      #8b0000;
+  --color-ink-on-map: #2a1f14;
+
+  /* Superfície escura (banner, sidebar do mapa) */
+  --color-shell-900:    #1a1108;
+  --color-shell-800:    #2a1f14;
+  --color-shell-700:    #3a2b1c;
+  --color-shell-border: #6e572b;
+
+  /* Tipografia adicional (Inter para UI moderna) */
+  --font-redesign-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Sombras */
+  --shadow-card:     0 2px 4px rgba(31, 26, 20, 0.06), 0 1px 2px rgba(31, 26, 20, 0.04);
+  --shadow-elevated: 0 4px 12px rgba(31, 26, 20, 0.10), 0 2px 4px rgba(31, 26, 20, 0.06);
+  --shadow-token:    0 4px 8px rgba(0, 0, 0, 0.5), 0 0 0 2px var(--color-gold-400);
+  --shadow-banner:   0 3px 10px rgba(0, 0, 0, 0.4);
 }
 
 /* ── Base global ── */
