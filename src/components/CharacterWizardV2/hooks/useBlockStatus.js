@@ -1,13 +1,21 @@
 // src/components/CharacterWizardV2/hooks/useBlockStatus.js
 import { useMemo } from 'react'
 import { BLOCKS } from '../blocks-config'
+import { getRaceRequirements } from '../blocks/race-helpers'
 
 const ATTR_KEYS = ['str', 'dex', 'con', 'int', 'wis', 'cha']
 
 function statusOf(blockId, draft) {
   switch (blockId) {
-    case 'race':
-      return draft.race ? 'completo' : 'vazio'
+    case 'race': {
+      if (!draft.race) return 'vazio'
+      const reqs = getRaceRequirements(draft, null, null)
+      if (reqs.draconicAncestry && !draft.draconicAncestry) return 'parcial'
+      if (reqs.highElfCantrip && !draft.racialCantrip) return 'parcial'
+      if (reqs.freeAbility > 0 && (draft.racialAbilityChoices?.length ?? 0) < reqs.freeAbility) return 'parcial'
+      if (reqs.racialSkills > 0 && (draft.racialSkills?.length ?? 0) < reqs.racialSkills) return 'parcial'
+      return 'completo'
+    }
 
     case 'class':
       return draft.class ? 'completo' : 'vazio'

@@ -10,8 +10,8 @@ describe('getBlockStatus', () => {
     expect(getBlockStatus('race', empty).status).toBe('vazio')
   })
 
-  it('race completo quando preenchido', () => {
-    expect(getBlockStatus('race', { ...empty, race: 'meio-elfo' }).status).toBe('completo')
+  it('race completo quando preenchido (raça simples)', () => {
+    expect(getBlockStatus('race', { ...empty, race: 'humano' }).status).toBe('completo')
   })
 
   it('attributes bloqueado quando race vazio', () => {
@@ -72,5 +72,48 @@ describe('getBlockStatus', () => {
       name: 'Heitor',
     }
     expect(getBlockStatus('review', draft).status).toBe('completo')
+  })
+
+  it('race parcial: Draconato escolhido sem ancestral', () => {
+    const draft = { ...empty, race: 'draconato' }
+    expect(getBlockStatus('race', draft).status).toBe('parcial')
+  })
+
+  it('race completo: Draconato com ancestral', () => {
+    const draft = { ...empty, race: 'draconato', draconicAncestry: 'red' }
+    expect(getBlockStatus('race', draft).status).toBe('completo')
+  })
+
+  it('race parcial: Alto Elfo sem truque', () => {
+    const draft = { ...empty, race: 'elfo', subrace: 'alto-elfo' }
+    expect(getBlockStatus('race', draft).status).toBe('parcial')
+  })
+
+  it('race completo: Alto Elfo com truque', () => {
+    const draft = { ...empty, race: 'elfo', subrace: 'alto-elfo', racialCantrip: 'Mãos Mágicas' }
+    expect(getBlockStatus('race', draft).status).toBe('completo')
+  })
+
+  it('race parcial: Meio-Elfo sem 2 atributos livres', () => {
+    const draft = { ...empty, race: 'meio-elfo', racialAbilityChoices: ['str'] }
+    expect(getBlockStatus('race', draft).status).toBe('parcial')
+  })
+
+  it('race parcial: Meio-Elfo com atributos mas sem 2 perícias', () => {
+    const draft = { ...empty, race: 'meio-elfo', racialAbilityChoices: ['str', 'dex'] }
+    expect(getBlockStatus('race', draft).status).toBe('parcial')
+  })
+
+  it('race completo: Meio-Elfo com tudo preenchido', () => {
+    const draft = {
+      ...empty, race: 'meio-elfo',
+      racialAbilityChoices: ['str', 'dex'],
+      racialSkills: ['atletismo', 'historia'],
+    }
+    expect(getBlockStatus('race', draft).status).toBe('completo')
+  })
+
+  it('race completo: raça simples (anão) sem requisitos extras', () => {
+    expect(getBlockStatus('race', { ...empty, race: 'anao' }).status).toBe('completo')
   })
 })
