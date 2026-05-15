@@ -7,6 +7,9 @@ import { ConfirmExitPrompt } from './ConfirmExitPrompt'
 import { BLOCKS } from './blocks-config'
 import { useDraft } from './hooks/useDraft'
 import { useBlockStatus } from './hooks/useBlockStatus'
+import { useSrd } from '../../providers/SrdProvider'
+import { ConceptBlock } from './blocks/ConceptBlock'
+import { RaceBlock } from './blocks/RaceBlock'
 
 const STORAGE_KEY = 'wizard-v2-draft'
 
@@ -38,8 +41,9 @@ const LABEL_BY_ID = Object.fromEntries(BLOCKS.map(b => [b.id, b.label]))
 // Sub-componente que monta apenas quando phase='grid'.
 // Isso garante que useDraft receba as options corretas na montagem inicial.
 function WizardGrid({ initialSettings, resume, onBack }) {
-  const { draft, hasChanges, resetDraft } = useDraft({ initialSettings, resume })
+  const { draft, updateDraft, hasChanges, resetDraft } = useDraft({ initialSettings, resume })
   const blockStatus = useBlockStatus(draft)
+  const { races } = useSrd()
   const [openBlockId, setOpenBlockId] = useState(null)
   const [exitConfirmOpen, setExitConfirmOpen] = useState(false)
 
@@ -96,9 +100,17 @@ function WizardGrid({ initialSettings, resume, onBack }) {
         title={openBlockId ? LABEL_BY_ID[openBlockId] : ''}
         onClose={() => setOpenBlockId(null)}
       >
-        <p className="text-sm text-ink-300 italic text-center py-12">
-          Em construção (PR seguinte).
-        </p>
+        {openBlockId === 'concept' && (
+          <ConceptBlock draft={draft} updateDraft={updateDraft} />
+        )}
+        {openBlockId === 'race' && (
+          <RaceBlock draft={draft} updateDraft={updateDraft} races={races} />
+        )}
+        {openBlockId && !['concept', 'race'].includes(openBlockId) && (
+          <p className="text-sm text-ink-300 italic text-center py-12">
+            Em construção (PR seguinte).
+          </p>
+        )}
       </BlockEditorModal>
 
       <ConfirmExitPrompt
