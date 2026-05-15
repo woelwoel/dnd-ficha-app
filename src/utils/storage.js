@@ -1,4 +1,5 @@
 import { safeParseCharacter, migrateCharacter } from '../domain/characterSchema'
+import { clampPosition } from './token-position'
 
 const STORAGE_KEY = 'dnd-app-characters'
 const CURRENT_VERSION = '1.0'
@@ -108,5 +109,32 @@ export function upsertCharacter(character) {
 
 export function deleteCharacter(id) {
   const all = loadCharacters().filter(c => c.id !== id)
+  return safeSet(STORAGE_KEY, all)
+}
+
+/**
+ * Atualiza somente `character.position` (sem revalidar todo o documento).
+ * Posição passa por clampPosition (faixa [0,1] + grid).
+ */
+export function updateCharacterPosition(id, position) {
+  const all = loadCharacters()
+  const idx = all.findIndex(c => c.id === id)
+  if (idx < 0) return { ok: false, reason: 'not-found' }
+  const next = {
+    ...all[idx],
+    position: clampPosition(position),
+  }
+  all[idx] = next
+  return safeSet(STORAGE_KEY, all)
+}
+
+/**
+ * Marca o personagem como aberto agora — grava lastOpenedAt em epoch ms.
+ */
+export function touchCharacterLastOpened(id) {
+  const all = loadCharacters()
+  const idx = all.findIndex(c => c.id === id)
+  if (idx < 0) return { ok: false, reason: 'not-found' }
+  all[idx] = { ...all[idx], lastOpenedAt: Date.now() }
   return safeSet(STORAGE_KEY, all)
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { loadCharacters, saveCharacters, loadCharacterById, upsertCharacter, deleteCharacter } from '../utils/storage'
+import { loadCharacters, saveCharacters, loadCharacterById, upsertCharacter, deleteCharacter, updateCharacterPosition, touchCharacterLastOpened } from '../utils/storage'
 
 // Fixture mínimo que passa pela validação Zod do characterSchema
 function makeChar(id, name = 'Teste', extra = {}) {
@@ -86,5 +86,48 @@ describe('storage helpers — localStorage resiliente', () => {
     const loaded = loadCharacters()
     expect(loaded).toHaveLength(1)
     expect(loaded[0].id).toBe('ok')
+  })
+})
+
+describe('updateCharacterPosition', () => {
+  beforeEach(() => localStorage.clear())
+
+  it('persiste position no character', () => {
+    upsertCharacter(makeChar('p1'))
+    const res = updateCharacterPosition('p1', { x: 0.3, y: 0.7 })
+    expect(res.ok).toBe(true)
+    const reloaded = loadCharacterById('p1')
+    expect(reloaded.position).toEqual({ x: 0.3, y: 0.7 })
+  })
+
+  it('clampa posições inválidas para [0, 1]', () => {
+    upsertCharacter(makeChar('p2'))
+    updateCharacterPosition('p2', { x: 1.5, y: -0.2 })
+    const reloaded = loadCharacterById('p2')
+    expect(reloaded.position.x).toBe(1)
+    expect(reloaded.position.y).toBe(0)
+  })
+
+  it('é no-op para ID inexistente', () => {
+    const res = updateCharacterPosition('nao-existe', { x: 0.5, y: 0.5 })
+    expect(res.ok).toBe(false)
+  })
+})
+
+describe('touchCharacterLastOpened', () => {
+  beforeEach(() => localStorage.clear())
+
+  it('grava timestamp lastOpenedAt em ms', () => {
+    upsertCharacter(makeChar('t1'))
+    const before = Date.now()
+    touchCharacterLastOpened('t1')
+    const reloaded = loadCharacterById('t1')
+    expect(reloaded.lastOpenedAt).toBeGreaterThanOrEqual(before)
+    expect(reloaded.lastOpenedAt).toBeLessThanOrEqual(Date.now())
+  })
+
+  it('é no-op para ID inexistente', () => {
+    const res = touchCharacterLastOpened('nao-existe')
+    expect(res.ok).toBe(false)
   })
 })
