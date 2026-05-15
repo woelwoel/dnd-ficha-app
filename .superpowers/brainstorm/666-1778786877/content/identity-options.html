@@ -1,0 +1,190 @@
+<h2>Qual direção visual te atrai mais?</h2>
+<p class="subtitle">Mesma tela (Lista de Personagens) em 3 linguagens. Clique para selecionar.</p>
+
+<style>
+  /* Estilos locais só pra esses mockups (não vão pro app) */
+  .mock-screen {
+    border-radius: 6px;
+    padding: 16px;
+    min-height: 360px;
+    font-size: 12px;
+    line-height: 1.45;
+    text-align: left;
+  }
+  .mock-screen h4 { margin: 0 0 4px 0; font-size: 14px; }
+  .mock-screen .meta { font-size: 11px; opacity: 0.7; }
+  .mock-screen .row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0;
+  }
+  .mock-screen .icon {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: grid; place-items: center; font-size: 14px; flex-shrink: 0;
+  }
+  .mock-screen .grow { flex: 1; min-width: 0; }
+  .mock-screen .lvl { font-size: 11px; opacity: 0.6; }
+  .mock-screen .cta {
+    display: inline-block; padding: 7px 14px; border-radius: 4px;
+    font-size: 11px; font-weight: 600; margin-top: 12px;
+  }
+
+  /* === A: Pergaminho refinado === */
+  .mock-A {
+    background: #f4ead3;
+    background-image:
+      radial-gradient(ellipse at 20% 15%, rgba(168, 149, 111, 0.18) 0%, transparent 45%),
+      radial-gradient(ellipse at 80% 85%, rgba(168, 149, 111, 0.15) 0%, transparent 50%);
+    color: #2a1f14;
+    font-family: 'EB Garamond', Garamond, serif;
+    border: 1px solid #a8956f;
+  }
+  .mock-A .title {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 18px; letter-spacing: 0.06em;
+    text-align: center; margin-bottom: 4px;
+  }
+  .mock-A .ornament {
+    text-align: center; color: #8b6f3a; font-size: 14px; margin-bottom: 14px;
+    letter-spacing: 0.3em;
+  }
+  .mock-A .row { border-bottom: 1px dotted #a8956f; }
+  .mock-A .icon { background: transparent; color: #5a4530; font-size: 18px; }
+  .mock-A h4 { font-family: 'IM Fell English SC', serif; letter-spacing: 0.04em; }
+  .mock-A .meta { font-style: italic; color: #5a4530; }
+  .mock-A .cta {
+    background: #2a1f14; color: #f4ead3; font-family: 'IM Fell English SC', serif;
+    letter-spacing: 0.1em;
+  }
+
+  /* === B: Híbrido moderno-clássico === */
+  .mock-B {
+    background: #faf7f1;
+    color: #1f1a14;
+    font-family: 'Inter', system-ui, sans-serif;
+    border: 1px solid #e5dcc9;
+  }
+  .mock-B .title {
+    font-family: 'EB Garamond', serif;
+    font-size: 20px; font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .mock-B .subhead {
+    font-size: 11px; opacity: 0.6; margin-bottom: 14px; text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .mock-B .row {
+    border-radius: 6px; padding: 10px 12px; margin-bottom: 4px;
+    background: #fff; border: 1px solid #ece4d2;
+  }
+  .mock-B .icon { background: #f4ead3; color: #6e572b; }
+  .mock-B h4 { font-family: 'EB Garamond', serif; font-weight: 600; }
+  .mock-B .meta { font-size: 11px; color: #6b6356; }
+  .mock-B .cta {
+    background: #2a1f14; color: #faf7f1; border-radius: 6px;
+  }
+
+  /* === C: Moderno limpo total === */
+  .mock-C {
+    background: #ffffff;
+    color: #1a1a1a;
+    font-family: 'Inter', system-ui, sans-serif;
+    border: 1px solid #e5e5e5;
+  }
+  .mock-C .title { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+  .mock-C .subhead { font-size: 11px; color: #888; margin-bottom: 14px; }
+  .mock-C .row {
+    border-radius: 8px; padding: 10px 12px; margin-bottom: 4px;
+  }
+  .mock-C .row:hover { background: #f7f7f7; }
+  .mock-C .icon { background: #eef2ff; color: #4f46e5; font-weight: 600; }
+  .mock-C h4 { font-weight: 600; }
+  .mock-C .meta { font-size: 11px; color: #666; }
+  .mock-C .cta {
+    background: #4f46e5; color: white; border-radius: 6px;
+  }
+</style>
+
+<div class="cards">
+  <div class="card" data-choice="A" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mock-screen mock-A">
+        <div class="title">Tomo de Heróis</div>
+        <div class="ornament">❦ ⚜ ❦</div>
+        <div class="row">
+          <span class="icon">⚔</span>
+          <span class="grow"><h4>Thoradin Pedra-Forte</h4><span class="meta">Anão · Guerreiro · Nv 5</span></span>
+        </div>
+        <div class="row">
+          <span class="icon">✦</span>
+          <span class="grow"><h4>Elara Vento-Estelar</h4><span class="meta">Elfa · Maga · Nv 7</span></span>
+        </div>
+        <div class="row">
+          <span class="icon">☩</span>
+          <span class="grow"><h4>Brom Punho-Justo</h4><span class="meta">Humano · Clérigo · Nv 3</span></span>
+        </div>
+        <span class="cta">＋ Novo Herói</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Pergaminho refinado</h3>
+      <p>Direção atual, polida. Mantém serifa (IM Fell + Garamond), papel envelhecido, ornamentos discretos. Doubling-down no clima de livro de RPG.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="B" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mock-screen mock-B">
+        <div class="title">Personagens</div>
+        <div class="subhead">3 fichas salvas</div>
+        <div class="row">
+          <span class="icon">⚔</span>
+          <span class="grow"><h4>Thoradin Pedra-Forte</h4><div class="meta">Anão · Guerreiro · Nv 5</div></span>
+        </div>
+        <div class="row">
+          <span class="icon">✦</span>
+          <span class="grow"><h4>Elara Vento-Estelar</h4><div class="meta">Elfa · Maga · Nv 7</div></span>
+        </div>
+        <div class="row">
+          <span class="icon">☩</span>
+          <span class="grow"><h4>Brom Punho-Justo</h4><div class="meta">Humano · Clérigo · Nv 3</div></span>
+        </div>
+        <span class="cta">＋ Novo personagem</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Híbrido moderno-clássico (recomendado)</h3>
+      <p>Fundo off-white claro, sans-serif (Inter) pra UI/dados, serifa (Garamond) só pra nomes/títulos. Cards com sombra suave, acentos sépia pontuais. Legível e produtivo, com alma literária.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="C" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mock-screen mock-C">
+        <div class="title">Characters</div>
+        <div class="subhead">3 saved</div>
+        <div class="row">
+          <span class="icon">T</span>
+          <span class="grow"><h4>Thoradin Pedra-Forte</h4><div class="meta">Dwarf · Fighter · Lv 5</div></span>
+        </div>
+        <div class="row">
+          <span class="icon">E</span>
+          <span class="grow"><h4>Elara Vento-Estelar</h4><div class="meta">Elf · Wizard · Lv 7</div></span>
+        </div>
+        <div class="row">
+          <span class="icon">B</span>
+          <span class="grow"><h4>Brom Punho-Justo</h4><div class="meta">Human · Cleric · Lv 3</div></span>
+        </div>
+        <span class="cta">+ New character</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Moderno limpo (tipo Linear/Notion)</h3>
+      <p>Branco puro, Inter inteira, acentos índigo neutros. Zero flair medieval. Máxima legibilidade e familiaridade de ferramenta SaaS. Sacrifica identidade temática.</p>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top: 20px;">
+  Obs: essas são <em>opções de direção</em> — depois de escolher, refinamos paleta exata, tipografia, spacings.
+  Caso você ache que nenhuma serve, me fala em texto onde está errando.
+</p>

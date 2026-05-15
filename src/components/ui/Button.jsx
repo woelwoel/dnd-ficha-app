@@ -1,15 +1,17 @@
 /**
  * Botão primitivo do redesign. Variants:
- *   primary  — fundo escuro, texto claro (padrão)
- *   ghost    — apenas borda (usado em filtros, ações secundárias)
- *   gold     — gradiente dourado, usado em CTAs heróicos
+ *   primary     — fundo escuro, texto claro (padrão)
+ *   ghost       — apenas borda, texto escuro (sobre fundos claros)
+ *   ghost-dark  — apenas borda, texto dourado (sobre fundos escuros, ex: toolbar)
+ *   gold        — gradiente dourado, usado em CTAs heróicos
  *
  * Sempre type="button" por padrão.
  */
 const VARIANTS = {
-  primary: 'bg-[var(--color-shell-800)] text-[var(--color-ink-inverse)] hover:bg-[var(--color-shell-700)] border border-[var(--color-shell-border)]',
-  ghost:   'bg-transparent text-[var(--color-ink-primary)] border border-[var(--color-accent-300)] hover:bg-[var(--color-bg-elevated)]',
-  gold:    'bg-gradient-to-b from-[var(--color-gold-400)] to-[var(--color-gold-500)] text-[var(--color-shell-900)] hover:from-[var(--color-gold-500)] hover:to-[var(--color-gold-700)] border border-[var(--color-gold-700)] gold-cta font-semibold shadow-[var(--shadow-card)]',
+  primary:      'bg-[var(--color-shell-800)] text-[var(--color-ink-inverse)] hover:bg-[var(--color-shell-700)] border border-[var(--color-shell-border)]',
+  ghost:        'bg-transparent text-[var(--color-ink-primary)] border border-[var(--color-accent-300)] hover:bg-[var(--color-bg-elevated)]',
+  'ghost-dark': 'bg-transparent text-[var(--color-gold-400)] border border-[var(--color-shell-border)] hover:bg-[rgba(212,173,106,0.10)]',
+  gold:         'bg-gradient-to-b from-[var(--color-gold-400)] to-[var(--color-gold-500)] text-[var(--color-shell-900)] hover:from-[var(--color-gold-500)] hover:to-[var(--color-gold-700)] border border-[var(--color-gold-700)] gold-cta font-semibold shadow-[var(--shadow-card)]',
 }
 
 const SIZES = {

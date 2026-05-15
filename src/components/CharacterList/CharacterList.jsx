@@ -91,7 +91,7 @@ export function CharacterList({ onSelect, onCreate }) {
 
         <div className="flex items-center gap-2" role="group" aria-label="Modo de visualização">
           <Button
-            variant={view === VIEW_MAP ? 'gold' : 'ghost'}
+            variant={view === VIEW_MAP ? 'gold' : 'ghost-dark'}
             size="sm"
             onClick={() => switchView(VIEW_MAP)}
             aria-pressed={view === VIEW_MAP}
@@ -99,7 +99,7 @@ export function CharacterList({ onSelect, onCreate }) {
             ▦ Mapa
           </Button>
           <Button
-            variant={view === VIEW_LIST ? 'gold' : 'ghost'}
+            variant={view === VIEW_LIST ? 'gold' : 'ghost-dark'}
             size="sm"
             onClick={() => switchView(VIEW_LIST)}
             aria-pressed={view === VIEW_LIST}
@@ -113,10 +113,10 @@ export function CharacterList({ onSelect, onCreate }) {
         </Button>
       </header>
 
-      <main className="flex-1 flex overflow-hidden">
+      <main className="flex-1 flex overflow-hidden w-full max-w-[1800px] mx-auto">
         {view === VIEW_MAP ? (
           <>
-            <div className="flex-1 relative p-3">
+            <div className="flex-1 relative p-3 min-w-0">
               <CharacterMap
                 characters={characters}
                 campaignName={campaignName}
@@ -125,7 +125,7 @@ export function CharacterList({ onSelect, onCreate }) {
               />
               {isEmpty && <EmptyState onCreate={onCreate} />}
             </div>
-            <div className="hidden md:block w-[240px] flex-shrink-0 p-3 pl-0">
+            <div className="hidden md:block w-[260px] flex-shrink-0 p-3 pl-0">
               <CharacterSidebar
                 characters={characters}
                 onSelect={handleSelect}

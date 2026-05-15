@@ -122,7 +122,7 @@ export function CharacterMap({
         }}
       />
 
-      <div className="absolute top-3 left-1/2 -translate-x-1/2 w-[300px] max-w-[80%] z-[3]">
+      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[320px] max-w-[80%] z-[10]">
         <Banner>{campaignName}</Banner>
       </div>
 

@@ -79,16 +79,19 @@ export function CharacterSidebar({ characters = [], onSelect, onFilterChange }) 
             active={classFilter === f.key}
             onClick={() => applyFilter(f.key)}
             ariaLabel={`Filtrar por ${f.label.toLowerCase()}`}
+            title={f.label}
           >
-            <ClassIcon classKey={f.key} size={12} color="currentColor" />
+            <ClassIcon classKey={f.key} size={18} color="currentColor" />
           </Chip>
         ))}
       </div>
 
       <div className="flex-1 overflow-y-auto">
         {filtered.length === 0 && (
-          <p className="text-xs italic text-center mt-4" style={{ color: 'var(--color-gold-500)' }}>
-            Nenhum herói nesse filtro.
+          <p className="text-xs italic text-center mt-4 px-2 leading-relaxed" style={{ color: 'var(--color-gold-500)' }}>
+            {characters.length === 0
+              ? 'Nenhum herói recrutado ainda.'
+              : 'Nenhum aventureiro dessa estirpe na companhia.'}
           </p>
         )}
         {visible.map(c => (

@@ -61,8 +61,9 @@
   <!-- ============ LINHA DE TINTA: terreno ============ -->
   <g stroke="#2a1f14" fill="none" stroke-linecap="round">
 
-    <!-- Cordilheira norte (3 camadas de profundidade) -->
-    <g stroke-width="1.8">
+    <!-- Cordilheira norte (3 camadas de profundidade) — afastada do topo
+         para dar espaço ao banner "Companhia" sobreposto -->
+    <g stroke-width="1.8" transform="translate(0,45)">
       <!-- camada de trás -->
       <path d="M0,90 L40,50 L80,90 L120,55 L160,90 L200,55 L240,92 L280,58 L320,92 L360,58 L400,92 L440,58 L480,92 L520,58 L560,92 L600,55 L640,92 L680,55 L720,92 L760,60 L800,92" opacity="0.55"/>
       <!-- camada do meio -->
@@ -178,7 +179,7 @@
     </g>
 
     <!-- Caminhos pontilhados conectando locais -->
-    <g stroke="#2a1f14" stroke-width="1" stroke-dasharray="3,4" opacity="0.6">
+    <g stroke="#2a1f14" stroke-width="0.9" stroke-dasharray="3,4" opacity="0.3">
       <path d="M176,260 Q280,280 400,275"/>
       <path d="M400,290 Q520,310 656,390"/>
       <path d="M336,470 Q370,400 400,300"/>
@@ -219,7 +220,9 @@
 
   <!-- ============ LABELS REGIONAIS ============ -->
   <g fill="#2a1f14">
-    <text x="400" y="38" text-anchor="middle" font-family="serif" font-size="20" font-style="italic" font-weight="700" letter-spacing="6">— Terras do Vale —</text>
+    <!-- Título regional removido: banner "Companhia" sobreposto cobre essa região -->
+    <!-- <text x="400" y="38" ...>— Terras do Vale —</text> -->
+
     <text x="120" y="90" text-anchor="middle" font-family="serif" font-size="11" font-style="italic">Picos Antigos</text>
     <text x="660" y="80" text-anchor="middle" font-family="serif" font-size="11" font-style="italic">Garra Negra</text>
     <text x="125" y="395" text-anchor="middle" font-family="serif" font-size="11" font-style="italic">Mata Antiga</text>

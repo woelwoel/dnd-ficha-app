@@ -1,0 +1,431 @@
+<h2>Três redesenhos do mapa — largura total</h2>
+<p class="subtitle">Role pra baixo. Embaixo de tudo tem botões pra escolher.</p>
+
+<style>
+  .ms-block { margin-bottom: 32px; }
+  .ms-label {
+    font-family: 'EB Garamond', serif;
+    font-size: 18px; font-weight: 700;
+    color: #2a1f14; margin-bottom: 6px;
+  }
+  .ms-desc {
+    font-size: 13px; color: #6b6356;
+    margin-bottom: 12px; line-height: 1.5;
+  }
+  .ms-map {
+    width: 100%;
+    height: 380px;
+    border: 10px solid #5a4530;
+    box-shadow: inset 0 0 80px rgba(42,31,20,0.5), 0 4px 16px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+    border-radius: 3px;
+  }
+  .ms-art { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .ms-token { position: absolute; z-index: 5; text-align: center; }
+  .ms-token .disc {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 25%, #faf2da, #b89855 75%, #6e572b);
+    border: 3px solid #2a1f14;
+    box-shadow: 0 0 0 2px #d4ad6a, 0 3px 6px rgba(0,0,0,0.5);
+    display: grid; place-items: center;
+    color: #2a1f14;
+    margin: 0 auto;
+    font-size: 20px;
+    font-weight: 700;
+    position: relative;
+  }
+  .ms-token .lv {
+    position: absolute; bottom: -4px; right: -4px;
+    background: #8b0000; color: #f4ead3;
+    border: 2px solid #2a1f14;
+    border-radius: 50%;
+    width: 18px; height: 18px;
+    display: grid; place-items: center;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 9px; font-weight: 700;
+  }
+
+  /* M1 base */
+  .m1bg {
+    background:
+      radial-gradient(ellipse at 18% 75%, rgba(74,56,38,0.22), transparent 18%),
+      radial-gradient(ellipse at 75% 22%, rgba(74,56,38,0.18), transparent 15%),
+      radial-gradient(ellipse at center, #ecdcb8 0%, #d4be94 55%, #a08864 100%);
+  }
+  /* M2 base */
+  .m2bg {
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(90, 117, 72, 0.55), transparent 35%),
+      radial-gradient(ellipse at 70% 30%, rgba(107, 86, 64, 0.5), transparent 30%),
+      radial-gradient(ellipse at 50% 75%, rgba(69, 96, 115, 0.6), transparent 45%),
+      radial-gradient(ellipse at 80% 60%, rgba(184, 152, 85, 0.4), transparent 30%),
+      radial-gradient(ellipse at 20% 80%, rgba(90, 117, 72, 0.4), transparent 30%),
+      radial-gradient(ellipse at center, #f4ead3 0%, #e8dcc0 60%, #b89855 100%);
+  }
+  /* M3 base */
+  .m3bg { background: radial-gradient(ellipse at center, #ecdcb8 0%, #d4be94 60%, #a08864 100%); }
+</style>
+
+<!-- ============= M1 ============= -->
+<div class="ms-block">
+  <div class="ms-label">M1 — Cartógrafo Tolkien-esco</div>
+  <div class="ms-desc">Densidade máxima: cordilheira em camadas, floresta de árvores, rio nomeado, castelo com muralha, navios, monstros marinhos, "Hic Sunt Dracones". Tudo desenhado em tinta como livro físico.</div>
+  <div class="ms-map m1bg">
+    <svg class="ms-art" viewBox="0 0 800 380" preserveAspectRatio="xMidYMid slice">
+      <g stroke="#2a1f14" fill="none" stroke-linecap="round">
+        <!-- montanhas em 3 camadas -->
+        <g stroke-width="1.5">
+          <path d="M0,75 L50,40 L90,75 L120,45 L160,78 L200,48 L240,75 L280,45 L320,78 L360,45 L400,75 L440,45 L480,78 L520,45 L560,75 L600,45 L640,78 L680,45 L720,75 L760,50 L800,75" opacity="0.5"/>
+          <path d="M10,100 L60,60 L110,100 L150,68 L190,100 L240,65 L280,100 L325,68 L370,100 L415,68 L460,100 L505,68 L550,100 L595,68 L640,100 L685,68 L730,100 L775,72 L800,95"/>
+          <path d="M0,120 L40,85 L80,120 L125,90 L170,120 L215,88 L260,120 L305,88 L350,120 L395,88 L440,120 L485,88 L530,120 L575,88 L620,120 L665,88 L710,120 L755,88 L800,118"/>
+          <!-- neve nos picos -->
+          <g fill="#fff" opacity="0.65">
+            <path d="M125,90 L130,85 L135,90 Z M215,88 L220,83 L225,88 Z M305,88 L310,83 L315,88 Z M395,88 L400,83 L405,88 Z M485,88 L490,83 L495,88 Z M575,88 L580,83 L585,88 Z M665,88 L670,83 L675,88 Z M755,88 L760,83 L765,88 Z"/>
+          </g>
+        </g>
+
+        <!-- floresta oeste densa -->
+        <g fill="#2a1f14" stroke-width="0.7">
+          <g transform="translate(40,180)">
+            <path d="M0,0 L5,-9 L10,0 Z M9,-1 L14,-10 L19,-1 Z M18,0 L23,-9 L28,0 Z M27,-1 L32,-10 L37,-1 Z M36,0 L41,-9 L46,0 Z M45,-1 L50,-10 L55,-1 Z M54,0 L59,-9 L64,0 Z M63,-1 L68,-10 L73,-1 Z M72,0 L77,-9 L82,0 Z M81,-1 L86,-10 L91,-1 Z M90,0 L95,-9 L100,0 Z
+                     M0,12 L5,3 L10,12 Z M9,11 L14,2 L19,11 Z M18,12 L23,3 L28,12 Z M27,11 L32,2 L37,11 Z M36,12 L41,3 L46,12 Z M45,11 L50,2 L55,11 Z M54,12 L59,3 L64,12 Z M63,11 L68,2 L73,11 Z M72,12 L77,3 L82,12 Z M81,11 L86,2 L91,11 Z
+                     M4,24 L9,15 L14,24 Z M13,23 L18,14 L23,23 Z M22,24 L27,15 L32,24 Z M31,23 L36,14 L41,23 Z M40,24 L45,15 L50,24 Z M49,23 L54,14 L59,23 Z M58,24 L63,15 L68,24 Z M67,23 L72,14 L77,23 Z M76,24 L81,15 L86,24 Z M85,23 L90,14 L95,23 Z"/>
+          </g>
+          <g transform="translate(550,160)">
+            <path d="M0,0 L5,-9 L10,0 Z M9,-1 L14,-10 L19,-1 Z M18,0 L23,-9 L28,0 Z M27,-1 L32,-10 L37,-1 Z M36,0 L41,-9 L46,0 Z M45,-1 L50,-10 L55,-1 Z M54,0 L59,-9 L64,0 Z M63,-1 L68,-10 L73,-1 Z M72,0 L77,-9 L82,0 Z
+                     M0,12 L5,3 L10,12 Z M9,11 L14,2 L19,11 Z M18,12 L23,3 L28,12 Z M27,11 L32,2 L37,11 Z M36,12 L41,3 L46,12 Z M45,11 L50,2 L55,11 Z M54,12 L59,3 L64,12 Z"/>
+          </g>
+        </g>
+
+        <!-- rio -->
+        <g stroke-width="2.2" opacity="0.75">
+          <path d="M0,260 Q80,240 160,265 Q240,290 320,260 Q400,235 480,260 Q560,290 640,260 Q720,235 800,255"/>
+          <path d="M280,260 Q275,225 260,180" stroke-width="1.2"/>
+          <path d="M540,260 Q555,225 575,175" stroke-width="1.2"/>
+        </g>
+
+        <!-- castelo central com muralha -->
+        <g transform="translate(400,160)" stroke-width="1.4">
+          <path d="M-44,0 L-32,-18 L-12,-22 L12,-22 L32,-18 L44,0 L44,14 L32,28 L12,32 L-12,32 L-32,28 L-44,14 Z"/>
+          <rect x="-48" y="-6" width="7" height="18" fill="#2a1f14"/>
+          <rect x="41" y="-6" width="7" height="18" fill="#2a1f14"/>
+          <rect x="-3" y="-28" width="6" height="6" fill="#2a1f14"/>
+          <rect x="-14" y="-12" width="28" height="20" fill="#2a1f14"/>
+          <path d="M-18,-12 L-10,-22 L-2,-12 M2,-12 L10,-22 L18,-12" fill="#2a1f14"/>
+          <line x1="0" y1="-28" x2="0" y2="-42"/>
+          <path d="M0,-42 L12,-38 L0,-34" fill="#8b0000"/>
+        </g>
+
+        <!-- torre arcana NW -->
+        <g transform="translate(170,165)" stroke-width="1.4">
+          <path d="M-6,18 L-6,-9 L6,-9 L6,18 Z" fill="#2a1f14"/>
+          <path d="M-10,-9 L0,-23 L10,-9 Z" fill="#2a1f14"/>
+          <circle cx="0" cy="-2" r="2.5" fill="#fcf3da"/>
+          <text x="-14" y="-25" font-size="10" fill="#2a1f14">✦</text>
+          <text x="12" y="-28" font-size="7" fill="#2a1f14">✦</text>
+          <text x="-3" y="-32" font-size="6" fill="#2a1f14">✦</text>
+        </g>
+
+        <!-- vila central -->
+        <g transform="translate(290,295)" fill="#2a1f14" stroke-width="0.8">
+          <path d="M-8,5 L-8,-3 L0,-8 L8,-3 L8,5 Z M10,5 L10,-1 L15,-5 L20,-1 L20,5 Z M-18,5 L-18,-1 L-13,-5 L-8,-1 L-8,5 Z M22,5 L22,0 L26,-3 L30,0 L30,5 Z"/>
+        </g>
+
+        <!-- porto leste com navio -->
+        <g transform="translate(640,275)" stroke-width="0.9">
+          <g fill="#2a1f14">
+            <path d="M-10,5 L-10,-3 L-5,-7 L0,-3 L0,5 Z M2,5 L2,-1 L7,-5 L12,-1 L12,5 Z M-18,5 L-18,0 L-13,-4 L-8,0 L-8,5 Z"/>
+          </g>
+          <!-- navio -->
+          <g transform="translate(0,18)" fill="none">
+            <path d="M-8,6 L13,6 L10,12 L-5,12 Z"/>
+            <line x1="3" y1="6" x2="3" y2="-6"/>
+            <path d="M-2,-6 L9,-6 L9,2 L-2,2 Z" fill="#2a1f14" stroke="none"/>
+            <path d="M3,-6 L3,-12" stroke-width="0.6"/>
+          </g>
+        </g>
+
+        <!-- ruínas NE -->
+        <g transform="translate(680,210)" stroke-width="1.2">
+          <path d="M-14,12 L-14,-5 L-10,-9 L0,-9 L0,12 Z M3,12 L3,-5 L8,-9 L14,-9 L14,12 Z" fill="#2a1f14"/>
+          <circle cx="-20" cy="8" r="2.5" fill="#2a1f14"/>
+          <circle cx="20" cy="10" r="2.8" fill="#2a1f14"/>
+          <text x="0" y="-14" text-anchor="middle" font-size="11" fill="#2a1f14" font-weight="700">×</text>
+        </g>
+
+        <!-- estradas pontilhadas -->
+        <g stroke-width="1" stroke-dasharray="3,4" opacity="0.7">
+          <path d="M170,170 Q280,150 400,160"/>
+          <path d="M400,170 Q540,180 680,215"/>
+          <path d="M290,290 Q345,220 400,180"/>
+        </g>
+
+        <!-- mar e ondas -->
+        <g stroke-width="1" opacity="0.65">
+          <path d="M10,345 Q22,340 34,345 Q46,340 58,345 Q70,340 82,345 Q94,340 106,345 Q118,340 130,345"/>
+          <path d="M150,352 Q162,347 174,352 Q186,347 198,352 Q210,347 222,352"/>
+          <path d="M250,345 Q262,340 274,345 Q286,340 298,345"/>
+          <path d="M340,352 Q352,347 364,352 Q376,347 388,352"/>
+          <path d="M430,345 Q442,340 454,345 Q466,340 478,345"/>
+          <path d="M520,352 Q532,347 544,352 Q556,347 568,352"/>
+          <path d="M610,345 Q622,340 634,345 Q646,340 658,345"/>
+          <path d="M700,352 Q712,347 724,352 Q736,347 748,352 Q760,347 772,352"/>
+          <!-- monstro marinho -->
+          <g transform="translate(500,355)">
+            <path d="M0,0 Q8,-8 16,0 Q24,-8 32,0 Q40,-8 48,0"/>
+            <circle cx="4" cy="-3" r="0.8" fill="#2a1f14"/>
+          </g>
+        </g>
+
+        <!-- rosa dos ventos -->
+        <g transform="translate(740,68)" opacity="0.7">
+          <circle r="22" fill="rgba(244,234,211,0.35)" stroke="#2a1f14" stroke-width="1.2"/>
+          <circle r="17" fill="none" stroke="#2a1f14" stroke-width="0.6"/>
+          <path d="M0,-19 L3,0 L0,19 L-3,0 Z" fill="#2a1f14"/>
+          <path d="M-19,0 L0,-3 L19,0 L0,3 Z" fill="#2a1f14" opacity="0.55"/>
+          <text x="0" y="-23" text-anchor="middle" font-size="7" fill="#2a1f14" font-weight="700">N</text>
+        </g>
+
+        <!-- labels -->
+        <text x="400" y="26" text-anchor="middle" font-family="serif" font-size="18" font-style="italic" fill="#2a1f14" font-weight="700" letter-spacing="6">— Terras do Vale —</text>
+        <text x="170" y="220" text-anchor="middle" font-family="serif" font-size="11" font-style="italic" fill="#3a2b1c">Torre do Mago</text>
+        <text x="85" y="170" text-anchor="middle" font-family="serif" font-size="10" font-style="italic" fill="#3a2b1c">Mata Antiga</text>
+        <text x="400" y="200" text-anchor="middle" font-family="serif" font-size="11" font-style="italic" fill="#2a1f14" font-weight="700">Pedra do Rei</text>
+        <text x="590" y="160" text-anchor="middle" font-family="serif" font-size="10" font-style="italic" fill="#3a2b1c">Mata Oriente</text>
+        <text x="680" y="195" text-anchor="middle" font-family="serif" font-size="9" font-style="italic" fill="#3a2b1c">Ruínas de Tharos</text>
+        <text x="640" y="262" text-anchor="middle" font-family="serif" font-size="9" font-style="italic" fill="#3a2b1c">Porto Pedra</text>
+        <text x="290" y="312" text-anchor="middle" font-family="serif" font-size="9" font-style="italic" fill="#3a2b1c">Aldeia do Cervo</text>
+        <text x="400" y="368" text-anchor="middle" font-family="serif" font-size="11" font-style="italic" fill="#2a1f14" font-weight="700" letter-spacing="6">— Mar de Brumas —</text>
+        <text x="540" y="345" text-anchor="middle" font-family="serif" font-size="8" font-style="italic" fill="#2a1f14" opacity="0.7">Hic Sunt Dracones</text>
+      </g>
+    </svg>
+    <div class="ms-token" style="top: 30%; left: 12%;"><div class="ms-token-inner"><div class="disc">⚔<span class="lv">V</span></div></div></div>
+    <div class="ms-token" style="top: 38%; left: 48%;"><div class="disc">✦<span class="lv">VII</span></div></div>
+    <div class="ms-token" style="top: 70%; left: 35%;"><div class="disc">☩<span class="lv">III</span></div></div>
+    <div class="ms-token" style="top: 55%; left: 82%;"><div class="disc">⚜<span class="lv">VI</span></div></div>
+  </div>
+</div>
+
+<!-- ============= M2 ============= -->
+<div class="ms-block">
+  <div class="ms-label">M2 — Aquarela Atmosférica ⭐</div>
+  <div class="ms-desc">Menos linha, mais cor. Regiões viram <strong>manchas de aquarela difusas</strong> (verde, azul, marrom, ouro). Contornos minimalistas. Sensação Studio Ghibli / livro fantasy ilustrado. Tokens dourados se destacam super.</div>
+  <div class="ms-map m2bg">
+    <svg class="ms-art" viewBox="0 0 800 380" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <radialGradient id="fG" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#3d5530" stop-opacity="0.85"/>
+          <stop offset="70%" stop-color="#3d5530" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#3d5530" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="mG" cx="50%" cy="40%" r="55%">
+          <stop offset="0%" stop-color="#5a4838" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#5a4838" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="sG" cx="50%" cy="50%" r="60%">
+          <stop offset="0%" stop-color="#2c4858" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="#2c4858" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="dG" cx="50%" cy="50%" r="55%">
+          <stop offset="0%" stop-color="#b89855" stop-opacity="0.55"/>
+          <stop offset="100%" stop-color="#b89855" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- montanhas em aquarela -->
+      <ellipse cx="140" cy="55" rx="170" ry="50" fill="url(#mG)"/>
+      <ellipse cx="650" cy="55" rx="160" ry="48" fill="url(#mG)"/>
+      <!-- florestas -->
+      <ellipse cx="130" cy="200" rx="130" ry="70" fill="url(#fG)"/>
+      <ellipse cx="640" cy="190" rx="120" ry="65" fill="url(#fG)"/>
+      <!-- planície ouro -->
+      <ellipse cx="400" cy="190" rx="180" ry="80" fill="url(#dG)"/>
+      <!-- mar -->
+      <ellipse cx="400" cy="360" rx="460" ry="55" fill="url(#sG)"/>
+
+      <!-- linha mínima sugerindo silhueta de montanhas -->
+      <g stroke="#3a2b1c" fill="none" opacity="0.45">
+        <path d="M10,90 Q60,55 110,90 Q150,65 200,92 Q260,65 320,92" stroke-width="1.1"/>
+        <path d="M480,92 Q540,65 600,92 Q660,65 720,92 Q770,68 800,90" stroke-width="1.1"/>
+      </g>
+
+      <!-- rio finíssimo -->
+      <path d="M0,265 Q100,245 200,265 Q300,290 400,260 Q500,235 600,265 Q700,290 800,260" stroke="#2c4858" stroke-width="1.5" fill="none" opacity="0.7"/>
+
+      <!-- castelo (silhueta esfumada) -->
+      <g transform="translate(400,165)" stroke="#2a1f14" stroke-width="1" opacity="0.85">
+        <rect x="-14" y="-6" width="28" height="20" fill="#2a1f14"/>
+        <path d="M-17,-6 L0,-18 L17,-6" fill="#2a1f14"/>
+        <line x1="0" y1="-18" x2="0" y2="-28"/>
+        <path d="M0,-28 L8,-25 L0,-22" fill="#8b0000" stroke="none"/>
+      </g>
+
+      <!-- torre -->
+      <g transform="translate(165,165)" stroke="#2a1f14" stroke-width="0.9" opacity="0.85">
+        <path d="M-4,16 L-4,-7 L4,-7 L4,16 Z" fill="#2a1f14"/>
+        <path d="M-7,-7 L0,-16 L7,-7 Z" fill="#2a1f14"/>
+      </g>
+
+      <!-- ruínas -->
+      <g transform="translate(685,210)" stroke="#2a1f14" stroke-width="0.9" opacity="0.85">
+        <path d="M-10,10 L-10,-3 L-7,-6 L0,-6 L0,10 Z M2,10 L2,-3 L6,-6 L10,-6 L10,10 Z" fill="#2a1f14"/>
+      </g>
+
+      <!-- manchas de tinta espalhadas (acidentes do "pintor") -->
+      <g opacity="0.35">
+        <ellipse cx="80" cy="350" rx="18" ry="3.5" fill="#2c4858"/>
+        <ellipse cx="350" cy="358" rx="25" ry="4" fill="#2c4858"/>
+        <ellipse cx="720" cy="355" rx="20" ry="3.5" fill="#2c4858"/>
+        <ellipse cx="220" cy="40" rx="14" ry="2.5" fill="#5a4838"/>
+        <ellipse cx="520" cy="44" rx="16" ry="3" fill="#5a4838"/>
+        <ellipse cx="60" cy="220" rx="20" ry="6" fill="#3d5530" opacity="0.4"/>
+      </g>
+
+      <!-- labels mínimas -->
+      <g fill="#2a1f14">
+        <text x="400" y="30" text-anchor="middle" font-family="serif" font-size="16" font-style="italic" font-weight="500" letter-spacing="6">Terras do Vale</text>
+        <text x="130" y="210" text-anchor="middle" font-family="serif" font-size="10" font-style="italic" opacity="0.75">Mata Antiga</text>
+        <text x="400" y="200" text-anchor="middle" font-family="serif" font-size="11" font-style="italic" font-weight="600">Pedra do Rei</text>
+        <text x="640" y="195" text-anchor="middle" font-family="serif" font-size="10" font-style="italic" opacity="0.75">Mata Oriente</text>
+        <text x="400" y="365" text-anchor="middle" font-family="serif" font-size="11" font-style="italic" letter-spacing="5" opacity="0.85">Mar de Brumas</text>
+      </g>
+    </svg>
+    <div class="ms-token" style="top: 30%; left: 12%;"><div class="disc">⚔<span class="lv">V</span></div></div>
+    <div class="ms-token" style="top: 38%; left: 48%;"><div class="disc">✦<span class="lv">VII</span></div></div>
+    <div class="ms-token" style="top: 70%; left: 35%;"><div class="disc">☩<span class="lv">III</span></div></div>
+    <div class="ms-token" style="top: 55%; left: 82%;"><div class="disc">⚜<span class="lv">VI</span></div></div>
+  </div>
+</div>
+
+<!-- ============= M3 ============= -->
+<div class="ms-block">
+  <div class="ms-label">M3 — Battlemap Hex</div>
+  <div class="ms-desc">Estilo aventura D&D publicada: <strong>grid hexagonal</strong> sobre biomas coloridos, ícones padronizados, caveira marcando ruínas, legenda no canto. Mais game-board, super reconhecível como mapa de aventura tabletop.</div>
+  <div class="ms-map m3bg">
+    <svg class="ms-art" viewBox="0 0 800 380" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <pattern id="hex" x="0" y="0" width="34.64" height="60" patternUnits="userSpaceOnUse">
+          <path d="M17.32,0 L34.64,10 L34.64,30 L17.32,40 L0,30 L0,10 Z M17.32,40 L34.64,50 L34.64,70" stroke="#2a1f14" stroke-width="0.4" fill="none" opacity="0.6"/>
+        </pattern>
+      </defs>
+      <!-- biomas como áreas -->
+      <path d="M0,0 L800,0 L800,95 Q650,110 500,90 Q350,75 200,98 Q100,108 0,95 Z" fill="#7a6850" opacity="0.6"/>
+      <ellipse cx="135" cy="210" rx="135" ry="65" fill="#4a6840" opacity="0.65"/>
+      <ellipse cx="660" cy="195" rx="120" ry="58" fill="#4a6840" opacity="0.65"/>
+      <ellipse cx="400" cy="195" rx="180" ry="70" fill="#d4be94" opacity="0.45"/>
+      <ellipse cx="660" cy="290" rx="110" ry="42" fill="#a08864" opacity="0.6"/>
+      <rect x="0" y="325" width="800" height="55" fill="#3a5a7a" opacity="0.7"/>
+
+      <!-- grid hex sobre tudo -->
+      <rect x="0" y="0" width="800" height="380" fill="url(#hex)"/>
+
+      <!-- ícones de terreno -->
+      <g stroke="#2a1f14" fill="none" stroke-width="1.2">
+        <!-- montanhas-ícone -->
+        <path d="M40,70 L55,48 L70,70 M80,68 L95,46 L110,68 M120,70 L135,48 L150,70 M180,68 L195,46 L210,68 M220,70 L235,48 L250,70 M310,70 L325,48 L340,70 M380,70 L395,48 L410,70 M440,70 L455,48 L470,70 M500,68 L515,46 L530,68 M560,70 L575,48 L590,70 M620,70 L635,48 L650,70 M680,68 L695,46 L710,68 M730,70 L745,48 L760,70"/>
+      </g>
+
+      <!-- pinheiros estilizados -->
+      <g fill="#2a1f14" stroke-width="0.6">
+        <g transform="translate(70,200)">
+          <path d="M0,0 L5,-10 L10,0 Z M16,0 L21,-10 L26,0 Z M32,0 L37,-10 L42,0 Z M48,0 L53,-10 L58,0 Z M64,0 L69,-10 L74,0 Z M80,0 L85,-10 L90,0 Z M96,0 L101,-10 L106,0 Z
+                   M0,14 L5,4 L10,14 Z M16,14 L21,4 L26,14 Z M32,14 L37,4 L42,14 Z M48,14 L53,4 L58,14 Z M64,14 L69,4 L74,14 Z M80,14 L85,4 L90,14 Z M96,14 L101,4 L106,14 Z"/>
+        </g>
+        <g transform="translate(595,185)">
+          <path d="M0,0 L5,-10 L10,0 Z M16,0 L21,-10 L26,0 Z M32,0 L37,-10 L42,0 Z M48,0 L53,-10 L58,0 Z M64,0 L69,-10 L74,0 Z M80,0 L85,-10 L90,0 Z M96,0 L101,-10 L106,0 Z
+                   M0,14 L5,4 L10,14 Z M16,14 L21,4 L26,14 Z M32,14 L37,4 L42,14 Z M48,14 L53,4 L58,14 Z M64,14 L69,4 L74,14 Z M80,14 L85,4 L90,14 Z"/>
+        </g>
+      </g>
+
+      <!-- castelo ícone -->
+      <g transform="translate(395,175)" stroke="#2a1f14" stroke-width="1.2">
+        <rect x="-14" y="-6" width="28" height="18" fill="#2a1f14"/>
+        <rect x="-16" y="-14" width="6" height="10" fill="#2a1f14"/>
+        <rect x="-3" y="-18" width="6" height="14" fill="#2a1f14"/>
+        <rect x="10" y="-14" width="6" height="10" fill="#2a1f14"/>
+        <rect x="-3" y="4" width="6" height="8" fill="#d4be94"/>
+      </g>
+
+      <!-- torre -->
+      <g transform="translate(160,175)" fill="#2a1f14" stroke-width="1">
+        <rect x="-4" y="-2" width="8" height="18"/>
+        <path d="M-7,-2 L0,-11 L7,-2 Z"/>
+      </g>
+
+      <!-- caveira (ruínas) -->
+      <g transform="translate(665,290)" fill="#2a1f14">
+        <circle cx="0" cy="0" r="9"/>
+        <circle cx="-3" cy="-1.5" r="1.8" fill="#d4be94"/>
+        <circle cx="3" cy="-1.5" r="1.8" fill="#d4be94"/>
+        <path d="M-3,3.5 L3,3.5 L1.5,7 L-1.5,7 Z" fill="#d4be94"/>
+        <path d="M-9,9 L-6,12 M9,9 L6,12 M-12,5 L-15,5 M12,5 L15,5" stroke="#2a1f14" stroke-width="1" fill="none"/>
+      </g>
+
+      <!-- rio (linha clara azul) -->
+      <path d="M0,260 Q100,245 200,265 Q300,290 400,260 Q500,235 600,265 Q700,290 800,260" stroke="#3a5a7a" stroke-width="3.5" fill="none" opacity="0.75"/>
+
+      <!-- legenda -->
+      <g transform="translate(15,340)">
+        <rect width="180" height="32" fill="rgba(244,234,211,0.9)" stroke="#2a1f14" stroke-width="0.8"/>
+        <g font-family="sans-serif" font-size="8" fill="#2a1f14">
+          <rect x="5" y="5" width="8" height="8" fill="#7a6850"/>
+          <text x="17" y="12">Montanha</text>
+          <rect x="5" y="17" width="8" height="8" fill="#4a6840"/>
+          <text x="17" y="24">Floresta</text>
+          <rect x="65" y="5" width="8" height="8" fill="#d4be94"/>
+          <text x="77" y="12">Planície</text>
+          <rect x="65" y="17" width="8" height="8" fill="#a08864"/>
+          <text x="77" y="24">Ruínas</text>
+          <rect x="130" y="5" width="8" height="8" fill="#3a5a7a"/>
+          <text x="142" y="12">Mar</text>
+        </g>
+      </g>
+
+      <!-- labels -->
+      <g fill="#2a1f14" font-family="sans-serif" font-weight="700">
+        <text x="400" y="28" text-anchor="middle" font-size="14" letter-spacing="5">TERRAS DO VALE</text>
+        <text x="135" y="215" text-anchor="middle" font-size="9" font-style="italic">Mata Antiga</text>
+        <text x="400" y="208" text-anchor="middle" font-size="10" font-style="italic">Pedra do Rei</text>
+        <text x="660" y="200" text-anchor="middle" font-size="9" font-style="italic">Mata Oriente</text>
+        <text x="660" y="312" text-anchor="middle" font-size="9" font-style="italic">Ruínas</text>
+      </g>
+    </svg>
+    <div class="ms-token" style="top: 30%; left: 12%;"><div class="disc">⚔<span class="lv">V</span></div></div>
+    <div class="ms-token" style="top: 38%; left: 48%;"><div class="disc">✦<span class="lv">VII</span></div></div>
+    <div class="ms-token" style="top: 70%; left: 35%;"><div class="disc">☩<span class="lv">III</span></div></div>
+    <div class="ms-token" style="top: 55%; left: 82%;"><div class="disc">⚜<span class="lv">VI</span></div></div>
+  </div>
+</div>
+
+<div class="options" style="margin-top: 28px;">
+  <div class="option" data-choice="M1" onclick="toggleSelect(this)">
+    <div class="letter">1</div>
+    <div class="content">
+      <h3>M1 — Tolkien Cartógrafo</h3>
+      <p>Denso, tinta, ornado, livro físico.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="M2" onclick="toggleSelect(this)">
+    <div class="letter">2</div>
+    <div class="content">
+      <h3>M2 — Aquarela Atmosférica</h3>
+      <p>Manchas de cor, sonhador, Ghibli.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="M3" onclick="toggleSelect(this)">
+    <div class="letter">3</div>
+    <div class="content">
+      <h3>M3 — Battlemap Hex</h3>
+      <p>Game-board, hex grid, ícones.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="OTHER" onclick="toggleSelect(this)">
+    <div class="letter">✗</div>
+    <div class="content">
+      <h3>Nenhum — partir pra imagem real</h3>
+      <p>Buscar PNG/JPG fantasy real ou gerar por IA.</p>
+    </div>
+  </div>
+</div>
