@@ -10,3 +10,4 @@ export { default as InkField } from './InkField.jsx';
 export { default as TomeButton } from './TomeButton.jsx';
 export * as Ornaments from './ornaments/index.js';
 export { Button } from './Button.jsx';
+export { Chip } from './Chip.jsx';
