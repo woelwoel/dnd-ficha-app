@@ -14,8 +14,22 @@ const CharacterSheet = lazy(() =>
 const CharacterWizard = lazy(() =>
   import('./components/CharacterWizard/CharacterWizard').then(m => ({ default: m.CharacterWizard }))
 )
+const CharacterWizardV2 = lazy(() =>
+  import('./components/CharacterWizardV2').then(m => ({ default: m.CharacterWizardV2 }))
+)
 
 const VIEW = { LIST: 'list', NEW: 'new', SHEET: 'sheet' }
+
+function shouldUseWizardV2() {
+  if (typeof window === 'undefined') return false
+  try {
+    const url = new URLSearchParams(window.location.search)
+    if (url.get('v2') === '1') return true
+  } catch { /* ignore */ }
+  try {
+    return localStorage.getItem('wizardV2') === 'true'
+  } catch { return false }
+}
 
 function Loader() {
   return (
@@ -42,7 +56,9 @@ function App() {
                 <CharacterList onSelect={goToSheet} onCreate={goToNew} />
               )}
               {view.kind === VIEW.NEW && (
-                <CharacterWizard onBack={goToList} onComplete={goToSheet} />
+                shouldUseWizardV2()
+                  ? <CharacterWizardV2 onBack={goToList} onComplete={goToSheet} />
+                  : <CharacterWizard onBack={goToList} onComplete={goToSheet} />
               )}
               {view.kind === VIEW.SHEET && (
                 <CharacterSheet characterId={view.id} onBack={goToList} />
