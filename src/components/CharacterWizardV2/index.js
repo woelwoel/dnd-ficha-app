@@ -1,1 +1,1 @@
-// Será populado conforme módulos são criados.
+export { CharacterWizardV2 } from './CharacterWizardV2'
