@@ -14,6 +14,8 @@ export function CharacterMap({
 }) {
   const containerRef = useRef(null)
   const dragState = useRef(null)
+  // Cleanup ref para o drag em vigor (limpo no unmount ou em novo drag).
+  const cleanupRef = useRef(null)
   const [draggedPositions, setDraggedPositions] = useState({})
 
   const positioned = useMemo(
@@ -33,56 +35,68 @@ export function CharacterMap({
     })
   }, [])
 
-  const handlePointerMove = useCallback((e) => {
-    const st = dragState.current
-    if (!st) return
-    const dx = Math.abs(e.clientX - st.startX)
-    const dy = Math.abs(e.clientY - st.startY)
-    if (!st.moved && (dx > DRAG_THRESHOLD_PX || dy > DRAG_THRESHOLD_PX)) {
-      st.moved = true
+  const handleTokenDragStart = useCallback((e, id) => {
+    // Limpa drag anterior se houver (segurança).
+    if (cleanupRef.current) cleanupRef.current()
+
+    dragState.current = {
+      id, startX: e.clientX, startY: e.clientY, moved: false, lastPos: null,
     }
-    if (st.moved) {
-      const pos = computePos(e.clientX, e.clientY)
-      if (pos) {
-        st.lastPos = pos
-        setDraggedPositions(prev => ({ ...prev, [st.id]: pos }))
+
+    function onMove(ev) {
+      const st = dragState.current
+      if (!st) return
+      const dx = Math.abs(ev.clientX - st.startX)
+      const dy = Math.abs(ev.clientY - st.startY)
+      if (!st.moved && (dx > DRAG_THRESHOLD_PX || dy > DRAG_THRESHOLD_PX)) {
+        st.moved = true
+      }
+      if (st.moved) {
+        const pos = computePos(ev.clientX, ev.clientY)
+        if (pos) {
+          st.lastPos = pos
+          setDraggedPositions(prev => ({ ...prev, [st.id]: pos }))
+        }
       }
     }
-  }, [computePos])
 
-  const handlePointerUp = useCallback((e) => {
-    const st = dragState.current
-    if (!st) return
-    dragState.current = null
-    window.removeEventListener('pointermove', handlePointerMove)
-    window.removeEventListener('pointerup', handlePointerUp)
-
-    if (st.moved && st.lastPos && onPositionChange) {
-      onPositionChange(st.id, st.lastPos)
-      setDraggedPositions(prev => {
-        const next = { ...prev }
-        delete next[st.id]
-        return next
-      })
-    } else if (!st.moved && onSelect) {
-      onSelect(st.id)
+    function onUp() {
+      const st = dragState.current
+      cleanup()
+      dragState.current = null
+      if (!st) return
+      if (st.moved && st.lastPos && onPositionChange) {
+        onPositionChange(st.id, st.lastPos)
+        setDraggedPositions(prev => {
+          const next = { ...prev }
+          delete next[st.id]
+          return next
+        })
+      } else if (!st.moved && onSelect) {
+        onSelect(st.id)
+      }
     }
-  }, [onSelect, onPositionChange, handlePointerMove])
 
-  const handleTokenDragStart = useCallback((e, id) => {
-    dragState.current = { id, startX: e.clientX, startY: e.clientY, moved: false, lastPos: null }
-    window.addEventListener('pointermove', handlePointerMove)
-    window.addEventListener('pointerup', handlePointerUp)
+    function cleanup() {
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerup', onUp)
+      cleanupRef.current = null
+    }
+
+    cleanupRef.current = cleanup
+    window.addEventListener('pointermove', onMove)
+    window.addEventListener('pointerup', onUp)
     e.preventDefault()
-  }, [handlePointerMove, handlePointerUp])
+  }, [computePos, onSelect, onPositionChange])
 
   useEffect(() => {
     return () => {
-      window.removeEventListener('pointermove', handlePointerMove)
-      window.removeEventListener('pointerup', handlePointerUp)
+      if (cleanupRef.current) cleanupRef.current()
     }
-  }, [handlePointerMove, handlePointerUp])
+  }, [])
 
+  // Click é tratado pelo pointerup quando moved === false; CharacterToken's
+  // onClick fica como no-op para evitar disparo duplo.
   const noopSelect = useCallback(() => {}, [])
 
   return (
