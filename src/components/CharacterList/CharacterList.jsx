@@ -7,6 +7,7 @@ import { Button } from '../ui/Button'
 import {
   loadCharacters,
   touchCharacterLastOpened,
+  updateCharacterPosition,
 } from '../../utils/storage'
 import {
   CAMPAIGN_NAME_DEFAULT,
@@ -55,6 +56,11 @@ export function CharacterList({ onSelect, onCreate }) {
   const switchView = useCallback((v) => {
     setView(v)
     writeView(v)
+  }, [])
+
+  const handlePositionChange = useCallback((id, position) => {
+    updateCharacterPosition(id, position)
+    setCharacters(loadCharacters())
   }, [])
 
   const isEmpty = characters.length === 0
@@ -115,6 +121,7 @@ export function CharacterList({ onSelect, onCreate }) {
                 characters={characters}
                 campaignName={campaignName}
                 onSelect={handleSelect}
+                onPositionChange={handlePositionChange}
               />
               {isEmpty && <EmptyState onCreate={onCreate} />}
             </div>

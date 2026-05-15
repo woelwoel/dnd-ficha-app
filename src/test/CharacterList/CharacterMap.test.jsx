@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { CharacterMap } from '../../components/CharacterList/CharacterMap'
 
 const chars = [
@@ -30,12 +30,16 @@ describe('<CharacterMap>', () => {
     expect(screen.getByRole('region', { name: /Mapa da campanha/i })).toBeInTheDocument()
   })
 
-  it('chama onSelect ao clicar num token', async () => {
+  it('chama onSelect quando token recebe pointerDown+pointerUp na mesma posição (click puro)', () => {
     const onSelect = vi.fn()
-    const { default: userEvent } = await import('@testing-library/user-event')
-    const user = userEvent.setup()
-    render(<CharacterMap characters={chars} onSelect={onSelect} />)
-    await user.click(screen.getByRole('button', { name: /Alice/i }))
+    const { container } = render(<CharacterMap characters={chars} onSelect={onSelect} />)
+    const canvas = container.querySelector('[data-testid="character-map-canvas"]').parentElement
+    canvas.getBoundingClientRect = () => ({
+      left: 0, top: 0, right: 1000, bottom: 800, width: 1000, height: 800, x: 0, y: 0, toJSON() {},
+    })
+    const tokenButton = screen.getByRole('button', { name: /Alice/i })
+    fireEvent.pointerDown(tokenButton, { clientX: 200, clientY: 240, pointerId: 1 })
+    fireEvent.pointerUp(window, { clientX: 200, clientY: 240, pointerId: 1 })
     expect(onSelect).toHaveBeenCalledWith('a')
   })
 

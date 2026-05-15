@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { CharacterList } from '../../components/CharacterList'
 import { upsertCharacter } from '../../utils/storage'
@@ -72,13 +72,14 @@ describe('<CharacterList>', () => {
     expect(onCreate).toHaveBeenCalled()
   })
 
-  it('click no token chama onSelect com ID', async () => {
+  it('pointerdown+pointerup no token chama onSelect com ID', () => {
     seed('a', 'Alice', 'Mago')
-    const user = userEvent.setup()
     const onSelect = vi.fn()
     render(<CharacterList onSelect={onSelect} onCreate={() => {}} />)
-    const buttons = screen.getAllByRole('button', { name: /Alice.*mago/i })
-    await user.click(buttons[0])
+    const buttons = screen.getAllByRole('button', { name: /Alice/i })
+    const tokenButton = buttons[0]
+    fireEvent.pointerDown(tokenButton, { clientX: 100, clientY: 100, pointerId: 1 })
+    fireEvent.pointerUp(window, { clientX: 100, clientY: 100, pointerId: 1 })
     expect(onSelect).toHaveBeenCalledWith('a')
   })
 })

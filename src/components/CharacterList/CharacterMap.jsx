@@ -1,29 +1,93 @@
-import { useMemo } from 'react'
+import { useMemo, useRef, useState, useCallback, useEffect } from 'react'
 import { CharacterToken } from './CharacterToken'
 import { Banner } from '../ui/Banner'
 import { MAP_BACKGROUND_URL, CAMPAIGN_NAME_DEFAULT } from '../../utils/config'
-import { getDefaultPosition } from '../../utils/token-position'
+import { getDefaultPosition, clampPosition } from '../../utils/token-position'
 
-/**
- * Mapa background com tokens posicionados. Auto-place quando o
- * personagem não tem position salva.
- */
+const DRAG_THRESHOLD_PX = 4
+
 export function CharacterMap({
   characters = [],
   campaignName = CAMPAIGN_NAME_DEFAULT,
   onSelect,
-  onTokenDragStart,
+  onPositionChange,
 }) {
+  const containerRef = useRef(null)
+  const dragState = useRef(null)
+  const [draggedPositions, setDraggedPositions] = useState({})
+
   const positioned = useMemo(
     () => characters.map(c => ({
       ...c,
-      position: c.position || getDefaultPosition(c, 'default'),
+      position: draggedPositions[c.id] || c.position || getDefaultPosition(c, 'default'),
     })),
-    [characters]
+    [characters, draggedPositions]
   )
+
+  const computePos = useCallback((clientX, clientY) => {
+    const rect = containerRef.current?.getBoundingClientRect()
+    if (!rect) return null
+    return clampPosition({
+      x: (clientX - rect.left) / rect.width,
+      y: (clientY - rect.top) / rect.height,
+    })
+  }, [])
+
+  const handlePointerMove = useCallback((e) => {
+    const st = dragState.current
+    if (!st) return
+    const dx = Math.abs(e.clientX - st.startX)
+    const dy = Math.abs(e.clientY - st.startY)
+    if (!st.moved && (dx > DRAG_THRESHOLD_PX || dy > DRAG_THRESHOLD_PX)) {
+      st.moved = true
+    }
+    if (st.moved) {
+      const pos = computePos(e.clientX, e.clientY)
+      if (pos) {
+        st.lastPos = pos
+        setDraggedPositions(prev => ({ ...prev, [st.id]: pos }))
+      }
+    }
+  }, [computePos])
+
+  const handlePointerUp = useCallback((e) => {
+    const st = dragState.current
+    if (!st) return
+    dragState.current = null
+    window.removeEventListener('pointermove', handlePointerMove)
+    window.removeEventListener('pointerup', handlePointerUp)
+
+    if (st.moved && st.lastPos && onPositionChange) {
+      onPositionChange(st.id, st.lastPos)
+      setDraggedPositions(prev => {
+        const next = { ...prev }
+        delete next[st.id]
+        return next
+      })
+    } else if (!st.moved && onSelect) {
+      onSelect(st.id)
+    }
+  }, [onSelect, onPositionChange, handlePointerMove])
+
+  const handleTokenDragStart = useCallback((e, id) => {
+    dragState.current = { id, startX: e.clientX, startY: e.clientY, moved: false, lastPos: null }
+    window.addEventListener('pointermove', handlePointerMove)
+    window.addEventListener('pointerup', handlePointerUp)
+    e.preventDefault()
+  }, [handlePointerMove, handlePointerUp])
+
+  useEffect(() => {
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('pointerup', handlePointerUp)
+    }
+  }, [handlePointerMove, handlePointerUp])
+
+  const noopSelect = useCallback(() => {}, [])
 
   return (
     <div
+      ref={containerRef}
       role="region"
       aria-label="Mapa da campanha"
       className="relative w-full h-full overflow-hidden rounded"
@@ -66,8 +130,8 @@ export function CharacterMap({
         <CharacterToken
           key={c.id}
           character={c}
-          onSelect={onSelect}
-          onDragStart={onTokenDragStart}
+          onSelect={noopSelect}
+          onDragStart={handleTokenDragStart}
         />
       ))}
     </div>
