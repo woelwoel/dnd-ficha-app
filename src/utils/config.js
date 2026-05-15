@@ -2,11 +2,12 @@
  * Configuração estática do app — caminhos de assets, nomes default,
  * chaves de localStorage. Sem dependências de runtime.
  *
- * Pra trocar o mapa de fundo, substitua o arquivo em /public/maps/default.webp
- * (ou aponte MAP_BACKGROUND_URL para outro caminho).
+ * Pra trocar o mapa de fundo, substitua o arquivo em /public/maps/default.svg
+ * (ou aponte MAP_BACKGROUND_URL para outro caminho, ex: /maps/default.webp).
+ * Veja /public/maps/CREDITS.md para detalhes do asset atual.
  */
 
-export const MAP_BACKGROUND_URL = '/maps/default.webp'
+export const MAP_BACKGROUND_URL = '/maps/default.svg'
 
 export const CAMPAIGN_NAME_DEFAULT = '⚜ Companhia do Vale ⚜'
 

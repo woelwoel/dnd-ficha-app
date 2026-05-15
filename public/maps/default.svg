@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Mapa fantasy default — pergaminho desenhado a mão.
+  Estilo: cartógrafo Tolkien-esco, tinta sépia sobre papel envelhecido.
+  Regiões coincidem com REGIONS_DEFAULT em src/utils/token-position.js:
+    forest  (0.18, 0.55)  → mata oeste
+    castle  (0.50, 0.45)  → Pedra do Rei (centro)
+    tower   (0.22, 0.40)  → Torre Arcana
+    ruins   (0.82, 0.65)  → Ruínas de Tharos (leste)
+    village (0.42, 0.80)  → Aldeia do Cervo (sul)
+    port    (0.80, 0.78)  → Porto Pedra (sudeste)
+  Licença: CC0 (este arquivo) — gerado para o projeto dnd-ficha-app.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="paper" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#f4ead3"/>
+      <stop offset="55%" stop-color="#d4be94"/>
+      <stop offset="100%" stop-color="#9c8259"/>
+    </radialGradient>
+    <radialGradient id="stainA" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5a4530" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#5a4530" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="forestG" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3d5530" stop-opacity="0.55"/>
+      <stop offset="70%" stop-color="#3d5530" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#3d5530" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="seaG" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#456073" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#456073" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7"/>
+      <feColorMatrix values="0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0 0.08  0 0 0 0.25 0"/>
+      <feComposite in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+
+  <!-- Base pergaminho -->
+  <rect width="800" height="600" fill="url(#paper)"/>
+  <!-- Manchas de tinta antigas -->
+  <ellipse cx="140" cy="430" rx="80" ry="22" fill="url(#stainA)"/>
+  <ellipse cx="640" cy="120" rx="110" ry="30" fill="url(#stainA)"/>
+  <ellipse cx="380" cy="540" rx="90" ry="20" fill="url(#stainA)"/>
+
+  <!-- Áreas em aquarela: biomas -->
+  <!-- Mata oeste (cobre região "forest" em 0.18, 0.55) -->
+  <ellipse cx="144" cy="330" rx="125" ry="80" fill="url(#forestG)"/>
+  <!-- Mata leste -->
+  <ellipse cx="620" cy="300" rx="110" ry="70" fill="url(#forestG)"/>
+  <!-- Mar ao sul (cobre port em 0.80, 0.78) -->
+  <ellipse cx="400" cy="560" rx="450" ry="80" fill="url(#seaG)"/>
+  <!-- Mancha desértica (ruínas leste) -->
+  <ellipse cx="660" cy="390" rx="80" ry="50" fill="#b89855" opacity="0.25"/>
+
+  <!-- Textura granulada do papel sobreposta -->
+  <rect width="800" height="600" fill="#3a2b1c" opacity="0.08" filter="url(#grain)"/>
+
+  <!-- ============ LINHA DE TINTA: terreno ============ -->
+  <g stroke="#2a1f14" fill="none" stroke-linecap="round">
+
+    <!-- Cordilheira norte (3 camadas de profundidade) -->
+    <g stroke-width="1.8">
+      <!-- camada de trás -->
+      <path d="M0,90 L40,50 L80,90 L120,55 L160,90 L200,55 L240,92 L280,58 L320,92 L360,58 L400,92 L440,58 L480,92 L520,58 L560,92 L600,55 L640,92 L680,55 L720,92 L760,60 L800,92" opacity="0.55"/>
+      <!-- camada do meio -->
+      <path d="M10,115 L52,72 L92,115 L132,78 L172,118 L212,78 L252,118 L292,75 L332,118 L372,78 L412,118 L452,78 L492,118 L532,78 L572,118 L612,72 L652,118 L692,78 L732,118 L772,75 L800,108"/>
+      <!-- camada da frente (densa, próxima) -->
+      <path d="M0,142 L42,98 L84,142 L128,108 L172,142 L216,105 L260,148 L304,108 L348,148 L392,108 L436,148 L480,108 L524,148 L568,108 L612,142 L656,108 L700,142 L744,108 L800,140"/>
+      <!-- Picos com neve -->
+      <g fill="#ffffff" opacity="0.7" stroke="#ffffff" stroke-width="0.5">
+        <path d="M126,108 L132,102 L138,108 Z"/>
+        <path d="M216,105 L222,99 L228,105 Z"/>
+        <path d="M304,108 L310,102 L316,108 Z"/>
+        <path d="M480,108 L486,102 L492,108 Z"/>
+        <path d="M656,108 L662,102 L668,108 Z"/>
+      </g>
+      <!-- Sombreamento vertical em alguns picos -->
+      <g stroke-width="0.5" opacity="0.45">
+        <path d="M44,100 L46,128 M86,114 L88,140 M130,107 L132,138 M174,118 L176,140"/>
+        <path d="M218,107 L220,138 M262,118 L264,140 M306,108 L308,138 M350,118 L352,140"/>
+        <path d="M394,108 L396,138 M438,118 L440,140 M482,108 L484,138 M526,118 L528,140"/>
+        <path d="M570,108 L572,138 M614,114 L616,140 M658,108 L660,138 M702,114 L704,140"/>
+      </g>
+    </g>
+
+    <!-- Floresta oeste densa (Mata Antiga) -->
+    <g fill="#2a1f14" stroke-width="0.7">
+      <g transform="translate(60,290)">
+        <path d="M0,0 L6,-11 L12,0 Z M10,-2 L16,-13 L22,-2 Z M20,0 L26,-11 L32,0 Z M30,-2 L36,-13 L42,-2 Z M40,0 L46,-11 L52,0 Z M50,-2 L56,-13 L62,-2 Z M60,0 L66,-11 L72,0 Z M70,-2 L76,-13 L82,-2 Z M80,0 L86,-11 L92,0 Z M90,-2 L96,-13 L102,-2 Z M100,0 L106,-11 L112,0 Z M110,-2 L116,-13 L122,-2 Z M120,0 L126,-11 L132,0 Z
+                 M0,15 L6,4 L12,15 Z M10,13 L16,2 L22,13 Z M20,15 L26,4 L32,15 Z M30,13 L36,2 L42,13 Z M40,15 L46,4 L52,15 Z M50,13 L56,2 L62,13 Z M60,15 L66,4 L72,15 Z M70,13 L76,2 L82,13 Z M80,15 L86,4 L92,15 Z M90,13 L96,2 L102,13 Z M100,15 L106,4 L112,15 Z M110,13 L116,2 L122,13 Z M120,15 L126,4 L132,15 Z
+                 M5,30 L11,19 L17,30 Z M15,28 L21,17 L27,28 Z M25,30 L31,19 L37,30 Z M35,28 L41,17 L47,28 Z M45,30 L51,19 L57,30 Z M55,28 L61,17 L67,28 Z M65,30 L71,19 L77,30 Z M75,28 L81,17 L87,28 Z M85,30 L91,19 L97,30 Z M95,28 L101,17 L107,28 Z M105,30 L111,19 L117,30 Z M115,28 L121,17 L127,28 Z
+                 M0,45 L6,34 L12,45 Z M10,43 L16,32 L22,43 Z M20,45 L26,34 L32,45 Z M30,43 L36,32 L42,43 Z M40,45 L46,34 L52,45 Z M50,43 L56,32 L62,43 Z M60,45 L66,34 L72,45 Z M70,43 L76,32 L82,43 Z M80,45 L86,34 L92,45 Z M90,43 L96,32 L102,43 Z M100,45 L106,34 L112,45 Z"/>
+      </g>
+    </g>
+
+    <!-- Floresta leste (Mata Oriente) -->
+    <g fill="#2a1f14" stroke-width="0.7">
+      <g transform="translate(540,250)">
+        <path d="M0,0 L6,-11 L12,0 Z M10,-2 L16,-13 L22,-2 Z M20,0 L26,-11 L32,0 Z M30,-2 L36,-13 L42,-2 Z M40,0 L46,-11 L52,0 Z M50,-2 L56,-13 L62,-2 Z M60,0 L66,-11 L72,0 Z M70,-2 L76,-13 L82,-2 Z M80,0 L86,-11 L92,0 Z M90,-2 L96,-13 L102,-2 Z M100,0 L106,-11 L112,0 Z M110,-2 L116,-13 L122,-2 Z
+                 M0,15 L6,4 L12,15 Z M10,13 L16,2 L22,13 Z M20,15 L26,4 L32,15 Z M30,13 L36,2 L42,13 Z M40,15 L46,4 L52,15 Z M50,13 L56,2 L62,13 Z M60,15 L66,4 L72,15 Z M70,13 L76,2 L82,13 Z M80,15 L86,4 L92,15 Z M90,13 L96,2 L102,13 Z M100,15 L106,4 L112,15 Z
+                 M5,30 L11,19 L17,30 Z M15,28 L21,17 L27,28 Z M25,30 L31,19 L37,30 Z M35,28 L41,17 L47,28 Z M45,30 L51,19 L57,30 Z M55,28 L61,17 L67,28 Z M65,30 L71,19 L77,30 Z M75,28 L81,17 L87,28 Z M85,30 L91,19 L97,30 Z M95,28 L101,17 L107,28 Z"/>
+      </g>
+    </g>
+
+    <!-- Rio principal serpenteando -->
+    <g stroke-width="2.4" opacity="0.78">
+      <path d="M0,425 Q70,400 140,420 Q220,445 300,420 Q380,400 460,420 Q540,445 620,420 Q700,395 800,415"/>
+      <!-- Afluentes -->
+      <path d="M280,420 Q275,360 250,310" stroke-width="1.3"/>
+      <path d="M540,420 Q555,360 580,300" stroke-width="1.3"/>
+    </g>
+
+    <!-- Castelo central: Pedra do Rei (região "castle" em 0.50, 0.45 → 400, 270) -->
+    <g transform="translate(400,270)" stroke-width="1.6">
+      <!-- Muralha octagonal -->
+      <path d="M-40,0 L-28,-18 L-12,-22 L12,-22 L28,-18 L40,0 L40,14 L28,32 L12,36 L-12,36 L-28,32 L-40,14 Z" fill="none"/>
+      <!-- Torres laterais -->
+      <rect x="-44" y="-6" width="6" height="16" fill="#2a1f14"/>
+      <rect x="38" y="-6" width="6" height="16" fill="#2a1f14"/>
+      <!-- Torre principal -->
+      <rect x="-14" y="-12" width="28" height="22" fill="#2a1f14"/>
+      <path d="M-17,-12 L-7,-22 L3,-12 M3,-12 L13,-22 L21,-12" fill="#2a1f14"/>
+      <!-- Mastros e bandeira -->
+      <line x1="0" y1="-22" x2="0" y2="-38" stroke="#2a1f14" stroke-width="1.5"/>
+      <path d="M0,-38 L14,-34 L0,-30" fill="#8b0000"/>
+      <!-- Portão -->
+      <rect x="-4" y="22" width="8" height="14" fill="#5a4530"/>
+    </g>
+
+    <!-- Torre Arcana (região "tower" em 0.22, 0.40 → 176, 240) -->
+    <g transform="translate(176,240)" stroke-width="1.5">
+      <path d="M-8,28 L-8,-14 L8,-14 L8,28 Z" fill="#2a1f14"/>
+      <path d="M-13,-14 L0,-32 L13,-14 Z" fill="#2a1f14"/>
+      <circle cx="0" cy="-2" r="3.5" fill="#fcf3da"/>
+      <!-- Estrelas/símbolos arcanos -->
+      <text x="-18" y="-30" font-size="11" fill="#2a1f14" font-family="serif">✦</text>
+      <text x="14" y="-34" font-size="8" fill="#2a1f14" font-family="serif">✦</text>
+      <text x="-3" y="-42" font-size="7" fill="#2a1f14" font-family="serif">✦</text>
+      <text x="22" y="-22" font-size="6" fill="#2a1f14" font-family="serif">✦</text>
+    </g>
+
+    <!-- Ruínas (região "ruins" em 0.82, 0.65 → 656, 390) -->
+    <g transform="translate(656,390)" stroke-width="1.5">
+      <path d="M-16,14 L-16,-4 L-12,-10 L0,-10 L0,14 Z M4,14 L4,-4 L10,-10 L16,-10 L16,14 Z" fill="#2a1f14"/>
+      <!-- Pedras quebradas -->
+      <circle cx="-24" cy="10" r="3" fill="#2a1f14"/>
+      <circle cx="22" cy="12" r="3.5" fill="#2a1f14"/>
+      <circle cx="-22" cy="18" r="2" fill="#2a1f14"/>
+      <circle cx="26" cy="4" r="2.5" fill="#2a1f14"/>
+      <circle cx="-30" cy="0" r="1.8" fill="#2a1f14"/>
+      <text x="0" y="-18" text-anchor="middle" font-size="13" fill="#2a1f14" font-weight="700" font-family="serif">×</text>
+    </g>
+
+    <!-- Aldeia do Cervo (região "village" em 0.42, 0.80 → 336, 480) -->
+    <g transform="translate(336,480)" stroke-width="1" fill="#2a1f14">
+      <!-- Casas -->
+      <path d="M-12,6 L-12,-4 L-6,-9 L0,-4 L0,6 Z M2,6 L2,-2 L8,-7 L14,-2 L14,6 Z M-22,6 L-22,-2 L-16,-7 L-10,-2 L-10,6 Z M16,6 L16,-1 L20,-5 L24,-1 L24,6 Z"/>
+      <!-- Fumaça (linhas finas) -->
+      <path d="M-6,-12 Q-9,-18 -4,-22" stroke="#2a1f14" stroke-width="0.7" fill="none" opacity="0.5"/>
+      <path d="M8,-13 Q11,-20 6,-24" stroke="#2a1f14" stroke-width="0.7" fill="none" opacity="0.5"/>
+    </g>
+
+    <!-- Porto Pedra (região "port" em 0.80, 0.78 → 640, 468) -->
+    <g transform="translate(640,468)" stroke-width="1" fill="#2a1f14">
+      <!-- Cidade portuária -->
+      <path d="M-14,6 L-14,-3 L-8,-9 L-2,-3 L-2,6 Z M0,6 L0,-1 L6,-7 L12,-1 L12,6 Z M14,6 L14,0 L18,-3 L22,0 L22,6 Z M-22,6 L-22,1 L-18,-3 L-14,1 L-14,6 Z"/>
+      <!-- Navio (fora do porto) -->
+      <g transform="translate(0,25)" fill="none" stroke="#2a1f14" stroke-width="0.9">
+        <path d="M-10,5 L14,5 L11,11 L-7,11 Z"/>
+        <line x1="2" y1="5" x2="2" y2="-8"/>
+        <path d="M-4,-8 L10,-8 L10,2 L-4,2 Z" fill="#2a1f14"/>
+        <line x1="2" y1="-8" x2="2" y2="-14"/>
+        <path d="M2,-14 L8,-12 L2,-10" fill="#5a4530"/>
+      </g>
+    </g>
+
+    <!-- Caminhos pontilhados conectando locais -->
+    <g stroke="#2a1f14" stroke-width="1" stroke-dasharray="3,4" opacity="0.6">
+      <path d="M176,260 Q280,280 400,275"/>
+      <path d="M400,290 Q520,310 656,390"/>
+      <path d="M336,470 Q370,400 400,300"/>
+      <path d="M656,400 Q655,440 640,465"/>
+    </g>
+
+    <!-- Mar — ondas finas -->
+    <g stroke-width="1" opacity="0.6">
+      <path d="M10,540 Q22,535 34,540 Q46,535 58,540 Q70,535 82,540 Q94,535 106,540 Q118,535 130,540"/>
+      <path d="M150,548 Q162,543 174,548 Q186,543 198,548 Q210,543 222,548"/>
+      <path d="M250,540 Q262,535 274,540 Q286,535 298,540"/>
+      <path d="M380,548 Q392,543 404,548 Q416,543 428,548"/>
+      <path d="M460,540 Q472,535 484,540 Q496,535 508,540"/>
+      <path d="M550,548 Q562,543 574,548 Q586,543 598,548"/>
+      <path d="M720,540 Q732,535 744,540 Q756,535 768,540 Q780,535 792,540"/>
+      <!-- Criatura marinha mítica -->
+      <g transform="translate(490,558)" stroke-width="0.9" opacity="0.65" fill="none">
+        <path d="M0,0 Q8,-7 16,0 Q24,-7 32,0 Q40,-7 48,0"/>
+        <circle cx="3" cy="-3" r="0.8" fill="#2a1f14"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Rosa-dos-ventos no canto superior direito -->
+  <g transform="translate(740,90)" opacity="0.75">
+    <circle r="32" fill="rgba(244,234,211,0.4)" stroke="#2a1f14" stroke-width="1.5"/>
+    <circle r="24" fill="none" stroke="#2a1f14" stroke-width="0.7"/>
+    <circle r="3" fill="#2a1f14"/>
+    <path d="M0,-28 L4,0 L0,28 L-4,0 Z" fill="#2a1f14"/>
+    <path d="M-28,0 L0,-4 L28,0 L0,4 Z" fill="#2a1f14" opacity="0.55"/>
+    <path d="M-20,-20 L0,-4 L20,20 L4,0 Z" fill="#2a1f14" opacity="0.3"/>
+    <path d="M-20,20 L-4,0 L20,-20 L0,4 Z" fill="#2a1f14" opacity="0.3"/>
+    <text x="0" y="-34" text-anchor="middle" font-size="8" fill="#2a1f14" font-weight="700" font-family="serif">N</text>
+    <text x="0" y="40" text-anchor="middle" font-size="8" fill="#2a1f14" font-weight="700" font-family="serif">S</text>
+    <text x="-36" y="3" text-anchor="middle" font-size="8" fill="#2a1f14" font-weight="700" font-family="serif">O</text>
+    <text x="36" y="3" text-anchor="middle" font-size="8" fill="#2a1f14" font-weight="700" font-family="serif">L</text>
+  </g>
+
+  <!-- ============ LABELS REGIONAIS ============ -->
+  <g fill="#2a1f14">
+    <text x="400" y="38" text-anchor="middle" font-family="serif" font-size="20" font-style="italic" font-weight="700" letter-spacing="6">— Terras do Vale —</text>
+    <text x="120" y="90" text-anchor="middle" font-family="serif" font-size="11" font-style="italic">Picos Antigos</text>
+    <text x="660" y="80" text-anchor="middle" font-family="serif" font-size="11" font-style="italic">Garra Negra</text>
+    <text x="125" y="395" text-anchor="middle" font-family="serif" font-size="11" font-style="italic">Mata Antiga</text>
+    <text x="400" y="315" text-anchor="middle" font-family="serif" font-size="12" font-style="italic" font-weight="700">Pedra do Rei</text>
+    <text x="595" y="350" text-anchor="middle" font-family="serif" font-size="11" font-style="italic">Mata Oriente</text>
+    <text x="660" y="430" text-anchor="middle" font-family="serif" font-size="10" font-style="italic">Ruínas de Tharos</text>
+    <text x="336" y="510" text-anchor="middle" font-family="serif" font-size="10" font-style="italic">Aldeia do Cervo</text>
+    <text x="640" y="498" text-anchor="middle" font-family="serif" font-size="10" font-style="italic">Porto Pedra</text>
+    <text x="400" y="580" text-anchor="middle" font-family="serif" font-size="12" font-style="italic" font-weight="700" letter-spacing="6">— Mar de Brumas —</text>
+    <text x="220" y="240" text-anchor="middle" font-family="serif" font-size="9" font-style="italic" opacity="0.8">Torre do Mago</text>
+    <text x="600" y="568" text-anchor="middle" font-family="serif" font-size="8" font-style="italic" opacity="0.65">Hic Sunt Dracones</text>
+  </g>
+
+  <!-- Régua de escala -->
+  <g transform="translate(30,540)" font-family="serif" font-size="9" fill="#2a1f14">
+    <g stroke="#2a1f14" stroke-width="1" fill="none">
+      <rect x="0" y="0" width="14" height="6" fill="#2a1f14"/>
+      <rect x="14" y="0" width="14" height="6" fill="none"/>
+      <rect x="28" y="0" width="14" height="6" fill="#2a1f14"/>
+      <rect x="42" y="0" width="14" height="6" fill="none"/>
+    </g>
+    <text x="28" y="16" text-anchor="middle" font-style="italic">0 — 5 léguas</text>
+  </g>
+</svg>

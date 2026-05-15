@@ -8,8 +8,8 @@ import {
 } from '../utils/config'
 
 describe('config', () => {
-  it('expõe URL do mapa padrão apontando para /maps/default.webp', () => {
-    expect(MAP_BACKGROUND_URL).toBe('/maps/default.webp')
+  it('expõe URL do mapa padrão apontando para /maps/default.svg', () => {
+    expect(MAP_BACKGROUND_URL).toBe('/maps/default.svg')
   })
 
   it('expõe nome de campanha padrão com ornamentos', () => {
