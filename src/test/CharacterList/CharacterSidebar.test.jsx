@@ -53,4 +53,31 @@ describe('<CharacterSidebar>', () => {
     render(<CharacterSidebar characters={[]} onSelect={() => {}} />)
     expect(screen.getByText(/Nenhum herói/i)).toBeInTheDocument()
   })
+
+  it('botão × abre confirmação inline (Riscar / Cancelar)', async () => {
+    const user = userEvent.setup()
+    render(<CharacterSidebar characters={chars} onSelect={() => {}} onDelete={() => {}} />)
+    await user.click(screen.getByRole('button', { name: /Excluir Alice/i }))
+    expect(screen.getByRole('button', { name: /^Riscar$/ })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Cancelar/i })).toBeInTheDocument()
+  })
+
+  it('confirmar Riscar chama onDelete com ID', async () => {
+    const user = userEvent.setup()
+    const onDelete = vi.fn()
+    render(<CharacterSidebar characters={chars} onSelect={() => {}} onDelete={onDelete} />)
+    await user.click(screen.getByRole('button', { name: /Excluir Alice/i }))
+    await user.click(screen.getByRole('button', { name: /^Riscar$/ }))
+    expect(onDelete).toHaveBeenCalledWith('a')
+  })
+
+  it('clicar Cancelar fecha a confirmação sem chamar onDelete', async () => {
+    const user = userEvent.setup()
+    const onDelete = vi.fn()
+    render(<CharacterSidebar characters={chars} onSelect={() => {}} onDelete={onDelete} />)
+    await user.click(screen.getByRole('button', { name: /Excluir Alice/i }))
+    await user.click(screen.getByRole('button', { name: /Cancelar/i }))
+    expect(onDelete).not.toHaveBeenCalled()
+    expect(screen.queryByRole('button', { name: /^Riscar$/ })).not.toBeInTheDocument()
+  })
 })

@@ -29,8 +29,9 @@ function toRoman(num) {
   return r
 }
 
-export function CharacterSidebar({ characters = [], onSelect, onFilterChange }) {
+export function CharacterSidebar({ characters = [], onSelect, onDelete, onFilterChange }) {
   const [classFilter, setClassFilter] = useState(null) // null = todos
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null)
 
   const filtered = useMemo(() => {
     if (!classFilter) return characters
@@ -94,44 +95,101 @@ export function CharacterSidebar({ characters = [], onSelect, onFilterChange }) 
               : 'Nenhum aventureiro dessa estirpe na companhia.'}
           </p>
         )}
-        {visible.map(c => (
-          <button
-            key={c.id}
-            type="button"
-            onClick={() => onSelect && onSelect(c.id)}
-            className="w-full flex items-center gap-2 px-1 py-1.5 text-left transition-colors hover:bg-[rgba(212,173,106,0.08)] border-b"
-            style={{ borderColor: 'rgba(110, 87, 43, 0.3)' }}
-          >
-            <span
-              className="grid place-items-center rounded-full flex-shrink-0"
-              style={{
-                width: '26px', height: '26px',
-                background: 'radial-gradient(circle at 30% 25%, var(--color-accent-100), var(--color-accent-500))',
-                border: '1px solid var(--color-shell-800)',
-                color: 'var(--color-shell-800)',
-              }}
+        {visible.map(c => {
+          const confirming = confirmDeleteId === c.id
+          return (
+            <div
+              key={c.id}
+              className="group relative flex items-center gap-2 px-1 py-1.5 transition-colors hover:bg-[rgba(212,173,106,0.08)] border-b"
+              style={{ borderColor: 'rgba(110, 87, 43, 0.3)' }}
             >
-              <ClassIcon classKey={c.info?.class} size={16} color="currentColor" />
-            </span>
-            <span className="flex-1 min-w-0">
-              <span
-                className="block text-[12px] font-semibold leading-tight truncate"
-                style={{ fontFamily: 'EB Garamond, serif', color: 'var(--color-ink-inverse)' }}
+              <button
+                type="button"
+                onClick={() => onSelect && onSelect(c.id)}
+                className="flex-1 flex items-center gap-2 text-left min-w-0"
+                aria-label={`Abrir ${c.info?.name || 'personagem'}`}
               >
-                {c.info?.name || 'Sem nome'}
-              </span>
-              <span className="block text-[10px] italic mt-0.5" style={{ color: 'var(--color-gold-500)' }}>
-                {c.info?.class || '—'}
-              </span>
-            </span>
-            <span
-              className="text-[11px] font-bold flex-shrink-0"
-              style={{ fontFamily: 'IM Fell English SC, serif', color: 'var(--color-gold-400)' }}
-            >
-              {toRoman(c.info?.level ?? 1)}
-            </span>
-          </button>
-        ))}
+                <span
+                  className="grid place-items-center rounded-full flex-shrink-0"
+                  style={{
+                    width: '26px', height: '26px',
+                    background: 'radial-gradient(circle at 30% 25%, var(--color-accent-100), var(--color-accent-500))',
+                    border: '1px solid var(--color-shell-800)',
+                    color: 'var(--color-shell-800)',
+                  }}
+                >
+                  <ClassIcon classKey={c.info?.class} size={16} color="currentColor" />
+                </span>
+                <span className="flex-1 min-w-0">
+                  <span
+                    className="block text-[12px] font-semibold leading-tight truncate"
+                    style={{ fontFamily: 'EB Garamond, serif', color: 'var(--color-ink-inverse)' }}
+                  >
+                    {c.info?.name || 'Sem nome'}
+                  </span>
+                  <span className="block text-[10px] italic mt-0.5" style={{ color: 'var(--color-gold-500)' }}>
+                    {c.info?.class || '—'}
+                  </span>
+                </span>
+                <span
+                  className="text-[11px] font-bold flex-shrink-0 mr-1"
+                  style={{ fontFamily: 'IM Fell English SC, serif', color: 'var(--color-gold-400)' }}
+                >
+                  {toRoman(c.info?.level ?? 1)}
+                </span>
+              </button>
+
+              {/* Delete inline com confirmação */}
+              {confirming ? (
+                <span className="flex items-center gap-1 flex-shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (onDelete) onDelete(c.id)
+                      setConfirmDeleteId(null)
+                    }}
+                    className="text-[10px] px-2 py-0.5 rounded font-bold border"
+                    style={{
+                      background: 'var(--color-blood)',
+                      color: 'var(--color-ink-inverse)',
+                      borderColor: '#5a0000',
+                      fontFamily: 'IM Fell English SC, serif',
+                      letterSpacing: '0.08em',
+                    }}
+                  >
+                    Riscar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setConfirmDeleteId(null)}
+                    className="text-[10px] px-2 py-0.5 rounded border"
+                    style={{
+                      background: 'transparent',
+                      color: 'var(--color-gold-400)',
+                      borderColor: 'var(--color-shell-border)',
+                      fontFamily: 'IM Fell English SC, serif',
+                      letterSpacing: '0.08em',
+                    }}
+                    aria-label="Cancelar exclusão"
+                  >
+                    Cancelar
+                  </button>
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setConfirmDeleteId(c.id)}
+                  className="flex-shrink-0 w-6 h-6 grid place-items-center rounded opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity hover:bg-[rgba(139,0,0,0.18)]"
+                  style={{ color: 'var(--color-gold-500)' }}
+                  aria-label={`Excluir ${c.info?.name || 'personagem'}`}
+                  title="Excluir"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+          )
+        })}
         {hidden > 0 && (
           <div
             className="mt-2 p-2 rounded text-[10px] text-center italic border-dashed"

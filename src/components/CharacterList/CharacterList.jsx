@@ -8,6 +8,7 @@ import {
   loadCharacters,
   touchCharacterLastOpened,
   updateCharacterPosition,
+  deleteCharacter,
 } from '../../utils/storage'
 import {
   CAMPAIGN_NAME_DEFAULT,
@@ -60,6 +61,11 @@ export function CharacterList({ onSelect, onCreate }) {
 
   const handlePositionChange = useCallback((id, position) => {
     updateCharacterPosition(id, position)
+    setCharacters(loadCharacters())
+  }, [])
+
+  const handleDelete = useCallback((id) => {
+    deleteCharacter(id)
     setCharacters(loadCharacters())
   }, [])
 
@@ -129,6 +135,7 @@ export function CharacterList({ onSelect, onCreate }) {
               <CharacterSidebar
                 characters={characters}
                 onSelect={handleSelect}
+                onDelete={handleDelete}
               />
             </div>
           </>
