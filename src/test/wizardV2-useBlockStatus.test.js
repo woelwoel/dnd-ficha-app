@@ -116,4 +116,87 @@ describe('getBlockStatus', () => {
   it('race completo: raça simples (anão) sem requisitos extras', () => {
     expect(getBlockStatus('race', { ...empty, race: 'anao' }).status).toBe('completo')
   })
+
+  it('class parcial: sem srdData, fallback é completo se preenchido', () => {
+    expect(getBlockStatus('class', { ...empty, class: 'guerreiro' }).status).toBe('completo')
+  })
+
+  it('class parcial: choice obrigatória pendente', () => {
+    const srdData = {
+      classChoices: { guerreiro: { choices: [
+        { id: 'fighting-style', level: 1, options: [{ value: 'archery' }] },
+      ]}},
+    }
+    const draft = { ...empty, class: 'guerreiro', level: 1 }
+    expect(getBlockStatus('class', draft, srdData).status).toBe('parcial')
+  })
+
+  it('class completo: choice obrigatória feita', () => {
+    const srdData = {
+      classChoices: { guerreiro: { choices: [
+        { id: 'fighting-style', level: 1, options: [{ value: 'archery' }] },
+      ]}},
+    }
+    const draft = {
+      ...empty, class: 'guerreiro', level: 1,
+      chosenFeatures: { 'fighting-style': 'archery' },
+    }
+    expect(getBlockStatus('class', draft, srdData).status).toBe('completo')
+  })
+
+  it('class parcial: ASI no nível 4 sem escolha', () => {
+    const srdData = {
+      classProgression: { guerreiro: { levels: [
+        { level: 1, features: [] },
+        { level: 4, features: [{ name: 'Aumento de Atributo' }] },
+      ]}},
+    }
+    const draft = { ...empty, class: 'guerreiro', level: 4 }
+    expect(getBlockStatus('class', draft, srdData).status).toBe('parcial')
+  })
+
+  it('class completo: ASI escolhido', () => {
+    const srdData = {
+      classProgression: { guerreiro: { levels: [
+        { level: 4, features: [{ name: 'Aumento de Atributo' }] },
+      ]}},
+    }
+    const draft = {
+      ...empty, class: 'guerreiro', level: 4,
+      asiChoices: { 4: { type: 'asi', bonuses: { str: 2 } } },
+    }
+    expect(getBlockStatus('class', draft, srdData).status).toBe('completo')
+  })
+
+  it('class parcial: cantrips bônus pendentes', () => {
+    const srdData = {
+      classChoices: { bruxo: { choices: [
+        { id: 'pact', level: 3, options: [
+          { value: 'tome', grants: { bonusCantrips: 3 } },
+        ]},
+      ]}},
+    }
+    const draft = {
+      ...empty, class: 'bruxo', level: 3,
+      chosenFeatures: { pact: 'tome' },
+      bonusSpells: ['fire bolt'],
+    }
+    expect(getBlockStatus('class', draft, srdData).status).toBe('parcial')
+  })
+
+  it('class completo: cantrips bônus atendidos', () => {
+    const srdData = {
+      classChoices: { bruxo: { choices: [
+        { id: 'pact', level: 3, options: [
+          { value: 'tome', grants: { bonusCantrips: 3 } },
+        ]},
+      ]}},
+    }
+    const draft = {
+      ...empty, class: 'bruxo', level: 3,
+      chosenFeatures: { pact: 'tome' },
+      bonusSpells: ['a', 'b', 'c'],
+    }
+    expect(getBlockStatus('class', draft, srdData).status).toBe('completo')
+  })
 })
