@@ -24,7 +24,7 @@ function readView() {
   } catch { return VIEW_MAP }
 }
 function writeView(v) {
-  try { localStorage.setItem(VIEW_MODE_STORAGE_KEY, v) } catch {}
+  try { localStorage.setItem(VIEW_MODE_STORAGE_KEY, v) } catch { /* localStorage indisponível */ }
 }
 
 function readCampaignName() {

@@ -1,7 +1,12 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * Silhuetas SVG por classe de personagem para uso em tokens, chips e
  * avatares. Cada path foi desenhado em um viewBox 32x32 e usa
  * `currentColor` pra herdar cor do contexto.
+ *
+ * Este módulo intencionalmente exporta um componente (`ClassIcon`) +
+ * helpers (`getClassIconKey`, `CLASS_KEYS`) juntos pra manter a API
+ * coesa. Split desabilita HMR fast-refresh — aceitável aqui.
  */
 
 const PATHS = {
