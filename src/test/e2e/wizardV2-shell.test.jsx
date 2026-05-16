@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { CharacterWizardV2 } from '../../components/CharacterWizardV2/CharacterWizardV2'
 import { SrdProvider } from '../../providers/SrdProvider'
@@ -37,6 +37,15 @@ describe('E2E — CharacterWizardV2 shell', () => {
     await userEvent.click(screen.getByRole('button', { name: /começar/i }))
     await userEvent.click(screen.getByRole('button', { name: /conceito/i }))
     expect(screen.getByLabelText(/nome do personagem/i)).toBeInTheDocument()
+  })
+
+  it('clicar em card Classe abre ClassBlock real', async () => {
+    renderWithSrd(<CharacterWizardV2 onBack={() => {}} onComplete={() => {}} />)
+    await userEvent.click(screen.getByRole('button', { name: /começar/i }))
+    await userEvent.click(screen.getByRole('button', { name: /classe/i }))
+    // O modal envolve o ClassBlock; busca o select dentro do dialog pra evitar colisão com o card "Classe" do grid.
+    const dialog = screen.getByRole('dialog', { name: /classe/i })
+    expect(within(dialog).getByLabelText(/^classe/i)).toBeInTheDocument()
   })
 
   it('mostra ResumeDraftPrompt se sessionStorage tem draft', () => {

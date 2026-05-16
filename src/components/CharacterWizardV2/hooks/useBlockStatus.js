@@ -2,10 +2,14 @@
 import { useMemo } from 'react'
 import { BLOCKS } from '../blocks-config'
 import { getRaceRequirements } from '../blocks/race-helpers'
+import {
+  isASIChoiceComplete, isChoiceDone,
+  getLeveledChoices, computeBonusCantripsNeeded, getASILevels,
+} from '../blocks/class-helpers'
 
 const ATTR_KEYS = ['str', 'dex', 'con', 'int', 'wis', 'cha']
 
-function statusOf(blockId, draft) {
+function statusOf(blockId, draft, srdData = {}) {
   switch (blockId) {
     case 'race': {
       if (!draft.race) return 'vazio'
@@ -17,8 +21,28 @@ function statusOf(blockId, draft) {
       return 'completo'
     }
 
-    case 'class':
-      return draft.class ? 'completo' : 'vazio'
+    case 'class': {
+      if (!draft.class) return 'vazio'
+      const { classChoices, classProgression } = srdData
+      // Sem dados SRD, considera completo (PR 1 fallback).
+      if (!classChoices && !classProgression) return 'completo'
+
+      const leveledChoices = getLeveledChoices(classChoices?.[draft.class], draft.level ?? 1)
+      const allChoicesDone = leveledChoices.every(c =>
+        isChoiceDone(c, draft.chosenFeatures?.[c.id])
+      )
+      if (!allChoicesDone) return 'parcial'
+
+      const asiLevels = getASILevels(classProgression?.[draft.class], draft.level ?? 1)
+      const allASIDone = asiLevels.every(l => isASIChoiceComplete(draft.asiChoices?.[l]))
+      if (!allASIDone) return 'parcial'
+
+      const bonusNeeded = computeBonusCantripsNeeded(leveledChoices, draft.chosenFeatures ?? {})
+      const bonusGiven = draft.bonusSpells?.length ?? 0
+      if (bonusGiven < bonusNeeded) return 'parcial'
+
+      return 'completo'
+    }
 
     case 'background':
       return draft.background ? 'completo' : 'vazio'
@@ -68,14 +92,14 @@ function blockedBy(blockId, draft) {
   }
 }
 
-export function getBlockStatus(blockId, draft) {
+export function getBlockStatus(blockId, draft, srdData = {}) {
   if (blockId === 'review') {
     // Review fica bloqueado até todos os outros não-bloqueados estarem completos.
     const others = BLOCKS.filter(b => b.id !== 'review')
     const allReady = others.every(b => {
       const blocked = blockedBy(b.id, draft).length > 0
       if (blocked) return true   // bloqueado conta como "ainda não pronto, mas não impede"
-      return statusOf(b.id, draft) === 'completo'
+      return getBlockStatus(b.id, draft, srdData).status === 'completo'
     })
     if (allReady) return { status: 'completo', missing: [], blockedBy: [] }
     return { status: 'bloqueado', missing: [], blockedBy: ['outros'] }
@@ -85,13 +109,13 @@ export function getBlockStatus(blockId, draft) {
   if (bb.length > 0) {
     return { status: 'bloqueado', missing: [], blockedBy: bb }
   }
-  return { status: statusOf(blockId, draft), missing: [], blockedBy: [] }
+  return { status: statusOf(blockId, draft, srdData), missing: [], blockedBy: [] }
 }
 
-export function useBlockStatus(draft) {
+export function useBlockStatus(draft, srdData = {}) {
   return useMemo(() => {
     const map = {}
-    BLOCKS.forEach(b => { map[b.id] = getBlockStatus(b.id, draft) })
+    BLOCKS.forEach(b => { map[b.id] = getBlockStatus(b.id, draft, srdData) })
     return map
-  }, [draft])
+  }, [draft, srdData])
 }
