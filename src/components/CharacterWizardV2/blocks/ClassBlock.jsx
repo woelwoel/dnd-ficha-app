@@ -1,6 +1,7 @@
 import { ClassPicker } from './class/ClassPicker'
 import { LevelProgressionList } from './class/LevelProgressionList'
 import { ClassStatsCards } from './class/ClassStatsCards'
+import { ClassEquipment } from './class/ClassEquipment'
 import { CantripsGrantPicker } from '../../CantripsGrantPicker'
 import {
   getLeveledChoices, computeBonusCantripsNeeded, getProgressionLevels,
@@ -14,6 +15,7 @@ const ATTR_NAME_TO_KEY = {
 
 export function ClassBlock({
   draft, updateDraft, classes, classChoices = {}, classProgression = {}, feats = [],
+  classEquipment = {}, weaponsArmor = {},
 }) {
   const selectedClass = classes.find(c => c.index === draft.class) ?? null
 
@@ -103,9 +105,12 @@ export function ClassBlock({
             savingThrows={draft.savingThrows ?? []}
           />
 
-          <div className="border-2 border-dashed border-parchment-600 bg-parchment-50 rounded-sm p-3 text-center">
-            <p className="text-xs italic text-ink-300">Equipamento: PR 3b (em construção)</p>
-          </div>
+          <ClassEquipment
+            draft={draft} updateDraft={updateDraft}
+            selectedClass={selectedClass}
+            classEquipmentData={classEquipment[draft.class] ?? null}
+            weaponsArmor={weaponsArmor}
+          />
         </>
       )}
     </div>

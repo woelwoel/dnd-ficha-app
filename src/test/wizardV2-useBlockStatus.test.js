@@ -199,4 +199,49 @@ describe('getBlockStatus', () => {
     }
     expect(getBlockStatus('class', draft, srdData).status).toBe('completo')
   })
+
+  it('class parcial: equipamento com escolha pendente', () => {
+    const srdData = {
+      classEquipment: { guerreiro: { choices: [
+        { id: 'weapon', options: [{ value: 'longsword' }] },
+      ], fixed: [] }},
+    }
+    const draft = { ...empty, class: 'guerreiro', level: 1 }
+    expect(getBlockStatus('class', draft, srdData).status).toBe('parcial')
+  })
+
+  it('class completo: equipamento com escolha feita', () => {
+    const srdData = {
+      classEquipment: { guerreiro: { choices: [
+        { id: 'weapon', options: [{ value: 'longsword' }] },
+      ], fixed: [] }},
+    }
+    const draft = {
+      ...empty, class: 'guerreiro', level: 1,
+      classEquipmentChoices: { weapon: 'longsword' },
+    }
+    expect(getBlockStatus('class', draft, srdData).status).toBe('completo')
+  })
+
+  it('class parcial: modo ouro sem rolar', () => {
+    const srdData = {
+      classEquipment: { guerreiro: { choices: [], fixed: [] }},
+    }
+    const draft = {
+      ...empty, class: 'guerreiro', level: 1,
+      classEquipmentChoice: 'gold', classStartingGold: 0,
+    }
+    expect(getBlockStatus('class', draft, srdData).status).toBe('parcial')
+  })
+
+  it('class completo: modo ouro rolado', () => {
+    const srdData = {
+      classEquipment: { guerreiro: { choices: [], fixed: [] }},
+    }
+    const draft = {
+      ...empty, class: 'guerreiro', level: 1,
+      classEquipmentChoice: 'gold', classStartingGold: 75,
+    }
+    expect(getBlockStatus('class', draft, srdData).status).toBe('completo')
+  })
 })
