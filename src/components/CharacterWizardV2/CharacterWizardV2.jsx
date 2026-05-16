@@ -43,8 +43,9 @@ const LABEL_BY_ID = Object.fromEntries(BLOCKS.map(b => [b.id, b.label]))
 // Isso garante que useDraft receba as options corretas na montagem inicial.
 function WizardGrid({ initialSettings, resume, onBack }) {
   const { draft, updateDraft, hasChanges, resetDraft } = useDraft({ initialSettings, resume })
-  const { races, classes, classChoices, progression: classProgression, feats } = useSrd()
-  const blockStatus = useBlockStatus(draft, { classChoices, classProgression })
+  const { races, classes, classChoices, progression: classProgression, feats,
+          classEquipment, weaponsArmor } = useSrd()
+  const blockStatus = useBlockStatus(draft, { classChoices, classProgression, classEquipment })
   const [openBlockId, setOpenBlockId] = useState(null)
   const [exitConfirmOpen, setExitConfirmOpen] = useState(false)
 
@@ -112,6 +113,7 @@ function WizardGrid({ initialSettings, resume, onBack }) {
             draft={draft} updateDraft={updateDraft}
             classes={classes ?? []} classChoices={classChoices ?? {}}
             classProgression={classProgression ?? {}} feats={feats ?? []}
+            classEquipment={classEquipment ?? {}} weaponsArmor={weaponsArmor ?? {}}
           />
         )}
         {openBlockId && !['concept', 'race', 'class'].includes(openBlockId) && (

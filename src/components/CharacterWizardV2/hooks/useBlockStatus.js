@@ -6,6 +6,7 @@ import {
   isASIChoiceComplete, isChoiceDone,
   getLeveledChoices, computeBonusCantripsNeeded, getASILevels,
 } from '../blocks/class-helpers'
+import { allPicksDone } from '../blocks/class/equipment-helpers'
 
 const ATTR_KEYS = ['str', 'dex', 'con', 'int', 'wis', 'cha']
 
@@ -23,9 +24,9 @@ function statusOf(blockId, draft, srdData = {}) {
 
     case 'class': {
       if (!draft.class) return 'vazio'
-      const { classChoices, classProgression } = srdData
+      const { classChoices, classProgression, classEquipment } = srdData
       // Sem dados SRD, considera completo (PR 1 fallback).
-      if (!classChoices && !classProgression) return 'completo'
+      if (!classChoices && !classProgression && !classEquipment) return 'completo'
 
       const leveledChoices = getLeveledChoices(classChoices?.[draft.class], draft.level ?? 1)
       const allChoicesDone = leveledChoices.every(c =>
@@ -40,6 +41,20 @@ function statusOf(blockId, draft, srdData = {}) {
       const bonusNeeded = computeBonusCantripsNeeded(leveledChoices, draft.chosenFeatures ?? {})
       const bonusGiven = draft.bonusSpells?.length ?? 0
       if (bonusGiven < bonusNeeded) return 'parcial'
+
+      if (classEquipment) {
+        const eqData = classEquipment[draft.class]
+        const mode = draft.classEquipmentChoice ?? 'equipment'
+        if (mode === 'equipment' && eqData) {
+          const totalChoices = eqData.choices?.length ?? 0
+          const doneChoices = (eqData.choices ?? []).filter(c =>
+            !!draft.classEquipmentChoices?.[c.id]
+          ).length
+          if (doneChoices < totalChoices) return 'parcial'
+          if (!allPicksDone(eqData, draft.classEquipmentChoices ?? {}, draft.classEquipmentPicks ?? {})) return 'parcial'
+        }
+        if (mode === 'gold' && (draft.classStartingGold ?? 0) === 0) return 'parcial'
+      }
 
       return 'completo'
     }

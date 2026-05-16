@@ -66,9 +66,10 @@ describe('ClassBlock', () => {
     expect(updateDraft).toHaveBeenCalledWith(expect.objectContaining({ level: 4 }))
   })
 
-  it('mostra placeholder de equipamento (PR 3b)', () => {
+  it('mostra ClassEquipment quando classe escolhida', () => {
     render(<ClassBlock draft={{ ...INITIAL_DRAFT_V2, class: 'guerreiro' }} updateDraft={() => {}}
       classes={classes} classChoices={classChoices} classProgression={classProgression} feats={[]} />)
-    expect(screen.getByText(/equipamento.*pr 3b/i)).toBeInTheDocument()
+    expect(screen.getByText(/equipamento inicial/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /equipamento da classe/i })).toBeInTheDocument()
   })
 })
