@@ -43,10 +43,15 @@ export function useDraft({ initialSettings = null, resume = false } = {}) {
       }
     }
     if (initialSettings) {
-      return {
+      const merged = {
         ...INITIAL_DRAFT_V2,
         settings: { ...INITIAL_DRAFT_V2.settings, ...initialSettings },
       }
+      // startLevel da campanha → nível inicial do personagem
+      if (typeof initialSettings.startLevel === 'number' && initialSettings.startLevel > 0) {
+        merged.level = initialSettings.startLevel
+      }
+      return merged
     }
     return INITIAL_DRAFT_V2
   })
