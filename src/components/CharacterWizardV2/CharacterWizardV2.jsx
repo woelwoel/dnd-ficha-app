@@ -51,7 +51,7 @@ const LABEL_BY_ID = Object.fromEntries(BLOCKS.map(b => [b.id, b.label]))
 function WizardGrid({ initialSettings, resume, onBack, onComplete }) {
   const { draft, updateDraft, hasChanges, resetDraft } = useDraft({ initialSettings, resume })
   const { races, classes, classChoices, progression: classProgression, feats,
-          classEquipment, weaponsArmor, backgrounds } = useSrd()
+          classEquipment, weaponsArmor, backgrounds, multiclass: multiclassData } = useSrd()
   const blockStatus = useBlockStatus(draft, { classChoices, classProgression, classEquipment, classes })
   const [openBlockId, setOpenBlockId] = useState(null)
   const [exitConfirmOpen, setExitConfirmOpen] = useState(false)
@@ -131,6 +131,7 @@ function WizardGrid({ initialSettings, resume, onBack, onComplete }) {
             classes={classes ?? []} classChoices={classChoices ?? {}}
             classProgression={classProgression ?? {}} feats={feats ?? []}
             classEquipment={classEquipment ?? {}} weaponsArmor={weaponsArmor ?? {}}
+            multiclassData={multiclassData ?? {}}
           />
         )}
         {openBlockId === 'background' && (

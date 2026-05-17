@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { ClassPicker } from './class/ClassPicker'
 import { LevelProgressionList } from './class/LevelProgressionList'
 import { ClassStatsCards } from './class/ClassStatsCards'
 import { ClassEquipment } from './class/ClassEquipment'
 import { CantripsGrantPicker } from '../../CantripsGrantPicker'
+import { MulticlassModal } from '../MulticlassModal'
 import {
   getLeveledChoices, computeBonusCantripsNeeded, getProgressionLevels,
 } from './class-helpers'
@@ -15,9 +17,21 @@ const ATTR_NAME_TO_KEY = {
 
 export function ClassBlock({
   draft, updateDraft, classes, classChoices = {}, classProgression = {}, feats = [],
-  classEquipment = {}, weaponsArmor = {},
+  classEquipment = {}, weaponsArmor = {}, multiclassData = {},
 }) {
+  const [mcModalOpen, setMcModalOpen] = useState(false)
   const selectedClass = classes.find(c => c.index === draft.class) ?? null
+  const multiclasses = draft.multiclasses ?? []
+  const allowMulticlass = draft.settings?.allowMulticlass ?? false
+
+  function handleAddMulticlass(mcEntry) {
+    updateDraft({ multiclasses: [...multiclasses, mcEntry] })
+    setMcModalOpen(false)
+  }
+
+  function handleRemoveMulticlass(idx) {
+    updateDraft({ multiclasses: multiclasses.filter((_, i) => i !== idx) })
+  }
 
   const leveledChoices = getLeveledChoices(classChoices[draft.class], draft.level)
   const progressionLevels = getProgressionLevels(classProgression[draft.class], draft.level)
@@ -111,8 +125,53 @@ export function ClassBlock({
             classEquipmentData={classEquipment[draft.class] ?? null}
             weaponsArmor={weaponsArmor}
           />
+
+          {allowMulticlass && (
+            <div className="border-2 border-parchment-600 bg-parchment-100 rounded-sm p-3 flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-display tracking-widest uppercase text-ink-500">
+                  Multiclasse
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setMcModalOpen(true)}
+                  className="text-xs font-display tracking-wide text-ink-500 hover:text-ink-600 border-2 border-parchment-600 hover:border-ink-300 px-2.5 py-1 rounded-sm transition-colors"
+                >+ Adicionar classe</button>
+              </div>
+
+              {multiclasses.length === 0 && (
+                <p className="text-xs italic text-ink-300">Nenhuma classe secundária.</p>
+              )}
+
+              {multiclasses.map((mc, idx) => {
+                const cls = classes.find(c => c.index === mc.class)
+                return (
+                  <div key={idx} className="flex items-center gap-2 border-2 border-parchment-600 bg-parchment-50 rounded-sm px-3 py-2">
+                    <span className="text-sm font-display text-ink-500 flex-1">
+                      {cls?.name ?? mc.class} <span className="text-ink-300">Nível {mc.level}</span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveMulticlass(idx)}
+                      aria-label={`Remover ${cls?.name ?? mc.class}`}
+                      className="text-ink-300 hover:text-red-700 text-sm transition-colors"
+                    >🗑</button>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </>
       )}
+
+      <MulticlassModal
+        open={mcModalOpen}
+        draft={draft}
+        classes={classes}
+        multiclassData={multiclassData}
+        onAdd={handleAddMulticlass}
+        onCancel={() => setMcModalOpen(false)}
+      />
     </div>
   )
 }
