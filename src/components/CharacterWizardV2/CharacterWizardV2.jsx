@@ -11,6 +11,9 @@ import { useSrd } from '../../providers/SrdProvider'
 import { ConceptBlock } from './blocks/ConceptBlock'
 import { RaceBlock } from './blocks/RaceBlock'
 import { ClassBlock } from './blocks/ClassBlock'
+import { BackgroundBlock } from './blocks/BackgroundBlock'
+import { AttributesBlock } from './blocks/AttributesBlock'
+import { SkillsBlock } from './blocks/SkillsBlock'
 
 const STORAGE_KEY = 'wizard-v2-draft'
 
@@ -44,8 +47,8 @@ const LABEL_BY_ID = Object.fromEntries(BLOCKS.map(b => [b.id, b.label]))
 function WizardGrid({ initialSettings, resume, onBack }) {
   const { draft, updateDraft, hasChanges, resetDraft } = useDraft({ initialSettings, resume })
   const { races, classes, classChoices, progression: classProgression, feats,
-          classEquipment, weaponsArmor } = useSrd()
-  const blockStatus = useBlockStatus(draft, { classChoices, classProgression, classEquipment })
+          classEquipment, weaponsArmor, backgrounds } = useSrd()
+  const blockStatus = useBlockStatus(draft, { classChoices, classProgression, classEquipment, classes })
   const [openBlockId, setOpenBlockId] = useState(null)
   const [exitConfirmOpen, setExitConfirmOpen] = useState(false)
 
@@ -116,7 +119,17 @@ function WizardGrid({ initialSettings, resume, onBack }) {
             classEquipment={classEquipment ?? {}} weaponsArmor={weaponsArmor ?? {}}
           />
         )}
-        {openBlockId && !['concept', 'race', 'class'].includes(openBlockId) && (
+        {openBlockId === 'background' && (
+          <BackgroundBlock draft={draft} updateDraft={updateDraft} backgrounds={backgrounds ?? []} />
+        )}
+        {openBlockId === 'attributes' && (
+          <AttributesBlock draft={draft} updateDraft={updateDraft} />
+        )}
+        {openBlockId === 'skills' && (
+          <SkillsBlock draft={draft} updateDraft={updateDraft}
+            classData={(classes ?? []).find(c => c.index === draft.class) ?? null} />
+        )}
+        {openBlockId && !['concept', 'race', 'class', 'background', 'attributes', 'skills'].includes(openBlockId) && (
           <p className="text-sm text-ink-300 italic text-center py-12">
             Em construção (PR seguinte).
           </p>

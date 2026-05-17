@@ -70,8 +70,17 @@ function statusOf(blockId, draft, srdData = {}) {
       return 'parcial'
     }
 
-    case 'skills':
-      return (draft.chosenSkills?.length ?? 0) > 0 ? 'completo' : 'vazio'
+    case 'skills': {
+      const chosen = draft.chosenSkills?.length ?? 0
+      const { classes } = srdData
+      if (!classes) return chosen > 0 ? 'completo' : 'vazio'
+      const cls = classes.find(c => c.index === draft.class)
+      const limit = cls?.skill_choices?.count ?? null
+      if (limit == null) return chosen > 0 ? 'completo' : 'vazio'
+      if (chosen === 0) return 'vazio'
+      if (chosen < limit) return 'parcial'
+      return 'completo'
+    }
 
     case 'spells': {
       const total = (draft.spells?.length ?? 0) + (draft.bonusSpells?.length ?? 0)
