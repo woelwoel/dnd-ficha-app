@@ -14,6 +14,10 @@ import { ClassBlock } from './blocks/ClassBlock'
 import { BackgroundBlock } from './blocks/BackgroundBlock'
 import { AttributesBlock } from './blocks/AttributesBlock'
 import { SkillsBlock } from './blocks/SkillsBlock'
+import { SpellsBlock } from './blocks/SpellsBlock'
+import { ReviewBlock } from './blocks/ReviewBlock'
+import { buildCharacter } from './blocks/build-character'
+import { upsertCharacter } from '../../utils/storage'
 
 const STORAGE_KEY = 'wizard-v2-draft'
 
@@ -44,7 +48,7 @@ const LABEL_BY_ID = Object.fromEntries(BLOCKS.map(b => [b.id, b.label]))
 
 // Sub-componente que monta apenas quando phase='grid'.
 // Isso garante que useDraft receba as options corretas na montagem inicial.
-function WizardGrid({ initialSettings, resume, onBack }) {
+function WizardGrid({ initialSettings, resume, onBack, onComplete }) {
   const { draft, updateDraft, hasChanges, resetDraft } = useDraft({ initialSettings, resume })
   const { races, classes, classChoices, progression: classProgression, feats,
           classEquipment, weaponsArmor, backgrounds } = useSrd()
@@ -52,9 +56,18 @@ function WizardGrid({ initialSettings, resume, onBack }) {
   const [openBlockId, setOpenBlockId] = useState(null)
   const [exitConfirmOpen, setExitConfirmOpen] = useState(false)
 
+  const selectedClassData = (classes ?? []).find(c => c.index === draft.class) ?? null
+
   function handleBackClick() {
     if (hasChanges) setExitConfirmOpen(true)
     else onBack()
+  }
+
+  function handleFinalize() {
+    const character = buildCharacter(draft, selectedClassData, classEquipment ?? {})
+    upsertCharacter(character)
+    sessionStorage.removeItem('wizard-v2-draft')
+    onComplete(character.id)
   }
 
   return (
@@ -74,6 +87,7 @@ function WizardGrid({ initialSettings, resume, onBack }) {
         <button
           type="button"
           disabled={blockStatus.review.status !== 'completo'}
+          onClick={handleFinalize}
           className="ml-auto px-5 py-1.5 rounded-sm bg-ink-500 hover:bg-ink-600 border-2 border-ink-600 text-parchment-50 text-sm font-display tracking-wide disabled:opacity-35 disabled:cursor-not-allowed"
         >✦ Inscrever Herói ✦</button>
       </header>
@@ -127,9 +141,18 @@ function WizardGrid({ initialSettings, resume, onBack }) {
         )}
         {openBlockId === 'skills' && (
           <SkillsBlock draft={draft} updateDraft={updateDraft}
-            classData={(classes ?? []).find(c => c.index === draft.class) ?? null} />
+            classData={selectedClassData} />
         )}
-        {openBlockId && !['concept', 'race', 'class', 'background', 'attributes', 'skills'].includes(openBlockId) && (
+        {openBlockId === 'spells' && (
+          <SpellsBlock draft={draft} updateDraft={updateDraft}
+            classData={selectedClassData} />
+        )}
+        {openBlockId === 'review' && (
+          <ReviewBlock draft={draft}
+            races={races ?? []} backgrounds={backgrounds ?? []}
+            classData={selectedClassData} />
+        )}
+        {openBlockId && !['concept', 'race', 'class', 'background', 'attributes', 'skills', 'spells', 'review'].includes(openBlockId) && (
           <p className="text-sm text-ink-300 italic text-center py-12">
             Em construção (PR seguinte).
           </p>
@@ -150,7 +173,7 @@ function WizardGrid({ initialSettings, resume, onBack }) {
   )
 }
 
-export function CharacterWizardV2({ onBack, onComplete: _onComplete }) {
+export function CharacterWizardV2({ onBack, onComplete }) {
   const hasSavedDraft = !!sessionStorage.getItem(STORAGE_KEY)
   const [phase, setPhase] = useState(hasSavedDraft ? 'resume' : 'setup')
   const [pendingSettings, setPendingSettings] = useState(null)
@@ -182,6 +205,7 @@ export function CharacterWizardV2({ onBack, onComplete: _onComplete }) {
       initialSettings={pendingSettings}
       resume={resumeRequested}
       onBack={onBack}
+      onComplete={onComplete}
     />
   )
 }

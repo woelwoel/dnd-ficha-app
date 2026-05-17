@@ -84,6 +84,14 @@ function statusOf(blockId, draft, srdData = {}) {
 
     case 'spells': {
       const total = (draft.spells?.length ?? 0) + (draft.bonusSpells?.length ?? 0)
+      // Classes que ganham magias só em níveis mais altos — completo automático
+      const NON_CASTERS_WITH_DELAYED_SPELLS = new Set(['paladino', 'patrulheiro'])
+      if (NON_CASTERS_WITH_DELAYED_SPELLS.has(draft.class)) return 'completo'
+      const { classes } = srdData
+      if (classes) {
+        const cls = classes.find(c => c.index === draft.class)
+        if (cls && !cls.spellcasting_ability) return 'completo'
+      }
       return total > 0 ? 'completo' : 'vazio'
     }
 

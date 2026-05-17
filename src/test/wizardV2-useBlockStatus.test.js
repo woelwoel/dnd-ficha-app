@@ -260,4 +260,27 @@ describe('getBlockStatus', () => {
     const draft = { ...empty, class: 'guerreiro', background: 'soldado', chosenSkills: ['athletics', 'history'] }
     expect(getBlockStatus('skills', draft, srdData).status).toBe('completo')
   })
+
+  it('spells completo para paladino sem magias', () => {
+    const draft = { ...empty, class: 'paladino' }
+    expect(getBlockStatus('spells', draft).status).toBe('completo')
+  })
+
+  it('spells completo para classe não-conjuradora (guerreiro)', () => {
+    const srdData = { classes: [{ index: 'guerreiro', spellcasting_ability: '' }] }
+    const draft = { ...empty, class: 'guerreiro' }
+    expect(getBlockStatus('spells', draft, srdData).status).toBe('completo')
+  })
+
+  it('spells vazio para mago sem magias', () => {
+    const srdData = { classes: [{ index: 'mago', spellcasting_ability: 'Inteligência' }] }
+    const draft = { ...empty, class: 'mago' }
+    expect(getBlockStatus('spells', draft, srdData).status).toBe('vazio')
+  })
+
+  it('spells completo para mago com magia', () => {
+    const srdData = { classes: [{ index: 'mago', spellcasting_ability: 'Inteligência' }] }
+    const draft = { ...empty, class: 'mago', spells: [{ index: 'mage-hand', level: 0 }] }
+    expect(getBlockStatus('spells', draft, srdData).status).toBe('completo')
+  })
 })
