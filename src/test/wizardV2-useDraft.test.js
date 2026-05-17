@@ -25,6 +25,18 @@ describe('useDraft', () => {
     expect(result.current.draft.settings.abilityScoreMethod).toBe('standard-array')
   })
 
+  it('startLevel propaga para draft.level', () => {
+    const { result } = renderHook(() =>
+      useDraft({ initialSettings: { startLevel: 5 } })
+    )
+    expect(result.current.draft.level).toBe(5)
+  })
+
+  it('draft.level continua 1 quando startLevel ausente', () => {
+    const { result } = renderHook(() => useDraft())
+    expect(result.current.draft.level).toBe(1)
+  })
+
   it('updateDraft aplica patch e marca hasChanges', () => {
     const { result } = renderHook(() => useDraft())
     act(() => result.current.updateDraft({ name: 'Heitor' }))

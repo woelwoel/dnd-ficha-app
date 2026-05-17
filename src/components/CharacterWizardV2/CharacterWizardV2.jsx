@@ -138,7 +138,8 @@ function WizardGrid({ initialSettings, resume, onBack, onComplete }) {
           <BackgroundBlock draft={draft} updateDraft={updateDraft} backgrounds={backgrounds ?? []} />
         )}
         {openBlockId === 'attributes' && (
-          <AttributesBlock draft={draft} updateDraft={updateDraft} />
+          <AttributesBlock draft={draft} updateDraft={updateDraft}
+            multiclassData={multiclassData ?? {}} classes={classes ?? []} />
         )}
         {openBlockId === 'skills' && (
           <SkillsBlock draft={draft} updateDraft={updateDraft}

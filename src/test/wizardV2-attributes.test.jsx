@@ -160,3 +160,49 @@ describe('FourD6UI', () => {
     })
   })
 })
+
+describe('AttributesBlock — validação cruzada multiclasse', () => {
+  const classes = [
+    { index: 'guerreiro', name: 'Guerreiro' },
+    { index: 'mago', name: 'Mago' },
+  ]
+  const multiclassData = {
+    mago: { prerequisites: { int: 13 } },
+  }
+
+  it('NÃO mostra warning sem multiclasses', () => {
+    const draft = {
+      ...empty,
+      settings: { ...empty.settings, abilityScoreMethod: 'standard-array' },
+      baseAttributes: { str: 10, dex: 10, con: 10, int: 8, wis: 10, cha: 10 },
+    }
+    render(<AttributesBlock draft={draft} updateDraft={() => {}}
+      multiclassData={multiclassData} classes={classes} />)
+    expect(screen.queryByText(/sem pré-requisito/i)).not.toBeInTheDocument()
+  })
+
+  it('mostra warning quando multiclasse não atende prereq', () => {
+    const draft = {
+      ...empty,
+      settings: { ...empty.settings, abilityScoreMethod: 'standard-array' },
+      baseAttributes: { str: 15, dex: 14, con: 13, int: 8, wis: 10, cha: 8 },
+      multiclasses: [{ class: 'mago', level: 1 }],
+    }
+    render(<AttributesBlock draft={draft} updateDraft={() => {}}
+      multiclassData={multiclassData} classes={classes} />)
+    expect(screen.getByText(/sem pré-requisito/i)).toBeInTheDocument()
+    expect(screen.getByText(/Mago/i)).toBeInTheDocument()
+  })
+
+  it('NÃO mostra warning quando prereq atendido', () => {
+    const draft = {
+      ...empty,
+      settings: { ...empty.settings, abilityScoreMethod: 'standard-array' },
+      baseAttributes: { str: 15, dex: 14, con: 13, int: 13, wis: 10, cha: 8 },
+      multiclasses: [{ class: 'mago', level: 1 }],
+    }
+    render(<AttributesBlock draft={draft} updateDraft={() => {}}
+      multiclassData={multiclassData} classes={classes} />)
+    expect(screen.queryByText(/sem pré-requisito/i)).not.toBeInTheDocument()
+  })
+})
