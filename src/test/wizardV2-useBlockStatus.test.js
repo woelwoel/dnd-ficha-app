@@ -244,4 +244,20 @@ describe('getBlockStatus', () => {
     }
     expect(getBlockStatus('class', draft, srdData).status).toBe('completo')
   })
+
+  it('skills parcial: count < limite da classe', () => {
+    const srdData = {
+      classes: [{ index: 'guerreiro', skill_choices: { count: 2 } }],
+    }
+    const draft = { ...empty, class: 'guerreiro', background: 'soldado', chosenSkills: ['athletics'] }
+    expect(getBlockStatus('skills', draft, srdData).status).toBe('parcial')
+  })
+
+  it('skills completo: count = limite', () => {
+    const srdData = {
+      classes: [{ index: 'guerreiro', skill_choices: { count: 2 } }],
+    }
+    const draft = { ...empty, class: 'guerreiro', background: 'soldado', chosenSkills: ['athletics', 'history'] }
+    expect(getBlockStatus('skills', draft, srdData).status).toBe('completo')
+  })
 })
