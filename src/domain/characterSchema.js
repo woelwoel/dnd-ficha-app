@@ -160,6 +160,20 @@ const combatSchema = z.object({
     successes: z.number().int().min(0).max(3).default(0),
     failures:  z.number().int().min(0).max(3).default(0),
   }).default({ successes: 0, failures: 0 }),
+  /** PHB p.197: morto após 3 falhas em testes de morte ou massive damage. */
+  isDead: z.boolean().default(false),
+  /** PHB p.197: estabilizado (a 0 HP, mas não rola testes de morte). */
+  isStable: z.boolean().default(false),
+  /** PHB p.291: nível de exaustão 0-6. Nível 6 = morte. */
+  exhaustion: z.number().int().min(0).max(6).default(0),
+  /** PHB p.125: inspiração (vantagem em UMA rolagem). */
+  inspiration: z.boolean().default(false),
+  /** Condições ativas (PHB Apêndice A): unconscious, prone, charmed, etc. */
+  conditions: z.array(z.string()).default([]),
+  /** Bárbaro: Rage ativa (PHB p.48). */
+  rageActive: z.boolean().default(false),
+  /** Druida: Wild Shape ativa (PHB p.66). */
+  wildShape: z.boolean().default(false),
   /**
    * Ataques registrados na ficha (armas + bônus mágicos). Schema aberto
    * para tolerar dados antigos; campos calculados vêm de `src/utils/attacks`.
@@ -306,6 +320,31 @@ export const characterSchema = z.object({
 
   // Death saves: só fazem sentido com 0 HP.
   // (Permitimos > 0, pois o jogador pode "deixar marcado" entre quedas.)
+
+  // isDead exige currentHp = 0 (não dá pra estar "morto com HP").
+  if (ch.combat?.isDead && (ch.combat?.currentHp ?? 0) > 0) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'isDead=true requer currentHp=0',
+      path: ['combat', 'isDead'],
+    })
+  }
+  // isStable só faz sentido com 0 HP (estabilizado = caído mas sem rolar).
+  if (ch.combat?.isStable && (ch.combat?.currentHp ?? 0) > 0) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'isStable=true requer currentHp=0',
+      path: ['combat', 'isStable'],
+    })
+  }
+  // isStable + isDead é incoerente.
+  if (ch.combat?.isStable && ch.combat?.isDead) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'isStable e isDead não podem ambos ser true',
+      path: ['combat', 'isDead'],
+    })
+  }
 
   // Tasha's: soma do override flexível ≤ +3.
   const override = ch.info?.racialAsiOverride

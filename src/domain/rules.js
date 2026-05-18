@@ -739,3 +739,292 @@ export function listSpellcastingClasses(character) {
   }
   return [...new Set(out)]
 }
+
+/* ── Dano, Cura, Testes de Morte ──────────────────────────────────────
+ * Camada pura RAW PHB p.197-198 + p.203 (concentração).
+ * Todas as funções retornam { character, ... } — sem mutar input.
+ * O caller (hook/UI) decide o que fazer com `sideEffects`:
+ *  - droppedTo0: personagem caiu pra 0 HP, agora faz testes de morte
+ *  - instakill: dano massivo (PHB p.197) → morte instantânea
+ *  - revived: estava a 0 HP e foi curado → testes de morte zerados
+ *  - died: 3 falhas acumuladas
+ *  - stabilized: 3 sucessos ou cura → estável
+ *  - concentrationCheckDC: dano em personagem concentrando → save CON DC
+ *  - deathSaveFailuresApplied: falhas auto-aplicadas por dano a 0 HP
+ */
+
+function clampHp(value, max) {
+  return Math.max(0, Math.min(max, value))
+}
+
+function emptyDeathSaves() {
+  return { successes: 0, failures: 0 }
+}
+
+/**
+ * Aplica dano. Drena tempHp primeiro, depois currentHp. Detecta massive damage,
+ * golpe em personagem a 0 HP (+1 falha, +2 se crit), morte instantânea.
+ * NÃO aplica concentration check automaticamente — só sinaliza o DC.
+ */
+export function applyDamage(character, amount, opts = {}) {
+  const { critical = false } = opts
+  const dmg = Math.max(0, Math.floor(Number(amount) || 0))
+  const sideEffects = {
+    damageDealt: dmg,
+    droppedTo0: false,
+    instakill: false,
+    died: false,
+    deathSaveFailuresApplied: 0,
+    concentrationCheckDC: null,
+  }
+  if (dmg === 0) return { character, sideEffects }
+
+  const combat = character.combat ?? {}
+  const maxHp     = combat.maxHp ?? 0
+  const curHp     = combat.currentHp ?? 0
+  const tempHp    = combat.tempHp ?? 0
+  const wasAt0    = curHp === 0
+  const wasDead   = !!combat.isDead
+
+  if (wasDead) return { character, sideEffects } // Mortos não recebem mais dano.
+
+  // Concentração: gera DC para o caller (não auto-falha).
+  if (combat.concentrating?.spellIndex) {
+    sideEffects.concentrationCheckDC = Math.max(10, Math.floor(dmg / 2))
+  }
+
+  let nextTemp = tempHp
+  let nextHp   = curHp
+  let nextDeathSaves = combat.deathSaves ?? emptyDeathSaves()
+  let nextIsStable   = !!combat.isStable
+  let nextIsDead     = false
+
+  if (wasAt0) {
+    // Já estava a 0 HP: dano causa falha(s) automática(s).
+    const fails = critical ? 2 : 1
+    sideEffects.deathSaveFailuresApplied = fails
+    nextDeathSaves = {
+      successes: nextDeathSaves.successes ?? 0,
+      failures: Math.min(3, (nextDeathSaves.failures ?? 0) + fails),
+    }
+    nextIsStable = false // dano remove estabilização (PHB p.197).
+    // Dano >= maxHp em personagem a 0 HP = morte instantânea (PHB p.197).
+    if (dmg >= maxHp && maxHp > 0) {
+      sideEffects.instakill = true
+      nextIsDead = true
+      nextDeathSaves = { successes: 0, failures: 3 }
+    }
+    if (nextDeathSaves.failures >= 3) {
+      sideEffects.died = true
+      nextIsDead = true
+    }
+  } else {
+    // Tempo HP absorve primeiro (PHB p.198).
+    if (nextTemp > 0) {
+      const absorbed = Math.min(nextTemp, dmg)
+      nextTemp -= absorbed
+    }
+    const afterTemp = nextTemp + (dmg - Math.min(tempHp, dmg))
+    // Quanto sobra pra HP real:
+    const toHp = Math.max(0, dmg - tempHp)
+    nextHp = Math.max(0, curHp - toHp)
+    if (nextHp === 0) {
+      sideEffects.droppedTo0 = true
+      const remaining = toHp - curHp
+      // Massive damage: dano remanescente >= maxHp → morte instantânea.
+      if (remaining >= maxHp && maxHp > 0) {
+        sideEffects.instakill = true
+        nextIsDead = true
+        nextDeathSaves = { successes: 0, failures: 3 }
+      } else {
+        // Caiu pra 0: zera death saves anteriores; começa fluxo limpo.
+        nextDeathSaves = emptyDeathSaves()
+        nextIsStable = false
+      }
+    }
+  }
+
+  return {
+    character: {
+      ...character,
+      combat: {
+        ...combat,
+        tempHp: nextTemp,
+        currentHp: nextHp,
+        deathSaves: nextDeathSaves,
+        isStable: nextIsStable,
+        isDead: nextIsDead,
+        // Concentração mantida — caller decide se quebra após save.
+      },
+    },
+    sideEffects,
+  }
+}
+
+/**
+ * Cura. Não restaura tempHp (PHB p.198: tempHp é separado).
+ * Se estava a 0 HP, revive → zera testes de morte e remove `isStable`.
+ * Personagem morto NÃO pode ser curado por essa função (precisa Reviver).
+ */
+export function applyHealing(character, amount) {
+  const heal = Math.max(0, Math.floor(Number(amount) || 0))
+  const sideEffects = { healed: 0, revived: false }
+  if (heal === 0) return { character, sideEffects }
+
+  const combat = character.combat ?? {}
+  if (combat.isDead) return { character, sideEffects }
+
+  const maxHp = combat.maxHp ?? 0
+  const curHp = combat.currentHp ?? 0
+  const newHp = clampHp(curHp + heal, maxHp)
+  sideEffects.healed = newHp - curHp
+
+  const wasAt0 = curHp === 0
+  const revived = wasAt0 && newHp > 0
+  if (revived) sideEffects.revived = true
+
+  return {
+    character: {
+      ...character,
+      combat: {
+        ...combat,
+        currentHp: newHp,
+        deathSaves: revived ? emptyDeathSaves() : (combat.deathSaves ?? emptyDeathSaves()),
+        isStable: revived ? false : !!combat.isStable,
+      },
+    },
+    sideEffects,
+  }
+}
+
+/**
+ * Ganha PV temporários. PHB p.198: não acumulam — vale o maior.
+ */
+export function gainTempHp(character, amount) {
+  const gain = Math.max(0, Math.floor(Number(amount) || 0))
+  const combat = character.combat ?? {}
+  const current = combat.tempHp ?? 0
+  const next = Math.max(current, gain)
+  return {
+    character: {
+      ...character,
+      combat: { ...combat, tempHp: next },
+    },
+  }
+}
+
+/**
+ * Estabiliza personagem a 0 HP (PHB p.197). Após Medicina DC 10 ou
+ * spare-the-dying. Mantém a 0 HP mas para de fazer testes de morte.
+ */
+export function stabilizeCharacter(character) {
+  const combat = character.combat ?? {}
+  if (combat.currentHp > 0) return character // não faz sentido pra quem está consciente.
+  if (combat.isDead) return character
+  return {
+    ...character,
+    combat: {
+      ...combat,
+      isStable: true,
+      deathSaves: emptyDeathSaves(),
+    },
+  }
+}
+
+/**
+ * Rola UM teste de morte (PHB p.197).
+ * Caller pode passar `roll` (1-20) ou deixar a função rolar.
+ * Nat 1 = 2 falhas. Nat 20 = recupera com 1 HP (limpa death saves e isStable).
+ * 10-19 = sucesso; 1-9 = falha.
+ * 3 sucessos = estabiliza (zera death saves, mantém 0 HP).
+ * 3 falhas = morte (isDead=true).
+ *
+ * Retorna { character, result: { roll, success, failure, twoFails,
+ *   recovered, stabilized, died, successesAfter, failuresAfter } }.
+ */
+export function rollDeathSave(character, { roll } = {}) {
+  const combat = character.combat ?? {}
+  if (combat.isDead) {
+    return { character, result: { roll: null, blocked: 'dead' } }
+  }
+  if (combat.currentHp > 0) {
+    return { character, result: { roll: null, blocked: 'conscious' } }
+  }
+  if (combat.isStable) {
+    return { character, result: { roll: null, blocked: 'stable' } }
+  }
+
+  const d20 = Number.isInteger(roll) && roll >= 1 && roll <= 20
+    ? roll
+    : Math.ceil(Math.random() * 20)
+
+  const ds = combat.deathSaves ?? emptyDeathSaves()
+  let successes = ds.successes ?? 0
+  let failures  = ds.failures  ?? 0
+  const result = {
+    roll: d20,
+    success: false,
+    failure: false,
+    twoFails: false,
+    recovered: false,
+    stabilized: false,
+    died: false,
+  }
+
+  if (d20 === 20) {
+    // Recupera com 1 HP (PHB p.197).
+    result.recovered = true
+    return {
+      character: {
+        ...character,
+        combat: {
+          ...combat,
+          currentHp: 1,
+          deathSaves: emptyDeathSaves(),
+          isStable: false,
+        },
+      },
+      result: { ...result, successesAfter: 0, failuresAfter: 0 },
+    }
+  }
+
+  if (d20 === 1) {
+    // 2 falhas.
+    result.twoFails = true
+    result.failure = true
+    failures = Math.min(3, failures + 2)
+  } else if (d20 >= 10) {
+    result.success = true
+    successes = Math.min(3, successes + 1)
+  } else {
+    result.failure = true
+    failures = Math.min(3, failures + 1)
+  }
+
+  let died = false
+  let stabilized = false
+  let isStableNext = combat.isStable ?? false
+  if (failures >= 3) {
+    died = true
+    result.died = true
+  } else if (successes >= 3) {
+    stabilized = true
+    isStableNext = true
+    successes = 0
+    failures = 0
+    result.stabilized = true
+  }
+
+  return {
+    character: {
+      ...character,
+      combat: {
+        ...combat,
+        deathSaves: stabilized ? emptyDeathSaves() : { successes, failures },
+        isStable: isStableNext,
+        isDead: died,
+      },
+    },
+    result: { ...result, successesAfter: successes, failuresAfter: failures },
+  }
+}
