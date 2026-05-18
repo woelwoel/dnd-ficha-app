@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { useSrd } from '../../providers/SrdProvider'
+import { useSrd, useLazySrdDataset } from '../../providers/SrdProvider'
 import { enrichDraconicTopics } from '../../utils/draconicAncestors'
 
 /* ══════════════════════════════════════════════════════════════════
@@ -265,7 +265,8 @@ function resolveChosenFeature(classIndex, featureName, chosenFeatures, classChoi
    ══════════════════════════════════════════════════════════════════ */
 export function FeaturesTab({ character, featureUses, onSpend, onRegain }) {
   const [activeFilter, setActiveFilter] = useState('acoes')
-  const { progression, races, feats: allFeats, classChoices } = useSrd()
+  const { progression, races, classChoices } = useSrd()
+  const allFeats = useLazySrdDataset('feats')
   const { info } = character
 
   const classIndex      = info?.class ?? ''

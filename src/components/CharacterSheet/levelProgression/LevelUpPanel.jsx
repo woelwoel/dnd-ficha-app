@@ -3,7 +3,7 @@
 // cantrips bônus e confirma o patch de level-up para o pai.
 import { useState } from 'react'
 import { DetailsModal } from '../../DetailsModal'
-import { useSrd } from '../../../providers/SrdProvider'
+import { useLazySrdDataset } from '../../../providers/SrdProvider'
 import { isASIEntry } from './helpers'
 import { HPSection } from './HPSection'
 import { ASIPicker } from './ASIPicker'
@@ -25,8 +25,8 @@ export function LevelUpPanel({
   const [selectedFeatIdx,     setSelectedFeatIdx]     = useState(null)
   const [featChosenAttr,      setFeatChosenAttr]      = useState(null)
   const [featSearch,          setFeatSearch]          = useState('')
-  // Feats vêm do SrdProvider (cache centralizado + AbortController no provider)
-  const { feats } = useSrd()
+  // Feats vêm sob demanda — só usados aqui no fluxo de level-up.
+  const feats = useLazySrdDataset('feats')
 
   const newFeatures = nextEntry?.features?.filter(f => !f.name?.includes('Aumento') && !f.name?.includes('Melhoria')) ?? []
   const hasASI      = isASIEntry(nextEntry)

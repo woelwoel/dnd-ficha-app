@@ -129,6 +129,69 @@ export function updateCharacterPosition(id, position) {
 }
 
 /**
+ * Empacota todos os personagens válidos num payload de backup com
+ * metadados (versão, data, contagem) para export como arquivo JSON.
+ */
+export function exportAllCharacters() {
+  const characters = loadCharacters()
+  return {
+    app: 'dnd-ficha-app',
+    version: CURRENT_VERSION,
+    exportedAt: new Date().toISOString(),
+    count: characters.length,
+    characters,
+  }
+}
+
+/**
+ * Aceita um payload bruto vindo de arquivo JSON e tenta importar.
+ *
+ * `mode`:
+ *   - 'replace' → substitui TUDO pelos personagens do backup
+ *   - 'merge'   → mantém os atuais; sobrescreve quando id colidir;
+ *                 adiciona novos por id ausente
+ *
+ * Retorna `{ ok, imported, invalid, total, reason? }`.
+ * Em caso de payload irreconhecível, NÃO toca o storage.
+ */
+export function importAllCharacters(rawPayload, mode = 'merge') {
+  const list = Array.isArray(rawPayload)
+    ? rawPayload
+    : Array.isArray(rawPayload?.characters)
+      ? rawPayload.characters
+      : null
+
+  if (!list) return { ok: false, reason: 'invalid-format', imported: 0, invalid: 0, total: 0 }
+
+  const valid = []
+  let invalid = 0
+  for (const raw of list) {
+    const v = validateForSave(raw)
+    if (v.ok) valid.push(v.data)
+    else invalid += 1
+  }
+
+  if (valid.length === 0) {
+    return { ok: false, reason: 'no-valid-characters', imported: 0, invalid, total: list.length }
+  }
+
+  let merged
+  if (mode === 'replace') {
+    merged = valid
+  } else {
+    const current = loadCharacters()
+    const byId = new Map(current.map(c => [c.id, c]))
+    for (const c of valid) byId.set(c.id, c)
+    merged = Array.from(byId.values())
+  }
+
+  const result = safeSet(STORAGE_KEY, merged)
+  if (!result.ok) return { ok: false, reason: result.reason ?? 'save-failed', imported: 0, invalid, total: list.length }
+
+  return { ok: true, imported: valid.length, invalid, total: list.length }
+}
+
+/**
  * Marca o personagem como aberto agora — grava lastOpenedAt em epoch ms.
  */
 export function touchCharacterLastOpened(id) {
