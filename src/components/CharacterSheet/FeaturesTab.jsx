@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useSrd, useLazySrdDataset } from '../../providers/SrdProvider'
 import { enrichDraconicTopics } from '../../utils/draconicAncestors'
+import { getFeatureTypeMeta } from '../../domain/featureMeta'
 
 /* ══════════════════════════════════════════════════════════════════
    DETECTOR DE TIPO DE AÇÃO
@@ -22,10 +23,10 @@ function detectActionType(desc = '') {
 /* ══════════════════════════════════════════════════════════════════
    META
    ══════════════════════════════════════════════════════════════════ */
-const TYPE_META = {
-  'ação':       { color: 'border-amber-600/40 bg-amber-900/10', badge: 'bg-amber-800/60 text-amber-200', icon: '⚔️', label: 'Ação' },
-  'ação bônus': { color: 'border-blue-600/40 bg-blue-900/10',   badge: 'bg-blue-800/60 text-blue-200',   icon: '⚡', label: 'Ação Bônus' },
-  'reação':     { color: 'border-purple-600/40 bg-purple-900/10', badge: 'bg-purple-800/60 text-purple-200', icon: '🛡️', label: 'Reação' },
+const TYPE_THEME = {
+  'ação':       { color: 'border-amber-600/40 bg-amber-900/10', badge: 'bg-amber-800/60 text-amber-200' },
+  'ação bônus': { color: 'border-blue-600/40 bg-blue-900/10',   badge: 'bg-blue-800/60 text-blue-200' },
+  'reação':     { color: 'border-purple-600/40 bg-purple-900/10', badge: 'bg-purple-800/60 text-purple-200' },
 }
 
 const RECHARGE_META = {
@@ -78,7 +79,8 @@ function ResourceTracker({ use, onSpend, onRegain }) {
 
 /** Card de ação de combate (ação / ação bônus / reação) */
 function ActionCard({ name, type, desc, source, used, max, onSpend, onRegain }) {
-  const meta = TYPE_META[type] ?? TYPE_META['ação']
+  const theme = TYPE_THEME[type] ?? TYPE_THEME['ação']
+  const meta = { ...getFeatureTypeMeta(type), ...theme }
   const remaining = max != null ? max - (used ?? 0) : null
 
   return (

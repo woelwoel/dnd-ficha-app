@@ -1,4 +1,4 @@
-import { useDiceRoller } from '../../context/useDiceRoller'
+import { useDiceRoller } from '../../hooks/useDiceRoller'
 
 /**
  * Botão único "⚔ Atacar" que dispara ataque + dano em sequência.

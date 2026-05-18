@@ -1,5 +1,5 @@
 import { useCallback, useReducer } from 'react'
-import { DiceRollerContext, MAX_HISTORY, parseAndRoll } from './useDiceRoller'
+import { DiceRollerContext, MAX_HISTORY, parseAndRoll } from '../hooks/useDiceRoller'
 
 function reducer(state, action) {
   switch (action.type) {

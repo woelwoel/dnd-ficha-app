@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { RollButton } from '../DiceRoller/RollButton'
 import { getModifier, formatModifier } from '../../utils/calculations'
 import { getSpellSlots } from '../../utils/spellcasting'
-import { useDiceRoller } from '../../context/useDiceRoller'
+import { useDiceRoller } from '../../hooks/useDiceRoller'
 
 /* ── Helpers ───────────────────────────────────────────────────── */
 
