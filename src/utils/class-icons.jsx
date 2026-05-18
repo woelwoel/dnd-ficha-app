@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * Silhuetas SVG por classe de personagem para uso em tokens, chips e
  * avatares. Cada path foi desenhado em um viewBox 32x32 e usa

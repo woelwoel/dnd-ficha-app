@@ -907,12 +907,19 @@ export function LevelProgression({ character, classData, classes, onLevelChange,
   const totalLevel = currentLevel + multiclasses.reduce((s, m) => s + (m.level ?? 0), 0)
 
   useEffect(() => {
-    fetch('/srd-data/phb-class-progression-pt.json')
-      .then(r => r.json()).then(setAllProgressions).catch(() => setAllProgressions({}))
-    fetch('/srd-data/phb-class-choices-pt.json')
-      .then(r => r.json()).then(setClassChoices).catch(() => setClassChoices({}))
-    fetch('/srd-data/phb-multiclass-pt.json')
-      .then(r => r.json()).then(setMcRules).catch(() => setMcRules({}))
+    const ctrl = new AbortController()
+    const handle = (label, setter, fallback) => err => {
+      if (err.name === 'AbortError') return
+      console.error(`Falha ao carregar ${label}:`, err)
+      setter(fallback)
+    }
+    fetch('/srd-data/phb-class-progression-pt.json', { signal: ctrl.signal })
+      .then(r => r.json()).then(setAllProgressions).catch(handle('progressão', setAllProgressions, {}))
+    fetch('/srd-data/phb-class-choices-pt.json', { signal: ctrl.signal })
+      .then(r => r.json()).then(setClassChoices).catch(handle('escolhas de classe', setClassChoices, {}))
+    fetch('/srd-data/phb-multiclass-pt.json', { signal: ctrl.signal })
+      .then(r => r.json()).then(setMcRules).catch(handle('regras de multiclasse', setMcRules, {}))
+    return () => ctrl.abort()
   }, [])
 
   if (!classIndex) {
