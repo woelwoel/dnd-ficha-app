@@ -5,6 +5,7 @@ import { DiceRollerProvider } from './context/DiceRollerContext'
 import { DiceHistoryPanel } from './components/DiceRoller/DiceHistoryPanel'
 import { BestiaryButton } from './components/Bestiary/BestiaryButton'
 import { CharacterList } from './components/CharacterList'
+import { PWAUpdatePrompt } from './components/PWAUpdatePrompt'
 import './index.css'
 
 // Code-splitting: wizard e ficha só carregam quando necessárias.
@@ -50,6 +51,7 @@ function App() {
             </Suspense>
             <DiceHistoryPanel />
             <BestiaryButton />
+            <PWAUpdatePrompt />
           </div>
         </DiceRollerProvider>
       </SrdProvider>
