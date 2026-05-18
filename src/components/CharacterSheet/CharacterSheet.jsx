@@ -8,8 +8,10 @@ import { loadCharacterById } from '../../utils/storage'
 import { SheetHeader } from './SheetHeader'
 import { SheetTabs, TABS, NavBlockedBanner, ImportErrorBanner } from './SheetTabs'
 import { SheetContent } from './SheetContent'
+import { CharacterProvider } from './CharacterContext'
 import { useSheetHandlers } from './useSheetHandlers'
 import { PrintView } from '../PrintView/PrintView'
+import { defaultClassFeatureUses, mergeFeatureUses } from '../../domain/rules'
 
 /**
  * Orquestrador da ficha.
@@ -94,72 +96,82 @@ export function CharacterSheet({ characterId, onBack }) {
     hpColor:    calc.hpColor,
   }
 
+  // featureUses é derivado de character — memo para evitar recalcular nos filhos.
+  const featureUses = useMemo(
+    () => mergeFeatureUses(character.combat?.classFeatureUses ?? [], defaultClassFeatureUses(character)),
+    [character],
+  )
+
+  const contextValue = useMemo(() => ({
+    character,
+    setCharacter,
+    calc,
+    classData,
+    races,
+    classes,
+    backgrounds,
+    updaters,
+    handlers,
+    fichaErrors,
+    featureUses,
+    onNavigateToSpells: () => setActiveTab('magias'),
+  }), [character, setCharacter, calc, classData, races, classes, backgrounds, updaters, handlers, fichaErrors, featureUses])
+
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
+    <CharacterProvider value={contextValue}>
+      <div className="h-screen flex flex-col overflow-hidden">
 
-      {/* ── Header fixo ──────────────────────────────────────── */}
-      <SheetHeader
-        characterName={character.info.name}
-        saved={saved}
-        saveError={saveError}
-        onBack={onBack}
-        onExport={handleExport}
-        onImport={handleImport}
-        onImportError={setImportError}
-        onPrint={() => window.print()}
-        showPrint={true}
-        quickStats={quickStats}
-      />
+        {/* ── Header fixo ──────────────────────────────────────── */}
+        <SheetHeader
+          characterName={character.info.name}
+          saved={saved}
+          saveError={saveError}
+          onBack={onBack}
+          onExport={handleExport}
+          onImport={handleImport}
+          onImportError={setImportError}
+          onPrint={() => window.print()}
+          showPrint={true}
+          quickStats={quickStats}
+        />
 
-      {/* ── Corpo: sidebar + conteúdo ────────────────────────── */}
-      <div className="flex flex-1 min-h-0">
+        {/* ── Corpo: sidebar + conteúdo ────────────────────────── */}
+        <div className="flex flex-1 min-h-0">
 
-        {/* Sidebar de navegação (embutida em SheetTabs) */}
-        <SheetTabs activeTab={activeTab} onChange={handleTabChange} />
+          {/* Sidebar de navegação (embutida em SheetTabs) */}
+          <SheetTabs activeTab={activeTab} onChange={handleTabChange} />
 
-        {/* Área de conteúdo scrollável */}
-        <main className="flex-1 overflow-y-auto min-w-0">
-          <div className="max-w-4xl mx-auto px-2 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6 space-y-4">
+          {/* Área de conteúdo scrollável */}
+          <main className="flex-1 overflow-y-auto min-w-0">
+            <div className="max-w-4xl mx-auto px-2 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6 space-y-4">
 
-            {importError && (
-              <ImportErrorBanner
-                message={importError}
-                onDismiss={() => setImportError(null)}
-              />
-            )}
+              {importError && (
+                <ImportErrorBanner
+                  message={importError}
+                  onDismiss={() => setImportError(null)}
+                />
+              )}
 
-            {navBlocked && (
-              <NavBlockedBanner
-                onReview={() => focusFirstError(activeTab)}
-                onDismiss={() => setNavBlocked(false)}
-              />
-            )}
+              {navBlocked && (
+                <NavBlockedBanner
+                  onReview={() => focusFirstError(activeTab)}
+                  onDismiss={() => setNavBlocked(false)}
+                />
+              )}
 
-            <SheetContent
-              activeTab={activeTab}
-              character={character}
-              setCharacter={setCharacter}
-              calc={calc}
-              classData={classData}
-              races={races}
-              classes={classes}
-              backgrounds={backgrounds}
-              fichaErrors={fichaErrors}
-              updaters={updaters}
-              handlers={handlers}
-              onNavigateToSpells={() => setActiveTab('magias')}
-            />
-          </div>
-        </main>
+              <SheetContent activeTab={activeTab} />
+            </div>
+          </main>
+        </div>
+
+        {/* Ficha para impressão/PDF — invisível na UI, visível apenas em @media print */}
+        <PrintView
+          character={character}
+          calc={calc}
+          classData={classData}
+          backgrounds={backgrounds}
+        />
       </div>
-
-      {/* Ficha para impressão/PDF — invisível na UI, visível apenas em @media print */}
-      <PrintView
-        character={character}
-        calc={calc}
-        classData={classData}
-        backgrounds={backgrounds}
-      />
-    </div>
+    </CharacterProvider>
   )
 }
