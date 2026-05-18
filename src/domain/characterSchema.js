@@ -72,9 +72,15 @@ const multiclassSchema = z.object({
 }).passthrough()
 
 /**
- * Para cada nível com ASI/Feat (4, 8, 12, 16, 19 + variantes de classe),
- * registra a escolha. PHB p.165: é mutuamente exclusivo (um OU outro).
- * Chave = nível em que ocorreu, valor = 'asi' | 'feat'.
+ * Para cada ASI/Feat ganho, registra a escolha. PHB p.165: é mutuamente
+ * exclusivo (um OU outro).
+ *
+ * Chave: `"${classIndex}:${classLevel}"` (ex.: "guerreiro:4", "mago:8").
+ * ASI é por nível de CLASSE, não nível total — evita colisão em multiclasse
+ * quando dois ASIs caem no mesmo nível total combinado.
+ *
+ * (Compat: chaves antigas como "4" ou "8" — apenas nível total — continuam
+ * válidas no schema mas não são geradas mais.)
  */
 const asiOrFeatSchema = z.record(z.string(), z.enum(['asi', 'feat']))
   .default({})

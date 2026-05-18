@@ -59,19 +59,37 @@ const PT_BR_ALIASES = {
 }
 
 /**
+ * Aliases ordenados por comprimento decrescente. Garante que "cota de escamas"
+ * é testado antes de "cota" (que existe como fallback genérico para chain-mail).
+ * Pré-computado uma vez no carregamento — `Object.entries` preserva ordem de
+ * inserção, mas confiar nisso para regras de jogo é frágil.
+ */
+const SORTED_ALIASES = Object.entries(PT_BR_ALIASES)
+  .sort(([a], [b]) => b.length - a.length)
+
+/**
  * Tenta identificar armadura/escudo a partir do nome do item (em PT-BR ou EN).
  * Retorna a entrada da tabela ou `null`.
+ *
+ * Estratégia:
+ *  1. Match exato com alias PT-BR (normalizado).
+ *  2. Match por prefixo (alias seguido de espaço — captura "cota de escamas
+ *     do dragão" como scale-mail).
+ *  3. Match com chave EN direta (item vindo da SRD em inglês).
+ *
+ * NÃO usa `String.includes` (substring) para evitar falsos positivos como
+ * "longa cota dos heróis" → chain-mail por causa do alias curto "cota".
  */
 export function findArmorByName(name) {
   if (!name) return null
   const norm = name.trim().toLowerCase()
-  // 1. Alias PT-BR exato ou prefixo
-  for (const [alias, key] of Object.entries(PT_BR_ALIASES)) {
-    if (norm === alias || norm.startsWith(alias + ' ') || norm.includes(alias)) {
+  // 1+2. Aliases PT-BR (ordenados por comprimento desc, exato OU prefixo)
+  for (const [alias, key] of SORTED_ALIASES) {
+    if (norm === alias || norm.startsWith(alias + ' ')) {
       return { ...ARMOR_TABLE[key], key }
     }
   }
-  // 2. Chave EN direta (itens vindos da SRD em inglês)
+  // 3. Chave EN direta (itens vindos da SRD em inglês)
   const enKey = norm.replace(/\s+/g, '-')
   if (ARMOR_TABLE[enKey]) return { ...ARMOR_TABLE[enKey], key: enKey }
   return null

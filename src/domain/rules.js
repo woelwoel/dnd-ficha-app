@@ -91,29 +91,48 @@ export function syncGrantedSpells(character) {
 /* ── Pré-requisitos de multiclasse (PHB p.163) ───────────────────── */
 
 /**
- * Avalia pré-requisitos de uma classe. O JSON pode ter formato:
- *   { "str": 13 }                    → STR ≥ 13
- *   { "str": 13, "cha": 13 }         → STR ≥ 13 E CHA ≥ 13
- *   { "str": 13, "or": "dex" }       → STR ≥ 13 OU DEX ≥ 13 (Guerreiro)
+ * Avalia pré-requisitos de uma classe (PHB p.163). Suporta:
+ *
+ *   AND (todas as chaves numéricas devem passar):
+ *     { "str": 13 }                       → STR ≥ 13
+ *     { "str": 13, "cha": 13 }            → STR ≥ 13 E CHA ≥ 13 (Paladino)
+ *     { "dex": 13, "wis": 13 }            → DEX ≥ 13 E WIS ≥ 13 (Monge/Patrulheiro)
+ *
+ *   OR (qualquer uma das chaves numéricas + a chave `or` deve passar):
+ *     { "str": 13, "or": "dex" }          → STR ≥ 13 OU DEX ≥ 13 (Guerreiro)
+ *     { "str": 13, "or": ["dex","cha"] }  → STR ≥ 13 OU DEX ≥ 13 OU CHA ≥ 13
+ *
+ * Para o caso OR, o min usado para a(s) chave(s) em `or` é o min da PRIMEIRA
+ * chave numérica encontrada (PHB usa 13 uniformemente, então é seguro).
  *
  * @returns {{ ok:boolean, missing:string[] }}
  */
 export function evaluateMulticlassPrerequisites(attributes = {}, reqs) {
   if (!reqs || typeof reqs !== 'object') return { ok: true, missing: [] }
-  const orKey = reqs.or
-  if (orKey) {
-    const mainKey = Object.keys(reqs).find(k => k !== 'or')
-    if (!mainKey) return { ok: true, missing: [] }
-    const min = reqs[mainKey]
-    const passMain = (attributes?.[mainKey] ?? 0) >= min
-    const passOr   = (attributes?.[orKey]   ?? 0) >= min
-    return passMain || passOr
-      ? { ok: true, missing: [] }
-      : { ok: false, missing: [`${mainKey.toUpperCase()} ou ${orKey.toUpperCase()} ≥ ${min}`] }
+
+  // Coleta apenas pares numéricos (ignora `or` e qualquer chave não-numérica).
+  const numericEntries = Object.entries(reqs).filter(
+    ([k, v]) => k !== 'or' && typeof v === 'number'
+  )
+
+  // OR mode: gera lista de alternativas (chaves numéricas + chave(s) `or`).
+  if (reqs.or !== undefined && reqs.or !== null) {
+    if (numericEntries.length === 0) return { ok: true, missing: [] }
+    const baseMin = numericEntries[0][1]
+    const orKeys = Array.isArray(reqs.or) ? reqs.or : [reqs.or]
+    const alternatives = [
+      ...numericEntries.map(([k, v]) => ({ key: k, min: v })),
+      ...orKeys.filter(k => typeof k === 'string').map(k => ({ key: k, min: baseMin })),
+    ]
+    const passed = alternatives.some(a => (attributes?.[a.key] ?? 0) >= a.min)
+    if (passed) return { ok: true, missing: [] }
+    const label = alternatives.map(a => `${a.key.toUpperCase()} ≥ ${a.min}`).join(' ou ')
+    return { ok: false, missing: [label] }
   }
+
+  // AND mode: todas as chaves numéricas devem passar.
   const missing = []
-  for (const [key, min] of Object.entries(reqs)) {
-    if (typeof min !== 'number') continue
+  for (const [key, min] of numericEntries) {
     if ((attributes?.[key] ?? 0) < min) missing.push(`${key.toUpperCase()} ≥ ${min}`)
   }
   return { ok: missing.length === 0, missing }
@@ -492,14 +511,18 @@ export function applyLevelUp(character, patch) {
   }
 
   if (hasAsi || (hasFeat && !hasAsi)) {
-    const totalLevelAfter = (multiclassIndex == null ? newLevel : character.info.level)
-      + (character.info.multiclasses ?? [])
-        .reduce((s, mc, i) => s + (i === multiclassIndex ? newLevel : mc.level ?? 0), 0)
+    // PHB p.165: ASI/Feat é por nível de CLASSE, não nível total de personagem.
+    // Chave: "classIndex:classLevel" — evita colisão em multiclasse quando
+    // dois ASIs caem no mesmo nível total combinado.
+    const targetClass = multiclassIndex == null
+      ? character.info.class
+      : character.info.multiclasses?.[multiclassIndex]?.class
+    const key = `${targetClass ?? 'unknown'}:${newLevel}`
     info = {
       ...info,
       asiOrFeatByLevel: {
         ...(info.asiOrFeatByLevel ?? {}),
-        [String(totalLevelAfter)]: hasAsi ? 'asi' : 'feat',
+        [key]: hasAsi ? 'asi' : 'feat',
       },
     }
   }
