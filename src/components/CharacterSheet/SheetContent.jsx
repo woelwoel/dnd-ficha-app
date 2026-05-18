@@ -183,12 +183,11 @@ export function SheetContent({
               onRollDeathSave={() => {
                 const result = rollDeathSave()
                 if (result?.blocked) return
-                // Resultado já vai para o character; banner mostra via lastDamageEvent
-                // (a UI atual de save manual continua disponível como fallback).
               }}
               onStabilize={stabilize}
               lastDamageEvent={lastDamageEvent}
               onClearDamageEvent={clearLastDamageEvent}
+              onBreakConcentration={() => setConcentration(null)}
             />
           </div>
 
