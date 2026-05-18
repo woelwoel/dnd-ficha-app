@@ -40,6 +40,32 @@ export function getModifier(score) {
   return Math.floor((score - 10) / 2)
 }
 
+/**
+ * Efeitos de exaustão (PHB p.291). Tabela cumulativa:
+ *  1 — Desvantagem em testes de habilidade
+ *  2 — Velocidade reduzida à metade
+ *  3 — Desvantagem em ataques E salvaguardas
+ *  4 — PV máximo reduzido à metade
+ *  5 — Velocidade reduzida a 0
+ *  6 — Morte
+ *
+ * Retorna flags + multiplicadores prontos para aplicar.
+ */
+export function getExhaustionEffects(level = 0) {
+  const lvl = Math.max(0, Math.min(6, Math.floor(Number(level) || 0)))
+  return {
+    level: lvl,
+    abilityCheckDisadvantage: lvl >= 1,
+    attackDisadvantage: lvl >= 3,
+    saveDisadvantage: lvl >= 3,
+    /** Multiplicador de velocidade. 1 = sem mudança, 0.5 = metade, 0 = imóvel. */
+    speedMultiplier: lvl >= 5 ? 0 : (lvl >= 2 ? 0.5 : 1),
+    /** Multiplicador de maxHp. 1 = sem mudança, 0.5 = metade. */
+    maxHpMultiplier: lvl >= 4 ? 0.5 : 1,
+    dead: lvl >= 6,
+  }
+}
+
 // Formato com sinal: +3, -1, +0
 export function formatModifier(mod) {
   return mod >= 0 ? `+${mod}` : `${mod}`
