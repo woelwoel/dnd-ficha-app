@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { CharacterInfo } from './CharacterInfo'
 import { CombatStats } from './CombatStats'
 import { SavingThrows } from './SavingThrows'
@@ -12,7 +12,7 @@ import { AttributesSection } from './AttributesSection'
 import { RestActions } from './RestActions'
 import { Attacks } from './Attacks'
 import { CombatClassActions } from './CombatClassActions'
-import { defaultClassFeatureUses, mergeFeatureUses } from '../../domain/rules'
+import { useCharacterContext } from './CharacterContext'
 
 /* ── Wrapper de painel de aba ─────────────────────────────── */
 function TabPanel({ id, children }) {
@@ -68,20 +68,13 @@ function CollapsibleSection({ title, summary, children, defaultOpen = false }) {
 }
 
 /* ── Componente principal ─────────────────────────────────── */
-export function SheetContent({
-  activeTab,
-  character,
-  setCharacter,
-  calc,
-  classData,
-  races,
-  classes,
-  backgrounds,
-  fichaErrors,
-  updaters,
-  handlers,
-  onNavigateToSpells,
-}) {
+export function SheetContent({ activeTab }) {
+  const {
+    character, setCharacter, calc, classData,
+    races, classes, backgrounds,
+    updaters, handlers, fichaErrors, featureUses, onNavigateToSpells,
+  } = useCharacterContext()
+
   const {
     updateInfo, updateTraits, updateAttribute, updateCombat,
     toggleSkillProficiency, toggleExpertiseSkill,
@@ -103,11 +96,6 @@ export function SheetContent({
     handleClassChange, handleApplyLevelUp, handleAddMulticlass,
     handleRemoveMulticlass, handleChosenFeaturesChange,
   } = handlers
-
-  const featureUses = useMemo(
-    () => mergeFeatureUses(character.combat?.classFeatureUses ?? [], defaultClassFeatureUses(character)),
-    [character]
-  )
 
   /* ── Aba: Ficha ─────────────────────────────────────────── */
   if (activeTab === 'ficha') {

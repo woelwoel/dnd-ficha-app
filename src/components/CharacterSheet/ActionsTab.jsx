@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useSrd } from '../../providers/SrdProvider'
+import { getFeatureTypeMeta } from '../../domain/featureMeta'
 
 /* ── Ações padrão do D&D 5e (PHB p. 192-193) ─────────────────── */
 const STANDARD_ACTIONS = [
@@ -41,17 +42,18 @@ function detectActionType(desc = '') {
   return null
 }
 
-/* ── Cor e ícone por tipo ────────────────────────────────────────── */
-const TYPE_META = {
-  'ação':       { color: 'border-amber-600 bg-amber-900/20', badge: 'bg-amber-700 text-amber-100', icon: '⚔️',  label: 'Ação' },
-  'ação bônus': { color: 'border-blue-600 bg-blue-900/20',   badge: 'bg-blue-700 text-blue-100',   icon: '⚡',  label: 'Ação Bônus' },
-  'reação':     { color: 'border-purple-600 bg-purple-900/20', badge: 'bg-purple-700 text-purple-100', icon: '🛡️', label: 'Reação' },
-  'livre':      { color: 'border-green-600 bg-green-900/20', badge: 'bg-green-700 text-green-100',  icon: '✦',  label: 'Livre' },
+/* ── Tema visual por tipo (icon/label vêm de domain/featureMeta) ── */
+const TYPE_THEME = {
+  'ação':       { color: 'border-amber-600 bg-amber-900/20',  badge: 'bg-amber-700 text-amber-100' },
+  'ação bônus': { color: 'border-blue-600 bg-blue-900/20',    badge: 'bg-blue-700 text-blue-100' },
+  'reação':     { color: 'border-purple-600 bg-purple-900/20', badge: 'bg-purple-700 text-purple-100' },
+  'livre':      { color: 'border-green-600 bg-green-900/20',   badge: 'bg-green-700 text-green-100' },
 }
 
 /* ── Card de ação individual ─────────────────────────────────────── */
 function ActionCard({ name, type, desc, source, used, max, onSpend, onRegain }) {
-  const meta = TYPE_META[type] ?? TYPE_META['ação']
+  const theme = TYPE_THEME[type] ?? TYPE_THEME['ação']
+  const meta = { ...getFeatureTypeMeta(type), ...theme }
   const remaining = max != null ? max - (used ?? 0) : null
 
   return (

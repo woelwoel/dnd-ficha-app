@@ -1,4 +1,4 @@
-import { useDiceRoller } from '../../context/useDiceRoller'
+import { useDiceRoller } from '../../hooks/useDiceRoller'
 
 /**
  * Botão compacto 🎲 para disparar uma rolagem e abrir o painel de histórico.
