@@ -7,7 +7,7 @@ import { ConfirmExitPrompt } from './ConfirmExitPrompt'
 import { BLOCKS } from './blocks-config'
 import { useDraft } from './hooks/useDraft'
 import { useBlockStatus } from './hooks/useBlockStatus'
-import { useSrd } from '../../providers/SrdProvider'
+import { useSrd, useLazySrdDataset } from '../../providers/SrdProvider'
 import { ConceptBlock } from './blocks/ConceptBlock'
 import { RaceBlock } from './blocks/RaceBlock'
 import { ClassBlock } from './blocks/ClassBlock'
@@ -50,8 +50,12 @@ const LABEL_BY_ID = Object.fromEntries(BLOCKS.map(b => [b.id, b.label]))
 // Isso garante que useDraft receba as options corretas na montagem inicial.
 function WizardGrid({ initialSettings, resume, onBack, onComplete }) {
   const { draft, updateDraft, hasChanges, resetDraft } = useDraft({ initialSettings, resume })
-  const { races, classes, classChoices, progression: classProgression, feats,
-          classEquipment, weaponsArmor, backgrounds, multiclass: multiclassData } = useSrd()
+  const { races, classes, classChoices, progression: classProgression, backgrounds } = useSrd()
+  // Datasets só usados no wizard — carregados sob demanda.
+  const feats          = useLazySrdDataset('feats')
+  const classEquipment = useLazySrdDataset('classEquipment')
+  const weaponsArmor   = useLazySrdDataset('weaponsArmor')
+  const multiclassData = useLazySrdDataset('multiclass')
   const blockStatus = useBlockStatus(draft, { classChoices, classProgression, classEquipment, classes })
   const [openBlockId, setOpenBlockId] = useState(null)
   const [exitConfirmOpen, setExitConfirmOpen] = useState(false)

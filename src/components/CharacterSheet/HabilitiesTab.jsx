@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { useSrd } from '../../providers/SrdProvider'
+import { useSrd, useLazySrdDataset } from '../../providers/SrdProvider'
 import { enrichDraconicTopics } from '../../utils/draconicAncestors'
 
 /* ── Badge de recarga ──────────────────────────────────────────── */
@@ -142,7 +142,8 @@ function FeatureGroup({ title, icon, features, featureUses, onSpend, onRegain })
    Componente principal
    ═══════════════════════════════════════════════════════════════════ */
 export function HabilitiesTab({ character, featureUses, onSpend, onRegain }) {
-  const { progression, races, feats: allFeats } = useSrd()
+  const { progression, races } = useSrd()
+  const allFeats = useLazySrdDataset('feats')
   const { info } = character
 
   const classIndex = info?.class ?? ''
