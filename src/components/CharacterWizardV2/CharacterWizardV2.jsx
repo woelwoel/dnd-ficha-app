@@ -4,7 +4,7 @@ import { BlockCard } from './BlockCard'
 import { BlockEditorModal } from './BlockEditorModal'
 import { ResumeDraftPrompt } from './ResumeDraftPrompt'
 import { ConfirmExitPrompt } from './ConfirmExitPrompt'
-import { BLOCKS } from './blocks-config'
+import { BLOCKS, GROUPS } from './blocks-config'
 import { useDraft } from './hooks/useDraft'
 import { useBlockStatus } from './hooks/useBlockStatus'
 import { useSrd, useLazySrdDataset } from '../../providers/SrdProvider'
@@ -130,25 +130,81 @@ function WizardGrid({ initialSettings, resume, onBack, onComplete }) {
       </header>
 
       <div className="flex-1 overflow-y-auto p-6">
-        <div
-          className="max-w-5xl mx-auto grid gap-4"
-          style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}
-        >
-          {BLOCKS.map((b, i) => {
-            const s = blockStatus[b.id]
+        <div className="max-w-5xl mx-auto flex flex-col gap-8">
+          {GROUPS.map((g, gi) => {
+            const groupBlocks = BLOCKS
+              .map((b, i) => ({ b, originalIndex: i }))
+              .filter(({ b }) => b.group === g.id)
+            const completeInGroup = groupBlocks.filter(
+              ({ b }) => blockStatus[b.id]?.status === 'completo'
+            ).length
+
             return (
-              <BlockCard
-                key={b.id}
-                dataTestId={`block-card-${b.id}`}
-                label={b.label}
-                icon={b.icon}
-                hint={b.hint}
-                step={i}
-                status={s.status}
-                summary={summaryFor(b.id, draft)}
-                blockedBy={s.blockedBy.map(id => LABEL_BY_ID[id] ?? id)}
-                onClick={() => setOpenBlockId(b.id)}
-              />
+              <section key={g.id} aria-labelledby={`chapter-${g.id}`}>
+                {/* Cabeçalho do capítulo */}
+                <header className="flex items-center gap-4 mb-3 px-1">
+                  <span
+                    aria-hidden
+                    className="text-2xl font-display text-parchment-600/80 leading-none w-8 text-center"
+                  >{g.roman}</span>
+                  <div className="flex-1 min-w-0">
+                    <h2
+                      id={`chapter-${g.id}`}
+                      className="text-base font-display tracking-[0.25em] uppercase text-ink-500 leading-tight"
+                    >{g.title}</h2>
+                    <p className="text-xs ink-italic text-ink-300 mt-0.5">{g.subtitle}</p>
+                  </div>
+                  <span
+                    aria-hidden
+                    className="hidden sm:flex items-center gap-2 text-[10px] font-display tracking-[0.2em] uppercase text-ink-300 shrink-0"
+                  >
+                    <span className={completeInGroup === groupBlocks.length ? 'text-emerald-700 font-bold' : ''}>
+                      {completeInGroup}
+                    </span>
+                    /<span>{groupBlocks.length}</span>
+                  </span>
+                </header>
+
+                {/* Linha decorativa abaixo do título */}
+                <div className="flex items-center gap-2 mb-4 px-1" aria-hidden>
+                  <span className="h-px flex-1 bg-gradient-to-r from-parchment-600/50 to-transparent" />
+                  <span className="text-parchment-600/60 text-xs">❦</span>
+                  <span className="h-px flex-1 bg-gradient-to-l from-parchment-600/50 to-transparent" />
+                </div>
+
+                {/* Grid de cards do capítulo */}
+                <div
+                  className="grid gap-4"
+                  style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}
+                >
+                  {groupBlocks.map(({ b, originalIndex }) => {
+                    const s = blockStatus[b.id]
+                    return (
+                      <BlockCard
+                        key={b.id}
+                        dataTestId={`block-card-${b.id}`}
+                        label={b.label}
+                        icon={b.icon}
+                        hint={b.hint}
+                        step={originalIndex}
+                        status={s.status}
+                        summary={summaryFor(b.id, draft)}
+                        blockedBy={s.blockedBy.map(id => LABEL_BY_ID[id] ?? id)}
+                        onClick={() => setOpenBlockId(b.id)}
+                      />
+                    )
+                  })}
+                </div>
+
+                {/* Separador entre capítulos (exceto o último) */}
+                {gi < GROUPS.length - 1 && (
+                  <div className="mt-8 flex items-center justify-center gap-3 select-none" aria-hidden>
+                    <span className="h-px w-20 bg-parchment-600/40" />
+                    <span className="text-parchment-600/60 text-base">⁂</span>
+                    <span className="h-px w-20 bg-parchment-600/40" />
+                  </div>
+                )}
+              </section>
             )
           })}
         </div>
