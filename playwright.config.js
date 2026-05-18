@@ -1,11 +1,13 @@
 import { defineConfig, devices } from '@playwright/test'
 
 /**
- * Playwright para testes E2E críticos (fluxos end-to-end no browser real).
+ * Playwright = canal oficial de E2E (fluxos end-to-end no browser real).
  *
- * O grosso dos testes E2E vive em `src/test/e2e/*.test.jsx` (RTL+jsdom).
- * Aqui ficam os 2 cenários que precisam de browser real:
- *   - wizard.spec.js     : criação completa de personagem
+ * Testes de integração (RTL + jsdom) vivem em `src/test/integration/*.test.jsx`
+ * e rodam via Vitest — NÃO são E2E, apesar do nome anterior da pasta.
+ *
+ * Aqui ficam os cenários que dependem de browser real:
+ *   - smoke.spec.js      : fluxo básico carrega
  *   - persistence.spec.js: refresh do navegador mantém dados (localStorage)
  *
  * O webServer roda `vite preview` na build estática para evitar HMR.

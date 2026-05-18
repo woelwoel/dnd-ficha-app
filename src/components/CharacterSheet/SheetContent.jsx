@@ -93,6 +93,9 @@ export function SheetContent({
     addAttack, removeAttack, updateAttack,
     spendFeatureUse, regainFeatureUse,
     updateDeathSaves, toggleCondition, setInspiration, setExhaustion, setRageActive, setWildShape,
+    // Sistema de dano/cura/testes de morte
+    applyDamage, applyHealing, stabilize, rollDeathSave,
+    lastDamageEvent, clearLastDamageEvent, consumeInspiration,
   } = updaters
 
   const {
@@ -175,6 +178,17 @@ export function SheetContent({
               onToggleCondition={toggleCondition}
               onSetInspiration={setInspiration}
               onSetExhaustion={setExhaustion}
+              onApplyDamage={applyDamage}
+              onApplyHealing={applyHealing}
+              onRollDeathSave={() => {
+                const result = rollDeathSave()
+                if (result?.blocked) return
+              }}
+              onStabilize={stabilize}
+              lastDamageEvent={lastDamageEvent}
+              onClearDamageEvent={clearLastDamageEvent}
+              onBreakConcentration={() => setConcentration(null)}
+              onConsumeInspiration={consumeInspiration}
             />
           </div>
 

@@ -12,7 +12,7 @@ const CharacterSheet = lazy(() =>
   import('./components/CharacterSheet/CharacterSheet').then(m => ({ default: m.CharacterSheet }))
 )
 const CharacterWizard = lazy(() =>
-  import('./components/CharacterWizard/CharacterWizard').then(m => ({ default: m.CharacterWizard }))
+  import('./components/CharacterWizardV2').then(m => ({ default: m.CharacterWizardV2 }))
 )
 
 const VIEW = { LIST: 'list', NEW: 'new', SHEET: 'sheet' }

@@ -29,3 +29,4 @@ dist-ssr
 /playwright-report/
 /test-results/
 /playwright/.cache/
+.superpowers/
