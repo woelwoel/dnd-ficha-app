@@ -74,26 +74,59 @@ function WizardGrid({ initialSettings, resume, onBack, onComplete }) {
     onComplete(character.id)
   }
 
+  // Conta blocos completos para o indicador de progresso (Revisão é meta, não conta)
+  const trackedBlocks = BLOCKS.filter(b => b.id !== 'review')
+  const completedCount = trackedBlocks.filter(b => blockStatus[b.id]?.status === 'completo').length
+  const totalCount = trackedBlocks.length
+  const progressPct = Math.round((completedCount / totalCount) * 100)
+  const allReady = blockStatus.review.status === 'completo'
+
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-parchment-100">
       <header
-        className="flex items-center gap-4 px-6 py-3.5 border-b-2 border-parchment-600 bg-parchment-100"
+        className="border-b-2 border-parchment-600 bg-parchment-100"
         style={{ boxShadow: 'var(--shadow-parchment)' }}
       >
-        <button
-          onClick={handleBackClick}
-          className="text-ink-200 hover:text-ink-500 text-sm font-display tracking-wide"
-        >← Personagens</button>
-        <div className="w-px h-4 bg-parchment-600" />
-        <h1 className="text-sm font-display text-ink-500 tracking-widest uppercase">
-          Forjar Herói
-        </h1>
-        <button
-          type="button"
-          disabled={blockStatus.review.status !== 'completo'}
-          onClick={handleFinalize}
-          className="ml-auto px-5 py-1.5 rounded-sm bg-ink-500 hover:bg-ink-600 border-2 border-ink-600 text-parchment-50 text-sm font-display tracking-wide disabled:opacity-35 disabled:cursor-not-allowed"
-        >✦ Inscrever Herói ✦</button>
+        <div className="flex items-center gap-4 px-6 py-3.5">
+          <button
+            onClick={handleBackClick}
+            className="text-ink-200 hover:text-ink-500 text-sm font-display tracking-wide"
+          >← Personagens</button>
+          <div className="w-px h-4 bg-parchment-600" />
+          <h1 className="text-sm font-display text-ink-500 tracking-widest uppercase">
+            Forjar Herói
+          </h1>
+          <span
+            aria-label={`${completedCount} de ${totalCount} blocos prontos`}
+            className="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-display tracking-[0.2em] uppercase text-ink-300"
+          >
+            <span className="text-emerald-700 font-bold">{completedCount}</span>
+            <span>/</span>
+            <span>{totalCount}</span>
+            <span className="ink-italic normal-case tracking-normal ml-1">
+              {allReady ? 'pronto pra forjar' : 'prontos'}
+            </span>
+          </span>
+          <button
+            type="button"
+            disabled={!allReady}
+            onClick={handleFinalize}
+            className={[
+              'ml-auto px-5 py-1.5 rounded-sm border-2 text-sm font-display tracking-wide transition-all',
+              allReady
+                ? 'bg-ink-500 hover:bg-ink-600 border-ink-600 text-parchment-50 shadow-[var(--shadow-parchment-sm)]'
+                : 'bg-parchment-200 border-parchment-600 text-ink-300 opacity-60 cursor-not-allowed',
+            ].join(' ')}
+          >✦ Inscrever Herói ✦</button>
+        </div>
+        {/* Barra de progresso */}
+        <div className="h-1 bg-parchment-200">
+          <div
+            className="h-full bg-gradient-to-r from-emerald-600 to-emerald-700 transition-all duration-500"
+            style={{ width: `${progressPct}%` }}
+            aria-hidden
+          />
+        </div>
       </header>
 
       <div className="flex-1 overflow-y-auto p-6">
@@ -101,13 +134,16 @@ function WizardGrid({ initialSettings, resume, onBack, onComplete }) {
           className="max-w-5xl mx-auto grid gap-4"
           style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}
         >
-          {BLOCKS.map(b => {
+          {BLOCKS.map((b, i) => {
             const s = blockStatus[b.id]
             return (
               <BlockCard
                 key={b.id}
                 dataTestId={`block-card-${b.id}`}
                 label={b.label}
+                icon={b.icon}
+                hint={b.hint}
+                step={i}
                 status={s.status}
                 summary={summaryFor(b.id, draft)}
                 blockedBy={s.blockedBy.map(id => LABEL_BY_ID[id] ?? id)}
