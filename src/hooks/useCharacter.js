@@ -2,7 +2,14 @@ import { useState, useCallback, useMemo } from 'react'
 import { SCHEMA_VERSION } from '../domain/characterSchema'
 import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
 import { getModifier } from '../utils/calculations'
-import { defaultClassFeatureUses, mergeFeatureUses } from '../domain/rules'
+import {
+  defaultClassFeatureUses, mergeFeatureUses,
+  applyDamage as applyDamagePure,
+  applyHealing as applyHealingPure,
+  gainTempHp as gainTempHpPure,
+  stabilizeCharacter as stabilizeCharacterPure,
+  rollDeathSave as rollDeathSavePure,
+} from '../domain/rules'
 
 const DEFAULT_CHARACTER = {
   id: null,
@@ -441,6 +448,72 @@ export function useCharacter(initialCharacter = null) {
     }))
   }, [setCharacter])
 
+  /* ── Dano, Cura, Testes de Morte (camada pura em rules.js) ──── */
+
+  // Guarda os últimos sideEffects da última operação de dano/cura.
+  // Útil para UI exibir banners (instakill, drop, revival, concentration DC).
+  const [lastDamageEvent, setLastDamageEvent] = useState(null)
+
+  /**
+   * Aplica dano. Delega para rules.applyDamage e propaga sideEffects.
+   * @returns sideEffects do dano para o caller exibir feedback.
+   */
+  const applyDamage = useCallback((amount, opts = {}) => {
+    let captured = null
+    setCharacter(prev => {
+      const { character: next, sideEffects } = applyDamagePure(prev, amount, opts)
+      captured = sideEffects
+      return next
+    })
+    setLastDamageEvent({ kind: 'damage', ...captured })
+    return captured
+  }, [setCharacter])
+
+  /**
+   * Cura. Delega para rules.applyHealing. Revival a partir de 0 HP zera
+   * testes de morte e remove isStable automaticamente.
+   */
+  const applyHealing = useCallback((amount) => {
+    let captured = null
+    setCharacter(prev => {
+      const { character: next, sideEffects } = applyHealingPure(prev, amount)
+      captured = sideEffects
+      return next
+    })
+    setLastDamageEvent({ kind: 'heal', ...captured })
+    return captured
+  }, [setCharacter])
+
+  /** Ganha PV temporários (PHB p.198: não acumulam, vale o maior). */
+  const gainTempHp = useCallback((amount) => {
+    setCharacter(prev => gainTempHpPure(prev, amount).character)
+  }, [setCharacter])
+
+  /** Estabiliza personagem a 0 HP (DC 10 Medicina ou spare-the-dying). */
+  const stabilize = useCallback(() => {
+    setCharacter(prev => stabilizeCharacterPure(prev))
+  }, [setCharacter])
+
+  /**
+   * Rola um teste de morte. Caller pode passar `roll` (1-20) para forçar
+   * resultado (mestre). Retorna o `result` da rolagem para UI/DiceHistory.
+   * Também propaga o resultado para `lastDamageEvent` (banner).
+   */
+  const rollDeathSave = useCallback((opts = {}) => {
+    let captured = null
+    setCharacter(prev => {
+      const { character: next, result } = rollDeathSavePure(prev, opts)
+      captured = result
+      return next
+    })
+    if (captured && !captured.blocked) {
+      setLastDamageEvent({ kind: 'deathSave', ...captured })
+    }
+    return captured
+  }, [setCharacter])
+
+  const clearLastDamageEvent = useCallback(() => setLastDamageEvent(null), [])
+
   /* ── Condições (Poisoned, Stunned, …) ────────────────────── */
 
   const toggleCondition = useCallback(conditionId => {
@@ -541,6 +614,14 @@ export function useCharacter(initialCharacter = null) {
     setExhaustion,
     setRageActive,
     setWildShape,
+    // v5 — sistema de dano/cura/testes de morte
+    applyDamage,
+    applyHealing,
+    gainTempHp,
+    stabilize,
+    rollDeathSave,
+    lastDamageEvent,
+    clearLastDamageEvent,
   }), [
     character, setCharacter,
     updateInfo, updateAttribute, updateCombat, updateTraits,
@@ -554,5 +635,7 @@ export function useCharacter(initialCharacter = null) {
     addAttack, removeAttack, updateAttack,
     setClassFeatureUses, spendFeatureUse, regainFeatureUse,
     updateDeathSaves, toggleCondition, setInspiration, setExhaustion, setRageActive, setWildShape,
+    applyDamage, applyHealing, gainTempHp, stabilize, rollDeathSave,
+    lastDamageEvent, clearLastDamageEvent,
   ])
 }

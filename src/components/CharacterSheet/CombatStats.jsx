@@ -34,7 +34,7 @@ const EXHAUSTION_EFFECTS = [
 ]
 
 /* ── Death Saves ───────────────────────────────────────────── */
-function DeathSavesTracker({ deathSaves, onUpdate }) {
+function DeathSavesTracker({ deathSaves, isStable, isDead, onUpdate, onRoll, onStabilize }) {
   const successes = deathSaves?.successes ?? 0
   const failures  = deathSaves?.failures  ?? 0
 
@@ -44,11 +44,59 @@ function DeathSavesTracker({ deathSaves, onUpdate }) {
     onUpdate(type, Math.max(0, Math.min(3, next)))
   }
 
+  if (isDead) {
+    return (
+      <div className="space-y-1">
+        <p className="text-sm text-red-700 font-display uppercase tracking-widest font-bold">
+          ☠ Morto
+        </p>
+        <p className="text-[11px] text-ink-200 italic">
+          Personagem morreu. Reviver requer magia (Reviver os Mortos, Ressurreição).
+        </p>
+      </div>
+    )
+  }
+
+  if (isStable) {
+    return (
+      <div className="space-y-1">
+        <p className="text-sm text-green-700 font-display uppercase tracking-widest font-bold">
+          🛡 Estabilizado
+        </p>
+        <p className="text-[11px] text-ink-200 italic">
+          A 0 PV, mas não faz testes de morte. Recupera 1 PV após 1d4 horas (PHB p.197).
+        </p>
+      </div>
+    )
+  }
+
   return (
-    <div className="space-y-1.5">
-      <p className="text-xs text-ink-200 font-semibold uppercase tracking-widest">
-        Testes de Morte
-      </p>
+    <div className="space-y-2">
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs text-ink-200 font-semibold uppercase tracking-widest">
+          Testes de Morte
+        </p>
+        <div className="flex gap-1.5">
+          {onRoll && (
+            <button
+              onClick={onRoll}
+              title="Rolar 1d20 (PHB p.197): ≤9 falha, ≥10 sucesso, Nat 1 = 2 falhas, Nat 20 recupera com 1 PV"
+              className="text-[10px] px-2 py-0.5 rounded bg-ink-500 hover:bg-ink-600 text-parchment-50 font-display tracking-wide"
+            >
+              🎲 Rolar
+            </button>
+          )}
+          {onStabilize && (
+            <button
+              onClick={onStabilize}
+              title="Estabilizar (DC 10 Medicina ou spare-the-dying — PHB p.197)"
+              className="text-[10px] px-2 py-0.5 rounded bg-parchment-300 hover:bg-parchment-400 border border-parchment-600 text-ink-500"
+            >
+              Estabilizar
+            </button>
+          )}
+        </div>
+      </div>
       {[
         { key: 'successes', label: 'Sucesso', color: 'bg-ink-300 border-ink-500' },
         { key: 'failures',  label: 'Falha',   color: 'bg-ink-600 border-ink-700'   },
@@ -75,6 +123,108 @@ function DeathSavesTracker({ deathSaves, onUpdate }) {
           </div>
         )
       })}
+    </div>
+  )
+}
+
+/* ── Damage / Heal input ───────────────────────────────────── */
+function DamageHealControls({ onApplyDamage, onApplyHealing, disabled }) {
+  const [value, setValue] = useState('')
+  const num = Math.max(0, parseInt(value, 10) || 0)
+
+  function handle(action) {
+    if (num <= 0) return
+    action(num)
+    setValue('')
+  }
+
+  return (
+    <div className="space-y-1.5">
+      <label className="text-xs text-ink-200 font-semibold uppercase tracking-widest">
+        Sofrer Dano / Curar
+      </label>
+      <div className="flex items-center gap-2">
+        <input
+          type="number"
+          min={0}
+          value={value}
+          onChange={e => setValue(e.target.value)}
+          onWheel={e => e.currentTarget.blur()}
+          onKeyDown={e => {
+            if (e.key === 'Enter' && num > 0) handle(onApplyDamage)
+          }}
+          placeholder="0"
+          disabled={disabled}
+          className="w-16 text-center bg-parchment-100 border border-parchment-600 rounded px-2 py-1 text-ink-500 font-bold focus:outline-none focus:border-ink-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-40"
+        />
+        <button
+          type="button"
+          onClick={() => handle(onApplyDamage)}
+          disabled={disabled || num <= 0}
+          className="flex-1 text-xs px-2 py-1 rounded bg-red-700 hover:bg-red-600 text-parchment-50 font-display tracking-wide disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          ⚔ Dano
+        </button>
+        <button
+          type="button"
+          onClick={() => handle(onApplyHealing)}
+          disabled={disabled || num <= 0}
+          className="flex-1 text-xs px-2 py-1 rounded bg-green-700 hover:bg-green-600 text-parchment-50 font-display tracking-wide disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          ✚ Cura
+        </button>
+      </div>
+    </div>
+  )
+}
+
+/* ── Banner do último evento de dano/cura ────────────────── */
+function DamageEventBanner({ event, onDismiss }) {
+  if (!event) return null
+  const { kind, damageDealt, healed, droppedTo0, instakill, died, revived,
+          deathSaveFailuresApplied, concentrationCheckDC,
+          roll, success, failure, twoFails, recovered, stabilized } = event
+
+  const lines = []
+  if (kind === 'damage') {
+    if (damageDealt > 0) lines.push(`-${damageDealt} PV`)
+    if (instakill) lines.push('☠ Morte instantânea (dano massivo, PHB p.197)')
+    else if (died)  lines.push('☠ Morreu (3 falhas)')
+    else if (droppedTo0) lines.push('💀 Caiu para 0 PV — comece os testes de morte!')
+    if (deathSaveFailuresApplied > 0) lines.push(`+${deathSaveFailuresApplied} falha(s) de morte (dano enquanto a 0 PV)`)
+    if (concentrationCheckDC != null) lines.push(`🔮 Faça um teste de CON CD ${concentrationCheckDC} ou perca a concentração`)
+  } else if (kind === 'heal') {
+    if (healed > 0) lines.push(`+${healed} PV`)
+    if (revived) lines.push('✨ Recuperou a consciência — testes de morte zerados')
+  } else if (kind === 'deathSave') {
+    if (roll != null) lines.push(`🎲 Rolou ${roll}`)
+    if (recovered)  lines.push('✨ Nat 20! Recuperou a consciência com 1 PV')
+    else if (died)  lines.push('☠ Morreu (3 falhas)')
+    else if (stabilized) lines.push('🛡 Estabilizado (3 sucessos)')
+    else if (twoFails)   lines.push('💀 Nat 1: 2 falhas')
+    else if (success)    lines.push('✓ Sucesso')
+    else if (failure)    lines.push('✗ Falha')
+  }
+  if (lines.length === 0) return null
+
+  const isBad  = instakill || died || (kind === 'deathSave' && (twoFails || failure))
+  const isGood = revived || recovered || stabilized || (kind === 'heal')
+  const tone = isBad
+    ? 'border-red-700 bg-red-50 text-red-700'
+    : isGood
+    ? 'border-green-700 bg-green-50 text-green-700'
+    : 'border-amber-700 bg-amber-50 text-amber-700'
+
+  return (
+    <div className={`relative border-2 rounded-sm px-3 py-2 ${tone}`}>
+      <button
+        onClick={onDismiss}
+        className="absolute top-1 right-2 text-xs opacity-60 hover:opacity-100"
+        title="Fechar"
+      >✕</button>
+      <ul className="text-xs space-y-0.5 pr-4">
+        {lines.map((l, i) => <li key={i}>{l}</li>)}
+      </ul>
     </div>
   )
 }
@@ -151,6 +301,9 @@ function CombatStatsBase({
   suggestedAC, suggestedMaxHp, passivePerception, featSpeedBonus = 0,
   errors = {},
   onUpdateDeathSaves, onToggleCondition, onSetInspiration, onSetExhaustion,
+  // Sistema de dano/cura/testes de morte (PR 2 do damage-system).
+  onApplyDamage, onApplyHealing, onRollDeathSave, onStabilize,
+  lastDamageEvent, onClearDamageEvent,
 }) {
   const initiative = calculateInitiative(attributes.dex)
   const initNotation = `1d20${formatModifier(initiative)}`
@@ -343,12 +496,31 @@ function CombatStatsBase({
         </div>
       </div>
 
-      {/* Death Saves — visíveis quando desmaiado */}
-      {isDowned && (
+      {/* Damage / Heal — sempre visíveis (substitui o ajuste manual de PV pra
+          fluxo RAW PHB: tempHp drain, drop to 0, instakill, etc.) */}
+      {onApplyDamage && (
+        <DamageHealControls
+          onApplyDamage={onApplyDamage}
+          onApplyHealing={onApplyHealing}
+          disabled={!!combat.isDead}
+        />
+      )}
+
+      {/* Banner do último evento (auto-dismissable) */}
+      {lastDamageEvent && (
+        <DamageEventBanner event={lastDamageEvent} onDismiss={onClearDamageEvent} />
+      )}
+
+      {/* Death Saves — visíveis quando desmaiado, estabilizado ou morto */}
+      {(isDowned || combat.isStable || combat.isDead) && (
         <div className="p-3 bg-parchment-50 border border-parchment-600 rounded-lg">
           <DeathSavesTracker
             deathSaves={combat.deathSaves}
+            isStable={!!combat.isStable}
+            isDead={!!combat.isDead}
             onUpdate={(type, val) => onUpdateDeathSaves?.(type, val)}
+            onRoll={onRollDeathSave && !combat.isStable && !combat.isDead ? onRollDeathSave : null}
+            onStabilize={onStabilize && !combat.isStable && !combat.isDead ? onStabilize : null}
           />
         </div>
       )}
