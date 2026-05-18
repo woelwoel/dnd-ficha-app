@@ -2,12 +2,12 @@
 import { memo, useCallback, useMemo, useRef } from 'react'
 
 export const TABS = [
-  { id: 'ficha',      label: 'Ficha',      icon: '◆' },
-  { id: 'magias',     label: 'Magias',     icon: '✧' },
-  { id: 'acoes',      label: 'Habilidades/Ações', icon: '⊛' },
-  { id: 'inventario', label: 'Inventário', icon: '◈' },
-  { id: 'progressao', label: 'Progressão', icon: '▲' },
-  { id: 'notas',      label: 'Notas',      icon: '≡' },
+  { id: 'ficha',      label: 'Ficha',             shortLabel: 'Ficha',   icon: '◆' },
+  { id: 'magias',     label: 'Magias',            shortLabel: 'Magias',  icon: '✧' },
+  { id: 'acoes',      label: 'Habilidades/Ações', shortLabel: 'Ações',   icon: '⊛' },
+  { id: 'inventario', label: 'Inventário',        shortLabel: 'Itens',   icon: '◈' },
+  { id: 'progressao', label: 'Progressão',        shortLabel: 'Nível',   icon: '▲' },
+  { id: 'notas',      label: 'Notas',             shortLabel: 'Notas',   icon: '≡' },
 ]
 
 /**
@@ -62,8 +62,8 @@ function SheetTabsBase({ activeTab, onChange }) {
       onKeyDown={handleKeyDown}
       className={[
         'flex shrink-0',
-        /* mobile: linha horizontal de guias */
-        'flex-row overflow-x-auto scrollbar-none',
+        /* mobile: distribui as 6 abas no eixo horizontal sem scroll */
+        'flex-row',
         'border-b border-parchment-600 bg-parchment-300',
         /* desktop: coluna lateral, guias de pergaminho */
         'lg:flex-col lg:overflow-x-hidden lg:overflow-y-auto',
@@ -82,11 +82,13 @@ function SheetTabsBase({ activeTab, onChange }) {
             type="button"
             aria-selected={isActive}
             aria-controls={`tabpanel-${tab.id}`}
+            aria-label={tab.label}
             tabIndex={isActive ? 0 : -1}
             onClick={() => onChange(tab.id)}
             className={[
-              'relative flex items-center shrink-0',
-              'gap-2 px-4 py-2.5 whitespace-nowrap',
+              'relative flex items-center justify-center flex-1 min-w-0',
+              'flex-col gap-0.5 px-1 py-2 min-h-[48px]',
+              'sm:flex-row sm:gap-2 sm:px-3 sm:py-2.5 sm:flex-initial sm:min-h-0',
               'lg:gap-3 lg:px-5 lg:py-3 lg:w-full',
               'font-display tracking-wider',
               'transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-200',
@@ -95,10 +97,14 @@ function SheetTabsBase({ activeTab, onChange }) {
                 : 'text-ink-200 hover:text-ink-500 hover:bg-parchment-200 border border-transparent',
             ].join(' ')}
           >
-            <span className="text-base" aria-hidden>
+            <span className="text-base sm:text-base" aria-hidden>
               {tab.icon}
             </span>
-            <span className="text-sm">
+            {/* Mobile: short label below icon. sm+: full label inline. */}
+            <span className="text-[10px] leading-tight sm:hidden truncate max-w-full">
+              {tab.shortLabel}
+            </span>
+            <span className="hidden sm:inline text-sm">
               {tab.label}
             </span>
             {isActive && (
