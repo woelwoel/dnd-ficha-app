@@ -3,6 +3,7 @@ import { CharacterMap } from './CharacterMap'
 import { CharacterSidebar } from './CharacterSidebar'
 import { CharacterListView } from './CharacterListView'
 import { EmptyState } from './EmptyState'
+import { BackupMenu } from './BackupMenu'
 import { Button } from '../ui/Button'
 import {
   loadCharacters,
@@ -114,9 +115,15 @@ export function CharacterList({ onSelect, onCreate }) {
           </Button>
         </div>
 
-        <Button variant="gold" size="md" onClick={onCreate}>
-          ⚔ Recrutar
-        </Button>
+        <div className="flex items-center gap-2">
+          <BackupMenu
+            characterCount={characters.length}
+            onImported={() => setCharacters(loadCharacters())}
+          />
+          <Button variant="gold" size="md" onClick={onCreate}>
+            ⚔ Recrutar
+          </Button>
+        </div>
       </header>
 
       <main className="flex-1 flex overflow-hidden w-full max-w-[1800px] mx-auto">

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { loadCharacters, saveCharacters, loadCharacterById, upsertCharacter, deleteCharacter, updateCharacterPosition, touchCharacterLastOpened } from '../utils/storage'
+import { loadCharacters, saveCharacters, loadCharacterById, upsertCharacter, deleteCharacter, updateCharacterPosition, touchCharacterLastOpened, exportAllCharacters, importAllCharacters } from '../utils/storage'
 
 // Fixture mínimo que passa pela validação Zod do characterSchema
 function makeChar(id, name = 'Teste', extra = {}) {
@@ -129,5 +129,76 @@ describe('touchCharacterLastOpened', () => {
   it('é no-op para ID inexistente', () => {
     const res = touchCharacterLastOpened('nao-existe')
     expect(res.ok).toBe(false)
+  })
+})
+
+describe('exportAllCharacters / importAllCharacters', () => {
+  beforeEach(() => localStorage.clear())
+
+  it('exporta payload com metadados + lista de personagens', () => {
+    upsertCharacter(makeChar('a', 'Aragorn'))
+    upsertCharacter(makeChar('b', 'Boromir'))
+    const payload = exportAllCharacters()
+    expect(payload.app).toBe('dnd-ficha-app')
+    expect(payload.count).toBe(2)
+    expect(payload.characters).toHaveLength(2)
+    expect(typeof payload.exportedAt).toBe('string')
+  })
+
+  it('importa em modo replace substituindo tudo', () => {
+    upsertCharacter(makeChar('a', 'Aragorn'))
+    const payload = { characters: [makeChar('z', 'Zelda')] }
+    const res = importAllCharacters(payload, 'replace')
+    expect(res.ok).toBe(true)
+    expect(res.imported).toBe(1)
+    const all = loadCharacters()
+    expect(all).toHaveLength(1)
+    expect(all[0].id).toBe('z')
+  })
+
+  it('importa em modo merge preservando atuais e sobrescrevendo por id', () => {
+    upsertCharacter(makeChar('a', 'Aragorn'))
+    upsertCharacter(makeChar('b', 'Boromir'))
+    const payload = { characters: [makeChar('a', 'Aragorn Renomeado'), makeChar('c', 'Cirdan')] }
+    const res = importAllCharacters(payload, 'merge')
+    expect(res.ok).toBe(true)
+    expect(res.imported).toBe(2)
+    const all = loadCharacters()
+    expect(all).toHaveLength(3)
+    expect(all.find(c => c.id === 'a').info.name).toBe('Aragorn Renomeado')
+    expect(all.find(c => c.id === 'b').info.name).toBe('Boromir')
+    expect(all.find(c => c.id === 'c')).toBeDefined()
+  })
+
+  it('aceita array bruto como payload (compatibilidade)', () => {
+    const res = importAllCharacters([makeChar('x', 'Xenon')], 'replace')
+    expect(res.ok).toBe(true)
+    expect(loadCharacters()).toHaveLength(1)
+  })
+
+  it('falha com reason invalid-format para payload irreconhecível', () => {
+    const res = importAllCharacters({ foo: 'bar' })
+    expect(res.ok).toBe(false)
+    expect(res.reason).toBe('invalid-format')
+  })
+
+  it('conta personagens inválidos sem abortar quando há ao menos um válido', () => {
+    const res = importAllCharacters({ characters: [makeChar('ok', 'Bom'), { id: 'bad' }] }, 'replace')
+    expect(res.ok).toBe(true)
+    expect(res.imported).toBe(1)
+    expect(res.invalid).toBe(1)
+  })
+
+  it('falha com no-valid-characters quando nenhum passa schema', () => {
+    const res = importAllCharacters({ characters: [{ id: 'bad' }] })
+    expect(res.ok).toBe(false)
+    expect(res.reason).toBe('no-valid-characters')
+  })
+
+  it('não toca storage quando payload é inválido', () => {
+    upsertCharacter(makeChar('keep', 'Mantido'))
+    importAllCharacters('nope')
+    expect(loadCharacters()).toHaveLength(1)
+    expect(loadCharacterById('keep')).toBeTruthy()
   })
 })
