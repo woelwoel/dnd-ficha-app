@@ -1,5 +1,5 @@
 import { memo, useState } from 'react'
-import { formatModifier, calculateInitiative, getModifier } from '../../utils/calculations'
+import { formatModifier, calculateInitiative, getModifier, getExhaustionEffects } from '../../utils/calculations'
 import { formatHitDicePool } from '../../utils/hitDice'
 import { FormFieldError } from '../FormFieldError'
 import { RollButton } from '../DiceRoller/RollButton'
@@ -375,8 +375,12 @@ function CombatStatsBase({
   // Concentração (PR 3). Quando lastDamageEvent.concentrationCheckDC vem
   // preenchido, mostramos o prompt; ao falhar, chama onBreakConcentration.
   onBreakConcentration,
+  // PR 4 — Inspiração consumível como vantagem.
+  onConsumeInspiration,
 }) {
   const conMod = getModifier(attributes?.con ?? 10)
+  const exh = getExhaustionEffects(combat?.exhaustion ?? 0)
+  const effectiveSpeed = Math.floor((combat?.speed ?? 0) * exh.speedMultiplier)
   const initiative = calculateInitiative(attributes.dex)
   const initNotation = `1d20${formatModifier(initiative)}`
 
@@ -415,9 +419,16 @@ function CombatStatsBase({
           value={formatModifier(initiative)}
           action={<RollButton notation={initNotation} label="Iniciativa" size="xs" className="mt-0.5" />}
         />
-        <StatBox label="Velocidade" value={`${combat.speed}ft`} editable
+        <StatBox label="Velocidade"
+          value={exh.speedMultiplier < 1 ? `${effectiveSpeed}ft` : `${combat.speed}ft`}
+          editable={exh.speedMultiplier >= 1}
           onChange={v => onUpdateCombat('speed', Math.max(0, parseInt(v) || 0))}
-          hint={featSpeedBonus > 0 && combat.speed < (30 + featSpeedBonus)
+          warning={
+            exh.speedMultiplier === 0 ? '⚠ Imóvel (Exaustão 5)'
+            : exh.speedMultiplier < 1 ? '⚠ Metade (Exaustão 2+)'
+            : null
+          }
+          hint={exh.speedMultiplier >= 1 && featSpeedBonus > 0 && combat.speed < (30 + featSpeedBonus)
             ? { label: `Mob: +${featSpeedBonus}ft`, onApply: () => onUpdateCombat('speed', combat.speed + featSpeedBonus) }
             : null}
         />
@@ -431,9 +442,9 @@ function CombatStatsBase({
       </div>
 
       {/* Inspiração + Exaustão */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 flex-wrap">
         {/* Inspiração */}
-        <label className="flex items-center gap-2 cursor-pointer">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => onSetInspiration?.(!combat.inspiration)}
             title={combat.inspiration ? 'Remover Inspiração' : 'Ganhar Inspiração'}
@@ -446,7 +457,16 @@ function CombatStatsBase({
             {combat.inspiration ? '✦' : ''}
           </button>
           <span className="text-xs text-ink-200">Inspiração</span>
-        </label>
+          {combat.inspiration && onConsumeInspiration && (
+            <button
+              onClick={onConsumeInspiration}
+              title="Consumir Inspiração para ganhar vantagem em uma rolagem (PHB p.125)"
+              className="text-[10px] px-2 py-0.5 rounded bg-amber-700 hover:bg-amber-600 text-parchment-50 font-display tracking-wide"
+            >
+              💡 Usar (vantagem)
+            </button>
+          )}
+        </div>
 
         {/* Exaustão */}
         <div className="flex items-center gap-2 flex-1">
@@ -476,6 +496,32 @@ function CombatStatsBase({
           )}
         </div>
       </div>
+
+      {/* Badges de penalidades ativas por exaustão (PHB p.291) */}
+      {(exh.abilityCheckDisadvantage || exh.attackDisadvantage || exh.saveDisadvantage || exh.maxHpMultiplier < 1) && (
+        <div className="flex flex-wrap gap-1.5">
+          {exh.abilityCheckDisadvantage && (
+            <span className="text-[10px] bg-amber-50 border border-amber-700 text-amber-700 px-2 py-0.5 rounded-full">
+              ⚠ Desv. em testes de habilidade
+            </span>
+          )}
+          {exh.attackDisadvantage && (
+            <span className="text-[10px] bg-red-50 border border-red-700 text-red-700 px-2 py-0.5 rounded-full">
+              ⚠ Desv. em ataques
+            </span>
+          )}
+          {exh.saveDisadvantage && (
+            <span className="text-[10px] bg-red-50 border border-red-700 text-red-700 px-2 py-0.5 rounded-full">
+              ⚠ Desv. em salvaguardas
+            </span>
+          )}
+          {exh.maxHpMultiplier < 1 && (
+            <span className="text-[10px] bg-red-50 border border-red-700 text-red-700 px-2 py-0.5 rounded-full">
+              ⚠ PV máx. à metade
+            </span>
+          )}
+        </div>
+      )}
 
       {/* HP Tracker */}
       <div className="space-y-2">
@@ -620,7 +666,7 @@ function CombatStatsBase({
 
 export const CombatStats = memo(CombatStatsBase)
 
-const StatBox = memo(function StatBox({ label, value, editable, onChange, hint, fieldId, errId, error, action }) {
+const StatBox = memo(function StatBox({ label, value, editable, onChange, hint, fieldId, errId, error, action, warning }) {
   return (
     <div className="flex flex-col items-center bg-parchment-50 border border-parchment-600 rounded p-2">
       <span className="text-xs font-display text-ink-500 text-center mb-1 leading-tight uppercase tracking-wide">{label}</span>
@@ -647,6 +693,11 @@ const StatBox = memo(function StatBox({ label, value, editable, onChange, hint, 
         >
           {hint.label}
         </button>
+      )}
+      {warning && (
+        <span className="text-[9px] text-red-600 mt-0.5 leading-none text-center">
+          {warning}
+        </span>
       )}
       {error && (
         <p id={errId} role="alert" className="text-[9px] text-red-400 mt-0.5 text-center leading-none">
