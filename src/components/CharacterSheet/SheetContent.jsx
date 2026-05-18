@@ -95,7 +95,7 @@ export function SheetContent({
     updateDeathSaves, toggleCondition, setInspiration, setExhaustion, setRageActive, setWildShape,
     // Sistema de dano/cura/testes de morte
     applyDamage, applyHealing, stabilize, rollDeathSave,
-    lastDamageEvent, clearLastDamageEvent,
+    lastDamageEvent, clearLastDamageEvent, consumeInspiration,
   } = updaters
 
   const {
@@ -188,6 +188,7 @@ export function SheetContent({
               lastDamageEvent={lastDamageEvent}
               onClearDamageEvent={clearLastDamageEvent}
               onBreakConcentration={() => setConcentration(null)}
+              onConsumeInspiration={consumeInspiration}
             />
           </div>
 
