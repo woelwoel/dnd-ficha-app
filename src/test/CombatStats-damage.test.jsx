@@ -58,7 +58,7 @@ describe('CombatStats — Damage/Heal controls', () => {
     const onApplyDamage = vi.fn()
     const onApplyHealing = vi.fn()
     renderWith({ onApplyDamage, onApplyHealing })
-    const input = screen.getAllByRole('spinbutton').find(i => i.placeholder === '0')
+    const input = screen.getByLabelText(/quantidade de dano ou cura/i)
     await userEvent.type(input, '7')
     await userEvent.click(screen.getByRole('button', { name: /⚔ Dano/i }))
     expect(onApplyDamage).toHaveBeenCalledWith(7)
@@ -68,7 +68,7 @@ describe('CombatStats — Damage/Heal controls', () => {
     const onApplyDamage = vi.fn()
     const onApplyHealing = vi.fn()
     renderWith({ onApplyDamage, onApplyHealing })
-    const input = screen.getAllByRole('spinbutton').find(i => i.placeholder === '0')
+    const input = screen.getByLabelText(/quantidade de dano ou cura/i)
     await userEvent.type(input, '5')
     await userEvent.click(screen.getByRole('button', { name: /✚ Cura/i }))
     expect(onApplyHealing).toHaveBeenCalledWith(5)
@@ -77,7 +77,7 @@ describe('CombatStats — Damage/Heal controls', () => {
   it('Enter no input aplica dano', async () => {
     const onApplyDamage = vi.fn()
     renderWith({ onApplyDamage, onApplyHealing: vi.fn() })
-    const input = screen.getAllByRole('spinbutton').find(i => i.placeholder === '0')
+    const input = screen.getByLabelText(/quantidade de dano ou cura/i)
     await userEvent.type(input, '3{Enter}')
     expect(onApplyDamage).toHaveBeenCalledWith(3)
   })
@@ -93,11 +93,16 @@ describe('CombatStats — Damage/Heal controls', () => {
     expect(curaBtn).toBeDisabled()
   })
 
-  it('botões desabilitados com valor 0', () => {
-    renderWith({ onApplyDamage: vi.fn(), onApplyHealing: vi.fn() })
-    expect(screen.getByRole('button', { name: /⚔ Dano/i })).toBeDisabled()
-    expect(screen.getByRole('button', { name: /✚ Cura/i })).toBeDisabled()
+  it('botões ficam HABILITADOS com input vazio; clicar foca o input e mostra hint', async () => {
+    const onApplyDamage = vi.fn()
+    renderWith({ onApplyDamage, onApplyHealing: vi.fn() })
+    const danoBtn = screen.getByRole('button', { name: /⚔ Dano/i })
+    expect(danoBtn).not.toBeDisabled()
+    await userEvent.click(danoBtn)
+    expect(onApplyDamage).not.toHaveBeenCalled()
+    expect(screen.getByText(/digite quanto/i)).toBeInTheDocument()
   })
+
 })
 
 describe('CombatStats — DeathSavesTracker', () => {
