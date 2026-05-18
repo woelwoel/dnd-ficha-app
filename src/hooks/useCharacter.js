@@ -533,10 +533,32 @@ export function useCharacter(initialCharacter = null) {
   }, [setCharacter])
 
   const setExhaustion = useCallback(level => {
+    const clamped = Math.max(0, Math.min(6, Number(level)))
     setCharacter(prev => ({
       ...prev,
-      combat: { ...prev.combat, exhaustion: Math.max(0, Math.min(6, Number(level))) },
+      combat: {
+        ...prev.combat,
+        exhaustion: clamped,
+        // PHB p.291: nível 6 = morte. Auto-marca isDead.
+        // Se for reduzido abaixo de 6, NÃO ressuscita automaticamente (precisa Reviver).
+        isDead: clamped >= 6 ? true : (prev.combat?.isDead ?? false),
+      },
     }))
+  }, [setCharacter])
+
+  /**
+   * Consome inspiração (PHB p.125). Caller pode chamar essa função antes de
+   * uma rolagem que precisa de vantagem. Retorna true se havia inspiração,
+   * false se não.
+   */
+  const consumeInspiration = useCallback(() => {
+    let hadIt = false
+    setCharacter(prev => {
+      hadIt = !!prev.combat?.inspiration
+      if (!hadIt) return prev
+      return { ...prev, combat: { ...prev.combat, inspiration: false } }
+    })
+    return hadIt
   }, [setCharacter])
 
   /**
@@ -622,6 +644,7 @@ export function useCharacter(initialCharacter = null) {
     rollDeathSave,
     lastDamageEvent,
     clearLastDamageEvent,
+    consumeInspiration,
   }), [
     character, setCharacter,
     updateInfo, updateAttribute, updateCombat, updateTraits,
@@ -636,6 +659,6 @@ export function useCharacter(initialCharacter = null) {
     setClassFeatureUses, spendFeatureUse, regainFeatureUse,
     updateDeathSaves, toggleCondition, setInspiration, setExhaustion, setRageActive, setWildShape,
     applyDamage, applyHealing, gainTempHp, stabilize, rollDeathSave,
-    lastDamageEvent, clearLastDamageEvent,
+    lastDamageEvent, clearLastDamageEvent, consumeInspiration,
   ])
 }
