@@ -1,8 +1,9 @@
 import { memo, useState } from 'react'
-import { formatModifier, calculateInitiative } from '../../utils/calculations'
+import { formatModifier, calculateInitiative, getModifier } from '../../utils/calculations'
 import { formatHitDicePool } from '../../utils/hitDice'
 import { FormFieldError } from '../FormFieldError'
 import { RollButton } from '../DiceRoller/RollButton'
+import { DamageModal } from './DamageModal'
 
 /* ── Condições D&D 5e (PHB p.290–296) ─────────────────────── */
 const CONDITIONS = [
@@ -130,12 +131,17 @@ function DeathSavesTracker({ deathSaves, isStable, isDead, onUpdate, onRoll, onS
 /* ── Damage / Heal input ───────────────────────────────────── */
 function DamageHealControls({ onApplyDamage, onApplyHealing, disabled }) {
   const [value, setValue] = useState('')
+  const [modalOpen, setModalOpen] = useState(false)
   const num = Math.max(0, parseInt(value, 10) || 0)
 
   function handle(action) {
     if (num <= 0) return
     action(num)
     setValue('')
+  }
+
+  function handleModalConfirm(amount, opts) {
+    onApplyDamage(amount, opts)
   }
 
   return (
@@ -172,6 +178,68 @@ function DamageHealControls({ onApplyDamage, onApplyHealing, disabled }) {
           className="flex-1 text-xs px-2 py-1 rounded bg-green-700 hover:bg-green-600 text-parchment-50 font-display tracking-wide disabled:opacity-40 disabled:cursor-not-allowed"
         >
           ✚ Cura
+        </button>
+        <button
+          type="button"
+          onClick={() => setModalOpen(true)}
+          disabled={disabled}
+          title="Mais opções (crítico, tipo de dano)"
+          className="w-8 h-8 rounded bg-parchment-300 hover:bg-parchment-400 border border-parchment-600 text-ink-500 text-sm flex items-center justify-center disabled:opacity-40"
+        >
+          ⚙
+        </button>
+      </div>
+      <DamageModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onConfirm={handleModalConfirm}
+      />
+    </div>
+  )
+}
+
+/* ── Concentration Check prompt ────────────────────────────── */
+function ConcentrationCheckPrompt({ dc, conMod, spellName, onPass, onFail, onDismiss }) {
+  const [rolled, setRolled] = useState(null)
+  const bonus = conMod ?? 0
+
+  function rollNow() {
+    const d20 = Math.ceil(Math.random() * 20)
+    const total = d20 + bonus
+    setRolled({ d20, total, passed: total >= dc })
+    if (total >= dc) onPass?.()
+    else onFail?.()
+  }
+
+  if (rolled) {
+    return (
+      <div className={`relative border-2 rounded-sm px-3 py-2 ${
+        rolled.passed
+          ? 'border-green-700 bg-green-50 text-green-700'
+          : 'border-red-700 bg-red-50 text-red-700'
+      }`}>
+        <button onClick={onDismiss} className="absolute top-1 right-2 text-xs opacity-60 hover:opacity-100">✕</button>
+        <p className="text-xs">
+          🎲 1d20 ({rolled.d20}) {bonus >= 0 ? '+' : ''}{bonus} = <strong>{rolled.total}</strong>{' '}
+          vs CD {dc} — {rolled.passed ? '✓ Concentração mantida' : `✗ ${spellName ?? 'Magia'} interrompida!`}
+        </p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="relative border-2 border-purple-700 bg-purple-50 rounded-sm px-3 py-2">
+      <button onClick={onDismiss} className="absolute top-1 right-2 text-xs opacity-60 hover:opacity-100">✕</button>
+      <div className="flex items-center justify-between gap-2 pr-4">
+        <p className="text-xs text-purple-800">
+          🔮 Teste de Concentração: <strong>CON CD {dc}</strong>
+          {spellName && <span className="ml-1 italic text-purple-700">({spellName})</span>}
+        </p>
+        <button
+          onClick={rollNow}
+          className="text-[10px] px-2 py-0.5 rounded bg-purple-700 hover:bg-purple-600 text-parchment-50 font-display tracking-wide shrink-0"
+        >
+          🎲 Rolar Save
         </button>
       </div>
     </div>
@@ -304,7 +372,11 @@ function CombatStatsBase({
   // Sistema de dano/cura/testes de morte (PR 2 do damage-system).
   onApplyDamage, onApplyHealing, onRollDeathSave, onStabilize,
   lastDamageEvent, onClearDamageEvent,
+  // Concentração (PR 3). Quando lastDamageEvent.concentrationCheckDC vem
+  // preenchido, mostramos o prompt; ao falhar, chama onBreakConcentration.
+  onBreakConcentration,
 }) {
+  const conMod = getModifier(attributes?.con ?? 10)
   const initiative = calculateInitiative(attributes.dex)
   const initNotation = `1d20${formatModifier(initiative)}`
 
@@ -509,6 +581,18 @@ function CombatStatsBase({
       {/* Banner do último evento (auto-dismissable) */}
       {lastDamageEvent && (
         <DamageEventBanner event={lastDamageEvent} onDismiss={onClearDamageEvent} />
+      )}
+
+      {/* Prompt de teste de concentração — só aparece se há DC no último evento */}
+      {lastDamageEvent?.concentrationCheckDC != null && combat.concentrating?.spellIndex && (
+        <ConcentrationCheckPrompt
+          dc={lastDamageEvent.concentrationCheckDC}
+          conMod={conMod}
+          spellName={combat.concentrating?.spellName}
+          onPass={() => { /* mantém concentração — apenas limpa o DC visualmente */ }}
+          onFail={() => onBreakConcentration?.()}
+          onDismiss={onClearDamageEvent}
+        />
       )}
 
       {/* Death Saves — visíveis quando desmaiado, estabilizado ou morto */}
