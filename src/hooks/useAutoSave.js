@@ -7,24 +7,36 @@ import { upsertCharacter } from '../utils/storage'
  */
 export function useAutoSave(character, delayMs = 500) {
   const [status, setStatus] = useState({ saved: false, error: null })
-  const timerRef = useRef(null)
+  const debounceRef = useRef(null)
+  const flashRef = useRef(null)
+  const mountedRef = useRef(true)
+
+  useEffect(() => () => {
+    mountedRef.current = false
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    if (flashRef.current) clearTimeout(flashRef.current)
+  }, [])
 
   useEffect(() => {
     if (!character?.id) return
-    if (timerRef.current) clearTimeout(timerRef.current)
+    if (debounceRef.current) clearTimeout(debounceRef.current)
 
-    timerRef.current = setTimeout(() => {
+    debounceRef.current = setTimeout(() => {
       const result = upsertCharacter(character)
+      if (!mountedRef.current) return
       if (result.ok) {
         setStatus({ saved: true, error: null })
-        setTimeout(() => setStatus(s => ({ ...s, saved: false })), 1500)
+        if (flashRef.current) clearTimeout(flashRef.current)
+        flashRef.current = setTimeout(() => {
+          if (mountedRef.current) setStatus(s => ({ ...s, saved: false }))
+        }, 1500)
       } else {
         setStatus({ saved: false, error: result.reason ?? 'unknown' })
       }
     }, delayMs)
 
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current)
+      if (debounceRef.current) clearTimeout(debounceRef.current)
     }
   }, [character, delayMs])
 

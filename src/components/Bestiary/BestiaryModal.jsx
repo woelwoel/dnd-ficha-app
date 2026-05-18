@@ -25,19 +25,31 @@ export function BestiaryModal({ isOpen, onClose }) {
 
   useEffect(() => {
     if (!isOpen || monstersEn.length > 0) return
-    fetch('/srd-data/5e-SRD-Monsters.json')
+    const ctrl = new AbortController()
+    fetch('/srd-data/5e-SRD-Monsters.json', { signal: ctrl.signal })
       .then(r => r.json())
       .then(data => setMonstersEn(Array.isArray(data) ? data : []))
-      .catch(() => setMonstersEn([]))
+      .catch(err => {
+        if (err.name === 'AbortError') return
+        console.error('Falha ao carregar bestiário:', err)
+        setMonstersEn([])
+      })
+    return () => ctrl.abort()
   }, [isOpen, monstersEn.length])
 
   // Carrega overrides PT-BR sob demanda (apenas uma vez)
   useEffect(() => {
     if (!isOpen || ptOverrides !== null) return
-    fetch('/srd-data/5e-SRD-Monsters-pt.json')
+    const ctrl = new AbortController()
+    fetch('/srd-data/5e-SRD-Monsters-pt.json', { signal: ctrl.signal })
       .then(r => r.json())
       .then(data => setPtOverrides(indexOverrides(data)))
-      .catch(() => setPtOverrides(new Map()))
+      .catch(err => {
+        if (err.name === 'AbortError') return
+        console.error('Falha ao carregar traduções PT do bestiário:', err)
+        setPtOverrides(new Map())
+      })
+    return () => ctrl.abort()
   }, [isOpen, ptOverrides])
 
   // Lista de monstros com tradução aplicada conforme o idioma escolhido

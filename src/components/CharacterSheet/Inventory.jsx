@@ -34,17 +34,25 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
   const [magicSearchOpen, setMagicSearchOpen] = useState(false)
 
   useEffect(() => {
-    fetch('/srd-data/5e-SRD-Equipment.json')
+    const ctrl = new AbortController()
+    fetch('/srd-data/5e-SRD-Equipment.json', { signal: ctrl.signal })
       .then(r => r.json())
       .then(setSrdEquipment)
-      .catch(() => {})
+      .catch(err => {
+        if (err.name !== 'AbortError') console.error('Falha ao carregar Equipment:', err)
+      })
+    return () => ctrl.abort()
   }, [])
 
   useEffect(() => {
-    fetch('/srd-data/phb-magic-items-pt.json')
+    const ctrl = new AbortController()
+    fetch('/srd-data/phb-magic-items-pt.json', { signal: ctrl.signal })
       .then(r => r.json())
       .then(setMagicCatalog)
-      .catch(() => {})
+      .catch(err => {
+        if (err.name !== 'AbortError') console.error('Falha ao carregar itens mágicos:', err)
+      })
+    return () => ctrl.abort()
   }, [])
 
   function handleAdd() {
