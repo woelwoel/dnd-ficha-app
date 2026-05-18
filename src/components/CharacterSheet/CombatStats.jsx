@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { memo, useState, useRef } from 'react'
 import { formatModifier, calculateInitiative, getModifier, getExhaustionEffects } from '../../utils/calculations'
 import { formatHitDicePool } from '../../utils/hitDice'
 import { FormFieldError } from '../FormFieldError'
@@ -132,10 +132,18 @@ function DeathSavesTracker({ deathSaves, isStable, isDead, onUpdate, onRoll, onS
 function DamageHealControls({ onApplyDamage, onApplyHealing, disabled }) {
   const [value, setValue] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
+  const [needsValue, setNeedsValue] = useState(false)
+  const inputRef = useRef(null)
   const num = Math.max(0, parseInt(value, 10) || 0)
 
   function handle(action) {
-    if (num <= 0) return
+    if (num <= 0) {
+      // UX: em vez de bloquear silenciosamente, foca o input e mostra hint.
+      setNeedsValue(true)
+      inputRef.current?.focus()
+      return
+    }
+    setNeedsValue(false)
     action(num)
     setValue('')
   }
@@ -146,36 +154,49 @@ function DamageHealControls({ onApplyDamage, onApplyHealing, disabled }) {
 
   return (
     <div className="space-y-1.5">
-      <label className="text-xs text-ink-200 font-semibold uppercase tracking-widest">
-        Sofrer Dano / Curar
-      </label>
+      <div className="flex items-center justify-between">
+        <label className="text-xs text-ink-200 font-semibold uppercase tracking-widest">
+          Sofrer Dano / Curar
+        </label>
+        {needsValue && (
+          <span className="text-[10px] text-amber-700 italic">
+            ↳ Digite quanto dano/cura primeiro
+          </span>
+        )}
+      </div>
       <div className="flex items-center gap-2">
         <input
+          ref={inputRef}
           type="number"
           min={0}
           value={value}
-          onChange={e => setValue(e.target.value)}
+          onChange={e => { setValue(e.target.value); if (e.target.value) setNeedsValue(false) }}
           onWheel={e => e.currentTarget.blur()}
           onKeyDown={e => {
-            if (e.key === 'Enter' && num > 0) handle(onApplyDamage)
+            if (e.key === 'Enter') handle(onApplyDamage)
           }}
-          placeholder="0"
+          placeholder="quanto?"
           disabled={disabled}
-          className="w-16 text-center bg-parchment-100 border border-parchment-600 rounded px-2 py-1 text-ink-500 font-bold focus:outline-none focus:border-ink-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-40"
+          aria-label="Quantidade de dano ou cura"
+          className={`w-24 text-center bg-parchment-100 border rounded px-2 py-1.5 text-ink-500 font-bold focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-40 placeholder:text-xs placeholder:font-normal placeholder:italic ${
+            needsValue
+              ? 'border-amber-600 ring-2 ring-amber-300 focus:border-amber-700'
+              : 'border-parchment-600 focus:border-ink-300'
+          }`}
         />
         <button
           type="button"
           onClick={() => handle(onApplyDamage)}
-          disabled={disabled || num <= 0}
-          className="flex-1 text-xs px-2 py-1 rounded bg-red-700 hover:bg-red-600 text-parchment-50 font-display tracking-wide disabled:opacity-40 disabled:cursor-not-allowed"
+          disabled={disabled}
+          className="flex-1 text-xs px-2 py-1.5 rounded bg-red-700 hover:bg-red-600 text-parchment-50 font-display tracking-wide disabled:opacity-40 disabled:cursor-not-allowed"
         >
           ⚔ Dano
         </button>
         <button
           type="button"
           onClick={() => handle(onApplyHealing)}
-          disabled={disabled || num <= 0}
-          className="flex-1 text-xs px-2 py-1 rounded bg-green-700 hover:bg-green-600 text-parchment-50 font-display tracking-wide disabled:opacity-40 disabled:cursor-not-allowed"
+          disabled={disabled}
+          className="flex-1 text-xs px-2 py-1.5 rounded bg-green-700 hover:bg-green-600 text-parchment-50 font-display tracking-wide disabled:opacity-40 disabled:cursor-not-allowed"
         >
           ✚ Cura
         </button>
