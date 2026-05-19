@@ -71,75 +71,66 @@ function smiteDice(slotLevel) {
 
 function SmitePanel({ paladinoLevel, slotsAvailable, onConsumeSlot }) {
   const { roll, openPanel } = useDiceRoller()
-  const [open, setOpen] = useState(false)
+  const [vsUndead, setVsUndead] = useState(false)
   const slotLevels = Object.keys(slotsAvailable).map(Number).sort((a, b) => a - b)
-  const hasAnySlot = slotLevels.some(sl => slotsAvailable[sl] > 0)
+  const availableLevels = slotLevels.filter(sl => slotsAvailable[sl] > 0)
+  const hasAnySlot = availableLevels.length > 0
 
-  function applySmite(slotLevel, undead = false) {
-    const dice = smiteDice(slotLevel) + (undead ? 1 : 0)
+  function applySmite(slotLevel) {
+    const dice = smiteDice(slotLevel) + (vsUndead ? 1 : 0)
     const notation = `${dice}d8`
-    roll(notation, `Golpe Divino — espaço de Nv ${slotLevel}${undead ? ' (morto-vivo/fora)' : ''}`)
+    roll(notation, `Golpe Divino — espaço de Nv ${slotLevel}${vsUndead ? ' (morto-vivo/fora)' : ''}`)
     onConsumeSlot?.(slotLevel)
     openPanel()
-    setOpen(false)
   }
 
   if (paladinoLevel < 2) return null
 
   return (
-    <div className="bg-ink-700/10 border border-ink-300 rounded-lg p-3">
-      <div className="flex items-center gap-3">
-        <span className="text-xl shrink-0" aria-hidden>✨</span>
+    <div className="bg-ink-700/10 border border-ink-300 rounded-lg p-3 space-y-2">
+      <div className="flex items-start gap-3">
+        <span className="text-xl shrink-0 mt-0.5" aria-hidden>✨</span>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-display text-ink-500 tracking-wide">Golpe Divino</p>
           <p className="text-[11px] ink-italic">
-            Ao acertar um ataque c/c, gaste um espaço para causar dano radiante extra (2d8 a 5d8 + 1d8 vs morto-vivo/fora).
+            Ao acertar c/c, gaste um espaço pra dano radiante extra (2d8 a 5d8 · +1d8 vs morto-vivo/fora).
           </p>
         </div>
-        <button
-          onClick={() => setOpen(v => !v)}
-          disabled={!hasAnySlot}
-          className={`shrink-0 text-xs px-3 py-1.5 rounded border-2 font-display tracking-wide transition-all ${
-            hasAnySlot
-              ? 'border-ink-300 bg-parchment-100 text-ink-500 hover:bg-parchment-200'
-              : 'border-parchment-600 bg-parchment-100 text-ink-200 cursor-not-allowed'
-          }`}
-        >
-          {hasAnySlot ? (open ? 'Cancelar' : 'Aplicar') : 'Sem espaços'}
-        </button>
       </div>
 
-      {open && hasAnySlot && (
-        <div className="mt-2 pt-2 border-t border-ink-300/40 space-y-1.5">
-          <p className="text-[10px] text-ink-500 uppercase tracking-widest font-bold">Escolher espaço:</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-            {slotLevels.filter(sl => slotsAvailable[sl] > 0).map(sl => (
-              <div key={sl} className="border border-parchment-600 rounded bg-parchment-50 px-2 py-1.5">
-                <div className="text-[10px] text-ink-500 font-bold">
-                  Nv {sl} ({slotsAvailable[sl]}) → {smiteDice(sl)}d8
-                </div>
-                <div className="flex gap-1 mt-0.5">
-                  <button
-                    onClick={() => applySmite(sl, false)}
-                    className="flex-1 text-[10px] px-1 py-0.5 rounded bg-amber-700 hover:bg-amber-800 text-white font-bold transition-colors"
-                  >
-                    Normal
-                  </button>
-                  <button
-                    onClick={() => applySmite(sl, true)}
-                    title="+1d8 contra morto-vivo ou celestial demoníaco"
-                    className="flex-1 text-[10px] px-1 py-0.5 rounded bg-rose-700 hover:bg-rose-800 text-white font-bold transition-colors"
-                  >
-                    +1d8
-                  </button>
-                </div>
-              </div>
-            ))}
+      {hasAnySlot ? (
+        <>
+          {/* Botões inline: um por nível de espaço disponível, com preview do dano */}
+          <div className="flex flex-wrap gap-1.5">
+            {availableLevels.map(sl => {
+              const dice = smiteDice(sl) + (vsUndead ? 1 : 0)
+              return (
+                <button
+                  key={sl}
+                  onClick={() => applySmite(sl)}
+                  title={`Gasta 1 espaço de Nível ${sl} (${slotsAvailable[sl]} disponíveis) → rola ${dice}d8 radiante`}
+                  className="text-xs px-2.5 py-1 rounded-sm border-2 border-ink-300 bg-parchment-50 text-ink-500 hover:bg-amber-100 hover:border-ink-500 font-display tracking-wide transition-colors flex items-center gap-1.5"
+                >
+                  <span className="text-[10px] text-ink-300">Nv {sl}</span>
+                  <span className="text-ink-300">×{slotsAvailable[sl]}</span>
+                  <span className="font-bold tabular-nums">{dice}d8</span>
+                </button>
+              )
+            })}
           </div>
-        </div>
-      )}
-      {!hasAnySlot && (
-        <p className="mt-1 text-[10px] text-ink-200 italic">Recupere espaços com descanso longo para usar Golpe Divino.</p>
+          {/* Toggle "+1d8 contra morto-vivo" */}
+          <label className="flex items-center gap-1.5 text-[11px] ink-italic text-ink-500 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={vsUndead}
+              onChange={e => setVsUndead(e.target.checked)}
+              className="accent-rose-700"
+            />
+            <span>+1d8 contra morto-vivo ou celestial demoníaco</span>
+          </label>
+        </>
+      ) : (
+        <p className="text-[10px] text-ink-200 italic">Recupere espaços com descanso longo pra usar Golpe Divino.</p>
       )}
     </div>
   )

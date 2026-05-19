@@ -125,18 +125,20 @@ describe('CombatClassActions E2E', () => {
   })
 
   describe('Paladino', () => {
-    it('Smite aparece a partir do Nv 2 e consome slot ao aplicar', async () => {
-      const user = userEvent.setup()
+    it('Smite aparece a partir do Nv 2 e expõe botão por nível de espaço', async () => {
       const initial = baseCharacter('paladino', 5)
       // Paladino 5 (half-caster): slots 1°=4, 2°=2
       initial.spellcasting.usedSlots = {}
       render(<ControlledActions initial={initial} />)
       expect(screen.getByText('Golpe Divino')).toBeInTheDocument()
-      // Abre picker de slot
-      await user.click(screen.getByRole('button', { name: /Aplicar/i }))
-      // "Nv 1 (4) → 2d8" deve aparecer
-      const nv1Card = await screen.findByText(/Nv 1 \(4\) → 2d8/)
-      expect(nv1Card).toBeInTheDocument()
+      // Botões inline por nível de espaço (sem mais click "Aplicar" pra expandir).
+      // Cada botão mostra "Nv X" + "×N" disponíveis + "Yd8" do dano.
+      const buttons = screen.getAllByRole('button')
+      const smiteButtons = buttons.filter(b => /Nv\s*\d/i.test(b.textContent ?? ''))
+      // Paladino 5: pelo menos 1 botão de Nv 1 e 1 de Nv 2
+      expect(smiteButtons.length).toBeGreaterThanOrEqual(2)
+      expect(smiteButtons.some(b => /Nv\s*1.*2d8/i.test(b.textContent ?? ''))).toBe(true)
+      expect(smiteButtons.some(b => /Nv\s*2.*3d8/i.test(b.textContent ?? ''))).toBe(true)
     })
 
     it('Lay on Hands tem pool = 5 × nível', () => {

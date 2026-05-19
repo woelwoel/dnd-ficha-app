@@ -102,10 +102,16 @@ export function SheetCombatBar() {
   const isBarbarian = (info.class === 'barbarian' || info.class === 'Barbarian')
   const rageActive = !!character.rageActive
 
-  // Cor da barra de HP por % restante
-  const hpColor = hpPct > 50 ? 'bg-green-600'
-    : hpPct > 25 ? 'bg-amber-500'
-    : hpPct > 0 ? 'bg-red-600'
+  // Cor da barra de HP por % restante — gradient pra dar volume visual.
+  // Quando cheio vira esmeralda vibrante; vai cedendo pra âmbar e vermelho.
+  const hpColor = hpPct >= 100
+      ? 'bg-gradient-to-r from-emerald-500 to-emerald-600'
+    : hpPct > 50
+      ? 'bg-gradient-to-r from-emerald-500 to-emerald-600'
+    : hpPct > 25
+      ? 'bg-gradient-to-r from-amber-400 to-amber-500'
+    : hpPct > 0
+      ? 'bg-gradient-to-r from-red-500 to-red-600'
     : 'bg-ink-600'
 
   const hpLabel = currentHp <= 0
@@ -127,9 +133,9 @@ export function SheetCombatBar() {
               <span className="text-[10px] font-display tracking-widest uppercase text-ink-300">PV</span>
               <span className="text-xs font-bold text-ink-500 tabular-nums">{hpLabel}</span>
             </div>
-            <div className="h-2 mt-0.5 rounded-full bg-parchment-400 overflow-hidden border border-parchment-600">
+            <div className="h-2.5 mt-0.5 rounded-full bg-ink-700/30 overflow-hidden border border-parchment-600 shadow-inner">
               <div
-                className={`h-full ${hpColor} transition-all duration-300`}
+                className={`h-full ${hpColor} transition-all duration-500 shadow-sm`}
                 style={{ width: `${hpPct}%` }}
                 aria-hidden
               />
