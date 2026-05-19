@@ -7,7 +7,7 @@ import { DamageModal } from './DamageModal'
 import { CONDITIONS, EXHAUSTION_EFFECTS } from '../../domain/conditions'
 
 /* ── Death Saves ───────────────────────────────────────────── */
-function DeathSavesTracker({ deathSaves, isStable, isDead, onUpdate, onRoll, onStabilize }) {
+function DeathSavesTracker({ deathSaves, isStable, isDead, onUpdate, onRoll, onStabilize, compact = false }) {
   const successes = deathSaves?.successes ?? 0
   const failures  = deathSaves?.failures  ?? 0
 
@@ -19,26 +19,41 @@ function DeathSavesTracker({ deathSaves, isStable, isDead, onUpdate, onRoll, onS
 
   if (isDead) {
     return (
-      <div className="space-y-1">
+      <div
+        className={compact ? 'flex items-baseline gap-2' : 'space-y-1'}
+        title={compact ? 'Personagem morreu. Reviver requer magia (Reviver os Mortos, Ressurreição).' : undefined}
+      >
         <p className="text-sm text-red-700 font-display uppercase tracking-widest font-bold">
           ☠ Morto
         </p>
-        <p className="text-[11px] text-ink-200 italic">
-          Personagem morreu. Reviver requer magia (Reviver os Mortos, Ressurreição).
-        </p>
+        {!compact && (
+          <p className="text-[11px] text-ink-200 italic">
+            Personagem morreu. Reviver requer magia (Reviver os Mortos, Ressurreição).
+          </p>
+        )}
       </div>
     )
   }
 
   if (isStable) {
     return (
-      <div className="space-y-1">
+      <div
+        className={compact ? 'flex items-baseline gap-2 flex-wrap' : 'space-y-1'}
+        title={compact ? 'A 0 PV, mas não faz testes de morte. Recupera 1 PV após 1d4 horas (PHB p.197).' : undefined}
+      >
         <p className="text-sm text-green-700 font-display uppercase tracking-widest font-bold">
           🛡 Estabilizado
         </p>
-        <p className="text-[11px] text-ink-200 italic">
-          A 0 PV, mas não faz testes de morte. Recupera 1 PV após 1d4 horas (PHB p.197).
-        </p>
+        {!compact && (
+          <p className="text-[11px] text-ink-200 italic">
+            A 0 PV, mas não faz testes de morte. Recupera 1 PV após 1d4 horas (PHB p.197).
+          </p>
+        )}
+        {compact && (
+          <span className="text-[10px] ink-italic text-ink-300">
+            0 PV · recupera 1 PV após 1d4h
+          </span>
+        )}
       </div>
     )
   }
@@ -476,12 +491,30 @@ function CombatStatsBase({
       </div>
       )}
 
-      {/* Linha 2: Bônus de Prof / Dado de Vida / Percepção Passiva */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-3">
-        <StatBox label="Prof. Bônus" value={formatModifier(profBonus)} />
-        <StatBox label="Dado de Vida" value={formatHitDicePool(combat.hitDice)} />
-        <StatBox label="Perc. Passiva" value={passivePerception ?? '—'} />
-      </div>
+      {/* Linha 2: Bônus de Prof / Dado de Vida / Percepção Passiva.
+          Em modo compacto vira uma linha de pills (não cards grandes). */}
+      {compact ? (
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+          <span className="flex items-baseline gap-1">
+            <span className="text-[10px] font-display tracking-widest uppercase text-ink-300">Prof</span>
+            <span className="font-bold text-ink-500 tabular-nums">{formatModifier(profBonus)}</span>
+          </span>
+          <span className="flex items-baseline gap-1">
+            <span className="text-[10px] font-display tracking-widest uppercase text-ink-300">DV</span>
+            <span className="font-bold text-ink-500 tabular-nums">{formatHitDicePool(combat.hitDice)}</span>
+          </span>
+          <span className="flex items-baseline gap-1">
+            <span className="text-[10px] font-display tracking-widest uppercase text-ink-300">Perc. Passiva</span>
+            <span className="font-bold text-ink-500 tabular-nums">{passivePerception ?? '—'}</span>
+          </span>
+        </div>
+      ) : (
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          <StatBox label="Prof. Bônus" value={formatModifier(profBonus)} />
+          <StatBox label="Dado de Vida" value={formatHitDicePool(combat.hitDice)} />
+          <StatBox label="Perc. Passiva" value={passivePerception ?? '—'} />
+        </div>
+      )}
 
       {/* Inspiração + Exaustão */}
       <div className="flex items-center gap-4 flex-wrap">
@@ -565,8 +598,9 @@ function CombatStatsBase({
         </div>
       )}
 
-      {/* HP Tracker — esconde o PV current em modo compacto (barra sticky cobre) */}
-      <div className="space-y-2">
+      {/* HP Tracker — esconde o PV current em modo compacto (barra sticky cobre);
+          PV Temp e PV Máx ficam lado a lado no compact pra economizar altura. */}
+      <div className={compact ? 'grid grid-cols-2 gap-2' : 'space-y-2'}>
         {!compact && (
         <div>
           <div className="flex justify-between items-center mb-1">
@@ -685,9 +719,10 @@ function CombatStatsBase({
         />
       )}
 
-      {/* Death Saves — visíveis quando desmaiado, estabilizado ou morto */}
+      {/* Death Saves — visíveis quando desmaiado, estabilizado ou morto.
+          Em modo compacto, padding menor; texto auxiliar fica via tooltip. */}
       {(isDowned || combat.isStable || combat.isDead) && (
-        <div className="p-3 bg-parchment-50 border border-parchment-600 rounded-lg">
+        <div className={`bg-parchment-50 border border-parchment-600 rounded-lg ${compact ? 'p-2' : 'p-3'}`}>
           <DeathSavesTracker
             deathSaves={combat.deathSaves}
             isStable={!!combat.isStable}
@@ -695,6 +730,7 @@ function CombatStatsBase({
             onUpdate={(type, val) => onUpdateDeathSaves?.(type, val)}
             onRoll={onRollDeathSave && !combat.isStable && !combat.isDead ? onRollDeathSave : null}
             onStabilize={onStabilize && !combat.isStable && !combat.isDead ? onStabilize : null}
+            compact={compact}
           />
         </div>
       )}
