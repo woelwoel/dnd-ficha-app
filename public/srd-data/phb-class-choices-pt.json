@@ -136,6 +136,23 @@
             "desc": "Druidas do Círculo da Lua são guardiões ferozes das terras selvagens. Seus rituais e encontros são guardados em segredo total, realizados nas profundezas das florestas onde poucos podem bisbilhotar. Os druidas desse círculo se reúnem a cada lua nova para compartilhar notícias e prestar reverências aos espíritos da natureza."
           }
         ]
+      },
+      {
+        "level": 2,
+        "id": "druid_land_type",
+        "featureName": "Tipo de Terreno (Círculo da Terra)",
+        "prompt": "Escolha o tipo de terreno do seu Círculo — define quais magias bônus você ganha nos níveis 3, 5, 7 e 9",
+        "requires": { "druid_circle": "terra" },
+        "options": [
+          { "value": "artico",     "name": "Ártico",    "desc": "Frio, neve, gelo. Bônus de Resistência (nv 3, 5, 7, 9)." },
+          { "value": "costa",      "name": "Costa",     "desc": "Praias, falésias, mar. Bônus com criaturas aquáticas." },
+          { "value": "deserto",    "name": "Deserto",   "desc": "Calor, areia, dunas. Magias contra calor e desidratação." },
+          { "value": "floresta",   "name": "Floresta",  "desc": "Bosques, matas densas. Magias de movimento entre árvores." },
+          { "value": "montanha",   "name": "Montanha",  "desc": "Pedras, altitudes. Magias terráqueas." },
+          { "value": "pantano",    "name": "Pântano",   "desc": "Brejos, água parada. Magias de obscurecimento e veneno." },
+          { "value": "pradaria",   "name": "Pradaria",  "desc": "Campos abertos. Magias de velocidade e visão." },
+          { "value": "submontano", "name": "Submontano (Underdark)", "desc": "Cavernas, profundezas. Magias de furtividade e veneno." }
+        ]
       }
     ]
   },

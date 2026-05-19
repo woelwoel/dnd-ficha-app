@@ -38,7 +38,7 @@ export function ClassBlock({
     updateDraft({ multiclasses: multiclasses.filter((_, i) => i !== idx) })
   }
 
-  const leveledChoices = getLeveledChoices(classChoices[draft.class], draft.level)
+  const leveledChoices = getLeveledChoices(classChoices[draft.class], draft.level, draft.chosenFeatures)
   const progressionLevels = getProgressionLevels(classProgression[draft.class], draft.level)
   const bonusCantripsNeeded = computeBonusCantripsNeeded(leveledChoices, draft.chosenFeatures ?? {})
 

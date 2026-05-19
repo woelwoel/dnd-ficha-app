@@ -209,14 +209,23 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
                 )}
               </span>
             )}
-            {/* Conhecidas (bardo/feiticeiro/bruxo/patrulheiro) */}
-            {!isPrepared && spellsLimit != null && (
-              <span>
-                {spellsLabel}: <span className={myLeveled.length > spellsLimit ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
-                  {myLeveled.length}/{spellsLimit}
+            {/* Conhecidas (bardo/feiticeiro/bruxo/patrulheiro) — exclui alwaysPrepared do contador */}
+            {!isPrepared && spellsLimit != null && (() => {
+              const knownCount = myLeveled.filter(s => s.alwaysPrepared !== true).length
+              const bonusCount = myLeveled.length - knownCount
+              return (
+                <span>
+                  {spellsLabel}: <span className={knownCount > spellsLimit ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
+                    {knownCount}/{spellsLimit}
+                  </span>
+                  {bonusCount > 0 && (
+                    <span className="text-amber-500/70 italic ml-1">
+                      (+{bonusCount} subclasse)
+                    </span>
+                  )}
                 </span>
-              </span>
-            )}
+              )
+            })()}
             {isPrepared && (
               <span className="text-gray-600 italic">
                 {isMagoStyle
