@@ -65,57 +65,60 @@ export function RestActions({ character, onApply }) {
   }
 
   return (
-    <div className="bg-gray-800 border border-gray-600 rounded-lg p-3">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-bold text-amber-400 uppercase tracking-widest">Descansos</h3>
-        <span className="text-xs text-gray-500">
+    <div className="bg-parchment-100 border border-parchment-600 rounded-lg px-3 py-2"
+      style={{ boxShadow: 'var(--shadow-parchment-sm)' }}>
+      {/* Linha compacta: rótulo + meta + 2 botões inline */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className="text-xs font-display text-ink-500 uppercase tracking-widest shrink-0">
+          Descansos
+        </span>
+        <span className="text-[10px] ink-italic text-ink-300 shrink-0">
           CON {formatModifier(conMod)} · HD disp.: {totalAvail}
         </span>
-      </div>
-
-      <div className="mt-2 flex gap-2">
-        <button
-          onClick={() => setShortOpen(v => !v)}
-          disabled={totalAvail <= 0 && !shortOpen}
-          className="flex-1 text-sm px-3 py-1.5 rounded bg-blue-700 hover:bg-blue-600 disabled:opacity-40 text-white font-semibold"
-        >
-          {shortOpen ? 'Fechar' : 'Descanso Curto'}
-        </button>
-        <button
-          onClick={applyLong}
-          className="flex-1 text-sm px-3 py-1.5 rounded bg-green-700 hover:bg-green-600 text-white font-semibold"
-        >
-          Descanso Longo
-        </button>
+        <div className="flex gap-1.5 ml-auto shrink-0">
+          <button
+            onClick={() => setShortOpen(v => !v)}
+            disabled={totalAvail <= 0 && !shortOpen}
+            className="text-xs px-2.5 py-1 rounded-sm border border-parchment-600 hover:border-ink-300 text-ink-500 hover:bg-parchment-200 disabled:opacity-40 disabled:cursor-not-allowed font-display tracking-wide transition-colors"
+          >
+            {shortOpen ? 'Fechar' : 'Descanso Curto'}
+          </button>
+          <button
+            onClick={applyLong}
+            className="text-xs px-2.5 py-1 rounded-sm bg-ink-500 hover:bg-ink-600 border border-ink-600 text-parchment-50 font-display tracking-wide transition-colors"
+          >
+            Descanso Longo
+          </button>
+        </div>
       </div>
 
       {shortOpen && (
-        <div className="mt-3 p-3 bg-gray-900 rounded-lg space-y-2">
-          <p className="text-xs text-gray-400">
+        <div className="mt-3 p-3 bg-parchment-50 border border-parchment-600 rounded-sm space-y-2">
+          <p className="text-[11px] ink-italic text-ink-300 leading-relaxed">
             Gaste HD para curar HP. Cada HD cura a rolagem + mod CON ({formatModifier(conMod)}), mínimo 1.
-            Deixe a rolagem em branco para usar a média do dado.
+            Em branco usa a média do dado.
           </p>
           {dice.length === 0 ? (
-            <p className="text-sm text-gray-500">Nenhum HD disponível.</p>
+            <p className="text-xs ink-italic text-ink-300">Nenhum HD disponível.</p>
           ) : dice.map(([die, v]) => {
             const remaining = Math.max(0, (v.total ?? 0) - (v.used ?? 0))
             const count = counts[die] ?? 0
             return (
               <div key={die} className="grid grid-cols-[3rem_auto_1fr] gap-2 items-center">
-                <span className="text-sm font-semibold text-gray-200">{die}</span>
+                <span className="text-sm font-semibold text-ink-500 font-display">{die}</span>
                 <div className="flex items-center gap-1">
                   <button
                     onClick={() => bump(die, -1)}
                     disabled={count <= 0}
-                    className="w-6 h-6 rounded bg-gray-700 hover:bg-gray-600 disabled:opacity-40 text-white"
+                    className="w-6 h-6 rounded-sm bg-parchment-100 hover:bg-parchment-200 border border-parchment-600 disabled:opacity-40 text-ink-500"
                   >−</button>
-                  <span className="w-10 text-center text-sm text-white">
+                  <span className="w-10 text-center text-sm text-ink-500 tabular-nums">
                     {count}/{remaining}
                   </span>
                   <button
                     onClick={() => bump(die, +1)}
                     disabled={count >= remaining}
-                    className="w-6 h-6 rounded bg-gray-700 hover:bg-gray-600 disabled:opacity-40 text-white"
+                    className="w-6 h-6 rounded-sm bg-parchment-100 hover:bg-parchment-200 border border-parchment-600 disabled:opacity-40 text-ink-500"
                   >+</button>
                 </div>
                 <input
@@ -125,7 +128,7 @@ export function RestActions({ character, onApply }) {
                   value={rolls[die] ?? ''}
                   onChange={e => setRolls(r => ({ ...r, [die]: e.target.value.replace(/\D/g, '') }))}
                   disabled={count <= 0}
-                  className="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-sm text-white disabled:opacity-40"
+                  className="w-full bg-parchment-50 border border-parchment-600 rounded-sm px-2 py-1 text-xs text-ink-500 disabled:opacity-40 placeholder:text-ink-300 placeholder:italic focus:outline-none focus:border-ink-300"
                 />
               </div>
             )
@@ -133,7 +136,7 @@ export function RestActions({ character, onApply }) {
           <button
             onClick={applyShort}
             disabled={Object.values(counts).every(c => !c)}
-            className="w-full py-1.5 rounded bg-blue-700 hover:bg-blue-600 disabled:opacity-40 text-white text-sm font-semibold"
+            className="w-full py-1.5 rounded-sm bg-ink-500 hover:bg-ink-600 disabled:opacity-40 disabled:cursor-not-allowed text-parchment-50 text-xs font-display tracking-wide transition-colors"
           >
             Aplicar Descanso Curto
           </button>

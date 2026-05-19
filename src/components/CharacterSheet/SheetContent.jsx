@@ -38,15 +38,15 @@ function CollapsibleSection({ title, summary, children, defaultOpen = false }) {
       <button
         type="button"
         onClick={() => setOpen(v => !v)}
-        className="w-full flex items-center justify-between gap-3 px-4 py-2.5 bg-parchment-200 hover:bg-parchment-300 transition-colors text-left"
+        className="w-full flex items-start justify-between gap-3 px-4 py-2 bg-parchment-200 hover:bg-parchment-300 transition-colors text-left"
         aria-expanded={open}
       >
-        <div className="flex items-center gap-3 min-w-0">
-          <span className="text-xs font-bold text-ink-500 font-display tracking-widest uppercase shrink-0">
+        <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+          <span className="text-xs font-bold text-ink-500 font-display tracking-widest uppercase">
             {title}
           </span>
           {!open && summary && (
-            <span className="text-xs ink-italic truncate">{summary}</span>
+            <span className="text-[11px] ink-italic text-ink-300 leading-snug">{summary}</span>
           )}
         </div>
         <span
@@ -98,13 +98,17 @@ export function SheetContent({ activeTab }) {
 
   /* ── Aba: Ficha ─────────────────────────────────────────── */
   if (activeTab === 'ficha') {
-    // Resumo compacto para o header recolhido
+    // Resumo enriquecido pro header recolhido — substitui a necessidade de
+    // expandir só pra ler os dados básicos do personagem.
     const identitySummary = [
-      character.info.name || '—',
-      character.info.class
-        ? `${character.info.class} Nível ${character.info.level ?? 1}`
+      character.info.race
+        ? `${character.info.race}${character.info.subrace ? ` (${character.info.subrace})` : ''}`
         : null,
-      character.info.race || null,
+      character.info.class
+        ? `${character.info.class} N${character.info.level ?? 1}`
+        : null,
+      character.info.background || null,
+      character.info.alignment || null,
     ].filter(Boolean).join(' · ')
 
     return (
