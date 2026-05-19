@@ -6,7 +6,7 @@ import { getModifier } from '../../utils/calculations'
 import { calculateMulticlassSpellSlots } from '../../utils/spellcasting'
 import { useSrd } from '../../providers/SrdProvider'
 import { useClassProgressionData } from './levelProgression/useClassProgressionData'
-import { enrichWithClericDomainSpells } from './levelProgression/domainSpells'
+import { enrichWithSubclassSpells } from '../../domain/subclassSpells'
 import { TotalLevelHeader } from './levelProgression/TotalLevelHeader'
 import { MulticlassTabs } from './levelProgression/MulticlassTabs'
 import { AddMulticlassPicker } from './levelProgression/AddMulticlassPicker'
@@ -50,10 +50,11 @@ export function LevelProgression({
     ? calculateMulticlassSpellSlots(classIndex, currentLevel, multiclasses)
     : null
 
-  // Wrapper para o onApplyLevelUp: injeta magias de domínio do Clérigo
-  // automaticamente quando o nível dispara concessão (1, 3, 5, 7, 9).
+  // Wrapper para o onApplyLevelUp: injeta magias de subclasse automaticamente
+  // (Cleric domain, Paladin oath, Druid land circle, Warlock patron) quando o
+  // nível dispara concessão da tabela apropriada.
   function enrichedApplyLevelUp(patch) {
-    const enriched = enrichWithClericDomainSpells({
+    const enriched = enrichWithSubclassSpells({
       patch, classIndex, chosenFeatures, srdSpells,
     })
     onApplyLevelUp?.(enriched)

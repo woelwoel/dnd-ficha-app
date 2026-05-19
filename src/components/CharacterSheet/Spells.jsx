@@ -60,8 +60,11 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   const myCantrips  = mySpells.filter(s => s.level === 0)
   const myLeveled   = mySpells.filter(s => s.level > 0)
   // Conta como "preparada" qualquer magia leveled cujo flag não seja false
-  // (undefined ou true = preparada — assim toda magia antiga já é castável)
+  // (undefined ou true = preparada — assim toda magia antiga já é castável).
   const myPrepared  = myLeveled.filter(s => s.prepared !== false)
+  // Magias sempre-preparadas (subclasse: domínio/juramento/círculo) NÃO
+  // contam pro limite (PHB). Excluímos elas do contador.
+  const myPreparedCount = myPrepared.filter(s => s.alwaysPrepared !== true).length
   const concentrating = character.combat?.concentrating ?? null
 
   const isPrepared    = castType === 'prepared'
@@ -196,9 +199,14 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
             )}
             {isPrepared && spellsLimit != null && (
               <span>
-                Preparadas: <span className={myPrepared.length > spellsLimit ? 'text-red-400 font-bold' : myPrepared.length === spellsLimit ? 'text-green-400 font-semibold' : 'text-amber-300 font-semibold'}>
-                  {myPrepared.length}/{spellsLimit}
+                Preparadas: <span className={myPreparedCount > spellsLimit ? 'text-red-400 font-bold' : myPreparedCount === spellsLimit ? 'text-green-400 font-semibold' : 'text-amber-300 font-semibold'}>
+                  {myPreparedCount}/{spellsLimit}
                 </span>
+                {myPrepared.length > myPreparedCount && (
+                  <span className="text-amber-500/70 italic ml-1">
+                    (+{myPrepared.length - myPreparedCount} subclasse)
+                  </span>
+                )}
               </span>
             )}
             {/* Conhecidas (bardo/feiticeiro/bruxo/patrulheiro) */}
@@ -352,7 +360,7 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
                   onCastAtLevel={(slotLevel) => onToggleSlot?.(slotLevel, (usedSlots[slotLevel] || 0) + 1)}
                   canCast={spell.level === 0 || (isPrepared ? spell.prepared !== false : true)}
                   isPrepared={spell.level === 0 || spell.prepared !== false}
-                  showPreparedToggle={isPrepared && spell.level > 0 && !!onTogglePrepared}
+                  showPreparedToggle={isPrepared && spell.level > 0 && !!onTogglePrepared && spell.alwaysPrepared !== true}
                   onTogglePrepared={() => onTogglePrepared?.(spell.id)}
                   isConcentrating={concentrating?.spellIndex === spell.index}
                   canConcentrate={!!spell.concentration && !!onSetConcentration}
@@ -362,7 +370,7 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
                       : onSetConcentration?.(spell)
                   }
                   onDetail={() => setDetailSpell(spell)}
-                  onRemove={() => onRemoveSpell(spell.id)}
+                  onRemove={spell.alwaysPrepared === true ? null : () => onRemoveSpell(spell.id)}
                 />
               ))}
             </div>
@@ -454,6 +462,16 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
         onClick={onDetail}
         className="text-sm font-medium text-white flex-1 text-left hover:text-amber-300 transition-colors"
       >
+        {spell.alwaysPrepared && (
+          <span
+            className="text-amber-400 mr-1"
+            title={spell.sourceLabel
+              ? `${spell.sourceLabel} — sempre preparada (não conta no limite)`
+              : 'Sempre preparada (subclasse)'}
+          >
+            ✦
+          </span>
+        )}
         {spell.name}
       </button>
       <div className="flex items-center gap-1.5 text-xs flex-shrink-0">
@@ -507,12 +525,21 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
           ✓ Nv {castedAt}
         </span>
       )}
-      <button
-        onClick={onRemove}
-        className="text-red-500 hover:text-red-400 text-lg leading-none flex-shrink-0"
-      >
-        ×
-      </button>
+      {onRemove ? (
+        <button
+          onClick={onRemove}
+          className="text-red-500 hover:text-red-400 text-lg leading-none flex-shrink-0"
+        >
+          ×
+        </button>
+      ) : (
+        <span
+          className="text-gray-700 text-base leading-none flex-shrink-0 cursor-help"
+          title="Concedida pela subclasse — não pode ser removida"
+        >
+          🔒
+        </span>
+      )}
     </div>
     {castOpen && availableSlots.length > 0 && (
       <div className="flex flex-wrap gap-1 mt-1 pt-1.5 border-t border-gray-700/60">
