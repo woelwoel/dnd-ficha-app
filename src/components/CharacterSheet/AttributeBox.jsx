@@ -2,6 +2,7 @@ import { memo } from 'react'
 import { getModifier, formatModifier, POINT_BUY_COST } from '../../utils/calculations'
 import { FormFieldError } from '../FormFieldError'
 import { Tooltip } from '../Tooltip'
+import { RollButton } from '../DiceRoller/RollButton'
 
 function scoreColor() {
   return { border: 'border-parchment-600', text: 'text-ink-500', ring: 'border-ink-300' }
@@ -16,6 +17,10 @@ function AttributeBoxBase({
   pointsRemaining = 27,
   onChangeBase,
   error,
+  // Salvaguarda fundida no card (opcional — se ausente, o rodapé não renderiza)
+  saveProficient = false,
+  saveBonus,
+  saveNotation,
 }) {
   const base = baseValue ?? (value - racialBonus)
   const mod  = getModifier(value)
@@ -144,6 +149,32 @@ function AttributeBoxBase({
 
       {error && (
         <p id={errId} role="alert" className="text-[10px] text-ink-500 mt-1 text-center leading-tight">3–20</p>
+      )}
+
+      {/* Rodapé de salvaguarda — fundido no card */}
+      {saveBonus !== undefined && saveBonus !== null && (
+        <div
+          className="mt-2 pt-2 border-t border-parchment-600/50 w-full flex items-center justify-center gap-1.5"
+          title={saveProficient
+            ? `Salvaguarda de ${name} — proficiente (definida pela classe)`
+            : `Salvaguarda de ${name}`}
+        >
+          <span
+            aria-hidden
+            className={`text-[10px] leading-none ${saveProficient ? 'text-ink-500' : 'text-ink-300'}`}
+          >{saveProficient ? '🔒' : '○'}</span>
+          <span className="text-[9px] font-display tracking-widest uppercase text-ink-300">Salva</span>
+          <span className={`text-xs font-bold tabular-nums ${saveProficient ? 'text-ink-500' : 'text-ink-300'}`}>
+            {formatModifier(saveBonus)}
+          </span>
+          {saveNotation && (
+            <RollButton
+              notation={saveNotation}
+              label={`Salvaguarda — ${abbr}`}
+              size="xs"
+            />
+          )}
+        </div>
       )}
     </div>
   )
