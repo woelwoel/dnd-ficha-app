@@ -23,6 +23,11 @@ export function ClassBlock({
   const selectedClass = classes.find(c => c.index === draft.class) ?? null
   const multiclasses = draft.multiclasses ?? []
   const allowMulticlass = draft.settings?.allowMulticlass ?? false
+  // Multiclasse exige pré-requisito de atributo (ex: 13 FOR pra Guerreiro).
+  // Antes de Atributos estarem distribuídos não há como validar — bloqueia ação,
+  // mas mantém a seção visível com explicação pra usuário descobrir a feature.
+  const attributesReady = ['str', 'dex', 'con', 'int', 'wis', 'cha']
+    .every(k => (draft.baseAttributes?.[k] ?? 0) > 0)
 
   function handleAddMulticlass(mcEntry) {
     updateDraft({ multiclasses: [...multiclasses, mcEntry] })
@@ -127,19 +132,34 @@ export function ClassBlock({
           />
 
           {allowMulticlass && (
-            <div className="border-2 border-parchment-600 bg-parchment-100 rounded-sm p-3 flex flex-col gap-2">
-              <div className="flex items-center justify-between">
+            <div
+              className={[
+                'border-2 rounded-sm p-3 flex flex-col gap-2 transition-opacity',
+                attributesReady
+                  ? 'border-parchment-600 bg-parchment-100'
+                  : 'border-parchment-600/50 bg-parchment-100/40',
+              ].join(' ')}
+            >
+              <div className="flex items-center justify-between gap-2">
                 <p className="text-xs font-display tracking-widest uppercase text-ink-500">
                   Multiclasse
                 </p>
                 <button
                   type="button"
                   onClick={() => setMcModalOpen(true)}
-                  className="text-xs font-display tracking-wide text-ink-500 hover:text-ink-600 border-2 border-parchment-600 hover:border-ink-300 px-2.5 py-1 rounded-sm transition-colors"
+                  disabled={!attributesReady}
+                  title={attributesReady ? undefined : 'Defina Atributos primeiro — multiclasse exige pré-requisitos (ex: 13 FOR pra Guerreiro)'}
+                  className="text-xs font-display tracking-wide text-ink-500 hover:text-ink-600 border-2 border-parchment-600 hover:border-ink-300 px-2.5 py-1 rounded-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-parchment-600 disabled:hover:text-ink-500"
                 >+ Adicionar classe</button>
               </div>
 
-              {multiclasses.length === 0 && (
+              {!attributesReady && (
+                <p className="text-xs ink-italic text-ink-300 leading-relaxed">
+                  🔒 Disponível após definir <span className="font-semibold">Atributos</span> — multiclasse exige pré-requisitos (ex: 13 FOR pra Guerreiro, 13 CAR pra Bardo).
+                </p>
+              )}
+
+              {attributesReady && multiclasses.length === 0 && (
                 <p className="text-xs italic text-ink-300">Nenhuma classe secundária.</p>
               )}
 
