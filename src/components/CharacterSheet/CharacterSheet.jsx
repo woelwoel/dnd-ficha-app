@@ -119,30 +119,32 @@ export function CharacterSheet({ characterId, onBack }) {
 
   return (
     <CharacterProvider value={contextValue}>
-      <div className="h-screen flex flex-col overflow-hidden">
+      <div className="min-h-screen flex flex-col">
 
-        {/* ── Header fixo ──────────────────────────────────────── */}
-        <SheetHeader
-          characterName={character.info.name}
-          saved={saved}
-          saveError={saveError}
-          onBack={onBack}
-          onExport={handleExport}
-          onImport={handleImport}
-          onImportError={setImportError}
-          onPrint={() => window.print()}
-          showPrint={true}
-          quickStats={quickStats}
-        />
+        {/* ── Header (sticky, mas não bloqueia scroll do documento) ── */}
+        <div className="sticky top-0 z-30">
+          <SheetHeader
+            characterName={character.info.name}
+            saved={saved}
+            saveError={saveError}
+            onBack={onBack}
+            onExport={handleExport}
+            onImport={handleImport}
+            onImportError={setImportError}
+            onPrint={() => window.print()}
+            showPrint={true}
+            quickStats={quickStats}
+          />
+        </div>
 
         {/* ── Corpo: sidebar + conteúdo ────────────────────────── */}
-        <div className="flex flex-1 min-h-0">
+        <div className="flex flex-1">
 
           {/* Sidebar de navegação (embutida em SheetTabs) */}
           <SheetTabs activeTab={activeTab} onChange={handleTabChange} />
 
-          {/* Área de conteúdo scrollável */}
-          <main className="flex-1 overflow-y-auto min-w-0">
+          {/* Área de conteúdo (sem scroll próprio — flui no documento pra permitir print) */}
+          <main className="flex-1 min-w-0">
             <div className="max-w-4xl mx-auto px-2 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6 space-y-4">
 
               {importError && (
