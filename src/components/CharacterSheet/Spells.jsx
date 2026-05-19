@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { ABILITY_SCORES, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus, getProficiencyBonus } from '../../utils/calculations'
 import { abbrOfKey } from '../../domain/attributes'
 import { getSpellcastingRules, getWarlockPactSlots, getClassSpellMath, getSpellSlots } from '../../utils/spellcasting'
@@ -12,7 +12,7 @@ import {
   CASTING_TIME_LABELS,
 } from '../../utils/spellFilters'
 
-export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onTogglePrepared, onToggleSlot, onSetConcentration, onSpendPactSlot, onRegainPactSlot }) {
+export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onTogglePrepared, onToggleSlot, onSetConcentration, onSpendPactSlot, onRegainPactSlot, focusSpellId, onClearFocusSpell }) {
   const [activeTab, setActiveTab] = useState(0)
   const [search, setSearch] = useState('')
   const [pickerOpen, setPickerOpen] = useState(false)
@@ -44,6 +44,19 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
 
   const usedSlots   = character.spellcasting.usedSlots || {}
   const mySpells    = character.spellcasting.spells || []
+
+  // Auto-abre o modal de detalhe quando o usuário navega aqui a partir de
+  // PreparedSpellsList (que passa o id/index da magia via focusSpellId).
+  // Aceita id (interno) OU index (SRD reference) — o que vier primeiro.
+  useEffect(() => {
+    if (!focusSpellId) return
+    const match = mySpells.find(s => s.id === focusSpellId || s.index === focusSpellId)
+    if (match) setDetailSpell(match)
+    onClearFocusSpell?.()
+    // Intencional: só dispara quando focusSpellId muda. mySpells/onClearFocusSpell
+    // são lidos no momento da execução.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusSpellId])
   const myCantrips  = mySpells.filter(s => s.level === 0)
   const myLeveled   = mySpells.filter(s => s.level > 0)
   // Conta como "preparada" qualquer magia leveled cujo flag não seja false

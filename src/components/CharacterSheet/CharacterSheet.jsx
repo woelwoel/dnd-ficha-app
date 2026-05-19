@@ -25,6 +25,10 @@ export function CharacterSheet({ characterId, onBack }) {
   const [activeTab, setActiveTab] = useState('ficha')
   const [navBlocked, setNavBlocked] = useState(false)
   const [importError, setImportError] = useState(null)
+  // Magia que deve ter o modal de detalhe auto-aberto ao navegar pra aba Magias.
+  // Setada por PreparedSpellsList ao clicar num chip; consumida e zerada pelo
+  // próprio Spells (que dispara setDetailSpell e depois chama clearFocusSpell).
+  const [focusSpellId, setFocusSpellId] = useState(null)
 
   const initialCharacter = useMemo(() => {
     if (!characterId || characterId === 'new') return null
@@ -114,8 +118,15 @@ export function CharacterSheet({ characterId, onBack }) {
     handlers,
     fichaErrors,
     featureUses,
-    onNavigateToSpells: () => setActiveTab('magias'),
-  }), [character, setCharacter, calc, classData, races, classes, backgrounds, updaters, handlers, fichaErrors, featureUses])
+    // Quando chamado sem arg, só troca de aba. Com arg (spellId), também
+    // pede pra aba Magias auto-abrir o modal de detalhe daquela magia.
+    onNavigateToSpells: (spellId) => {
+      if (spellId != null) setFocusSpellId(spellId)
+      setActiveTab('magias')
+    },
+    focusSpellId,
+    clearFocusSpell: () => setFocusSpellId(null),
+  }), [character, setCharacter, calc, classData, races, classes, backgrounds, updaters, handlers, fichaErrors, featureUses, focusSpellId])
 
   return (
     <CharacterProvider value={contextValue}>
