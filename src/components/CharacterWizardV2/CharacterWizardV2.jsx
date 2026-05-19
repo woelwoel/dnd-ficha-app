@@ -82,9 +82,9 @@ function WizardGrid({ initialSettings, resume, onBack, onComplete }) {
   const allReady = blockStatus.review.status === 'completo'
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-parchment-100">
+    <div className="min-h-screen flex flex-col bg-parchment-100">
       <header
-        className="border-b-2 border-parchment-600 bg-parchment-100"
+        className="sticky top-0 z-30 border-b-2 border-parchment-600 bg-parchment-100"
         style={{ boxShadow: 'var(--shadow-parchment)' }}
       >
         <div className="flex items-center gap-4 px-6 py-3.5">
@@ -129,7 +129,7 @@ function WizardGrid({ initialSettings, resume, onBack, onComplete }) {
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 p-6">
         <div className="max-w-5xl mx-auto flex flex-col gap-8">
           {GROUPS.map((g, gi) => {
             const groupBlocks = BLOCKS
