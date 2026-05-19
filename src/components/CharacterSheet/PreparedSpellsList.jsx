@@ -23,22 +23,26 @@ export function PreparedSpellsList() {
   const allSpells = spellcasting.spells ?? []
   const spellAbilityKey = calc?.spellAbilityKey ?? null
 
-  // Truques (nível 0) e preparadas/conhecidas (level >= 1 + prepared).
-  // Bruxos têm "conhecidas" sempre disponíveis (sem flag prepared) — tratamos
-  // aqui como prepared=true por default quando o pool é pequeno.
+  // Truques (nível 0), preparadas (level >= 1 + prepared) e "sempre preparadas"
+  // da subclasse (domínio/juramento/círculo — alwaysPrepared=true).
   const grouped = useMemo(() => {
     const groups = {}
     for (const s of allSpells) {
       const isCantrip = (s.level ?? 0) === 0
-      const isPrepared = isCantrip || s.prepared === true
+      const isPrepared = isCantrip || s.prepared === true || s.alwaysPrepared === true
       if (!isPrepared) continue
       const lvl = s.level ?? 0
       if (!groups[lvl]) groups[lvl] = []
       groups[lvl].push(s)
     }
-    // Ordena cada grupo alfabeticamente
+    // Ordena cada grupo: sempre-preparadas primeiro, depois alfabético
     for (const lvl of Object.keys(groups)) {
-      groups[lvl].sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '', 'pt-BR'))
+      groups[lvl].sort((a, b) => {
+        const aAlways = a.alwaysPrepared ? 0 : 1
+        const bAlways = b.alwaysPrepared ? 0 : 1
+        if (aAlways !== bAlways) return aAlways - bAlways
+        return (a.name ?? '').localeCompare(b.name ?? '', 'pt-BR')
+      })
     }
     return groups
   }, [allSpells])
@@ -146,13 +150,27 @@ function SpellChip({ spell }) {
   // Passamos id ou index (o Spells aceita ambos). Click navega pra aba Magias
   // e auto-abre o SpellDetailModal com essa magia em destaque.
   const focusId = spell.id ?? spell.index
+  const isAlways = spell.alwaysPrepared === true
+
+  // Chips "sempre preparadas" ganham um anel dourado e um ✦ pra destacar
+  // que vieram da subclasse (não contam pro limite de preparadas).
+  const chipCls = isAlways
+    ? 'inline-flex items-center gap-1 px-2 py-0.5 rounded-sm bg-amber-50 border border-amber-400 text-xs text-ink-500'
+    : 'inline-flex items-center gap-1 px-2 py-0.5 rounded-sm bg-parchment-50 border border-parchment-600 text-xs text-ink-500'
+
+  const sourceTag = spell.sourceLabel
+    ? `\n\n[${spell.sourceLabel} — sempre preparada]`
+    : (isAlways ? '\n\n[Sempre preparada — não conta no limite]' : '')
 
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm bg-parchment-50 border border-parchment-600 text-xs text-ink-500">
+    <span className={chipCls}>
+      {isAlways && (
+        <span className="text-amber-600 leading-none" title="Sempre preparada (subclasse)">✦</span>
+      )}
       <button
         onClick={() => onNavigateToSpells?.(focusId)}
         className="hover:text-ink-600 hover:underline"
-        title={`${spell.name}${spell.school ? ` · ${spell.school}` : ''}${spell.castingTime ? ` · ${spell.castingTime}` : ''}\n\n(click pra ver a descrição completa)`}
+        title={`${spell.name}${spell.school ? ` · ${spell.school}` : ''}${spell.castingTime ? ` · ${spell.castingTime}` : ''}${sourceTag}\n\n(click pra ver a descrição completa)`}
       >
         {spell.name}
       </button>

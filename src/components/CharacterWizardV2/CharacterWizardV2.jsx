@@ -16,7 +16,7 @@ import { AttributesBlock } from './blocks/AttributesBlock'
 import { SkillsBlock } from './blocks/SkillsBlock'
 import { SpellsBlock } from './blocks/SpellsBlock'
 import { ReviewBlock } from './blocks/ReviewBlock'
-import { buildCharacter } from './blocks/build-character'
+import { buildCharacterWithSubclassSpells } from './blocks/build-character'
 import { upsertCharacter } from '../../utils/storage'
 
 const STORAGE_KEY = 'wizard-v2-draft'
@@ -50,7 +50,7 @@ const LABEL_BY_ID = Object.fromEntries(BLOCKS.map(b => [b.id, b.label]))
 // Isso garante que useDraft receba as options corretas na montagem inicial.
 function WizardGrid({ initialSettings, resume, onBack, onComplete }) {
   const { draft, updateDraft, hasChanges, resetDraft } = useDraft({ initialSettings, resume })
-  const { races, classes, classChoices, progression: classProgression, backgrounds } = useSrd()
+  const { races, classes, classChoices, progression: classProgression, backgrounds, spells: srdSpells } = useSrd()
   // Datasets só usados no wizard — carregados sob demanda.
   const feats          = useLazySrdDataset('feats')
   const classEquipment = useLazySrdDataset('classEquipment')
@@ -68,7 +68,9 @@ function WizardGrid({ initialSettings, resume, onBack, onComplete }) {
   }
 
   function handleFinalize() {
-    const character = buildCharacter(draft, selectedClassData, classEquipment ?? {})
+    const character = buildCharacterWithSubclassSpells(
+      draft, selectedClassData, classEquipment ?? {}, srdSpells ?? []
+    )
     upsertCharacter(character)
     sessionStorage.removeItem('wizard-v2-draft')
     onComplete(character.id)

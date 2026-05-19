@@ -1,6 +1,7 @@
 // src/components/CharacterWizardV2/blocks/build-character.js
 import { generateId } from '../../../hooks/useCharacter'
 import { calculateMaxHp, getModifier } from '../../../utils/calculations'
+import { injectSubclassSpellsAtBuild } from '../../../domain/subclassSpells'
 
 export function resolveClassEquipmentItems(draft, classEquipment) {
   if (draft.classEquipmentChoice !== 'equipment') return []
@@ -36,7 +37,7 @@ export function resolveClassEquipmentItems(draft, classEquipment) {
   return items
 }
 
-export function buildCharacter(draft, classData, classEquipment) {
+export function buildCharacter(draft, classData, classEquipment, srdSpells = null) {
   const attrs = { ...draft.baseAttributes }
   for (const [k, v] of Object.entries(draft.racialBonuses ?? {})) {
     attrs[k] = Math.min(30, (attrs[k] ?? 10) + v)
@@ -174,4 +175,16 @@ export function buildCharacter(draft, classData, classEquipment) {
       featuresAndTraits: '', notes: '',
     },
   }
+}
+
+/**
+ * Wrapper de buildCharacter que pós-processa o personagem para injetar
+ * magias concedidas por subclasse (Cleric domain, Paladin oath, Druid
+ * Land circle, Warlock patron). Separado de buildCharacter pra manter o
+ * core puro/testável sem dependência da lista SRD.
+ */
+export function buildCharacterWithSubclassSpells(draft, classData, classEquipment, srdSpells) {
+  const base = buildCharacter(draft, classData, classEquipment)
+  if (!srdSpells || srdSpells.length === 0) return base
+  return injectSubclassSpellsAtBuild(base, srdSpells)
 }
