@@ -93,8 +93,18 @@ export function SheetCombatBar() {
   const hpPct = Math.max(0, Math.min(100, (currentHp / Math.max(1, maxHp)) * 100))
 
   const ac = combat.armorClass ?? calc?.suggestedAC ?? 10
-  const init = combat.initiative ?? 0
+  // Iniciativa: usa o cálculo (mod de DES + feats como Alert) em vez do override
+  // armazenado em combat.initiative — esse só vale como display histórico/fallback.
+  const init = calc?.initiative ?? combat.initiative ?? 0
   const speed = combat.speed ?? 30
+
+  // Stats de conjuração — só aparecem se o personagem é caster (tem ability key).
+  const spellAbilityKey = calc?.spellAbilityKey ?? null
+  const spellSaveDC = calc?.spellSaveDC ?? null
+  const spellAttackBonus = calc?.spellAttackBonus ?? null
+  const isCaster = !!spellAbilityKey && spellSaveDC != null
+  const SPELL_ABILITY_ABBR = { str: 'FOR', dex: 'DES', con: 'CON', int: 'INT', wis: 'SAB', cha: 'CAR' }
+  const spellAbilityAbbr = spellAbilityKey ? (SPELL_ABILITY_ABBR[spellAbilityKey] ?? spellAbilityKey.toUpperCase()) : null
 
   const activeConditions = combat.conditions ?? []
   const exhaustion = combat.exhaustion ?? 0
@@ -154,9 +164,33 @@ export function SheetCombatBar() {
             icon="⚡"
             label="INIT"
             value={init >= 0 ? `+${init}` : init}
-            title="Iniciativa"
+            title="Iniciativa (mod DES + feats como Alerta)"
           />
           <StatChip icon="👣" label="VEL" value={speed} title="Velocidade (em pés)" />
+
+          {/* Stats de conjuração — só pra casters (mago, clérigo, paladino N2+, etc) */}
+          {isCaster && (
+            <>
+              <StatChip
+                icon="🔮"
+                label="ATK MG"
+                value={spellAttackBonus >= 0 ? `+${spellAttackBonus}` : spellAttackBonus}
+                title={`Bônus de ataque mágico (${spellAbilityAbbr}: prof + mod do atributo)`}
+              />
+              <StatChip
+                icon="✦"
+                label="CD"
+                value={spellSaveDC}
+                title={`CD de salva das suas magias (8 + prof + mod ${spellAbilityAbbr})`}
+              />
+              <StatChip
+                icon="✎"
+                label="ATR"
+                value={spellAbilityAbbr}
+                title="Atributo de conjuração"
+              />
+            </>
+          )}
         </div>
 
         {/* Recurso de classe — barbaro */}
