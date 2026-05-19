@@ -73,6 +73,7 @@ export function SheetContent({ activeTab }) {
     character, setCharacter, calc, classData,
     races, classes, backgrounds,
     updaters, handlers, fichaErrors, featureUses, onNavigateToSpells,
+    focusSpellId, clearFocusSpell,
   } = useCharacterContext()
 
   const {
@@ -237,6 +238,8 @@ export function SheetContent({ activeTab }) {
           onSpendPactSlot={spendPactSlot}
           onRegainPactSlot={regainPactSlot}
           onSetConcentration={setConcentration}
+          focusSpellId={focusSpellId}
+          onClearFocusSpell={clearFocusSpell}
         />
       </TabPanel>
     )

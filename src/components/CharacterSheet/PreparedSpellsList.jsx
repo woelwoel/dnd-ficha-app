@@ -71,7 +71,7 @@ export function PreparedSpellsList() {
         </div>
         {onNavigateToSpells && (
           <button
-            onClick={onNavigateToSpells}
+            onClick={() => onNavigateToSpells()}
             className="text-[10px] font-display tracking-wide text-ink-300 hover:text-ink-500 underline"
             title="Abrir aba Magias pra preparar/conjurar"
           >
@@ -143,13 +143,16 @@ function SpellChip({ spell }) {
   const { onNavigateToSpells } = useCharacterContext()
   const hasRoll = !!spell.damageDice
   const notation = spell.damageDice || null
+  // Passamos id ou index (o Spells aceita ambos). Click navega pra aba Magias
+  // e auto-abre o SpellDetailModal com essa magia em destaque.
+  const focusId = spell.id ?? spell.index
 
   return (
     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm bg-parchment-50 border border-parchment-600 text-xs text-ink-500">
       <button
-        onClick={onNavigateToSpells}
+        onClick={() => onNavigateToSpells?.(focusId)}
         className="hover:text-ink-600 hover:underline"
-        title={`${spell.name}${spell.school ? ` · ${spell.school}` : ''}${spell.castingTime ? ` · ${spell.castingTime}` : ''}`}
+        title={`${spell.name}${spell.school ? ` · ${spell.school}` : ''}${spell.castingTime ? ` · ${spell.castingTime}` : ''}\n\n(click pra ver a descrição completa)`}
       >
         {spell.name}
       </button>
