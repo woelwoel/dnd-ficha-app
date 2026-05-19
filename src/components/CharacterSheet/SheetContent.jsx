@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { CharacterInfo } from './CharacterInfo'
 import { CombatStats } from './CombatStats'
-import { SavingThrows } from './SavingThrows'
 import { SkillsList } from './SkillsList'
 import { Inventory } from './Inventory'
 import { Spells } from './Spells'
@@ -134,7 +133,7 @@ export function SheetContent({ activeTab }) {
           {/* ②  Atributos + Salvaguardas  |  Combate */}
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(240px,310px)_1fr] gap-4 items-start">
 
-            {/* Coluna esquerda */}
+            {/* Coluna esquerda — Atributos com salvaguardas fundidas em cada card */}
             <div className="space-y-4">
               <AttributesSection
                 attributes={character.attributes}
@@ -143,9 +142,6 @@ export function SheetContent({ activeTab }) {
                 onChangeMethod={m => updateInfo('scoreMethod', m)}
                 onChangeAttribute={updateAttribute}
                 errors={fichaErrors}
-              />
-              <SavingThrows
-                attributes={character.attributes}
                 profBonus={calc.profBonus}
                 classData={classData}
               />

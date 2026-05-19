@@ -5,6 +5,9 @@ import {
   STANDARD_ARRAY,
   POINT_BUY_COST,
   POINT_BUY_BUDGET,
+  ATTR_NAME_TO_KEY,
+  formatModifier,
+  calculateSavingThrow,
 } from '../../utils/calculations'
 
 /**
@@ -18,7 +21,15 @@ export function AttributesSection({
   onChangeMethod,
   onChangeAttribute,
   errors = {},
+  // Dados pra fundir salvaguardas no card (opcional — quando ausentes, cards não mostram salva)
+  profBonus,
+  classData,
 }) {
+  // Quais atributos têm proficiência de salva (definidas pela classe)
+  const saveProficientKeys = useMemo(() => {
+    if (!classData?.saving_throws) return []
+    return classData.saving_throws.map(n => ATTR_NAME_TO_KEY[n]).filter(Boolean)
+  }, [classData])
   const { baseValues, pbRemaining, saUsed, saValid, appliedList } = useMemo(() => {
     const base = Object.fromEntries(
       ABILITY_SCORES.map(({ key }) => [key, attributes[key] - (appliedRacialBonuses[key] ?? 0)])
@@ -101,6 +112,12 @@ export function AttributesSection({
           const racialBonus = appliedRacialBonuses[key] ?? 0
           const baseValue = baseValues[key]
           const availableSA = STANDARD_ARRAY.filter(v => v === baseValue || !saUsed.includes(v))
+          // Salvaguarda
+          const saveProficient = saveProficientKeys.includes(key)
+          const saveBonus = profBonus != null
+            ? calculateSavingThrow(attributes[key], profBonus, saveProficient)
+            : undefined
+          const saveNotation = saveBonus !== undefined ? `1d20${formatModifier(saveBonus)}` : undefined
           return (
             <AttributeBox
               key={key}
@@ -117,6 +134,9 @@ export function AttributesSection({
                 onChangeAttribute(key, Math.min(30, Math.max(1, newBase)) + racialBonus)
               }
               error={errors[`attr_${key}`]}
+              saveProficient={saveProficient}
+              saveBonus={saveBonus}
+              saveNotation={saveNotation}
             />
           )
         })}
