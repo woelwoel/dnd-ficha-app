@@ -1,27 +1,6 @@
 import { useState, useRef } from 'react'
 import { useCharacterContext } from './CharacterContext'
-
-/* ── Condições D&D 5e (PHB p.290–296) ─────────────────────────
- * Mantém o mesmo conjunto que CombatStats — duplicação intencional
- * pra a barra ser autocontida. Quando a tooltip de regras virar
- * um dataset compartilhado (PR seguinte), centraliza num arquivo só.
- */
-const CONDITIONS = {
-  blinded:       { label: 'Cego',          icon: '👁️‍🗨️', rule: 'Não enxerga: falha em testes que dependem da visão. Ataques contra você têm vantagem; seus ataques têm desvantagem. (PHB p.290)' },
-  charmed:       { label: 'Enfeitiçado',   icon: '💜',    rule: 'Não pode atacar quem o enfeitiçou nem mirar nele com habilidades danosas. O encantador tem vantagem em testes sociais. (PHB p.290)' },
-  deafened:      { label: 'Surdo',          icon: '🔇',    rule: 'Não escuta: falha em testes que dependem da audição. (PHB p.290)' },
-  frightened:    { label: 'Amedrontado',   icon: '😱',    rule: 'Desvantagem em testes/ataques enquanto a fonte do medo estiver à vista. Não pode se aproximar dela voluntariamente. (PHB p.290)' },
-  grappled:      { label: 'Agarrado',       icon: '🤜',    rule: 'Velocidade = 0; bônus de velocidade não se aplicam. Termina se o agarrador for incapacitado ou afastado. (PHB p.290)' },
-  incapacitated: { label: 'Incapacitado',  icon: '💢',    rule: 'Não pode tomar ações nem reações. (PHB p.290)' },
-  invisible:     { label: 'Invisível',     icon: '👻',    rule: 'Não pode ser visto sem magia ou sentido especial. Ataques contra você têm desvantagem; seus ataques têm vantagem. (PHB p.291)' },
-  paralyzed:     { label: 'Paralisado',    icon: '⚡',    rule: 'Incapacitado, não fala, falha autom. em salvas de FOR e DES. Ataques têm vantagem; acertos a até 1,5 m são críticos. (PHB p.291)' },
-  petrified:     { label: 'Petrificado',   icon: '🪨',    rule: 'Transformado em pedra. Incapacitado, falha em salvas de FOR/DES, resistência a todo dano, imune a veneno e doença. (PHB p.291)' },
-  poisoned:      { label: 'Envenenado',    icon: '🟢',    rule: 'Desvantagem em ataques e testes de habilidade. (PHB p.292)' },
-  prone:         { label: 'Prostrado',     icon: '⬇️',    rule: 'Move-se só se rastejando. Desvantagem em ataques. Ataques contra você têm vantagem a 1,5 m, desvantagem à distância. (PHB p.292)' },
-  restrained:    { label: 'Imobilizado',   icon: '🔗',    rule: 'Velocidade = 0. Ataques contra você têm vantagem; seus ataques e salvas de DES têm desvantagem. (PHB p.292)' },
-  stunned:       { label: 'Atordoado',     icon: '💫',    rule: 'Incapacitado, não se move, fala balbuciante. Falha em salvas de FOR/DES; ataques contra você têm vantagem. (PHB p.292)' },
-  unconscious:   { label: 'Inconsciente',  icon: '💤',    rule: 'Incapacitado, cai prostrado, larga o que segura. Falha em salvas de FOR/DES; ataques têm vantagem; acertos a 1,5 m são críticos. (PHB p.292)' },
-}
+import { CONDITIONS_BY_ID } from '../../domain/conditions'
 
 /* Pequeno controle inline de dano/cura ──────────────────────── */
 function HpQuickControls({ onDamage, onHeal, disabled }) {
@@ -86,7 +65,7 @@ function StatChip({ icon, label, value, title }) {
 
 /* Chip de condição ativa (clicável remove + tooltip de regra) ─ */
 function ConditionChip({ id, onToggle }) {
-  const c = CONDITIONS[id]
+  const c = CONDITIONS_BY_ID[id]
   if (!c) return null
   return (
     <button
