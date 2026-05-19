@@ -125,6 +125,7 @@ export function SheetContent({ activeTab }) {
               errors={fichaErrors}
               profBonus={calc.profBonus}
               classData={classData}
+              hideMethodSelector
             />
 
             <SkillsList

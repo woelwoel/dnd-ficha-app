@@ -24,7 +24,13 @@ export function AttributesSection({
   // Dados pra fundir salvaguardas no card (opcional — quando ausentes, cards não mostram salva)
   profBonus,
   classData,
+  // Esconde os botões "Manual / Array Padrão / Compra de Ptos" — usado na ficha,
+  // onde o personagem já existe e a definição inicial foi feita no wizard.
+  // Quando true, força modo 'manual' (edição livre) independente do que salvou
+  // o wizard, pra evitar trancar um personagem point-buy no range 8-15 pra sempre.
+  hideMethodSelector = false,
 }) {
+  const effectiveMethod = hideMethodSelector ? 'manual' : scoreMethod
   // Quais atributos têm proficiência de salva (definidas pela classe)
   const saveProficientKeys = useMemo(() => {
     if (!classData?.saving_throws) return []
@@ -58,25 +64,27 @@ export function AttributesSection({
     <section>
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <h2 className="text-base font-display text-ink-500 uppercase tracking-widest border-b-2 border-parchment-600 pb-1 flex-1">Atributos</h2>
-        <div className="flex gap-1 text-xs">
-          {[
-            { id: 'manual',         label: 'Manual'         },
-            { id: 'standard-array', label: 'Array Padrão'   },
-            { id: 'point-buy',      label: 'Compra de Ptos' },
-          ].map(m => (
-            <button
-              key={m.id}
-              onClick={() => onChangeMethod(m.id)}
-              className={`px-2 py-1 rounded border font-display tracking-wide transition-colors ${
-                scoreMethod === m.id
-                  ? 'bg-ink-500 border-ink-600 text-parchment-50'
-                  : 'bg-parchment-100 border-parchment-600 text-ink-200 hover:text-ink-500 hover:bg-parchment-200'
-              }`}
-            >
-              {m.label}
-            </button>
-          ))}
-        </div>
+        {!hideMethodSelector && (
+          <div className="flex gap-1 text-xs">
+            {[
+              { id: 'manual',         label: 'Manual'         },
+              { id: 'standard-array', label: 'Array Padrão'   },
+              { id: 'point-buy',      label: 'Compra de Ptos' },
+            ].map(m => (
+              <button
+                key={m.id}
+                onClick={() => onChangeMethod(m.id)}
+                className={`px-2 py-1 rounded border font-display tracking-wide transition-colors ${
+                  effectiveMethod === m.id
+                    ? 'bg-ink-500 border-ink-600 text-parchment-50'
+                    : 'bg-parchment-100 border-parchment-600 text-ink-200 hover:text-ink-500 hover:bg-parchment-200'
+                }`}
+              >
+                {m.label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="mb-3 space-y-1">
@@ -85,7 +93,7 @@ export function AttributesSection({
             ↑ Bônus racial aplicado automaticamente: {appliedList.join(', ')}
           </p>
         )}
-        {scoreMethod === 'point-buy' && (
+        {effectiveMethod === 'point-buy' && (
           <p
             className={`text-xs font-semibold ${
               pbRemaining < 0 ? 'text-red-400' : pbRemaining === 0 ? 'text-green-400' : 'text-sky-400'
@@ -97,12 +105,12 @@ export function AttributesSection({
               : `${pbRemaining}/${POINT_BUY_BUDGET} pts restantes`}
           </p>
         )}
-        {scoreMethod === 'standard-array' && !saValid && (
+        {effectiveMethod === 'standard-array' && !saValid && (
           <p className="text-xs text-amber-400">
             Array Padrão: atribua os valores [8, 10, 12, 13, 14, 15] uma vez cada.
           </p>
         )}
-        {scoreMethod === 'standard-array' && saValid && (
+        {effectiveMethod === 'standard-array' && saValid && (
           <p className="text-xs text-green-400">Array Padrão completo ✓</p>
         )}
       </div>
@@ -126,7 +134,7 @@ export function AttributesSection({
               value={attributes[key]}
               baseValue={baseValue}
               racialBonus={racialBonus}
-              mode={scoreMethod}
+              mode={effectiveMethod}
               availableSA={availableSA}
               pointsRemaining={pbRemaining}
               onChange={value => onChangeAttribute(key, value)}

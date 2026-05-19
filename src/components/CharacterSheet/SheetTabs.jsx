@@ -65,13 +65,14 @@ function SheetTabsBase({ activeTab, onChange }) {
         /* mobile: distribui as 6 abas no eixo horizontal sem scroll */
         'flex-row',
         'border-b border-parchment-600 bg-parchment-300',
-        /* desktop: coluna lateral compacta, segue scroll via sticky */
+        /* desktop: coluna lateral mais estreita, fundo levemente
+           diferenciado da página (parchment-200/60 vs parchment-100).
+           Sem altura forçada; sem sticky (acompanha o scroll do
+           documento) — o header continua sticky e cobre o essencial. */
         'lg:flex-col',
-        'lg:w-44 lg:border-b-0 lg:border-r-2 lg:border-parchment-600',
-        'lg:bg-parchment-100 lg:py-4 lg:gap-1',
-        /* sticky abaixo do header+sticky-bar (z-30); ajustável depois */
-        'lg:sticky lg:top-[var(--sheet-stick-offset,7rem)] lg:self-start lg:max-h-[calc(100vh-7rem)]',
-        'lg:overflow-y-auto lg:overflow-x-hidden',
+        'lg:w-36 lg:border-b-0 lg:border-r-2 lg:border-parchment-600',
+        'lg:bg-parchment-200/60 lg:py-3 lg:gap-0.5',
+        'lg:self-start',
       ].join(' ')}
     >
       {TABS.map(tab => {
