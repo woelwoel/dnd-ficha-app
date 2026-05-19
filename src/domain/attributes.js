@@ -25,3 +25,17 @@ export const keyFromAbbr = abbr => BY_ABBR[abbr]?.key ?? null
 export const keyFromName = name => BY_NAME[name]?.key ?? null
 export const abbrOfKey   = key  => BY_KEY[key]?.abbrPt ?? null
 export const nameOfKey   = key  => BY_KEY[key]?.name   ?? null
+
+/**
+ * Resolve um label de atributo em qualquer forma comum (key 'cha', abbr
+ * 'CAR'/'CHA', nome 'Carisma') pra a key canônica ('cha'). Retorna null
+ * se não reconhecer.
+ *
+ * Necessário porque `spellcasting.ability` pode vir como 'cha' (wizard v2),
+ * 'CAR' (UI antiga) ou 'Carisma' (legado v1).
+ */
+export const resolveAbilityKey = label => {
+  if (!label) return null
+  if (BY_KEY[label]) return label                       // já é key ('cha')
+  return keyFromAbbr(label) ?? keyFromName(label)       // tenta abbr ou nome
+}

@@ -225,7 +225,9 @@ html, body, #root {
   background-color: var(--color-parchment-200);
   color: var(--color-ink-500);
   font-family: var(--font-body);
-  font-size: 18px;
+  /* Aumentado de 18px → 20px pra melhorar legibilidade na mesa.
+     Como Tailwind usa rem, todos os tamanhos escalam proporcionalmente. */
+  font-size: 20px;
   line-height: 1.55;
 }
 
@@ -306,12 +308,12 @@ body {
   }
 }
 
-/* Fonte base menor em telas pequenas */
+/* Fonte base menor em telas pequenas (proporcional ao aumento da base 18→20) */
 @media (max-width: 375px) {
-  html { font-size: 16.5px; }
+  html { font-size: 18.5px; }
 }
 @media (min-width: 376px) and (max-width: 639px) {
-  html { font-size: 17px; }
+  html { font-size: 19px; }
 }
 
 /* ── Impressão / Exportar PDF (mantém infraestrutura existente da PrintView) ── */
