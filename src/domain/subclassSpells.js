@@ -26,22 +26,120 @@ const CLERIC_DOMAIN_LEVELS = [1, 3, 5, 7, 9]
 /* ── Paladin — Oath Spells (PHB p.84) — tiers em 3, 5, 9, 13, 17 ──── */
 const PALADIN_OATH_LEVELS = [3, 5, 9, 13, 17]
 const PALADIN_OATH_SPELLS = {
-  // TODO: validar índices em phb-spells-pt.json (PR 2).
-  // 'devocao':    [[],[],[],[],[]],
-  // 'os_antigos': [[],[],[],[],[]],
-  // 'vinganca':   [[],[],[],[],[]],
+  // Juramento de Devoção (PHB p.85)
+  devocao: [
+    ['protecao-contra-o-bem-e-mal', 'santuario'],          // 3
+    ['restauracao-menor',           'zona-da-verdade'],    // 5
+    ['farol-de-esperanca',          'dissipar-magia'],     // 9
+    ['liberdade-de-movimento',      'guardiao-da-fe'],     // 13
+    ['comunhao',                    'coluna-de-chamas'],   // 17 (Flame Strike)
+  ],
+  // Juramento dos Anciões (PHB p.86)
+  os_antigos: [
+    ['golpe-constritor',         'falar-com-animais'],        // 3 (Ensnaring Strike)
+    ['passo-nebuloso',           'raio-lunar'],               // 5 (Misty Step, Moonbeam)
+    ['crescimento-de-planta',    'protecao-contra-energia'],  // 9
+    ['tempestade-de-gelo',       'pele-de-pedra'],            // 13
+    ['comunhao-com-a-natureza',  'caminhar-em-arvores'],      // 17 (Tree Stride)
+  ],
+  // Juramento de Vingança (PHB p.88)
+  vinganca: [
+    ['perdicao',          'marca-do-cacador'],          // 3 (Bane, Hunter's Mark)
+    ['imobilizar-pessoa', 'passo-nebuloso'],            // 5 (Hold Person, Misty Step)
+    ['velocidade',        'protecao-contra-energia'],   // 9 (Haste)
+    ['banimento',         'porta-dimensional'],         // 13
+    ['imobilizar-monstro','escrutinio'],                // 17 (Hold Monster, Scrying)
+  ],
 }
 
 /* ── Druid Circle of the Land (PHB p.69) — tiers 3, 5, 7, 9 ──────── */
 const DRUID_LAND_LEVELS = [3, 5, 7, 9]
 const DRUID_LAND_SPELLS = {
-  // TODO: precisa de sub-escolha druid_land_type + tabela (PR 3).
+  artico: [
+    ['imobilizar-pessoa',       'crescer-espinhos'],       // 3 (Hold Person, Spike Growth)
+    ['tempestade-de-neve',      'lentidao'],               // 5 (Sleet Storm, Slow)
+    ['liberdade-de-movimento',  'tempestade-de-gelo'],     // 7
+    ['comunhao-com-a-natureza', 'cone-de-frio'],           // 9
+  ],
+  costa: [
+    ['imagem-espelhada',       'passo-nebuloso'],          // 3 (Mirror Image, Misty Step)
+    ['respirar-na-agua',       'andar-na-agua'],           // 5
+    ['controlar-agua',         'liberdade-de-movimento'],  // 7
+    ['conjurar-elemental',     'escrutinio'],              // 9
+  ],
+  deserto: [
+    ['nublar',                'silencio'],                 // 3 (Blur, Silence)
+    ['criar-alimentos',       'protecao-contra-energia'],  // 5
+    ['malogro',               'terreno-alucinogeno'],      // 7 (Blight, Hall. Terrain)
+    ['praga-de-insetos',      'parede-de-pedra'],          // 9
+  ],
+  floresta: [
+    ['pele-de-arvore',         'patas-de-aranha'],         // 3 (Barkskin, Spider Climb)
+    ['chamada-do-relampago',   'crescimento-de-planta'],   // 5
+    ['adivinhacao',            'liberdade-de-movimento'],  // 7
+    ['comunhao-com-a-natureza','caminhar-em-arvores'],     // 9 (Tree Stride)
+  ],
+  montanha: [
+    ['patas-de-aranha',     'crescer-espinhos'],           // 3 (Spider Climb, Spike Growth)
+    ['relampago',           'moldar-rochas'],              // 5 (Lightning Bolt; Meld Into Stone faltando no SRD-PT, usa Stone Shape como proxy)
+    ['moldar-rochas',       'pele-de-pedra'],              // 7 (Stone Shape, Stoneskin)
+    ['criar-passagem',      'parede-de-pedra'],            // 9 (Passwall, Wall of Stone)
+  ],
+  pantano: [
+    ['escuridao',                'flecha-acida-de-melf'],  // 3 (Darkness, Melf's Acid Arrow)
+    ['andar-na-agua',            'nevoa-fetida'],          // 5 (Water Walk, Stinking Cloud)
+    ['liberdade-de-movimento',   'localizar-criatura'],    // 7
+    ['praga-de-insetos',         'escrutinio'],            // 9
+  ],
+  pradaria: [
+    ['invisibilidade',         'passar-sem-rastro'],       // 3
+    ['luz-do-dia',             'velocidade'],              // 5 (Daylight, Haste)
+    ['adivinhacao',            'liberdade-de-movimento'],  // 7
+    ['sonho',                  'praga-de-insetos'],        // 9 (Dream, Insect Plague)
+  ],
+  submontano: [
+    ['patas-de-aranha',        'teia'],                    // 3 (Spider Climb, Web)
+    ['forma-gasosa',           'nevoa-fetida'],            // 5 (Gaseous Form, Stinking Cloud)
+    ['invisibilidade-maior',   'moldar-rochas'],           // 7 (Greater Invis., Stone Shape)
+    ['nevoa-mortal',           'praga-de-insetos'],        // 9 (Cloudkill, Insect Plague)
+  ],
 }
 
-/* ── Warlock Expanded List (PHB p.108) — tiers 1, 3, 5, 7, 9 ─────── */
+/* ── Warlock Expanded List (PHB p.108) — tiers 1, 3, 5, 7, 9 ───────
+ * Semântica diferente das outras três: NÃO são "always prepared".
+ * Entram na lista expandida de magias do bruxo — funcionam como se fossem
+ * da lista do bruxo pra ele, e ainda assim ocupam slot de "magia conhecida"
+ * quando o bruxo decide aprendê-las. Marcamos `source: 'patron'` e
+ * `expandsKnownList: true`, sem `alwaysPrepared`. A injeção atual adiciona
+ * elas à lista de spells do personagem — uma futura iteração pode tratar
+ * elas como "disponíveis para aprender" em vez de já aprendidas.
+ */
 const WARLOCK_PATRON_LEVELS = [1, 3, 5, 7, 9]
 const WARLOCK_PATRON_SPELLS = {
-  // TODO: (PR 4) semântica "known" diferente das demais.
+  // Patrono Feérico — Archfey (PHB p.109)
+  feerico: [
+    ['fogo-das-fadas',       'sono'],                     // 1
+    ['acalmar-emocoes',      'forca-fantasmagorica'],     // 3 (lvl 2 spells)
+    ['piscar',               'crescimento-de-planta'],    // 5 (lvl 3)
+    ['dominar-besta',        'invisibilidade-maior'],     // 7 (lvl 4)
+    ['dominar-pessoa',       'similaridade'],             // 9 (lvl 5, Seeming)
+  ],
+  // Patrono Infernal — Fiend (PHB p.109)
+  infernal: [
+    ['maos-flamejantes',  'comando'],                     // 1
+    ['cegueirasurdez',    'raio-ardente'],                // 3
+    ['bola-de-fogo',      'nevoa-fetida'],                // 5
+    ['escudo-de-fogo',    'muralha-de-fogo'],             // 7
+    ['coluna-de-chamas',  'consagrar'],                   // 9 (Flame Strike, Hallow)
+  ],
+  // Patrono do Grande Antigo (PHB p.110)
+  grande_antigo: [
+    ['sussurros-dissonantes',     'riso-histerico-de-tasha'],   // 1
+    ['detectar-pensamentos',      'forca-fantasmagorica'],      // 3
+    ['clarividencia',             'enviar-mensagem'],           // 5 (Sending)
+    ['dominar-besta',             'tentaculos-negros-de-evard'],// 7
+    ['dominar-pessoa',            'telecinesia'],               // 9
+  ],
 }
 
 function labelFor(classIndex, subclassKey) {
@@ -99,11 +197,14 @@ export function getSubclassSpellsForLevel({ classIndex, chosenFeatures, classLev
     const patron = chosenFeatures.patron
     if (!patron || !WARLOCK_PATRON_LEVELS.includes(classLevel)) return { indices: [] }
     const tier = WARLOCK_PATRON_LEVELS.indexOf(classLevel)
+    // PHB p.108: lista expandida = magias adicionais que NÃO contam pro limite
+    // de conhecidas. UX-wise isso é equivalente a "always available / doesn't
+    // count" — usamos alwaysPrepared=true (que a UI já trata excluindo do
+    // contador). O label indica fonte ("Patrono: feerico").
     return {
       indices: WARLOCK_PATRON_SPELLS[patron]?.[tier] ?? [],
-      alwaysPrepared: false,
+      alwaysPrepared: true,
       source: 'patron',
-      expandsKnownList: true,
       label: labelFor(classIndex, patron),
     }
   }

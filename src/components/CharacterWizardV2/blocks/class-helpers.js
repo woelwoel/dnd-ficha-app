@@ -20,9 +20,21 @@ export function isChoiceDone(choice, value) {
   return !!value
 }
 
-export function getLeveledChoices(classChoicesData, level) {
+/**
+ * Lista de escolhas que se aplicam até o nível atual.
+ *
+ * Suporta o campo opcional `requires: { fieldKey: requiredValue }` na escolha.
+ * Quando presente, a escolha só aparece se TODOS os pares chosenFeatures
+ * baterem. Usado pra escolhas condicionais (ex: druid_land_type só faz sentido
+ * se druid_circle === 'terra').
+ */
+export function getLeveledChoices(classChoicesData, level, chosenFeatures = {}) {
   return (classChoicesData?.choices ?? [])
     .filter(c => c.level <= level)
+    .filter(c => {
+      if (!c.requires) return true
+      return Object.entries(c.requires).every(([k, v]) => chosenFeatures?.[k] === v)
+    })
     .sort((a, b) => a.level - b.level)
 }
 
