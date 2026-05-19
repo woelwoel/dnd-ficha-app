@@ -49,16 +49,30 @@ function HpQuickControls({ onDamage, onHeal, disabled }) {
   )
 }
 
-/* Chip de stat numérico (CA / INIT / VEL) ──────────────────── */
-function StatChip({ icon, label, value, title }) {
+/* Chip de stat numérico (CA / INIT / VEL) ──────────────────────
+ * Quando `editable` + `onChange` são passados, o valor vira input.
+ */
+function StatChip({ icon, label, value, title, editable = false, onChange }) {
   return (
     <div
       title={title}
       className="flex items-center gap-1.5 px-2 py-1 rounded-sm bg-parchment-50/80 border border-parchment-600 text-ink-500"
     >
       <span aria-hidden className="text-sm leading-none">{icon}</span>
-      <span className="text-[9px] font-display tracking-widest uppercase text-ink-300 leading-none">{label}</span>
-      <span className="text-sm font-bold leading-none">{value}</span>
+      <span className="text-[10px] font-display tracking-widest uppercase text-ink-300 leading-none">{label}</span>
+      {editable && onChange ? (
+        <input
+          type="number"
+          min={0}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          onWheel={e => e.currentTarget.blur()}
+          aria-label={label}
+          className="w-10 text-center text-sm font-bold leading-none bg-transparent focus:outline-none focus:bg-parchment-100 rounded-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        />
+      ) : (
+        <span className="text-sm font-bold leading-none">{value}</span>
+      )}
     </div>
   )
 }
@@ -135,15 +149,15 @@ export function SheetCombatBar() {
     >
       <div className="max-w-7xl mx-auto px-4 py-2 flex flex-wrap items-center gap-x-4 gap-y-2">
 
-        {/* HP — bloco principal */}
-        <div className="flex items-center gap-2 min-w-[260px] flex-1">
+        {/* HP — bloco compacto (largura reduzida pra dar espaço aos chips) */}
+        <div className="flex items-center gap-2 min-w-[180px] max-w-[280px] flex-1">
           <span aria-hidden className="text-base text-red-700">❤</span>
           <div className="flex-1 min-w-0">
             <div className="flex items-baseline justify-between gap-2">
               <span className="text-[10px] font-display tracking-widest uppercase text-ink-300">PV</span>
               <span className="text-xs font-bold text-ink-500 tabular-nums">{hpLabel}</span>
             </div>
-            <div className="h-2.5 mt-0.5 rounded-full bg-ink-700/30 overflow-hidden border border-parchment-600 shadow-inner">
+            <div className="h-2 mt-0.5 rounded-full bg-ink-700/30 overflow-hidden border border-parchment-600 shadow-inner">
               <div
                 className={`h-full ${hpColor} transition-all duration-500 shadow-sm`}
                 style={{ width: `${hpPct}%` }}
@@ -159,7 +173,14 @@ export function SheetCombatBar() {
 
         {/* Stats inline */}
         <div className="flex items-center gap-1.5 flex-wrap">
-          <StatChip icon="⛨" label="CA" value={ac} title="Classe de Armadura" />
+          <StatChip
+            icon="⛨"
+            label="CA"
+            value={ac}
+            title="Classe de Armadura (clique pra editar)"
+            editable
+            onChange={v => updaters.updateCombat?.('armorClass', Math.max(0, parseInt(v, 10) || 0))}
+          />
           <StatChip
             icon="⚡"
             label="INIT"

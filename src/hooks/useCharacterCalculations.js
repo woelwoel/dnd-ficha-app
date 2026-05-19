@@ -10,7 +10,7 @@ import {
 } from '../utils/calculations'
 import { calculateMaxHpMulticlass, listSpellcastingClasses } from '../domain/rules'
 import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
-import { keyFromAbbr } from '../domain/attributes'
+import { resolveAbilityKey } from '../domain/attributes'
 import {
   getSpellSlots,
   clampUsedSlots,
@@ -106,7 +106,7 @@ export function useCharacterCalculations(character, classData = null, classDataM
     const initiative = calculateInitiative(dex, { feats })
 
     // Atributo de magia (compat: classe primária)
-    const spellAbilityKey = spellAbilityLabel ? keyFromAbbr(spellAbilityLabel) : null
+    const spellAbilityKey = resolveAbilityKey(spellAbilityLabel)
     const spellScore = spellAbilityKey ? (attributes?.[spellAbilityKey] ?? 10) : 10
 
     const spellSaveDC = spellAbilityKey

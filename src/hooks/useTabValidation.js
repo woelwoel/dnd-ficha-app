@@ -53,8 +53,11 @@ function validateFicha(character, races = []) {
       errors[`attr_${key}`] = `${name}: valor deve estar entre 3 e 20`
   }
 
-  if (Number(combat.armorClass) < 10)
-    errors.armorClass = 'Classe de Armadura mínima é 10'
+  // CA pode ser qualquer valor não-negativo. (Antes travava em ≥10, mas no
+  // 5e existem efeitos/itens que reduzem temporariamente abaixo disso, e o
+  // usuário deve poder editar livremente.)
+  if (Number(combat.armorClass) < 0)
+    errors.armorClass = 'Classe de Armadura não pode ser negativa'
 
   if (Number(combat.maxHp) > 0 && Number(combat.currentHp) > Number(combat.maxHp))
     errors.currentHp = 'PV atual não pode exceder PV máximo'
