@@ -107,7 +107,7 @@ export function AttributesSection({
         )}
       </div>
 
-      <div className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:gap-3 sm:justify-start">
+      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-2.5">
         {ABILITY_SCORES.map(({ key, abbr, name }) => {
           const racialBonus = appliedRacialBonuses[key] ?? 0
           const baseValue = baseValues[key]

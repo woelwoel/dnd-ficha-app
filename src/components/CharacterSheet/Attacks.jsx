@@ -56,18 +56,40 @@ export function Attacks({ attacks = [], attributes, profBonus, onAdd, onRemove, 
     onChange(Array.from(set))
   }
 
-  return (
-    <div className="bg-gray-800 border border-gray-600 rounded-lg p-4">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-bold text-amber-400 uppercase tracking-widest">
+  // Estado vazio sem formulário aberto vira uma linha discreta com botão de adicionar.
+  if (attacks.length === 0 && !showForm) {
+    return (
+      <div className="bg-parchment-100 border border-parchment-600 rounded-lg px-4 py-2.5 flex items-center justify-between gap-3"
+        style={{ boxShadow: 'var(--shadow-parchment-sm)' }}>
+        <h3 className="text-sm font-display text-ink-500 uppercase tracking-widest">
           Ataques
-          <span className="ml-2 text-gray-500 font-normal normal-case text-xs">
+          <span className="ml-2 ink-italic text-ink-300 text-xs normal-case tracking-normal">
+            — nenhum registrado
+          </span>
+        </h3>
+        <button
+          onClick={() => setShowForm(true)}
+          className="text-xs px-3 py-1.5 rounded-sm bg-ink-500 hover:bg-ink-600 text-parchment-50 font-display tracking-wide"
+        >
+          + Ataque
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-parchment-100 border border-parchment-600 rounded-lg p-4"
+      style={{ boxShadow: 'var(--shadow-parchment-sm)' }}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-sm font-display text-ink-500 uppercase tracking-widest">
+          Ataques
+          <span className="ml-2 text-ink-300 font-normal normal-case text-xs">
             {attacks.length} registrado{attacks.length !== 1 ? 's' : ''}
           </span>
         </h3>
         <button
           onClick={() => setShowForm(v => !v)}
-          className="text-xs px-3 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white font-semibold"
+          className="text-xs px-3 py-1.5 rounded-sm bg-ink-500 hover:bg-ink-600 text-parchment-50 font-display tracking-wide"
         >
           {showForm ? 'Cancelar' : '+ Ataque'}
         </button>

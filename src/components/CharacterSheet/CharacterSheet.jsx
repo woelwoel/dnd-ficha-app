@@ -147,7 +147,7 @@ export function CharacterSheet({ characterId, onBack }) {
 
           {/* Área de conteúdo (sem scroll próprio — flui no documento pra permitir print) */}
           <main className="flex-1 min-w-0">
-            <div className="max-w-4xl mx-auto px-2 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6 space-y-4">
+            <div className="max-w-7xl mx-auto px-2 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6 space-y-4">
 
               {importError && (
                 <ImportErrorBanner

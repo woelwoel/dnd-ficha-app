@@ -44,7 +44,7 @@ function AttributeBoxBase({
   }
 
   return (
-    <div className={`relative flex flex-col items-center bg-parchment-50 border-2 rounded p-2 sm:p-3 min-w-0 sm:min-w-[90px] ${
+    <div className={`relative flex flex-col items-center bg-parchment-50 border-2 rounded p-2 sm:p-3 min-w-0 ${
       error ? 'border-ink-500' : col.border
     }`}
       style={{ boxShadow: 'var(--shadow-parchment-sm)' }}>
