@@ -4,35 +4,7 @@ import { formatHitDicePool } from '../../utils/hitDice'
 import { FormFieldError } from '../FormFieldError'
 import { RollButton } from '../DiceRoller/RollButton'
 import { DamageModal } from './DamageModal'
-
-/* ── Condições D&D 5e (PHB p.290–296) ─────────────────────── */
-const CONDITIONS = [
-  { id: 'blinded',       label: 'Cego',          icon: '👁️‍🗨️' },
-  { id: 'charmed',       label: 'Enfeitiçado',   icon: '💜' },
-  { id: 'deafened',      label: 'Surdo',          icon: '🔇' },
-  { id: 'frightened',    label: 'Amedrontado',   icon: '😱' },
-  { id: 'grappled',      label: 'Agarrado',       icon: '🤜' },
-  { id: 'incapacitated', label: 'Incapacitado',  icon: '💢' },
-  { id: 'invisible',     label: 'Invisível',     icon: '👻' },
-  { id: 'paralyzed',     label: 'Paralisado',    icon: '⚡' },
-  { id: 'petrified',     label: 'Petrificado',   icon: '🪨' },
-  { id: 'poisoned',      label: 'Envenenado',    icon: '🟢' },
-  { id: 'prone',         label: 'Prostrado',     icon: '⬇️' },
-  { id: 'restrained',    label: 'Imobilizado',   icon: '🔗' },
-  { id: 'stunned',       label: 'Atordoado',     icon: '💫' },
-  { id: 'unconscious',   label: 'Inconsciente',  icon: '💤' },
-]
-
-/* Descrições de exaustão (PHB p.291) */
-const EXHAUSTION_EFFECTS = [
-  'Sem efeito',
-  'Desvantagem em testes de habilidade',
-  'Velocidade reduzida à metade',
-  'Desv. em ataques e testes de resistência',
-  'Máximo de PV reduzido à metade',
-  'Velocidade reduzida a 0',
-  'Morte',
-]
+import { CONDITIONS, EXHAUSTION_EFFECTS } from '../../domain/conditions'
 
 /* ── Death Saves ───────────────────────────────────────────── */
 function DeathSavesTracker({ deathSaves, isStable, isDead, onUpdate, onRoll, onStabilize }) {
@@ -318,6 +290,54 @@ function DamageEventBanner({ event, onDismiss }) {
   )
 }
 
+/* ── Botão individual de condição com expansão de regra ───── */
+function ConditionButton({ condition, isActive, onToggle }) {
+  const [showRule, setShowRule] = useState(false)
+  return (
+    <div className="flex flex-col">
+      <div className={`flex items-stretch rounded overflow-hidden border ${
+        isActive
+          ? 'bg-ink-500 border-ink-600 text-parchment-50'
+          : 'bg-parchment-100 border-parchment-600 text-ink-200 hover:border-ink-300'
+      }`}>
+        <button
+          onClick={onToggle}
+          title={isActive ? 'Remover condição' : 'Adicionar condição'}
+          className={`flex-1 flex items-center gap-1.5 px-2 py-1.5 text-xs text-left ${
+            isActive ? '' : 'hover:text-ink-500'
+          }`}
+        >
+          <span aria-hidden>{condition.icon}</span>
+          <span>{condition.label}</span>
+          {isActive && <span className="ml-auto text-parchment-50 text-[10px]" aria-hidden>✕</span>}
+        </button>
+        <button
+          onClick={() => setShowRule(v => !v)}
+          aria-label={`Ler regra de ${condition.label}`}
+          aria-expanded={showRule}
+          title="Ler regra (PHB)"
+          className={`px-2 text-[11px] border-l ${
+            isActive
+              ? 'border-ink-600/40 text-parchment-50 hover:bg-ink-600'
+              : 'border-parchment-600 text-ink-300 hover:text-ink-500 hover:bg-parchment-200'
+          }`}
+        >
+          {showRule ? '▴' : 'ℹ'}
+        </button>
+      </div>
+      {showRule && (
+        <p className={`text-[10px] leading-relaxed px-2 py-1.5 border border-t-0 rounded-b ${
+          isActive
+            ? 'border-ink-600 bg-ink-500/10 text-ink-500'
+            : 'border-parchment-600 bg-parchment-50 text-ink-300 italic'
+        }`}>
+          {condition.rule}
+        </p>
+      )}
+    </div>
+  )
+}
+
 /* ── Condições ─────────────────────────────────────────────── */
 function ConditionsTracker({ conditions = [], onToggle }) {
   const [expanded, setExpanded] = useState(false)
@@ -357,25 +377,18 @@ function ConditionsTracker({ conditions = [], onToggle }) {
         </div>
       )}
 
-      {/* Painel expandido com todas as condições */}
+      {/* Painel expandido com todas as condições — botão "?" abre regra */}
       {expanded && (
         <div className="grid grid-cols-2 gap-1 p-2 bg-parchment-50 border border-parchment-600 rounded-lg">
           {CONDITIONS.map(c => {
             const isActive = conditions.includes(c.id)
             return (
-              <button
+              <ConditionButton
                 key={c.id}
-                onClick={() => onToggle(c.id)}
-                className={`flex items-center gap-1.5 px-2 py-1.5 rounded text-xs text-left transition-colors ${
-                  isActive
-                    ? 'bg-ink-500 border border-ink-600 text-parchment-50'
-                    : 'bg-parchment-100 border border-parchment-600 text-ink-200 hover:border-ink-300 hover:text-ink-500'
-                }`}
-              >
-                <span>{c.icon}</span>
-                <span>{c.label}</span>
-                {isActive && <span className="ml-auto text-parchment-50 text-[10px]">✕</span>}
-              </button>
+                condition={c}
+                isActive={isActive}
+                onToggle={() => onToggle(c.id)}
+              />
             )
           })}
         </div>
