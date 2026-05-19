@@ -455,7 +455,7 @@ function CombatStatsBase({
     <div className="bg-parchment-100 border border-parchment-600 rounded-lg p-4 space-y-4"
       style={{ boxShadow: 'var(--shadow-parchment-sm)' }}>
       <h3 className="text-sm font-display text-ink-500 uppercase tracking-widest border-b border-parchment-600 pb-1">
-        {compact ? 'Ajustes & Manutenção' : 'Combate'}
+        {compact ? 'Detalhes' : 'Combate'}
       </h3>
 
       {/* Linha 1: CA / Iniciativa / Velocidade (ocultos em modo compacto — barra sticky cobre) */}

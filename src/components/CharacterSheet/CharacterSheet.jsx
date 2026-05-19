@@ -8,7 +8,6 @@ import { loadCharacterById } from '../../utils/storage'
 import { SheetHeader } from './SheetHeader'
 import { SheetTabs, TABS, NavBlockedBanner, ImportErrorBanner } from './SheetTabs'
 import { SheetContent } from './SheetContent'
-import { SheetCombatBar } from './SheetCombatBar'
 import { CharacterProvider } from './CharacterContext'
 import { useSheetHandlers } from './useSheetHandlers'
 import { PrintView } from '../PrintView/PrintView'
@@ -122,7 +121,7 @@ export function CharacterSheet({ characterId, onBack }) {
     <CharacterProvider value={contextValue}>
       <div className="min-h-screen flex flex-col">
 
-        {/* ── Header + barra de combate (ambos sticky, colados) ── */}
+        {/* ── Header único (navegação + barra de combate integrada) ── */}
         <div className="sticky top-0 z-30">
           <SheetHeader
             characterName={character.info.name}
@@ -136,7 +135,6 @@ export function CharacterSheet({ characterId, onBack }) {
             showPrint={true}
             quickStats={quickStats}
           />
-          <SheetCombatBar />
         </div>
 
         {/* ── Corpo: sidebar + conteúdo ────────────────────────── */}
