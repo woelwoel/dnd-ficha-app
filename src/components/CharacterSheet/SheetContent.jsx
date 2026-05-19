@@ -10,6 +10,7 @@ import { FeaturesTab } from './FeaturesTab'
 import { AttributesSection } from './AttributesSection'
 import { RestActions } from './RestActions'
 import { Attacks } from './Attacks'
+import { PreparedSpellsList } from './PreparedSpellsList'
 import { CombatClassActions } from './CombatClassActions'
 import { useCharacterContext } from './CharacterContext'
 
@@ -149,6 +150,8 @@ export function SheetContent({ activeTab }) {
               onRemove={removeAttack}
               onUpdate={updateAttack}
             />
+
+            <PreparedSpellsList />
           </div>
 
           {/* ── COLUNA DIREITA ────────────────────────────────────── */}
