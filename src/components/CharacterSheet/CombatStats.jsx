@@ -411,6 +411,10 @@ function CombatStatsBase({
   onBreakConcentration,
   // PR 4 — Inspiração consumível como vantagem.
   onConsumeInspiration,
+  // Modo compacto: esconde CA/INIT/VEL e tracker de PV (vivem na barra
+  // sticky agora). Mantém só ajustes avançados: PV Máx/Temp, Insp,
+  // Exaustão, mortes, condições, eventos de dano.
+  compact = false,
 }) {
   const conMod = getModifier(attributes?.con ?? 10)
   const exh = getExhaustionEffects(combat?.exhaustion ?? 0)
@@ -435,9 +439,12 @@ function CombatStatsBase({
   return (
     <div className="bg-parchment-100 border border-parchment-600 rounded-lg p-4 space-y-4"
       style={{ boxShadow: 'var(--shadow-parchment-sm)' }}>
-      <h3 className="text-sm font-display text-ink-500 uppercase tracking-widest border-b border-parchment-600 pb-1">Combate</h3>
+      <h3 className="text-sm font-display text-ink-500 uppercase tracking-widest border-b border-parchment-600 pb-1">
+        {compact ? 'Ajustes & Manutenção' : 'Combate'}
+      </h3>
 
-      {/* Linha 1: CA / Iniciativa / Velocidade */}
+      {/* Linha 1: CA / Iniciativa / Velocidade (ocultos em modo compacto — barra sticky cobre) */}
+      {!compact && (
       <div className="grid grid-cols-3 gap-2 sm:gap-3">
         <StatBox label="CA" value={combat.armorClass} editable
           fieldId="field-armorClass"
@@ -467,6 +474,7 @@ function CombatStatsBase({
             : null}
         />
       </div>
+      )}
 
       {/* Linha 2: Bônus de Prof / Dado de Vida / Percepção Passiva */}
       <div className="grid grid-cols-3 gap-2 sm:gap-3">
@@ -557,8 +565,9 @@ function CombatStatsBase({
         </div>
       )}
 
-      {/* HP Tracker */}
+      {/* HP Tracker — esconde o PV current em modo compacto (barra sticky cobre) */}
       <div className="space-y-2">
+        {!compact && (
         <div>
           <div className="flex justify-between items-center mb-1">
             <label className="text-xs text-ink-200">Pontos de Vida</label>
@@ -599,6 +608,7 @@ function CombatStatsBase({
             />
           </div>
         </div>
+        )}
 
         <div>
           <div className="flex items-center justify-between">
@@ -648,9 +658,9 @@ function CombatStatsBase({
         </div>
       </div>
 
-      {/* Damage / Heal — sempre visíveis (substitui o ajuste manual de PV pra
-          fluxo RAW PHB: tempHp drain, drop to 0, instakill, etc.) */}
-      {onApplyDamage && (
+      {/* Damage / Heal — esconde em modo compacto (barra sticky tem controles rápidos
+          e o modal de opções avançadas é acessível via ⚙ ali) */}
+      {!compact && onApplyDamage && (
         <DamageHealControls
           onApplyDamage={onApplyDamage}
           onApplyHealing={onApplyHealing}

@@ -154,17 +154,27 @@ function AttributeBoxBase({
       {/* Rodapé de salvaguarda — fundido no card */}
       {saveBonus !== undefined && saveBonus !== null && (
         <div
-          className="mt-2 pt-2 border-t border-parchment-600/50 w-full flex items-center justify-center gap-1.5"
+          className={[
+            'mt-2 -mx-2 sm:-mx-3 -mb-2 sm:-mb-3 px-2 py-1.5 rounded-b-sm w-[calc(100%+1rem)] sm:w-[calc(100%+1.5rem)] flex items-center justify-center gap-2 border-t',
+            saveProficient
+              ? 'bg-ink-500/10 border-ink-300/50'
+              : 'bg-parchment-200/50 border-parchment-600/40',
+          ].join(' ')}
           title={saveProficient
             ? `Salvaguarda de ${name} — proficiente (definida pela classe)`
-            : `Salvaguarda de ${name}`}
+            : `Salvaguarda de ${name} (não proficiente)`}
         >
           <span
             aria-hidden
-            className={`text-[10px] leading-none ${saveProficient ? 'text-ink-500' : 'text-ink-300'}`}
-          >{saveProficient ? '🔒' : '○'}</span>
-          <span className="text-[9px] font-display tracking-widest uppercase text-ink-300">Salva</span>
-          <span className={`text-xs font-bold tabular-nums ${saveProficient ? 'text-ink-500' : 'text-ink-300'}`}>
+            className={`text-[10px] leading-none ${saveProficient ? 'text-ink-500' : 'text-parchment-600'}`}
+          >{saveProficient ? '◆' : '◇'}</span>
+          <span className={[
+            'text-[9px] font-display tracking-widest uppercase leading-none',
+            saveProficient ? 'text-ink-500 font-semibold' : 'text-ink-300',
+          ].join(' ')}>salva</span>
+          <span className={`text-sm font-bold tabular-nums leading-none ${
+            saveProficient ? 'text-ink-500' : 'text-ink-300'
+          }`}>
             {formatModifier(saveBonus)}
           </span>
           {saveNotation && (
