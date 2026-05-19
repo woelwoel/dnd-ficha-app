@@ -147,21 +147,24 @@ export function SkillsList({ attributes, proficiencies, profBonus, onToggle, onT
         </div>
       </div>
 
-      {/* Grid de grupos: 1 col mobile, 2 cols tablet, 3 cols desktop */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-3">
-        {ABILITY_SCORES.map(({ key }) => (
-          <AbilityGroup
-            key={key}
-            ability={key}
-            skills={skillsByAbility[key]}
-            attributes={attributes}
-            profBonus={profBonus}
-            proficiencies={proficiencies}
-            onToggle={onToggle}
-            onToggleExpertise={onToggleExpertise}
-            atLimit={atLimit}
-          />
-        ))}
+      {/* Grid de grupos: 1 col mobile, 2 cols a partir de sm.
+          Atributos sem perícias (CON em 5e base) são ocultados. */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+        {ABILITY_SCORES
+          .filter(({ key }) => skillsByAbility[key]?.length > 0)
+          .map(({ key }) => (
+            <AbilityGroup
+              key={key}
+              ability={key}
+              skills={skillsByAbility[key]}
+              attributes={attributes}
+              profBonus={profBonus}
+              proficiencies={proficiencies}
+              onToggle={onToggle}
+              onToggleExpertise={onToggleExpertise}
+              atLimit={atLimit}
+            />
+          ))}
       </div>
     </div>
   )

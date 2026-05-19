@@ -109,46 +109,77 @@ export function SheetContent({ activeTab }) {
 
     return (
       <TabPanel id="ficha">
-        <div className="space-y-4">
+        {/* Layout 2 colunas no desktop (60% esquerda, 40% direita); empilha no mobile.
+            ESQUERDA = "o que você rola" (Atributos, Perícias, Ataques)
+            DIREITA  = "contexto e ajustes" (Identidade, Recursos, Descansos, Manutenção) */}
+        <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-4 items-start">
 
-          {/* ①  Identidade — recolhível */}
-          <CollapsibleSection title="Identidade" summary={identitySummary}>
-            <div className="p-4">
-              <CharacterInfo
-                info={{ ...character.info, languages: character.proficiencies.languages ?? [] }}
-                onUpdate={updateInfo}
-                races={races}
-                classes={classes}
-                backgrounds={backgrounds}
-                errors={fichaErrors}
-                onRaceChange={handleRaceChange}
-                onSubraceChange={handleSubraceChange}
-                onBackgroundChange={handleBackgroundChange}
-                onClassChange={handleClassChange}
-                onToggleLanguage={toggleLanguage}
-              />
-            </div>
-          </CollapsibleSection>
+          {/* ── COLUNA ESQUERDA ───────────────────────────────────── */}
+          <div className="space-y-4 min-w-0">
+            <AttributesSection
+              attributes={character.attributes}
+              scoreMethod={character.info.scoreMethod ?? 'manual'}
+              appliedRacialBonuses={character.appliedRacialBonuses ?? {}}
+              onChangeMethod={m => updateInfo('scoreMethod', m)}
+              onChangeAttribute={updateAttribute}
+              errors={fichaErrors}
+              profBonus={calc.profBonus}
+              classData={classData}
+            />
 
-          {/* ②  Atributos + Salvaguardas  |  Combate */}
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(240px,310px)_1fr] gap-4 items-start">
+            <SkillsList
+              attributes={character.attributes}
+              proficiencies={character.proficiencies}
+              profBonus={calc.profBonus}
+              onToggle={toggleSkillProficiency}
+              onToggleExpertise={toggleExpertiseSkill}
+              classData={classData}
+            />
 
-            {/* Coluna esquerda — Atributos com salvaguardas fundidas em cada card */}
-            <div className="space-y-4">
-              <AttributesSection
-                attributes={character.attributes}
-                scoreMethod={character.info.scoreMethod ?? 'manual'}
-                appliedRacialBonuses={character.appliedRacialBonuses ?? {}}
-                onChangeMethod={m => updateInfo('scoreMethod', m)}
-                onChangeAttribute={updateAttribute}
-                errors={fichaErrors}
-                profBonus={calc.profBonus}
-                classData={classData}
-              />
-            </div>
+            <Attacks
+              attacks={character.combat?.attacks ?? []}
+              attributes={character.attributes}
+              profBonus={calc.profBonus}
+              onAdd={addAttack}
+              onRemove={removeAttack}
+              onUpdate={updateAttack}
+            />
+          </div>
 
-            {/* Coluna direita: Combate */}
+          {/* ── COLUNA DIREITA ────────────────────────────────────── */}
+          <div className="space-y-4 min-w-0">
+            <CollapsibleSection title="Identidade" summary={identitySummary} defaultOpen={false}>
+              <div className="p-4">
+                <CharacterInfo
+                  info={{ ...character.info, languages: character.proficiencies.languages ?? [] }}
+                  onUpdate={updateInfo}
+                  races={races}
+                  classes={classes}
+                  backgrounds={backgrounds}
+                  errors={fichaErrors}
+                  onRaceChange={handleRaceChange}
+                  onSubraceChange={handleSubraceChange}
+                  onBackgroundChange={handleBackgroundChange}
+                  onClassChange={handleClassChange}
+                  onToggleLanguage={toggleLanguage}
+                />
+              </div>
+            </CollapsibleSection>
+
+            <CombatClassActions
+              character={character}
+              onToggleRage={setRageActive}
+              onSpendFeatureUse={spendFeatureUse}
+              onRegainFeatureUse={regainFeatureUse}
+              onToggleSlot={toggleSlot}
+              onSetWildShape={setWildShape}
+            />
+
+            <RestActions character={character} onApply={setCharacter} />
+
+            {/* Manutenção: PV Máx/Temp, Inspiração, Exaustão, Death Saves, Condições. */}
             <CombatStats
+              compact
               combat={character.combat}
               attributes={character.attributes}
               profBonus={calc.profBonus}
@@ -175,39 +206,6 @@ export function SheetContent({ activeTab }) {
               onConsumeInspiration={consumeInspiration}
             />
           </div>
-
-          {/* ③  Perícias — largura total, 3 colunas no desktop */}
-          <SkillsList
-            attributes={character.attributes}
-            proficiencies={character.proficiencies}
-            profBonus={calc.profBonus}
-            onToggle={toggleSkillProficiency}
-            onToggleExpertise={toggleExpertiseSkill}
-            classData={classData}
-          />
-
-          {/* ④  Ataques */}
-          <Attacks
-            attacks={character.combat?.attacks ?? []}
-            attributes={character.attributes}
-            profBonus={calc.profBonus}
-            onAdd={addAttack}
-            onRemove={removeAttack}
-            onUpdate={updateAttack}
-          />
-
-          {/* ④.5  Recursos de combate específicos de classe */}
-          <CombatClassActions
-            character={character}
-            onToggleRage={setRageActive}
-            onSpendFeatureUse={spendFeatureUse}
-            onRegainFeatureUse={regainFeatureUse}
-            onToggleSlot={toggleSlot}
-            onSetWildShape={setWildShape}
-          />
-
-          {/* ⑤  Descansos */}
-          <RestActions character={character} onApply={setCharacter} />
         </div>
       </TabPanel>
     )
