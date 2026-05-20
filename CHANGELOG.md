@@ -9,6 +9,27 @@ Versionamento semântico: [SemVer](https://semver.org/lang/pt-BR/).
 
 ## [Não lançado]
 
+### Adicionado (PR 2 — Fichas no Postgres)
+- Persistência das fichas migrada de `localStorage` para Supabase Postgres
+  (tabela `public.characters` com RLS owner-only).
+- Fichas agora sincronizam entre dispositivos da mesma conta automaticamente
+  (refresh manual ainda necessário — realtime fica pra PR 5).
+- `storage.js` mantém a mesma fachada de funções, agora todas `async`.
+- RPCs `update_character_position` (jsonb_set) e `touch_character_last_opened`
+  evitam reescrever o payload completo em operações de alta frequência.
+- Limite anti-abuse: 100 fichas por conta + 200 KB por ficha.
+- Campo `traits` no schema da ficha tornou-se opcional com default `{}` —
+  mais tolerante a fichas migradas sem o campo explícito.
+
+### Removido (PR 2)
+- Persistência de fichas em `localStorage`. Backup local (export JSON) continua
+  funcionando como mecanismo de portabilidade.
+- Listener cross-tab `storage` event no `CharacterList` (não se aplica mais).
+
+### Notas (PR 2)
+- Setup adicional: aplicar migration `supabase/migrations/0002_characters.sql`
+  no SQL Editor do Supabase antes do primeiro uso.
+
 ### Adicionado (PR 1 — Auth Supabase)
 - Autenticação Supabase com email/senha. App passa a exigir login antes de
   mostrar a lista de fichas. Google OAuth fica pra PR futuro.
