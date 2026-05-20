@@ -317,3 +317,39 @@ begin
   return v_cid;
 end;
 $$;
+
+-- ─────────────────────────────────────────────────────────────────────
+-- RPC: rotate_invite_code(campaign_id) -> new_code
+-- Só o DM da mesa. Gera código novo e devolve.
+-- ─────────────────────────────────────────────────────────────────────
+
+create function public.rotate_invite_code(p_campaign_id uuid)
+returns text
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+declare
+  v_uid  uuid := auth.uid();
+  v_code text;
+begin
+  if v_uid is null then
+    raise exception 'not_authenticated' using errcode = '42501';
+  end if;
+
+  if not exists (
+    select 1 from public.campaigns
+    where id = p_campaign_id and dm_id = v_uid
+  ) then
+    raise exception 'not_dm_of_campaign' using errcode = '42501';
+  end if;
+
+  v_code := public.gen_campaign_invite_code();
+
+  update public.campaigns
+    set invite_code = v_code, updated_at = now()
+    where id = p_campaign_id;
+
+  return v_code;
+end;
+$$;
