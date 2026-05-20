@@ -32,6 +32,12 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg}'],
         // Aumenta o limite — bundle do CharacterSheet passa de 2MB.
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
+        // Após deploy novo, o SW novo assume imediatamente — evita o caso de
+        // SW velho servir HTML antigo apontando pra chunks que não existem mais.
+        skipWaiting: true,
+        clientsClaim: true,
+        // Limpa precache de versões anteriores no activate.
+        cleanupOutdatedCaches: true,
         // Runtime: dados SRD JSON cacheados sob demanda (CacheFirst — não mudam).
         runtimeCaching: [
           {
