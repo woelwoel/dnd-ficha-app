@@ -16,6 +16,7 @@
     "test:all": "vitest run && playwright test"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.106.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "zod": "^3.23.8"
