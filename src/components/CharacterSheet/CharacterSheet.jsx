@@ -30,9 +30,23 @@ export function CharacterSheet({ characterId, onBack }) {
   // próprio Spells (que dispara setDetailSpell e depois chama clearFocusSpell).
   const [focusSpellId, setFocusSpellId] = useState(null)
 
-  const initialCharacter = useMemo(() => {
-    if (!characterId || characterId === 'new') return null
-    return loadCharacterById(characterId)
+  const [initialCharacter, setInitialCharacter] = useState(null)
+  const [loadingCharacter, setLoadingCharacter] = useState(true)
+
+  useEffect(() => {
+    let alive = true
+    if (!characterId || characterId === 'new') {
+      setInitialCharacter(null)
+      setLoadingCharacter(false)
+      return
+    }
+    setLoadingCharacter(true)
+    loadCharacterById(characterId).then(ch => {
+      if (!alive) return
+      setInitialCharacter(ch)
+      setLoadingCharacter(false)
+    })
+    return () => { alive = false }
   }, [characterId])
 
   const { character, setCharacter, ...updaters } = useCharacter(initialCharacter)
@@ -127,6 +141,14 @@ export function CharacterSheet({ characterId, onBack }) {
     focusSpellId,
     clearFocusSpell: () => setFocusSpellId(null),
   }), [character, setCharacter, calc, classData, races, classes, backgrounds, updaters, handlers, fichaErrors, featureUses, focusSpellId])
+
+  if (loadingCharacter) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-amber-400 text-sm">
+        Carregando ficha…
+      </div>
+    )
+  }
 
   return (
     <CharacterProvider value={contextValue}>
