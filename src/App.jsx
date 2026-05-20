@@ -6,9 +6,11 @@ import { DiceHistoryPanel } from './components/DiceRoller/DiceHistoryPanel'
 import { BestiaryButton } from './components/Bestiary/BestiaryButton'
 import { CharacterList } from './components/CharacterList'
 import { PWAUpdatePrompt } from './components/PWAUpdatePrompt'
+import { AuthProvider, useAuth } from './auth/AuthProvider'
+import { LoginScreen } from './auth/LoginScreen'
+import { ResetPasswordScreen } from './auth/ResetPasswordScreen'
 import './index.css'
 
-// Code-splitting: wizard e ficha só carregam quando necessárias.
 const CharacterSheet = lazy(() =>
   import('./components/CharacterSheet/CharacterSheet').then(m => ({ default: m.CharacterSheet }))
 )
@@ -26,35 +28,50 @@ function Loader() {
   )
 }
 
-function App() {
+function AuthedApp() {
   const [view, setView] = useState({ kind: VIEW.LIST, id: null })
-
   const goToList  = useCallback(() => setView({ kind: VIEW.LIST,  id: null }), [])
   const goToNew   = useCallback(() => setView({ kind: VIEW.NEW,   id: null }), [])
   const goToSheet = useCallback(id =>  setView({ kind: VIEW.SHEET, id }),        [])
 
   return (
+    <SrdProvider>
+      <DiceRollerProvider>
+        <div className="min-h-screen bg-gray-950 text-gray-100">
+          <Suspense fallback={<Loader />}>
+            {view.kind === VIEW.LIST && (
+              <CharacterList onSelect={goToSheet} onCreate={goToNew} />
+            )}
+            {view.kind === VIEW.NEW && (
+              <CharacterWizard onBack={goToList} onComplete={goToSheet} />
+            )}
+            {view.kind === VIEW.SHEET && (
+              <CharacterSheet characterId={view.id} onBack={goToList} />
+            )}
+          </Suspense>
+          <DiceHistoryPanel />
+          <BestiaryButton />
+          <PWAUpdatePrompt />
+        </div>
+      </DiceRollerProvider>
+    </SrdProvider>
+  )
+}
+
+function Gate() {
+  const { user, loading, recoveryMode } = useAuth()
+  if (loading) return <Loader />
+  if (recoveryMode) return <ResetPasswordScreen />
+  if (!user) return <LoginScreen />
+  return <AuthedApp />
+}
+
+function App() {
+  return (
     <ErrorBoundary>
-      <SrdProvider>
-        <DiceRollerProvider>
-          <div className="min-h-screen bg-gray-950 text-gray-100">
-            <Suspense fallback={<Loader />}>
-              {view.kind === VIEW.LIST && (
-                <CharacterList onSelect={goToSheet} onCreate={goToNew} />
-              )}
-              {view.kind === VIEW.NEW && (
-                <CharacterWizard onBack={goToList} onComplete={goToSheet} />
-              )}
-              {view.kind === VIEW.SHEET && (
-                <CharacterSheet characterId={view.id} onBack={goToList} />
-              )}
-            </Suspense>
-            <DiceHistoryPanel />
-            <BestiaryButton />
-            <PWAUpdatePrompt />
-          </div>
-        </DiceRollerProvider>
-      </SrdProvider>
+      <AuthProvider>
+        <Gate />
+      </AuthProvider>
     </ErrorBoundary>
   )
 }

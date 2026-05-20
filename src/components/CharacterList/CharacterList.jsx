@@ -5,6 +5,7 @@ import { CharacterListView } from './CharacterListView'
 import { EmptyState } from './EmptyState'
 import { BackupMenu } from './BackupMenu'
 import { Button } from '../ui/Button'
+import { useAuth } from '../../auth/AuthProvider'
 import {
   loadCharacters,
   touchCharacterLastOpened,
@@ -40,6 +41,7 @@ export function CharacterList({ onSelect, onCreate }) {
   const [characters, setCharacters] = useState(loadCharacters)
   const [view, setView] = useState(readView)
   const [campaignName] = useState(readCampaignName)
+  const { signOut } = useAuth()
 
   useEffect(() => {
     function onStorage(e) {
@@ -116,6 +118,9 @@ export function CharacterList({ onSelect, onCreate }) {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button variant="ghost-dark" size="sm" onClick={() => signOut()}>
+            Sair
+          </Button>
           <BackupMenu
             characterCount={characters.length}
             onImported={() => setCharacters(loadCharacters())}

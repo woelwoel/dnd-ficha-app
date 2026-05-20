@@ -1,6 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+
+// Mockar useAuth — CharacterList passou a depender do AuthProvider (PR 1 auth Supabase).
+vi.mock('../../auth/AuthProvider', () => ({
+  useAuth: () => ({ signOut: vi.fn() }),
+}))
+
 import { CharacterList } from '../../components/CharacterList'
 import { upsertCharacter, loadCharacters } from '../../utils/storage'
 import { clearStorage } from './helpers'
