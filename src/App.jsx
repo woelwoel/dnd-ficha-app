@@ -1,4 +1,5 @@
-import { useCallback, useState, lazy, Suspense } from 'react'
+import { lazy, Suspense } from 'react'
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { ErrorBoundary } from './ErrorBoundary'
 import { SrdProvider } from './providers/SrdProvider'
 import { DiceRollerProvider } from './context/DiceRollerContext'
@@ -18,8 +19,6 @@ const CharacterWizard = lazy(() =>
   import('./components/CharacterWizardV2').then(m => ({ default: m.CharacterWizardV2 }))
 )
 
-const VIEW = { LIST: 'list', NEW: 'new', SHEET: 'sheet' }
-
 function Loader() {
   return (
     <div className="min-h-screen flex items-center justify-center text-amber-400 text-sm">
@@ -28,25 +27,52 @@ function Loader() {
   )
 }
 
-function AuthedApp() {
-  const [view, setView] = useState({ kind: VIEW.LIST, id: null })
-  const goToList  = useCallback(() => setView({ kind: VIEW.LIST,  id: null }), [])
-  const goToNew   = useCallback(() => setView({ kind: VIEW.NEW,   id: null }), [])
-  const goToSheet = useCallback(id =>  setView({ kind: VIEW.SHEET, id }),        [])
+/* ── Wrappers de rota: traduzem URL → callbacks já existentes nos componentes ── */
 
+function ListRoute() {
+  const navigate = useNavigate()
+  return (
+    <CharacterList
+      onSelect={(id) => navigate(`/c/${id}`)}
+      onCreate={() => navigate('/new')}
+    />
+  )
+}
+
+function NewRoute() {
+  const navigate = useNavigate()
+  return (
+    <Suspense fallback={<Loader />}>
+      <CharacterWizard
+        onBack={() => navigate('/')}
+        onComplete={(id) => navigate(`/c/${id}`, { replace: true })}
+      />
+    </Suspense>
+  )
+}
+
+function SheetRoute() {
+  const navigate = useNavigate()
+  const { id } = useParams()
+  return (
+    <Suspense fallback={<Loader />}>
+      <CharacterSheet
+        characterId={id}
+        onBack={() => navigate('/')}
+      />
+    </Suspense>
+  )
+}
+
+function AuthedRoutes() {
   return (
     <div className="min-h-screen bg-gray-950 text-gray-100">
-      <Suspense fallback={<Loader />}>
-        {view.kind === VIEW.LIST && (
-          <CharacterList onSelect={goToSheet} onCreate={goToNew} />
-        )}
-        {view.kind === VIEW.NEW && (
-          <CharacterWizard onBack={goToList} onComplete={goToSheet} />
-        )}
-        {view.kind === VIEW.SHEET && (
-          <CharacterSheet characterId={view.id} onBack={goToList} />
-        )}
-      </Suspense>
+      <Routes>
+        <Route path="/" element={<ListRoute />} />
+        <Route path="/new" element={<NewRoute />} />
+        <Route path="/c/:id" element={<SheetRoute />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
       <DiceHistoryPanel />
       <BestiaryButton />
       <PWAUpdatePrompt />
@@ -59,7 +85,7 @@ function Gate() {
   if (loading) return <Loader />
   if (recoveryMode) return <ResetPasswordScreen />
   if (!user) return <LoginScreen />
-  return <AuthedApp />
+  return <AuthedRoutes />
 }
 
 function App() {
@@ -67,9 +93,11 @@ function App() {
     <ErrorBoundary>
       <SrdProvider>
         <DiceRollerProvider>
-          <AuthProvider>
-            <Gate />
-          </AuthProvider>
+          <BrowserRouter>
+            <AuthProvider>
+              <Gate />
+            </AuthProvider>
+          </BrowserRouter>
         </DiceRollerProvider>
       </SrdProvider>
     </ErrorBoundary>
