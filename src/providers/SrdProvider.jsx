@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 
 /**
  * Cache de módulo para datasets SRD. Persiste entre remounts e tabs do
@@ -23,16 +23,28 @@ const DATASETS = {
   feats:           { pt: 'phb-feats-pt.json',            fallback: null,                      lazy: true },
 }
 
-function loadDataset(name, { pt, fallback }, signal) {
+function loadDataset(name, { pt, fallback }) {
   if (moduleCache.has(name)) return moduleCache.get(name)
-  const promise = fetch(`/srd-data/${pt}`, { signal })
+  // Sem AbortController: SW pode cancelar em transições; queremos que essas
+  // promises terminem normalmente e populem o cache. Resultados vazios NÃO são
+  // cacheados (próxima chamada retenta).
+  const promise = fetch(`/srd-data/${pt}`)
     .then(r => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
     .catch(() =>
       fallback
-        ? fetch(`/srd-data/${fallback}`, { signal }).then(r => (r.ok ? r.json() : []))
+        ? fetch(`/srd-data/${fallback}`).then(r => (r.ok ? r.json() : []))
         : []
     )
     .catch(() => [])
+    .then(data => {
+      // Não cacheia resultado vazio — assim, em caso de aborto/falha, próximo
+      // mount tem chance de buscar de novo.
+      const isEmpty = Array.isArray(data) ? data.length === 0
+        : data && typeof data === 'object' ? Object.keys(data).length === 0
+        : true
+      if (isEmpty) moduleCache.delete(name)
+      return data
+    })
   moduleCache.set(name, promise)
   return promise
 }
@@ -46,28 +58,20 @@ const SrdContext = createContext(null)
 
 export function SrdProvider({ children }) {
   const [data, setData] = useState(() => ({ ...EMPTY_DEFAULTS, ready: false }))
-  const controllerRef = useRef(null)
-  if (controllerRef.current == null) controllerRef.current = new AbortController()
 
   // Carrega o core (não-lazy) e libera `ready` assim que todos terminam.
   useEffect(() => {
-    const controller = controllerRef.current
     let cancelled = false
 
     const coreEntries = Object.entries(DATASETS).filter(([, def]) => !def.lazy)
     Promise.all(
-      coreEntries.map(async ([name, def]) => [name, await loadDataset(name, def, controller.signal)])
+      coreEntries.map(async ([name, def]) => [name, await loadDataset(name, def)])
     ).then(entries => {
       if (cancelled) return
       setData(prev => ({ ...prev, ...Object.fromEntries(entries), ready: true }))
     })
 
-    return () => {
-      cancelled = true
-      controller.abort()
-      // Novo controller pra próximos requests lazy após remount em dev/HMR.
-      controllerRef.current = new AbortController()
-    }
+    return () => { cancelled = true }
   }, [])
 
   // Permite que telas específicas (Wizard, level-up) puxem datasets sob demanda.
@@ -76,7 +80,7 @@ export function SrdProvider({ children }) {
     if (!def) return Promise.resolve(null)
     // Se já está em memória local (não é o default vazio), retorna.
     // Caso contrário, dispara o fetch e popula state quando chegar.
-    return loadDataset(name, def, controllerRef.current.signal).then(value => {
+    return loadDataset(name, def).then(value => {
       setData(prev => {
         // Não sobrescreve se o valor atual já tem conteúdo (evita re-render à toa).
         const current = prev[name]
