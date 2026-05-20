@@ -217,3 +217,40 @@ create policy "characters_insert_own_in_own_campaign"
 
 -- update e delete permanecem owner-only (já estão criados em 0002_characters.sql,
 -- não precisam ser recriados). Spec: DM NÃO edita ficha de jogador.
+
+-- ─────────────────────────────────────────────────────────────────────
+-- RPC: create_campaign(name) -> campaign_id
+-- Cria campanha com dm_id = auth.uid() + insere o criador em campaign_members
+-- como 'dm'. Tudo numa transação.
+-- ─────────────────────────────────────────────────────────────────────
+
+create function public.create_campaign(p_name text)
+returns uuid
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+declare
+  v_uid uuid := auth.uid();
+  v_id  uuid;
+  v_code text;
+begin
+  if v_uid is null then
+    raise exception 'not_authenticated' using errcode = '42501';
+  end if;
+  if p_name is null or char_length(btrim(p_name)) = 0 then
+    raise exception 'invalid_name' using errcode = '22023';
+  end if;
+
+  v_code := public.gen_campaign_invite_code();
+
+  insert into public.campaigns (name, dm_id, invite_code)
+    values (btrim(p_name), v_uid, v_code)
+    returning id into v_id;
+
+  insert into public.campaign_members (campaign_id, user_id, role)
+    values (v_id, v_uid, 'dm');
+
+  return v_id;
+end;
+$$;
