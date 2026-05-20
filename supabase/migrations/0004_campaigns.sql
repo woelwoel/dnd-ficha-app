@@ -108,3 +108,75 @@ as $$
     where id = cid and dm_id = auth.uid()
   );
 $$;
+
+-- ─────────────────────────────────────────────────────────────────────
+-- RLS: campaigns
+-- ─────────────────────────────────────────────────────────────────────
+
+alter table public.campaigns enable row level security;
+
+-- DM vê a própria mesa; membros veem a mesa em que entraram.
+create policy "campaigns_select_dm_or_member"
+  on public.campaigns for select
+  to authenticated
+  using (dm_id = auth.uid() or public.is_campaign_member(id));
+
+-- Criação: precisa setar dm_id = self. (Na prática usuários usam create_campaign RPC,
+-- mas a policy existe pra permitir o insert que a RPC faz quando `security definer`
+-- volta ao contexto do usuário — security definer já burla RLS, mas mantemos a
+-- policy permissiva pra simetria.)
+create policy "campaigns_insert_self_dm"
+  on public.campaigns for insert
+  to authenticated
+  with check (dm_id = auth.uid());
+
+create policy "campaigns_update_dm"
+  on public.campaigns for update
+  to authenticated
+  using (dm_id = auth.uid())
+  with check (dm_id = auth.uid());
+
+create policy "campaigns_delete_dm"
+  on public.campaigns for delete
+  to authenticated
+  using (dm_id = auth.uid());
+
+-- ─────────────────────────────────────────────────────────────────────
+-- RLS: campaign_members
+-- Insert sem policy permissiva = bloqueado pra todo mundo. Único caminho:
+-- RPCs create_campaign e join_campaign (security definer fazem o bypass).
+-- ─────────────────────────────────────────────────────────────────────
+
+alter table public.campaign_members enable row level security;
+
+-- Cada user vê suas próprias linhas; também vê outros membros das mesas em que está.
+create policy "campaign_members_select_self_or_same_campaign"
+  on public.campaign_members for select
+  to authenticated
+  using (
+    user_id = auth.uid()
+    or public.is_campaign_member(campaign_id)
+  );
+
+-- DM da mesa pode remover qualquer um; usuário pode remover a si próprio
+-- desde que NÃO seja o DM (DM sai apagando a mesa inteira).
+create policy "campaign_members_delete_dm_or_self_non_dm"
+  on public.campaign_members for delete
+  to authenticated
+  using (
+    public.is_campaign_dm(campaign_id)
+    or (user_id = auth.uid() and role <> 'dm')
+  );
+
+-- ─────────────────────────────────────────────────────────────────────
+-- RLS: join_attempts
+-- Usuário pode ver suas próprias tentativas (debug); insert só via RPC
+-- (security definer). Sem update/delete (auditoria).
+-- ─────────────────────────────────────────────────────────────────────
+
+alter table public.join_attempts enable row level security;
+
+create policy "join_attempts_select_self"
+  on public.join_attempts for select
+  to authenticated
+  using (user_id = auth.uid());
