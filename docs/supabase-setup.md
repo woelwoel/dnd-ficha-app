@@ -25,7 +25,7 @@ No dashboard, abra **SQL Editor** e execute o conteúdo de `supabase/migrations/
 
 **Settings → Authentication → Providers:**
 - **Email:** habilitar. Marcar "Confirm email" = ON.
-- **Google:** habilitar. Configurar `Client ID` e `Client Secret` do Google Cloud Console.
+- **Google (opcional, não usado no PR 1):** caso queira habilitar no futuro, configurar `Client ID` e `Client Secret` do Google Cloud Console.
   - No Google Cloud Console (https://console.cloud.google.com), criar OAuth client tipo "Web application".
   - **Authorized redirect URIs:** `https://<seu-projeto>.supabase.co/auth/v1/callback`
 
