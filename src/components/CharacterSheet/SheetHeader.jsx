@@ -14,6 +14,7 @@ import { SheetCombatBar } from './SheetCombatBar'
  */
 export function SheetHeader({
   characterName,
+  saving = false,
   saved,
   saveError,
   onBack,
@@ -70,13 +71,24 @@ export function SheetHeader({
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {saveError && (
-            <span className="text-xs text-ink-500" title={`Erro: ${saveError}`} aria-label="Falha ao salvar">⚠</span>
+          {saveError ? (
+            <span
+              className="text-xs text-red-700 font-display"
+              title={`Erro: ${saveError}`}
+              aria-label="Falha ao salvar"
+              aria-live="polite"
+            >⚠ Sem salvar</span>
+          ) : saving ? (
+            <span
+              className="text-xs text-ink-300 font-display opacity-80"
+              aria-live="polite"
+            >Salvando…</span>
+          ) : (
+            <span
+              className={`text-xs transition-opacity duration-500 font-display ${saved ? 'opacity-100 text-ink-300' : 'opacity-0'}`}
+              aria-live="polite"
+            >✓ Salvo</span>
           )}
-          <span
-            className={`text-xs transition-opacity duration-500 font-display ${saved ? 'opacity-100 text-ink-300' : 'opacity-0'}`}
-            aria-live="polite"
-          >✓</span>
           <button
             onClick={onExport}
             className="text-xs px-2 sm:px-2.5 py-1.5 min-h-[36px] rounded border border-parchment-600 hover:border-ink-200 text-ink-200 hover:text-ink-500 font-display tracking-wide transition-colors"

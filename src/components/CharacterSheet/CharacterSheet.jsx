@@ -98,7 +98,7 @@ function SheetBody({ initialCharacter, onBack }) {
 
   const { character, setCharacter, ...updaters } = useCharacter(initialCharacter)
 
-  const { saved, error: saveError } = useAutoSave(character)
+  const { saving, saved, error: saveError } = useAutoSave(character)
 
   const classData = useMemo(
     () => classes.find(c => c.index === character.info.class) ?? null,
@@ -197,6 +197,7 @@ function SheetBody({ initialCharacter, onBack }) {
         <div className="sticky top-0 z-30">
           <SheetHeader
             characterName={character.info.name}
+            saving={saving}
             saved={saved}
             saveError={saveError}
             onBack={onBack}

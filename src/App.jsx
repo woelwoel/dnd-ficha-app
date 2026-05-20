@@ -7,6 +7,8 @@ import { DiceHistoryPanel } from './components/DiceRoller/DiceHistoryPanel'
 import { BestiaryButton } from './components/Bestiary/BestiaryButton'
 import { CharacterList } from './components/CharacterList'
 import { PWAUpdatePrompt } from './components/PWAUpdatePrompt'
+import { AppFooter } from './components/ui/AppFooter'
+import { OfflineBanner } from './components/ui/OfflineBanner'
 import { AuthProvider, useAuth } from './auth/AuthProvider'
 import { LoginScreen } from './auth/LoginScreen'
 import { ResetPasswordScreen } from './auth/ResetPasswordScreen'
@@ -66,13 +68,17 @@ function SheetRoute() {
 
 function AuthedRoutes() {
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
-      <Routes>
-        <Route path="/" element={<ListRoute />} />
-        <Route path="/new" element={<NewRoute />} />
-        <Route path="/c/:id" element={<SheetRoute />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+    <div className="min-h-screen flex flex-col bg-gray-950 text-gray-100">
+      <OfflineBanner />
+      <div className="flex-1">
+        <Routes>
+          <Route path="/" element={<ListRoute />} />
+          <Route path="/new" element={<NewRoute />} />
+          <Route path="/c/:id" element={<SheetRoute />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
+      <AppFooter />
       <DiceHistoryPanel />
       <BestiaryButton />
       <PWAUpdatePrompt />

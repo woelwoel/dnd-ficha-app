@@ -9,6 +9,18 @@ Versionamento semântico: [SemVer](https://semver.org/lang/pt-BR/).
 
 ## [Não lançado]
 
+### Adicionado (PR 5 — Polimento)
+- **Roteamento por URL** (react-router-dom v7): `/`, `/new`, `/c/:id`.
+  F5 mantém a view atual; botão voltar do browser funciona; links de ficha
+  são compartilháveis (sujeitos a RLS).
+- **Footer LGPD** com aviso de armazenamento e contato.
+- **Banner offline** detecta `navigator.onLine` e avisa quando perde conexão.
+- **Auto-save com 3 estados visíveis**: "Salvando…" / "✓ Salvo" / "⚠ Sem salvar".
+- **CSP via headers HTTP** (vercel.json): mais forte que meta tag, suporta
+  `frame-ancestors`. Adiciona também `X-Content-Type-Options`,
+  `Referrer-Policy` e `Permissions-Policy`.
+- `vercel.json` com SPA rewrite pra que rotas (`/c/:id`) resolvam `index.html`.
+
 ### Adicionado (PR 2 — Fichas no Postgres)
 - Persistência das fichas migrada de `localStorage` para Supabase Postgres
   (tabela `public.characters` com RLS owner-only).
