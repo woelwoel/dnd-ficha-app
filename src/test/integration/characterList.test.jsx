@@ -7,6 +7,31 @@ vi.mock('../../auth/AuthProvider', () => ({
   useAuth: () => ({ signOut: vi.fn() }),
 }))
 
+// Mock do storage Supabase — backend em memória controlado pelos testes.
+const store = vi.hoisted(() => ({ rows: [] }))
+vi.mock('../../utils/storage', () => ({
+  loadCharacters: async () => [...store.rows],
+  loadCharacterById: async (id) => store.rows.find(c => c.id === id) ?? null,
+  upsertCharacter: async (c) => {
+    const idx = store.rows.findIndex(r => r.id === c.id)
+    if (idx >= 0) store.rows[idx] = c
+    else store.rows.push(c)
+    return { ok: true }
+  },
+  deleteCharacter: async (id) => {
+    store.rows = store.rows.filter(c => c.id !== id)
+    return { ok: true }
+  },
+  updateCharacterPosition: async (id, position) => {
+    const r = store.rows.find(c => c.id === id)
+    if (r) r.position = position
+    return { ok: true }
+  },
+  touchCharacterLastOpened: async () => ({ ok: true }),
+  exportAllCharacters: async () => ({ app: 'dnd-ficha-app', version: '1.0', exportedAt: '', count: store.rows.length, characters: [...store.rows] }),
+  importAllCharacters: async () => ({ ok: true, imported: 0, invalid: 0, total: 0 }),
+}))
+
 import { CharacterList } from '../../components/CharacterList'
 import { upsertCharacter, loadCharacters } from '../../utils/storage'
 import { clearStorage } from './helpers'
@@ -43,6 +68,7 @@ function makeCharacter(id, name, classIndex = 'mago', level = 1) {
 describe('CharacterList E2E', () => {
   beforeEach(() => {
     clearStorage()
+    store.rows = []
   })
 
   it('mostra estado vazio com placeholder e botão "Inscrever Novo Herói"', () => {
@@ -61,7 +87,7 @@ describe('CharacterList E2E', () => {
 
   it('renderiza fichas salvas e dispara onSelect ao clicar', async () => {
     const char = makeCharacter('test-id-1', 'Gandalf', 'mago', 5)
-    upsertCharacter(char)
+    await upsertCharacter(char)
     const onSelect = vi.fn()
     const user = userEvent.setup()
     render(<CharacterList onSelect={onSelect} onCreate={() => {}} />)
@@ -72,7 +98,7 @@ describe('CharacterList E2E', () => {
   })
 
   it('confirma exclusão antes de remover do tomo', async () => {
-    upsertCharacter(makeCharacter('test-id-2', 'Frodo', 'ladino', 3))
+    await upsertCharacter(makeCharacter('test-id-2', 'Frodo', 'ladino', 3))
     const user = userEvent.setup()
     render(<CharacterList onSelect={() => {}} onCreate={() => {}} />)
     // Botão "×" só aparece em hover, mas RTL não simula hover de CSS pseudo-classes.
@@ -92,9 +118,9 @@ describe('CharacterList E2E', () => {
     expect(loadCharacters()).toHaveLength(0)
   })
 
-  it('lista persiste entre re-renders (localStorage)', () => {
-    upsertCharacter(makeCharacter('id-a', 'Aragorn', 'guerreiro', 10))
-    upsertCharacter(makeCharacter('id-b', 'Legolas', 'patrulheiro', 8))
+  it('lista persiste entre re-renders (localStorage)', async () => {
+    await upsertCharacter(makeCharacter('id-a', 'Aragorn', 'guerreiro', 10))
+    await upsertCharacter(makeCharacter('id-b', 'Legolas', 'patrulheiro', 8))
     const { unmount } = render(<CharacterList onSelect={() => {}} onCreate={() => {}} />)
     expect(screen.getByText('Aragorn')).toBeInTheDocument()
     expect(screen.getByText('Legolas')).toBeInTheDocument()
