@@ -180,3 +180,40 @@ create policy "join_attempts_select_self"
   on public.join_attempts for select
   to authenticated
   using (user_id = auth.uid());
+
+-- ─────────────────────────────────────────────────────────────────────
+-- characters: vincular opcionalmente a uma campanha.
+-- ─────────────────────────────────────────────────────────────────────
+
+alter table public.characters
+  add column campaign_id uuid references public.campaigns(id) on delete set null;
+
+create index characters_campaign_id_idx on public.characters (campaign_id);
+
+-- Substitui o select_own pra também permitir DM ler fichas de membros da mesa.
+-- Insert ganha check extra: se campaign_id setado, precisa ser membro.
+
+drop policy "characters_select_own"   on public.characters;
+drop policy "characters_insert_own"   on public.characters;
+
+create policy "characters_select_own_or_dm_of_campaign"
+  on public.characters for select
+  to authenticated
+  using (
+    owner_id = auth.uid()
+    or (campaign_id is not null and public.is_campaign_dm(campaign_id))
+  );
+
+create policy "characters_insert_own_in_own_campaign"
+  on public.characters for insert
+  to authenticated
+  with check (
+    owner_id = auth.uid()
+    and (
+      campaign_id is null
+      or public.is_campaign_member(campaign_id)
+    )
+  );
+
+-- update e delete permanecem owner-only (já estão criados em 0002_characters.sql,
+-- não precisam ser recriados). Spec: DM NÃO edita ficha de jogador.
