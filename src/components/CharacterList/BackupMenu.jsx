@@ -24,6 +24,7 @@ const REASON_MESSAGES = {
   'no-valid-characters': 'Nenhum personagem válido encontrado no arquivo.',
   'quota': 'Sem espaço no armazenamento do navegador.',
   'save-failed': 'Falha ao gravar no armazenamento.',
+  'limit': 'Você atingiu o limite de 100 fichas por conta.',
 }
 
 export function BackupMenu({ characterCount, onImported }) {
@@ -31,8 +32,8 @@ export function BackupMenu({ characterCount, onImported }) {
   const [feedback, setFeedback] = useState(null)
   const fileRef = useRef(null)
 
-  function handleExport() {
-    const payload = exportAllCharacters()
+  async function handleExport() {
+    const payload = await exportAllCharacters()
     downloadJson(`dnd-ficha-backup-${todayStamp()}.json`, payload)
     setFeedback({ tone: 'success', text: `Backup gerado com ${payload.count} personagem(ns).` })
   }
@@ -49,7 +50,7 @@ export function BackupMenu({ characterCount, onImported }) {
     if (!file) return
 
     const reader = new FileReader()
-    reader.onload = ev => {
+    reader.onload = async ev => {
       let raw
       try {
         raw = JSON.parse(ev.target.result)
@@ -57,7 +58,7 @@ export function BackupMenu({ characterCount, onImported }) {
         setFeedback({ tone: 'error', text: 'Arquivo inválido (JSON malformado).' })
         return
       }
-      const result = importAllCharacters(raw, mode)
+      const result = await importAllCharacters(raw, mode)
       if (!result.ok) {
         setFeedback({ tone: 'error', text: REASON_MESSAGES[result.reason] ?? 'Falha ao importar.' })
         return
@@ -108,7 +109,7 @@ export function BackupMenu({ characterCount, onImported }) {
                   Backup de Personagens
                 </h2>
                 <p className="text-xs opacity-70 mt-1">
-                  Todo o trabalho fica no seu navegador. Exporte sempre que terminar uma sessão.
+                  Backup local da sua conta. Útil pra arquivamento ou transferir entre contas.
                 </p>
               </div>
               <button
