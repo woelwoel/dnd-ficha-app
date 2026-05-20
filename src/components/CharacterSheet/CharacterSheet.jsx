@@ -14,11 +14,77 @@ import { PrintView } from '../PrintView/PrintView'
 import { defaultClassFeatureUses, mergeFeatureUses } from '../../domain/rules'
 
 /**
- * Orquestrador da ficha.
+ * Wrapper: carrega a ficha de forma assíncrona e só monta o orquestrador
+ * SheetBody depois que `initialCharacter` está pronto.
+ *
+ * Por que dois componentes? `useCharacter` inicializa state lazy (`useState(() => ...)`),
+ * o que significa que o `initialCharacter` é capturado apenas na primeira render.
+ * Se montássemos o body com `initialCharacter = null` e depois trocássemos via
+ * `setState`, o useCharacter ignoraria a mudança — a ficha apareceria zerada.
+ */
+export function CharacterSheet({ characterId, onBack }) {
+  const [initialCharacter, setInitialCharacter] = useState(null)
+  const [loadingCharacter, setLoadingCharacter] = useState(true)
+  const [loadError, setLoadError] = useState(null)
+
+  useEffect(() => {
+    let alive = true
+    setLoadError(null)
+    if (!characterId || characterId === 'new') {
+      setInitialCharacter(null)
+      setLoadingCharacter(false)
+      return
+    }
+    setLoadingCharacter(true)
+    loadCharacterById(characterId).then(ch => {
+      if (!alive) return
+      if (!ch) {
+        setLoadError('Ficha não encontrada (ou sem permissão de leitura).')
+        setInitialCharacter(null)
+        setLoadingCharacter(false)
+        return
+      }
+      setInitialCharacter(ch)
+      setLoadingCharacter(false)
+    }).catch(err => {
+      if (!alive) return
+      setLoadError(`Erro ao carregar ficha: ${err?.message ?? 'desconhecido'}`)
+      setLoadingCharacter(false)
+    })
+    return () => { alive = false }
+  }, [characterId])
+
+  if (loadingCharacter) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-amber-400 text-sm">
+        Carregando ficha…
+      </div>
+    )
+  }
+
+  if (loadError) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-amber-400 text-sm">
+        <p>{loadError}</p>
+        <button onClick={onBack} className="px-4 py-2 border border-amber-400 rounded">
+          Voltar
+        </button>
+      </div>
+    )
+  }
+
+  // Re-monta o body sempre que characterId mudar — garante que useCharacter
+  // pegue o initialCharacter correto na sua primeira render.
+  return <SheetBody key={characterId ?? 'new'} initialCharacter={initialCharacter} onBack={onBack} />
+}
+
+/**
+ * Orquestrador real da ficha. Só monta depois que `initialCharacter` está
+ * carregado (ou explicitamente null pra 'new').
  *
  * Layout: header fixo + sidebar de navegação (desktop) + área de conteúdo scrollável.
  */
-export function CharacterSheet({ characterId, onBack }) {
+function SheetBody({ initialCharacter, onBack }) {
   const { races, classes, backgrounds } = useSrd()
   const classDataMap = useClassDataMap()
 
@@ -29,25 +95,6 @@ export function CharacterSheet({ characterId, onBack }) {
   // Setada por PreparedSpellsList ao clicar num chip; consumida e zerada pelo
   // próprio Spells (que dispara setDetailSpell e depois chama clearFocusSpell).
   const [focusSpellId, setFocusSpellId] = useState(null)
-
-  const [initialCharacter, setInitialCharacter] = useState(null)
-  const [loadingCharacter, setLoadingCharacter] = useState(true)
-
-  useEffect(() => {
-    let alive = true
-    if (!characterId || characterId === 'new') {
-      setInitialCharacter(null)
-      setLoadingCharacter(false)
-      return
-    }
-    setLoadingCharacter(true)
-    loadCharacterById(characterId).then(ch => {
-      if (!alive) return
-      setInitialCharacter(ch)
-      setLoadingCharacter(false)
-    })
-    return () => { alive = false }
-  }, [characterId])
 
   const { character, setCharacter, ...updaters } = useCharacter(initialCharacter)
 
@@ -141,14 +188,6 @@ export function CharacterSheet({ characterId, onBack }) {
     focusSpellId,
     clearFocusSpell: () => setFocusSpellId(null),
   }), [character, setCharacter, calc, classData, races, classes, backgrounds, updaters, handlers, fichaErrors, featureUses, focusSpellId])
-
-  if (loadingCharacter) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-amber-400 text-sm">
-        Carregando ficha…
-      </div>
-    )
-  }
 
   return (
     <CharacterProvider value={contextValue}>
