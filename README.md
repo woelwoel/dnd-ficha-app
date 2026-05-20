@@ -7,6 +7,10 @@ import/export de JSON e persistência local no navegador.
 Single-page app, 100% client-side. Nada vai para servidor algum — dados ficam
 no `localStorage` da sua própria máquina.
 
+## Setup
+
+Este app requer um projeto Supabase configurado. Veja [docs/supabase-setup.md](docs/supabase-setup.md).
+
 ## Stack
 
 | Camada            | Ferramenta                         |
