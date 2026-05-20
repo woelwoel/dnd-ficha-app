@@ -254,3 +254,66 @@ begin
   return v_id;
 end;
 $$;
+
+-- ─────────────────────────────────────────────────────────────────────
+-- RPC: join_campaign(code) -> campaign_id
+-- Rate limit: 10 attempts/min/user via join_attempts. Mensagem genérica
+-- pra "não existe / já é membro / é DM" (anti-enumeração).
+-- ─────────────────────────────────────────────────────────────────────
+
+create function public.join_campaign(p_code text)
+returns uuid
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+declare
+  v_uid     uuid := auth.uid();
+  v_cid     uuid;
+  v_dm      uuid;
+  v_count   int;
+begin
+  if v_uid is null then
+    raise exception 'not_authenticated' using errcode = '42501';
+  end if;
+
+  -- Registra a tentativa ANTES do lookup pra contar até as que falham.
+  insert into public.join_attempts (user_id) values (v_uid);
+
+  select count(*) into v_count
+    from public.join_attempts
+    where user_id = v_uid
+      and ts > now() - interval '1 minute';
+
+  if v_count > 10 then
+    raise exception 'rate_limited' using errcode = 'P0001',
+      hint = 'Muitas tentativas. Tente de novo em alguns segundos.';
+  end if;
+
+  if p_code is null or char_length(p_code) = 0 then
+    raise exception 'not_found_or_already_member' using errcode = 'P0002';
+  end if;
+
+  select id, dm_id into v_cid, v_dm
+    from public.campaigns
+    where invite_code = p_code;
+
+  -- Não existe → mensagem genérica.
+  if v_cid is null then
+    raise exception 'not_found_or_already_member' using errcode = 'P0002';
+  end if;
+
+  -- Já é membro (incluindo DM) → mesma mensagem genérica.
+  if exists (
+    select 1 from public.campaign_members
+    where campaign_id = v_cid and user_id = v_uid
+  ) then
+    raise exception 'not_found_or_already_member' using errcode = 'P0002';
+  end if;
+
+  insert into public.campaign_members (campaign_id, user_id, role)
+    values (v_cid, v_uid, 'player');
+
+  return v_cid;
+end;
+$$;
