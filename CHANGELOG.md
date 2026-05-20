@@ -9,6 +9,30 @@ Versionamento semântico: [SemVer](https://semver.org/lang/pt-BR/).
 
 ## [Não lançado]
 
+### Adicionado (PR 1 — Auth Supabase)
+- Autenticação Supabase com email/senha. App passa a exigir login antes de
+  mostrar a lista de fichas. Google OAuth fica pra PR futuro.
+- Fluxo de "esqueci a senha" e tela `ResetPasswordScreen` para definição de
+  nova senha após link de recovery.
+- `AuthProvider` em `src/auth/` gerencia sessão, recovery mode e expõe
+  `useAuth()` (signIn, signUp, signOut, requestPasswordReset, updatePassword,
+  signInWithGoogle reservado pra futuro).
+- `LoginScreen` com abas Entrar/Criar conta, validação de senha mínima
+  (8 chars) e tradução das mensagens de erro do Supabase pra PT-BR.
+- Botão "Sair" temporário no header de `CharacterList` (AccountMenu completo
+  fica pra PR 4).
+- Tabela `public.profiles` no Supabase com trigger automático a partir de
+  `auth.users` (migration `supabase/migrations/0001_profiles.sql`). RLS
+  habilitado: leitura por qualquer usuário autenticado, update só do próprio.
+
+### Notas
+- Fichas continuam armazenadas em `localStorage` neste PR. A migração para
+  Postgres ocorre no PR 2.
+- Setup manual obrigatório do projeto Supabase: ver
+  [docs/supabase-setup.md](docs/supabase-setup.md).
+- Vars de ambiente requeridas em `.env.local` (e no Vercel pra produção):
+  `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY`.
+
 ### Corrigido
 - `utils/fetchSrd.js` agora checa `res.ok` e `content-type` antes de `.json()`,
   respeita `AbortController` e tenta cadeia de fallbacks em vez de engolir
