@@ -300,7 +300,7 @@ export const characterSchema = z.object({
   proficiencies: proficienciesSchema,
   spellcasting: spellcastingSchema,
   inventory: inventorySchema,
-  traits: traitsSchema,
+  traits: traitsSchema.optional().default({}),
 }).passthrough().superRefine((ch, ctx) => {
   // PHB p.15: nível total ≤ 20.
   const primary = ch.info?.level ?? 0
