@@ -67,11 +67,15 @@ function WizardGrid({ initialSettings, resume, onBack, onComplete }) {
     else onBack()
   }
 
-  function handleFinalize() {
+  async function handleFinalize() {
     const character = buildCharacterWithSubclassSpells(
       draft, selectedClassData, classEquipment ?? {}, srdSpells ?? []
     )
-    upsertCharacter(character)
+    const result = await upsertCharacter(character)
+    if (!result.ok) {
+      console.error('[wizard] falha ao salvar:', result.errors ?? result.reason)
+      return
+    }
     sessionStorage.removeItem('wizard-v2-draft')
     onComplete(character.id)
   }
