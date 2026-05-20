@@ -38,22 +38,24 @@ function readCampaignName() {
 }
 
 export function CharacterList({ onSelect, onCreate }) {
-  const [characters, setCharacters] = useState(loadCharacters)
+  const [characters, setCharacters] = useState([])
+  const [loading, setLoading] = useState(true)
   const [view, setView] = useState(readView)
   const [campaignName] = useState(readCampaignName)
   const { signOut } = useAuth()
 
-  useEffect(() => {
-    function onStorage(e) {
-      if (e.key === 'dnd-app-characters') setCharacters(loadCharacters())
-    }
-    window.addEventListener('storage', onStorage)
-    return () => window.removeEventListener('storage', onStorage)
+  // Carga inicial + recarga.
+  const reload = useCallback(async () => {
+    setLoading(true)
+    const list = await loadCharacters()
+    setCharacters(list)
+    setLoading(false)
   }, [])
 
-  const handleSelect = useCallback((id) => {
-    touchCharacterLastOpened(id)
-    setCharacters(loadCharacters())
+  useEffect(() => { reload() }, [reload])
+
+  const handleSelect = useCallback(async (id) => {
+    await touchCharacterLastOpened(id)
     if (onSelect) onSelect(id)
   }, [onSelect])
 
@@ -62,17 +64,18 @@ export function CharacterList({ onSelect, onCreate }) {
     writeView(v)
   }, [])
 
-  const handlePositionChange = useCallback((id, position) => {
-    updateCharacterPosition(id, position)
-    setCharacters(loadCharacters())
+  const handlePositionChange = useCallback(async (id, position) => {
+    // Otimista: atualiza local imediatamente, depois envia.
+    setCharacters(prev => prev.map(c => c.id === id ? { ...c, position } : c))
+    await updateCharacterPosition(id, position)
   }, [])
 
-  const handleDelete = useCallback((id) => {
-    deleteCharacter(id)
-    setCharacters(loadCharacters())
-  }, [])
+  const handleDelete = useCallback(async (id) => {
+    await deleteCharacter(id)
+    await reload()
+  }, [reload])
 
-  const isEmpty = characters.length === 0
+  const isEmpty = !loading && characters.length === 0
 
   return (
     <div
@@ -123,7 +126,7 @@ export function CharacterList({ onSelect, onCreate }) {
           </Button>
           <BackupMenu
             characterCount={characters.length}
-            onImported={() => setCharacters(loadCharacters())}
+            onImported={reload}
           />
           <Button variant="gold" size="md" onClick={onCreate}>
             ⚔ Recrutar
@@ -132,7 +135,11 @@ export function CharacterList({ onSelect, onCreate }) {
       </header>
 
       <main className="flex-1 flex overflow-hidden w-full max-w-[1800px] mx-auto">
-        {view === VIEW_MAP ? (
+        {loading ? (
+          <div className="flex-1 flex items-center justify-center text-amber-400 text-sm">
+            Carregando heróis…
+          </div>
+        ) : view === VIEW_MAP ? (
           <>
             <div className="flex-1 relative p-3 min-w-0">
               <CharacterMap
