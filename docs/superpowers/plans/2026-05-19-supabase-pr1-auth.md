@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Adicionar autenticação Supabase (email/senha + Google) gating o app, sem ainda tocar na persistência de fichas — localStorage continua sendo a fonte de dados das fichas até o PR 2.
+**Goal:** Adicionar autenticação Supabase (email/senha) gating o app, sem ainda tocar na persistência de fichas — localStorage continua sendo a fonte de dados das fichas até o PR 2. **Google OAuth fica fora do PR 1** (adicionado em PR futuro); a função `signInWithGoogle` existe no `AuthProvider` mas não é exposta na UI.
 
 **Architecture:** Singleton client em `src/lib/supabase.js`. Contexto React `AuthProvider` em `src/auth/` gerencia sessão e expõe `useAuth()`. Telas `LoginScreen` e `ResetPasswordScreen` consomem o contexto. `App.jsx` faz gating: loading → spinner; sem usuário → login; com usuário → app atual. Tabela `profiles` com trigger criada no Supabase. Confirmação de email obrigatória, HIBP, Allowed Origins e Google OAuth configurados via dashboard.
 
@@ -586,7 +586,6 @@ import userEvent from '@testing-library/user-event'
 const auth = {
   signIn: vi.fn(),
   signUp: vi.fn(),
-  signInWithGoogle: vi.fn(),
   requestPasswordReset: vi.fn(),
 }
 
@@ -601,15 +600,13 @@ describe('LoginScreen', () => {
     vi.clearAllMocks()
     auth.signIn.mockResolvedValue({ data: {}, error: null })
     auth.signUp.mockResolvedValue({ data: {}, error: null })
-    auth.signInWithGoogle.mockResolvedValue({ data: {}, error: null })
     auth.requestPasswordReset.mockResolvedValue({ data: {}, error: null })
   })
 
-  it('renderiza aba Entrar por default com email/senha e botão Google', () => {
+  it('renderiza aba Entrar por default com email/senha', () => {
     render(<LoginScreen />)
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/senha/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /entrar com google/i })).toBeInTheDocument()
   })
 
   it('faz login ao submeter o form', async () => {
@@ -657,12 +654,6 @@ describe('LoginScreen', () => {
     expect(await screen.findByText(/pelo menos 8/i)).toBeInTheDocument()
   })
 
-  it('chama signInWithGoogle ao clicar', async () => {
-    render(<LoginScreen />)
-    await userEvent.click(screen.getByRole('button', { name: /entrar com google/i }))
-    expect(auth.signInWithGoogle).toHaveBeenCalled()
-  })
-
   it('fluxo de esqueci a senha pede email e chama requestPasswordReset', async () => {
     render(<LoginScreen />)
     await userEvent.click(screen.getByRole('button', { name: /esqueci a senha/i }))
@@ -700,7 +691,7 @@ function translateError(message) {
 }
 
 export function LoginScreen() {
-  const { signIn, signUp, signInWithGoogle, requestPasswordReset } = useAuth()
+  const { signIn, signUp, requestPasswordReset } = useAuth()
   const [tab, setTab] = useState(TABS.SIGNIN)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -744,17 +735,6 @@ export function LoginScreen() {
     setBusy(false)
     if (error) setError(translateError(error.message))
     else setInfo('Enviamos um link para o email informado.')
-  }
-
-  async function onGoogle() {
-    reset()
-    setBusy(true)
-    const { error } = await signInWithGoogle()
-    if (error) {
-      setBusy(false)
-      setError(translateError(error.message))
-    }
-    // redirect acontece — não precisa parar busy se OK.
   }
 
   return (
@@ -836,15 +816,6 @@ export function LoginScreen() {
           </form>
         )}
 
-        {tab !== TABS.FORGOT && (
-          <>
-            <div className="my-4 text-center text-xs text-gray-500">ou</div>
-            <Button type="button" variant="ghost-dark" size="md" disabled={busy} className="w-full" onClick={onGoogle}>
-              Entrar com Google
-            </Button>
-          </>
-        )}
-
         {error && <p role="alert" className="mt-3 text-xs text-red-400">{error}</p>}
         {info && <p className="mt-3 text-xs text-emerald-400">{info}</p>}
       </div>
@@ -856,13 +827,13 @@ export function LoginScreen() {
 - [ ] **Step 4: Rodar teste — deve passar**
 
 Run: `npx vitest run src/test/auth/LoginScreen.test.jsx`
-Expected: PASS (8 testes).
+Expected: PASS (6 testes).
 
 - [ ] **Step 5: Commit**
 
 ```bash
 git add src/auth/LoginScreen.jsx src/test/auth/LoginScreen.test.jsx
-git commit -m "feat(auth): LoginScreen com abas entrar/criar conta, Google e reset"
+git commit -m "feat(auth): LoginScreen com abas entrar/criar conta e reset"
 ```
 
 ---
@@ -1252,11 +1223,10 @@ Rodar `npm run dev` e verificar manualmente:
 6. Clicar "Esqueci a senha", digitar email, submeter. Aparece "Enviamos um link…".
 7. Conferir email, clicar no link de recovery. App entra em `ResetPasswordScreen`. Digitar nova senha (≥ 8 chars, igual nas duas), salvar. Volta pra app autenticado.
 8. Fazer logout e login com nova senha. OK.
-9. Logout. Clicar "Entrar com Google". Completa OAuth e volta autenticado.
-10. No painel Supabase, **Authentication → Users**, conferir que existem os 2 usuários (email e Google).
-11. **Table Editor → public.profiles**, conferir 2 linhas (uma por user).
+9. No painel Supabase, **Authentication → Users**, conferir que o usuário existe.
+10. **Table Editor → public.profiles**, conferir 1 linha (criada pela trigger).
 
-Anotar qualquer falha — não fechar a task até todos os 11 itens passarem.
+Anotar qualquer falha — não fechar a task até todos os 10 itens passarem.
 
 - [ ] **Step 2: Atualizar `CHANGELOG.md`**
 
@@ -1265,7 +1235,7 @@ Adicionar no topo (abaixo do cabeçalho do CHANGELOG, antes da entrada mais rece
 ## [Unreleased]
 
 ### Adicionado
-- Autenticação Supabase (email/senha + Google OAuth). App passa a exigir login antes de mostrar a lista de fichas.
+- Autenticação Supabase (email/senha). App passa a exigir login antes de mostrar a lista de fichas. Google OAuth fica pra PR futuro.
 - Fluxo de "esqueci a senha" e tela de definição de nova senha após link de recovery.
 - Tabela `profiles` no Supabase com trigger automático a partir de `auth.users`.
 
@@ -1294,7 +1264,7 @@ git push
 - [ ] `npm test` passa sem warnings novos.
 - [ ] `npm run lint` passa.
 - [ ] `npm run build` passa.
-- [ ] Smoke manual da Task 10 — 11 itens — completo.
+- [ ] Smoke manual da Task 10 — 10 itens — completo.
 - [ ] Sem chamadas a `localStorage` adicionadas em código novo (busca: `grep -r "localStorage" src/auth src/lib/supabase.js` deve retornar vazio).
 - [ ] `.env.local` não está commitado (`git status --ignored` deve listar como ignorado).
 
