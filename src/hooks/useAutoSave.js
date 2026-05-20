@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { upsertCharacter } from '../utils/storage'
 
 /**
- * Salva `character` em localStorage com debounce de `delayMs`.
+ * Salva `character` no Supabase com debounce de `delayMs`.
  * Retorna `{ saved, error }` para feedback visual.
  */
 export function useAutoSave(character, delayMs = 500) {
@@ -21,8 +21,8 @@ export function useAutoSave(character, delayMs = 500) {
     if (!character?.id) return
     if (debounceRef.current) clearTimeout(debounceRef.current)
 
-    debounceRef.current = setTimeout(() => {
-      const result = upsertCharacter(character)
+    debounceRef.current = setTimeout(async () => {
+      const result = await upsertCharacter(character)
       if (!mountedRef.current) return
       if (result.ok) {
         setStatus({ saved: true, error: null })
