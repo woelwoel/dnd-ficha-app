@@ -35,26 +35,22 @@ function AuthedApp() {
   const goToSheet = useCallback(id =>  setView({ kind: VIEW.SHEET, id }),        [])
 
   return (
-    <SrdProvider>
-      <DiceRollerProvider>
-        <div className="min-h-screen bg-gray-950 text-gray-100">
-          <Suspense fallback={<Loader />}>
-            {view.kind === VIEW.LIST && (
-              <CharacterList onSelect={goToSheet} onCreate={goToNew} />
-            )}
-            {view.kind === VIEW.NEW && (
-              <CharacterWizard onBack={goToList} onComplete={goToSheet} />
-            )}
-            {view.kind === VIEW.SHEET && (
-              <CharacterSheet characterId={view.id} onBack={goToList} />
-            )}
-          </Suspense>
-          <DiceHistoryPanel />
-          <BestiaryButton />
-          <PWAUpdatePrompt />
-        </div>
-      </DiceRollerProvider>
-    </SrdProvider>
+    <div className="min-h-screen bg-gray-950 text-gray-100">
+      <Suspense fallback={<Loader />}>
+        {view.kind === VIEW.LIST && (
+          <CharacterList onSelect={goToSheet} onCreate={goToNew} />
+        )}
+        {view.kind === VIEW.NEW && (
+          <CharacterWizard onBack={goToList} onComplete={goToSheet} />
+        )}
+        {view.kind === VIEW.SHEET && (
+          <CharacterSheet characterId={view.id} onBack={goToList} />
+        )}
+      </Suspense>
+      <DiceHistoryPanel />
+      <BestiaryButton />
+      <PWAUpdatePrompt />
+    </div>
   )
 }
 
@@ -69,9 +65,13 @@ function Gate() {
 function App() {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <Gate />
-      </AuthProvider>
+      <SrdProvider>
+        <DiceRollerProvider>
+          <AuthProvider>
+            <Gate />
+          </AuthProvider>
+        </DiceRollerProvider>
+      </SrdProvider>
     </ErrorBoundary>
   )
 }
