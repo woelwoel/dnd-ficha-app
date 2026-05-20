@@ -77,7 +77,9 @@ function WizardGrid({ initialSettings, resume, onBack, onComplete }) {
       return
     }
     sessionStorage.removeItem('wizard-v2-draft')
-    onComplete(character.id)
+    // Prefere short_id (URL curta); fallback pro UUID em caso de fichas
+    // pre-migration 0003 ou se o servidor não devolver short_id.
+    onComplete(result.shortId ?? character.id)
   }
 
   // Conta blocos completos para o indicador de progresso (Revisão é meta, não conta)

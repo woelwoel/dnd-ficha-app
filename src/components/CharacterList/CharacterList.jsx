@@ -56,8 +56,13 @@ export function CharacterList({ onSelect, onCreate }) {
 
   const handleSelect = useCallback(async (id) => {
     await touchCharacterLastOpened(id)
-    if (onSelect) onSelect(id)
-  }, [onSelect])
+    if (onSelect) {
+      // Navega usando short_id quando disponível (URLs mais curtas);
+      // fallback pro UUID em fichas ainda sem short_id (pre-migration 0003).
+      const ch = characters.find(c => c.id === id)
+      onSelect(ch?.shortId ?? id)
+    }
+  }, [onSelect, characters])
 
   const switchView = useCallback((v) => {
     setView(v)

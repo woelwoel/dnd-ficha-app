@@ -10,6 +10,10 @@ Versionamento semântico: [SemVer](https://semver.org/lang/pt-BR/).
 ## [Não lançado]
 
 ### Adicionado (PR 5 — Polimento)
+- **Short ID nas URLs de ficha**: 10 chars URL-friendly (sem 0/O/1/I/l).
+  `/c/V1StGXR8_Z` em vez de `/c/13f58f02-445e-4334-b5c3-56e55f9b9bbe`.
+  URLs antigas (UUID) continuam funcionando como fallback.
+  Requer migration `supabase/migrations/0003_characters_short_id.sql`.
 - **Roteamento por URL** (react-router-dom v7): `/`, `/new`, `/c/:id`.
   F5 mantém a view atual; botão voltar do browser funciona; links de ficha
   são compartilháveis (sujeitos a RLS).

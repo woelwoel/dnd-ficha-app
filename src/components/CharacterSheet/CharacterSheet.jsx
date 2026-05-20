@@ -4,7 +4,7 @@ import { useCharacterCalculations } from '../../hooks/useCharacterCalculations'
 import { useTabValidation } from '../../hooks/useTabValidation'
 import { useAutoSave } from '../../hooks/useAutoSave'
 import { useSrd, useClassDataMap } from '../../providers/SrdProvider'
-import { loadCharacterById } from '../../utils/storage'
+import { loadCharacterByRouteParam } from '../../utils/storage'
 import { SheetHeader } from './SheetHeader'
 import { SheetTabs, TABS, NavBlockedBanner, ImportErrorBanner } from './SheetTabs'
 import { SheetContent } from './SheetContent'
@@ -36,7 +36,7 @@ export function CharacterSheet({ characterId, onBack }) {
       return
     }
     setLoadingCharacter(true)
-    loadCharacterById(characterId).then(ch => {
+    loadCharacterByRouteParam(characterId).then(ch => {
       if (!alive) return
       if (!ch) {
         setLoadError('Ficha não encontrada (ou sem permissão de leitura).')

@@ -18,11 +18,19 @@ function validateForSave(character) {
   return { ok: true, data: result.data }
 }
 
+// Formato de short_id: 10 chars do alfabeto sem ambíguos (gerado server-side
+// na trigger characters_set_short_id). Antes da migration 0003 ser aplicada,
+// row.short_id pode ser undefined — tratado como null.
+const SHORT_ID_REGEX = /^[A-HJ-NP-Za-hj-km-np-z2-9]{10}$/
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 function rowToCharacter(row) {
-  // O payload da ficha vive em row.data. last_opened_at é metadado relacional.
+  // O payload da ficha vive em row.data. last_opened_at e short_id são
+  // metadados relacionais.
   if (!row?.data) return null
   return {
     ...row.data,
+    shortId: row.short_id ?? null,
     lastOpenedAt: row.last_opened_at ? Date.parse(row.last_opened_at) : (row.data.lastOpenedAt ?? null),
   }
 }
@@ -38,7 +46,7 @@ function logDev(label, payload) {
 export async function loadCharacters() {
   const { data, error } = await supabase
     .from(TABLE)
-    .select('id, data, last_opened_at, created_at')
+    .select('id, data, last_opened_at, created_at, short_id')
     .order('created_at', { ascending: true })
   if (error) {
     logDev('loadCharacters falhou', error)
@@ -57,8 +65,30 @@ export async function loadCharacters() {
 export async function loadCharacterById(id) {
   const { data, error } = await supabase
     .from(TABLE)
-    .select('id, data, last_opened_at')
+    .select('id, data, last_opened_at, short_id')
     .eq('id', id)
+    .maybeSingle()
+  if (error || !data) return null
+  const ch = rowToCharacter(data)
+  const parsed = safeParseCharacter(ch)
+  return parsed.success ? parsed.data : null
+}
+
+/**
+ * Aceita o parâmetro de URL (`:idOrShort`) e busca por UUID OU short_id,
+ * permitindo links antigos (UUID) continuarem funcionando após a migração
+ * para short_id. Caracteres ambíguos (0/O, 1/I/l) são rejeitados pra short_id.
+ */
+export async function loadCharacterByRouteParam(routeParam) {
+  if (!routeParam) return null
+  const column = UUID_REGEX.test(routeParam) ? 'id'
+    : SHORT_ID_REGEX.test(routeParam) ? 'short_id'
+    : null
+  if (!column) return null
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select('id, data, last_opened_at, short_id')
+    .eq(column, routeParam)
     .maybeSingle()
   if (error || !data) return null
   const ch = rowToCharacter(data)
@@ -72,18 +102,20 @@ export async function upsertCharacter(character) {
     logDev('upsert: ficha inválida', v.errors.slice(0, 3))
     return { ok: false, reason: 'invalid', errors: v.errors }
   }
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from(TABLE)
     .upsert({
       id: v.data.id,
       data: v.data,
       last_opened_at: v.data.lastOpenedAt ? new Date(v.data.lastOpenedAt).toISOString() : null,
     })
+    .select('short_id')
+    .maybeSingle()
   if (error) {
     logDev('upsert falhou', error)
     return { ok: false, reason: error.message?.includes('character_limit_reached') ? 'limit' : 'unknown' }
   }
-  return { ok: true }
+  return { ok: true, shortId: data?.short_id ?? null }
 }
 
 export async function deleteCharacter(id) {

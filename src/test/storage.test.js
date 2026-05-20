@@ -25,22 +25,42 @@ const supabaseMock = vi.hoisted(() => {
         if (ctx.single) return resolve({ data: rows[0] ?? null, error: rows.length === 0 && !ctx.maybe ? { message: 'No rows' } : null })
         return resolve({ data: rows, error: null })
       },
-      async upsert(record) {
+      upsert(record) {
+        // Aplica o upsert no store em memória e retorna um builder que pode
+        // ser awaited diretamente OU encadeado com `.select(...).maybeSingle()`.
         const arr = Array.isArray(record) ? record : [record]
         const out = []
         for (const r of arr) {
-          if (!r.id) return { data: null, error: { message: 'id required' } }
-          const stamped = { owner_id: store.uid, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), ...r }
+          if (!r.id) {
+            return Promise.resolve({ data: null, error: { message: 'id required' } })
+          }
+          // Auto-gera short_id no insert (simula trigger characters_set_short_id).
           const idx = store.rows.findIndex(x => x.id === r.id)
+          const isInsert = idx < 0
+          const stamped = {
+            owner_id: store.uid,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            short_id: isInsert ? `mock${Math.random().toString(36).slice(2, 8)}` : store.rows[idx].short_id,
+            ...r,
+          }
           if (idx >= 0) store.rows[idx] = { ...store.rows[idx], ...stamped, updated_at: new Date().toISOString() }
           else store.rows.push(stamped)
           out.push(stamped)
         }
-        return { data: out, error: null }
+        const upsertCtx = { single: false, columns: '*' }
+        const upsertBuilder = {
+          select(cols = '*') { upsertCtx.columns = cols; return upsertBuilder },
+          single() { upsertCtx.single = true; return upsertBuilder },
+          maybeSingle() { upsertCtx.single = true; return upsertBuilder },
+          then(resolve) {
+            if (upsertCtx.single) return resolve({ data: out[0] ?? null, error: null })
+            return resolve({ data: out, error: null })
+          },
+        }
+        return upsertBuilder
       },
-      async insert(record) {
-        return builder.upsert(record)
-      },
+      insert(record) { return builder.upsert(record) },
       delete() {
         // Returns a builder so .eq() can be chained after .delete()
         const deleteCtx = { filter: ctx.filter }
