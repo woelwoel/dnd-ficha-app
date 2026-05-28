@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { listMyCampaigns } from '../../lib/campaigns'
 
 const METHODS = [
   {
@@ -102,22 +103,56 @@ function SelectableCard({ selected, children, inputProps, kind = 'radio' }) {
   )
 }
 
-export function CampaignSetupModal({ open, onCancel, onConfirm }) {
+/**
+ * Modal de onboarding do wizard.
+ *
+ * - Quando `showDestination` é true (criação nova sem campaignId definido),
+ *   adiciona uma seção "Destino" no topo: pessoal vs mesa em que sou membro.
+ *   onConfirm recebe `{ settings, campaignId }`.
+ * - Quando false (compatibilidade com testes / chamadas legadas), o modal
+ *   funciona como antes — só configurações, onConfirm recebe `{ settings }`.
+ *
+ * #19 do super review: fundir DestinationModal + CampaignSetupModal num único
+ * passo, eliminando a cadeia de 2 modais consecutivos pra usuário novo.
+ */
+export function CampaignSetupModal({
+  open,
+  showDestination = false,
+  onCancel,
+  onConfirm,
+}) {
   const [method, setMethod] = useState('standard-array')
   const [allowFeats, setAllowFeats] = useState(false)
   const [allowMulticlass, setAllowMulticlass] = useState(false)
   const [startLevel, setStartLevel] = useState(1)
+  // null = pessoal; uuid = mesa. Default null (pessoal).
+  const [campaignId, setCampaignId] = useState(null)
+  const [campaigns, setCampaigns] = useState([])
+  const [loadingCampaigns, setLoadingCampaigns] = useState(showDestination)
+
+  useEffect(() => {
+    if (!showDestination) return
+    let alive = true
+    listMyCampaigns().then(list => {
+      if (!alive) return
+      setCampaigns(list)
+      setLoadingCampaigns(false)
+    })
+    return () => { alive = false }
+  }, [showDestination])
 
   if (!open) return null
 
   function submit(e) {
     e.preventDefault()
-    onConfirm({
+    const settings = {
       abilityScoreMethod: method,
       allowFeats,
       allowMulticlass,
       startLevel: clampLevel(startLevel),
-    })
+    }
+    if (showDestination) onConfirm({ settings, campaignId })
+    else onConfirm(settings)
   }
 
   return (
@@ -150,6 +185,63 @@ export function CampaignSetupModal({ open, onCancel, onConfirm }) {
             Essas escolhas valem só pra este personagem. Você pode criar outros com regras diferentes.
           </p>
         </header>
+
+        {showDestination && (
+          <fieldset>
+            <legend className="text-xs font-display tracking-widest uppercase text-ink-500 mb-2">
+              Destino
+            </legend>
+            <div className="flex flex-col gap-2">
+              <SelectableCard
+                selected={campaignId === null}
+                inputProps={{
+                  type: 'radio',
+                  name: 'destination',
+                  value: '__personal__',
+                  checked: campaignId === null,
+                  onChange: () => setCampaignId(null),
+                  'aria-label': 'Personagem pessoal',
+                }}
+              >
+                <span className="block text-sm font-semibold text-ink-500 font-display tracking-wide">
+                  Personagem pessoal
+                </span>
+                <span className="block text-xs ink-italic mt-0.5">
+                  Só você vê. Pode vincular a uma mesa depois pelo botão no header da ficha.
+                </span>
+              </SelectableCard>
+              {loadingCampaigns ? (
+                <p className="text-xs ink-italic text-ink-300 pl-2">Carregando mesas…</p>
+              ) : campaigns.length === 0 ? (
+                <p className="text-xs ink-italic text-ink-300 pl-2">
+                  Você ainda não é membro de nenhuma mesa.
+                </p>
+              ) : (
+                campaigns.map(c => (
+                  <SelectableCard
+                    key={c.id}
+                    selected={campaignId === c.id}
+                    inputProps={{
+                      type: 'radio',
+                      name: 'destination',
+                      value: c.id,
+                      checked: campaignId === c.id,
+                      onChange: () => setCampaignId(c.id),
+                      'aria-label': `Mesa ${c.name}`,
+                    }}
+                  >
+                    <span className="block text-sm font-semibold text-ink-500 font-display tracking-wide">
+                      Mesa: {c.name}
+                    </span>
+                    <span className="block text-xs ink-italic mt-0.5">
+                      {c.role === 'dm' ? 'Você é o Mestre dessa mesa.' : 'O Mestre poderá ler a ficha.'}
+                    </span>
+                  </SelectableCard>
+                ))
+              )}
+            </div>
+          </fieldset>
+        )}
 
         <fieldset>
           <legend className="text-xs font-display tracking-widest uppercase text-ink-500 mb-2">

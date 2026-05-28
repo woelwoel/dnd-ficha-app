@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { CampaignSetupModal } from './CampaignSetupModal'
-import { DestinationModal } from './steps/DestinationModal'
 import { BlockCard } from './BlockCard'
 import { BlockEditorModal } from './BlockEditorModal'
 import { ResumeDraftPrompt } from './ResumeDraftPrompt'
@@ -309,7 +308,7 @@ export function CharacterWizardV2({ onBack, onComplete, initialCampaignId }) {
   const savedCampaignId = hasSavedDraft ? readSavedCampaignId() : undefined
   const resolvedInitialCampaignId =
     initialCampaignId !== undefined ? initialCampaignId : savedCampaignId
-  // campaignId: undefined = ainda não decidido (mostra modal);
+  // campaignId: undefined = ainda não decidido (mostra modal fundido);
   // null = pessoal; string = mesa específica.
   const [campaignId, setCampaignIdState] = useState(resolvedInitialCampaignId)
 
@@ -318,14 +317,13 @@ export function CharacterWizardV2({ onBack, onComplete, initialCampaignId }) {
     setCampaignIdState(id)
   }
 
-  const needsDestination = campaignId === undefined
+  // Fase inicial:
+  //  - resume   → quando tem draft real no sessionStorage
+  //  - setup    → modal fundido (destino + settings se campaignId ainda
+  //               não decidido; só settings se já veio decidido por URL/prop)
   const [phase, setPhase] = useState(hasSavedDraft ? 'resume' : 'setup')
   const [pendingSettings, setPendingSettings] = useState(null)
   const [resumeRequested, setResumeRequested] = useState(false)
-
-  if (needsDestination) {
-    return <DestinationModal onChoose={(id) => setCampaignId(id)} />
-  }
 
   if (phase === 'resume') {
     return (
@@ -338,11 +336,23 @@ export function CharacterWizardV2({ onBack, onComplete, initialCampaignId }) {
   }
 
   if (phase === 'setup') {
+    const showDestination = campaignId === undefined
     return (
       <CampaignSetupModal
         open={true}
+        showDestination={showDestination}
         onCancel={onBack}
-        onConfirm={settings => { setPendingSettings(settings); setPhase('grid') }}
+        onConfirm={payload => {
+          if (showDestination) {
+            // payload = { settings, campaignId }
+            setCampaignId(payload.campaignId)
+            setPendingSettings(payload.settings)
+          } else {
+            // payload = settings (legado)
+            setPendingSettings(payload)
+          }
+          setPhase('grid')
+        }}
       />
     )
   }
