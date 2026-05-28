@@ -21,6 +21,26 @@ import { buildCharacterWithSubclassSpells } from './blocks/build-character'
 import { upsertCharacter } from '../../utils/storage'
 
 const STORAGE_KEY = 'wizard-v2-draft'
+// Mantém o destino (mesa vs pessoal) junto do draft no sessionStorage.
+// Sem isso, se o user começa a ficha pra Mesa X, salva draft, e retoma sem
+// `?campaignId=X` na URL, o wizard pula o DestinationModal e salva como
+// pessoal silenciosamente (super review #2).
+const CAMPAIGN_KEY = 'wizard-v2-campaign'
+
+function readSavedCampaignId() {
+  const raw = sessionStorage.getItem(CAMPAIGN_KEY)
+  if (raw === null) return undefined
+  try { return JSON.parse(raw) } catch { return undefined }
+}
+
+function writeSavedCampaignId(id) {
+  sessionStorage.setItem(CAMPAIGN_KEY, JSON.stringify(id))
+}
+
+function clearWizardStorage() {
+  sessionStorage.removeItem(STORAGE_KEY)
+  sessionStorage.removeItem(CAMPAIGN_KEY)
+}
 
 function summaryFor(blockId, draft) {
   switch (blockId) {
@@ -77,7 +97,7 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
       console.error('[wizard] falha ao salvar:', result.errors ?? result.reason)
       return
     }
-    sessionStorage.removeItem('wizard-v2-draft')
+    clearWizardStorage()
     // Prefere short_id (URL curta); fallback pro UUID em caso de fichas
     // pre-migration 0003 ou se o servidor não devolver short_id.
     onComplete(result.shortId ?? character.id)
@@ -271,6 +291,7 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
         onSaveAndExit={() => { setExitConfirmOpen(false); onBack() }}
         onDiscard={() => {
           resetDraft()
+          sessionStorage.removeItem(CAMPAIGN_KEY)
           setExitConfirmOpen(false)
           onBack()
         }}
@@ -282,10 +303,21 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
 
 export function CharacterWizardV2({ onBack, onComplete, initialCampaignId }) {
   const hasSavedDraft = !!sessionStorage.getItem(STORAGE_KEY)
+  // Se o usuário começou a criar ficha pra uma mesa e fechou, recupera o
+  // destino salvo. URL/prop sempre vence (intent explícito do user).
+  const savedCampaignId = readSavedCampaignId()
+  const resolvedInitialCampaignId =
+    initialCampaignId !== undefined ? initialCampaignId : savedCampaignId
   // campaignId: undefined = ainda não decidido (mostra modal);
-  // null = pessoal; string = mesa específica. Se vier por prop, pula o modal.
-  const [campaignId, setCampaignId] = useState(initialCampaignId !== undefined ? initialCampaignId : undefined)
-  const needsDestination = campaignId === undefined && !hasSavedDraft
+  // null = pessoal; string = mesa específica.
+  const [campaignId, setCampaignIdState] = useState(resolvedInitialCampaignId)
+
+  const setCampaignId = (id) => {
+    writeSavedCampaignId(id)
+    setCampaignIdState(id)
+  }
+
+  const needsDestination = campaignId === undefined
   const [phase, setPhase] = useState(hasSavedDraft ? 'resume' : 'setup')
   const [pendingSettings, setPendingSettings] = useState(null)
   const [resumeRequested, setResumeRequested] = useState(false)
@@ -299,7 +331,7 @@ export function CharacterWizardV2({ onBack, onComplete, initialCampaignId }) {
       <ResumeDraftPrompt
         open={true}
         onResume={() => { setResumeRequested(true); setPhase('grid') }}
-        onDiscard={() => { sessionStorage.removeItem(STORAGE_KEY); setPhase('setup') }}
+        onDiscard={() => { clearWizardStorage(); setPhase('setup') }}
       />
     )
   }

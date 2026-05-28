@@ -3,6 +3,14 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 const STORAGE_KEY = 'wizard-v2-draft'
 const AUTOSAVE_MS = 500
 
+// Por que sessionStorage (não localStorage)?
+//  - Drafts são efêmeros. Se o usuário fechou o browser, partiu pra outra
+//    coisa, queremos recomeçar limpo no próximo acesso (super review #15).
+//  - Evita acumular lixo de fichas abandonadas indefinidamente.
+//  - Refresh / pin de aba preserva (cobre o caso real de "fechei sem querer").
+//  - O destino (campaignId) tem chave separada em CharacterWizardV2 para que
+//    "criar pra mesa X" sobreviva a um resume do mesmo draft.
+
 export const INITIAL_DRAFT_V2 = {
   settings: {
     abilityScoreMethod: 'standard-array',
