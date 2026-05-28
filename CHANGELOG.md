@@ -9,6 +9,31 @@ Versionamento semântico: [SemVer](https://semver.org/lang/pt-BR/).
 
 ## [Não lançado]
 
+### Adicionado (PR 3 — Schema de Campanhas)
+- Tabelas `campaigns`, `campaign_members`, `join_attempts` no Postgres com RLS
+  completa. Sem UI ainda — terreno preparado pro PR 4.
+- RPCs `create_campaign`, `join_campaign` (com rate limit 10/min/user),
+  `rotate_invite_code`, `delete_my_account`.
+- Coluna `characters.campaign_id` (nullable). Policy de select de characters
+  agora também permite DM da mesa ler fichas dos jogadores (read-only).
+- Helpers SQL `is_campaign_member(cid)` e `is_campaign_dm(cid)` pra usar em
+  policies (`SECURITY DEFINER stable`).
+- Invite code de 10 chars no alfabeto sem ambíguos (mesmo do `short_id`),
+  gerado via `gen_random_bytes` (CSPRNG).
+- Script `npm run test:rls` (`scripts/test-rls-isolation.mjs`) valida
+  isolamento end-to-end com 2 usuários reais.
+
+### Notas (PR 3)
+- Setup adicional: aplicar `supabase/migrations/0004_campaigns.sql` no SQL
+  Editor do Supabase antes de rodar `npm run test:rls`.
+- Criar 2 usuários de teste em Auth → Users (`test-dm@example.com`,
+  `test-player@example.com`) e adicionar credenciais ao `.env.local`
+  (`TEST_DM_EMAIL`, `TEST_DM_PASSWORD`, `TEST_PLAYER_EMAIL`,
+  `TEST_PLAYER_PASSWORD`).
+- `delete_my_account` remove `profiles` (cascade limpa fichas, memberships e
+  campanhas onde é DM). A linha em `auth.users` permanece — apagar de vez
+  precisa admin API (fica pro PR 4 junto com o botão na UI).
+
 ### Adicionado (PR 5 — Polimento)
 - **Short ID nas URLs de ficha**: 10 chars URL-friendly (sem 0/O/1/I/l).
   `/c/V1StGXR8_Z` em vez de `/c/13f58f02-445e-4334-b5c3-56e55f9b9bbe`.
