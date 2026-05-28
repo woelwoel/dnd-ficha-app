@@ -353,3 +353,28 @@ begin
   return v_code;
 end;
 $$;
+
+-- ─────────────────────────────────────────────────────────────────────
+-- RPC: delete_my_account()
+-- Remove a linha de profiles do usuário corrente. Cascade limpa o resto
+-- (characters, campaign_members, join_attempts, e campaigns onde é DM).
+-- A linha em auth.users PERMANECE (precisa admin API pra apagar de vez
+-- — fora de escopo deste PR; vira chamada no botão da UI no PR 4).
+-- ─────────────────────────────────────────────────────────────────────
+
+create function public.delete_my_account()
+returns void
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+declare
+  v_uid uuid := auth.uid();
+begin
+  if v_uid is null then
+    raise exception 'not_authenticated' using errcode = '42501';
+  end if;
+
+  delete from public.profiles where id = v_uid;
+end;
+$$;
