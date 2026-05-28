@@ -7,6 +7,8 @@ import { EmptyState } from './EmptyState'
 import { BackupMenu } from './BackupMenu'
 import { Button } from '../ui/Button'
 import { useAuth } from '../../auth/AuthProvider'
+import { useCampaignContext } from '../../hooks/useCampaignContext'
+import { CampaignSelector } from './CampaignSelector'
 import {
   loadCharacters,
   touchCharacterLastOpened,
@@ -45,14 +47,15 @@ export function CharacterList({ onSelect, onCreate }) {
   const [campaignName] = useState(readCampaignName)
   const { signOut } = useAuth()
   const navigate = useNavigate()
+  const [scope, setScope] = useCampaignContext()
 
   // Carga inicial + recarga.
   const reload = useCallback(async () => {
     setLoading(true)
-    const list = await loadCharacters()
+    const list = await loadCharacters(scope)
     setCharacters(list)
     setLoading(false)
-  }, [])
+  }, [scope])
 
   useEffect(() => { reload() }, [reload])
 
@@ -108,6 +111,8 @@ export function CharacterList({ onSelect, onCreate }) {
           {campaignName.replace(/⚜\s*/g, '')}
         </h1>
 
+        <CampaignSelector scope={scope} onChange={setScope} />
+
         <div className="flex items-center gap-2" role="group" aria-label="Modo de visualização">
           <Button
             variant={view === VIEW_MAP ? 'gold' : 'ghost-dark'}
@@ -138,7 +143,14 @@ export function CharacterList({ onSelect, onCreate }) {
             characterCount={characters.length}
             onImported={reload}
           />
-          <Button variant="gold" size="md" onClick={onCreate}>
+          <Button
+            variant="gold"
+            size="md"
+            onClick={() => {
+              const campaignId = scope === 'personal' ? null : scope.campaignId
+              if (onCreate) onCreate(campaignId)
+            }}
+          >
             ⚔ Recrutar
           </Button>
         </div>

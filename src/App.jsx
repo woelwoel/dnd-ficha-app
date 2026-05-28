@@ -42,7 +42,7 @@ function ListRoute() {
   return (
     <CharacterList
       onSelect={(id) => navigate(`/c/${id}`)}
-      onCreate={() => navigate('/new')}
+      onCreate={(campaignId) => navigate(campaignId ? `/new?campaignId=${campaignId}` : '/new')}
     />
   )
 }

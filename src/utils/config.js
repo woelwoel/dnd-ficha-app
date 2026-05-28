@@ -17,3 +17,5 @@ export const MAX_VISIBLE_TOKENS = 10
 /** Chaves do localStorage (mantém namespace `dnd-ficha:`). */
 export const CAMPAIGN_NAME_STORAGE_KEY = 'dnd-ficha:campaign-name'
 export const VIEW_MODE_STORAGE_KEY = 'dnd-ficha:char-list-view'
+/** Scope do CharacterList: 'personal' ou JSON `{campaignId}`. */
+export const CAMPAIGN_SCOPE_STORAGE_KEY = 'dnd-ficha:campaign-scope'
