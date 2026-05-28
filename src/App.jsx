@@ -20,6 +20,9 @@ const CharacterSheet = lazy(() =>
 const CharacterWizard = lazy(() =>
   import('./components/CharacterWizardV2').then(m => ({ default: m.CharacterWizardV2 }))
 )
+const CampaignsScreen = lazy(() =>
+  import('./components/Campaigns').then(m => ({ default: m.CampaignsScreen }))
+)
 
 function Loader() {
   return (
@@ -75,6 +78,7 @@ function AuthedRoutes() {
           <Route path="/" element={<ListRoute />} />
           <Route path="/new" element={<NewRoute />} />
           <Route path="/c/:id" element={<SheetRoute />} />
+          <Route path="/campaigns" element={<Suspense fallback={<Loader />}><CampaignsScreen /></Suspense>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

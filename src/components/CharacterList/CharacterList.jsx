@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { CharacterMap } from './CharacterMap'
 import { CharacterSidebar } from './CharacterSidebar'
 import { CharacterListView } from './CharacterListView'
@@ -43,6 +44,7 @@ export function CharacterList({ onSelect, onCreate }) {
   const [view, setView] = useState(readView)
   const [campaignName] = useState(readCampaignName)
   const { signOut } = useAuth()
+  const navigate = useNavigate()
 
   // Carga inicial + recarga.
   const reload = useCallback(async () => {
@@ -126,6 +128,9 @@ export function CharacterList({ onSelect, onCreate }) {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button variant="ghost-dark" size="sm" onClick={() => navigate('/campaigns')}>
+            ⚔ Mesas
+          </Button>
           <Button variant="ghost-dark" size="sm" onClick={() => signOut()}>
             Sair
           </Button>
