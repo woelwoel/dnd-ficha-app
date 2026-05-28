@@ -25,12 +25,15 @@ const SHORT_ID_REGEX = /^[A-HJ-NP-Za-hj-km-np-z2-9]{10}$/
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 function rowToCharacter(row) {
-  // O payload da ficha vive em row.data. last_opened_at e short_id são
-  // metadados relacionais.
+  // O payload da ficha vive em row.data. Outros campos (owner_id, campaign_id,
+  // short_id, last_opened_at) são metadados relacionais e são espelhados no
+  // objeto pra que o cliente possa consultar sem fazer outra query.
   if (!row?.data) return null
   return {
     ...row.data,
     shortId: row.short_id ?? null,
+    ownerId: row.owner_id ?? row.data.ownerId ?? null,
+    campaignId: row.campaign_id ?? row.data.campaignId ?? null,
     lastOpenedAt: row.last_opened_at ? Date.parse(row.last_opened_at) : (row.data.lastOpenedAt ?? null),
   }
 }
@@ -43,11 +46,22 @@ function logDev(label, payload) {
 
 /* ── API pública ─────────────────────────────────────────────────── */
 
-export async function loadCharacters() {
-  const { data, error } = await supabase
+/**
+ * Carrega fichas com filtro opcional por escopo:
+ *   - 'mine' (default)            → todas que o user pode ver (owner + DM)
+ *   - 'personal'                  → só com campaign_id IS NULL
+ *   - { campaignId: '<uuid>' }    → só dessa mesa
+ */
+export async function loadCharacters(scope = 'mine') {
+  let q = supabase
     .from(TABLE)
-    .select('id, data, last_opened_at, created_at, short_id')
+    .select('id, data, last_opened_at, created_at, short_id, owner_id, campaign_id')
     .order('created_at', { ascending: true })
+
+  if (scope === 'personal') q = q.is('campaign_id', null)
+  else if (scope && typeof scope === 'object' && scope.campaignId) q = q.eq('campaign_id', scope.campaignId)
+
+  const { data, error } = await q
   if (error) {
     logDev('loadCharacters falhou', error)
     return []
@@ -96,26 +110,32 @@ export async function loadCharacterByRouteParam(routeParam) {
   return parsed.success ? parsed.data : null
 }
 
-export async function upsertCharacter(character) {
+export async function upsertCharacter(character, opts = {}) {
   const v = validateForSave(character)
   if (!v.ok) {
     logDev('upsert: ficha inválida', v.errors.slice(0, 3))
     return { ok: false, reason: 'invalid', errors: v.errors }
   }
+  const row = {
+    id: v.data.id,
+    data: v.data,
+    last_opened_at: v.data.lastOpenedAt ? new Date(v.data.lastOpenedAt).toISOString() : null,
+  }
+  // campaignId pode vir como override em opts (criação no contexto de mesa)
+  // ou já no objeto character (replays). null = explicitamente pessoal.
+  if (opts.campaignId !== undefined) row.campaign_id = opts.campaignId
+  else if (character.campaignId !== undefined) row.campaign_id = character.campaignId
+
   const { data, error } = await supabase
     .from(TABLE)
-    .upsert({
-      id: v.data.id,
-      data: v.data,
-      last_opened_at: v.data.lastOpenedAt ? new Date(v.data.lastOpenedAt).toISOString() : null,
-    })
-    .select('short_id')
+    .upsert(row)
+    .select('short_id, campaign_id')
     .maybeSingle()
   if (error) {
     logDev('upsert falhou', error)
     return { ok: false, reason: error.message?.includes('character_limit_reached') ? 'limit' : 'unknown' }
   }
-  return { ok: true, shortId: data?.short_id ?? null }
+  return { ok: true, shortId: data?.short_id ?? null, campaignId: data?.campaign_id ?? null }
 }
 
 export async function deleteCharacter(id) {

@@ -292,6 +292,15 @@ const traitsSchema = z.object({
 
 export const characterSchema = z.object({
   id: z.string().min(1),
+  // Vínculo com mesa (Postgres `characters.campaign_id`). Null/undefined = pessoal.
+  // Exposto via `rowToCharacter` em `storage.js`; persistido fora de `data` no
+  // Postgres mas espelhado no objeto pra leitura cliente.
+  campaignId: z.string().nullable().optional(),
+  // Owner da ficha (Postgres `characters.owner_id`). Read-only no cliente —
+  // usado pelo `CharacterSheet` pra detectar "modo leitura" quando DM abre
+  // ficha de jogador. Tipado como string em vez de uuid pra tolerar testes
+  // e payloads legados.
+  ownerId: z.string().nullable().optional(),
   meta: metaSchema,
   info: infoSchema,
   attributes: abilitiesSchema,

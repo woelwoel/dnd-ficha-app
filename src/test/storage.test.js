@@ -17,6 +17,7 @@ const supabaseMock = vi.hoisted(() => {
       select(cols = '*') { ctx.columns = cols; return builder },
       order() { return builder },
       eq(col, val) { const prev = ctx.filter; ctx.filter = (r) => prev(r) && r[col] === val; return builder },
+      is(col, val) { const prev = ctx.filter; ctx.filter = (r) => prev(r) && r[col] === val; return builder },
       single() { ctx.single = true; return builder },
       maybeSingle() { ctx.single = true; ctx.maybe = true; return builder },
       // Terminators that return Promises:
@@ -39,6 +40,7 @@ const supabaseMock = vi.hoisted(() => {
           const isInsert = idx < 0
           const stamped = {
             owner_id: store.uid,
+            campaign_id: r.campaign_id ?? null,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
             short_id: isInsert ? `mock${Math.random().toString(36).slice(2, 8)}` : store.rows[idx].short_id,
@@ -234,5 +236,21 @@ describe('storage (Supabase backend)', () => {
     expect(r.ok).toBe(false)
     expect(r.reason).toBe('invalid-format')
     expect(await loadCharacters()).toHaveLength(1)
+  })
+
+  it('loadCharacters({ campaignId }) filtra por mesa', async () => {
+    await upsertCharacter(makeChar('a'), { campaignId: 'camp-1' })
+    await upsertCharacter(makeChar('b'), { campaignId: 'camp-2' })
+    await upsertCharacter(makeChar('c')) // pessoal (campaign_id null)
+    const m1 = await loadCharacters({ campaignId: 'camp-1' })
+    expect(m1.map(x => x.id)).toEqual(['a'])
+    const personal = await loadCharacters('personal')
+    expect(personal.map(x => x.id)).toEqual(['c'])
+  })
+
+  it('upsertCharacter({campaignId}) vincula à mesa via opts', async () => {
+    const r = await upsertCharacter(makeChar('a'), { campaignId: 'camp-1' })
+    expect(r.ok).toBe(true)
+    expect(r.campaignId).toBe('camp-1')
   })
 })
