@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { BrowserRouter, Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { ErrorBoundary } from './ErrorBoundary'
 import { SrdProvider } from './providers/SrdProvider'
 import { DiceRollerProvider } from './context/DiceRollerContext'
@@ -49,9 +49,15 @@ function ListRoute() {
 
 function NewRoute() {
   const navigate = useNavigate()
+  const [params] = useSearchParams()
+  const campaignId = params.get('campaignId') || null
+  // Se a query string definiu o destino, pula o modal; senão deixa undefined
+  // pra que o wizard mostre o DestinationModal.
+  const initialCampaignId = params.has('campaignId') ? campaignId : undefined
   return (
     <Suspense fallback={<Loader />}>
       <CharacterWizard
+        initialCampaignId={initialCampaignId}
         onBack={() => navigate('/')}
         onComplete={(id) => navigate(`/c/${id}`, { replace: true })}
       />

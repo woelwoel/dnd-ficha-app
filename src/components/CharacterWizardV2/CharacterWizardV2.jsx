@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { CampaignSetupModal } from './CampaignSetupModal'
+import { DestinationModal } from './steps/DestinationModal'
 import { BlockCard } from './BlockCard'
 import { BlockEditorModal } from './BlockEditorModal'
 import { ResumeDraftPrompt } from './ResumeDraftPrompt'
@@ -48,7 +49,7 @@ const LABEL_BY_ID = Object.fromEntries(BLOCKS.map(b => [b.id, b.label]))
 
 // Sub-componente que monta apenas quando phase='grid'.
 // Isso garante que useDraft receba as options corretas na montagem inicial.
-function WizardGrid({ initialSettings, resume, onBack, onComplete }) {
+function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete }) {
   const { draft, updateDraft, hasChanges, resetDraft } = useDraft({ initialSettings, resume })
   const { races, classes, classChoices, progression: classProgression, backgrounds, spells: srdSpells } = useSrd()
   // Datasets só usados no wizard — carregados sob demanda.
@@ -71,7 +72,7 @@ function WizardGrid({ initialSettings, resume, onBack, onComplete }) {
     const character = buildCharacterWithSubclassSpells(
       draft, selectedClassData, classEquipment ?? {}, srdSpells ?? []
     )
-    const result = await upsertCharacter(character)
+    const result = await upsertCharacter(character, { campaignId: campaignId ?? null })
     if (!result.ok) {
       console.error('[wizard] falha ao salvar:', result.errors ?? result.reason)
       return
@@ -279,11 +280,19 @@ function WizardGrid({ initialSettings, resume, onBack, onComplete }) {
   )
 }
 
-export function CharacterWizardV2({ onBack, onComplete }) {
+export function CharacterWizardV2({ onBack, onComplete, initialCampaignId }) {
   const hasSavedDraft = !!sessionStorage.getItem(STORAGE_KEY)
+  // campaignId: undefined = ainda não decidido (mostra modal);
+  // null = pessoal; string = mesa específica. Se vier por prop, pula o modal.
+  const [campaignId, setCampaignId] = useState(initialCampaignId !== undefined ? initialCampaignId : undefined)
+  const needsDestination = campaignId === undefined && !hasSavedDraft
   const [phase, setPhase] = useState(hasSavedDraft ? 'resume' : 'setup')
   const [pendingSettings, setPendingSettings] = useState(null)
   const [resumeRequested, setResumeRequested] = useState(false)
+
+  if (needsDestination) {
+    return <DestinationModal onChoose={(id) => setCampaignId(id)} />
+  }
 
   if (phase === 'resume') {
     return (
@@ -310,6 +319,7 @@ export function CharacterWizardV2({ onBack, onComplete }) {
     <WizardGrid
       initialSettings={pendingSettings}
       resume={resumeRequested}
+      campaignId={campaignId}
       onBack={onBack}
       onComplete={onComplete}
     />
