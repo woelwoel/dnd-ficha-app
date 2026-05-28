@@ -36,7 +36,12 @@ export async function listMyCampaigns() {
 
 export async function createCampaign(name) {
   const { data, error } = await supabase.rpc('create_campaign', { p_name: name })
-  if (error) { logDev('createCampaign', error); return { ok: false, reason: 'unknown' } }
+  if (error) {
+    if (/too_many_campaigns/.test(error.message)) return { ok: false, reason: 'too-many-campaigns' }
+    if (/invalid_name/.test(error.message)) return { ok: false, reason: 'invalid-name' }
+    logDev('createCampaign', error)
+    return { ok: false, reason: 'unknown' }
+  }
   return { ok: true, id: data }
 }
 

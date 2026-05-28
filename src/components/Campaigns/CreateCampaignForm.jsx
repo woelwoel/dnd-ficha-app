@@ -17,7 +17,14 @@ export function CreateCampaignForm({ onCreated }) {
     setBusy(true); setErr(null)
     const r = await createCampaign(name.trim())
     setBusy(false)
-    if (!r.ok) { setErr('Falha ao criar a mesa. Tente novamente.'); return }
+    if (!r.ok) {
+      const msg = r.reason === 'too-many-campaigns'
+        ? 'Limite de 20 mesas por DM atingido. Apague uma antiga antes.'
+        : r.reason === 'invalid-name'
+          ? 'Informe um nome válido pra mesa.'
+          : 'Falha ao criar a mesa. Tente novamente.'
+      setErr(msg); return
+    }
     setName('')
     onCreated?.(r.id)
   }
