@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+# Cancela runs antigos da mesma branch quando um novo push chega.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-test-build:
+    name: Lint + Test + Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+        env:
+          # Vite precisa de env públicas no build pra pré-resolver o client.
+          # Use os mesmos secrets que estão no Vercel.
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+  # test:rls roda contra um projeto Supabase dedicado de teste. Skip se
+  # os secrets não estiverem configurados (fork / contributor externo).
+  rls:
+    name: RLS isolation
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' || github.repository == github.event.pull_request.head.repo.full_name }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Run RLS isolation tests
+        env:
+          TEST_SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          TEST_SUPABASE_ANON_KEY: ${{ secrets.TEST_SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$TEST_SUPABASE_URL" ]; then
+            echo "TEST_SUPABASE_URL não configurado — pulando RLS tests."
+            exit 0
+          fi
+          npm run test:rls
