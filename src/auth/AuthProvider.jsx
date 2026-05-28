@@ -2,6 +2,11 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import { supabase } from '../lib/supabase'
 import { deleteMyAccount } from '../lib/campaigns'
 
+// Endpoint da serverless function que apaga auth.users via admin API.
+// Em dev (Vite) a chamada vai falhar — desenvolvedor precisa rodar
+// `vercel dev` ou só validar visualmente até deploy.
+const DELETE_ACCOUNT_ENDPOINT = '/api/delete-account'
+
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
@@ -76,14 +81,38 @@ export function AuthProvider({ children }) {
     return result
   }, [])
 
-  // Chama a RPC delete_my_account (cascade limpa profiles/characters/membros/
-  // campanhas onde sou DM) e depois signOut. A linha em auth.users permanece —
-  // apagar de vez exige admin API (fora deste PR).
+  // Apaga a conta de verdade:
+  //   1) Chama /api/delete-account (Vercel function com service_role) que
+  //      faz admin.deleteUser(uid). FK cascade limpa profiles/characters/
+  //      membros/campanhas-onde-sou-DM em uma única operação.
+  //   2) Se a função falhar (ex: env var ausente em dev), faz fallback pra
+  //      RPC delete_my_account — apaga só o profile + cascade public; deixa
+  //      auth.users órfão. Pior pior, signOut leva o user pra tela de login
+  //      sem dados visíveis.
+  //   3) signOut sempre, independente do caminho.
   const deleteAccount = useCallback(async () => {
-    const r = await deleteMyAccount()
-    if (!r.ok) return { ok: false, reason: r.reason }
+    const { data: { session } } = await supabase.auth.getSession()
+    const token = session?.access_token
+    let hardDeleted = false
+    if (token) {
+      try {
+        const resp = await fetch(DELETE_ACCOUNT_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ confirm: 'APAGAR' }),
+        })
+        hardDeleted = resp.ok
+      } catch { /* network/dev — cai no fallback */ }
+    }
+    if (!hardDeleted) {
+      const r = await deleteMyAccount()
+      if (!r.ok) return { ok: false, reason: r.reason }
+    }
     await supabase.auth.signOut()
-    return { ok: true }
+    return { ok: true, hardDeleted }
   }, [])
 
   const value = {

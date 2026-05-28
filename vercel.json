@@ -23,6 +23,6 @@
     }
   ],
   "rewrites": [
-    { "source": "/((?!assets/|srd-data/|maps/|sw\\.js|workbox-.*\\.js|manifest\\.webmanifest|favicon\\.svg|icons\\.svg|robots\\.txt).*)", "destination": "/" }
+    { "source": "/((?!api/|assets/|srd-data/|maps/|sw\\.js|workbox-.*\\.js|manifest\\.webmanifest|favicon\\.svg|icons\\.svg|robots\\.txt).*)", "destination": "/" }
   ]
 }

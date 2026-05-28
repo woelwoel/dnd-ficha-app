@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react'
-import { BrowserRouter, Routes, Route, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useParams, useSearchParams, useLocation } from 'react-router-dom'
+import { PrivacyPage } from './components/PrivacyPage'
 import { ErrorBoundary } from './ErrorBoundary'
 import { SrdProvider } from './providers/SrdProvider'
 import { DiceRollerProvider } from './context/DiceRollerContext'
@@ -112,6 +113,9 @@ function AuthedRoutes() {
 
 function Gate() {
   const { user, loading, recoveryMode } = useAuth()
+  const location = useLocation()
+  // /privacidade é acessível sem login (exigência LGPD art. 9°).
+  if (location.pathname === '/privacidade') return <PrivacyPage />
   if (loading) return <Loader />
   if (recoveryMode) return <ResetPasswordScreen />
   if (!user) return <LoginScreen />

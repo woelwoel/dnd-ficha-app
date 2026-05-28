@@ -57,6 +57,22 @@ Esperado:
 - `campaign_members` — SELECT por membro da mesma mesa, INSERT/DELETE via RPCs
 - `join_attempts` — INSERT por authenticated, SELECT só do próprio user_id
 
+## Vercel — env vars para /api/delete-account
+
+A função serverless `api/delete-account.js` usa a admin API do Supabase
+pra apagar `auth.users` de verdade quando o usuário escolhe "Apagar minha
+conta". Sem isso, o profile some via cascade mas a linha em `auth.users`
+fica órfã (e o user pode logar de novo num app vazio).
+
+No painel Vercel → Project → Settings → Environment Variables, adicionar:
+
+- [ ] `SUPABASE_URL` — mesma URL pública usada pelo client (ex:
+      `https://xxxxx.supabase.co`)
+- [ ] `SUPABASE_SERVICE_ROLE_KEY` — pegar em Supabase → Project Settings →
+      API → `service_role` (secret). **Nunca expor no client.**
+
+Após configurar, redeploy o projeto pra função carregar as envs.
+
 ## Testes RLS
 
 ```bash
