@@ -30,3 +30,7 @@ dist-ssr
 /test-results/
 /playwright/.cache/
 .superpowers/
+
+# Caches de sessão de assistentes
+.claude/
+.claire/
