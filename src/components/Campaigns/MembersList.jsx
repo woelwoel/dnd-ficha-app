@@ -9,6 +9,10 @@ import { Button } from '../ui/Button'
 export function MembersList({ campaignId, currentUserId, isDM, onChanged }) {
   const [members, setMembers] = useState([])
   const [loading, setLoading] = useState(true)
+  // #26 super review: spinner em ações destrutivas.
+  // busyMember = user_id sendo removido; busyLeave = leave em vôo.
+  const [busyMember, setBusyMember] = useState(null)
+  const [busyLeave, setBusyLeave] = useState(false)
 
   async function reload() {
     setLoading(true)
@@ -19,13 +23,17 @@ export function MembersList({ campaignId, currentUserId, isDM, onChanged }) {
 
   async function onRemove(userId) {
     if (!confirm('Remover este jogador da mesa?')) return
+    setBusyMember(userId)
     const r = await removeMember(campaignId, userId)
+    setBusyMember(null)
     if (r.ok) { await reload(); onChanged?.() }
   }
 
   async function onLeave() {
     if (!confirm('Sair desta mesa?')) return
+    setBusyLeave(true)
     const r = await leaveCampaign(campaignId)
+    setBusyLeave(false)
     if (r.ok) onChanged?.({ left: true })
   }
 
@@ -62,10 +70,19 @@ export function MembersList({ campaignId, currentUserId, isDM, onChanged }) {
                 </span>
               </div>
               {isDM && !isSelf && (
-                <Button variant="ghost-dark" size="sm" onClick={() => onRemove(m.user_id)}>Remover</Button>
+                <Button
+                  variant="ghost-dark"
+                  size="sm"
+                  disabled={busyMember === m.user_id}
+                  onClick={() => onRemove(m.user_id)}
+                >
+                  {busyMember === m.user_id ? 'Removendo…' : 'Remover'}
+                </Button>
               )}
               {!isDM && isSelf && (
-                <Button variant="ghost-dark" size="sm" onClick={onLeave}>Sair</Button>
+                <Button variant="ghost-dark" size="sm" disabled={busyLeave} onClick={onLeave}>
+                  {busyLeave ? 'Saindo…' : 'Sair'}
+                </Button>
               )}
             </li>
           )

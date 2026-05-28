@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { loadCampaignCharacters } from '../../lib/campaigns'
+import { supabase } from '../../lib/supabase'
 
 /**
  * Lista de fichas dos jogadores vinculadas a uma mesa. RLS já garante que
@@ -11,16 +12,36 @@ export function CampaignCharactersList({ campaignId, onOpen }) {
   const [rows, setRows] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    let alive = true
+  const reload = useCallback(() => {
     setLoading(true)
-    loadCampaignCharacters(campaignId).then(list => {
-      if (!alive) return
+    return loadCampaignCharacters(campaignId).then(list => {
       setRows(list)
       setLoading(false)
     })
-    return () => { alive = false }
   }, [campaignId])
+
+  useEffect(() => {
+    let alive = true
+    reload().then(() => { if (!alive) return })
+    return () => { alive = false }
+  }, [reload])
+
+  // #41 super review: subscribe a UPDATE/INSERT/DELETE em characters dessa
+  // mesa. RLS no Realtime: o channel só emite linhas que o user pode ler,
+  // então DM só recebe eventos dos players da própria mesa.
+  // Estratégia: reload completo a cada evento. Volume baixo (1 mesa,
+  // poucas fichas) — patch incremental seria over-engineering.
+  useEffect(() => {
+    const channel = supabase
+      .channel(`campaign:${campaignId}:characters`)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'characters', filter: `campaign_id=eq.${campaignId}` },
+        () => { reload() },
+      )
+      .subscribe()
+    return () => { supabase.removeChannel(channel) }
+  }, [campaignId, reload])
 
   if (loading) return <div className="p-4 text-amber-400 text-sm">Carregando fichas…</div>
 

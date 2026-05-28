@@ -14,6 +14,7 @@ import { AccountMenu } from '../ui/AccountMenu'
 export function CampaignsScreen() {
   const [campaigns, setCampaigns] = useState([])
   const [loading, setLoading] = useState(true)
+  const [query, setQuery] = useState('')
   const navigate = useNavigate()
 
   const reload = useCallback(async () => {
@@ -23,6 +24,13 @@ export function CampaignsScreen() {
   }, [])
 
   useEffect(() => { reload() }, [reload])
+
+  const q = query.trim().toLowerCase()
+  const filtered = q
+    ? campaigns.filter(c => (c.name ?? '').toLowerCase().includes(q))
+    : campaigns
+  // #24 super review: busca só aparece quando vale a pena (5+ mesas).
+  const showSearch = campaigns.length >= 5
 
   return (
     <div className="min-h-screen p-4" style={{ background: 'var(--color-bg-canvas)' }}>
@@ -42,14 +50,29 @@ export function CampaignsScreen() {
       </div>
 
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-sm uppercase tracking-wider text-gray-400 mb-3">Suas mesas</h2>
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <h2 className="text-sm uppercase tracking-wider text-gray-400">Suas mesas</h2>
+          {showSearch && (
+            <input
+              type="search"
+              placeholder="Buscar…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="px-3 py-1 bg-gray-900 border rounded text-gray-100 text-sm w-48"
+              style={{ borderColor: 'var(--color-shell-border)' }}
+              aria-label="Buscar mesa pelo nome"
+            />
+          )}
+        </div>
         {loading ? (
           <p className="text-amber-400 text-sm">Carregando…</p>
         ) : campaigns.length === 0 ? (
           <p className="text-gray-500 text-sm">Você ainda não tem mesas. Crie uma ou entre com código.</p>
+        ) : filtered.length === 0 ? (
+          <p className="text-gray-500 text-sm">Nenhuma mesa corresponde a "{query}".</p>
         ) : (
           <div className="grid gap-3 md:grid-cols-2">
-            {campaigns.map(c => (
+            {filtered.map(c => (
               <CampaignCard key={c.id} campaign={c} onOpen={(id) => navigate(`/campaigns/${id}`)} />
             ))}
           </div>

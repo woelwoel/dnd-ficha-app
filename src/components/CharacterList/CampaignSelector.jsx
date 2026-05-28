@@ -1,45 +1,92 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import {
+  Combobox,
+  ComboboxButton,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
+} from '@headlessui/react'
 import { listMyCampaigns } from '../../lib/campaigns'
 import { resetScopeIfMissing } from '../../hooks/useCampaignContext'
 
 /**
- * Dropdown no header do CharacterList. "Pessoais" filtra fichas com
+ * Combobox no header do CharacterList. "Pessoais" filtra fichas com
  * campaign_id NULL; uma mesa selecionada filtra por aquela mesa.
+ *
+ * #25 super review: substitui o <select> nativo por Headless UI Combobox
+ * pra acomodar nomes longos com truncate elegante e busca quando houver
+ * muitas mesas. Acessibilidade ARIA cuidada pela lib.
  */
+const PERSONAL = { id: 'personal', label: 'Personagens pessoais' }
+
 export function CampaignSelector({ scope, onChange }) {
   const [campaigns, setCampaigns] = useState([])
+  const [query, setQuery] = useState('')
 
   useEffect(() => {
     listMyCampaigns().then(list => {
       setCampaigns(list)
-      // #10 super review: se o scope salvo aponta pra mesa em que o user
-      // não é mais membro (ou que foi deletada), reseta pra 'personal'.
       resetScopeIfMissing(scope, onChange, list)
     })
-    // intencional: roda só no mount; mudar scope reativamente causaria loop.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const value = scope === 'personal' ? 'personal' : scope?.campaignId
+  const options = useMemo(
+    () => [PERSONAL, ...campaigns.map(c => ({ id: c.id, label: `Mesa: ${c.name}` }))],
+    [campaigns],
+  )
 
-  function onSelect(e) {
-    const v = e.target.value
-    if (v === 'personal') onChange('personal')
-    else onChange({ campaignId: v })
+  const filtered = query.trim()
+    ? options.filter(o => o.label.toLowerCase().includes(query.trim().toLowerCase()))
+    : options
+
+  const selectedId = scope === 'personal' ? 'personal' : scope?.campaignId
+  const selected = options.find(o => o.id === selectedId) ?? PERSONAL
+
+  function onSelect(opt) {
+    if (!opt) return
+    if (opt.id === 'personal') onChange('personal')
+    else onChange({ campaignId: opt.id })
+    setQuery('')
   }
 
   return (
-    <select
-      value={value}
-      onChange={onSelect}
-      className="px-3 py-1 bg-gray-900 border rounded text-gray-100 text-sm"
-      style={{ borderColor: 'var(--color-shell-border)' }}
-      aria-label="Contexto de personagens"
-    >
-      <option value="personal">Personagens pessoais</option>
-      {campaigns.map(c => (
-        <option key={c.id} value={c.id}>Mesa: {c.name}</option>
-      ))}
-    </select>
+    <Combobox value={selected} onChange={onSelect}>
+      <div className="relative">
+        <div
+          className="flex items-center bg-gray-900 border rounded text-sm"
+          style={{ borderColor: 'var(--color-shell-border)' }}
+        >
+          <ComboboxInput
+            aria-label="Contexto de personagens"
+            className="px-3 py-1 bg-transparent text-gray-100 w-48 sm:w-56 outline-none truncate"
+            displayValue={(opt) => opt?.label ?? ''}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Pessoais / Mesa…"
+          />
+          <ComboboxButton className="px-2 text-gray-400 hover:text-amber-300">▾</ComboboxButton>
+        </div>
+        <ComboboxOptions
+          className="absolute z-20 mt-1 w-full max-h-72 overflow-auto rounded border bg-gray-900 shadow-lg"
+          style={{ borderColor: 'var(--color-shell-border)' }}
+        >
+          {filtered.length === 0 ? (
+            <li className="px-3 py-2 text-xs text-gray-500">Nenhum resultado</li>
+          ) : (
+            filtered.map(opt => (
+              <ComboboxOption
+                key={opt.id}
+                value={opt}
+                className={({ active }) =>
+                  `px-3 py-2 cursor-pointer truncate ${active ? 'bg-gray-800 text-amber-300' : 'text-gray-100'}`
+                }
+              >
+                {opt.label}
+              </ComboboxOption>
+            ))
+          )}
+        </ComboboxOptions>
+      </div>
+    </Combobox>
   )
 }

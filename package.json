@@ -17,6 +17,7 @@
     "test:rls": "node scripts/test-rls-isolation.mjs"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.10",
     "@supabase/supabase-js": "^2.106.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
