@@ -76,10 +76,16 @@ export async function loadCharacters(scope = 'mine') {
   return valid
 }
 
+// owner_id + campaign_id são colunas relacionais (stripadas do JSONB pelo
+// Batch F #29). Precisam estar no SELECT pra rowToCharacter conseguir
+// expor ownerId/campaignId no objeto — sem isso, ownerId vira null no
+// cliente e a detecção de readOnly (DM lendo ficha de player) falha.
+const CHARACTER_COLUMNS = 'id, data, last_opened_at, short_id, owner_id, campaign_id'
+
 export async function loadCharacterById(id) {
   const { data, error } = await supabase
     .from(TABLE)
-    .select('id, data, last_opened_at, short_id')
+    .select(CHARACTER_COLUMNS)
     .eq('id', id)
     .maybeSingle()
   if (error || !data) return null
@@ -101,7 +107,7 @@ export async function loadCharacterByRouteParam(routeParam) {
   if (!column) return null
   const { data, error } = await supabase
     .from(TABLE)
-    .select('id, data, last_opened_at, short_id')
+    .select(CHARACTER_COLUMNS)
     .eq(column, routeParam)
     .maybeSingle()
   if (error || !data) return null
