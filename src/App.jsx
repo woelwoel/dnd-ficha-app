@@ -38,12 +38,23 @@ function Loader() {
 
 /* ── Wrappers de rota: traduzem URL → callbacks já existentes nos componentes ── */
 
+// UUID padrão v4 — usado pra rejeitar querystrings com lixo (ex: SyntheticEvent
+// stringificado virando "[object Object]") antes de propagar pro Supabase.
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 function ListRoute() {
   const navigate = useNavigate()
   return (
     <CharacterList
       onSelect={(id) => navigate(`/c/${id}`)}
-      onCreate={(campaignId) => navigate(campaignId ? `/new?campaignId=${campaignId}` : '/new')}
+      onCreate={(campaignId) => {
+        // Só aceita string que parece UUID. Qualquer outra coisa (objeto,
+        // Event, string lixo) cai como ficha pessoal.
+        const safe = typeof campaignId === 'string' && UUID_RE.test(campaignId)
+          ? campaignId
+          : null
+        navigate(safe ? `/new?campaignId=${encodeURIComponent(safe)}` : '/new')
+      }}
     />
   )
 }
@@ -51,10 +62,11 @@ function ListRoute() {
 function NewRoute() {
   const navigate = useNavigate()
   const [params] = useSearchParams()
-  const campaignId = params.get('campaignId') || null
-  // Se a query string definiu o destino, pula o modal; senão deixa undefined
-  // pra que o wizard mostre o DestinationModal.
-  const initialCampaignId = params.has('campaignId') ? campaignId : undefined
+  const raw = params.get('campaignId')
+  // Mesma validação no consumo: se a URL trouxe lixo, ignora e mostra
+  // DestinationModal em vez de propagar lixo pro upsert.
+  const campaignId = raw && UUID_RE.test(raw) ? raw : null
+  const initialCampaignId = params.has('campaignId') && campaignId ? campaignId : undefined
   return (
     <Suspense fallback={<Loader />}>
       <CharacterWizard

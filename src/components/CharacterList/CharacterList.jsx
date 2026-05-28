@@ -84,6 +84,14 @@ export function CharacterList({ onSelect, onCreate }) {
     await reload()
   }, [reload])
 
+  // Único ponto de entrada para "Recrutar" — extrai campaignId do scope.
+  // Recebe args só pra ignorar (botões que passam SyntheticEvent por engano
+  // não corrompem o destino).
+  const handleCreate = useCallback(() => {
+    const campaignId = scope === 'personal' ? null : scope.campaignId
+    if (onCreate) onCreate(campaignId ?? null)
+  }, [scope, onCreate])
+
   const isEmpty = !loading && characters.length === 0
 
   return (
@@ -142,10 +150,7 @@ export function CharacterList({ onSelect, onCreate }) {
           <Button
             variant="gold"
             size="md"
-            onClick={() => {
-              const campaignId = scope === 'personal' ? null : scope.campaignId
-              if (onCreate) onCreate(campaignId)
-            }}
+            onClick={() => handleCreate()}
           >
             ⚔ Recrutar
           </Button>
@@ -167,7 +172,7 @@ export function CharacterList({ onSelect, onCreate }) {
                 onSelect={handleSelect}
                 onPositionChange={handlePositionChange}
               />
-              {isEmpty && <EmptyState onCreate={onCreate} />}
+              {isEmpty && <EmptyState onCreate={handleCreate} />}
             </div>
             <div className="hidden md:block w-[260px] flex-shrink-0 p-3 pl-0">
               <CharacterSidebar
