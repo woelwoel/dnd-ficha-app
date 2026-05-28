@@ -8,6 +8,7 @@ import { Button } from '../ui/Button'
  */
 export function InviteCodeBox({ campaignId, code, isDM, onRotated }) {
   const [copied, setCopied] = useState(false)
+  const [rotated, setRotated] = useState(false)
   const [busy, setBusy] = useState(false)
 
   async function onCopy() {
@@ -23,7 +24,11 @@ export function InviteCodeBox({ campaignId, code, isDM, onRotated }) {
     setBusy(true)
     const r = await rotateInviteCode(campaignId)
     setBusy(false)
-    if (r.ok) onRotated?.(r.code)
+    if (r.ok) {
+      onRotated?.(r.code)
+      setRotated(true)
+      setTimeout(() => setRotated(false), 2000)
+    }
   }
 
   return (
@@ -36,7 +41,7 @@ export function InviteCodeBox({ campaignId, code, isDM, onRotated }) {
         </Button>
         {isDM && (
           <Button variant="ghost-dark" size="sm" onClick={onRotate} disabled={busy}>
-            {busy ? '...' : '↻ Rotacionar'}
+            {busy ? '...' : rotated ? '✓ Código atualizado' : '↻ Rotacionar'}
           </Button>
         )}
       </div>

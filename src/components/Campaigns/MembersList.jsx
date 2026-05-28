@@ -44,9 +44,20 @@ export function MembersList({ campaignId, currentUserId, isDM, onChanged }) {
           const isSelf = m.user_id === currentUserId
           return (
             <li key={m.user_id} className="flex items-center justify-between px-4 py-2 text-sm">
-              <div>
-                <span className="text-gray-200">{isSelf ? 'Você' : `${m.user_id.slice(0, 8)}…`}</span>
-                <span className="ml-2 text-xs uppercase text-gray-500">
+              <div className="flex items-center gap-2 min-w-0">
+                {m.profiles?.avatar_url && (
+                  <img
+                    src={m.profiles.avatar_url}
+                    alt=""
+                    className="w-6 h-6 rounded-full object-cover shrink-0"
+                  />
+                )}
+                <span className="text-gray-200 truncate">
+                  {isSelf
+                    ? 'Você'
+                    : (m.profiles?.display_name?.trim() || `${m.user_id.slice(0, 8)}…`)}
+                </span>
+                <span className="ml-2 text-xs uppercase text-gray-500 shrink-0">
                   {m.role === 'dm' ? 'Mestre' : 'Jogador'}
                 </span>
               </div>

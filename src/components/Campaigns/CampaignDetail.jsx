@@ -5,6 +5,7 @@ import { InviteCodeBox } from './InviteCodeBox'
 import { MembersList } from './MembersList'
 import { CampaignCharactersList } from './CampaignCharactersList'
 import { Button } from '../ui/Button'
+import { AccountMenu } from '../ui/AccountMenu'
 
 /**
  * Tela /campaigns/:id. Para DM: vê código + rotaciona + remove membros +
@@ -57,6 +58,7 @@ export function CampaignDetail({ campaignId, onBack }) {
           </h1>
           <p className="text-xs text-gray-500">{isDM ? 'Você é o Mestre' : 'Você é Jogador'}</p>
         </div>
+        <AccountMenu />
       </header>
 
       <div className="max-w-4xl mx-auto grid gap-4">

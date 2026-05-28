@@ -133,7 +133,7 @@ export function CharacterList({ onSelect, onCreate }) {
 
         <div className="flex items-center gap-2">
           <Button variant="ghost-dark" size="sm" onClick={() => navigate('/campaigns')}>
-            ⚔ Mesas
+            ⚜ Mesas
           </Button>
           <BackupMenu
             characterCount={characters.length}

@@ -5,6 +5,7 @@ import { CampaignCard } from './CampaignCard'
 import { CreateCampaignForm } from './CreateCampaignForm'
 import { JoinCampaignForm } from './JoinCampaignForm'
 import { Button } from '../ui/Button'
+import { AccountMenu } from '../ui/AccountMenu'
 
 /**
  * Tela /campaigns: lista de mesas onde sou membro + forms inline pra criar
@@ -29,7 +30,10 @@ export function CampaignsScreen() {
         <h1 className="text-2xl text-amber-400" style={{ fontFamily: 'IM Fell English SC, serif' }}>
           Mesas
         </h1>
-        <Button variant="ghost-dark" size="sm" onClick={() => navigate('/')}>← Personagens</Button>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost-dark" size="sm" onClick={() => navigate('/')}>← Personagens</Button>
+          <AccountMenu />
+        </div>
       </header>
 
       <div className="max-w-4xl mx-auto grid gap-4 md:grid-cols-2 mb-8">

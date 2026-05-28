@@ -63,9 +63,12 @@ export async function rotateInviteCode(campaignId) {
 }
 
 export async function listMembers(campaignId) {
+  // Join via foreign key relationship com profiles pra puxar display_name
+  // e avatar (#14 super review). RLS de profiles (após #3) permite ler
+  // perfis de quem compartilha mesa — então DM vê todos os players.
   const { data, error } = await supabase
     .from(T_MEMBERS)
-    .select('user_id, role, created_at')
+    .select('user_id, role, created_at, profiles:user_id(display_name, avatar_url)')
     .eq('campaign_id', campaignId)
     .order('created_at', { ascending: true })
   if (error) { logDev('listMembers', error); return [] }
