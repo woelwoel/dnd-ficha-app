@@ -95,6 +95,7 @@ export function LoginScreen() {
               <input
                 type="email"
                 required
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1 w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-sm"
@@ -114,6 +115,7 @@ export function LoginScreen() {
               <input
                 type="email"
                 required
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1 w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-sm"
@@ -124,6 +126,8 @@ export function LoginScreen() {
               <input
                 type="password"
                 required
+                autoComplete={tab === TABS.SIGNIN ? 'current-password' : 'new-password'}
+                minLength={tab === TABS.SIGNUP ? 8 : undefined}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1 w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-sm"

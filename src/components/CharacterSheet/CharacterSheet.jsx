@@ -5,6 +5,7 @@ import { useTabValidation } from '../../hooks/useTabValidation'
 import { useAutoSave } from '../../hooks/useAutoSave'
 import { useSrd, useClassDataMap } from '../../providers/SrdProvider'
 import { loadCharacterByRouteParam } from '../../utils/storage'
+import { useAuth } from '../../auth'
 import { SheetHeader } from './SheetHeader'
 import { SheetTabs, TABS, NavBlockedBanner, ImportErrorBanner } from './SheetTabs'
 import { SheetContent } from './SheetContent'
@@ -99,17 +100,8 @@ function SheetBody({ initialCharacter, onBack }) {
   const { character, setCharacter, ...updaters } = useCharacter(initialCharacter)
 
   // Detecta usuário corrente pra modo readonly (DM lendo ficha de jogador).
-  const [currentUserId, setCurrentUserId] = useState(null)
-  useEffect(() => {
-    let alive = true
-    import('../../lib/supabase').then(({ supabase }) =>
-      supabase.auth.getUser().then(({ data }) => {
-        if (alive) setCurrentUserId(data?.user?.id ?? null)
-      }),
-    )
-    return () => { alive = false }
-  }, [])
-
+  const { user } = useAuth()
+  const currentUserId = user?.id ?? null
   const readOnly = !!(character?.ownerId && currentUserId && character.ownerId !== currentUserId)
 
   const { saving, saved, error: saveError } = useAutoSave(character, { enabled: !readOnly })
