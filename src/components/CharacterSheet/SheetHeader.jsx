@@ -23,6 +23,8 @@ export function SheetHeader({
   onPrint,
   showPrint,
   onImportError,
+  readOnly = false,
+  campaignId = null,
   // eslint-disable-next-line no-unused-vars
   quickStats = null,
 }) {
@@ -68,10 +70,25 @@ export function SheetHeader({
           <h1 className="text-sm font-bold text-ink-500 font-display truncate tracking-wide">
             {characterName || 'Ficha de Personagem'}
           </h1>
+          {campaignId && (
+            <span
+              className="hidden sm:inline-flex items-center px-2 py-0.5 rounded bg-amber-900 text-amber-200 text-[10px] uppercase tracking-wider shrink-0"
+              title="Ficha vinculada a uma mesa"
+            >
+              Mesa
+            </span>
+          )}
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {saveError ? (
+          {readOnly ? (
+            <span
+              className="text-xs px-2 py-1 rounded bg-amber-200 text-amber-900 font-display"
+              aria-label="Modo leitura"
+            >
+              Modo leitura
+            </span>
+          ) : saveError ? (
             <span
               className="text-xs text-red-700 font-display"
               title={`Erro: ${saveError}`}

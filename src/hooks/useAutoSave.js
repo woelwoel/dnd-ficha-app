@@ -3,12 +3,18 @@ import { upsertCharacter } from '../utils/storage'
 
 /**
  * Salva `character` no Supabase com debounce de `delayMs`.
+ *
+ * Opções:
+ *   - delayMs (default 500) — debounce
+ *   - enabled (default true) — quando false, não dispara save (modo readonly,
+ *     ex: DM lendo ficha de jogador)
+ *
  * Retorna `{ saving, saved, error }` para feedback visual:
  * - saving:  true enquanto a request está em vôo
  * - saved:   true brevemente após sucesso (1.5s); útil pra mostrar "✓ Salvo"
  * - error:   string com a razão da falha (null quando ok)
  */
-export function useAutoSave(character, delayMs = 500) {
+export function useAutoSave(character, { delayMs = 500, enabled = true } = {}) {
   const [status, setStatus] = useState({ saving: false, saved: false, error: null })
   const debounceRef = useRef(null)
   const flashRef = useRef(null)
@@ -21,6 +27,7 @@ export function useAutoSave(character, delayMs = 500) {
   }, [])
 
   useEffect(() => {
+    if (!enabled) return
     if (!character?.id) return
     if (debounceRef.current) clearTimeout(debounceRef.current)
 
@@ -42,7 +49,7 @@ export function useAutoSave(character, delayMs = 500) {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current)
     }
-  }, [character, delayMs])
+  }, [character, delayMs, enabled])
 
   return status
 }

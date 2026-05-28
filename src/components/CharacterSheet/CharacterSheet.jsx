@@ -98,7 +98,21 @@ function SheetBody({ initialCharacter, onBack }) {
 
   const { character, setCharacter, ...updaters } = useCharacter(initialCharacter)
 
-  const { saving, saved, error: saveError } = useAutoSave(character)
+  // Detecta usuário corrente pra modo readonly (DM lendo ficha de jogador).
+  const [currentUserId, setCurrentUserId] = useState(null)
+  useEffect(() => {
+    let alive = true
+    import('../../lib/supabase').then(({ supabase }) =>
+      supabase.auth.getUser().then(({ data }) => {
+        if (alive) setCurrentUserId(data?.user?.id ?? null)
+      }),
+    )
+    return () => { alive = false }
+  }, [])
+
+  const readOnly = !!(character?.ownerId && currentUserId && character.ownerId !== currentUserId)
+
+  const { saving, saved, error: saveError } = useAutoSave(character, { enabled: !readOnly })
 
   const classData = useMemo(
     () => classes.find(c => c.index === character.info.class) ?? null,
@@ -179,6 +193,7 @@ function SheetBody({ initialCharacter, onBack }) {
     handlers,
     fichaErrors,
     featureUses,
+    readOnly,
     // Quando chamado sem arg, só troca de aba. Com arg (spellId), também
     // pede pra aba Magias auto-abrir o modal de detalhe daquela magia.
     onNavigateToSpells: (spellId) => {
@@ -187,7 +202,7 @@ function SheetBody({ initialCharacter, onBack }) {
     },
     focusSpellId,
     clearFocusSpell: () => setFocusSpellId(null),
-  }), [character, setCharacter, calc, classData, races, classes, backgrounds, updaters, handlers, fichaErrors, featureUses, focusSpellId])
+  }), [character, setCharacter, calc, classData, races, classes, backgrounds, updaters, handlers, fichaErrors, featureUses, focusSpellId, readOnly])
 
   return (
     <CharacterProvider value={contextValue}>
@@ -207,6 +222,8 @@ function SheetBody({ initialCharacter, onBack }) {
             onPrint={() => window.print()}
             showPrint={true}
             quickStats={quickStats}
+            readOnly={readOnly}
+            campaignId={character?.campaignId ?? null}
           />
         </div>
 
