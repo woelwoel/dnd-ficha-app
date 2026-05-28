@@ -4665,8 +4665,9 @@
         "prof": 3,
         "features": [
           {
-            "name": "Aura de Coragem",
-            "desc": "Você emana uma aura de coragem que protege seus companheiros do medo. Você e criaturas amigáveis a até 1,5 metros de você não podem ser amedrontados enquanto você estiver consciente. Heróis ao seu redor encontram fortaleza em sua presença. No nível 18, o raio da aura aumenta para 9 metros."
+            "name": "Característica do Juramento Sagrado",
+            "desc": "Você recebe a característica de nível 7 do seu Juramento (Devoção: Aura de Devoção — você e aliados a 1,5m imunes a ser encantados; Anciões: Aura Eterna — você e aliados a 1,5m têm resistência a dano de magias; Vingança: Vingador Implacável — ao acertar um Ataque de Oportunidade, pode mover metade do deslocamento em direção ao alvo como parte da reação).",
+            "subclass": true
           }
         ]
       },
@@ -4690,9 +4691,8 @@
         "prof": 4,
         "features": [
           {
-            "name": "Característica do Juramento Sagrado",
-            "desc": "Você recebe a característica de nível 7 do seu Juramento (Devoção: Aura de Devoção — você e aliados a 1,5m imunes a ser encantados; Anciões: Aura Eterna — você e aliados a 1,5m têm resistência a dano de magias; Vingança: Vingador Implacável — ao acertar um Ataque de Oportunidade, pode mover metade do deslocamento em direção ao alvo como parte da reação).",
-            "subclass": true
+            "name": "Aura de Coragem",
+            "desc": "Você emana uma aura de coragem que protege seus companheiros do medo. Você e criaturas amigáveis a até 1,5 metros de você não podem ser amedrontados enquanto você estiver consciente. Heróis ao seu redor encontram fortaleza em sua presença. No nível 18, o raio da aura aumenta para 9 metros."
           }
         ]
       },
