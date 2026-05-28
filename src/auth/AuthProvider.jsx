@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { deleteMyAccount } from '../lib/campaigns'
 
 const AuthContext = createContext(null)
 
@@ -75,6 +76,16 @@ export function AuthProvider({ children }) {
     return result
   }, [])
 
+  // Chama a RPC delete_my_account (cascade limpa profiles/characters/membros/
+  // campanhas onde sou DM) e depois signOut. A linha em auth.users permanece —
+  // apagar de vez exige admin API (fora deste PR).
+  const deleteAccount = useCallback(async () => {
+    const r = await deleteMyAccount()
+    if (!r.ok) return { ok: false, reason: r.reason }
+    await supabase.auth.signOut()
+    return { ok: true }
+  }, [])
+
   const value = {
     user,
     loading,
@@ -85,6 +96,7 @@ export function AuthProvider({ children }) {
     signOut,
     requestPasswordReset,
     updatePassword,
+    deleteAccount,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

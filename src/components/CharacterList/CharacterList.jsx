@@ -6,7 +6,7 @@ import { CharacterListView } from './CharacterListView'
 import { EmptyState } from './EmptyState'
 import { BackupMenu } from './BackupMenu'
 import { Button } from '../ui/Button'
-import { useAuth } from '../../auth/AuthProvider'
+import { AccountMenu } from '../ui/AccountMenu'
 import { useCampaignContext } from '../../hooks/useCampaignContext'
 import { CampaignSelector } from './CampaignSelector'
 import {
@@ -45,7 +45,6 @@ export function CharacterList({ onSelect, onCreate }) {
   const [loading, setLoading] = useState(true)
   const [view, setView] = useState(readView)
   const [campaignName] = useState(readCampaignName)
-  const { signOut } = useAuth()
   const navigate = useNavigate()
   const [scope, setScope] = useCampaignContext()
 
@@ -136,9 +135,6 @@ export function CharacterList({ onSelect, onCreate }) {
           <Button variant="ghost-dark" size="sm" onClick={() => navigate('/campaigns')}>
             ⚔ Mesas
           </Button>
-          <Button variant="ghost-dark" size="sm" onClick={() => signOut()}>
-            Sair
-          </Button>
           <BackupMenu
             characterCount={characters.length}
             onImported={reload}
@@ -153,6 +149,7 @@ export function CharacterList({ onSelect, onCreate }) {
           >
             ⚔ Recrutar
           </Button>
+          <AccountMenu />
         </div>
       </header>
 
