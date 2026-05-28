@@ -38,13 +38,11 @@ export function AccountMenu() {
         </button>
         {open && (
           <div
-            className="absolute right-0 mt-2 w-56 rounded border shadow-lg z-40"
-            style={{ background: 'var(--color-shell-800)', borderColor: 'var(--color-shell-border)' }}
+            className="absolute right-0 mt-2 w-56 rounded border border-shell-border bg-shell-800 shadow-lg z-40"
             role="menu"
           >
             <div
-              className="px-3 py-2 text-xs text-gray-400 border-b truncate"
-              style={{ borderColor: 'var(--color-shell-border)' }}
+              className="px-3 py-2 text-xs text-gray-400 border-b border-shell-border truncate"
               title={user?.email}
             >
               {user?.email}
@@ -58,8 +56,7 @@ export function AccountMenu() {
             </button>
             <button
               onClick={() => { setOpen(false); setShowDelete(true) }}
-              className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-gray-800 border-t"
-              style={{ borderColor: 'var(--color-shell-border)' }}
+              className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-gray-800 border-t border-shell-border"
               role="menuitem"
             >
               Apagar conta

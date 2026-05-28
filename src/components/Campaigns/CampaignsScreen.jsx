@@ -33,9 +33,9 @@ export function CampaignsScreen() {
   const showSearch = campaigns.length >= 5
 
   return (
-    <div className="min-h-screen p-4" style={{ background: 'var(--color-bg-canvas)' }}>
+    <div className="min-h-screen p-4 bg-bg-canvas">
       <header className="flex items-center justify-between mb-6 max-w-4xl mx-auto">
-        <h1 className="text-2xl text-amber-400" style={{ fontFamily: 'IM Fell English SC, serif' }}>
+        <h1 className="text-2xl text-amber-400 font-display">
           Mesas
         </h1>
         <div className="flex items-center gap-2">
@@ -58,8 +58,7 @@ export function CampaignsScreen() {
               placeholder="Buscar…"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="px-3 py-1 bg-gray-900 border rounded text-gray-100 text-sm w-48"
-              style={{ borderColor: 'var(--color-shell-border)' }}
+              className="px-3 py-1 bg-gray-900 border border-shell-border rounded text-gray-100 text-sm w-48"
               aria-label="Buscar mesa pelo nome"
             />
           )}

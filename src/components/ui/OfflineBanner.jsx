@@ -26,12 +26,7 @@ export function OfflineBanner() {
   return (
     <div
       role="alert"
-      className="sticky top-0 z-50 text-center text-xs font-semibold py-1.5 px-3"
-      style={{
-        background: 'rgba(180, 60, 60, 0.95)',
-        color: '#fff',
-        borderBottom: '1px solid rgba(120, 30, 30, 0.6)',
-      }}
+      className="sticky top-0 z-50 text-center text-xs font-semibold py-1.5 px-3 text-white bg-[rgba(180,60,60,0.95)] border-b border-[rgba(120,30,30,0.6)]"
     >
       ⚠ Você está offline. Mudanças não serão salvas até a conexão voltar.
     </div>

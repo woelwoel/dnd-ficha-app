@@ -258,6 +258,17 @@ body {
   color: var(--color-ink-200);
 }
 
+/* Avatar circular do CharacterSidebar (companhia). Movido pra CSS pra
+   poder remover unsafe-inline da CSP no futuro — gradient não dá
+   pra expressar como utility Tailwind. */
+.companion-avatar {
+  background: radial-gradient(
+    circle at 30% 25%,
+    var(--color-accent-100),
+    var(--color-accent-500)
+  );
+}
+
 /* Filete duplo (borda dupla sépia) */
 .rule-double {
   border-top: 1px solid var(--color-ink-200);

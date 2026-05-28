@@ -53,10 +53,7 @@ export function CampaignSelector({ scope, onChange }) {
   return (
     <Combobox value={selected} onChange={onSelect}>
       <div className="relative">
-        <div
-          className="flex items-center bg-gray-900 border rounded text-sm"
-          style={{ borderColor: 'var(--color-shell-border)' }}
-        >
+        <div className="flex items-center bg-gray-900 border border-shell-border rounded text-sm">
           <ComboboxInput
             aria-label="Contexto de personagens"
             className="px-3 py-1 bg-transparent text-gray-100 w-48 sm:w-56 outline-none truncate"
@@ -66,10 +63,7 @@ export function CampaignSelector({ scope, onChange }) {
           />
           <ComboboxButton className="px-2 text-gray-400 hover:text-amber-300">▾</ComboboxButton>
         </div>
-        <ComboboxOptions
-          className="absolute z-20 mt-1 w-full max-h-72 overflow-auto rounded border bg-gray-900 shadow-lg"
-          style={{ borderColor: 'var(--color-shell-border)' }}
-        >
+        <ComboboxOptions className="absolute z-20 mt-1 w-full max-h-72 overflow-auto rounded border border-shell-border bg-gray-900 shadow-lg">
           {filtered.length === 0 ? (
             <li className="px-3 py-2 text-xs text-gray-500">Nenhum resultado</li>
           ) : (

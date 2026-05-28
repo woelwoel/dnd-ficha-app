@@ -32,7 +32,7 @@ export function ResetPasswordScreen() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gray-950 text-gray-100">
       <form onSubmit={onSubmit} className="w-full max-w-sm border border-gray-800 rounded-lg p-6 bg-gray-900 space-y-3">
-        <h1 className="text-lg font-bold" style={{ fontFamily: 'IM Fell English SC, serif', color: 'var(--color-gold-400)' }}>
+        <h1 className="text-lg font-bold font-display text-gold-400">
           Definir nova senha
         </h1>
         <label className="block">

@@ -4,8 +4,7 @@ export function ResumeDraftPrompt({ open, onResume, onDiscard }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/60 p-4">
       <div
         role="dialog"
-        className="w-full max-w-sm bg-parchment-50 border-2 border-parchment-600 rounded-sm p-5 flex flex-col gap-4"
-        style={{ boxShadow: 'var(--shadow-parchment-lg)' }}
+        className="w-full max-w-sm bg-parchment-50 border-2 border-parchment-600 rounded-sm p-5 flex flex-col gap-4 shadow-parchment-lg"
       >
         <h2 className="text-base font-display text-ink-500 tracking-widest uppercase text-center">
           Continuar personagem em construção?

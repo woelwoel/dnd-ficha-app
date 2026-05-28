@@ -46,17 +46,14 @@ export function CampaignCharactersList({ campaignId, onOpen }) {
   if (loading) return <div className="p-4 text-amber-400 text-sm">Carregando fichas…</div>
 
   return (
-    <div className="rounded border bg-gray-900" style={{ borderColor: 'var(--color-shell-border)' }}>
-      <div
-        className="px-4 py-2 text-xs uppercase tracking-wider text-gray-400 border-b"
-        style={{ borderColor: 'var(--color-shell-border)' }}
-      >
+    <div className="rounded border border-shell-border bg-gray-900">
+      <div className="px-4 py-2 text-xs uppercase tracking-wider text-gray-400 border-b border-shell-border">
         Fichas dos jogadores ({rows.length}) — modo leitura
       </div>
       {rows.length === 0 ? (
         <p className="p-4 text-gray-500 text-sm">Nenhum jogador criou ficha vinculada à mesa ainda.</p>
       ) : (
-        <ul className="divide-y" style={{ borderColor: 'var(--color-shell-border)' }}>
+        <ul className="divide-y divide-shell-border">
           {rows.map(r => (
             <li key={r.id}>
               <button

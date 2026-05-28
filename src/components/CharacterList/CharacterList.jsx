@@ -95,26 +95,9 @@ export function CharacterList({ onSelect, onCreate }) {
   const isEmpty = !loading && characters.length === 0
 
   return (
-    <div
-      className="min-h-screen flex flex-col"
-      style={{ background: 'var(--color-bg-canvas)', color: 'var(--color-ink-primary)' }}
-    >
-      <header
-        className="flex items-center justify-between px-4 py-3 border-b"
-        style={{
-          background: 'linear-gradient(180deg, var(--color-shell-800), var(--color-shell-900))',
-          borderColor: 'var(--color-shell-border)',
-          color: 'var(--color-ink-inverse)',
-        }}
-      >
-        <h1
-          className="text-base font-bold"
-          style={{
-            fontFamily: 'IM Fell English SC, serif',
-            color: 'var(--color-gold-400)',
-            letterSpacing: '0.12em',
-          }}
-        >
+    <div className="min-h-screen flex flex-col bg-bg-canvas text-ink-primary">
+      <header className="flex items-center justify-between px-4 py-3 border-b border-shell-border bg-gradient-to-b from-shell-800 to-shell-900 text-ink-inverse">
+        <h1 className="text-base font-bold font-display tracking-[0.12em] text-gold-400">
           {campaignName.replace(/⚜\s*/g, '')}
         </h1>
 

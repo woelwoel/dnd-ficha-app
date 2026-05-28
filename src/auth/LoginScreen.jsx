@@ -64,7 +64,7 @@ export function LoginScreen() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gray-950 text-gray-100">
       <div className="w-full max-w-sm border border-gray-800 rounded-lg p-6 bg-gray-900">
-        <h1 className="text-xl font-bold text-center mb-4" style={{ fontFamily: 'IM Fell English SC, serif', color: 'var(--color-gold-400)' }}>
+        <h1 className="text-xl font-bold text-center mb-4 font-display text-gold-400">
           Forja de Heróis
         </h1>
 

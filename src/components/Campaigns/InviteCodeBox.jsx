@@ -32,7 +32,7 @@ export function InviteCodeBox({ campaignId, code, isDM, onRotated }) {
   }
 
   return (
-    <div className="p-4 rounded border bg-gray-900" style={{ borderColor: 'var(--color-shell-border)' }}>
+    <div className="p-4 rounded border border-shell-border bg-gray-900">
       <div className="text-xs uppercase tracking-wider text-gray-400 mb-1">Código de convite</div>
       <div className="flex items-center gap-2 flex-wrap">
         <span className="font-mono text-2xl text-amber-300 tracking-wider">{code}</span>

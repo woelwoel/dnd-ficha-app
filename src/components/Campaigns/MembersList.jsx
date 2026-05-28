@@ -40,14 +40,11 @@ export function MembersList({ campaignId, currentUserId, isDM, onChanged }) {
   if (loading) return <p className="text-amber-400 text-sm p-4">Carregando membros…</p>
 
   return (
-    <div className="rounded border bg-gray-900" style={{ borderColor: 'var(--color-shell-border)' }}>
-      <div
-        className="px-4 py-2 text-xs uppercase tracking-wider text-gray-400 border-b"
-        style={{ borderColor: 'var(--color-shell-border)' }}
-      >
+    <div className="rounded border border-shell-border bg-gray-900">
+      <div className="px-4 py-2 text-xs uppercase tracking-wider text-gray-400 border-b border-shell-border">
         Membros ({members.length})
       </div>
-      <ul className="divide-y" style={{ borderColor: 'var(--color-shell-border)' }}>
+      <ul className="divide-y divide-shell-border">
         {members.map(m => {
           const isSelf = m.user_id === currentUserId
           return (

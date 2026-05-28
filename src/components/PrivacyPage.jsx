@@ -10,10 +10,7 @@ export function PrivacyPage() {
     <div className="min-h-screen bg-gray-950 text-gray-100 px-6 py-10">
       <article className="max-w-3xl mx-auto space-y-6">
         <header className="flex items-center justify-between">
-          <h1
-            className="text-2xl text-amber-400"
-            style={{ fontFamily: 'IM Fell English SC, serif' }}
-          >
+          <h1 className="text-2xl text-amber-400 font-display">
             Privacidade
           </h1>
           <button

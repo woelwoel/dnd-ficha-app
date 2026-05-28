@@ -47,9 +47,8 @@ export function BlockCard({
         STATUS_ACCENT[status] ?? STATUS_ACCENT.vazio,
         isBlocked
           ? 'opacity-60 cursor-not-allowed'
-          : 'hover:-translate-y-0.5 hover:border-ink-300 hover:shadow-lg cursor-pointer',
+          : 'shadow-parchment hover:-translate-y-0.5 hover:border-ink-300 hover:shadow-lg cursor-pointer',
       ].join(' ')}
-      style={{ boxShadow: isBlocked ? 'none' : 'var(--shadow-parchment)' }}
     >
       {/* Faixa lateral colorida indicando status */}
       <span

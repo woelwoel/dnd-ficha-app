@@ -54,8 +54,7 @@ export function MulticlassModal({ open, draft, classes, multiclassData, onAdd, o
       <div
         role="dialog"
         aria-label="Adicionar Multiclasse"
-        className="w-full max-w-md flex flex-col gap-4 bg-parchment-50 border-2 border-parchment-600 rounded-sm p-6"
-        style={{ boxShadow: 'var(--shadow-parchment-lg)' }}
+        className="w-full max-w-md flex flex-col gap-4 bg-parchment-50 border-2 border-parchment-600 rounded-sm p-6 shadow-parchment-lg"
         onClick={e => e.stopPropagation()}
       >
         <header className="text-center">

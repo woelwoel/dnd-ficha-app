@@ -6,10 +6,7 @@ import { Link } from 'react-router-dom'
  */
 export function AppFooter() {
   return (
-    <footer
-      className="text-center text-xs py-3 px-4 opacity-60"
-      style={{ color: 'var(--color-ink-200, #b5a583)' }}
-    >
+    <footer className="text-center text-xs py-3 px-4 opacity-60 text-ink-200">
       Seus dados ficam armazenados no Supabase em conta vinculada ao seu email.{' '}
       <Link to="/privacidade" className="underline hover:opacity-100">
         Privacidade

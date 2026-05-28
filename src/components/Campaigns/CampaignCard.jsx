@@ -5,8 +5,7 @@ export function CampaignCard({ campaign, onOpen }) {
   return (
     <button
       onClick={() => onOpen(campaign.id)}
-      className="w-full text-left p-4 rounded border bg-gray-900 hover:bg-gray-800 transition"
-      style={{ borderColor: 'var(--color-shell-border)' }}
+      className="w-full text-left p-4 rounded border border-shell-border bg-gray-900 hover:bg-gray-800 transition"
     >
       <div className="flex items-center justify-between mb-1">
         <h3 className="text-amber-300 font-semibold">{campaign.name}</h3>

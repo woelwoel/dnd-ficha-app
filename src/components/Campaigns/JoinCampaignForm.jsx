@@ -32,8 +32,7 @@ export function JoinCampaignForm({ onJoined }) {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex flex-col gap-2 p-4 rounded border"
-      style={{ borderColor: 'var(--color-shell-border)' }}
+      className="flex flex-col gap-2 p-4 rounded border border-shell-border"
     >
       <label className="text-sm text-gray-300">Entrar com código</label>
       <input

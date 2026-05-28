@@ -47,23 +47,8 @@ export function CharacterSidebar({ characters = [], onSelect, onDelete, onFilter
   }
 
   return (
-    <aside
-      className="flex flex-col h-full p-3 rounded border"
-      style={{
-        background: 'linear-gradient(180deg, var(--color-shell-800), var(--color-shell-900))',
-        borderColor: 'var(--color-shell-border)',
-        color: 'var(--color-ink-inverse)',
-        fontFamily: 'var(--font-redesign-sans)',
-      }}
-    >
-      <h6
-        className="text-center pb-1.5 mb-2 text-[11px] uppercase tracking-[0.18em] font-bold border-b"
-        style={{
-          color: 'var(--color-gold-400)',
-          borderColor: 'var(--color-shell-border)',
-          fontFamily: 'IM Fell English SC, serif',
-        }}
-      >
+    <aside className="flex flex-col h-full p-3 rounded border border-shell-border bg-gradient-to-b from-shell-800 to-shell-900 text-ink-inverse font-redesign-sans">
+      <h6 className="text-center pb-1.5 mb-2 text-[11px] uppercase tracking-[0.18em] font-bold border-b border-shell-border text-gold-400 font-display">
         Companhia
       </h6>
 
@@ -89,7 +74,7 @@ export function CharacterSidebar({ characters = [], onSelect, onDelete, onFilter
 
       <div className="flex-1 overflow-y-auto">
         {filtered.length === 0 && (
-          <p className="text-xs italic text-center mt-4 px-2 leading-relaxed" style={{ color: 'var(--color-gold-500)' }}>
+          <p className="text-xs italic text-center mt-4 px-2 leading-relaxed text-gold-500">
             {characters.length === 0
               ? 'Nenhum herói recrutado ainda.'
               : 'Nenhum aventureiro dessa estirpe na companhia.'}
@@ -100,8 +85,7 @@ export function CharacterSidebar({ characters = [], onSelect, onDelete, onFilter
           return (
             <div
               key={c.id}
-              className="group relative flex items-center gap-2 px-1 py-1.5 transition-colors hover:bg-[rgba(212,173,106,0.08)] border-b"
-              style={{ borderColor: 'rgba(110, 87, 43, 0.3)' }}
+              className="group relative flex items-center gap-2 px-1 py-1.5 transition-colors hover:bg-[rgba(212,173,106,0.08)] border-b border-[rgba(110,87,43,0.3)]"
             >
               <button
                 type="button"
@@ -109,32 +93,18 @@ export function CharacterSidebar({ characters = [], onSelect, onDelete, onFilter
                 className="flex-1 flex items-center gap-2 text-left min-w-0"
                 aria-label={`Abrir ${c.info?.name || 'personagem'}`}
               >
-                <span
-                  className="grid place-items-center rounded-full flex-shrink-0"
-                  style={{
-                    width: '26px', height: '26px',
-                    background: 'radial-gradient(circle at 30% 25%, var(--color-accent-100), var(--color-accent-500))',
-                    border: '1px solid var(--color-shell-800)',
-                    color: 'var(--color-shell-800)',
-                  }}
-                >
+                <span className="companion-avatar grid place-items-center rounded-full flex-shrink-0 w-[26px] h-[26px] border border-shell-800 text-shell-800">
                   <ClassIcon classKey={c.info?.class} size={16} color="currentColor" />
                 </span>
                 <span className="flex-1 min-w-0">
-                  <span
-                    className="block text-[12px] font-semibold leading-tight truncate"
-                    style={{ fontFamily: 'EB Garamond, serif', color: 'var(--color-ink-inverse)' }}
-                  >
+                  <span className="block text-[12px] font-semibold leading-tight truncate font-body text-ink-inverse">
                     {c.info?.name || 'Sem nome'}
                   </span>
-                  <span className="block text-[10px] italic mt-0.5" style={{ color: 'var(--color-gold-500)' }}>
+                  <span className="block text-[10px] italic mt-0.5 text-gold-500">
                     {c.info?.class || '—'}
                   </span>
                 </span>
-                <span
-                  className="text-[11px] font-bold flex-shrink-0 mr-1"
-                  style={{ fontFamily: 'IM Fell English SC, serif', color: 'var(--color-gold-400)' }}
-                >
+                <span className="text-[11px] font-bold flex-shrink-0 mr-1 font-display text-gold-400">
                   {toRoman(c.info?.level ?? 1)}
                 </span>
               </button>
@@ -148,28 +118,14 @@ export function CharacterSidebar({ characters = [], onSelect, onDelete, onFilter
                       if (onDelete) onDelete(c.id)
                       setConfirmDeleteId(null)
                     }}
-                    className="text-[10px] px-2 py-0.5 rounded font-bold border"
-                    style={{
-                      background: 'var(--color-blood)',
-                      color: 'var(--color-ink-inverse)',
-                      borderColor: '#5a0000',
-                      fontFamily: 'IM Fell English SC, serif',
-                      letterSpacing: '0.08em',
-                    }}
+                    className="text-[10px] px-2 py-0.5 rounded font-bold border border-[#5a0000] bg-blood text-ink-inverse font-display tracking-[0.08em]"
                   >
                     Riscar
                   </button>
                   <button
                     type="button"
                     onClick={() => setConfirmDeleteId(null)}
-                    className="text-[10px] px-2 py-0.5 rounded border"
-                    style={{
-                      background: 'transparent',
-                      color: 'var(--color-gold-400)',
-                      borderColor: 'var(--color-shell-border)',
-                      fontFamily: 'IM Fell English SC, serif',
-                      letterSpacing: '0.08em',
-                    }}
+                    className="text-[10px] px-2 py-0.5 rounded border border-shell-border bg-transparent text-gold-400 font-display tracking-[0.08em]"
                     aria-label="Cancelar exclusão"
                   >
                     Cancelar
@@ -179,8 +135,7 @@ export function CharacterSidebar({ characters = [], onSelect, onDelete, onFilter
                 <button
                   type="button"
                   onClick={() => setConfirmDeleteId(c.id)}
-                  className="flex-shrink-0 w-6 h-6 grid place-items-center rounded opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity hover:bg-[rgba(139,0,0,0.18)]"
-                  style={{ color: 'var(--color-gold-500)' }}
+                  className="flex-shrink-0 w-6 h-6 grid place-items-center rounded opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity hover:bg-[rgba(139,0,0,0.18)] text-gold-500"
                   aria-label={`Excluir ${c.info?.name || 'personagem'}`}
                   title="Excluir"
                 >
@@ -191,14 +146,7 @@ export function CharacterSidebar({ characters = [], onSelect, onDelete, onFilter
           )
         })}
         {hidden > 0 && (
-          <div
-            className="mt-2 p-2 rounded text-[10px] text-center italic border-dashed"
-            style={{
-              background: 'rgba(212,173,106,0.1)',
-              border: '1px dashed var(--color-shell-border)',
-              color: 'var(--color-gold-500)',
-            }}
-          >
+          <div className="mt-2 p-2 rounded text-[10px] text-center italic border border-dashed border-shell-border bg-[rgba(212,173,106,0.1)] text-gold-500">
             + {hidden} outros
           </div>
         )}

@@ -129,7 +129,7 @@ export function BackupMenu({ characterCount, onImported }) {
               </Button>
             </section>
 
-            <hr style={{ borderColor: 'var(--color-shell-border)' }} />
+            <hr className="border-shell-border" />
 
             <section className="space-y-2">
               <h3 className="text-sm font-semibold">Importar</h3>

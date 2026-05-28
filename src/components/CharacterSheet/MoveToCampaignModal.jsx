@@ -36,8 +36,7 @@ export function MoveToCampaignModal({ characterId, currentCampaignId, onClose, o
       onClick={onClose}
     >
       <div
-        className="bg-parchment-100 border-2 border-parchment-600 rounded p-6 max-w-md w-full"
-        style={{ boxShadow: 'var(--shadow-parchment)' }}
+        className="bg-parchment-100 border-2 border-parchment-600 rounded p-6 max-w-md w-full shadow-parchment"
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-ink-500 font-display tracking-wide text-lg mb-1">

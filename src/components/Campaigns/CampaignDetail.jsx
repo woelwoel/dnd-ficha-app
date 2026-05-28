@@ -46,14 +46,11 @@ export function CampaignDetail({ campaignId, onBack }) {
   const isDM = campaign.dm_id === userId
 
   return (
-    <div className="min-h-screen p-4" style={{ background: 'var(--color-bg-canvas)' }}>
+    <div className="min-h-screen p-4 bg-bg-canvas">
       <header className="flex items-center justify-between mb-6 max-w-4xl mx-auto">
         <div>
           <button onClick={onBack} className="text-xs text-gray-400 hover:text-amber-300">← Mesas</button>
-          <h1
-            className="text-2xl text-amber-400 mt-1"
-            style={{ fontFamily: 'IM Fell English SC, serif' }}
-          >
+          <h1 className="text-2xl text-amber-400 mt-1 font-display">
             {campaign.name}
           </h1>
           <p className="text-xs text-gray-500">{isDM ? 'Você é o Mestre' : 'Você é Jogador'}</p>

@@ -18,8 +18,7 @@ export function BlockEditorModal({ open, title, onClose, onClear, children }) {
       <div
         role="dialog"
         aria-label={title}
-        className="w-full max-w-2xl max-h-[90vh] flex flex-col bg-parchment-50 border-2 border-parchment-600 rounded-sm overflow-hidden"
-        style={{ boxShadow: 'var(--shadow-parchment-lg)' }}
+        className="w-full max-w-2xl max-h-[90vh] flex flex-col bg-parchment-50 border-2 border-parchment-600 rounded-sm overflow-hidden shadow-parchment-lg"
         onClick={e => e.stopPropagation()}
       >
         <header className="flex items-center justify-between px-5 py-3 border-b-2 border-parchment-600 bg-parchment-100">
