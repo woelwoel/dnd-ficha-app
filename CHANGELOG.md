@@ -9,6 +9,18 @@ Versionamento semântico: [SemVer](https://semver.org/lang/pt-BR/).
 
 ## [Não lançado]
 
+### Corrigido (bugfixes de criação)
+- **Paladino**: atributo de conjuração estava como Sabedoria; corrigido para
+  Carisma (PHB p.84). Afetava CD de magia e bônus de ataque mágico.
+- **Bruxo (Pact Magic)**: o seletor de magias só mostrava a aba do slot atual
+  (ex.: nv 5 só mostrava magias nv 3), impedindo escolher magias de níveis
+  inferiores. Agora expõe `[truques, 1, 2, ..., slotLevel]` conforme PHB p.107
+  ("level no higher than the Slot Level column").
+- Trava de regressão: novo teste `src/test/phb-classes.test.js` valida o
+  atributo de conjuração de todas as 12 classes do PHB.
+- Novo teste `src/test/useClassSpells.test.js` cobre Pact Magic do Bruxo + full
+  caster (Mago) como regressão.
+
 ### Adicionado (PR 4 — UI de Mesas)
 - **Tela `/campaigns`**: cria mesa, entra com código, lista mesas em que sou
   membro com badge Mestre/Jogador.
