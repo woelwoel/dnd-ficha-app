@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { upsertCharacter } from '../utils/storage'
+import { reportError } from '../lib/report'
 
 /**
  * Salva `character` no Supabase com debounce de `delayMs`.
@@ -43,6 +44,12 @@ export function useAutoSave(character, { delayMs = 500, enabled = true } = {}) {
         }, 1500)
       } else {
         setStatus({ saving: false, saved: false, error: result.reason ?? 'unknown' })
+        // #37 super review: observabilidade mínima — sem isso, falhas de
+        // save em prod só aparecem como "Sem salvar" no header.
+        reportError('autosave_failed', new Error(result.reason ?? 'unknown'), {
+          characterId: character?.id,
+          errors: result.errors?.slice?.(0, 3),
+        })
       }
     }, delayMs)
 
