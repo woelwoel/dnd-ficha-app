@@ -136,8 +136,15 @@ export function SheetHeader({
         </div>
       </div>
 
-      {/* ── Linha 2: barra de combate (HP + chips + condições) ──── */}
-      <SheetCombatBar />
+      {/* ── Linha 2: barra de combate (HP + chips + condições) ────
+          Quando readOnly, o fieldset desabilita botões de dano/cura/condição
+          nativamente (DM lendo ficha de jogador). */}
+      <fieldset
+        disabled={readOnly}
+        className={`border-0 m-0 p-0 min-w-0 ${readOnly ? 'opacity-70 cursor-not-allowed' : ''}`}
+      >
+        <SheetCombatBar />
+      </fieldset>
     </header>
   )
 }

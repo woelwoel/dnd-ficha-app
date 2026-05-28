@@ -15,17 +15,22 @@ import { CombatClassActions } from './CombatClassActions'
 import { useCharacterContext } from './CharacterContext'
 
 /* ── Wrapper de painel de aba ─────────────────────────────── */
-function TabPanel({ id, children }) {
+function TabPanel({ id, readOnly, children }) {
+  // `<fieldset disabled>` desabilita nativamente todos os <input>/<button>/
+  // <select>/<textarea> aninhados — usado quando DM está vendo ficha de jogador.
+  // `min-w-0` mantém o comportamento de grid (children podem encolher); sem
+  // ele, o fieldset força largura mínima do conteúdo.
   return (
-    <div
+    <fieldset
       role="tabpanel"
       id={`tabpanel-${id}`}
       aria-labelledby={`tab-${id}`}
       tabIndex={0}
-      className="focus:outline-none"
+      disabled={readOnly}
+      className={`focus:outline-none border-0 m-0 p-0 min-w-0 ${readOnly ? 'opacity-70 cursor-not-allowed' : ''}`}
     >
       {children}
-    </div>
+    </fieldset>
   )
 }
 
@@ -73,7 +78,7 @@ export function SheetContent({ activeTab }) {
     character, setCharacter, calc, classData,
     races, classes, backgrounds,
     updaters, handlers, fichaErrors, featureUses, onNavigateToSpells,
-    focusSpellId, clearFocusSpell,
+    focusSpellId, clearFocusSpell, readOnly,
   } = useCharacterContext()
 
   const {
@@ -114,7 +119,7 @@ export function SheetContent({ activeTab }) {
     ].filter(Boolean).join(' · ')
 
     return (
-      <TabPanel id="ficha">
+      <TabPanel id="ficha" readOnly={readOnly}>
         {/* Layout 2 colunas no desktop (60% esquerda, 40% direita); empilha no mobile.
             ESQUERDA = "o que você rola" (Atributos, Perícias, Ataques)
             DIREITA  = "contexto e ajustes" (Identidade, Recursos, Descansos, Manutenção) */}
@@ -223,7 +228,7 @@ export function SheetContent({ activeTab }) {
   /* ── Aba: Magias ────────────────────────────────────────── */
   if (activeTab === 'magias') {
     return (
-      <TabPanel id="magias">
+      <TabPanel id="magias" readOnly={readOnly}>
         <Spells
           character={character}
           attributes={character.attributes}
@@ -248,7 +253,7 @@ export function SheetContent({ activeTab }) {
   /* ── Aba: Poderes (Ações + Habilidades fundidos) ────────── */
   if (activeTab === 'acoes') {
     return (
-      <TabPanel id="acoes">
+      <TabPanel id="acoes" readOnly={readOnly}>
         <FeaturesTab
           character={character}
           featureUses={featureUses}
@@ -262,7 +267,7 @@ export function SheetContent({ activeTab }) {
   /* ── Aba: Inventário ────────────────────────────────────── */
   if (activeTab === 'inventario') {
     return (
-      <TabPanel id="inventario">
+      <TabPanel id="inventario" readOnly={readOnly}>
         <Inventory
           inventory={character.inventory}
           attributes={character.attributes}
@@ -278,7 +283,7 @@ export function SheetContent({ activeTab }) {
   /* ── Aba: Progressão ────────────────────────────────────── */
   if (activeTab === 'progressao') {
     return (
-      <TabPanel id="progressao">
+      <TabPanel id="progressao" readOnly={readOnly}>
         <LevelProgression
           character={character}
           classData={classData}
@@ -299,7 +304,7 @@ export function SheetContent({ activeTab }) {
   /* ── Aba: Notas ─────────────────────────────────────────── */
   if (activeTab === 'notas') {
     return (
-      <TabPanel id="notas">
+      <TabPanel id="notas" readOnly={readOnly}>
         <Notes
           traits={character.traits}
           onUpdate={updateTraits}
