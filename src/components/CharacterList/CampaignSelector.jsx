@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { listMyCampaigns } from '../../lib/campaigns'
+import { resetScopeIfMissing } from '../../hooks/useCampaignContext'
 
 /**
  * Dropdown no header do CharacterList. "Pessoais" filtra fichas com
@@ -8,7 +9,16 @@ import { listMyCampaigns } from '../../lib/campaigns'
 export function CampaignSelector({ scope, onChange }) {
   const [campaigns, setCampaigns] = useState([])
 
-  useEffect(() => { listMyCampaigns().then(setCampaigns) }, [])
+  useEffect(() => {
+    listMyCampaigns().then(list => {
+      setCampaigns(list)
+      // #10 super review: se o scope salvo aponta pra mesa em que o user
+      // não é mais membro (ou que foi deletada), reseta pra 'personal'.
+      resetScopeIfMissing(scope, onChange, list)
+    })
+    // intencional: roda só no mount; mudar scope reativamente causaria loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const value = scope === 'personal' ? 'personal' : scope?.campaignId
 

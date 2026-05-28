@@ -116,21 +116,48 @@ export async function upsertCharacter(character, opts = {}) {
     logDev('upsert: ficha inválida', v.errors.slice(0, 3))
     return { ok: false, reason: 'invalid', errors: v.errors }
   }
-  const row = {
+  // #29 super review: ownerId/campaignId vivem como colunas relacionais;
+  // não devem ser persistidos dentro do JSONB `data`. Strip antes de salvar
+  // pra evitar divergência entre coluna e JSON em mudanças futuras.
+  const { ownerId: _omitOwnerId, campaignId: _omitCampaignId, ...dataToSave } = v.data
+  void _omitOwnerId; void _omitCampaignId
+
+  const baseRow = {
     id: v.data.id,
-    data: v.data,
+    data: dataToSave,
     last_opened_at: v.data.lastOpenedAt ? new Date(v.data.lastOpenedAt).toISOString() : null,
   }
   // campaignId pode vir como override em opts (criação no contexto de mesa)
   // ou já no objeto character (replays). null = explicitamente pessoal.
-  if (opts.campaignId !== undefined) row.campaign_id = opts.campaignId
-  else if (character.campaignId !== undefined) row.campaign_id = character.campaignId
+  let campaignIdForSave
+  if (opts.campaignId !== undefined) campaignIdForSave = opts.campaignId
+  else if (character.campaignId !== undefined) campaignIdForSave = character.campaignId
 
-  const { data, error } = await supabase
+  const row = campaignIdForSave === undefined
+    ? baseRow
+    : { ...baseRow, campaign_id: campaignIdForSave }
+
+  let { data, error } = await supabase
     .from(TABLE)
     .upsert(row)
     .select('short_id, campaign_id')
     .maybeSingle()
+
+  // #9 super review: FK violation em campaign_id (23503) acontece quando a
+  // mesa foi deletada mas o client ainda tem o UUID em memória. Retry com
+  // campaign_id = null pra não deixar o user com "Sem salvar" preso.
+  if (error?.code === '23503' && campaignIdForSave) {
+    logDev('upsert: FK violation em campaign_id, retry com null', { campaignId: campaignIdForSave })
+    const retryRow = { ...baseRow, campaign_id: null }
+    const retry = await supabase
+      .from(TABLE)
+      .upsert(retryRow)
+      .select('short_id, campaign_id')
+      .maybeSingle()
+    data = retry.data
+    error = retry.error
+  }
+
   if (error) {
     logDev('upsert falhou', error)
     return { ok: false, reason: error.message?.includes('character_limit_reached') ? 'limit' : 'unknown' }

@@ -38,3 +38,22 @@ export function useCampaignContext() {
   }, [])
   return [scope, setScope]
 }
+
+/**
+ * Se o scope persistido aponta pra uma mesa em que o user não é mais membro
+ * (ou que foi deletada), reseta pra 'personal'. Caso contrário, devolve o
+ * scope inalterado. Use depois de listMyCampaigns() pra evitar listas vazias
+ * mudas (#10 super review).
+ *
+ * @param scope estado atual de useCampaignContext()
+ * @param setScope setter de useCampaignContext()
+ * @param myCampaigns array retornado por listMyCampaigns()
+ * @returns boolean — true se resetou
+ */
+export function resetScopeIfMissing(scope, setScope, myCampaigns) {
+  if (!scope || typeof scope !== 'object' || !scope.campaignId) return false
+  const stillMember = (myCampaigns ?? []).some(c => c.id === scope.campaignId)
+  if (stillMember) return false
+  setScope('personal')
+  return true
+}
