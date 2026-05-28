@@ -23,6 +23,9 @@ const CharacterWizard = lazy(() =>
 const CampaignsScreen = lazy(() =>
   import('./components/Campaigns').then(m => ({ default: m.CampaignsScreen }))
 )
+const CampaignDetail = lazy(() =>
+  import('./components/Campaigns').then(m => ({ default: m.CampaignDetail }))
+)
 
 function Loader() {
   return (
@@ -69,6 +72,16 @@ function SheetRoute() {
   )
 }
 
+function CampaignDetailRoute() {
+  const navigate = useNavigate()
+  const { id } = useParams()
+  return (
+    <Suspense fallback={<Loader />}>
+      <CampaignDetail campaignId={id} onBack={() => navigate('/campaigns')} />
+    </Suspense>
+  )
+}
+
 function AuthedRoutes() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-950 text-gray-100">
@@ -79,6 +92,7 @@ function AuthedRoutes() {
           <Route path="/new" element={<NewRoute />} />
           <Route path="/c/:id" element={<SheetRoute />} />
           <Route path="/campaigns" element={<Suspense fallback={<Loader />}><CampaignsScreen /></Suspense>} />
+          <Route path="/campaigns/:id" element={<CampaignDetailRoute />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

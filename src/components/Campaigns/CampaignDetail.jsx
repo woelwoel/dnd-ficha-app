@@ -1,0 +1,84 @@
+import { useEffect, useState, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { supabase } from '../../lib/supabase'
+import { InviteCodeBox } from './InviteCodeBox'
+import { MembersList } from './MembersList'
+import { CampaignCharactersList } from './CampaignCharactersList'
+import { Button } from '../ui/Button'
+
+/**
+ * Tela /campaigns/:id. Para DM: vê código + rotaciona + remove membros +
+ * lê fichas dos jogadores. Para player: vê código (copiar) + lista de membros
+ * + botão sair.
+ */
+export function CampaignDetail({ campaignId, onBack }) {
+  const [campaign, setCampaign] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [userId, setUserId] = useState(null)
+  const navigate = useNavigate()
+
+  const reload = useCallback(async () => {
+    setLoading(true)
+    const { data: { user } } = await supabase.auth.getUser()
+    setUserId(user?.id ?? null)
+    const { data } = await supabase
+      .from('campaigns')
+      .select('id, name, dm_id, invite_code')
+      .eq('id', campaignId)
+      .maybeSingle()
+    setCampaign(data)
+    setLoading(false)
+  }, [campaignId])
+
+  useEffect(() => { reload() }, [reload])
+
+  if (loading) return <div className="p-6 text-amber-400 text-sm">Carregando mesa…</div>
+  if (!campaign) {
+    return (
+      <div className="p-6 flex flex-col gap-2 text-amber-400 text-sm">
+        <p>Mesa não encontrada (ou sem permissão).</p>
+        <Button variant="ghost-dark" size="sm" onClick={onBack}>Voltar</Button>
+      </div>
+    )
+  }
+
+  const isDM = campaign.dm_id === userId
+
+  return (
+    <div className="min-h-screen p-4" style={{ background: 'var(--color-bg-canvas)' }}>
+      <header className="flex items-center justify-between mb-6 max-w-4xl mx-auto">
+        <div>
+          <button onClick={onBack} className="text-xs text-gray-400 hover:text-amber-300">← Mesas</button>
+          <h1
+            className="text-2xl text-amber-400 mt-1"
+            style={{ fontFamily: 'IM Fell English SC, serif' }}
+          >
+            {campaign.name}
+          </h1>
+          <p className="text-xs text-gray-500">{isDM ? 'Você é o Mestre' : 'Você é Jogador'}</p>
+        </div>
+      </header>
+
+      <div className="max-w-4xl mx-auto grid gap-4">
+        <InviteCodeBox
+          campaignId={campaign.id}
+          code={campaign.invite_code}
+          isDM={isDM}
+          onRotated={(code) => setCampaign(c => ({ ...c, invite_code: code }))}
+        />
+        <MembersList
+          campaignId={campaign.id}
+          currentUserId={userId}
+          isDM={isDM}
+          onChanged={(ev) => ev?.left ? navigate('/campaigns') : null}
+        />
+        {isDM && (
+          <CampaignCharactersList
+            campaignId={campaign.id}
+            onOpen={(idOrShort) => navigate(`/c/${idOrShort}`)}
+          />
+        )}
+      </div>
+    </div>
+  )
+}
