@@ -303,9 +303,10 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
 
 export function CharacterWizardV2({ onBack, onComplete, initialCampaignId }) {
   const hasSavedDraft = !!sessionStorage.getItem(STORAGE_KEY)
-  // Se o usuário começou a criar ficha pra uma mesa e fechou, recupera o
-  // destino salvo. URL/prop sempre vence (intent explícito do user).
-  const savedCampaignId = readSavedCampaignId()
+  // Só recupera destino salvo se existe um DRAFT real em vôo. Sem isso,
+  // um "pessoal explícito" anterior virava cache permanente que pulava o
+  // modal silenciosamente nas próximas criações.
+  const savedCampaignId = hasSavedDraft ? readSavedCampaignId() : undefined
   const resolvedInitialCampaignId =
     initialCampaignId !== undefined ? initialCampaignId : savedCampaignId
   // campaignId: undefined = ainda não decidido (mostra modal);

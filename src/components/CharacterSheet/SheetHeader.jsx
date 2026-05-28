@@ -1,6 +1,7 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { safeParseCharacter } from '../../domain/characterSchema'
 import { SheetCombatBar } from './SheetCombatBar'
+import { MoveToCampaignModal } from './MoveToCampaignModal'
 
 /**
  * Barra superior única da ficha (header + combat bar fundidos).
@@ -14,6 +15,7 @@ import { SheetCombatBar } from './SheetCombatBar'
  */
 export function SheetHeader({
   characterName,
+  characterId,
   saving = false,
   saved,
   saveError,
@@ -23,12 +25,14 @@ export function SheetHeader({
   onPrint,
   showPrint,
   onImportError,
+  onMoved,
   readOnly = false,
   campaignId = null,
   // eslint-disable-next-line no-unused-vars
   quickStats = null,
 }) {
   const importRef = useRef(null)
+  const [moveOpen, setMoveOpen] = useState(false)
 
   function handleFile(e) {
     const file = e.target.files?.[0]
@@ -70,7 +74,21 @@ export function SheetHeader({
           <h1 className="text-sm font-bold text-ink-500 font-display truncate tracking-wide">
             {characterName || 'Ficha de Personagem'}
           </h1>
-          {campaignId && (
+          {!readOnly && characterId && (
+            <button
+              onClick={() => setMoveOpen(true)}
+              className={
+                'hidden sm:inline-flex items-center px-2 py-0.5 rounded text-[10px] uppercase tracking-wider shrink-0 transition-colors ' +
+                (campaignId
+                  ? 'bg-amber-900 text-amber-200 hover:bg-amber-800'
+                  : 'bg-parchment-300 text-ink-300 hover:bg-parchment-400')
+              }
+              title={campaignId ? 'Vinculada a uma mesa — clique pra mover' : 'Ficha pessoal — clique pra vincular a uma mesa'}
+            >
+              {campaignId ? 'Mesa ▾' : 'Pessoal ▾'}
+            </button>
+          )}
+          {readOnly && campaignId && (
             <span
               className="hidden sm:inline-flex items-center px-2 py-0.5 rounded bg-amber-900 text-amber-200 text-[10px] uppercase tracking-wider shrink-0"
               title="Ficha vinculada a uma mesa"
@@ -145,6 +163,18 @@ export function SheetHeader({
       >
         <SheetCombatBar />
       </fieldset>
+
+      {moveOpen && (
+        <MoveToCampaignModal
+          characterId={characterId}
+          currentCampaignId={campaignId}
+          onClose={() => setMoveOpen(false)}
+          onMoved={(newCampaignId) => {
+            setMoveOpen(false)
+            onMoved?.(newCampaignId)
+          }}
+        />
+      )}
     </header>
   )
 }

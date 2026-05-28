@@ -9,6 +9,36 @@ function logDev(label, payload) {
   }
 }
 
+/**
+ * Move uma ficha existente pra uma mesa (ou destaca da mesa atual com null).
+ * RLS já garante que só o owner consegue update; e o check de
+ * characters_insert_own_in_own_campaign exige membership na mesa
+ * (a policy de update herda — mas confirmamos com `is_campaign_member`
+ * antes pra mostrar mensagem amigável em vez de erro genérico de RLS).
+ *
+ * @param {string} characterId UUID da ficha
+ * @param {string|null} campaignId UUID da mesa (ou null pra destacar)
+ */
+export async function moveCharacterToCampaign(characterId, campaignId) {
+  if (campaignId) {
+    // Confirma membership antes de tentar o UPDATE — se o user já saiu
+    // da mesa (ou foi removido) o UPDATE falha por RLS com erro opaco.
+    const mine = await listMyCampaigns()
+    if (!mine.some(c => c.id === campaignId)) {
+      return { ok: false, reason: 'not-a-member' }
+    }
+  }
+  const { error } = await supabase
+    .from('characters')
+    .update({ campaign_id: campaignId })
+    .eq('id', characterId)
+  if (error) {
+    logDev('moveCharacterToCampaign', error)
+    return { ok: false, reason: 'unknown', message: error.message }
+  }
+  return { ok: true }
+}
+
 /** Lista mesas em que o usuário corrente é membro (com role). */
 export async function listMyCampaigns() {
   const { data: { user } } = await supabase.auth.getUser()

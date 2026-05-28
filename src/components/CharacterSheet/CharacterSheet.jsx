@@ -204,6 +204,7 @@ function SheetBody({ initialCharacter, onBack }) {
         <div className="sticky top-0 z-30">
           <SheetHeader
             characterName={character.info.name}
+            characterId={character?.id ?? null}
             saving={saving}
             saved={saved}
             saveError={saveError}
@@ -216,6 +217,9 @@ function SheetBody({ initialCharacter, onBack }) {
             quickStats={quickStats}
             readOnly={readOnly}
             campaignId={character?.campaignId ?? null}
+            onMoved={(newCampaignId) => {
+              setCharacter(prev => ({ ...prev, campaignId: newCampaignId }))
+            }}
           />
         </div>
 
