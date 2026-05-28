@@ -9,6 +9,33 @@ Versionamento semântico: [SemVer](https://semver.org/lang/pt-BR/).
 
 ## [Não lançado]
 
+### Adicionado (PR 4 — UI de Mesas)
+- **Tela `/campaigns`**: cria mesa, entra com código, lista mesas em que sou
+  membro com badge Mestre/Jogador.
+- **Tela `/campaigns/:id`**: mostra código de convite com botão copiar e
+  rotacionar (DM only), lista de membros (DM remove; player sai), e — pra DM —
+  lista de fichas dos jogadores em modo leitura.
+- **Selector de contexto no CharacterList**: "Pessoais / Mesa X / Mesa Y"
+  filtra a listagem. Persiste em `localStorage`.
+- **Wizard de criação aceita destino**: se vier de "Pessoais", abre modal
+  perguntando "pessoal ou mesa?"; se vier de uma mesa selecionada, já cria
+  vinculado (via `?campaignId=` na URL).
+- **Badge "Mesa" e selo "Modo leitura"** na CharacterSheet quando o usuário
+  não é o owner (DM lendo ficha de jogador). Auto-save fica desligado.
+- **AccountMenu no header**: avatar com iniciais → dropdown com Sair e
+  Apagar conta. Substitui o botão "Sair" solto.
+- **Modal de Apagar conta** com confirmação digitando `APAGAR`. Chama RPC
+  `delete_my_account` (criada no PR 3).
+- `src/lib/campaigns.js` — fachada async sobre as RPCs do PR 3.
+
+### Notas (PR 4)
+- Limitação conhecida: ao ser removido de uma mesa, a ficha do jogador continua
+  com `campaign_id` apontando pra mesa inacessível. Move-pra-pessoal manual
+  fica pra um PR futuro.
+- "Apagar conta" deleta `profiles` (cascade), mas a linha em `auth.users`
+  permanece. Login com o mesmo email funciona, porém vai criar profile zerado.
+  Apagamento completo precisa admin API (fora de escopo).
+
 ### Adicionado (PR 3 — Schema de Campanhas)
 - Tabelas `campaigns`, `campaign_members`, `join_attempts` no Postgres com RLS
   completa. Sem UI ainda — terreno preparado pro PR 4.
