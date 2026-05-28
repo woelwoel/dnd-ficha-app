@@ -3,6 +3,7 @@ import { useCharacter } from '../../hooks/useCharacter'
 import { useCharacterCalculations } from '../../hooks/useCharacterCalculations'
 import { useTabValidation } from '../../hooks/useTabValidation'
 import { useAutoSave } from '../../hooks/useAutoSave'
+import { useCharacterRealtime } from '../../hooks/useCharacterRealtime'
 import { useSrd, useClassDataMap } from '../../providers/SrdProvider'
 import { loadCharacterByRouteParam } from '../../utils/storage'
 import { useAuth } from '../../auth'
@@ -105,6 +106,11 @@ function SheetBody({ initialCharacter, onBack }) {
   const readOnly = !!(character?.ownerId && currentUserId && character.ownerId !== currentUserId)
 
   const { saving, saved, error: saveError } = useAutoSave(character, { enabled: !readOnly })
+
+  // Realtime: quando DM está em modo leitura, refetch ao vivo conforme
+  // o player edita a ficha. Não ativa pro próprio dono pra não conflitar
+  // com o auto-save local.
+  useCharacterRealtime(character?.id, readOnly, setCharacter)
 
   const classData = useMemo(
     () => classes.find(c => c.index === character.info.class) ?? null,
