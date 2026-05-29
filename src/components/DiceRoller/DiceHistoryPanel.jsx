@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useDiceRoller } from '../../hooks/useDiceRoller'
+import { useDraggableFab } from '../../hooks/useDraggableFab'
 
 function timeAgo(ts) {
   const diff = Math.floor((Date.now() - ts) / 1000)
@@ -76,6 +77,9 @@ function RollEntry({ entry }) {
  */
 export function DiceHistoryPanel() {
   const { history, clearHistory, open, togglePanel, mode = 'normal', setMode } = useDiceRoller()
+
+  // Botão fechado é arrastável e persiste posição via hook compartilhado.
+  const fab = useDraggableFab('dnd-ficha:fab-dice', { bottom: 20, right: 20 })
 
   // null = posição padrão (canto inferior direito)
   // {x, y} = posição após arrasto (left/top do viewport)
@@ -162,13 +166,15 @@ export function DiceHistoryPanel() {
   /* ── Botão quando fechado ──────────────────────────────────── */
   const button = !open ? (
     <button
-      onClick={togglePanel}
-      title={`Histórico de dados${mode !== 'normal' ? ` (próxima: ${mode === 'adv' ? 'vantagem' : 'desvantagem'})` : ''}`}
+      onPointerDown={fab.onPointerDown}
+      onClick={() => { if (!fab.isDragSuppressed()) togglePanel() }}
+      title={`Histórico de dados${mode !== 'normal' ? ` (próxima: ${mode === 'adv' ? 'vantagem' : 'desvantagem'})` : ''} — arraste para mover`}
       aria-label="Abrir histórico de rolagens"
-      className={`fixed bottom-5 right-5 z-50 shadow-parchment relative w-12 h-12 rounded-full text-xl flex items-center justify-center transition-all duration-200 border-2 ${
-        mode === 'adv' ? 'bg-emerald-100 border-emerald-700' :
-        mode === 'dis' ? 'bg-rose-100 border-rose-700' :
-        'bg-parchment-100 hover:bg-parchment-200 border-ink-300 hover:border-ink-500'
+      style={{ ...fab.style, zIndex: 50, touchAction: 'none' }}
+      className={`shadow-parchment w-12 h-12 rounded-full text-xl flex items-center justify-center transition-colors duration-200 border-2 backdrop-blur-sm cursor-grab active:cursor-grabbing ${
+        mode === 'adv' ? 'bg-emerald-100/70 border-emerald-700' :
+        mode === 'dis' ? 'bg-rose-100/70 border-rose-700' :
+        'bg-parchment-100/60 hover:bg-parchment-200/90 border-ink-300/70 hover:border-ink-500'
       }`}
     >
       🎲
