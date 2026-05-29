@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { DetailsModal } from '../DetailsModal'
 import { FormFieldError } from '../FormFieldError'
 import { TopicList, FullDescriptionToggle } from '../TopicList'
@@ -399,11 +399,6 @@ function XpTracker({ xp = 0, level = 1, onUpdate }) {
 /* ── Componente principal ── */
 export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, errors = {}, onRaceChange, onSubraceChange, onBackgroundChange, onClassChange, onToggleLanguage }) {
   const [modal, setModal] = useState(null)
-  const [classChoices, setClassChoices] = useState({})
-
-  useEffect(() => {
-    fetch('/srd-data/phb-class-choices-pt.json').then(r => r.json()).then(setClassChoices).catch(() => {})
-  }, [])
 
   const selectedRace    = races.find(r => r.index === info.race)
   const selectedClass   = classes.find(c => c.index === info.class)
@@ -577,26 +572,11 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
         <FormFieldError id="err-level" message={errors.level} />
       </div>
 
-      {/* Características escolhidas da classe */}
-      {info.class && (() => {
-        const choices = classChoices[info.class]?.choices ?? []
-        const chosen = info.chosenFeatures ?? {}
-        const filled = choices.filter(c => c.level <= info.level && chosen[c.id])
-        if (!filled.length) return null
-        return (
-          <div className="bg-gray-800/50 border border-amber-800/30 rounded-lg px-3 py-2 space-y-1">
-            <p className="text-[10px] text-amber-600 uppercase tracking-widest font-semibold">Características de Classe</p>
-            {filled.map(c => {
-              const opt = c.options.find(o => o.value === chosen[c.id])
-              return (
-                <p key={c.id} className="text-xs text-gray-300">
-                  <span className="text-amber-400">{c.featureName}:</span> {opt?.name ?? chosen[c.id]}
-                </p>
-              )
-            })}
-          </div>
-        )
-      })()}
+      {/* Removido: bloco "Características de Classe" duplicava o conteúdo
+       * que já aparece em Habilidades/Ações → Características de Classe
+       * (com a resolução de chosen completa, incluindo sub-picks como
+       * Manobras). O bloco aqui também renderizava errado pra arrays
+       * (mostrava IDs concatenados em vez dos nomes). */}
 
       {/* Antecedente */}
       <div>
