@@ -151,7 +151,7 @@ function FeatureCard({ name, desc, source, level, tracker, onSpend, onRegain }) 
 
       {open && (
         <div className="px-3 pb-3 pt-2 bg-gray-900/40 space-y-3">
-          {desc && <p className="text-sm text-gray-400 leading-relaxed">{desc}</p>}
+          {desc && <p className="text-sm text-gray-400 leading-relaxed whitespace-pre-line">{desc}</p>}
           {tracker && (
             <ResourceTracker
               use={tracker}
