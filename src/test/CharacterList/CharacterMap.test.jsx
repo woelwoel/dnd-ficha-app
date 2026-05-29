@@ -19,10 +19,13 @@ describe('<CharacterMap>', () => {
     expect(screen.getByText('Bob')).toBeInTheDocument()
   })
 
-  it('aplica background-image do MAP_BACKGROUND_URL', () => {
+  it('aplica a classe .map-canvas no canvas (background-image vem do CSS)', () => {
+    // Sprint K #31: background-image foi movido de inline style pra classe
+    // .map-canvas em src/index.css (espelha MAP_BACKGROUND_URL do config).
+    // O JSDOM não carrega o CSS importado, então conferimos a classe.
     const { container } = render(<CharacterMap characters={chars} onSelect={() => {}} />)
     const mapEl = container.querySelector('[data-testid="character-map-canvas"]')
-    expect(mapEl.style.backgroundImage).toContain('/maps/default.svg')
+    expect(mapEl).toHaveClass('map-canvas')
   })
 
   it('tem region landmark com aria-label', () => {

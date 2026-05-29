@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { renderWithRouter as render } from '../utils/renderWithRouter'
 
 // Mockar useAuth — CharacterList passou a depender do AuthProvider (PR 1 auth Supabase).
 // Esses testes não verificam comportamento de logout; basta um stub.

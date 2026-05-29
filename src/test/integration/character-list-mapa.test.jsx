@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { renderWithRouter as render } from '../utils/renderWithRouter'
 
 // Mockar useAuth — CharacterList passou a depender do AuthProvider (PR 1 auth Supabase).
 vi.mock('../../auth/AuthProvider', () => ({
