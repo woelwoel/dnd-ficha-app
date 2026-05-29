@@ -41,10 +41,20 @@ export default defineConfig({
         // Runtime: dados SRD JSON cacheados sob demanda (CacheFirst — não mudam).
         runtimeCaching: [
           {
+            // CacheFirst → o cache ANTIGO sobrevive ao deploy. Bumpar `cacheName`
+            // força o SW a criar bucket novo; `cleanupOutdatedCaches` apaga o
+            // antigo no activate. Bump quando schema SRD muda (ex.: nova choice
+            // em phb-class-choices-pt.json).
+            //
+            // Histórico:
+            //  v1 → v2 (2026-05-29): adicionou martial_archetype_maneuvers,
+            //    sub-picks de Bárbaro Totem, Patrulheiro Caçador/Mestre das
+            //    Bestas; descs enriquecidas de 19 subclasses; multiSelectByLevel
+            //    em Bruxo invocações e Feiticeiro metamagia.
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v1',
+              cacheName: 'srd-data-v2',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
