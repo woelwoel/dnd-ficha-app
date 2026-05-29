@@ -6,6 +6,9 @@ const SRD = [
   { index: 'chain-mail', name: 'Chain Mail', weight: 55, cost: { quantity: 75, unit: 'gp' }, armor_class: { base: 16, dex_bonus: false } },
   { index: 'shield',     name: 'Shield',     weight: 6,  cost: { quantity: 10, unit: 'gp' }, armor_class: { base: 2, dex_bonus: false } },
   { index: 'handaxe',    name: 'Handaxe',    weight: 2,  cost: { quantity: 5,  unit: 'gp' }, damage: { damage_dice: '1d6' } },
+  { index: 'leather-armor',         name: 'Leather Armor',         weight: 10, cost: { quantity: 10, unit: 'gp' }, armor_class: { base: 11, dex_bonus: true } },
+  { index: 'studded-leather-armor', name: 'Studded Leather Armor', weight: 13, cost: { quantity: 45, unit: 'gp' }, armor_class: { base: 12, dex_bonus: true } },
+  { index: 'plate-armor',           name: 'Plate Armor',           weight: 65, cost: { quantity: 1500, unit: 'gp' }, armor_class: { base: 18 } },
 ]
 const PT_WEAPONS = [
   { index: 'greatsword', name: 'Espadão' },
@@ -23,6 +26,13 @@ describe('itemLookup', () => {
   it('resolve nome PT de armadura via alias', () => {
     expect(lookup.resolve('Cota de Malha')?.index).toBe('chain-mail')
     expect(lookup.resolve('Escudo')?.index).toBe('shield')
+  })
+
+  it('resolve armaduras com sufixo "-armor" no SRD (leather, plate, etc.)', () => {
+    expect(lookup.resolve('Armadura de Couro')?.index).toBe('leather-armor')
+    expect(lookup.resolve('Couro')?.index).toBe('leather-armor')
+    expect(lookup.resolve('Armadura de Couro Batido')?.index).toBe('studded-leather-armor')
+    expect(lookup.resolve('Armadura de Placas')?.index).toBe('plate-armor')
   })
 
   it('resolve nome EN exato', () => {

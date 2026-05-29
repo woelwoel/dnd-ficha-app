@@ -29,11 +29,15 @@ const TYPE_THEME = {
   'reação':     { color: 'border-purple-600/40 bg-purple-900/10', badge: 'bg-purple-800/60 text-purple-200' },
 }
 
+// Cores pastéis com texto escuro pra ficarem legíveis tanto no tema parchment
+// (claro) quanto em fundo escuro. Antes usavam bg-sky-900/40 + text-sky-300
+// (escuro com texto claro), o que virava um bloco quase preto+pixel ilegível
+// no tema parchment.
 const RECHARGE_META = {
-  short:  { label: 'Desc. Curto', color: 'bg-sky-900/40 text-sky-300 border-sky-700' },
-  long:   { label: 'Desc. Longo', color: 'bg-amber-900/40 text-amber-300 border-amber-700' },
-  dawn:   { label: 'Amanhecer',   color: 'bg-orange-900/40 text-orange-300 border-orange-700' },
-  manual: { label: 'Manual',      color: 'bg-gray-700 text-gray-300 border-gray-600' },
+  short:  { label: 'Desc. Curto', color: 'bg-sky-100 text-sky-900 border-sky-400' },
+  long:   { label: 'Desc. Longo', color: 'bg-amber-100 text-amber-900 border-amber-400' },
+  dawn:   { label: 'Amanhecer',   color: 'bg-orange-100 text-orange-900 border-orange-400' },
+  manual: { label: 'Manual',      color: 'bg-gray-100 text-gray-800 border-gray-400' },
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -49,7 +53,7 @@ function ResourceTracker({ use, onSpend, onRegain }) {
     <div className="flex items-center justify-between gap-3 bg-gray-800/60 border border-gray-700 rounded-lg px-3 py-2">
       <div className="min-w-0">
         <p className="text-sm font-semibold text-gray-200">{use.name}</p>
-        <span className={`text-[10px] px-1.5 py-0.5 rounded-full border font-medium ${meta.color}`}>
+        <span className={`inline-block text-[10px] px-1.5 py-0.5 rounded-full border font-medium leading-tight mt-0.5 ${meta.color}`}>
           {meta.label}
         </span>
       </div>
@@ -366,12 +370,13 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain }) {
       type: detectActionType(f.desc),
     })
 
-    // Features que são slots de escolha de subclasse (Juramento, Domínio,
-    // Pacto, Patrono…) NUNCA são ações — mesmo que a descrição mencione
-    // "como ação bônus" ao listar uma das opções. O conteúdo real aparece
-    // resolvido em Habilidades depois que o jogador escolhe.
+    // Features que são slots de escolha (`choice_id`) ou placeholders de
+    // subclasse (`subclass: true` — ex. "Característica do Arquétipo Marcial"
+    // nv 7/10/15/18) NUNCA são ações — mesmo que a descrição mencione
+    // "como ação bônus" ao listar uma das opções de arquétipo. O conteúdo
+    // real aparece resolvido em Habilidades depois que o jogador escolhe.
     const classWithType = allClassFeatures
-      .filter(f => !f.choice_id)
+      .filter(f => !f.choice_id && !f.subclass)
       .map(toAction)
       .filter(a => a.type !== null)
     const raceWithType  = raceTraits.map(toAction).filter(a => a.type !== null)

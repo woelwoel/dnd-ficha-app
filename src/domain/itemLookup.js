@@ -43,9 +43,16 @@ export function buildItemLookup(srdEquipment, ptWeapons) {
       // 1) Nome PT de arma → index → SRD
       const idxFromPt = ptNameToIndex.get(lc)
       if (idxFromPt && byIndex.has(idxFromPt)) return byIndex.get(idxFromPt)
-      // 2) Armadura PT (key já alinhada com index SRD)
+      // 2) Armadura PT — alguns índices SRD têm sufixo "-armor" (padded,
+      // leather, studded-leather, hide, half-plate, splint, plate) e outros
+      // não (chain-shirt, scale-mail, ring-mail, chain-mail, shield). Tenta
+      // os dois.
       const armor = findArmorByName(name)
-      if (armor?.key && byIndex.has(armor.key)) return byIndex.get(armor.key)
+      if (armor?.key) {
+        if (byIndex.has(armor.key)) return byIndex.get(armor.key)
+        const suffixed = `${armor.key}-armor`
+        if (byIndex.has(suffixed)) return byIndex.get(suffixed)
+      }
       // 3) Nome EN exato
       if (byName.has(lc)) return byName.get(lc)
       // 4) Slug EN
