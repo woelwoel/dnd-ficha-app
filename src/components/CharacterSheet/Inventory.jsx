@@ -53,9 +53,13 @@ function buildAttackFromWeaponSrd(item, srd) {
     proficient: true,
     magicBonus: 0,
     versatileDice: srd.two_handed_damage?.damage_dice,
+    versatileTwoHanded: false, // toggle de empunhar versátil c/ 2 mãos
     abilityOverride: '',
     notes: '',
-    fromItemId: item.id, // rastreia origem pra clean-up
+    fromItemId: item.id,                // rastreia origem pra clean-up
+    weaponIndex: srd.index ?? null,     // pra lookup de munição/range futuro
+    rangeNormal: srd.range?.normal ?? null,  // em pés (convertido em display)
+    rangeLong:   srd.range?.long ?? null,
   }
 }
 

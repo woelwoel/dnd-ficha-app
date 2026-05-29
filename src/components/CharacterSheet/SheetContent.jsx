@@ -151,9 +151,11 @@ export function SheetContent({ activeTab }) {
               attacks={character.combat?.attacks ?? []}
               attributes={character.attributes}
               profBonus={calc.profBonus}
+              inventoryItems={character.inventory?.items ?? []}
               onAdd={addAttack}
               onRemove={removeAttack}
               onUpdate={updateAttack}
+              onUpdateItem={updateItem}
             />
 
             <PreparedSpellsList />

@@ -17,12 +17,17 @@ import { useDiceRoller } from '../../hooks/useDiceRoller'
  * ("Ataque · Espada longa" e "Dano · Espada longa") para o jogador
  * conseguir narrar a rolagem ao mestre em sequência.
  */
-export function AttackRollButton({ attackNotation, damageNotation, weaponName, size = 'sm', className = '' }) {
+export function AttackRollButton({
+  attackNotation, damageNotation, weaponName,
+  size = 'sm', className = '',
+  disabled = false, onAfterRoll,
+}) {
   const { roll, openPanel } = useDiceRoller()
 
   function handleClick(e) {
     e.stopPropagation()
     e.preventDefault()
+    if (disabled) return
 
     const opts = {}
     if (e.shiftKey) opts.mode = 'adv'
@@ -39,10 +44,14 @@ export function AttackRollButton({ attackNotation, damageNotation, weaponName, s
     const isNat1  = d20 === 1
     const isNat20 = d20 === 20
 
-    if (isNat1) return  // Erro automático — sem dano (PHB p.194)
+    if (!isNat1) {
+      const damageLabel = isNat20 ? `Dano CRÍTICO · ${weaponName}` : `Dano · ${weaponName}`
+      roll(damageNotation, damageLabel, { crit: isNat20 })
+    }
 
-    const damageLabel = isNat20 ? `Dano CRÍTICO · ${weaponName}` : `Dano · ${weaponName}`
-    roll(damageNotation, damageLabel, { crit: isNat20 })
+    // Consumo de munição (ou outro side-effect do parent) acontece SEMPRE
+    // que o ataque é rolado, inclusive natural 1 — a flecha foi gasta.
+    onAfterRoll?.({ isNat1, isNat20, d20 })
   }
 
   const title =
@@ -53,13 +62,15 @@ export function AttackRollButton({ attackNotation, damageNotation, weaponName, s
   return (
     <button
       onClick={handleClick}
-      title={title}
+      disabled={disabled}
+      title={disabled ? 'Sem munição no inventário' : title}
       aria-label={`Atacar com ${weaponName}: rola ${attackNotation} e ${damageNotation}`}
       className={`inline-flex items-center justify-center gap-1 px-1.5 py-0.5 rounded
-        bg-amber-700/30 hover:bg-amber-600/50 active:scale-95
-        text-amber-300 hover:text-amber-200
-        border border-amber-600/40 hover:border-amber-400
-        transition-all select-none leading-none font-semibold
+        active:scale-95
+        border transition-all select-none leading-none font-semibold
+        ${disabled
+          ? 'bg-gray-800 border-gray-700 text-gray-600 cursor-not-allowed'
+          : 'bg-amber-700/30 hover:bg-amber-600/50 text-amber-300 hover:text-amber-200 border-amber-600/40 hover:border-amber-400'}
         ${size === 'xs' ? 'text-[11px]' : 'text-xs'}
         ${className}`}
     >
