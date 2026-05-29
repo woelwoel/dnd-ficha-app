@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
+import { deleteCampaign } from '../../lib/campaigns'
 import { InviteCodeBox } from './InviteCodeBox'
 import { MembersList } from './MembersList'
 import { CampaignCharactersList } from './CampaignCharactersList'
@@ -16,7 +17,25 @@ export function CampaignDetail({ campaignId, onBack }) {
   const [campaign, setCampaign] = useState(null)
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState(null)
+  const [deleting, setDeleting] = useState(false)
   const navigate = useNavigate()
+
+  async function handleDelete() {
+    const confirmed = window.confirm(
+      `Apagar a mesa "${campaign.name}"?\n\n` +
+      'Os jogadores serão removidos e as fichas voltam a ser pessoais. ' +
+      'Essa ação não pode ser desfeita.'
+    )
+    if (!confirmed) return
+    setDeleting(true)
+    const res = await deleteCampaign(campaign.id)
+    setDeleting(false)
+    if (!res.ok) {
+      alert('Não foi possível apagar a mesa: ' + (res.message || res.reason))
+      return
+    }
+    navigate('/campaigns')
+  }
 
   const reload = useCallback(async () => {
     setLoading(true)
@@ -76,6 +95,25 @@ export function CampaignDetail({ campaignId, onBack }) {
             campaignId={campaign.id}
             onOpen={(idOrShort) => navigate(`/c/${idOrShort}`)}
           />
+        )}
+
+        {isDM && (
+          <div className="mt-6 pt-4 border-t border-shell-border flex flex-col gap-2">
+            <p className="text-xs text-gray-500">
+              Zona de perigo — apagar a mesa remove os membros e desvincula as fichas (elas voltam a ser pessoais dos donos).
+            </p>
+            <div>
+              <Button
+                variant="ghost-dark"
+                size="sm"
+                onClick={handleDelete}
+                disabled={deleting}
+                className="!text-red-400 !border-red-900/60 hover:!bg-red-950/30"
+              >
+                {deleting ? 'Apagando…' : 'Apagar mesa'}
+              </Button>
+            </div>
+          </div>
         )}
       </div>
     </div>

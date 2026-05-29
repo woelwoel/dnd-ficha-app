@@ -132,6 +132,20 @@ export async function loadCampaignCharacters(campaignId) {
   return data ?? []
 }
 
+/**
+ * Apaga a mesa. RLS (`campaigns_delete_dm` em 0004) garante que só o DM
+ * consegue. ON DELETE CASCADE remove memberships; fichas têm
+ * `on delete set null` em campaign_id (viram pessoais dos donos).
+ */
+export async function deleteCampaign(campaignId) {
+  const { error } = await supabase
+    .from(T_CAMPAIGNS)
+    .delete()
+    .eq('id', campaignId)
+  if (error) { logDev('deleteCampaign', error); return { ok: false, reason: 'unknown', message: error.message } }
+  return { ok: true }
+}
+
 export async function deleteMyAccount() {
   const { error } = await supabase.rpc('delete_my_account')
   if (error) { logDev('deleteMyAccount', error); return { ok: false, reason: 'unknown' } }
