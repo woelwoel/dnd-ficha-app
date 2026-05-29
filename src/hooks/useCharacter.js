@@ -251,13 +251,21 @@ export function useCharacter(initialCharacter = null) {
   }, [setCharacter])
 
   const addAttack = useCallback(attack => {
-    setCharacter(prev => ({
-      ...prev,
-      combat: {
-        ...prev.combat,
-        attacks: [...(prev.combat?.attacks ?? []), { ...attack, id: generateId() }],
-      },
-    }))
+    setCharacter(prev => {
+      // Respeita id explícito se fornecido (ex.: weapon-<itemId> pra ataques
+      // criados ao equipar arma do inventário). Caso contrário gera novo.
+      // Idempotente: se já existir um attack com o id, NÃO duplica.
+      const incomingId = attack?.id
+      const existing = prev.combat?.attacks ?? []
+      if (incomingId && existing.some(a => a.id === incomingId)) return prev
+      return {
+        ...prev,
+        combat: {
+          ...prev.combat,
+          attacks: [...existing, { id: incomingId ?? generateId(), ...attack }],
+        },
+      }
+    })
   }, [setCharacter])
 
   const removeAttack = useCallback(attackId => {

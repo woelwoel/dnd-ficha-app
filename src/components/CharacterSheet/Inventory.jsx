@@ -26,7 +26,44 @@ function carryingCapacity(strScore) {
   return (strScore ?? 10) * 15
 }
 
-export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, onRemoveItem, onUpdateItem }) {
+/**
+ * Identifica se uma entrada da SRD é uma arma (categoria "Weapon" ou tem
+ * bloco de dano). Usado pra liberar Equipar em armas do inventário.
+ */
+function isWeaponSrd(srd) {
+  if (!srd) return false
+  const cat = srd.equipment_category?.name ?? ''
+  return /weapon/i.test(cat) || !!srd.damage
+}
+
+/**
+ * Converte uma entrada de arma da SRD num objeto de ataque (formato
+ * combat.attacks). Mantém um id estável `weapon-<itemId>` pra permitir
+ * idempotência ao re-equipar e remoção precisa ao desequipar.
+ */
+function buildAttackFromWeaponSrd(item, srd) {
+  const props = (srd.properties ?? []).map(p => p.index)
+  if (srd.weapon_range === 'Ranged') props.push('ranged')
+  return {
+    id: `weapon-${item.id}`,
+    name: item.name,
+    damageDice: srd.damage?.damage_dice ?? '1d6',
+    damageType: srd.damage?.damage_type?.name ?? '',
+    properties: props,
+    proficient: true,
+    magicBonus: 0,
+    versatileDice: srd.two_handed_damage?.damage_dice,
+    abilityOverride: '',
+    notes: '',
+    fromItemId: item.id, // rastreia origem pra clean-up
+  }
+}
+
+export function Inventory({
+  inventory, attributes,
+  onUpdateCurrency, onAddItem, onRemoveItem, onUpdateItem,
+  onAddAttack, onRemoveAttack,
+}) {
   const [newItem, setNewItem] = useState(EMPTY_ITEM)
   const [showForm, setShowForm] = useState(false)
   const [srdEquipment, setSrdEquipment] = useState([])
@@ -73,6 +110,24 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
       })
     return () => ctrl.abort()
   }, [])
+
+  /**
+   * Toggle de equipar — funciona pra armaduras E armas.
+   * Quando arma é equipada, também adiciona um attack no combat.attacks
+   * (id estável `weapon-<itemId>`). Quando desequipada, remove.
+   * Idempotente: re-equipar sem desequipar antes não duplica.
+   */
+  function toggleEquip(item, currentlyEquipped) {
+    const willEquip = !currentlyEquipped
+    onUpdateItem?.(item.id, { equipped: willEquip })
+    const srd = itemLookup.resolve(item.name)
+    if (!srd || !isWeaponSrd(srd)) return // armadura segue só com flag
+    if (willEquip) {
+      onAddAttack?.(buildAttackFromWeaponSrd(item, srd))
+    } else {
+      onRemoveAttack?.(`weapon-${item.id}`)
+    }
+  }
 
   function handleAdd() {
     if (!newItem.name.trim()) return
@@ -436,7 +491,9 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
                       ? { ...ARMOR_TABLE[item.armorKey], key: item.armorKey }
                       : { category: item.armorType, type: item.armorType === 'shield' ? 'shield' : 'armor' })
                   : findArmorByName(item.name)
-                const isEquippable    = !!resolvedArmor
+                const srdEntry        = itemLookup.resolve(item.name)
+                const isWeapon        = isWeaponSrd(srdEntry)
+                const isEquippable    = !!resolvedArmor || isWeapon
                 const isEquipped      = !!item.equipped
                 const canAtune        = !!item.requiresAttunement
                 const isAttuned       = !!item.attuned
@@ -480,7 +537,7 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
                           </button>
                         )}
                         <button
-                          onClick={() => onRemoveItem(item.id)}
+                          onClick={() => { onRemoveAttack?.(`weapon-${item.id}`); onRemoveItem(item.id) }}
                           className="w-8 h-8 flex items-center justify-center text-red-500 hover:text-red-400 text-xl font-bold"
                           title="Remover"
                         >×</button>
@@ -495,12 +552,13 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
                       {enriched.notes && <span className="text-xs text-gray-500 truncate flex-1">{enriched.notes}</span>}
                       {isEquippable && (
                         <button
-                          onClick={() => onUpdateItem?.(item.id, { equipped: !isEquipped })}
+                          onClick={() => toggleEquip(item, isEquipped)}
+                          title={isWeapon ? (isEquipped ? 'Desequipar (remove dos Ataques)' : 'Equipar (cria entrada em Ataques)') : undefined}
                           className={`text-xs px-2 py-1 rounded border transition-colors min-h-[28px] ${
                             isEquipped ? 'border-amber-500 bg-amber-900/30 text-amber-300' : 'border-gray-600 text-gray-500 hover:border-amber-500 hover:text-amber-300'
                           }`}
                         >
-                          {isEquipped ? '✓ Equipado' : 'Equipar'}
+                          {isEquipped ? '✓ Equipado' : (isWeapon ? 'Empunhar' : 'Equipar')}
                         </button>
                       )}
                     </div>
@@ -526,7 +584,9 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
                       ? { ...ARMOR_TABLE[item.armorKey], key: item.armorKey }
                       : { category: item.armorType, type: item.armorType === 'shield' ? 'shield' : 'armor' })
                   : findArmorByName(item.name)
-                const isEquippable    = !!resolvedArmor
+                const srdEntry        = itemLookup.resolve(item.name)
+                const isWeapon        = isWeaponSrd(srdEntry)
+                const isEquippable    = !!resolvedArmor || isWeapon
                 const isEquipped      = !!item.equipped
                 const canAtune        = !!item.requiresAttunement
                 const isAttuned       = !!item.attuned
@@ -547,18 +607,22 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
                       {isAttuned && <span title="Atunado" className="text-[10px]">💎</span>}
                       {isEquippable && (
                         <button
-                          onClick={() => onUpdateItem?.(item.id, { equipped: !isEquipped })}
-                          title={isEquipped ? 'Desequipar' : 'Equipar'}
+                          onClick={() => toggleEquip(item, isEquipped)}
+                          title={isWeapon
+                            ? (isEquipped ? 'Desempunhar (remove dos Ataques)' : 'Empunhar (cria entrada em Ataques)')
+                            : (isEquipped ? 'Desequipar' : 'Equipar')}
                           className={`text-[10px] px-1.5 py-0.5 rounded border transition-colors ${
                             isEquipped ? 'border-amber-500 bg-amber-900/30 text-amber-300' : 'border-gray-600 text-gray-500 hover:text-gray-300 hover:border-gray-500'
                           }`}
                         >
-                          {isEquipped ? '✓ Equipado' : 'Equipar'}
+                          {isEquipped ? '✓ Equipado' : (isWeapon ? 'Empunhar' : 'Equipar')}
                         </button>
                       )}
                       {isEquippable && (
                         <span className="text-[9px] text-gray-500 uppercase">
-                          {resolvedArmor.type === 'shield' ? 'escudo' : resolvedArmor.category}
+                          {resolvedArmor
+                            ? (resolvedArmor.type === 'shield' ? 'escudo' : resolvedArmor.category)
+                            : 'arma'}
                         </span>
                       )}
                       <span className="truncate">{item.name}</span>
@@ -590,7 +654,7 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
                       )}
                     </div>
                     <button
-                      onClick={() => onRemoveItem(item.id)}
+                      onClick={() => { onRemoveAttack?.(`weapon-${item.id}`); onRemoveItem(item.id) }}
                       className="text-red-500 hover:text-red-400 text-lg leading-none font-bold justify-self-center"
                       title="Remover"
                     >×</button>

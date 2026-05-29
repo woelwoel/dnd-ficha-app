@@ -274,6 +274,8 @@ export function SheetContent({ activeTab }) {
           onAddItem={addItem}
           onRemoveItem={removeItem}
           onUpdateItem={updateItem}
+          onAddAttack={addAttack}
+          onRemoveAttack={removeAttack}
         />
       </TabPanel>
     )
