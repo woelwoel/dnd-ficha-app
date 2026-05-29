@@ -10,6 +10,7 @@ import { FeaturesTab } from './FeaturesTab'
 import { AttributesSection } from './AttributesSection'
 import { RestActions } from './RestActions'
 import { Attacks } from './Attacks'
+import { ManeuversPanel } from './ManeuversPanel'
 import { PreparedSpellsList } from './PreparedSpellsList'
 import { CombatClassActions } from './CombatClassActions'
 import { useCharacterContext } from './CharacterContext'
@@ -157,6 +158,12 @@ export function SheetContent({ activeTab }) {
               onRemove={removeAttack}
               onUpdate={updateAttack}
               onUpdateItem={updateItem}
+            />
+
+            <ManeuversPanel
+              character={character}
+              featureUses={featureUses}
+              onSpend={spendFeatureUse}
             />
 
             <PreparedSpellsList />
