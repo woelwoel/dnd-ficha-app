@@ -288,6 +288,26 @@ export function useCharacter(initialCharacter = null) {
     }))
   }, [setCharacter])
 
+  /**
+   * Define o valor de uma escolha de classe (chosenFeatures[choiceId]).
+   * Usado pra "backfill" — escolher Mestre de Combate manobras, Bárbaro
+   * totens etc. em personagens criados antes do picker existir.
+   *
+   * Aceita string (single-select) ou array (multi-select).
+   */
+  const setChosenFeature = useCallback((choiceId, value) => {
+    setCharacter(prev => ({
+      ...prev,
+      info: {
+        ...prev.info,
+        chosenFeatures: {
+          ...(prev.info?.chosenFeatures ?? {}),
+          [choiceId]: value,
+        },
+      },
+    }))
+  }, [setCharacter])
+
   const updateSpellcasting = useCallback((f, v) => patchSection('spellcasting', f, v), [patchSection])
 
   const addSpell = useCallback(spell => {
@@ -634,6 +654,7 @@ export function useCharacter(initialCharacter = null) {
     addAttack,
     removeAttack,
     updateAttack,
+    setChosenFeature,
     setClassFeatureUses,
     spendFeatureUse,
     regainFeatureUse,
@@ -664,6 +685,7 @@ export function useCharacter(initialCharacter = null) {
     setConcentration,
     toggleLanguage,
     addAttack, removeAttack, updateAttack,
+    setChosenFeature,
     setClassFeatureUses, spendFeatureUse, regainFeatureUse,
     updateDeathSaves, toggleCondition, setInspiration, setExhaustion, setRageActive, setWildShape,
     applyDamage, applyHealing, gainTempHp, stabilize, rollDeathSave,

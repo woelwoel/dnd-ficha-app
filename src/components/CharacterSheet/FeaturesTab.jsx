@@ -2,6 +2,8 @@ import { useState, useMemo } from 'react'
 import { useSrd, useLazySrdDataset } from '../../providers/SrdProvider'
 import { enrichDraconicTopics } from '../../utils/draconicAncestors'
 import { getFeatureTypeMeta } from '../../domain/featureMeta'
+import { ChosenFeaturePicker } from '../CharacterWizardV2/blocks/class/ChosenFeaturePicker'
+import { resolveMultiSelect, isChoiceDone } from '../CharacterWizardV2/blocks/class-helpers'
 
 /* ══════════════════════════════════════════════════════════════════
    DETECTOR DE TIPO DE AÇÃO
@@ -267,9 +269,85 @@ function resolveChosenFeature(classIndex, featureName, chosenFeatures, classChoi
 }
 
 /* ══════════════════════════════════════════════════════════════════
+   ESCOLHAS PENDENTES (backfill — para fichas criadas antes do picker)
+   ══════════════════════════════════════════════════════════════════ */
+
+/**
+ * Renderiza escolhas de classe que JÁ deveriam estar feitas no nível
+ * atual mas estão vazias. Usa o mesmo ChosenFeaturePicker do wizard.
+ *
+ * Caso clássico: guerreiro Mestre de Combate criado antes da gente
+ * adicionar o picker de Manobras — `chosenFeatures.martial_archetype_maneuvers`
+ * fica undefined e as manobras nunca aparecem em Habilidades.
+ *
+ * Aparece SÓ se houver escolhas pendentes; quando todas estão preenchidas,
+ * a seção some.
+ */
+function PendingChoicesSection({
+  classIndex, characterLevel, classChoices, multiclasses,
+  chosenFeatures, onSetChosenFeature,
+}) {
+  // Coleta choices da classe primária + multiclasses
+  const allEntries = []
+  if (classIndex) {
+    for (const ch of classChoices?.[classIndex]?.choices ?? []) {
+      allEntries.push({ choice: ch, scopeLevel: characterLevel, scopeLabel: null })
+    }
+  }
+  for (const mc of multiclasses ?? []) {
+    for (const ch of classChoices?.[mc.class]?.choices ?? []) {
+      allEntries.push({ choice: ch, scopeLevel: mc.level, scopeLabel: mc.class })
+    }
+  }
+
+  const pending = allEntries.filter(({ choice, scopeLevel }) => {
+    if ((choice.level ?? 0) > scopeLevel) return false
+    if (choice.requires) {
+      const ok = Object.entries(choice.requires).every(([k, v]) => chosenFeatures?.[k] === v)
+      if (!ok) return false
+    }
+    return !isChoiceDone(choice, chosenFeatures?.[choice.id], scopeLevel)
+  })
+
+  if (pending.length === 0) return null
+
+  return (
+    <section className="border border-amber-700/50 bg-amber-950/20 rounded-lg p-3 space-y-3">
+      <div className="flex items-center gap-2">
+        <span aria-hidden>⚠</span>
+        <h3 className="text-xs font-bold text-amber-300 uppercase tracking-widest">
+          Escolhas pendentes <span className="text-amber-500 font-normal normal-case">({pending.length})</span>
+        </h3>
+      </div>
+      <p className="text-[11px] text-amber-200/70 leading-relaxed">
+        Essas escolhas faltam pra ficha ficar completa. Pode escolher aqui mesmo —
+        elas vão aparecer logo abaixo em Habilidades.
+      </p>
+      <div className="space-y-2 bg-parchment-50/95 rounded p-3">
+        {pending.map(({ choice, scopeLevel, scopeLabel }) => (
+          <div key={`${scopeLabel ?? 'main'}-${choice.id}`}>
+            {scopeLabel && (
+              <p className="text-[10px] uppercase tracking-wider text-ink-300 mb-1 font-display">
+                Multiclasse: {scopeLabel}
+              </p>
+            )}
+            <ChosenFeaturePicker
+              choice={choice}
+              value={chosenFeatures?.[choice.id]}
+              effectiveMultiSelect={resolveMultiSelect(choice, scopeLevel)}
+              onChange={v => onSetChosenFeature(choice.id, v)}
+            />
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════
    COMPONENTE PRINCIPAL
    ══════════════════════════════════════════════════════════════════ */
-export function FeaturesTab({ character, featureUses, onSpend, onRegain }) {
+export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetChosenFeature }) {
   const [activeFilter, setActiveFilter] = useState('acoes')
   const { progression, races, classChoices } = useSrd()
   const allFeats = useLazySrdDataset('feats')
@@ -504,6 +582,16 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain }) {
       {/* ══ Vista: Habilidades ══ */}
       {activeFilter === 'habilidades' && (
         <div className="space-y-6">
+          {onSetChosenFeature && (
+            <PendingChoicesSection
+              classIndex={classIndex}
+              characterLevel={level}
+              classChoices={classChoices}
+              multiclasses={info?.multiclasses}
+              chosenFeatures={info?.chosenFeatures ?? {}}
+              onSetChosenFeature={onSetChosenFeature}
+            />
+          )}
           <FeatureGroup
             title="Características de Classe" icon="📖"
             features={classFeatures} featureUses={featureUses} onSpend={onSpend} onRegain={onRegain}

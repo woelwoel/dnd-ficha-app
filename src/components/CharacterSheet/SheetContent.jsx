@@ -89,6 +89,7 @@ export function SheetContent({ activeTab }) {
     setConcentration,
     toggleLanguage,
     addAttack, removeAttack, updateAttack,
+    setChosenFeature,
     spendFeatureUse, regainFeatureUse,
     updateDeathSaves, toggleCondition, setInspiration, setExhaustion, setRageActive, setWildShape,
     // Sistema de dano/cura/testes de morte
@@ -260,6 +261,7 @@ export function SheetContent({ activeTab }) {
           featureUses={featureUses}
           onSpend={spendFeatureUse}
           onRegain={regainFeatureUse}
+          onSetChosenFeature={setChosenFeature}
         />
       </TabPanel>
     )
