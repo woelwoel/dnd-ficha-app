@@ -366,7 +366,14 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain }) {
       type: detectActionType(f.desc),
     })
 
-    const classWithType = allClassFeatures.map(toAction).filter(a => a.type !== null)
+    // Features que são slots de escolha de subclasse (Juramento, Domínio,
+    // Pacto, Patrono…) NUNCA são ações — mesmo que a descrição mencione
+    // "como ação bônus" ao listar uma das opções. O conteúdo real aparece
+    // resolvido em Habilidades depois que o jogador escolhe.
+    const classWithType = allClassFeatures
+      .filter(f => !f.choice_id)
+      .map(toAction)
+      .filter(a => a.type !== null)
     const raceWithType  = raceTraits.map(toAction).filter(a => a.type !== null)
 
     return {
