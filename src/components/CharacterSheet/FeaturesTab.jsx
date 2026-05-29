@@ -376,12 +376,50 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain }) {
       .filter(a => a.type !== null)
     const raceWithType  = raceTraits.map(toAction).filter(a => a.type !== null)
 
+    /* ── Manobras (Mestre de Combate) ──
+     * Lista as manobras escolhidas como features individuais em Habilidades
+     * E em Ações (cada manobra é classificada por tipo via detectActionType).
+     */
+    const maneuversFeatures = []
+    const maneuverActions = []
+    const chosenManeuverIds = Array.isArray(chosenFeatures?.martial_archetype_maneuvers)
+      ? chosenFeatures.martial_archetype_maneuvers
+      : []
+    if (chosenManeuverIds.length > 0) {
+      const archMatch = classChoices?.[classIndex]?.choices?.find(c => c.id === 'martial_archetype_maneuvers')
+      if (archMatch) {
+        for (const id of chosenManeuverIds) {
+          const opt = archMatch.options.find(o => o.value === id)
+          if (!opt) continue
+          const featureId = `maneuver-${id}`
+          maneuversFeatures.push({
+            id: featureId,
+            name: `Manobra: ${opt.name}`,
+            desc: opt.desc,
+            source: 'Mestre de Combate',
+          })
+          const detectedType = detectActionType(opt.desc)
+          if (detectedType) {
+            maneuverActions.push({
+              id: featureId,
+              name: opt.name,
+              desc: opt.desc,
+              source: 'Manobra',
+              type: detectedType,
+            })
+          }
+        }
+      }
+    }
+    const classFeaturesAll = [...classFeatures, ...maneuversFeatures]
+    const allClassActions = [...classWithType, ...maneuverActions]
+
     return {
-      classActions:      classWithType.filter(a => a.type === 'ação'),
-      classBonusActions: classWithType.filter(a => a.type === 'ação bônus'),
-      classReactions:    classWithType.filter(a => a.type === 'reação'),
+      classActions:      allClassActions.filter(a => a.type === 'ação'),
+      classBonusActions: allClassActions.filter(a => a.type === 'ação bônus'),
+      classReactions:    allClassActions.filter(a => a.type === 'reação'),
       raceActions:       raceWithType,
-      classFeatures, multiFeatures, raceFeatures, featFeatures,
+      classFeatures: classFeaturesAll, multiFeatures, raceFeatures, featFeatures,
     }
   }, [
     progression, classIndex, level,

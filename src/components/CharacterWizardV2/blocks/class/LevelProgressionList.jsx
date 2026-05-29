@@ -1,6 +1,6 @@
 import { ASIOrFeatPicker } from './ASIOrFeatPicker'
 import { ChosenFeaturePicker } from './ChosenFeaturePicker'
-import { isASIChoiceComplete, isChoiceDone } from '../class-helpers'
+import { isASIChoiceComplete, isChoiceDone, resolveMultiSelect } from '../class-helpers'
 
 export function LevelProgressionList({
   level, progressionLevels, leveledChoices,
@@ -17,7 +17,7 @@ export function LevelProgressionList({
         const asiDone = hasASI && isASIChoiceComplete(asiChoice)
         const asiPending = hasASI && !asiDone
         const hasContent = features.length > 0 || lvlChoices.length > 0
-        const lvlChoicesDone = lvlChoices.length > 0 && lvlChoices.every(c => isChoiceDone(c, draft.chosenFeatures?.[c.id]))
+        const lvlChoicesDone = lvlChoices.length > 0 && lvlChoices.every(c => isChoiceDone(c, draft.chosenFeatures?.[c.id], level))
         const lvlChoicesPending = lvlChoices.length > 0 && !lvlChoicesDone
         const lvlPending = lvlChoicesPending || asiPending
         const lvlDone = (lvlChoices.length === 0 || lvlChoicesDone) && (!hasASI || asiDone) && (lvlChoices.length > 0 || hasASI)
@@ -73,6 +73,7 @@ export function LevelProgressionList({
                 key={choice.id}
                 choice={choice}
                 value={draft.chosenFeatures?.[choice.id]}
+                effectiveMultiSelect={resolveMultiSelect(choice, level)}
                 onChange={newValue => onFeatureChoice(choice.id, newValue, choice.multiSelect)}
               />
             ))}

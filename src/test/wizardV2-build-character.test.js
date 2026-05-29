@@ -97,6 +97,21 @@ describe('resolveClassEquipmentItems', () => {
     expect(resolveClassEquipmentItems({ classEquipmentChoice: 'gold' }, {})).toEqual([])
   })
 
+  it('propaga chosenFeatures.martial_archetype_maneuvers (Mestre de Combate)', () => {
+    const draft = {
+      ...baseDraft, level: 3,
+      chosenFeatures: {
+        martial_archetype: 'mestre_combate',
+        martial_archetype_maneuvers: ['estocada', 'resposta', 'precisao'],
+      },
+    }
+    const c = buildCharacter(draft, guerreiro, {})
+    expect(c.info.chosenFeatures.martial_archetype).toBe('mestre_combate')
+    expect(c.info.chosenFeatures.martial_archetype_maneuvers).toEqual(
+      ['estocada', 'resposta', 'precisao'],
+    )
+  })
+
   it('resolve choice + fixed', () => {
     const draft = {
       class: 'guerreiro', classEquipmentChoice: 'equipment',

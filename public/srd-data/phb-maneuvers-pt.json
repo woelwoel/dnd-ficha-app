@@ -1,0 +1,120 @@
+{
+  "_meta": {
+    "source": "PHB 5e (cap. 3 — Guerreiro / Mestre de Combate)",
+    "note": "Dado de Superioridade (d8 nv3→d12 nv18) é o recurso gasto por manobra. CD = 8 + prof + maior entre FOR/DES."
+  },
+  "maneuvers": [
+    {
+      "index": "ataque-ardiloso",
+      "name": "Ataque Ardiloso",
+      "type": "passiva",
+      "trigger": "Ao acertar um ataque com arma",
+      "desc": "Gasta 1 Dado de Superioridade pra adicionar o resultado do dado ao dano do ataque."
+    },
+    {
+      "index": "comandar-ataque",
+      "name": "Comandar Ataque",
+      "type": "ação bônus",
+      "trigger": "Como ação bônus, no seu turno",
+      "desc": "Gasta 1 Dado de Superioridade. Escolhe um aliado a até 9m que possa ver e ouvir você. Ele usa sua reação imediatamente pra fazer um ataque de arma, somando o dado ao dano."
+    },
+    {
+      "index": "ataque-avanco",
+      "name": "Ataque de Avanço",
+      "type": "passiva",
+      "trigger": "Ao se mover pelo menos 1,5m em direção ao alvo e atingi-lo",
+      "desc": "Gasta 1 Dado de Superioridade pra somar ao dano do primeiro ataque corpo a corpo contra esse alvo no turno."
+    },
+    {
+      "index": "desarmar",
+      "name": "Desarmar",
+      "type": "passiva",
+      "trigger": "Ao acertar um ataque com arma",
+      "desc": "Gasta 1 Dado de Superioridade. Força TR de Força (atleta) do alvo (CD = 8 + prof + FOR ou DES). Falha = o item escolhido cai a até 3m. Adiciona o dado ao dano."
+    },
+    {
+      "index": "empurrar",
+      "name": "Ataque Empurrar",
+      "type": "passiva",
+      "trigger": "Ao acertar um ataque com arma",
+      "desc": "Gasta 1 Dado de Superioridade. Força TR de Força do alvo; falha = empurrado até 4,5m para longe. Adiciona o dado ao dano."
+    },
+    {
+      "index": "precisao",
+      "name": "Ataque de Precisão",
+      "type": "passiva",
+      "trigger": "Ao fazer um ataque de arma, antes de saber o resultado",
+      "desc": "Gasta 1 Dado de Superioridade e adiciona o resultado à sua jogada de ataque. Pode usar essa manobra antes ou depois de rolar o d20, mas antes do GM revelar o resultado."
+    },
+    {
+      "index": "provocante",
+      "name": "Ataque Provocante",
+      "type": "passiva",
+      "trigger": "Ao acertar um ataque com arma",
+      "desc": "Gasta 1 Dado de Superioridade. Alvo faz TR de Sabedoria; falha = tem desvantagem em ataques contra qualquer alvo que não seja você até o fim do seu próximo turno. Adiciona o dado ao dano."
+    },
+    {
+      "index": "sopro",
+      "name": "Ataque com Sopro",
+      "type": "passiva",
+      "trigger": "Ao acertar um ataque com arma",
+      "desc": "Gasta 1 Dado de Superioridade. Alvo faz TR de Constituição; falha = não pode usar reações até o fim do próximo turno seu. Adiciona o dado ao dano."
+    },
+    {
+      "index": "defesa-agil",
+      "name": "Defesa Ágil",
+      "type": "reação",
+      "trigger": "Quando outra criatura faz um ataque contra você",
+      "desc": "Como reação, gasta 1 Dado de Superioridade e adiciona o resultado à sua CA contra esse ataque, possivelmente convertendo um acerto em erro."
+    },
+    {
+      "index": "distracao",
+      "name": "Distração",
+      "type": "ação bônus",
+      "trigger": "Como ação bônus, no seu turno",
+      "desc": "Gasta 1 Dado de Superioridade. Escolhe um aliado a 9m que possa ver/ouvir você. O próximo ataque desse aliado contra uma criatura que você sinalizar tem vantagem; se acertar, soma o dado ao dano."
+    },
+    {
+      "index": "manobra-derrubar",
+      "name": "Manobra de Derrubar",
+      "type": "passiva",
+      "trigger": "Ao acertar um ataque com arma corpo a corpo",
+      "desc": "Gasta 1 Dado de Superioridade. Força TR de Força; falha = criatura cai prona. Adiciona o dado ao dano. Funciona em alvos de tamanho Grande ou menor."
+    },
+    {
+      "index": "estocada",
+      "name": "Estocada (Lunging)",
+      "type": "passiva",
+      "trigger": "Ao fazer um ataque corpo a corpo no seu turno",
+      "desc": "Gasta 1 Dado de Superioridade pra aumentar o alcance corpo a corpo do ataque em 1,5m nesse turno. Se acerta, adiciona o dado ao dano."
+    },
+    {
+      "index": "joga-sopro",
+      "name": "Finta (Feint)",
+      "type": "ação bônus",
+      "trigger": "Como ação bônus, no seu turno",
+      "desc": "Gasta 1 Dado de Superioridade pra fintar contra uma criatura a 1,5m. Você tem vantagem no próximo ataque com arma contra ela neste turno; se acerta, soma o dado ao dano."
+    },
+    {
+      "index": "manobra-defensiva",
+      "name": "Manobra Defensiva",
+      "type": "reação",
+      "trigger": "Quando uma criatura a 9m faz um ataque contra um aliado",
+      "desc": "Como reação, gasta 1 Dado de Superioridade e adiciona o resultado à CA do aliado contra esse ataque, possivelmente convertendo acerto em erro."
+    },
+    {
+      "index": "resposta",
+      "name": "Resposta (Riposte)",
+      "type": "reação",
+      "trigger": "Quando uma criatura erra um ataque corpo a corpo contra você",
+      "desc": "Como reação, gasta 1 Dado de Superioridade e faz um ataque de arma corpo a corpo contra essa criatura. Se acertar, adiciona o dado ao dano."
+    },
+    {
+      "index": "rally",
+      "name": "Reorganização (Rally)",
+      "type": "ação bônus",
+      "trigger": "Como ação bônus, no seu turno",
+      "desc": "Gasta 1 Dado de Superioridade pra dar coragem a um aliado a 9m que possa ver/ouvir você. Esse aliado recebe PV temporários = resultado do dado + mod. CAR do guerreiro."
+    }
+  ]
+}

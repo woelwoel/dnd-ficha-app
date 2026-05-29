@@ -1,3 +1,27 @@
+/**
+ * Resolve `multiSelect` efetivo de uma choice considerando level scaling.
+ *
+ * Suporta dois formatos:
+ *  - `multiSelect: N`             — fixo, mesmo em todo nível.
+ *  - `multiSelectByLevel: { 3:3, 7:5, 10:7, 15:9 }` — escala: pega o maior
+ *    threshold ≤ characterLevel. Útil pra escolhas que crescem com o
+ *    personagem (ex.: manobras do Mestre de Combate).
+ *
+ * Retorna 0 (single-select) quando nenhum dos dois estiver presente.
+ */
+export function resolveMultiSelect(choice, characterLevel = 1) {
+  if (choice?.multiSelect) return choice.multiSelect
+  const byLevel = choice?.multiSelectByLevel
+  if (byLevel && typeof byLevel === 'object') {
+    const thresholds = Object.keys(byLevel)
+      .map(Number)
+      .filter(n => Number.isFinite(n) && n <= characterLevel)
+      .sort((a, b) => b - a)
+    if (thresholds.length > 0) return byLevel[thresholds[0]]
+  }
+  return 0
+}
+
 export function isASIChoiceComplete(choice) {
   if (!choice) return false
   if (choice.type === 'asi') {
@@ -13,9 +37,10 @@ export function isASIChoiceComplete(choice) {
   return false
 }
 
-export function isChoiceDone(choice, value) {
-  if (choice?.multiSelect) {
-    return Array.isArray(value) && value.length >= choice.multiSelect
+export function isChoiceDone(choice, value, characterLevel = 1) {
+  const effectiveMulti = resolveMultiSelect(choice, characterLevel)
+  if (effectiveMulti > 0) {
+    return Array.isArray(value) && value.length >= effectiveMulti
   }
   return !!value
 }

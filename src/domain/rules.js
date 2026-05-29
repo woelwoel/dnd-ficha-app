@@ -663,6 +663,21 @@ export function defaultClassFeatureUses(character) {
         out.push({ id: 'guerreiro-action-surge', name: 'Surto de Ação', max: actionSurges, used: 0, recharge: 'short', source: 'guerreiro' })
       }
       out.push({ id: 'guerreiro-second-wind', name: 'Retomar o Fôlego', max: 1, used: 0, recharge: 'short', source: 'guerreiro' })
+
+      // Mestre de Combate: Dado de Superioridade (4→5→6, d8→d10→d12). PHB p.73.
+      const isMestreCombate = character.info?.chosenFeatures?.martial_archetype === 'mestre_combate'
+      if (isMestreCombate && level >= 3) {
+        const dice = level >= 15 ? 6 : level >= 7 ? 5 : 4
+        const dieType = level >= 18 ? 'd12' : level >= 10 ? 'd10' : 'd8'
+        out.push({
+          id: 'guerreiro-superiority-dice',
+          name: `Dado de Superioridade (${dieType})`,
+          max: dice,
+          used: 0,
+          recharge: 'short',
+          source: 'guerreiro',
+        })
+      }
     }
     if (cls === 'monge' && level >= 2) {
       out.push({ id: 'monge-ki', name: 'Ki', max: level, used: 0, recharge: 'short', source: 'monge' })
