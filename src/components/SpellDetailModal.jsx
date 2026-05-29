@@ -58,8 +58,7 @@ export function SpellDetailModal({ spell, onClose }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby={SPELL_DETAIL_TITLE_ID}
-        className="bg-parchment-50 border-2 border-parchment-600 rounded-sm w-full max-w-md max-h-[85vh] flex flex-col"
-        style={{ boxShadow: 'var(--shadow-parchment-lg)' }}
+        className="bg-parchment-50 border-2 border-parchment-600 rounded-sm w-full max-w-md max-h-[85vh] flex flex-col shadow-parchment-lg"
       >
         {/* Header */}
         <div className="flex items-start gap-3 p-4 border-b border-gray-700">

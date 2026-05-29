@@ -32,28 +32,13 @@ export function MapTooltip({ character }) {
   return (
     <div
       role="tooltip"
-      className="px-3 py-2 rounded border text-xs"
-      style={{
-        background: 'linear-gradient(180deg, var(--color-shell-800), var(--color-shell-900))',
-        borderColor: 'var(--color-gold-400)',
-        color: 'var(--color-ink-inverse)',
-        fontFamily: 'var(--font-redesign-sans)',
-        boxShadow: '0 6px 16px rgba(0,0,0,0.6)',
-        whiteSpace: 'nowrap',
-      }}
+      className="map-tooltip px-3 py-2 rounded border border-gold-400 bg-gradient-to-b from-shell-800 to-shell-900 text-ink-inverse font-redesign-sans text-xs whitespace-nowrap"
     >
-      <div
-        className="font-bold"
-        style={{
-          fontFamily: 'IM Fell English SC, serif',
-          color: 'var(--color-gold-400)',
-          letterSpacing: '0.05em',
-        }}
-      >
+      <div className="font-bold font-display tracking-[0.05em] text-gold-400">
         {info.name || '—'}
       </div>
       {(info.race || info.class) && (
-        <div className="italic mt-0.5" style={{ color: 'var(--color-gold-500)', fontFamily: 'EB Garamond, serif' }}>
+        <div className="italic mt-0.5 text-gold-500 font-body">
           {[info.race, info.class].filter(Boolean).join(' · ')}
           {info.level != null && <> · Nível {info.level}</>}
         </div>
@@ -69,7 +54,7 @@ export function MapTooltip({ character }) {
         </div>
       )}
       {last && (
-        <div className="italic mt-1" style={{ color: 'var(--color-gold-500)' }}>
+        <div className="italic mt-1 text-gold-500">
           {last}
         </div>
       )}

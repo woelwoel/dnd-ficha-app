@@ -31,9 +31,8 @@ export function DetailsModal({ isOpen, onClose, children, title }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="details-modal-title"
-        className="relative z-10 bg-parchment-50 border-2 border-parchment-600 rounded-sm w-full max-w-2xl max-h-[85vh] flex flex-col"
+        className="relative z-10 bg-parchment-50 border-2 border-parchment-600 rounded-sm w-full max-w-2xl max-h-[85vh] flex flex-col shadow-parchment-lg"
         onClick={e => e.stopPropagation()}
-        style={{ boxShadow: 'var(--shadow-parchment-lg)' }}
       >
         {/* Filete duplo superior */}
         <div className="h-1 w-full bg-ink-300" />

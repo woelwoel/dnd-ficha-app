@@ -52,9 +52,8 @@ export function DamageModal({ open, onClose, onConfirm }) {
       onClick={handleClose}
     >
       <div
-        className="bg-parchment-100 border-2 border-parchment-600 rounded-sm shadow-xl w-full max-w-sm"
+        className="bg-parchment-100 border-2 border-parchment-600 rounded-sm w-full max-w-sm shadow-parchment"
         onClick={e => e.stopPropagation()}
-        style={{ boxShadow: 'var(--shadow-parchment)' }}
       >
         <div className="flex items-center justify-between px-4 py-3 border-b-2 border-parchment-600">
           <h3 className="text-sm font-display text-ink-500 uppercase tracking-widest">

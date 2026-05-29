@@ -269,6 +269,65 @@ body {
   );
 }
 
+/* Sombra de banner (drop-shadow) — Tailwind v4 não pega --shadow-* p/
+   drop-shadow utility, então definimos a classe direto. */
+.banner-shadow {
+  filter: drop-shadow(var(--shadow-banner));
+}
+
+/* Fundo do CampaignSetupModal — gradientes radiais com transparência.
+   Movido pra CSS pra remover style inline. */
+.setup-modal-bg {
+  background-image:
+    radial-gradient(ellipse at top, rgba(168,149,111,0.08), transparent 60%),
+    radial-gradient(ellipse at bottom, rgba(168,149,111,0.06), transparent 60%);
+}
+
+/* Tooltip dos tokens no mapa — sombra escura customizada. */
+.map-tooltip {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+}
+
+/* Canvas do mapa — imagem de fundo SVG vinda de /maps/default.svg.
+   Espelha MAP_BACKGROUND_URL em src/utils/config.js. */
+.map-canvas {
+  background-image: url("/maps/default.svg");
+}
+
+/* Tokens de personagem no mapa — moeda dourada com gradiente radial,
+   badge de nível em sangue, e label de nome em pergaminho. */
+.token-coin {
+  background: radial-gradient(
+    circle at 30% 25%,
+    #faf2da 0%,
+    #e8dcc0 35%,
+    #b89855 75%,
+    #6e572b 100%
+  );
+  box-shadow: var(--shadow-token);
+}
+.token-level {
+  background: linear-gradient(180deg, var(--color-blood), #5a0000);
+}
+.token-label {
+  background: rgba(255, 251, 242, 0.95);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Moldura do mapa da campanha — borda dourada com border-image gradiente. */
+.map-frame {
+  border: 12px solid;
+  border-image: linear-gradient(
+    135deg,
+    var(--color-gold-700),
+    var(--color-shell-700),
+    var(--color-gold-700)
+  ) 1;
+  box-shadow:
+    inset 0 0 60px rgba(42, 31, 20, 0.45),
+    0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
 /* Filete duplo (borda dupla sépia) */
 .rule-double {
   border-top: 1px solid var(--color-ink-200);

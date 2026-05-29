@@ -66,47 +66,21 @@ export function CharacterToken({ character, onSelect, onDragStart }) {
         onPointerDown={handlePointerDown}
         onFocus={() => setHovered(true)}
         onBlur={() => setHovered(false)}
-        className="relative block mx-auto rounded-full transition-transform hover:scale-110 focus-visible:scale-110 focus-visible:outline-none"
-        style={{
-          width: '56px',
-          height: '56px',
-          background: 'radial-gradient(circle at 30% 25%, #faf2da 0%, #e8dcc0 35%, #b89855 75%, #6e572b 100%)',
-          border: '3px solid var(--color-shell-800)',
-          boxShadow: 'var(--shadow-token)',
-          color: 'var(--color-ink-on-map)',
-          cursor: onDragStart ? 'grab' : 'pointer',
-        }}
+        className={`token-coin relative block mx-auto rounded-full transition-transform hover:scale-110 focus-visible:scale-110 focus-visible:outline-none w-14 h-14 border-[3px] border-shell-800 text-ink-on-map ${
+          onDragStart ? 'cursor-grab' : 'cursor-pointer'
+        }`}
       >
         <span className="absolute inset-0 grid place-items-center">
           <ClassIcon classKey={info.class} size={32} />
         </span>
         <span
           aria-hidden="true"
-          className="absolute -bottom-1 -right-1 rounded-full grid place-items-center font-bold"
-          style={{
-            background: 'linear-gradient(180deg, var(--color-blood), #5a0000)',
-            color: 'var(--color-ink-inverse)',
-            border: '2px solid var(--color-shell-800)',
-            width: '22px',
-            height: '22px',
-            fontSize: '10px',
-            fontFamily: 'IM Fell English SC, serif',
-          }}
+          className="token-level absolute -bottom-1 -right-1 rounded-full grid place-items-center font-bold w-[22px] h-[22px] text-[10px] border-2 border-shell-800 text-ink-inverse font-display"
         >
           {romanLv}
         </span>
       </button>
-      <div
-        className="mt-1 inline-block px-1.5 py-0.5 rounded text-[11px] font-semibold leading-tight max-w-full truncate"
-        style={{
-          background: 'rgba(255,251,242,0.95)',
-          border: '1px solid var(--color-shell-border)',
-          color: 'var(--color-ink-on-map)',
-          fontFamily: 'IM Fell English SC, EB Garamond, serif',
-          letterSpacing: '0.04em',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-        }}
-      >
+      <div className="token-label mt-1 inline-block px-1.5 py-0.5 rounded text-[11px] font-semibold leading-tight max-w-full truncate text-ink-on-map font-display tracking-[0.04em] border border-shell-border">
         {info.name || 'Sem nome'}
       </div>
       {hovered && (

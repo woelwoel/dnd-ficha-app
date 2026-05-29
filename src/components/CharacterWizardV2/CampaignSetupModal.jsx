@@ -162,12 +162,7 @@ export function CampaignSetupModal({
         role="dialog"
         aria-label="Configuração da Campanha"
         noValidate
-        className="relative w-full max-w-lg flex flex-col gap-5 bg-parchment-50 border-2 border-parchment-600 rounded-sm p-7 my-auto"
-        style={{
-          boxShadow: 'var(--shadow-parchment-lg)',
-          backgroundImage:
-            'radial-gradient(ellipse at top, rgba(168,149,111,0.08), transparent 60%), radial-gradient(ellipse at bottom, rgba(168,149,111,0.06), transparent 60%)',
-        }}
+        className="relative w-full max-w-lg flex flex-col gap-5 bg-parchment-50 border-2 border-parchment-600 rounded-sm p-7 my-auto shadow-parchment-lg setup-modal-bg"
       >
         {/* Cantos decorativos */}
         <span aria-hidden className="absolute top-2 left-2 w-3 h-3 border-l-2 border-t-2 border-parchment-600/70" />

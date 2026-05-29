@@ -73,8 +73,7 @@ export function SkillsList({ attributes, proficiencies, profBonus, onToggle, onT
   const orderedSkills = [...SKILLS].sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
 
   return (
-    <div className="bg-parchment-100 border border-parchment-600 rounded-lg p-4"
-      style={{ boxShadow: 'var(--shadow-parchment-sm)' }}>
+    <div className="bg-parchment-100 border border-parchment-600 rounded-lg p-4 shadow-parchment-sm">
       <div className="flex items-baseline justify-between gap-3 mb-2 border-b border-parchment-600 pb-1">
         <h3 className="text-sm font-display text-ink-500 uppercase tracking-widest">
           Perícias

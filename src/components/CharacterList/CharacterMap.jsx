@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState, useCallback, useEffect } from 'react'
 import { CharacterToken } from './CharacterToken'
 import { Banner } from '../ui/Banner'
-import { MAP_BACKGROUND_URL, CAMPAIGN_NAME_DEFAULT } from '../../utils/config'
+import { CAMPAIGN_NAME_DEFAULT } from '../../utils/config'
 import { getDefaultPosition, clampPosition } from '../../utils/token-position'
 
 const DRAG_THRESHOLD_PX = 4
@@ -104,22 +104,11 @@ export function CharacterMap({
       ref={containerRef}
       role="region"
       aria-label="Mapa da campanha"
-      className="relative w-full h-full overflow-hidden rounded"
-      style={{
-        border: '12px solid',
-        borderImage: 'linear-gradient(135deg, var(--color-gold-700), var(--color-shell-700), var(--color-gold-700)) 1',
-        boxShadow: 'inset 0 0 60px rgba(42,31,20,0.45), 0 4px 16px rgba(0,0,0,0.4)',
-      }}
+      className="map-frame relative w-full h-full overflow-hidden rounded"
     >
       <div
         data-testid="character-map-canvas"
-        className="absolute inset-0"
-        style={{
-          backgroundImage: `url('${MAP_BACKGROUND_URL}')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
+        className="map-canvas absolute inset-0 bg-center bg-cover bg-no-repeat"
       />
 
       <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[320px] max-w-[80%] z-[10]">
@@ -128,8 +117,7 @@ export function CharacterMap({
 
       <svg
         viewBox="0 0 78 78"
-        className="absolute bottom-3 right-3 z-[4]"
-        style={{ width: '78px', height: '78px', opacity: 0.85 }}
+        className="absolute bottom-3 right-3 z-[4] w-[78px] h-[78px] opacity-85"
         aria-hidden="true"
       >
         <circle cx="39" cy="39" r="34" fill="rgba(244,234,211,0.55)" stroke="var(--color-shell-800)" strokeWidth="1.8"/>

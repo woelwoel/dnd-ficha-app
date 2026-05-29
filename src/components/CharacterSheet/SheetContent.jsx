@@ -39,8 +39,7 @@ function CollapsibleSection({ title, summary, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen)
 
   return (
-    <div className="border border-parchment-600 rounded-lg overflow-hidden bg-parchment-100"
-      style={{ boxShadow: 'var(--shadow-parchment-sm)' }}>
+    <div className="border border-parchment-600 rounded-lg overflow-hidden bg-parchment-100 shadow-parchment-sm">
       <button
         type="button"
         onClick={() => setOpen(v => !v)}

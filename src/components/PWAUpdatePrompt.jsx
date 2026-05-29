@@ -48,14 +48,7 @@ export function PWAUpdatePrompt() {
       className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 max-w-md w-[calc(100%-2rem)]"
     >
       {needRefresh ? (
-        <div
-          className="flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border-2"
-          style={{
-            background: 'var(--color-bg-elevated, #fcf3da)',
-            borderColor: 'var(--color-shell-border, #5a4530)',
-            color: 'var(--color-ink-primary, #2a1a0a)',
-          }}
-        >
+        <div className="flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border-2 border-shell-border bg-bg-elevated text-ink-primary">
           <span className="text-lg" aria-hidden>📜</span>
           <p className="text-sm flex-1">Nova versão do app disponível.</p>
           <button
@@ -71,14 +64,7 @@ export function PWAUpdatePrompt() {
           >×</button>
         </div>
       ) : offlineReady ? (
-        <div
-          className="flex items-center gap-2 px-4 py-2.5 rounded-lg shadow border text-sm"
-          style={{
-            background: 'var(--color-bg-elevated, #fcf3da)',
-            borderColor: 'var(--color-shell-border, #5a4530)',
-            color: 'var(--color-ink-primary, #2a1a0a)',
-          }}
-        >
+        <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg shadow border border-shell-border bg-bg-elevated text-ink-primary text-sm">
           <span aria-hidden>✓</span>
           <span>App pronto para uso offline.</span>
           <button

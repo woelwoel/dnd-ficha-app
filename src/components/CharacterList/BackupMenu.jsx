@@ -90,22 +90,16 @@ export function BackupMenu({ characterCount, onImported }) {
           role="dialog"
           aria-modal="true"
           aria-labelledby="backup-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: 'rgba(0,0,0,0.6)' }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[rgba(0,0,0,0.6)]"
           onClick={handleClose}
         >
           <div
-            className="w-full max-w-md rounded-lg shadow-xl p-5 space-y-4"
-            style={{
-              background: 'var(--color-bg-elevated)',
-              color: 'var(--color-ink-primary)',
-              border: '1px solid var(--color-shell-border)',
-            }}
+            className="w-full max-w-md rounded-lg shadow-xl p-5 space-y-4 border border-shell-border bg-bg-elevated text-ink-primary"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <h2 id="backup-title" className="text-lg font-bold" style={{ fontFamily: 'IM Fell English SC, serif' }}>
+                <h2 id="backup-title" className="text-lg font-bold font-display">
                   Backup de Personagens
                 </h2>
                 <p className="text-xs opacity-70 mt-1">
@@ -158,11 +152,11 @@ export function BackupMenu({ characterCount, onImported }) {
               <div
                 role="status"
                 aria-live="polite"
-                className="text-sm px-3 py-2 rounded"
-                style={{
-                  background: feedback.tone === 'error' ? 'rgba(180,40,40,0.15)' : 'rgba(60,140,80,0.15)',
-                  border: `1px solid ${feedback.tone === 'error' ? 'rgba(180,40,40,0.45)' : 'rgba(60,140,80,0.45)'}`,
-                }}
+                className={`text-sm px-3 py-2 rounded border ${
+                  feedback.tone === 'error'
+                    ? 'bg-[rgba(180,40,40,0.15)] border-[rgba(180,40,40,0.45)]'
+                    : 'bg-[rgba(60,140,80,0.15)] border-[rgba(60,140,80,0.45)]'
+                }`}
               >
                 {feedback.text}
               </div>

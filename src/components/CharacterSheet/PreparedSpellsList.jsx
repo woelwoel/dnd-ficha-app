@@ -61,8 +61,7 @@ export function PreparedSpellsList() {
   const groupLevels = Object.keys(grouped).map(Number).sort((a, b) => a - b)
 
   return (
-    <div className="bg-parchment-100 border border-parchment-600 rounded-lg p-3"
-      style={{ boxShadow: 'var(--shadow-parchment-sm)' }}>
+    <div className="bg-parchment-100 border border-parchment-600 rounded-lg p-3 shadow-parchment-sm">
       {/* Header: título + atalho pra aba completa */}
       <div className="flex items-center justify-between gap-2 mb-2 border-b border-parchment-600 pb-1.5">
         <div className="flex items-baseline gap-2 min-w-0">

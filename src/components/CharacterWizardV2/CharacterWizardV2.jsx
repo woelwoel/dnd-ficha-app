@@ -111,10 +111,7 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
 
   return (
     <div className="min-h-screen flex flex-col bg-parchment-100">
-      <header
-        className="sticky top-0 z-30 border-b-2 border-parchment-600 bg-parchment-100"
-        style={{ boxShadow: 'var(--shadow-parchment)' }}
-      >
+      <header className="sticky top-0 z-30 border-b-2 border-parchment-600 bg-parchment-100 shadow-parchment">
         <div className="flex items-center gap-4 px-6 py-3.5">
           <button
             onClick={handleBackClick}
@@ -201,10 +198,7 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
                 </div>
 
                 {/* Grid de cards do capítulo */}
-                <div
-                  className="grid gap-4"
-                  style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}
-                >
+                <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
                   {groupBlocks.map(({ b, originalIndex }) => {
                     const s = blockStatus[b.id]
                     return (

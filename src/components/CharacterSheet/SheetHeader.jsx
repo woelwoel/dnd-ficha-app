@@ -54,10 +54,7 @@ export function SheetHeader({
   }
 
   return (
-    <header
-      className="shrink-0 border-b-2 border-parchment-600 bg-parchment-100 z-10"
-      style={{ boxShadow: 'var(--shadow-parchment)' }}
-    >
+    <header className="shrink-0 border-b-2 border-parchment-600 bg-parchment-100 z-10 shadow-parchment">
       {/* ── Linha 1: navegação + nome + ações ─────────────────────── */}
       <div className="flex items-center gap-2 px-4 py-2.5">
         <div className="flex items-center gap-3 min-w-0 flex-1">

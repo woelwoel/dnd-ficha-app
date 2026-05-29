@@ -65,8 +65,7 @@ export function RestActions({ character, onApply }) {
   }
 
   return (
-    <div className="bg-parchment-100 border border-parchment-600 rounded-lg px-3 py-2"
-      style={{ boxShadow: 'var(--shadow-parchment-sm)' }}>
+    <div className="bg-parchment-100 border border-parchment-600 rounded-lg px-3 py-2 shadow-parchment-sm">
       {/* Linha compacta: rótulo + meta + 2 botões inline */}
       <div className="flex items-center gap-2 flex-wrap">
         <span className="text-xs font-display text-ink-500 uppercase tracking-widest shrink-0">

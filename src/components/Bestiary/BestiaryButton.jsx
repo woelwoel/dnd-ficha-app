@@ -10,11 +10,7 @@ export function BestiaryButton() {
         onClick={() => setOpen(true)}
         title="Bestiário SRD"
         aria-label="Abrir bestiário"
-        style={{
-          position: 'fixed', bottom: '1.25rem', right: '5rem', zIndex: 50,
-          boxShadow: 'var(--shadow-parchment, 0 4px 16px rgba(0,0,0,0.4))',
-        }}
-        className="w-12 h-12 rounded-full text-xl flex items-center justify-center transition-all duration-200 border-2 bg-parchment-100 hover:bg-parchment-200 border-ink-300 hover:border-ink-500"
+        className="fixed bottom-5 right-20 z-50 w-12 h-12 rounded-full text-xl flex items-center justify-center transition-all duration-200 border-2 bg-parchment-100 hover:bg-parchment-200 border-ink-300 hover:border-ink-500 shadow-parchment"
       >
         🐉
       </button>

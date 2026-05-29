@@ -59,8 +59,7 @@ export function Attacks({ attacks = [], attributes, profBonus, onAdd, onRemove, 
   // Estado vazio sem formulário aberto vira uma linha discreta com botão de adicionar.
   if (attacks.length === 0 && !showForm) {
     return (
-      <div className="bg-parchment-100 border border-parchment-600 rounded-lg px-4 py-2.5 flex items-center justify-between gap-3"
-        style={{ boxShadow: 'var(--shadow-parchment-sm)' }}>
+      <div className="bg-parchment-100 border border-parchment-600 rounded-lg px-4 py-2.5 flex items-center justify-between gap-3 shadow-parchment-sm">
         <h3 className="text-sm font-display text-ink-500 uppercase tracking-widest">
           Ataques
           <span className="ml-2 ink-italic text-ink-300 text-xs normal-case tracking-normal">
@@ -78,8 +77,7 @@ export function Attacks({ attacks = [], attributes, profBonus, onAdd, onRemove, 
   }
 
   return (
-    <div className="bg-parchment-100 border border-parchment-600 rounded-lg p-4"
-      style={{ boxShadow: 'var(--shadow-parchment-sm)' }}>
+    <div className="bg-parchment-100 border border-parchment-600 rounded-lg p-4 shadow-parchment-sm">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-display text-ink-500 uppercase tracking-widest">
           Ataques

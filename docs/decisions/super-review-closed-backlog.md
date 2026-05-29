@@ -37,6 +37,43 @@ schema aceita `campaignId` como `optional`, e `rowToCharacter` em
 relacional. Fichas antigas continuam carregando sem warning. Se a
 invariante mudar (ex: campaignId virar obrigatório), revisitar.
 
+## #31 — Inline styles → utilities
+**Status:** majoritariamente convertido (44 de 52 arquivos).
+**Resolução:** rodada de conversão mecânica usando utilities Tailwind v4
+geradas automaticamente do `@theme` em `src/index.css` (border-shell-border,
+shadow-parchment-*, font-display, text-gold-*, bg-bg-canvas, etc).
+Padrões que não cabem em utility (gradientes radiais, drop-shadow com var)
+foram movidos pra `.companion-avatar`, `.banner-shadow`,
+`.setup-modal-bg`, `.map-tooltip`, `.map-frame`, `.map-canvas`,
+`.token-coin`, `.token-level`, `.token-label` em `src/index.css`.
+
+Restam 8 arquivos com `style={{}}` legítimo (truly dynamic):
+- `CharacterToken.jsx`, `CharacterMap.jsx` — left/top% do drag de tokens
+- `CharacterInfo.jsx`, `CombatStats.jsx`, `Inventory.jsx`,
+  `SheetCombatBar.jsx`, `CharacterWizardV2.jsx` — `width: ${pct}%` de
+  barras de progresso
+- `DiceHistoryPanel.jsx` — posStyle do drag do painel
+- `CharacterView.jsx`, `PrintView.jsx` — layout de impressão com grids
+  customizados
+
+## #6 — CSP `'unsafe-inline'`
+**Status:** deferido — bloqueado por arquitetura (SPA estático).
+**Justificativa:** mesmo com 85% dos inlines removidos (item #31),
+restam ~8 arquivos com `style={{}}` legítimo pra valores computados
+em runtime (drag, %, posicionamento). CSP só aceita tirar
+`'unsafe-inline'` se TODOS os inlines desaparecerem ou se houver
+nonce/hash por request.
+- Nonce-per-request precisa SSR — não temos (Vite SPA estático).
+- Hash funciona só pra strings constantes (não cobre dinâmicas).
+- Remover os 8 últimos exigiria CSS-in-JS com pseudo-elementos + CSS
+  vars + re-render forçado — refactor pesado pra um ganho de auditoria
+  marginal.
+
+Manter `'unsafe-inline'` em `style-src` com `script-src 'self'`
+preservado é decisão consciente. Revisitar quando migrarmos pra Next.js
+SSR (não está no roadmap atual) ou se a auditoria de segurança exigir
+score CSP A+.
+
 ## #41 — Realtime no CampaignDetail
 **Status:** fechado.
 **Resolução:** implementado no backlog do super review (commit

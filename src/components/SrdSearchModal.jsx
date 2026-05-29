@@ -46,8 +46,7 @@ export function SrdSearchModal({ isOpen, onClose, title, items, onSelect, render
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="bg-parchment-50 border-2 border-parchment-600 rounded-sm w-full max-w-lg max-h-[80vh] flex flex-col"
-        style={{ boxShadow: 'var(--shadow-parchment-lg)' }}
+        className="bg-parchment-50 border-2 border-parchment-600 rounded-sm w-full max-w-lg max-h-[80vh] flex flex-col shadow-parchment-lg"
       >
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700">

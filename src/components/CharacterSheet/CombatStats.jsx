@@ -452,8 +452,7 @@ function CombatStatsBase({
   const isDowned = (combat.currentHp ?? 0) <= 0
 
   return (
-    <div className="bg-parchment-100 border border-parchment-600 rounded-lg p-4 space-y-4"
-      style={{ boxShadow: 'var(--shadow-parchment-sm)' }}>
+    <div className="bg-parchment-100 border border-parchment-600 rounded-lg p-4 space-y-4 shadow-parchment-sm">
       <h3 className="text-sm font-display text-ink-500 uppercase tracking-widest border-b border-parchment-600 pb-1">
         {compact ? 'Detalhes' : 'Combate'}
       </h3>
@@ -634,11 +633,8 @@ function CombatStatsBase({
           {/* HP Bar */}
           <div className="w-full bg-parchment-300 rounded-full h-2 mt-2 border border-parchment-600">
             <div
-              className="h-2 rounded-full transition-all"
-              style={{
-                width: `${combat.maxHp > 0 ? Math.min(100, (combat.currentHp / combat.maxHp) * 100) : 0}%`,
-                backgroundColor: 'var(--color-ink-300)',
-              }}
+              className="h-2 rounded-full transition-all bg-ink-300"
+              style={{ width: `${combat.maxHp > 0 ? Math.min(100, (combat.currentHp / combat.maxHp) * 100) : 0}%` }}
             />
           </div>
         </div>

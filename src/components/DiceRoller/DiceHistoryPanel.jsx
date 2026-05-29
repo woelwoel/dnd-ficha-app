@@ -165,11 +165,7 @@ export function DiceHistoryPanel() {
       onClick={togglePanel}
       title={`Histórico de dados${mode !== 'normal' ? ` (próxima: ${mode === 'adv' ? 'vantagem' : 'desvantagem'})` : ''}`}
       aria-label="Abrir histórico de rolagens"
-      style={{
-        position: 'fixed', bottom: '1.25rem', right: '1.25rem', zIndex: 50,
-        boxShadow: 'var(--shadow-parchment)',
-      }}
-      className={`relative w-12 h-12 rounded-full text-xl flex items-center justify-center transition-all duration-200 border-2 ${
+      className={`fixed bottom-5 right-5 z-50 shadow-parchment relative w-12 h-12 rounded-full text-xl flex items-center justify-center transition-all duration-200 border-2 ${
         mode === 'adv' ? 'bg-emerald-100 border-emerald-700' :
         mode === 'dis' ? 'bg-rose-100 border-rose-700' :
         'bg-parchment-100 hover:bg-parchment-200 border-ink-300 hover:border-ink-500'
@@ -191,9 +187,9 @@ export function DiceHistoryPanel() {
   const panel = open ? (
     <div
       ref={panelRef}
-      className="w-72 rounded-lg flex flex-col
+      className="w-72 rounded-lg flex flex-col shadow-parchment-lg
         border-2 border-parchment-600 bg-parchment-50"
-      style={{ ...posStyle, boxShadow: 'var(--shadow-parchment-lg)' }}
+      style={posStyle}
     >
       {/* ── Cabeçalho / alça de arrasto ─────────────────────── */}
       <div

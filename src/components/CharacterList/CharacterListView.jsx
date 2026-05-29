@@ -28,7 +28,7 @@ export function CharacterListView({ characters = [], onSelect }) {
 
   if (sorted.length === 0) {
     return (
-      <div className="text-center py-16" style={{ color: 'var(--color-ink-secondary)' }}>
+      <div className="text-center py-16 text-ink-secondary">
         <p className="text-sm italic">Nenhum herói recrutado ainda.</p>
       </div>
     )
@@ -45,40 +45,22 @@ export function CharacterListView({ characters = [], onSelect }) {
             type="button"
             onClick={() => onSelect && onSelect(c.id)}
             data-testid="list-card"
-            className="flex items-center gap-3 p-3 rounded-md text-left transition-colors hover:shadow-[var(--shadow-elevated)]"
-            style={{
-              background: 'var(--color-bg-surface)',
-              border: '1px solid var(--color-accent-300)',
-              boxShadow: 'var(--shadow-card)',
-              color: 'var(--color-ink-primary)',
-              fontFamily: 'var(--font-redesign-sans)',
-            }}
+            className="flex items-center gap-3 p-3 rounded-md text-left transition-colors hover:shadow-elevated border border-accent-300 bg-bg-surface shadow-card text-ink-primary font-redesign-sans"
           >
-            <span
-              className="grid place-items-center rounded-full flex-shrink-0"
-              style={{
-                width: '44px', height: '44px',
-                background: 'radial-gradient(circle at 30% 25%, var(--color-accent-100), var(--color-accent-500))',
-                border: '2px solid var(--color-shell-800)',
-                color: 'var(--color-shell-800)',
-              }}
-            >
+            <span className="companion-avatar grid place-items-center rounded-full flex-shrink-0 w-11 h-11 border-2 border-shell-800 text-shell-800">
               <ClassIcon classKey={info.class} size={24} color="currentColor" />
             </span>
             <span className="flex-1 min-w-0">
-              <span
-                className="block text-base font-semibold truncate"
-                style={{ fontFamily: 'EB Garamond, serif' }}
-              >
+              <span className="block text-base font-semibold truncate font-body">
                 {info.name || 'Sem nome'}
               </span>
-              <span className="block text-xs mt-0.5" style={{ color: 'var(--color-ink-secondary)' }}>
+              <span className="block text-xs mt-0.5 text-ink-secondary">
                 {[info.race, info.class].filter(Boolean).join(' · ') || '—'}
                 {info.level != null && <> · Nível {info.level}</>}
               </span>
             </span>
             {last && (
-              <span className="text-[11px] italic flex-shrink-0" style={{ color: 'var(--color-ink-muted)' }}>
+              <span className="text-[11px] italic flex-shrink-0 text-ink-muted">
                 {last}
               </span>
             )}
