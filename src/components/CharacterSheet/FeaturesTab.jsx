@@ -376,43 +376,47 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain }) {
       .filter(a => a.type !== null)
     const raceWithType  = raceTraits.map(toAction).filter(a => a.type !== null)
 
-    /* ── Manobras (Mestre de Combate) ──
-     * Lista as manobras escolhidas como features individuais em Habilidades
-     * E em Ações (cada manobra é classificada por tipo via detectActionType).
+    /* ── Sub-escolhas condicionais (`requires`) ──
+     * Algumas escolhas só fazem sentido depois que o jogador escolheu uma
+     * opção parent (ex.: manobras do Mestre de Combate só aparecem se
+     * martial_archetype === 'mestre_combate'; totens do Bárbaro só se
+     * primal_path === 'totem'). Como elas não têm correspondência direta
+     * em `levels[].features[]`, não são pegas por `resolveChosenFeature`.
+     * Renderizamos aqui como cards individuais (Habilidades + Ações).
      */
-    const maneuversFeatures = []
-    const maneuverActions = []
-    const chosenManeuverIds = Array.isArray(chosenFeatures?.martial_archetype_maneuvers)
-      ? chosenFeatures.martial_archetype_maneuvers
-      : []
-    if (chosenManeuverIds.length > 0) {
-      const archMatch = classChoices?.[classIndex]?.choices?.find(c => c.id === 'martial_archetype_maneuvers')
-      if (archMatch) {
-        for (const id of chosenManeuverIds) {
-          const opt = archMatch.options.find(o => o.value === id)
-          if (!opt) continue
-          const featureId = `maneuver-${id}`
-          maneuversFeatures.push({
+    const subChoiceFeatures = []
+    const subChoiceActions  = []
+    const allChoices        = classChoices?.[classIndex]?.choices ?? []
+    for (const ch of allChoices) {
+      if (!ch.requires) continue
+      const value = chosenFeatures?.[ch.id]
+      if (!value) continue
+      const picked = Array.isArray(value) ? value : [value]
+      for (const v of picked) {
+        const opt = ch.options.find(o => o.value === v)
+        if (!opt) continue
+        const featureId = `${ch.id}-${v}`
+        subChoiceFeatures.push({
+          id: featureId,
+          name: `${ch.featureName}: ${opt.name}`,
+          desc: opt.desc,
+          source: classData?.name ?? classIndex,
+          level: ch.level,
+        })
+        const detectedType = detectActionType(opt.desc)
+        if (detectedType) {
+          subChoiceActions.push({
             id: featureId,
-            name: `Manobra: ${opt.name}`,
+            name: opt.name,
             desc: opt.desc,
-            source: 'Mestre de Combate',
+            source: ch.featureName,
+            type: detectedType,
           })
-          const detectedType = detectActionType(opt.desc)
-          if (detectedType) {
-            maneuverActions.push({
-              id: featureId,
-              name: opt.name,
-              desc: opt.desc,
-              source: 'Manobra',
-              type: detectedType,
-            })
-          }
         }
       }
     }
-    const classFeaturesAll = [...classFeatures, ...maneuversFeatures]
-    const allClassActions = [...classWithType, ...maneuverActions]
+    const classFeaturesAll = [...classFeatures, ...subChoiceFeatures]
+    const allClassActions = [...classWithType, ...subChoiceActions]
 
     return {
       classActions:      allClassActions.filter(a => a.type === 'ação'),
