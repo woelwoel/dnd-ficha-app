@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { SrdSearchModal } from '../SrdSearchModal'
 import { findArmorByName, ARMOR_TABLE } from '../../domain/equipment'
 import { getRarityInfo, getActiveMagicEffects } from '../../domain/magicItems'
+import { buildItemLookup, enrichItemDisplay } from '../../domain/itemLookup'
 
 const CURRENCY_CONFIG = [
   { key: 'pp', label: 'PPl', title: 'Platina',  color: 'text-purple-300' },
@@ -32,6 +33,13 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
   const [searchOpen, setSearchOpen] = useState(false)
   const [magicCatalog, setMagicCatalog] = useState([])
   const [magicSearchOpen, setMagicSearchOpen] = useState(false)
+  const [ptWeapons, setPtWeapons] = useState([])
+
+  // Lookup PT-BR ↔ SRD reconstruído quando os datasets carregam.
+  const itemLookup = useMemo(
+    () => buildItemLookup(srdEquipment, ptWeapons),
+    [srdEquipment, ptWeapons],
+  )
 
   useEffect(() => {
     const ctrl = new AbortController()
@@ -40,6 +48,17 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
       .then(setSrdEquipment)
       .catch(err => {
         if (err.name !== 'AbortError') console.error('Falha ao carregar Equipment:', err)
+      })
+    return () => ctrl.abort()
+  }, [])
+
+  useEffect(() => {
+    const ctrl = new AbortController()
+    fetch('/srd-data/phb-weapons-pt.json', { signal: ctrl.signal })
+      .then(r => r.json())
+      .then(json => setPtWeapons(json?.weapons ?? json ?? []))
+      .catch(err => {
+        if (err.name !== 'AbortError') console.error('Falha ao carregar armas PT:', err)
       })
     return () => ctrl.abort()
   }, [])
@@ -71,8 +90,12 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
     setShowForm(false)
   }
 
-  // Peso total e capacidade
-  const totalWeight    = inventory.items.reduce((sum, i) => sum + parseWeight(i.weight) * (i.qty || 1), 0)
+  // Peso total e capacidade — usa enrichment p/ que itens do wizard (que
+  // entram sem peso) contem na carga.
+  const totalWeight    = inventory.items.reduce((sum, i) => {
+    const w = parseWeight(i.weight || enrichItemDisplay(i, itemLookup).weight)
+    return sum + w * (i.qty || 1)
+  }, 0)
   const capacity       = carryingCapacity(attributes?.str ?? 10)
   const weightPct      = Math.min(100, (totalWeight / capacity) * 100)
   const isEncumbered   = totalWeight > capacity * 0.5
@@ -420,6 +443,7 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
                 const canAddAtunement = !isAttuned && attunedCount < MAX_ATTUNED
                 const rarInfo         = item.rarity ? getRarityInfo(item.rarity) : null
                 const rarityBorder    = rarInfo ? rarInfo.border : 'border-gray-700/50'
+                const enriched        = enrichItemDisplay(item, itemLookup)
 
                 return (
                   <div
@@ -466,9 +490,9 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
                     <div className="flex items-center gap-3 mt-1 flex-wrap">
                       <span className="text-xs text-gray-500">
                         {item.qty > 1 ? `${item.qty}×` : ''}
-                        {item.weight ? ` · ${item.weight}` : ''}
+                        {enriched.weight ? ` · ${enriched.weight}` : ''}
                       </span>
-                      {item.notes && <span className="text-xs text-gray-500 truncate flex-1">{item.notes}</span>}
+                      {enriched.notes && <span className="text-xs text-gray-500 truncate flex-1">{enriched.notes}</span>}
                       {isEquippable && (
                         <button
                           onClick={() => onUpdateItem?.(item.id, { equipped: !isEquipped })}
@@ -509,6 +533,7 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
                 const canAddAtunement = !isAttuned && attunedCount < MAX_ATTUNED
                 const rarInfo         = item.rarity ? getRarityInfo(item.rarity) : null
                 const rarityBorder    = rarInfo ? `border ${rarInfo.border}` : ''
+                const enriched        = enrichItemDisplay(item, itemLookup)
 
                 return (
                   <div
@@ -544,8 +569,8 @@ export function Inventory({ inventory, attributes, onUpdateCurrency, onAddItem, 
                       )}
                     </span>
                     <span className="text-sm text-gray-300 text-center">{item.qty}</span>
-                    <span className="text-sm text-gray-400 text-center">{item.weight || '—'}</span>
-                    <span className="text-xs text-gray-500 truncate">{item.notes || '—'}</span>
+                    <span className="text-sm text-gray-400 text-center">{enriched.weight || '—'}</span>
+                    <span className="text-xs text-gray-500 truncate">{enriched.notes || '—'}</span>
                     <div className="flex items-center justify-center">
                       {canAtune ? (
                         <button
