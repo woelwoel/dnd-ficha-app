@@ -9,6 +9,10 @@ import { useCallback, useEffect, useRef, useState } from 'react'
  *    em `localStorage[storageKey]`.
  *  - Resize de janela → clampa pra dentro do viewport.
  *  - Click após drag é suprimido por ~200ms (evita disparar a ação ao soltar).
+ *  - `safeTop` (default 80px) reserva área superior pro header sticky —
+ *    o FAB nunca pode ser arrastado nem persistido em cima dele. Isso
+ *    previne o cenário "FAB cobre o título do app" reportado na audit
+ *    de UX (avatar circular sobre "Companhia do Vale" / "Personagens").
  *
  * Retorna:
  *   - `style`        — aplicar inline no botão; já inclui `position: fixed`.
@@ -21,15 +25,33 @@ import { useCallback, useEffect, useRef, useState } from 'react'
  */
 const DRAG_THRESHOLD = 4 // px
 const SUPPRESS_MS    = 200
+const DEFAULT_SAFE_TOP = 80 // px reservados pro header sticky
 
-export function useDraggableFab(storageKey, defaultAnchor = { bottom: 20, right: 20 }) {
+function clampPos(p, safeTop = DEFAULT_SAFE_TOP, fabSize = 48) {
+  if (!p) return null
+  const w = fabSize
+  const h = fabSize
+  const maxX = Math.max(0, (typeof window !== 'undefined' ? window.innerWidth  : 1024) - w)
+  const maxY = Math.max(safeTop, (typeof window !== 'undefined' ? window.innerHeight : 768) - h)
+  return {
+    x: Math.max(0,       Math.min(maxX, p.x)),
+    y: Math.max(safeTop, Math.min(maxY, p.y)),
+  }
+}
+
+export function useDraggableFab(storageKey, defaultAnchor = { bottom: 20, right: 20 }, opts = {}) {
+  const safeTop = opts.safeTop ?? DEFAULT_SAFE_TOP
   const [pos, setPos] = useState(() => {
     if (typeof window === 'undefined') return null
     try {
       const raw = localStorage.getItem(storageKey)
       if (!raw) return null
       const p = JSON.parse(raw)
-      if (typeof p?.x === 'number' && typeof p?.y === 'number') return p
+      if (typeof p?.x === 'number' && typeof p?.y === 'number') {
+        // Clampa imediato na carga — protege posições antigas em localStorage
+        // que ficaram em cima do header (bug histórico antes do safeTop).
+        return clampPos(p, safeTop)
+      }
     } catch { /* ignore */ }
     return null
   })
@@ -61,8 +83,8 @@ export function useDraggableFab(storageKey, defaultAnchor = { bottom: 20, right:
       s.moved = true
       const w = el.offsetWidth  || 48
       const h = el.offsetHeight || 48
-      const x = Math.max(0, Math.min(window.innerWidth  - w, s.origX + dx))
-      const y = Math.max(0, Math.min(window.innerHeight - h, s.origY + dy))
+      const x = Math.max(0,       Math.min(window.innerWidth  - w, s.origX + dx))
+      const y = Math.max(safeTop, Math.min(window.innerHeight - h, s.origY + dy))
       setPos({ x, y })
     }
 
@@ -97,8 +119,8 @@ export function useDraggableFab(storageKey, defaultAnchor = { bottom: 20, right:
       const w = el?.offsetWidth  || 48
       const h = el?.offsetHeight || 48
       setPos(p => p && ({
-        x: Math.max(0, Math.min(window.innerWidth  - w, p.x)),
-        y: Math.max(0, Math.min(window.innerHeight - h, p.y)),
+        x: Math.max(0,       Math.min(window.innerWidth  - w, p.x)),
+        y: Math.max(safeTop, Math.min(window.innerHeight - h, p.y)),
       }))
     }
     window.addEventListener('resize', onResize)
