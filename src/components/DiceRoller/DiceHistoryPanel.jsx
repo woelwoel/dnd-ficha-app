@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useDiceRoller } from '../../hooks/useDiceRoller'
 import { useDraggableFab } from '../../hooks/useDraggableFab'
+import { Icon } from '../ui/Icon'
 
 function timeAgo(ts) {
   const diff = Math.floor((Date.now() - ts) / 1000)
@@ -171,16 +172,16 @@ export function DiceHistoryPanel() {
       title={`Histórico de dados${mode !== 'normal' ? ` (próxima: ${mode === 'adv' ? 'vantagem' : 'desvantagem'})` : ''} — arraste para mover`}
       aria-label="Abrir histórico de rolagens"
       style={{ ...fab.style, zIndex: 50, touchAction: 'none' }}
-      className={`shadow-parchment w-12 h-12 rounded-full text-xl flex items-center justify-center transition-colors duration-200 border-2 backdrop-blur-sm cursor-grab active:cursor-grabbing ${
-        mode === 'adv' ? 'bg-emerald-100/70 border-emerald-700' :
-        mode === 'dis' ? 'bg-rose-100/70 border-rose-700' :
-        'bg-parchment-100/60 hover:bg-parchment-200/90 border-ink-300/70 hover:border-ink-500'
+      className={`shadow-parchment w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-200 border-2 backdrop-blur-sm cursor-grab active:cursor-grabbing ${
+        mode === 'adv' ? 'bg-emerald-100/70 border-emerald-700 text-emerald-800' :
+        mode === 'dis' ? 'bg-rose-100/70 border-rose-700 text-rose-800' :
+        'bg-parchment-100/60 hover:bg-parchment-200/90 border-ink-300/70 hover:border-ink-500 text-ink-500'
       }`}
     >
-      🎲
+      <Icon name="dice" size={22} strokeWidth={1.75} />
       {mode !== 'normal' && (
         <span className={`absolute -top-1 -right-1 w-5 h-5 rounded-full border-2 border-parchment-50 text-xs font-bold flex items-center justify-center ${
-          mode === 'adv' ? 'bg-emerald-700 text-white' : 'bg-rose-700 text-white'
+          mode === 'adv' ? 'bg-emerald-700 text-parchment-50' : 'bg-rose-700 text-parchment-50'
         }`}>
           {mode === 'adv' ? '↑' : '↓'}
         </span>
@@ -205,7 +206,9 @@ export function DiceHistoryPanel() {
         onPointerDown={startDrag}
         title="Arraste para mover"
       >
-        <span className="text-base shrink-0 pointer-events-none" aria-hidden>🎲</span>
+        <span className="shrink-0 pointer-events-none text-ink-500">
+          <Icon name="dice" size={18} strokeWidth={1.75} />
+        </span>
         <h3 className="text-sm font-display text-ink-500 tracking-wide flex-1 pointer-events-none uppercase">
           Rolagens
         </h3>
@@ -264,10 +267,13 @@ export function DiceHistoryPanel() {
       >
         {history.length === 0 ? (
           <div className="py-8 text-center text-ink-200">
-            <p className="text-3xl mb-2">🎲</p>
+            <div className="flex justify-center mb-2">
+              <Icon name="dice" size={36} strokeWidth={1.5} />
+            </div>
             <p className="text-xs ink-italic">Nenhuma rolagem ainda.</p>
-            <p className="text-xs mt-1 ink-italic">
-              Clique em 🎲 ao lado de perícias,<br />salvaguardas e ataques.
+            <p className="text-xs mt-1 ink-italic flex items-center justify-center gap-1 flex-wrap">
+              Clique no <Icon name="dice" size={14} strokeWidth={1.75} className="inline" />
+              <span>ao lado de perícias, salvaguardas e ataques.</span>
             </p>
           </div>
         ) : (

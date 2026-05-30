@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { useCharacterContext } from './CharacterContext'
 import { CONDITIONS_BY_ID } from '../../domain/conditions'
+import { Icon } from '../ui/Icon'
 
 /* Pequeno controle inline de dano/cura ──────────────────────── */
 function HpQuickControls({ onDamage, onHeal, disabled }) {
@@ -151,7 +152,9 @@ export function SheetCombatBar() {
 
         {/* HP — bloco compacto (largura reduzida pra dar espaço aos chips) */}
         <div className="flex items-center gap-2 min-w-[180px] max-w-[280px] flex-1">
-          <span aria-hidden className="text-base text-red-700">❤</span>
+          <span aria-hidden className="text-red-700">
+            <Icon name="heart" size={18} strokeWidth={2} />
+          </span>
           <div className="flex-1 min-w-0">
             <div className="flex items-baseline justify-between gap-2">
               <span className="text-xs font-display tracking-widest uppercase text-ink-300">PV</span>
@@ -174,7 +177,7 @@ export function SheetCombatBar() {
         {/* Stats inline */}
         <div className="flex items-center gap-1.5 flex-wrap">
           <StatChip
-            icon="⛨"
+            icon={<Icon name="shield" size={14} strokeWidth={1.75} />}
             label="CA"
             value={ac}
             title="Classe de Armadura (clique pra editar)"
@@ -182,18 +185,23 @@ export function SheetCombatBar() {
             onChange={v => updaters.updateCombat?.('armorClass', Math.max(0, parseInt(v, 10) || 0))}
           />
           <StatChip
-            icon="⚡"
+            icon={<Icon name="bolt" size={14} strokeWidth={1.75} />}
             label="INIT"
             value={init >= 0 ? `+${init}` : init}
             title="Iniciativa (mod DES + feats como Alerta)"
           />
-          <StatChip icon="👣" label="VEL" value={speed} title="Velocidade (em pés)" />
+          <StatChip
+            icon={<Icon name="move" size={14} strokeWidth={1.75} />}
+            label="VEL"
+            value={speed}
+            title="Velocidade (em pés)"
+          />
 
           {/* Stats de conjuração — só pra casters (mago, clérigo, paladino N2+, etc) */}
           {isCaster && (
             <>
               <StatChip
-                icon="🔮"
+                icon={<Icon name="magic" size={14} strokeWidth={1.75} />}
                 label="ATK MG"
                 value={spellAttackBonus >= 0 ? `+${spellAttackBonus}` : spellAttackBonus}
                 title={`Bônus de ataque mágico (${spellAbilityAbbr}: prof + mod do atributo)`}
@@ -205,7 +213,7 @@ export function SheetCombatBar() {
                 title={`CD de salva das suas magias (8 + prof + mod ${spellAbilityAbbr})`}
               />
               <StatChip
-                icon="✎"
+                icon={<Icon name="sparkle" size={14} strokeWidth={1.75} />}
                 label="ATR"
                 value={spellAbilityAbbr}
                 title="Atributo de conjuração"
@@ -227,7 +235,7 @@ export function SheetCombatBar() {
             ].join(' ')}
             title={rageActive ? 'Fúria ativa — clique pra desativar' : 'Entrar em Fúria'}
           >
-            <span aria-hidden>{rageActive ? '🔥' : '⚡'}</span>
+            <Icon name={rageActive ? 'fire' : 'bolt'} size={14} strokeWidth={1.75} />
             <span>{rageActive ? 'Em Fúria' : 'Fúria'}</span>
           </button>
         )}
@@ -244,9 +252,10 @@ export function SheetCombatBar() {
               {exhaustion > 0 && (
                 <span
                   title={`Nível ${exhaustion} de exaustão (PHB p.291)`}
-                  className="px-2 py-0.5 rounded-sm bg-red-100 border border-red-600 text-red-800 text-xs font-semibold"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm bg-red-100 border border-red-600 text-red-800 text-xs font-semibold"
                 >
-                  💀 Exaustão {exhaustion}
+                  <Icon name="skull" size={12} strokeWidth={2} />
+                  Exaustão {exhaustion}
                 </span>
               )}
             </>

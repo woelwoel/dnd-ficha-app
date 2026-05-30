@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { safeParseCharacter } from '../../domain/characterSchema'
 import { SheetCombatBar } from './SheetCombatBar'
 import { MoveToCampaignModal } from './MoveToCampaignModal'
+import { Icon } from '../ui/Icon'
 
 /**
  * Barra superior única da ficha (header + combat bar fundidos).
@@ -123,29 +124,29 @@ export function SheetHeader({
           )}
           <button
             onClick={onExport}
-            className="text-xs px-2 sm:px-2.5 py-1.5 min-h-[36px] rounded border border-parchment-600 hover:border-ink-200 text-ink-200 hover:text-ink-500 font-display tracking-wide transition-colors"
+            className="text-xs px-2 sm:px-2.5 py-1.5 min-h-[36px] rounded border border-parchment-600 hover:border-ink-200 text-ink-200 hover:text-ink-500 font-display tracking-wide transition-colors inline-flex items-center justify-center"
             title="Exportar como JSON"
           >
             <span className="hidden sm:inline">Exportar</span>
-            <span className="sm:hidden">⬇</span>
+            <span className="sm:hidden"><Icon name="download" size={16} strokeWidth={1.75} /></span>
           </button>
           <button
             onClick={() => importRef.current?.click()}
-            className="text-xs px-2 sm:px-2.5 py-1.5 min-h-[36px] rounded border border-parchment-600 hover:border-ink-200 text-ink-200 hover:text-ink-500 font-display tracking-wide transition-colors"
+            className="text-xs px-2 sm:px-2.5 py-1.5 min-h-[36px] rounded border border-parchment-600 hover:border-ink-200 text-ink-200 hover:text-ink-500 font-display tracking-wide transition-colors inline-flex items-center justify-center"
             title="Importar de JSON"
           >
             <span className="hidden sm:inline">Importar</span>
-            <span className="sm:hidden">⬆</span>
+            <span className="sm:hidden"><Icon name="upload" size={16} strokeWidth={1.75} /></span>
           </button>
           <input ref={importRef} type="file" accept=".json" onChange={handleFile} className="hidden" />
           {showPrint && (
             <button
               onClick={onPrint}
-              className="text-xs px-2 sm:px-2.5 py-1.5 min-h-[36px] rounded border border-ink-200 hover:border-ink-500 text-ink-300 hover:text-ink-600 font-display tracking-wide transition-colors"
+              className="text-xs px-2 sm:px-2.5 py-1.5 min-h-[36px] rounded border border-ink-200 hover:border-ink-500 text-ink-300 hover:text-ink-600 font-display tracking-wide transition-colors inline-flex items-center justify-center"
               title="Imprimir / Exportar PDF"
             >
               <span className="hidden sm:inline">Imprimir</span>
-              <span className="sm:hidden">🖨</span>
+              <span className="sm:hidden"><Icon name="print" size={16} strokeWidth={1.75} /></span>
             </button>
           )}
         </div>

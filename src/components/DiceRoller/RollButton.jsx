@@ -1,7 +1,8 @@
 import { useDiceRoller } from '../../hooks/useDiceRoller'
+import { Icon } from '../ui/Icon'
 
 /**
- * Botão compacto 🎲 para disparar uma rolagem e abrir o painel de histórico.
+ * Botão compacto pra disparar uma rolagem e abrir o painel de histórico.
  *
  * Atalhos (desktop):
  *   - Click            → rolagem normal (ou usa o modo pendente do painel)
@@ -13,6 +14,7 @@ import { useDiceRoller } from '../../hooks/useDiceRoller'
  *  - label:    string  — nome exibido no histórico (ex: "Atletismo")
  *  - size:     'xs'|'sm' — tamanho do ícone (default 'sm')
  *  - className: string — classes extras
+ *  - icon:     string | ReactNode — sobrescreve o glifo padrão (raro)
  */
 export function RollButton({ notation, label, size = 'sm', className = '', crit = false, icon }) {
   const { roll, openPanel } = useDiceRoller()
@@ -27,7 +29,6 @@ export function RollButton({ notation, label, size = 'sm', className = '', crit 
     openPanel()
   }
 
-  const glyph = icon ?? '🎲'
   const baseTitle = `Rolar ${notation}${label ? ` — ${label}` : ''}`
   const title = crit
     ? `${baseTitle} (dado dobrado — crítico)`
@@ -44,7 +45,7 @@ export function RollButton({ notation, label, size = 'sm', className = '', crit 
         ${size === 'xs' ? 'text-[13px]' : 'text-sm'}
         ${className}`}
     >
-      {glyph}
+      {icon ?? <Icon name="dice" size={size === 'xs' ? 14 : 16} />}
     </button>
   )
 }
