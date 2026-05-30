@@ -207,6 +207,19 @@ const combatSchema = z.object({
   concentrating: concentrationSchema.default({ spellIndex: null, spellName: null }),
   /** Usos limitados de class features (Action Surge, Ki, etc.). */
   classFeatureUses: z.array(classFeatureUseSchema).default([]),
+  /**
+   * Economia de ação do turno corrente (PHB p.189-193). Ephemeral por
+   * turno — resetada pelo botão "↻ Turno" ou descanso curto/longo. Persiste
+   * entre reloads pra sobreviver a rolagens em modals/abas.
+   *  - action/bonus/reaction: já gastou?
+   *  - movementUsed: pés gastos do speed (limpo no reset)
+   */
+  turnState: z.object({
+    actionUsed:    z.boolean().default(false),
+    bonusUsed:     z.boolean().default(false),
+    reactionUsed:  z.boolean().default(false),
+    movementUsed:  z.number().int().min(0).default(0),
+  }).default({ actionUsed: false, bonusUsed: false, reactionUsed: false, movementUsed: 0 }),
 }).passthrough()
 
 const proficienciesSchema = z.object({

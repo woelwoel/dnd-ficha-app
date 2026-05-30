@@ -78,6 +78,89 @@ function StatChip({ icon, label, value, title, editable = false, onChange }) {
   )
 }
 
+/* Tracker de Economia de Ação (PHB p.189-193) ─────────────────
+ * Quatro chips toggle: Ação · Bônus · Reação · Movimento (pés gastos).
+ * Cada chip clicado marca/desmarca o uso. Movimento mostra "X/30 ft"
+ * (gasto/máximo) e abre input ao clicar pra ajustar.
+ * Botão "↻" reseta tudo (geralmente clicado no início de cada turno).
+ * Reset automático: descanso curto/longo também limpa o estado.
+ */
+function ActionEconomy({ turnState, speed, onToggle, onResetTurn, onSetMovement }) {
+  const t = turnState ?? {}
+  const moveTotal = Math.max(0, speed ?? 30)
+  const moveUsed  = Math.max(0, t.movementUsed ?? 0)
+  const moveLeft  = Math.max(0, moveTotal - moveUsed)
+  const moveExceeded = moveUsed > moveTotal
+
+  const chips = [
+    { key: 'actionUsed',   label: 'Ação',   short: 'A' },
+    { key: 'bonusUsed',    label: 'Bônus',  short: 'B' },
+    { key: 'reactionUsed', label: 'Reação', short: 'R' },
+  ]
+
+  return (
+    <div className="flex items-center gap-1.5 flex-wrap">
+      {chips.map(c => {
+        const used = !!t[c.key]
+        return (
+          <button
+            key={c.key}
+            type="button"
+            onClick={() => onToggle?.(c.key)}
+            title={used
+              ? `${c.label} já gasta neste turno — clique pra desmarcar`
+              : `Marcar ${c.label} como gasta`}
+            aria-pressed={used}
+            className={[
+              'inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs font-display tracking-widest uppercase border transition-colors',
+              used
+                ? 'bg-ink-500 border-ink-600 text-parchment-50 line-through'
+                : 'bg-parchment-50 border-parchment-600 text-ink-500 hover:border-ink-300',
+            ].join(' ')}
+          >
+            <span aria-hidden className="font-bold not-italic">{c.short}</span>
+            <span className="hidden sm:inline">{c.label}</span>
+          </button>
+        )
+      })}
+
+      {/* Movimento: input + label "X/Y ft" */}
+      <div
+        title={`Movimento gasto neste turno: ${moveUsed} de ${moveTotal} pés`}
+        className={[
+          'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm border text-xs',
+          moveExceeded
+            ? 'bg-red-100 border-red-600 text-red-800'
+            : moveUsed === 0
+              ? 'bg-parchment-50 border-parchment-600 text-ink-500'
+              : 'bg-amber-100 border-amber-600 text-ink-500',
+        ].join(' ')}
+      >
+        <span className="font-display tracking-widest uppercase text-ink-300 leading-none">Mov</span>
+        <input
+          type="number"
+          min={0}
+          value={moveUsed}
+          onChange={e => onSetMovement?.(e.target.value)}
+          onWheel={e => e.currentTarget.blur()}
+          aria-label="Pés de movimento gastos no turno"
+          className="w-9 text-center bg-transparent text-xs font-bold leading-none focus:outline-none focus:bg-parchment-50 rounded-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        />
+        <span className="font-mono leading-none">/{moveTotal}</span>
+      </div>
+
+      <button
+        type="button"
+        onClick={onResetTurn}
+        title="Iniciar novo turno — reseta Ação, Bônus, Reação e Movimento"
+        className="inline-flex items-center justify-center w-6 h-6 rounded-sm border border-parchment-600 text-ink-300 hover:text-ink-500 hover:border-ink-300 hover:bg-parchment-200 transition-colors text-xs leading-none"
+      >
+        ↻
+      </button>
+    </div>
+  )
+}
+
 /* Chip de condição ativa (clicável remove + tooltip de regra) ─ */
 function ConditionChip({ id, onToggle }) {
   const c = CONDITIONS_BY_ID[id]
@@ -123,6 +206,7 @@ export function SheetCombatBar() {
 
   const activeConditions = combat.conditions ?? []
   const exhaustion = combat.exhaustion ?? 0
+  const turnState = combat.turnState ?? {}
 
   const isBarbarian = (info.class === 'barbarian' || info.class === 'Barbarian')
   const rageActive = !!character.rageActive
@@ -221,6 +305,15 @@ export function SheetCombatBar() {
             </>
           )}
         </div>
+
+        {/* Economia de ação (A / B / R / Mov + reset de turno) */}
+        <ActionEconomy
+          turnState={turnState}
+          speed={speed}
+          onToggle={key => updaters.toggleTurnFlag?.(key)}
+          onSetMovement={feet => updaters.setMovementUsed?.(feet)}
+          onResetTurn={() => updaters.resetTurn?.()}
+        />
 
         {/* Recurso de classe — barbaro */}
         {isBarbarian && (

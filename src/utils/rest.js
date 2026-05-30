@@ -98,6 +98,8 @@ export function performShortRest(character, { spent = [] } = {}) {
       currentHp,
       hitDice: { pool },
       classFeatureUses: rechargeFeatures(combat.classFeatureUses, ['short']),
+      // Reset da economia de ação (PHB p.189) — descansar zera o turno.
+      turnState: { actionUsed: false, bonusUsed: false, reactionUsed: false, movementUsed: 0 },
     },
     spellcasting,
   }
@@ -155,6 +157,8 @@ export function performLongRest(character, { recoverChoices = null } = {}) {
       hitDice: { pool },
       deathSaves: { successes: 0, failures: 0 },
       classFeatureUses: rechargeFeatures(combat.classFeatureUses, ['short', 'long', 'dawn']),
+      // Reset da economia de ação (PHB p.189)
+      turnState: { actionUsed: false, bonusUsed: false, reactionUsed: false, movementUsed: 0 },
     },
     spellcasting: {
       ...(character.spellcasting ?? {}),

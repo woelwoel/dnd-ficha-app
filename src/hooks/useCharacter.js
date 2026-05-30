@@ -599,6 +599,48 @@ export function useCharacter(initialCharacter = null) {
   }, [setCharacter])
 
   /**
+   * Economia de ação do turno (PHB p.189-193).
+   * `key` ∈ 'actionUsed' | 'bonusUsed' | 'reactionUsed' — toggle do flag.
+   */
+  const toggleTurnFlag = useCallback(key => {
+    setCharacter(prev => {
+      const turnState = prev.combat?.turnState ?? {}
+      return {
+        ...prev,
+        combat: {
+          ...prev.combat,
+          turnState: { ...turnState, [key]: !turnState[key] },
+        },
+      }
+    })
+  }, [setCharacter])
+
+  /** Marca pés de movimento gastos no turno corrente (clampa em 0). */
+  const setMovementUsed = useCallback(feet => {
+    setCharacter(prev => {
+      const turnState = prev.combat?.turnState ?? {}
+      return {
+        ...prev,
+        combat: {
+          ...prev.combat,
+          turnState: { ...turnState, movementUsed: Math.max(0, parseInt(feet, 10) || 0) },
+        },
+      }
+    })
+  }, [setCharacter])
+
+  /** Reset completo da economia de ação (botão "↻ Turno"). */
+  const resetTurn = useCallback(() => {
+    setCharacter(prev => ({
+      ...prev,
+      combat: {
+        ...prev.combat,
+        turnState: { actionUsed: false, bonusUsed: false, reactionUsed: false, movementUsed: 0 },
+      },
+    }))
+  }, [setCharacter])
+
+  /**
    * Atualiza o estado de Forma Selvagem (Druida, PHB p.66).
    * Estrutura: { active, beastName, currentHp, maxHp }.
    * Passar null reseta o estado.
@@ -689,6 +731,10 @@ export function useCharacter(initialCharacter = null) {
     setWildShape,
     setRangerCompanion,
     updatePortent,
+    // Economia de ação do turno (PHB p.189)
+    toggleTurnFlag,
+    setMovementUsed,
+    resetTurn,
     // v5 — sistema de dano/cura/testes de morte
     applyDamage,
     applyHealing,
