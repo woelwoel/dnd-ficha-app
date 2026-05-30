@@ -1,15 +1,17 @@
-// Ordem visual recomendada (Raça primeiro, Revisão último).
+// Ordem visual recomendada. Conceito (nome) vem PRIMEIRO em Fundamentos
+// pra dar engajamento emocional cedo — jogador novo quer nomear o
+// personagem antes de mexer em raça/classe (decisão de UX da audit).
 // `icon` é renderizado pelo BlockCard. `hint` aparece quando o bloco está vazio
 // e não bloqueado — substitui o "preencher..." genérico.
 // `group` agrupa blocos em capítulos exibidos na tela do wizard.
 export const BLOCKS = [
+  { id: 'concept',    group: 'fundamentos', label: 'Conceito',    icon: '✎', hint: 'dar nome e cara'   },
   { id: 'race',       group: 'fundamentos', label: 'Raça',        icon: '❦', hint: 'escolher linhagem' },
   { id: 'class',      group: 'fundamentos', label: 'Classe',      icon: '⚔', hint: 'escolher vocação'  },
-  { id: 'background', group: 'fundamentos', label: 'Antecedente', icon: '📜', hint: 'definir história'  },
+  { id: 'background', group: 'fundamentos', label: 'Antecedente', icon: '☰', hint: 'definir história'  },
   { id: 'attributes', group: 'construcao',  label: 'Atributos',   icon: '⚖', hint: 'distribuir valores'},
   { id: 'skills',     group: 'construcao',  label: 'Perícias',    icon: '✦', hint: 'escolher talentos' },
   { id: 'spells',     group: 'construcao',  label: 'Magias',      icon: '✷', hint: 'preparar feitiços' },
-  { id: 'concept',    group: 'acabamento',  label: 'Conceito',    icon: '✎', hint: 'dar nome e cara'   },
   { id: 'review',     group: 'acabamento',  label: 'Revisão',     icon: '✧', hint: 'conferir tudo'     },
 ]
 
@@ -30,7 +32,7 @@ export const GROUPS = [
   {
     id: 'acabamento',
     title: 'Acabamento',
-    subtitle: 'Identidade e revisão final',
+    subtitle: 'Revisão final',
     roman: 'III',
   },
 ]

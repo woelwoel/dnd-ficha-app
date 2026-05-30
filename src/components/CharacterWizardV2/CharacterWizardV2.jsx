@@ -109,6 +109,18 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
   const progressPct = Math.round((completedCount / totalCount) * 100)
   const allReady = blockStatus.review.status === 'completo'
 
+  // Próximo bloco recomendado após o aberto (resolve "qual o próximo passo?"
+  // após salvar — só clicar "Continuar →" e seguir).
+  const nextBlock = (() => {
+    if (!openBlockId) return null
+    const idx = BLOCKS.findIndex(b => b.id === openBlockId)
+    for (let i = idx + 1; i < BLOCKS.length; i++) {
+      const candidate = BLOCKS[i]
+      if (blockStatus[candidate.id]?.status !== 'bloqueado') return candidate
+    }
+    return null
+  })()
+
   return (
     <div className="min-h-screen flex flex-col bg-parchment-100">
       <header className="sticky top-0 z-30 border-b-2 border-parchment-600 bg-parchment-100 shadow-parchment">
@@ -236,6 +248,8 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
         open={openBlockId !== null}
         title={openBlockId ? LABEL_BY_ID[openBlockId] : ''}
         onClose={() => setOpenBlockId(null)}
+        onNext={nextBlock ? (() => setOpenBlockId(nextBlock.id)) : undefined}
+        nextLabel={nextBlock?.label}
       >
         {openBlockId === 'concept' && (
           <ConceptBlock draft={draft} updateDraft={updateDraft} />

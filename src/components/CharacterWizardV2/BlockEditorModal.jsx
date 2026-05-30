@@ -1,6 +1,14 @@
 import { useEffect } from 'react'
 
-export function BlockEditorModal({ open, title, onClose, onClear, children }) {
+/**
+ * Modal de edição de bloco no Wizard.
+ *
+ * `onNext` (opcional): se fornecido, mostra botão "Salvar e continuar →"
+ * em vez (ao lado) do botão "Fechar". Resolve o débito de UX "qual o
+ * próximo passo?" depois de fechar — auto-abre o próximo bloco recomendado.
+ * `nextLabel` é o label do próximo bloco (ex: "Classe").
+ */
+export function BlockEditorModal({ open, title, onClose, onClear, onNext, nextLabel, children }) {
   useEffect(() => {
     if (!open) return
     function onKey(e) { if (e.key === 'Escape') onClose() }
@@ -39,11 +47,23 @@ export function BlockEditorModal({ open, title, onClose, onClear, children }) {
               className="text-xs font-display tracking-wide text-ink-300 hover:text-ink-500 uppercase"
             >Limpar</button>
           ) : <span />}
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-1.5 rounded-sm border-2 border-ink-300 hover:border-ink-500 text-ink-500 text-sm font-display tracking-wide bg-parchment-50 hover:bg-parchment-100"
-          >Fechar</button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-1.5 rounded-sm border-2 border-parchment-600 hover:border-ink-300 text-ink-300 hover:text-ink-500 text-sm font-display tracking-wide"
+            >Fechar</button>
+            {onNext && (
+              <button
+                type="button"
+                onClick={onNext}
+                className="px-4 py-1.5 rounded-sm bg-ink-500 hover:bg-ink-600 border-2 border-ink-600 text-parchment-50 text-sm font-display tracking-wide inline-flex items-center gap-1.5"
+              >
+                <span>Continuar{nextLabel ? `: ${nextLabel}` : ''}</span>
+                <span aria-hidden>→</span>
+              </button>
+            )}
+          </div>
         </footer>
       </div>
     </div>
