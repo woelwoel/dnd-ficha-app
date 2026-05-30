@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { listMembers, removeMember, leaveCampaign } from '../../lib/campaigns'
 import { Button } from '../ui/Button'
+import { ConfirmDialog } from '../ui/ConfirmDialog'
 
 /**
  * Lista de membros da mesa. DM pode remover qualquer player; player pode sair.
@@ -13,6 +14,9 @@ export function MembersList({ campaignId, currentUserId, isDM, onChanged }) {
   // busyMember = user_id sendo removido; busyLeave = leave em vôo.
   const [busyMember, setBusyMember] = useState(null)
   const [busyLeave, setBusyLeave] = useState(false)
+  // Confirmação tematizada (substitui window.confirm nativo).
+  const [removeTarget, setRemoveTarget] = useState(null) // user_id a remover
+  const [leaveOpen, setLeaveOpen] = useState(false)
 
   async function reload() {
     setLoading(true)
@@ -21,21 +25,27 @@ export function MembersList({ campaignId, currentUserId, isDM, onChanged }) {
   }
   useEffect(() => { reload() /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [campaignId])
 
-  async function onRemove(userId) {
-    if (!confirm('Remover este jogador da mesa?')) return
+  async function performRemove() {
+    const userId = removeTarget
+    if (!userId) return
     setBusyMember(userId)
     const r = await removeMember(campaignId, userId)
     setBusyMember(null)
+    setRemoveTarget(null)
     if (r.ok) { await reload(); onChanged?.() }
   }
 
-  async function onLeave() {
-    if (!confirm('Sair desta mesa?')) return
+  async function performLeave() {
     setBusyLeave(true)
     const r = await leaveCampaign(campaignId)
     setBusyLeave(false)
+    setLeaveOpen(false)
     if (r.ok) onChanged?.({ left: true })
   }
+
+  const targetMember = members.find(m => m.user_id === removeTarget)
+  const targetName = targetMember?.profiles?.display_name?.trim()
+    || (targetMember ? `${targetMember.user_id.slice(0, 8)}…` : '')
 
   if (loading) return <p className="text-amber-400 text-sm p-4">Carregando membros…</p>
 
@@ -71,13 +81,13 @@ export function MembersList({ campaignId, currentUserId, isDM, onChanged }) {
                   variant="ghost-dark"
                   size="sm"
                   disabled={busyMember === m.user_id}
-                  onClick={() => onRemove(m.user_id)}
+                  onClick={() => setRemoveTarget(m.user_id)}
                 >
                   {busyMember === m.user_id ? 'Removendo…' : 'Remover'}
                 </Button>
               )}
               {!isDM && isSelf && (
-                <Button variant="ghost-dark" size="sm" disabled={busyLeave} onClick={onLeave}>
+                <Button variant="ghost-dark" size="sm" disabled={busyLeave} onClick={() => setLeaveOpen(true)}>
                   {busyLeave ? 'Saindo…' : 'Sair'}
                 </Button>
               )}
@@ -85,6 +95,30 @@ export function MembersList({ campaignId, currentUserId, isDM, onChanged }) {
           )
         })}
       </ul>
+
+      <ConfirmDialog
+        open={!!removeTarget}
+        title="Remover jogador?"
+        message={targetName
+          ? `Remover ${targetName} da mesa? O personagem vinculado volta a ser pessoal.`
+          : 'Remover este jogador da mesa? O personagem vinculado volta a ser pessoal.'}
+        confirmLabel="Remover"
+        variant="danger"
+        busy={!!busyMember}
+        onConfirm={performRemove}
+        onCancel={() => setRemoveTarget(null)}
+      />
+
+      <ConfirmDialog
+        open={leaveOpen}
+        title="Sair da mesa?"
+        message="Sua ficha vinculada volta a ser pessoal. Você pode entrar de novo se tiver o código."
+        confirmLabel="Sair"
+        variant="danger"
+        busy={busyLeave}
+        onConfirm={performLeave}
+        onCancel={() => setLeaveOpen(false)}
+      />
     </div>
   )
 }

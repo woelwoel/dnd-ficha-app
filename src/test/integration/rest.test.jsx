@@ -67,7 +67,10 @@ describe('RestActions E2E', () => {
     expect(screen.getByTestId('slots-1').textContent).toBe('3')
     expect(screen.getByTestId('hd-used').textContent).toBe('2')
 
+    // Clica no trigger → abre ConfirmDialog tematizado
     await user.click(screen.getByRole('button', { name: /Descanso Longo/i }))
+    // Confirma no dialog
+    await user.click(await screen.findByRole('button', { name: /^Descansar$/i }))
     await waitFor(() => {
       // HP volta ao máximo
       expect(screen.getByTestId('hp').textContent).toBe('30/30')

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { rotateInviteCode } from '../../lib/campaigns'
 import { Button } from '../ui/Button'
+import { ConfirmDialog } from '../ui/ConfirmDialog'
 
 /**
  * Caixa com o código de convite. Botão "Copiar" pra qualquer membro;
@@ -10,6 +11,7 @@ export function InviteCodeBox({ campaignId, code, isDM, onRotated }) {
   const [copied, setCopied] = useState(false)
   const [rotated, setRotated] = useState(false)
   const [busy, setBusy] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   async function onCopy() {
     try {
@@ -19,11 +21,11 @@ export function InviteCodeBox({ campaignId, code, isDM, onRotated }) {
     } catch { /* clipboard pode estar bloqueado */ }
   }
 
-  async function onRotate() {
-    if (!confirm('Gerar código novo? O atual deixa de funcionar.')) return
+  async function performRotate() {
     setBusy(true)
     const r = await rotateInviteCode(campaignId)
     setBusy(false)
+    setConfirmOpen(false)
     if (r.ok) {
       onRotated?.(r.code)
       setRotated(true)
@@ -40,11 +42,22 @@ export function InviteCodeBox({ campaignId, code, isDM, onRotated }) {
           {copied ? '✓ Copiado' : 'Copiar'}
         </Button>
         {isDM && (
-          <Button variant="ghost-dark" size="sm" onClick={onRotate} disabled={busy}>
+          <Button variant="ghost-dark" size="sm" onClick={() => setConfirmOpen(true)} disabled={busy}>
             {busy ? '...' : rotated ? '✓ Código atualizado' : '↻ Rotacionar'}
           </Button>
         )}
       </div>
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Rotacionar código?"
+        message="Gerar um código novo? O atual deixa de funcionar e os jogadores que ainda não entraram precisarão do código novo."
+        confirmLabel="Gerar novo código"
+        cancelLabel="Cancelar"
+        busy={busy}
+        onConfirm={performRotate}
+        onCancel={() => setConfirmOpen(false)}
+      />
     </div>
   )
 }

@@ -6,6 +6,7 @@ import { InviteCodeBox } from './InviteCodeBox'
 import { MembersList } from './MembersList'
 import { CampaignCharactersList } from './CampaignCharactersList'
 import { Button } from '../ui/Button'
+import { ConfirmDialog } from '../ui/ConfirmDialog'
 import { AccountMenu } from '../ui/AccountMenu'
 
 /**
@@ -18,22 +19,20 @@ export function CampaignDetail({ campaignId, onBack }) {
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState(null)
   const [deleting, setDeleting] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [deleteError, setDeleteError] = useState(null)
   const navigate = useNavigate()
 
-  async function handleDelete() {
-    const confirmed = window.confirm(
-      `Apagar a mesa "${campaign.name}"?\n\n` +
-      'Os jogadores serão removidos e as fichas voltam a ser pessoais. ' +
-      'Essa ação não pode ser desfeita.'
-    )
-    if (!confirmed) return
+  async function performDelete() {
     setDeleting(true)
+    setDeleteError(null)
     const res = await deleteCampaign(campaign.id)
     setDeleting(false)
     if (!res.ok) {
-      alert('Não foi possível apagar a mesa: ' + (res.message || res.reason))
+      setDeleteError(res.message || res.reason || 'Erro desconhecido')
       return
     }
+    setConfirmOpen(false)
     navigate('/campaigns')
   }
 
@@ -106,16 +105,43 @@ export function CampaignDetail({ campaignId, onBack }) {
               <Button
                 variant="ghost-dark"
                 size="sm"
-                onClick={handleDelete}
+                onClick={() => setConfirmOpen(true)}
                 disabled={deleting}
                 className="!text-red-400 !border-red-900/60 hover:!bg-red-950/30"
               >
-                {deleting ? 'Apagando…' : 'Apagar mesa'}
+                Apagar mesa
               </Button>
             </div>
           </div>
         )}
       </div>
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Apagar mesa?"
+        message={
+          <>
+            <p className="mb-2">
+              Apagar a mesa <strong>"{campaign.name}"</strong>?
+            </p>
+            <p className="ink-italic text-ink-300">
+              Os jogadores serão removidos e as fichas voltam a ser pessoais.
+              Essa ação não pode ser desfeita.
+            </p>
+            {deleteError && (
+              <p className="mt-3 text-red-700 text-xs">
+                Falha: {deleteError}
+              </p>
+            )}
+          </>
+        }
+        confirmLabel={deleting ? 'Apagando…' : 'Apagar mesa'}
+        cancelLabel="Cancelar"
+        variant="danger"
+        busy={deleting}
+        onConfirm={performDelete}
+        onCancel={() => { setConfirmOpen(false); setDeleteError(null) }}
+      />
     </div>
   )
 }

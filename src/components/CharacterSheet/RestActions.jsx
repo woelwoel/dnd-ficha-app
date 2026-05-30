@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { toHitDicePool, totalHitDiceAvailable } from '../../utils/hitDice'
 import { performShortRest, performLongRest } from '../../utils/rest'
 import { getModifier, formatModifier } from '../../utils/calculations'
+import { ConfirmDialog } from '../ui/ConfirmDialog'
 
 /**
  * Painel de descansos (PHB p.186).
@@ -22,6 +23,7 @@ export function RestActions({ character, onApply }) {
   const totalAvail = totalHitDiceAvailable(character.combat?.hitDice)
   const conMod = getModifier(character.attributes?.con ?? 10)
   const [shortOpen, setShortOpen] = useState(false)
+  const [longConfirmOpen, setLongConfirmOpen] = useState(false)
   // counts: { d8: 2, d10: 1, ... } quantidade de HD a gastar
   const [counts, setCounts] = useState({})
   // rolls: { d8: '12', ... } soma das rolagens por tipo (média = ceil((die+1)/2))
@@ -60,8 +62,8 @@ export function RestActions({ character, onApply }) {
   }
 
   function applyLong() {
-    if (!window.confirm('Aplicar descanso longo? HP volta ao máximo, metade dos HD é recuperada e todos os slots são restaurados.')) return
     onApply(prev => performLongRest(prev))
+    setLongConfirmOpen(false)
   }
 
   return (
@@ -83,7 +85,7 @@ export function RestActions({ character, onApply }) {
             {shortOpen ? 'Fechar' : 'Descanso Curto'}
           </button>
           <button
-            onClick={applyLong}
+            onClick={() => setLongConfirmOpen(true)}
             className="text-xs px-2.5 py-1 rounded-sm bg-ink-500 hover:bg-ink-600 border border-ink-600 text-parchment-50 font-display tracking-wide transition-colors"
           >
             Descanso Longo
@@ -141,6 +143,26 @@ export function RestActions({ character, onApply }) {
           </button>
         </div>
       )}
+
+      <ConfirmDialog
+        open={longConfirmOpen}
+        title="Descanso longo?"
+        message={
+          <>
+            <p className="mb-2">Vai aplicar um descanso longo (8h):</p>
+            <ul className="list-disc pl-5 space-y-0.5 ink-italic text-ink-300">
+              <li>PV volta ao máximo</li>
+              <li>Metade dos Dados de Vida é recuperada</li>
+              <li>Todos os espaços de magia são restaurados</li>
+              <li>Recursos com recarga "longo" voltam</li>
+            </ul>
+          </>
+        }
+        confirmLabel="Descansar"
+        cancelLabel="Cancelar"
+        onConfirm={applyLong}
+        onCancel={() => setLongConfirmOpen(false)}
+      />
     </div>
   )
 }

@@ -4,6 +4,7 @@ import { abbrOfKey } from '../../domain/attributes'
 import { getSpellcastingRules, getWarlockPactSlots, getClassSpellMath, getSpellSlots } from '../../utils/spellcasting'
 import { useClassSpells } from '../../hooks/useClassSpells'
 import { SpellDetailModal } from '../SpellDetailModal'
+import { ConfirmDialog } from '../ui/ConfirmDialog'
 import {
   matchesFilters,
   EMPTY_FILTERS,
@@ -18,6 +19,7 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   const [pickerOpen, setPickerOpen] = useState(false)
   const [detailSpell, setDetailSpell] = useState(null)
   const [filters, setFilters] = useState(EMPTY_FILTERS)
+  const [restoreSlotsOpen, setRestoreSlotsOpen] = useState(false)
 
   const classIndex   = character.info?.class || ''
   const classAbility = classData?.spellcasting_ability
@@ -241,8 +243,12 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
           <div>
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-gray-400 uppercase tracking-wide">Espaços de Magia</span>
-              <button onClick={() => onUpdateSpellcasting('usedSlots', {})} className="text-xs text-amber-600 hover:text-amber-400">
-                Descanso Longo
+              <button
+                onClick={() => setRestoreSlotsOpen(true)}
+                className="text-xs text-amber-600 hover:text-amber-400"
+                title="Restaurar todos os espaços (sem afetar PV/HD)"
+              >
+                Restaurar espaços
               </button>
             </div>
             <div className="space-y-1.5">
@@ -428,6 +434,19 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
 
       {/* Modal de detalhes da magia */}
       {detailSpell && <SpellDetailModal spell={detailSpell} onClose={() => setDetailSpell(null)} />}
+
+      <ConfirmDialog
+        open={restoreSlotsOpen}
+        title="Restaurar espaços?"
+        message="Marca todos os espaços de magia como disponíveis novamente. Não altera PV nem Dados de Vida — use o Descanso Longo na aba Ficha pra resetar tudo."
+        confirmLabel="Restaurar"
+        cancelLabel="Cancelar"
+        onConfirm={() => {
+          onUpdateSpellcasting('usedSlots', {})
+          setRestoreSlotsOpen(false)
+        }}
+        onCancel={() => setRestoreSlotsOpen(false)}
+      />
     </div>
   )
 }
