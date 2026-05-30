@@ -32,7 +32,7 @@ export class ErrorBoundary extends Component {
             Um erro inesperado interrompeu a tela. Suas fichas estão salvas.
           </p>
           {import.meta.env.DEV && (
-            <pre className="text-[10px] text-red-400 bg-gray-950 border border-gray-800 rounded p-2 mb-4 overflow-auto text-left">
+            <pre className="text-xs text-red-400 bg-gray-950 border border-gray-800 rounded p-2 mb-4 overflow-auto text-left">
               {String(this.state.error?.stack ?? this.state.error)}
             </pre>
           )}

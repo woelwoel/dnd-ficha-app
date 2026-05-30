@@ -53,10 +53,12 @@ export default defineConfig({
             //    em Bruxo invocações e Feiticeiro metamagia.
             //  v2 → v3 (2026-05-30): adicionou wild-shape-beasts-pt.json
             //    (catálogo de 70 bestas SRD pra Forma Selvagem do Druida).
+            //  v3 → v4 (2026-05-30): traduções completas (ataques + traços)
+            //    no wild-shape-beasts-pt.json.
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v3',
+              cacheName: 'srd-data-v4',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias

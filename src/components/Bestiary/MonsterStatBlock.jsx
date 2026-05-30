@@ -112,7 +112,7 @@ export function MonsterStatBlock({ monster, lang = 'en' }) {
       <div className="grid grid-cols-6 gap-2 text-center border-b border-amber-700/40 pb-3">
         {ABILITY_LABELS.map(({ key, label }) => (
           <div key={key} className="bg-gray-900/60 rounded px-1 py-1.5">
-            <div className="text-[10px] uppercase tracking-wider text-amber-400">{label}</div>
+            <div className="text-xs uppercase tracking-wider text-amber-400">{label}</div>
             <div className="text-sm font-bold text-white">{monster[key]}</div>
             <div className="text-xs text-gray-400">{modOf(monster[key])}</div>
           </div>

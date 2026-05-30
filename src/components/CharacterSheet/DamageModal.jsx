@@ -108,7 +108,7 @@ export function DamageModal({ open, onClose, onConfirm }) {
             />
             <span className="text-sm text-ink-500">
               💥 Crítico
-              <span className="ml-2 text-[10px] text-ink-200">
+              <span className="ml-2 text-xs text-ink-200">
                 (dobra falhas de morte se a 0 PV — PHB p.197)
               </span>
             </span>

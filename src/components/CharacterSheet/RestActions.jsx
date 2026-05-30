@@ -71,7 +71,7 @@ export function RestActions({ character, onApply }) {
         <span className="text-xs font-display text-ink-500 uppercase tracking-widest shrink-0">
           Descansos
         </span>
-        <span className="text-[10px] ink-italic text-ink-300 shrink-0">
+        <span className="text-xs ink-italic text-ink-300 shrink-0">
           CON {formatModifier(conMod)} · HD disp.: {totalAvail}
         </span>
         <div className="flex gap-1.5 ml-auto shrink-0">
@@ -93,7 +93,7 @@ export function RestActions({ character, onApply }) {
 
       {shortOpen && (
         <div className="mt-3 p-3 bg-parchment-50 border border-parchment-600 rounded-sm space-y-2">
-          <p className="text-[11px] ink-italic text-ink-300 leading-relaxed">
+          <p className="text-[13px] ink-italic text-ink-300 leading-relaxed">
             Gaste HD para curar HP. Cada HD cura a rolagem + mod CON ({formatModifier(conMod)}), mínimo 1.
             Em branco usa a média do dado.
           </p>

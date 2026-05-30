@@ -7,7 +7,7 @@ export function EquipmentChoiceGroup({ choice, selected, picks, weaponsArmor, on
       'border-2 rounded-sm p-3 flex flex-col gap-2',
       selected ? 'border-emerald-700 bg-emerald-50/30' : 'border-amber-700 bg-amber-50/30',
     ].join(' ')}>
-      <legend className="px-2 text-[11px] font-display tracking-widest uppercase text-ink-500">
+      <legend className="px-2 text-[13px] font-display tracking-widest uppercase text-ink-500">
         {choice.prompt}{!selected && <span className="text-red-700 ml-1">*</span>}
       </legend>
 
@@ -35,7 +35,7 @@ export function EquipmentChoiceGroup({ choice, selected, picks, weaponsArmor, on
                   <span className="font-display">{opt.label}</span>
                   <span className="flex flex-wrap gap-x-2 gap-y-0.5">
                     {opt.items.map((item, idx) => (
-                      <span key={idx} className="text-[10px] text-ink-200 italic">
+                      <span key={idx} className="text-xs text-ink-200 italic">
                         {item.pick
                           ? <>📌 {item.pickLabel ?? item.name} (à escolher)</>
                           : <>{item.qty > 1 ? `${item.qty}× ` : ''}{item.name}{item.desc && ` · ${item.desc}`}</>
@@ -52,7 +52,7 @@ export function EquipmentChoiceGroup({ choice, selected, picks, weaponsArmor, on
                 const pickedValue = picks?.[pickKey] ?? ''
                 return (
                   <div key={`pick-${itemIdx}`} className="mt-1.5 ml-5">
-                    <p className="text-[10px] font-display text-ink-500 mb-1">
+                    <p className="text-xs font-display text-ink-500 mb-1">
                       📌 {item.pickLabel ?? item.name}
                       {!pickedValue && <span className="text-red-700 ml-1">*</span>}
                       {pickedValue && <span className="text-emerald-700 ml-2">→ {pickedValue}</span>}

@@ -75,12 +75,12 @@ export function CharacterToken({ character, onSelect, onDragStart }) {
         </span>
         <span
           aria-hidden="true"
-          className="token-level absolute -bottom-1 -right-1 rounded-full grid place-items-center font-bold w-[22px] h-[22px] text-[10px] border-2 border-shell-800 text-ink-inverse font-display"
+          className="token-level absolute -bottom-1 -right-1 rounded-full grid place-items-center font-bold w-[22px] h-[22px] text-xs border-2 border-shell-800 text-ink-inverse font-display"
         >
           {romanLv}
         </span>
       </button>
-      <div className="token-label mt-1 inline-block px-1.5 py-0.5 rounded text-[11px] font-semibold leading-tight max-w-full truncate text-ink-on-map font-display tracking-[0.04em] border border-shell-border">
+      <div className="token-label mt-1 inline-block px-1.5 py-0.5 rounded text-[13px] font-semibold leading-tight max-w-full truncate text-ink-on-map font-display tracking-[0.04em] border border-shell-border">
         {info.name || 'Sem nome'}
       </div>
       {hovered && (

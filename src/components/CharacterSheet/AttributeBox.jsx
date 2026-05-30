@@ -53,7 +53,7 @@ function AttributeBoxBase({
       {/* Badge de bônus racial */}
       {racialBonus > 0 && (
         <Tooltip content={`+${racialBonus} de raça (base: ${base})`} position="top">
-          <span className="absolute top-1 right-1 text-[9px] font-bold text-ink-500 bg-parchment-200 border border-parchment-600 rounded-full px-1 cursor-help leading-tight">
+          <span className="absolute top-1 right-1 text-[13px] font-bold text-ink-500 bg-parchment-200 border border-parchment-600 rounded-full px-1 cursor-help leading-tight">
             +{racialBonus}↑
           </span>
         </Tooltip>
@@ -130,7 +130,7 @@ function AttributeBoxBase({
 
       {/* Custo em pontos (PB) */}
       {mode === 'point-buy' && (
-        <span className="text-[10px] ink-italic">{pbCost} pts</span>
+        <span className="text-xs ink-italic">{pbCost} pts</span>
       )}
 
       {/* Círculo de modificador */}
@@ -147,7 +147,7 @@ function AttributeBoxBase({
       <span className="text-xs ink-italic mt-1">{name}</span>
 
       {error && (
-        <p id={errId} role="alert" className="text-[10px] text-ink-500 mt-1 text-center leading-tight">3–20</p>
+        <p id={errId} role="alert" className="text-xs text-ink-500 mt-1 text-center leading-tight">3–20</p>
       )}
 
       {/* Rodapé de salvaguarda — fundido no card */}
@@ -165,10 +165,10 @@ function AttributeBoxBase({
         >
           <span
             aria-hidden
-            className={`text-[10px] leading-none ${saveProficient ? 'text-ink-500' : 'text-parchment-600'}`}
+            className={`text-xs leading-none ${saveProficient ? 'text-ink-500' : 'text-parchment-600'}`}
           >{saveProficient ? '◆' : '◇'}</span>
           <span className={[
-            'text-[9px] font-display tracking-widest uppercase leading-none',
+            'text-[13px] font-display tracking-widest uppercase leading-none',
             saveProficient ? 'text-ink-500 font-semibold' : 'text-ink-300',
           ].join(' ')}>salva</span>
           <span className={`text-sm font-bold tabular-nums leading-none ${

@@ -59,7 +59,7 @@ function StatChip({ icon, label, value, title, editable = false, onChange }) {
       className="flex items-center gap-1.5 px-2 py-1 rounded-sm bg-parchment-50/80 border border-parchment-600 text-ink-500"
     >
       <span aria-hidden className="text-sm leading-none">{icon}</span>
-      <span className="text-[10px] font-display tracking-widest uppercase text-ink-300 leading-none">{label}</span>
+      <span className="text-xs font-display tracking-widest uppercase text-ink-300 leading-none">{label}</span>
       {editable && onChange ? (
         <input
           type="number"
@@ -154,7 +154,7 @@ export function SheetCombatBar() {
           <span aria-hidden className="text-base text-red-700">❤</span>
           <div className="flex-1 min-w-0">
             <div className="flex items-baseline justify-between gap-2">
-              <span className="text-[10px] font-display tracking-widest uppercase text-ink-300">PV</span>
+              <span className="text-xs font-display tracking-widest uppercase text-ink-300">PV</span>
               <span className="text-xs font-bold text-ink-500 tabular-nums">{hpLabel}</span>
             </div>
             <div className="h-2 mt-0.5 rounded-full bg-ink-700/30 overflow-hidden border border-parchment-600 shadow-inner">
@@ -235,7 +235,7 @@ export function SheetCombatBar() {
         {/* Condições ativas (ou rótulo se vazio) */}
         <div className="flex items-center gap-1.5 flex-wrap min-w-0">
           {activeConditions.length === 0 && exhaustion === 0 ? (
-            <span className="text-[10px] ink-italic text-ink-300">sem condições</span>
+            <span className="text-xs ink-italic text-ink-300">sem condições</span>
           ) : (
             <>
               {activeConditions.map(id => (

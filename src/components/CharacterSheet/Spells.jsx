@@ -309,7 +309,7 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
                 })}
               </div>
               <span className="text-xs text-gray-500">{pactSlots.qty - pactUsed}/{pactSlots.qty}</span>
-              <span className="text-[10px] text-purple-400/70 italic ml-auto">
+              <span className="text-xs text-purple-400/70 italic ml-auto">
                 Sempre no nível mais alto disponível
               </span>
             </div>
@@ -487,7 +487,7 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
         {spell.ritual && <span className="text-green-400" title="Ritual">📿</span>}
         {spell.concentration && <span className="text-blue-400" title="Concentração">⊙</span>}
         <span className="text-gray-600">{schoolAbbr}</span>
-        <span className="text-gray-600 text-[10px]">{spell.castingTime || ''}</span>
+        <span className="text-gray-600 text-xs">{spell.castingTime || ''}</span>
       </div>
       {canConcentrate && (
         <button
@@ -530,7 +530,7 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
         </button>
       )}
       {castedAt && (
-        <span className="flex-shrink-0 text-[10px] text-emerald-400 font-bold animate-pulse">
+        <span className="flex-shrink-0 text-xs text-emerald-400 font-bold animate-pulse">
           ✓ Nv {castedAt}
         </span>
       )}
@@ -552,7 +552,7 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
     </div>
     {castOpen && availableSlots.length > 0 && (
       <div className="flex flex-wrap gap-1 mt-1 pt-1.5 border-t border-gray-700/60">
-        <span className="text-[10px] text-gray-500 self-center mr-1">Conjurar em:</span>
+        <span className="text-xs text-gray-500 self-center mr-1">Conjurar em:</span>
         {availableSlots.map(sl => {
           const remaining = (slotMax?.(sl) ?? 0) - (usedSlots[sl] || 0)
           const isUpcast  = sl > spell.level
@@ -561,7 +561,7 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
               key={sl}
               onClick={() => castAt(sl)}
               title={isUpcast ? `Espaço de nível ${sl} (efeito de nível superior)` : `Espaço de nível ${sl}`}
-              className={`text-[10px] px-2 py-0.5 rounded border font-mono transition-colors ${
+              className={`text-xs px-2 py-0.5 rounded border font-mono transition-colors ${
                 isUpcast
                   ? 'border-amber-600 bg-amber-900/20 text-amber-300 hover:bg-amber-900/40'
                   : 'border-gray-700 bg-gray-900 text-gray-300 hover:border-amber-700'
@@ -576,7 +576,7 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
           <button
             onClick={onDetail}
             title="Ver efeito em nível superior"
-            className="text-[10px] text-blue-400 hover:text-blue-300 underline self-center"
+            className="text-xs text-blue-400 hover:text-blue-300 underline self-center"
           >
             ver efeito ↑
           </button>
@@ -640,7 +640,7 @@ function SpellPicker({
           >
             Filtros{activeCount > 0 ? ` · ${activeCount}` : ''}
           </button>
-          <span className="text-[11px] text-gray-500 flex-shrink-0">
+          <span className="text-[13px] text-gray-500 flex-shrink-0">
             {spells.length} magia{spells.length === 1 ? '' : 's'}
           </span>
         </div>
@@ -748,19 +748,19 @@ function FilterPanel({ filters, onChange }) {
   }
 
   const chip = (active) =>
-    `text-[11px] px-2 py-1 rounded border transition-colors ${
+    `text-[13px] px-2 py-1 rounded border transition-colors ${
       active
         ? 'border-amber-500 bg-amber-900/40 text-amber-200'
         : 'border-gray-700 text-gray-400 hover:border-gray-500 hover:text-gray-200'
     }`
 
-  const selectCls = `text-[11px] bg-gray-900 border border-gray-700 rounded px-1.5 py-0.5 text-gray-200`
+  const selectCls = `text-[13px] bg-gray-900 border border-gray-700 rounded px-1.5 py-0.5 text-gray-200`
 
   return (
     <div className="bg-gray-900/60 border border-gray-700 rounded-lg p-2.5 space-y-2.5">
       {/* Escolas */}
       <div>
-        <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Escolas</div>
+        <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">Escolas</div>
         <div className="flex flex-wrap gap-1">
           {SCHOOL_LABELS.map(s => (
             <button
@@ -777,7 +777,7 @@ function FilterPanel({ filters, onChange }) {
 
       {/* Tempo de conjuração */}
       <div>
-        <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Tempo</div>
+        <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">Tempo</div>
         <div className="flex flex-wrap gap-1">
           {CASTING_TIME_LABELS.map(ct => (
             <button
@@ -794,10 +794,10 @@ function FilterPanel({ filters, onChange }) {
 
       {/* Componentes V/S/M */}
       <div>
-        <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Componentes</div>
+        <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">Componentes</div>
         <div className="flex flex-wrap gap-3">
           {['v', 's', 'm'].map(letter => (
-            <label key={letter} className="flex items-center gap-1.5 text-[11px] text-gray-300">
+            <label key={letter} className="flex items-center gap-1.5 text-[13px] text-gray-300">
               <span className="font-semibold w-3">{letter.toUpperCase()}</span>
               <select
                 value={filters.components[letter]}
@@ -815,9 +815,9 @@ function FilterPanel({ filters, onChange }) {
 
       {/* Outros */}
       <div>
-        <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Outros</div>
+        <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">Outros</div>
         <div className="flex flex-wrap gap-3">
-          <label className="flex items-center gap-1.5 text-[11px] text-gray-300">
+          <label className="flex items-center gap-1.5 text-[13px] text-gray-300">
             <span>Concentração</span>
             <select
               value={filters.concentration}
@@ -829,7 +829,7 @@ function FilterPanel({ filters, onChange }) {
               <option value="no">não</option>
             </select>
           </label>
-          <label className="flex items-center gap-1.5 text-[11px] text-gray-300">
+          <label className="flex items-center gap-1.5 text-[13px] text-gray-300">
             <span>Ritual</span>
             <select
               value={filters.ritual}
@@ -848,7 +848,7 @@ function FilterPanel({ filters, onChange }) {
         <button
           type="button"
           onClick={reset}
-          className="text-[11px] text-gray-500 hover:text-amber-400 transition-colors"
+          className="text-[13px] text-gray-500 hover:text-amber-400 transition-colors"
         >
           Limpar filtros
         </button>

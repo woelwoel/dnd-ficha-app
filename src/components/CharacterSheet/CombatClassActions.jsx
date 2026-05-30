@@ -46,7 +46,7 @@ function SneakAttackPanel({ rogueLevel }) {
       <span className="text-xl shrink-0" aria-hidden>🗡️</span>
       <div className="min-w-0 flex-1">
         <p className="text-sm font-display text-ink-500 tracking-wide">Ataque Furtivo</p>
-        <p className="text-[11px] ink-italic">
+        <p className="text-[13px] ink-italic">
           1×/turno. Condição: vantagem no ataque OU aliado adjacente ao alvo (e você sem desvantagem). Requer arma de acuidade ou à distância.
         </p>
       </div>
@@ -93,7 +93,7 @@ function SmitePanel({ paladinoLevel, slotsAvailable, onConsumeSlot }) {
         <span className="text-xl shrink-0 mt-0.5" aria-hidden>✨</span>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-display text-ink-500 tracking-wide">Golpe Divino</p>
-          <p className="text-[11px] ink-italic">
+          <p className="text-[13px] ink-italic">
             Ao acertar c/c, gaste um espaço pra dano radiante extra (2d8 a 5d8 · +1d8 vs morto-vivo/fora).
           </p>
         </div>
@@ -112,7 +112,7 @@ function SmitePanel({ paladinoLevel, slotsAvailable, onConsumeSlot }) {
                   title={`Gasta 1 espaço de Nível ${sl} (${slotsAvailable[sl]} disponíveis) → rola ${dice}d8 radiante`}
                   className="text-xs px-2.5 py-1 rounded-sm border-2 border-ink-300 bg-parchment-50 text-ink-500 hover:bg-amber-100 hover:border-ink-500 font-display tracking-wide transition-colors flex items-center gap-1.5"
                 >
-                  <span className="text-[10px] text-ink-300">Nv {sl}</span>
+                  <span className="text-xs text-ink-300">Nv {sl}</span>
                   <span className="text-ink-300">×{slotsAvailable[sl]}</span>
                   <span className="font-bold tabular-nums">{dice}d8</span>
                 </button>
@@ -120,7 +120,7 @@ function SmitePanel({ paladinoLevel, slotsAvailable, onConsumeSlot }) {
             })}
           </div>
           {/* Toggle "+1d8 contra morto-vivo" */}
-          <label className="flex items-center gap-1.5 text-[11px] ink-italic text-ink-500 cursor-pointer select-none">
+          <label className="flex items-center gap-1.5 text-[13px] ink-italic text-ink-500 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={vsUndead}
@@ -131,7 +131,7 @@ function SmitePanel({ paladinoLevel, slotsAvailable, onConsumeSlot }) {
           </label>
         </>
       ) : (
-        <p className="text-[10px] text-ink-200 italic">Recupere espaços com descanso longo pra usar Golpe Divino.</p>
+        <p className="text-xs text-ink-200 italic">Recupere espaços com descanso longo pra usar Golpe Divino.</p>
       )}
     </div>
   )
@@ -175,7 +175,7 @@ function BardicInspirationPanel({ bardLevel, usesRemaining, onSpend }) {
           <p className="text-sm font-display text-ink-500 tracking-wide">
             Inspiração de Bardo <span className="text-ink-200 font-mono">({notation})</span>
           </p>
-          <p className="text-[11px] ink-italic">
+          <p className="text-[13px] ink-italic">
             Aliado a 18m soma o dado a um teste/save/ataque (ação bônus do bardo, dura 10 min).
           </p>
         </div>
@@ -199,7 +199,7 @@ function BardicInspirationPanel({ bardLevel, usesRemaining, onSpend }) {
           placeholder="Nome do aliado (opcional)"
           className="flex-1 bg-parchment-50 border border-parchment-600 rounded px-2 py-1 text-xs text-ink-500 placeholder:text-ink-200 focus:outline-none focus:border-ink-300"
         />
-        <span className="text-[10px] ink-italic">
+        <span className="text-xs ink-italic">
           Restantes: <strong className="text-ink-500">{usesRemaining ?? '—'}</strong>
         </span>
       </div>
@@ -276,14 +276,14 @@ function SorceryPanel({ feiticeiroLevel, sorceryUse, onSpendPoints, onRegainPoin
           <p className="text-sm font-display text-ink-500 tracking-wide">
             Feitiçaria · Pontos: <span className="font-mono">{remaining}/{sorceryUse?.max ?? 0}</span>
           </p>
-          <p className="text-[11px] ink-italic">Metamagia (lvl 3+) e Conversão Flexível (lvl 2+).</p>
+          <p className="text-[13px] ink-italic">Metamagia (lvl 3+) e Conversão Flexível (lvl 2+).</p>
         </div>
       </div>
 
       <div className="mt-2 flex gap-1">
         <button
           onClick={() => setTab('meta')}
-          className={`flex-1 text-[11px] py-1 rounded border-2 font-display tracking-wide transition-all ${
+          className={`flex-1 text-[13px] py-1 rounded border-2 font-display tracking-wide transition-all ${
             tab === 'meta'
               ? 'border-ink-500 bg-parchment-200 text-ink-500'
               : 'border-parchment-600 bg-parchment-50 text-ink-200 hover:text-ink-500'
@@ -293,7 +293,7 @@ function SorceryPanel({ feiticeiroLevel, sorceryUse, onSpendPoints, onRegainPoin
         </button>
         <button
           onClick={() => setTab('flex')}
-          className={`flex-1 text-[11px] py-1 rounded border-2 font-display tracking-wide transition-all ${
+          className={`flex-1 text-[13px] py-1 rounded border-2 font-display tracking-wide transition-all ${
             tab === 'flex'
               ? 'border-ink-500 bg-parchment-200 text-ink-500'
               : 'border-parchment-600 bg-parchment-50 text-ink-200 hover:text-ink-500'
@@ -306,7 +306,7 @@ function SorceryPanel({ feiticeiroLevel, sorceryUse, onSpendPoints, onRegainPoin
       {tab === 'meta' && (
         <div className="mt-2 space-y-1">
           {feiticeiroLevel < 3 && (
-            <p className="text-[10px] ink-italic">Metamagia disponível a partir do nível 3.</p>
+            <p className="text-xs ink-italic">Metamagia disponível a partir do nível 3.</p>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
             {METAMAGIC_OPTIONS.map(opt => {
@@ -318,14 +318,14 @@ function SorceryPanel({ feiticeiroLevel, sorceryUse, onSpendPoints, onRegainPoin
                   onClick={() => applyMetamagic(opt)}
                   disabled={disabled}
                   title={opt.desc}
-                  className={`text-left text-[10px] px-2 py-1 rounded border transition-colors ${
+                  className={`text-left text-xs px-2 py-1 rounded border transition-colors ${
                     disabled
                       ? 'border-parchment-600 bg-parchment-100 text-ink-200 cursor-not-allowed'
                       : 'border-ink-300 bg-parchment-50 text-ink-500 hover:bg-parchment-200'
                   }`}
                 >
                   <span className="font-bold">{opt.name}</span>
-                  <span className="ml-1 font-mono text-[9px]">({opt.cost == null ? '=nv' : `${opt.cost}pt`})</span>
+                  <span className="ml-1 font-mono text-[13px]">({opt.cost == null ? '=nv' : `${opt.cost}pt`})</span>
                 </button>
               )
             })}
@@ -336,7 +336,7 @@ function SorceryPanel({ feiticeiroLevel, sorceryUse, onSpendPoints, onRegainPoin
       {tab === 'flex' && (
         <div className="mt-2 space-y-2">
           <div>
-            <p className="text-[10px] text-ink-500 uppercase tracking-widest font-bold mb-1">
+            <p className="text-xs text-ink-500 uppercase tracking-widest font-bold mb-1">
               Gastar pontos → criar espaço de magia
             </p>
             <div className="grid grid-cols-3 sm:grid-cols-5 gap-1">
@@ -350,7 +350,7 @@ function SorceryPanel({ feiticeiroLevel, sorceryUse, onSpendPoints, onRegainPoin
                     key={slot}
                     onClick={() => convertPointsToSlot(cost, slot)}
                     disabled={disabled}
-                    className={`text-[10px] py-1 rounded border font-mono transition-colors ${
+                    className={`text-xs py-1 rounded border font-mono transition-colors ${
                       disabled
                         ? 'border-parchment-600 bg-parchment-100 text-ink-200 cursor-not-allowed'
                         : 'border-ink-300 bg-parchment-50 text-ink-500 hover:bg-parchment-200'
@@ -363,7 +363,7 @@ function SorceryPanel({ feiticeiroLevel, sorceryUse, onSpendPoints, onRegainPoin
             </div>
           </div>
           <div>
-            <p className="text-[10px] text-ink-500 uppercase tracking-widest font-bold mb-1">
+            <p className="text-xs text-ink-500 uppercase tracking-widest font-bold mb-1">
               Gastar espaço → ganhar pontos (= nível do espaço)
             </p>
             <div className="grid grid-cols-3 sm:grid-cols-5 gap-1">
@@ -376,7 +376,7 @@ function SorceryPanel({ feiticeiroLevel, sorceryUse, onSpendPoints, onRegainPoin
                     key={slot}
                     onClick={() => convertSlotToPoints(slot)}
                     disabled={disabled}
-                    className={`text-[10px] py-1 rounded border font-mono transition-colors ${
+                    className={`text-xs py-1 rounded border font-mono transition-colors ${
                       disabled
                         ? 'border-parchment-600 bg-parchment-100 text-ink-200 cursor-not-allowed'
                         : 'border-ink-300 bg-parchment-50 text-ink-500 hover:bg-parchment-200'
@@ -388,7 +388,7 @@ function SorceryPanel({ feiticeiroLevel, sorceryUse, onSpendPoints, onRegainPoin
               })}
             </div>
           </div>
-          <p className="text-[10px] ink-italic">
+          <p className="text-xs ink-italic">
             Conversão consome ação bônus. Máx de pontos = nível de Feiticeiro.
           </p>
         </div>
@@ -425,7 +425,7 @@ function KiPanel({ monkLevel, kiUse, onSpend }) {
           <p className="text-sm font-display text-ink-500 tracking-wide">
             Ki · <span className="font-mono">{remaining}/{kiUse?.max ?? 0}</span>
           </p>
-          <p className="text-[11px] ink-italic">
+          <p className="text-[13px] ink-italic">
             Pontos recarregam em descanso curto. Nível {monkLevel} de Monge.
           </p>
         </div>
@@ -439,14 +439,14 @@ function KiPanel({ monkLevel, kiUse, onSpend }) {
               onClick={() => spend(opt.cost)}
               disabled={disabled}
               title={opt.desc}
-              className={`text-left text-[10px] px-2 py-1 rounded border transition-colors ${
+              className={`text-left text-xs px-2 py-1 rounded border transition-colors ${
                 disabled
                   ? 'border-parchment-600 bg-parchment-100 text-ink-200 cursor-not-allowed'
                   : 'border-ink-300 bg-parchment-50 text-ink-500 hover:bg-parchment-200'
               }`}
             >
               <span className="font-bold">{opt.name}</span>
-              <span className="ml-1 font-mono text-[9px]">({opt.cost} ki)</span>
+              <span className="ml-1 font-mono text-[13px]">({opt.cost} ki)</span>
             </button>
           )
         })}
@@ -480,7 +480,7 @@ function LayOnHandsPanel({ paladinoLevel, lohUse, onSpend }) {
           <p className="text-sm font-display text-ink-500 tracking-wide">
             Imposição das Mãos · <span className="font-mono">{remaining}/{lohUse?.max ?? 0} PV</span>
           </p>
-          <p className="text-[11px] ink-italic">
+          <p className="text-[13px] ink-italic">
             Pool de cura: gaste N pontos para curar N PV (ação). 5 pontos cura doença ou veneno. Nv {paladinoLevel}.
           </p>
         </div>
@@ -491,7 +491,7 @@ function LayOnHandsPanel({ paladinoLevel, lohUse, onSpend }) {
             key={n}
             onClick={() => spend(n)}
             disabled={remaining < n}
-            className={`text-[10px] px-2 py-1 rounded border font-bold transition-colors ${
+            className={`text-xs px-2 py-1 rounded border font-bold transition-colors ${
               remaining < n
                 ? 'border-parchment-600 bg-parchment-100 text-ink-200 cursor-not-allowed'
                 : 'border-ink-300 bg-parchment-50 text-ink-500 hover:bg-parchment-200'
@@ -506,12 +506,12 @@ function LayOnHandsPanel({ paladinoLevel, lohUse, onSpend }) {
           onChange={e => setDraft(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleCustom()}
           placeholder="N"
-          className="w-14 bg-parchment-50 border border-parchment-600 rounded px-2 py-0.5 text-[10px] text-ink-500 placeholder:text-ink-200 focus:outline-none focus:border-ink-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          className="w-14 bg-parchment-50 border border-parchment-600 rounded px-2 py-0.5 text-xs text-ink-500 placeholder:text-ink-200 focus:outline-none focus:border-ink-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         />
         <button
           onClick={handleCustom}
           disabled={!draft || (parseInt(draft, 10) || 0) > remaining || (parseInt(draft, 10) || 0) <= 0}
-          className="text-[10px] px-2 py-1 rounded border border-ink-300 bg-parchment-50 text-ink-500 hover:bg-parchment-200 disabled:border-parchment-600 disabled:bg-parchment-100 disabled:text-ink-200 disabled:cursor-not-allowed font-bold transition-colors"
+          className="text-xs px-2 py-1 rounded border border-ink-300 bg-parchment-50 text-ink-500 hover:bg-parchment-200 disabled:border-parchment-600 disabled:bg-parchment-100 disabled:text-ink-200 disabled:cursor-not-allowed font-bold transition-colors"
         >
           OK
         </button>
@@ -551,8 +551,8 @@ function FighterPanel({ fighterLevel, surgeUse, secondWindUse, onSpendSurge, onS
       {secondWindUse && (
         <div className="flex items-center gap-2">
           <div className="flex-1">
-            <p className="text-[11px] text-ink-500 font-bold">Retomar o Fôlego</p>
-            <p className="text-[10px] ink-italic">
+            <p className="text-[13px] text-ink-500 font-bold">Retomar o Fôlego</p>
+            <p className="text-xs ink-italic">
               Ação bônus: cura {swDie} PV. Restantes: <strong>{swRem}/{secondWindUse.max}</strong>.
             </p>
           </div>
@@ -572,8 +572,8 @@ function FighterPanel({ fighterLevel, surgeUse, secondWindUse, onSpendSurge, onS
       {surgeUse && (
         <div className="flex items-center gap-2 pt-2 border-t border-parchment-600/50">
           <div className="flex-1">
-            <p className="text-[11px] text-ink-500 font-bold">Surto de Ação</p>
-            <p className="text-[10px] ink-italic">
+            <p className="text-[13px] text-ink-500 font-bold">Surto de Ação</p>
+            <p className="text-xs ink-italic">
               No seu turno, tome uma ação adicional. Restantes: <strong>{surgeRem}/{surgeUse.max}</strong>.
             </p>
           </div>
@@ -618,7 +618,7 @@ function RagePanel({ character, barbLevel, attributes, onToggleRage, ragesRemain
           <p className={`text-sm font-display tracking-wide ${active ? 'text-rose-800' : 'text-ink-500'}`}>
             {active ? 'EM FÚRIA' : 'Fúria'}
           </p>
-          <p className="text-[11px] ink-italic">
+          <p className="text-[13px] ink-italic">
             Bônus de dano: <strong className={active ? 'text-rose-800' : 'text-ink-500'}>+{bonus}</strong> em ataques c/c com FOR
             · Resistência a B/P/S
             · Vantagem em testes/saves de FOR
@@ -640,16 +640,16 @@ function RagePanel({ character, barbLevel, attributes, onToggleRage, ragesRemain
       </div>
       {active && (
         <div className="mt-2 pt-2 border-t border-rose-700/30 flex items-center gap-2 flex-wrap">
-          <span className="text-[10px] text-rose-800 font-bold uppercase tracking-wide">Rolagens rápidas:</span>
+          <span className="text-xs text-rose-800 font-bold uppercase tracking-wide">Rolagens rápidas:</span>
           <RollButton
             notation={`1d20${formatModifier(strMod)}`}
             label="Teste de FOR (Fúria — vantagem)"
           />
-          <span className="text-[10px] ink-italic">FOR (use Shift+click para vantagem)</span>
+          <span className="text-xs ink-italic">FOR (use Shift+click para vantagem)</span>
         </div>
       )}
       {!active && ragesRemaining != null && ragesRemaining <= 0 && (
-        <p className="mt-1 text-[10px] text-rose-700 italic">Sem usos de Fúria restantes — descanso longo para recuperar.</p>
+        <p className="mt-1 text-xs text-rose-700 italic">Sem usos de Fúria restantes — descanso longo para recuperar.</p>
       )}
     </div>
   )

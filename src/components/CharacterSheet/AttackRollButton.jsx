@@ -71,7 +71,7 @@ export function AttackRollButton({
         ${disabled
           ? 'bg-gray-800 border-gray-700 text-gray-600 cursor-not-allowed'
           : 'bg-amber-700/30 hover:bg-amber-600/50 text-amber-300 hover:text-amber-200 border-amber-600/40 hover:border-amber-400'}
-        ${size === 'xs' ? 'text-[11px]' : 'text-xs'}
+        ${size === 'xs' ? 'text-[13px]' : 'text-xs'}
         ${className}`}
     >
       ⚔ Atacar

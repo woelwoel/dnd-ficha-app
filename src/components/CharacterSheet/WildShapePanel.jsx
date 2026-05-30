@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { RollButton } from '../DiceRoller/RollButton'
+import { AttackRollButton } from './AttackRollButton'
 import { useDiceRoller } from '../../hooks/useDiceRoller'
 
 /**
@@ -112,12 +112,12 @@ function BeastPicker({ beasts, crLimit, allowFly, allowSwim, isMoon, onSelect, o
         />
         <button
           onClick={onCancel}
-          className="text-[10px] px-2 py-1 rounded border border-parchment-600 bg-parchment-100 text-ink-300 hover:bg-parchment-200"
+          className="text-xs px-2 py-1 rounded border border-parchment-600 bg-parchment-100 text-ink-300 hover:bg-parchment-200"
         >
           Cancelar
         </button>
       </div>
-      <p className="text-[10px] ink-italic text-ink-300">
+      <p className="text-xs ink-italic text-ink-300">
         Filtro: CR ≤ <strong>{filtered[0]?.crLabel ?? '—'}</strong>
         {!allowFly  && <> · sem voo</>}
         {!allowSwim && <> · sem natação</>}
@@ -130,7 +130,7 @@ function BeastPicker({ beasts, crLimit, allowFly, allowSwim, isMoon, onSelect, o
         )}
         {grouped.map(([cr, list]) => (
           <div key={cr}>
-            <p className="text-[10px] uppercase tracking-widest font-bold text-ink-300 mb-1">
+            <p className="text-xs uppercase tracking-widest font-bold text-ink-300 mb-1">
               CR {list[0].crLabel} <span className="font-normal">({list.length})</span>
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
@@ -139,14 +139,14 @@ function BeastPicker({ beasts, crLimit, allowFly, allowSwim, isMoon, onSelect, o
                   key={b.index}
                   onClick={() => onSelect(b)}
                   title={`${b.name} (${b.nameEn}) — HP ${b.hp} · AC ${b.ac} · ${formatSpeed(b.speed)}`}
-                  className="text-left text-[11px] px-2 py-1.5 rounded border border-parchment-600 bg-parchment-50 hover:bg-emerald-50 hover:border-emerald-500 transition-colors"
+                  className="text-left text-[13px] px-2 py-1.5 rounded border border-parchment-600 bg-parchment-50 hover:bg-emerald-50 hover:border-emerald-500 transition-colors"
                 >
                   <div className="flex items-center gap-1.5">
                     <span className="font-bold text-ink-500 truncate flex-1">{b.name}</span>
-                    <span className="text-[9px] text-ink-300 font-mono shrink-0">HP{b.hp}</span>
-                    <span className="text-[9px] text-ink-300 font-mono shrink-0">AC{b.ac}</span>
+                    <span className="text-[13px] text-ink-300 font-mono shrink-0">HP{b.hp}</span>
+                    <span className="text-[13px] text-ink-300 font-mono shrink-0">AC{b.ac}</span>
                   </div>
-                  <div className="text-[9px] text-ink-300 italic truncate">{formatSpeed(b.speed)}</div>
+                  <div className="text-[13px] text-ink-300 italic truncate">{formatSpeed(b.speed)}</div>
                 </button>
               ))}
             </div>
@@ -164,7 +164,7 @@ function ActiveBeastStatBlock({ ws, druidaLevel }) {
   // Lista de ataques com botões de rolagem
   return (
     <div className="mt-2 pt-2 border-t border-emerald-700/30 space-y-2">
-      <div className="grid grid-cols-3 gap-2 text-[10px]">
+      <div className="grid grid-cols-3 gap-2 text-xs">
         <div className="bg-emerald-100 rounded px-2 py-1 border border-emerald-700/30">
           <div className="text-emerald-900/70 uppercase tracking-wider font-bold">AC</div>
           <div className="text-emerald-900 font-bold font-mono text-base">{b.ac}</div>
@@ -179,11 +179,11 @@ function ActiveBeastStatBlock({ ws, druidaLevel }) {
         </div>
       </div>
 
-      <div className="text-[10px] text-emerald-900 bg-emerald-50 rounded px-2 py-1 border border-emerald-700/30">
+      <div className="text-xs text-emerald-900 bg-emerald-50 rounded px-2 py-1 border border-emerald-700/30">
         <span className="font-bold">Velocidade:</span> {formatSpeed(b.speed)}
       </div>
 
-      <div className="grid grid-cols-6 gap-1 text-[10px] text-center">
+      <div className="grid grid-cols-6 gap-1 text-xs text-center">
         {[
           ['FOR', b.str], ['DES', b.dex], ['CON', b.con],
           ['INT', b.int], ['SAB', b.wis], ['CAR', b.cha],
@@ -197,32 +197,41 @@ function ActiveBeastStatBlock({ ws, druidaLevel }) {
                 ? 'bg-emerald-100 border-emerald-700/40'
                 : 'bg-parchment-100 border-parchment-600/50 opacity-60'
             }`}>
-              <div className="font-bold text-[9px] text-emerald-900/70">{k}</div>
+              <div className="font-bold text-[13px] text-emerald-900/70">{k}</div>
               <div className="font-mono text-xs text-emerald-900 font-bold">{v}</div>
-              <div className="font-mono text-[9px] text-emerald-900/80">{formatBonus(mod)}</div>
+              <div className="font-mono text-[13px] text-emerald-900/80">{formatBonus(mod)}</div>
             </div>
           )
         })}
       </div>
-      <p className="text-[9px] ink-italic text-emerald-900/70 text-center -mt-1">
+      <p className="text-[13px] ink-italic text-emerald-900/70 text-center -mt-1">
         Você usa FOR/DES/CON da besta. INT/SAB/CAR continuam suas.
       </p>
 
       {b.attacks?.length > 0 && (
         <div className="space-y-1">
-          <p className="text-[10px] uppercase tracking-widest font-bold text-emerald-900">Ataques</p>
+          <p className="text-xs uppercase tracking-widest font-bold text-emerald-900">Ataques</p>
           {b.attacks.map((atk, i) => {
             const atkRoll = `1d20${formatBonus(atk.attackBonus)}`
+            const weaponName = `${ws.beastName} — ${atk.name}`
             return (
               <div key={i} className="flex items-center gap-2 bg-emerald-100/60 rounded px-2 py-1 border border-emerald-700/30">
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold text-emerald-900 truncate">{atk.name}</p>
-                  <p className="text-[10px] text-emerald-900/80 font-mono">
+                  <p className="text-sm font-bold text-emerald-900 truncate">{atk.name}</p>
+                  <p className="text-xs text-emerald-900/80 font-mono">
                     {atkRoll} · {atk.damageDice} <span className="italic">{atk.damageType}</span>
                   </p>
+                  {atk.desc && (
+                    <p className="text-xs text-emerald-900/70 italic leading-snug mt-0.5">
+                      {atk.desc}
+                    </p>
+                  )}
                 </div>
-                <RollButton notation={atkRoll}     label={`${atk.name} — ataque`} />
-                <RollButton notation={atk.damageDice} label={`${atk.name} — dano (${atk.damageType})`} />
+                <AttackRollButton
+                  attackNotation={atkRoll}
+                  damageNotation={atk.damageDice}
+                  weaponName={weaponName}
+                />
               </div>
             )
           })}
@@ -230,7 +239,7 @@ function ActiveBeastStatBlock({ ws, druidaLevel }) {
       )}
 
       {b.traits?.length > 0 && (
-        <details className="text-[10px]">
+        <details className="text-xs">
           <summary className="cursor-pointer text-emerald-900 font-bold uppercase tracking-widest">
             Traços ({b.traits.length})
           </summary>
@@ -246,7 +255,7 @@ function ActiveBeastStatBlock({ ws, druidaLevel }) {
       )}
 
       {(b.damageResistances?.length > 0 || b.damageImmunities?.length > 0) && (
-        <div className="text-[10px] text-emerald-900/80">
+        <div className="text-xs text-emerald-900/80">
           {b.damageResistances?.length > 0 && (
             <div><span className="font-bold">Resistências:</span> {b.damageResistances.join(', ')}</div>
           )}
@@ -280,7 +289,7 @@ function MoonHealPanel({ slotsAvailable, onConsumeSlot, ws, onSetWildShape }) {
 
   if (availableLevels.length === 0) {
     return (
-      <p className="text-[10px] italic text-emerald-900/70 mt-1">
+      <p className="text-xs italic text-emerald-900/70 mt-1">
         Sem slots de magia para cura primal.
       </p>
     )
@@ -288,7 +297,7 @@ function MoonHealPanel({ slotsAvailable, onConsumeSlot, ws, onSetWildShape }) {
 
   return (
     <div className="mt-2 pt-2 border-t border-emerald-700/30">
-      <p className="text-[10px] uppercase tracking-widest font-bold text-emerald-900 mb-1">
+      <p className="text-xs uppercase tracking-widest font-bold text-emerald-900 mb-1">
         🌙 Cura Primal — gastar slot
       </p>
       <div className="flex flex-wrap gap-1">
@@ -297,7 +306,7 @@ function MoonHealPanel({ slotsAvailable, onConsumeSlot, ws, onSetWildShape }) {
             key={sl}
             onClick={() => castHeal(sl)}
             title={`Gasta 1 slot Nv ${sl} (${n} disponíveis) → cura ${sl}d8 PV à besta`}
-            className="text-[10px] px-2 py-1 rounded border border-emerald-700 bg-emerald-100 text-emerald-900 hover:bg-emerald-200 font-bold transition-colors"
+            className="text-xs px-2 py-1 rounded border border-emerald-700 bg-emerald-100 text-emerald-900 hover:bg-emerald-200 font-bold transition-colors"
           >
             Nv {sl} <span className="text-emerald-700">×{n}</span> · +{sl}d8
           </button>
@@ -392,12 +401,12 @@ export function WildShapePanel({
           <p className={`text-sm font-display tracking-wide ${ws.active ? 'text-emerald-800' : 'text-ink-500'}`}>
             {ws.active ? `EM FORMA SELVAGEM — ${ws.beastName}` : 'Forma Selvagem'}
             {isMoon && !ws.active && (
-              <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded border border-emerald-700 bg-emerald-100 text-emerald-800 font-bold normal-case tracking-normal">
+              <span className="ml-2 text-xs px-1.5 py-0.5 rounded border border-emerald-700 bg-emerald-100 text-emerald-800 font-bold normal-case tracking-normal">
                 🌙 Círculo da Lua
               </span>
             )}
           </p>
-          <p className="text-[11px] ink-italic">
+          <p className="text-[13px] ink-italic">
             {ws.active
               ? `Não conjura magias${isMoon ? ' (exceto Círculo da Lua nv 18)' : ''}. Mantém concentração. Reverter como ação bônus.`
               : `CR ≤ ${crLimit === 0.5 ? '1/2' : crLimit === 0.25 ? '1/4' : crLimit}${!movement.fly ? ' · sem voo' : ''}${!movement.swim ? ' · sem natação' : ''}. Duração: ${Math.max(1, Math.floor(druidaLevel / 2))}h. ${usesRemaining ?? '—'}/${wsUse?.max ?? '—'} usos. Transformar como ${actionLabel}.`}
@@ -444,7 +453,7 @@ export function WildShapePanel({
       {ws.active && (
         <>
           <div className="mt-2 pt-2 border-t border-emerald-700/30 flex items-center gap-2 flex-wrap">
-            <span className="text-[10px] text-emerald-800 font-bold uppercase tracking-wide shrink-0">HP da Besta:</span>
+            <span className="text-xs text-emerald-800 font-bold uppercase tracking-wide shrink-0">HP da Besta:</span>
             <button
               onClick={() => adjustBeastHp(-1)}
               className="w-7 h-7 rounded bg-emerald-200 hover:bg-emerald-300 text-emerald-900 font-bold"
@@ -457,19 +466,19 @@ export function WildShapePanel({
               className="w-7 h-7 rounded bg-emerald-200 hover:bg-emerald-300 text-emerald-900 font-bold"
             >+</button>
 
-            <span className="text-[10px] text-emerald-800 font-bold uppercase tracking-wide shrink-0 ml-2">Dano:</span>
+            <span className="text-xs text-emerald-800 font-bold uppercase tracking-wide shrink-0 ml-2">Dano:</span>
             <input
               type="number"
               value={damageInput}
               onChange={e => setDamageInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && applyBeastDamage()}
               placeholder="N"
-              className="w-14 bg-parchment-50 border border-parchment-600 rounded px-2 py-0.5 text-[11px] text-ink-500 placeholder:text-ink-200 focus:outline-none focus:border-ink-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="w-14 bg-parchment-50 border border-parchment-600 rounded px-2 py-0.5 text-[13px] text-ink-500 placeholder:text-ink-200 focus:outline-none focus:border-ink-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
             <button
               onClick={applyBeastDamage}
               disabled={!damageInput || (parseInt(damageInput, 10) || 0) <= 0}
-              className="text-[10px] px-2 py-1 rounded border border-emerald-700 bg-emerald-100 text-emerald-900 hover:bg-emerald-200 disabled:border-parchment-600 disabled:bg-parchment-100 disabled:text-ink-200 disabled:cursor-not-allowed font-bold transition-colors"
+              className="text-xs px-2 py-1 rounded border border-emerald-700 bg-emerald-100 text-emerald-900 hover:bg-emerald-200 disabled:border-parchment-600 disabled:bg-parchment-100 disabled:text-ink-200 disabled:cursor-not-allowed font-bold transition-colors"
               title="Aplica dano à besta. Excedente passa pro humanoide e desfaz a forma."
             >
               Aplicar
@@ -477,7 +486,7 @@ export function WildShapePanel({
           </div>
 
           {ws.currentHp === 0 && (
-            <p className="mt-1 text-[10px] text-rose-700 font-bold italic">
+            <p className="mt-1 text-xs text-rose-700 font-bold italic">
               ⚠ Forma desfeita ao chegar a 0 PV.
             </p>
           )}

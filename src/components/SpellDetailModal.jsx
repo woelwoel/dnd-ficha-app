@@ -64,17 +64,17 @@ export function SpellDetailModal({ spell, onClose }) {
         <div className="flex items-start gap-3 p-4 border-b border-gray-700">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${schoolColor(school)}`}>
+              <span className={`text-xs font-semibold px-2 py-0.5 rounded border ${schoolColor(school)}`}>
                 {schoolName}
               </span>
-              <span className="text-[10px] text-gray-500">{levelLabel}</span>
+              <span className="text-xs text-gray-500">{levelLabel}</span>
               {spell.ritual && (
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded border bg-green-900/50 text-green-300 border-green-700">
+                <span className="text-xs font-semibold px-2 py-0.5 rounded border bg-green-900/50 text-green-300 border-green-700">
                   📿 Ritual
                 </span>
               )}
               {spell.concentration && (
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded border bg-blue-900/50 text-blue-300 border-blue-700">
+                <span className="text-xs font-semibold px-2 py-0.5 rounded border bg-blue-900/50 text-blue-300 border-blue-700">
                   ⊙ Concentração
                 </span>
               )}
@@ -95,31 +95,31 @@ export function SpellDetailModal({ spell, onClose }) {
         <div className="grid grid-cols-2 gap-x-4 gap-y-1 px-4 py-3 border-b border-gray-700/60 bg-gray-800/40">
           {castingTime && (
             <div>
-              <span className="text-[10px] text-gray-500 uppercase tracking-wide">Tempo</span>
+              <span className="text-xs text-gray-500 uppercase tracking-wide">Tempo</span>
               <p className="text-xs text-gray-200">{castingTime}</p>
             </div>
           )}
           {spell.range && (
             <div>
-              <span className="text-[10px] text-gray-500 uppercase tracking-wide">Alcance</span>
+              <span className="text-xs text-gray-500 uppercase tracking-wide">Alcance</span>
               <p className="text-xs text-gray-200">{spell.range}</p>
             </div>
           )}
           {components && (
             <div>
-              <span className="text-[10px] text-gray-500 uppercase tracking-wide">Componentes</span>
+              <span className="text-xs text-gray-500 uppercase tracking-wide">Componentes</span>
               <p className="text-xs text-gray-200">{components}</p>
             </div>
           )}
           {spell.duration && (
             <div>
-              <span className="text-[10px] text-gray-500 uppercase tracking-wide">Duração</span>
+              <span className="text-xs text-gray-500 uppercase tracking-wide">Duração</span>
               <p className="text-xs text-gray-200">{spell.duration}</p>
             </div>
           )}
           {spell.material && (
             <div className="col-span-2">
-              <span className="text-[10px] text-gray-500 uppercase tracking-wide">Material</span>
+              <span className="text-xs text-gray-500 uppercase tracking-wide">Material</span>
               <p className="text-xs text-gray-400 italic">{spell.material}</p>
             </div>
           )}
@@ -132,7 +132,7 @@ export function SpellDetailModal({ spell, onClose }) {
           )}
           {higherLevel && (
             <div>
-              <p className="text-[10px] text-amber-600 uppercase tracking-wide font-semibold mb-1">Em Nível Superior</p>
+              <p className="text-xs text-amber-600 uppercase tracking-wide font-semibold mb-1">Em Nível Superior</p>
               <p className="text-sm text-gray-400 italic leading-relaxed">{higherLevel}</p>
             </div>
           )}

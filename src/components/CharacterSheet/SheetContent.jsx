@@ -52,7 +52,7 @@ function CollapsibleSection({ title, summary, children, defaultOpen = false }) {
             {title}
           </span>
           {!open && summary && (
-            <span className="text-[11px] ink-italic text-ink-300 leading-snug">{summary}</span>
+            <span className="text-[13px] ink-italic text-ink-300 leading-snug">{summary}</span>
           )}
         </div>
         <span

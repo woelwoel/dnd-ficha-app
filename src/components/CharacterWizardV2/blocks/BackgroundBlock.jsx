@@ -64,19 +64,19 @@ export function BackgroundBlock({ draft, updateDraft, backgrounds }) {
 
           {selectedBg.tool_proficiencies?.length > 0 && (
             <div className="border-2 border-parchment-600 bg-parchment-100 rounded-sm px-3 py-2">
-              <p className="text-[10px] font-display tracking-widest uppercase text-ink-300 mb-0.5">Ferramentas</p>
+              <p className="text-xs font-display tracking-widest uppercase text-ink-300 mb-0.5">Ferramentas</p>
               <p className="text-sm text-ink-500">{selectedBg.tool_proficiencies.join(', ')}</p>
             </div>
           )}
           {selectedBg.languages && (
             <div className="border-2 border-parchment-600 bg-parchment-100 rounded-sm px-3 py-2">
-              <p className="text-[10px] font-display tracking-widest uppercase text-ink-300 mb-0.5">Idiomas</p>
+              <p className="text-xs font-display tracking-widest uppercase text-ink-300 mb-0.5">Idiomas</p>
               <p className="text-sm text-ink-500">{selectedBg.languages}</p>
             </div>
           )}
           {selectedBg.equipment && (
             <div className="border-2 border-parchment-600 bg-parchment-100 rounded-sm px-3 py-2">
-              <p className="text-[10px] font-display tracking-widest uppercase text-ink-300 mb-0.5">Equipamento</p>
+              <p className="text-xs font-display tracking-widest uppercase text-ink-300 mb-0.5">Equipamento</p>
               <p className="text-sm text-ink-500 leading-relaxed">{selectedBg.equipment}</p>
             </div>
           )}

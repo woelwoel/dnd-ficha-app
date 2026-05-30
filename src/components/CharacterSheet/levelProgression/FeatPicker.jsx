@@ -58,7 +58,7 @@ export function FeatPicker({
                 <div>
                   <span className="font-semibold text-sm">{feat.name}</span>
                   {feat.prereq && (
-                    <span className="ml-2 text-[10px] text-gray-500">
+                    <span className="ml-2 text-xs text-gray-500">
                       {feat.prereq.type === 'spellcasting' && '(requer conjuração)'}
                       {feat.prereq.type === 'ability' && `(requer ${feat.prereq.ability.toUpperCase()} ${feat.prereq.min}+)`}
                       {feat.prereq.type === 'ability_or' && `(requer atributo ${feat.prereq.abilities[0].min}+)`}
@@ -112,13 +112,13 @@ export function FeatPicker({
                   }`}
                 >
                   {score?.abbr ?? attrKey.toUpperCase()} {currentVal} → {Math.min(20, currentVal + chosenFeat.attrBonus.amount)}
-                  {atMax && <span className="ml-1 text-[10px] text-gray-600">(máx)</span>}
+                  {atMax && <span className="ml-1 text-xs text-gray-600">(máx)</span>}
                 </button>
               )
             })}
           </div>
           {featNeedsAttrPick && !featChosenAttr && (
-            <p className="text-[10px] text-red-400">Escolha qual atributo será aumentado.</p>
+            <p className="text-xs text-red-400">Escolha qual atributo será aumentado.</p>
           )}
         </div>
       )}

@@ -38,7 +38,7 @@ export function WeaponPicker({ category, pickKey, currentValue, weaponsArmor, on
                 isSelected ? 'border-ink-500 bg-ink-500' : 'border-parchment-600',
               ].join(' ')} />
               <span className="font-display flex-1">{item.name}</span>
-              {stats && <span className="text-ink-200 text-[10px] shrink-0 italic">{stats}</span>}
+              {stats && <span className="text-ink-200 text-xs shrink-0 italic">{stats}</span>}
             </button>
           )
         })}

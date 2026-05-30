@@ -72,16 +72,16 @@ export function SpellsBlock({ draft, updateDraft, classData }) {
       {spellAbilityKey && (
         <div className="grid grid-cols-3 gap-2">
           <div className="border-2 border-parchment-600 bg-parchment-100 rounded-sm px-3 py-3 text-center">
-            <p className="text-[10px] font-display tracking-widest uppercase text-ink-300 mb-1">Habilidade</p>
+            <p className="text-xs font-display tracking-widest uppercase text-ink-300 mb-1">Habilidade</p>
             <p className="text-lg font-display text-ink-500">{abbrOfKey(spellAbilityKey) ?? spellAbilityKey.toUpperCase()}</p>
-            <p className="text-[10px] italic text-ink-200">{nameOfKey(spellAbilityKey) ?? ''}</p>
+            <p className="text-xs italic text-ink-200">{nameOfKey(spellAbilityKey) ?? ''}</p>
           </div>
           <div className="border-2 border-parchment-600 bg-parchment-100 rounded-sm px-3 py-3 text-center">
-            <p className="text-[10px] font-display tracking-widest uppercase text-ink-300 mb-1">CD de Magia</p>
+            <p className="text-xs font-display tracking-widest uppercase text-ink-300 mb-1">CD de Magia</p>
             <p className="text-lg font-display text-ink-500">{spellSaveDC ?? '—'}</p>
           </div>
           <div className="border-2 border-parchment-600 bg-parchment-100 rounded-sm px-3 py-3 text-center">
-            <p className="text-[10px] font-display tracking-widest uppercase text-ink-300 mb-1">Atk Magia</p>
+            <p className="text-xs font-display tracking-widest uppercase text-ink-300 mb-1">Atk Magia</p>
             <p className="text-lg font-display text-ink-500">{spellAttackBonus !== null ? formatModifier(spellAttackBonus) : '—'}</p>
           </div>
         </div>
@@ -102,7 +102,7 @@ export function SpellsBlock({ draft, updateDraft, classData }) {
 
       {chosenSpells.length > 0 && (
         <div className="flex flex-col gap-1">
-          <p className="text-[10px] font-display tracking-widest uppercase text-ink-300">Selecionadas</p>
+          <p className="text-xs font-display tracking-widest uppercase text-ink-300">Selecionadas</p>
           <div className="flex flex-wrap gap-2">
             {chosenSpells.map(spell => (
               <div key={spell.index} className="flex items-center gap-1 border-2 border-parchment-600 bg-parchment-100 rounded-sm px-3 py-1 text-xs">
@@ -199,7 +199,7 @@ export function SpellsBlock({ draft, updateDraft, classData }) {
 
       {slotLevels.length > 0 && levelData && (
         <div>
-          <p className="text-[10px] font-display tracking-widest uppercase text-ink-300 mb-2">Espaços de magia (Nível {draft.level}):</p>
+          <p className="text-xs font-display tracking-widest uppercase text-ink-300 mb-2">Espaços de magia (Nível {draft.level}):</p>
           <div className="flex flex-wrap gap-2">
             {slotLevels.map(lvl => (
               <div key={lvl} className="border-2 border-parchment-600 bg-parchment-100 rounded-sm px-3 py-1.5 text-xs">

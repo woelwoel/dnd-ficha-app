@@ -6,7 +6,7 @@ export function DraconicAncestryPicker({ value, onChange }) {
       <legend className="px-2 text-xs font-display tracking-widest uppercase text-ink-500">
         Ancestral Dracônico <span className="text-red-700">*</span>
       </legend>
-      <p className="text-[11px] italic text-ink-300 mb-2">
+      <p className="text-[13px] italic text-ink-300 mb-2">
         Define seu tipo de dragão, dano de sopro e resistência.
       </p>
       <div className="grid grid-cols-2 gap-1.5">
@@ -25,7 +25,7 @@ export function DraconicAncestryPicker({ value, onChange }) {
               ].join(' ')}
             >
               <span className="font-display block">{a.label}</span>
-              <span className="text-[10px] text-ink-200">{a.damage} · {a.breath} (TR {a.save})</span>
+              <span className="text-xs text-ink-200">{a.damage} · {a.breath} (TR {a.save})</span>
             </button>
           )
         })}

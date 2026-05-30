@@ -33,7 +33,7 @@ export function ChosenFeaturePicker({ choice, value, onChange, effectiveMultiSel
         </p>
         {isMulti && (
           <span className={[
-            'text-[10px] font-display',
+            'text-xs font-display',
             selected.length >= multiCount ? 'text-emerald-700' : 'text-amber-700',
           ].join(' ')}>
             ({selected.length}/{multiCount})
@@ -41,7 +41,7 @@ export function ChosenFeaturePicker({ choice, value, onChange, effectiveMultiSel
         )}
       </div>
       {choice.prompt && (
-        <p className="text-[11px] italic text-ink-300">{choice.prompt}</p>
+        <p className="text-[13px] italic text-ink-300">{choice.prompt}</p>
       )}
       <div className="flex flex-col gap-1">
         {choice.options.map(opt => {
@@ -78,18 +78,18 @@ export function ChosenFeaturePicker({ choice, value, onChange, effectiveMultiSel
               <span className="flex-1 min-w-0">
                 <span className="font-display block">{opt.name}</span>
                 {isMulti && opt.desc && (
-                  <span className="text-[10px] text-ink-200 italic block mt-0.5 leading-snug whitespace-pre-line">
+                  <span className="text-xs text-ink-200 italic block mt-0.5 leading-snug whitespace-pre-line">
                     {opt.desc}
                   </span>
                 )}
               </span>
               {opt.grants?.bonusCantrips > 0 && (
-                <span className="text-[10px] bg-parchment-100 border-2 border-parchment-600 px-1.5 py-0.5 rounded-sm text-ink-300 shrink-0">
+                <span className="text-xs bg-parchment-100 border-2 border-parchment-600 px-1.5 py-0.5 rounded-sm text-ink-300 shrink-0">
                   +{opt.grants.bonusCantrips} truques
                 </span>
               )}
               {opt.grants?.spells?.length > 0 && (
-                <span className="text-[10px] bg-parchment-100 border-2 border-parchment-600 px-1.5 py-0.5 rounded-sm text-ink-300 shrink-0">
+                <span className="text-xs bg-parchment-100 border-2 border-parchment-600 px-1.5 py-0.5 rounded-sm text-ink-300 shrink-0">
                   +magia
                 </span>
               )}

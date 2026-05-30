@@ -22,16 +22,16 @@ function RollEntry({ entry }) {
           <p className="text-xs text-ink-500 font-display tracking-wide truncate leading-tight">
             {entry.label}
             {isAdvDis && (
-              <span className={`ml-1.5 text-[9px] font-bold ${entry.mode === 'adv' ? 'text-emerald-700' : 'text-rose-700'}`}>
+              <span className={`ml-1.5 text-[13px] font-bold ${entry.mode === 'adv' ? 'text-emerald-700' : 'text-rose-700'}`}>
                 {entry.mode === 'adv' ? '↑VANT' : '↓DESV'}
               </span>
             )}
-            {entry.crit && <span className="ml-1.5 text-[9px] font-bold text-amber-700">✦CRIT</span>}
+            {entry.crit && <span className="ml-1.5 text-[13px] font-bold text-amber-700">✦CRIT</span>}
           </p>
         )}
-        <p className="text-[11px] ink-italic font-mono">{entry.notation}</p>
+        <p className="text-[13px] ink-italic font-mono">{entry.notation}</p>
         {isAdvDis && entry.allRolls?.length === 2 ? (
-          <p className="text-[11px] ink-italic font-mono">
+          <p className="text-[13px] ink-italic font-mono">
             [
             <span className={entry.keptIndex === 0 ? 'font-bold text-ink-600' : 'line-through opacity-50'}>
               {entry.allRolls[0]}
@@ -44,7 +44,7 @@ function RollEntry({ entry }) {
             {entry.modifier !== 0 ? ` ${entry.modifier > 0 ? '+' : ''}${entry.modifier}` : ''}
           </p>
         ) : entry.rolls?.length > 0 && (
-          <p className="text-[11px] ink-italic">
+          <p className="text-[13px] ink-italic">
             [{entry.rolls.join(', ')}]
             {entry.modifier !== 0 ? ` ${entry.modifier > 0 ? '+' : ''}${entry.modifier}` : ''}
           </p>
@@ -60,7 +60,7 @@ function RollEntry({ entry }) {
           {isCrit   && <span className="text-sm ml-0.5">✦</span>}
           {isFumble && <span className="text-sm ml-0.5">✗</span>}
         </span>
-        <span className="text-[10px] ink-italic">{timeAgo(entry.timestamp)}</span>
+        <span className="text-xs ink-italic">{timeAgo(entry.timestamp)}</span>
       </div>
     </div>
   )
@@ -179,7 +179,7 @@ export function DiceHistoryPanel() {
     >
       🎲
       {mode !== 'normal' && (
-        <span className={`absolute -top-1 -right-1 w-5 h-5 rounded-full border-2 border-parchment-50 text-[10px] font-bold flex items-center justify-center ${
+        <span className={`absolute -top-1 -right-1 w-5 h-5 rounded-full border-2 border-parchment-50 text-xs font-bold flex items-center justify-center ${
           mode === 'adv' ? 'bg-emerald-700 text-white' : 'bg-rose-700 text-white'
         }`}>
           {mode === 'adv' ? '↑' : '↓'}
@@ -218,7 +218,7 @@ export function DiceHistoryPanel() {
           <button
             onClick={clearHistory}
             onPointerDown={e => e.stopPropagation()}
-            className="text-[11px] text-ink-200 hover:text-ink-500 underline transition-colors px-1 py-0.5"
+            className="text-[13px] text-ink-200 hover:text-ink-500 underline transition-colors px-1 py-0.5"
           >
             limpar
           </button>
@@ -235,7 +235,7 @@ export function DiceHistoryPanel() {
 
       {/* ── Modo da próxima rolagem (vantagem/desvantagem) ────── */}
       <div className="flex items-center gap-1 px-3 py-1.5 border-b border-parchment-600 bg-parchment-100 shrink-0">
-        <span className="text-[10px] ink-italic uppercase tracking-widest shrink-0 mr-1">Próxima:</span>
+        <span className="text-xs ink-italic uppercase tracking-widest shrink-0 mr-1">Próxima:</span>
         {[
           { v: 'normal', lbl: 'Normal', cls: 'border-ink-300 bg-parchment-50 text-ink-500' },
           { v: 'adv',    lbl: '↑ Vant.', cls: 'border-emerald-700 bg-emerald-100 text-emerald-800' },
@@ -246,7 +246,7 @@ export function DiceHistoryPanel() {
             <button
               key={opt.v}
               onClick={() => setMode?.(opt.v)}
-              className={`flex-1 text-[10px] font-bold py-0.5 rounded border transition-all ${
+              className={`flex-1 text-xs font-bold py-0.5 rounded border transition-all ${
                 active
                   ? opt.cls + ' shadow-inner'
                   : 'border-parchment-600 text-ink-200 hover:border-ink-300 hover:text-ink-500'

@@ -58,7 +58,7 @@ export function MulticlassModal({ open, draft, classes, multiclassData, onAdd, o
         onClick={e => e.stopPropagation()}
       >
         <header className="text-center">
-          <p className="text-[10px] ink-italic tracking-[0.3em] uppercase mb-1">Forjar Herói</p>
+          <p className="text-xs ink-italic tracking-[0.3em] uppercase mb-1">Forjar Herói</p>
           <h2 className="text-xl font-display text-ink-500 tracking-widest uppercase">
             Adicionar Classe
           </h2>

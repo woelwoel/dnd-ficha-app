@@ -17,7 +17,7 @@ function SkillRow({
       {/* Checkbox de proficiência — travado quando vem do antecedente */}
       {isBackgroundSkill && !isClassSkill ? (
         <span
-          className="w-4 h-4 flex items-center justify-center text-[10px] text-ink-300 shrink-0"
+          className="w-4 h-4 flex items-center justify-center text-xs text-ink-300 shrink-0"
           title="Proficiência do antecedente"
         >🎒</span>
       ) : (
@@ -35,7 +35,7 @@ function SkillRow({
         disabled={!proficient}
         tabIndex={proficient ? 0 : -1}
         title={expert ? 'Remover Especialização' : 'Adicionar Especialização (requer proficiência)'}
-        className={`w-4 h-4 flex items-center justify-center rounded shrink-0 text-[11px] leading-none transition-colors ${
+        className={`w-4 h-4 flex items-center justify-center rounded shrink-0 text-[13px] leading-none transition-colors ${
           expert
             ? 'text-ink-500 hover:text-ink-600 cursor-pointer'
             : proficient
@@ -54,7 +54,7 @@ function SkillRow({
       {/* Nome + atributo */}
       <span className={`text-sm leading-tight ${proficient ? 'text-ink-500' : 'text-ink-300'}`}>
         {skill.name}
-        <span className="text-ink-200 text-[10px] ml-1 font-display tracking-widest">
+        <span className="text-ink-200 text-xs ml-1 font-display tracking-widest">
           {skill.abbr}
         </span>
       </span>
@@ -78,7 +78,7 @@ export function SkillsList({ attributes, proficiencies, profBonus, onToggle, onT
         <h3 className="text-sm font-display text-ink-500 uppercase tracking-widest">
           Perícias
         </h3>
-        <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] ink-italic justify-end">
+        <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs ink-italic justify-end">
           <span>Prof: {formatModifier(profBonus)}</span>
           {skillLimit !== null && (
             <span className={selectedCount >= skillLimit ? 'text-ink-500 font-semibold not-italic' : ''}>

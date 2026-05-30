@@ -19,7 +19,7 @@ function ResourceTracker({ use, onSpend, onRegain }) {
     <div className="flex items-center justify-between gap-3 bg-gray-800/60 border border-gray-700 rounded-lg px-3 py-2">
       <div className="min-w-0">
         <p className="text-sm font-semibold text-gray-200">{use.name}</p>
-        <span className={`text-[10px] px-1.5 py-0.5 rounded-full border font-medium ${meta.color}`}>
+        <span className={`text-xs px-1.5 py-0.5 rounded-full border font-medium ${meta.color}`}>
           {meta.label}
         </span>
       </div>
@@ -65,7 +65,7 @@ function FeatureCard({ name, desc, source, level, tracker, onSpend, onRegain, de
           <div className="min-w-0">
             <span className="text-sm font-semibold text-gray-100">{name}</span>
             {(source || level) && (
-              <span className="text-[10px] text-gray-500 ml-2 capitalize">
+              <span className="text-xs text-gray-500 ml-2 capitalize">
                 {source}{level != null ? ` · Nv ${level}` : ''}
               </span>
             )}

@@ -67,7 +67,7 @@ export function BlockCard({
           {step != null && (
             <span
               aria-hidden
-              className="text-[10px] font-display tracking-widest text-ink-300 leading-none pt-0.5"
+              className="text-xs font-display tracking-widest text-ink-300 leading-none pt-0.5"
             >
               {ROMAN[step] ?? step + 1}
             </span>
@@ -83,7 +83,7 @@ export function BlockCard({
           </span>
         </div>
         <span className={[
-          'shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold border-2',
+          'shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold border-2',
           badge.cls,
         ].join(' ')}>
           {badge.icon}

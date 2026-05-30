@@ -35,7 +35,7 @@ function Row({ label, value, highlight }) {
 function StatBox({ label, value }) {
   return (
     <div className="border-2 border-parchment-600 bg-parchment-50 rounded-sm px-2 py-2 text-center">
-      <p className="text-[10px] font-display tracking-widest uppercase text-ink-300 mb-0.5">{label}</p>
+      <p className="text-xs font-display tracking-widest uppercase text-ink-300 mb-0.5">{label}</p>
       <p className="text-base font-display text-ink-500">{value}</p>
     </div>
   )
@@ -88,8 +88,8 @@ export function ReviewBlock({ draft, races, backgrounds, classData }) {
             const bonus = draft.racialBonuses?.[key] ?? 0
             return (
               <div key={key} className="border-2 border-parchment-600 bg-parchment-50 rounded-sm px-2 py-2 text-center">
-                <p className="text-[10px] font-display tracking-widest uppercase text-ink-300 mb-1">{abbr}</p>
-                {bonus > 0 && <p className="text-[10px] italic text-ink-200">{base}+{bonus}</p>}
+                <p className="text-xs font-display tracking-widest uppercase text-ink-300 mb-1">{abbr}</p>
+                {bonus > 0 && <p className="text-xs italic text-ink-200">{base}+{bonus}</p>}
                 <p className="text-lg font-display text-ink-500">{score}</p>
                 <p className="text-xs text-ink-200">{formatModifier(getModifier(score))}</p>
               </div>

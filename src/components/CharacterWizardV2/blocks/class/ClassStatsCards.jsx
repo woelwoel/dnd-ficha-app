@@ -3,9 +3,9 @@ import { calculateMaxHp } from '../../../../utils/calculations'
 function StatCard({ label, value, sub }) {
   return (
     <div className="border-2 border-parchment-600 bg-parchment-100 rounded-sm px-3 py-2">
-      <p className="text-[10px] font-display tracking-widest uppercase text-ink-300 mb-0.5">{label}</p>
+      <p className="text-xs font-display tracking-widest uppercase text-ink-300 mb-0.5">{label}</p>
       <p className="text-sm font-display text-ink-500">{value}</p>
-      {sub && <p className="text-[10px] italic text-ink-200">{sub}</p>}
+      {sub && <p className="text-xs italic text-ink-200">{sub}</p>}
     </div>
   )
 }

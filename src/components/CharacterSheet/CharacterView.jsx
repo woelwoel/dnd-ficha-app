@@ -23,7 +23,7 @@ function fmt(n) { return n >= 0 ? `+${n}` : `${n}` }
 
 function SectionHeader({ children }) {
   return (
-    <div className={`text-center text-[9px] font-black tracking-widest uppercase py-0.5 ${P.header} ${P.border} border-t border-x rounded-t`}>
+    <div className={`text-center text-[13px] font-black tracking-widest uppercase py-0.5 ${P.header} ${P.border} border-t border-x rounded-t`}>
       {children}
     </div>
   )
@@ -51,8 +51,8 @@ function Dot({ filled }) {
 function InfoField({ label, value }) {
   return (
     <div className={`border-b-2 ${P.border} text-center`}>
-      <div className={`text-[9px] font-black uppercase tracking-wide ${P.text} mt-0.5`}>{label}</div>
-      <div className={`text-[10px] font-semibold ${P.text} min-h-[18px] leading-tight py-0.5 break-words hyphens-auto`}>{value || ''}</div>
+      <div className={`text-[13px] font-black uppercase tracking-wide ${P.text} mt-0.5`}>{label}</div>
+      <div className={`text-xs font-semibold ${P.text} min-h-[18px] leading-tight py-0.5 break-words hyphens-auto`}>{value || ''}</div>
     </div>
   )
 }
@@ -83,8 +83,8 @@ function CheckRow({ proficient, label, value, subLabel }) {
   return (
     <div className="flex items-center gap-1 py-0.5">
       <Dot filled={proficient} />
-      <span className={`text-[10px] font-bold ${P.text} w-5 text-right shrink-0`}>{fmt(value)}</span>
-      <span className={`text-[9px] ${P.text} leading-tight min-w-0`}>
+      <span className={`text-xs font-bold ${P.text} w-5 text-right shrink-0`}>{fmt(value)}</span>
+      <span className={`text-[13px] ${P.text} leading-tight min-w-0`}>
         {label}
         {subLabel && <span className="text-[8px] opacity-60 ml-0.5">({subLabel})</span>}
       </span>
@@ -95,7 +95,7 @@ function CheckRow({ proficient, label, value, subLabel }) {
 /* ── Linha de ataque ── */
 function AttackRow({ name, bonus, damage, type }) {
   return (
-    <div className={`grid gap-1 text-[9px] border-b ${P.border} py-0.5`}
+    <div className={`grid gap-1 text-[13px] border-b ${P.border} py-0.5`}
          style={{ gridTemplateColumns: '2fr 1fr 2fr' }}>
       <span className={P.text}>{name}</span>
       <span className={`text-center font-bold ${P.text}`}>{bonus}</span>
@@ -115,7 +115,7 @@ function Coins({ currency }) {
       {coins.map(c => (
         <div key={c.key} className={`flex items-center gap-0.5 border ${P.border} rounded px-1 py-0.5 ${P.section}`}>
           <span className={`text-[8px] font-black ${P.text} w-4`}>{c.label}</span>
-          <span className={`text-[9px] font-bold ${P.text}`}>{currency?.[c.key] ?? 0}</span>
+          <span className={`text-[13px] font-bold ${P.text}`}>{currency?.[c.key] ?? 0}</span>
         </div>
       ))}
     </div>
@@ -210,7 +210,7 @@ export function CharacterView({
       {subTab === 'ficha' && (
     <div id="print-character-view" className="overflow-x-auto"><div style={{ minWidth: '560px' }}>
     <div
-      className={`${P.bg} ${P.text} text-[10px] font-serif p-2 rounded-lg`}
+      className={`${P.bg} ${P.text} text-xs font-serif p-2 rounded-lg`}
       style={{ fontFamily: "'Georgia', 'Times New Roman', serif" }}
     >
       {/* ── CABEÇALHO ── */}
@@ -218,7 +218,7 @@ export function CharacterView({
         {/* Logo D&D */}
         <div className="flex flex-col items-center justify-center">
           <span
-            className="font-black text-[11px] leading-none text-center"
+            className="font-black text-[13px] leading-none text-center"
             style={{ color: '#8b1a1a', fontFamily: 'Georgia, serif', letterSpacing: '-0.5px' }}
           >
             DUNGEONS<br />
@@ -302,7 +302,7 @@ export function CharacterView({
             </div>
             <div className="flex items-center gap-1">
               <div className={`w-5 h-5 rounded-full border-2 ${P.border} ${P.circle} flex items-center justify-center`}>
-                <span className="text-[9px] font-black">+{prof}</span>
+                <span className="text-[13px] font-black">+{prof}</span>
               </div>
               <span className="text-[8px] font-black uppercase leading-tight">Bônus de Proficiência</span>
             </div>
@@ -453,7 +453,7 @@ export function CharacterView({
             <Box label="Equipamentos" className="flex-1">
               <div className="min-h-[80px] space-y-0.5">
                 {inventory.items?.slice(0, 12).map(item => (
-                  <div key={item.id} className="flex justify-between text-[9px]">
+                  <div key={item.id} className="flex justify-between text-[13px]">
                     <span>{item.name}</span>
                     {item.quantity > 1 && <span className="text-[8px] opacity-60">×{item.quantity}</span>}
                   </div>
@@ -469,19 +469,19 @@ export function CharacterView({
 
           {/* ── Personalidade (direita-baixo) ── */}
           <Box label="Traços de Personalidade">
-            <p className="min-h-[36px] text-[9px] leading-tight whitespace-pre-wrap">{traits.personalityTraits || ''}</p>
+            <p className="min-h-[36px] text-[13px] leading-tight whitespace-pre-wrap">{traits.personalityTraits || ''}</p>
           </Box>
           <Box label="Ideais">
-            <p className="min-h-[28px] text-[9px] leading-tight whitespace-pre-wrap">{traits.ideals || ''}</p>
+            <p className="min-h-[28px] text-[13px] leading-tight whitespace-pre-wrap">{traits.ideals || ''}</p>
           </Box>
           <Box label="Ligações">
-            <p className="min-h-[28px] text-[9px] leading-tight whitespace-pre-wrap">{traits.bonds || ''}</p>
+            <p className="min-h-[28px] text-[13px] leading-tight whitespace-pre-wrap">{traits.bonds || ''}</p>
           </Box>
           <Box label="Defeitos">
-            <p className="min-h-[28px] text-[9px] leading-tight whitespace-pre-wrap">{traits.flaws || ''}</p>
+            <p className="min-h-[28px] text-[13px] leading-tight whitespace-pre-wrap">{traits.flaws || ''}</p>
           </Box>
           <Box label="Características e Habilidades" className="flex-1">
-            <p className="min-h-[60px] text-[9px] leading-tight whitespace-pre-wrap">{traits.featuresAndTraits || ''}</p>
+            <p className="min-h-[60px] text-[13px] leading-tight whitespace-pre-wrap">{traits.featuresAndTraits || ''}</p>
           </Box>
         </div>
       </div>
@@ -490,7 +490,7 @@ export function CharacterView({
       {traits.notes && (
         <div className="mt-1">
           <Box label="Notas de Campanha">
-            <p className="text-[9px] leading-tight whitespace-pre-wrap">{traits.notes}</p>
+            <p className="text-[13px] leading-tight whitespace-pre-wrap">{traits.notes}</p>
           </Box>
         </div>
       )}
@@ -534,7 +534,7 @@ function SpellsPage({ character, selectedClass, attributes, prof }) {
   return (
     <div className={`mt-2 border-t-4 ${P.border} pt-2`}>
       {/* Cabeçalho da página de magias */}
-      <div className={`text-center text-[10px] font-black tracking-widest uppercase py-1 ${P.header} ${P.border} border rounded mb-1`}>
+      <div className={`text-center text-xs font-black tracking-widest uppercase py-1 ${P.header} ${P.border} border rounded mb-1`}>
         ✦ Magias ✦
       </div>
 
@@ -556,7 +556,7 @@ function SpellsPage({ character, selectedClass, attributes, prof }) {
 
       {/* Lista de magias agrupadas */}
       {grouped.length === 0 ? (
-        <div className={`${P.section} ${P.border} border rounded p-2 text-center text-[9px] ${P.text} opacity-60`}>
+        <div className={`${P.section} ${P.border} border rounded p-2 text-center text-[13px] ${P.text} opacity-60`}>
           Nenhuma magia registrada
         </div>
       ) : (

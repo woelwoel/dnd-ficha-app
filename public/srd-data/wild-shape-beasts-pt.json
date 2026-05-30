@@ -37,21 +37,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Beak",
+          "name": "Bicada",
+          "nameEn": "Beak",
           "attackBonus": 2,
           "damageDice": "1d4",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 2 (1d4) piercing damage."
+          "desc": "Ataque corpo a corpo: +2 pra acertar, alcance 5 pés, um alvo. Acerto: 2 (1d4) de dano perfuração."
         }
       ],
       "traits": [
         {
-          "name": "Keen Sight and Smell",
-          "desc": "The vulture has advantage on Wisdom (Perception) checks that rely on sight or smell."
+          "name": "Visão e Olfato Aguçados",
+          "nameEn": "Keen Sight and Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam da visão ou olfato."
         },
         {
-          "name": "Pack Tactics",
-          "desc": "The vulture has advantage on an attack roll against a creature if at least one of the vulture's allies is within 5 ft. of the creature and the ally isn't incapacitated."
+          "name": "Táticas de Matilha",
+          "nameEn": "Pack Tactics",
+          "desc": "Tem vantagem em jogadas de ataque contra uma criatura se pelo menos um aliado estiver a até 1,5m do alvo e não estiver incapacitado."
         }
       ]
     },
@@ -91,17 +94,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Talons",
+          "name": "Garras",
+          "nameEn": "Talons",
           "attackBonus": 4,
           "damageDice": "1d4+2",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) slashing damage."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, um alvo. Acerto: 4 (1d4 + 2) de dano corte."
         }
       ],
       "traits": [
         {
-          "name": "Keen Sight",
-          "desc": "The eagle has advantage on Wisdom (Perception) checks that rely on sight."
+          "name": "Visão Aguçada",
+          "nameEn": "Keen Sight",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam da visão."
         }
       ]
     },
@@ -142,25 +147,29 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 4,
           "damageDice": "1",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one creature. Hit: 1 piercing damage, and the target must succeed on a DC 9 Constitution saving throw or take 2 (1d4) poison damage."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, uma criatura. Acerto: 1 de dano perfuração, e o alvo precisa passar em TR de Constituição CD 9 ou sofrer 2 (1d4) veneno damage."
         }
       ],
       "traits": [
         {
-          "name": "Spider Climb",
-          "desc": "The spider can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check."
+          "name": "Escalada de Aranha",
+          "nameEn": "Spider Climb",
+          "desc": "Pode escalar superfícies difíceis, incluindo de cabeça pra baixo em tetos, sem teste."
         },
         {
-          "name": "Web Sense",
-          "desc": "While in contact with a web, the spider knows the exact location of any other creature in contact with the same web."
+          "name": "Sentido das Teias",
+          "nameEn": "Web Sense",
+          "desc": "Em contato com uma teia, sabe a localização exata de qualquer criatura em contato com a mesma teia."
         },
         {
-          "name": "Web Walker",
-          "desc": "The spider ignores movement restrictions caused by webbing."
+          "name": "Caminhar em Teias",
+          "nameEn": "Web Walker",
+          "desc": "Ignora restrições de movimento causadas por teias."
         }
       ]
     },
@@ -200,17 +209,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 1,
           "damageDice": "1d4-1",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +1 to hit, reach 5 ft., one target. Hit: 1 (1d4 - 1) piercing damage."
+          "desc": "Ataque corpo a corpo: +1 pra acertar, alcance 5 pés, um alvo. Acerto: 1 (1d4 - 1) de dano perfuração."
         }
       ],
       "traits": [
         {
-          "name": "Pack Tactics",
-          "desc": "The baboon has advantage on an attack roll against a creature if at least one of the baboon's allies is within 5 ft. of the creature and the ally isn't incapacitated."
+          "name": "Táticas de Matilha",
+          "nameEn": "Pack Tactics",
+          "desc": "Tem vantagem em jogadas de ataque contra uma criatura se pelo menos um aliado estiver a até 1,5m do alvo e não estiver incapacitado."
         }
       ]
     },
@@ -246,17 +257,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 1,
           "damageDice": "1d6-1",
           "damageType": "corte",
-          "desc": "Melee Weapon Attack: +1 to hit, reach 5 ft., one target. Hit: 2 (1d6 - 1) slashing damage."
+          "desc": "Ataque corpo a corpo: +1 pra acertar, alcance 5 pés, um alvo. Acerto: 2 (1d6 - 1) de dano corte."
         }
       ],
       "traits": [
         {
-          "name": "Illumination",
-          "desc": "The beetle sheds bright light in a 10-foot radius and dim light for an additional 10 ft.."
+          "name": "Iluminação",
+          "nameEn": "Illumination",
+          "desc": "Emite luz brilhante num raio de 3m e luz fraca por mais 3m."
         }
       ]
     },
@@ -291,21 +304,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Ram",
+          "name": "Investida",
+          "nameEn": "Ram",
           "attackBonus": 3,
           "damageDice": "1d4+1",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 3 (1d4 + 1) bludgeoning damage."
+          "desc": "Ataque corpo a corpo: +3 pra acertar, alcance 5 pés, um alvo. Acerto: 3 (1d4 + 1) de dano concussão."
         }
       ],
       "traits": [
         {
-          "name": "Charge",
-          "desc": "If the goat moves at least 20 ft. straight toward a target and then hits it with a ram attack on the same turn, the target takes an extra 2 (1d4) bludgeoning damage. If the target is a creature, it must succeed on a DC 10 Strength saving throw or be knocked prone."
+          "name": "Investida",
+          "nameEn": "Charge",
+          "desc": "Se mover pelo menos 6m em linha reta em direção a um alvo e acertar com um ataque na mesma rodada, o alvo sofre +3 (1d6) de dano extra. Se for criatura, precisa passar em TR de Força CD 11 ou cair caída."
         },
         {
-          "name": "Sure-Footed",
-          "desc": "The goat has advantage on Strength and Dexterity saving throws made against effects that would knock it prone."
+          "name": "Pisada Firme",
+          "nameEn": "Sure-Footed",
+          "desc": "Tem vantagem em TR de Força e Destreza contra efeitos que a derrubariam."
         }
       ]
     },
@@ -346,17 +362,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Claw",
+          "name": "Garras",
+          "nameEn": "Claw",
           "attackBonus": 0,
           "damageDice": "1",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +0 to hit, reach 5 ft., one target. Hit: 1 bludgeoning damage."
+          "desc": "Ataque corpo a corpo: +0 pra acertar, alcance 5 pés, um alvo. Acerto: 1 de dano concussão."
         }
       ],
       "traits": [
         {
-          "name": "Amphibious",
-          "desc": "The crab can breathe air and water."
+          "name": "Anfíbio",
+          "nameEn": "Amphibious",
+          "desc": "Respira tanto ar quanto água."
         }
       ]
     },
@@ -392,8 +410,9 @@
       "attacks": [],
       "traits": [
         {
-          "name": "Water Breathing",
-          "desc": "The sea horse can breathe only underwater."
+          "name": "Respiração Aquática",
+          "nameEn": "Water Breathing",
+          "desc": "Só consegue respirar debaixo d'água."
         }
       ]
     },
@@ -428,11 +447,12 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 2,
           "damageDice": "1d4",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 2 (1d4) piercing damage."
+          "desc": "Ataque corpo a corpo: +2 pra acertar, alcance 5 pés, um alvo. Acerto: 2 (1d4) de dano perfuração."
         }
       ],
       "traits": []
@@ -468,21 +488,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 1,
           "damageDice": "1d4-1",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +1 to hit, reach 5 ft., one target. Hit: 1 (1d4 - 1) piercing damage."
+          "desc": "Ataque corpo a corpo: +1 pra acertar, alcance 5 pés, um alvo. Acerto: 1 (1d4 - 1) de dano perfuração."
         }
       ],
       "traits": [
         {
-          "name": "Keen Hearing and Smell",
-          "desc": "The jackal has advantage on Wisdom (Perception) checks that rely on hearing or smell."
+          "name": "Audição e Olfato Aguçados",
+          "nameEn": "Keen Hearing and Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam da audição ou olfato."
         },
         {
-          "name": "Pack Tactics",
-          "desc": "The jackal has advantage on an attack roll against a creature if at least one of the jackal's allies is within 5 ft. of the creature and the ally isn't incapacitated."
+          "name": "Táticas de Matilha",
+          "nameEn": "Pack Tactics",
+          "desc": "Tem vantagem em jogadas de ataque contra uma criatura se pelo menos um aliado estiver a até 1,5m do alvo e não estiver incapacitado."
         }
       ]
     },
@@ -523,21 +546,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Talons",
+          "name": "Garras",
+          "nameEn": "Talons",
           "attackBonus": 3,
           "damageDice": "1",
           "damageType": "corte",
-          "desc": "Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 1 slashing damage."
+          "desc": "Ataque corpo a corpo: +3 pra acertar, alcance 5 pés, um alvo. Acerto: 1 de dano corte."
         }
       ],
       "traits": [
         {
-          "name": "Flyby",
-          "desc": "The owl doesn't provoke opportunity attacks when it flies out of an enemy's reach."
+          "name": "Voo Rasante",
+          "nameEn": "Flyby",
+          "desc": "Não provoca ataques de oportunidade ao voar para fora do alcance de um inimigo."
         },
         {
-          "name": "Keen Hearing and Sight",
-          "desc": "The owl has advantage on Wisdom (Perception) checks that rely on hearing or sight."
+          "name": "Audição e Visão Aguçadas",
+          "nameEn": "Keen Hearing and Sight",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam da audição ou visão."
         }
       ]
     },
@@ -577,17 +603,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Beak",
+          "name": "Bicada",
+          "nameEn": "Beak",
           "attackBonus": 4,
           "damageDice": "1",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 1 piercing damage."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, um alvo. Acerto: 1 de dano perfuração."
         }
       ],
       "traits": [
         {
-          "name": "Mimicry",
-          "desc": "The raven can mimic simple sounds it has heard, such as a person whispering, a baby crying, or an animal chittering. A creature that hears the sounds can tell they are imitations with a successful DC 10 Wisdom (Insight) check."
+          "name": "Mimetismo",
+          "nameEn": "Mimicry",
+          "desc": "Pode imitar sons simples que tenha ouvido (sussurros, choro de bebê, animais). Uma criatura pode identificar como imitação com teste de Sabedoria (Intuição) CD 10."
         }
       ]
     },
@@ -622,17 +650,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 5,
           "damageDice": "1",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one creature. Hit: 1 piercing damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, uma criatura. Acerto: 1 de dano perfuração."
         }
       ],
       "traits": [
         {
-          "name": "Keen Hearing and Smell",
-          "desc": "The weasel has advantage on Wisdom (Perception) checks that rely on hearing or smell."
+          "name": "Audição e Olfato Aguçados",
+          "nameEn": "Keen Hearing and Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam da audição ou olfato."
         }
       ]
     },
@@ -668,11 +698,12 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Sting",
+          "name": "Ferrão",
+          "nameEn": "Sting",
           "attackBonus": 2,
           "damageDice": "1",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +2 to hit, reach 5 ft., one creature. Hit: 1 piercing damage, and the target must make a DC 9 Constitution saving throw, taking 4 (1d8) poison damage on a failed save, or half as much damage on a successful one."
+          "desc": "Ataque corpo a corpo: +2 pra acertar, alcance 5 pés, uma criatura. Acerto: 1 de dano perfuração, e o alvo precisa fazer um TR de Constituição CD 9, sofrendo 4 (1d8) de dano veneno em falha, ou metade do dano em sucesso."
         }
       ],
       "traits": []
@@ -713,17 +744,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Talons",
+          "name": "Garras",
+          "nameEn": "Talons",
           "attackBonus": 5,
           "damageDice": "1",
           "damageType": "corte",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 1 slashing damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 1 de dano corte."
         }
       ],
       "traits": [
         {
-          "name": "Keen Sight",
-          "desc": "The hawk has advantage on Wisdom (Perception) checks that rely on sight."
+          "name": "Visão Aguçada",
+          "nameEn": "Keen Sight",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam da visão."
         }
       ]
     },
@@ -763,17 +796,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Claws",
+          "name": "Garras",
+          "nameEn": "Claws",
           "attackBonus": 0,
           "damageDice": "1",
           "damageType": "corte",
-          "desc": "Melee Weapon Attack: +0 to hit, reach 5 ft., one target. Hit: 1 slashing damage."
+          "desc": "Ataque corpo a corpo: +0 pra acertar, alcance 5 pés, um alvo. Acerto: 1 de dano corte."
         }
       ],
       "traits": [
         {
-          "name": "Keen Smell",
-          "desc": "The cat has advantage on Wisdom (Perception) checks that rely on smell."
+          "name": "Olfato Aguçado",
+          "nameEn": "Keen Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam do olfato."
         }
       ]
     },
@@ -808,17 +843,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 2,
           "damageDice": "1d6",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 3 (1d6) piercing damage."
+          "desc": "Ataque corpo a corpo: +2 pra acertar, alcance 5 pés, um alvo. Acerto: 3 (1d6) de dano perfuração."
         }
       ],
       "traits": [
         {
-          "name": "Pack Tactics",
-          "desc": "The hyena has advantage on an attack roll against a creature if at least one of the hyena's allies is within 5 ft. of the creature and the ally isn't incapacitated."
+          "name": "Táticas de Matilha",
+          "nameEn": "Pack Tactics",
+          "desc": "Tem vantagem em jogadas de ataque contra uma criatura se pelo menos um aliado estiver a até 1,5m do alvo e não estiver incapacitado."
         }
       ]
     },
@@ -859,11 +896,12 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 0,
           "damageDice": "1",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +0 to hit, reach 5 ft., one target. Hit: 1 piercing damage."
+          "desc": "Ataque corpo a corpo: +0 pra acertar, alcance 5 pés, um alvo. Acerto: 1 de dano perfuração."
         }
       ],
       "traits": []
@@ -905,21 +943,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 0,
           "damageDice": "1",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +0 to hit, reach 5 ft., one creature. Hit: 1 piercing damage."
+          "desc": "Ataque corpo a corpo: +0 pra acertar, alcance 5 pés, uma criatura. Acerto: 1 de dano perfuração."
         }
       ],
       "traits": [
         {
-          "name": "Echolocation",
-          "desc": "The bat can't use its blindsight while deafened."
+          "name": "Ecolocalização",
+          "nameEn": "Echolocation",
+          "desc": "Não pode usar visão cega enquanto estiver ensurdecida."
         },
         {
-          "name": "Keen Hearing",
-          "desc": "The bat has advantage on Wisdom (Perception) checks that rely on hearing."
+          "name": "Audição Aguçada",
+          "nameEn": "Keen Hearing",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam da audição."
         }
       ]
     },
@@ -960,25 +1001,29 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Tentacles",
+          "name": "Tentáculos",
+          "nameEn": "Tentacles",
           "attackBonus": 4,
           "damageDice": "1",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 1 bludgeoning damage, and the target is grappled (escape DC 10). Until this grapple ends, the octopus can't use its tentacles on another target."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, um alvo. Acerto: 1 de dano concussão, e o alvo fica agarrada (CD pra escapar 10). Enquanto agarrada, não pode usar seus tentáculos em outro alvo."
         }
       ],
       "traits": [
         {
-          "name": "Hold Breath",
-          "desc": "While out of water, the octopus can hold its breath for 30 minutes."
+          "name": "Prender Fôlego",
+          "nameEn": "Hold Breath",
+          "desc": "Pode prender o fôlego por 15 minutos."
         },
         {
-          "name": "Underwater Camouflage",
-          "desc": "The octopus has advantage on Dexterity (Stealth) checks made while underwater."
+          "name": "Camuflagem Submersa",
+          "nameEn": "Underwater Camouflage",
+          "desc": "Tem vantagem em testes de Destreza (Furtividade) feitos debaixo d'água."
         },
         {
-          "name": "Water Breathing",
-          "desc": "The octopus can breathe only underwater."
+          "name": "Respiração Aquática",
+          "nameEn": "Water Breathing",
+          "desc": "Só consegue respirar debaixo d'água."
         }
       ]
     },
@@ -1014,21 +1059,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 5,
           "damageDice": "1",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 1 piercing damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 1 de dano perfuração."
         }
       ],
       "traits": [
         {
-          "name": "Blood Frenzy",
-          "desc": "The quipper has advantage on melee attack rolls against any creature that doesn't have all its hit points."
+          "name": "Frenesi Sanguinário",
+          "nameEn": "Blood Frenzy",
+          "desc": "Tem vantagem em ataques corpo a corpo contra qualquer criatura que não esteja com PV cheios."
         },
         {
-          "name": "Water Breathing",
-          "desc": "The quipper can breathe only underwater."
+          "name": "Respiração Aquática",
+          "nameEn": "Water Breathing",
+          "desc": "Só consegue respirar debaixo d'água."
         }
       ]
     },
@@ -1064,17 +1112,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 0,
           "damageDice": "1",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +0 to hit, reach 5 ft., one target. Hit: 1 piercing damage."
+          "desc": "Ataque corpo a corpo: +0 pra acertar, alcance 5 pés, um alvo. Acerto: 1 de dano perfuração."
         }
       ],
       "traits": [
         {
-          "name": "Keen Smell",
-          "desc": "The rat has advantage on Wisdom (Perception) checks that rely on smell."
+          "name": "Olfato Aguçado",
+          "nameEn": "Keen Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam do olfato."
         }
       ]
     },
@@ -1116,12 +1166,14 @@
       "attacks": [],
       "traits": [
         {
-          "name": "Amphibious",
-          "desc": "The frog can breathe air and water"
+          "name": "Anfíbio",
+          "nameEn": "Amphibious",
+          "desc": "Respira tanto ar quanto água."
         },
         {
-          "name": "Standing Leap",
-          "desc": "The frog's long jump is up to 10 ft. and its high jump is up to 5 ft., with or without a running start."
+          "name": "Salto Parado",
+          "nameEn": "Standing Leap",
+          "desc": "Salto em distância de até 3m e salto em altura de até 1,5m, com ou sem corrida."
         }
       ]
     },
@@ -1162,17 +1214,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 2,
           "damageDice": "1",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 1 piercing damage."
+          "desc": "Ataque corpo a corpo: +2 pra acertar, alcance 5 pés, um alvo. Acerto: 1 de dano perfuração."
         }
       ],
       "traits": [
         {
-          "name": "Keen Smell",
-          "desc": "The badger has advantage on Wisdom (Perception) checks that rely on smell."
+          "name": "Olfato Aguçado",
+          "nameEn": "Keen Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam do olfato."
         }
       ]
     },
@@ -1207,11 +1261,12 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 5,
           "damageDice": "1d4",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 2 (1d4) bludgeoning damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 2 (1d4) de dano concussão."
         }
       ],
       "traits": []
@@ -1253,17 +1308,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Claw",
+          "name": "Garras",
+          "nameEn": "Claw",
           "attackBonus": 3,
           "damageDice": "1d6+1",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) bludgeoning damage, and the target is grappled (escape DC 11). The crab has two claws, each of which can grapple only one target."
+          "desc": "Ataque corpo a corpo: +3 pra acertar, alcance 5 pés, um alvo. Acerto: 4 (1d6 + 1) de dano concussão, e o alvo fica agarrada (CD pra escapar 11). crab has two claws, cada of which can grapple apenas um alvo."
         }
       ],
       "traits": [
         {
-          "name": "Amphibious",
-          "desc": "The crab can breathe air and water."
+          "name": "Anfíbio",
+          "nameEn": "Amphibious",
+          "desc": "Respira tanto ar quanto água."
         }
       ]
     },
@@ -1304,11 +1361,12 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 5,
           "damageDice": "1",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 1 piercing damage, and the target must make a DC 10 Constitution saving throw, taking 5 (2d4) poison damage on a failed save, or half as much damage on a successful one."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 1 de dano perfuração, e o alvo precisa fazer um TR de Constituição CD 10, sofrendo 5 (2d4) de dano veneno em falha, ou metade do dano em sucesso."
         }
       ],
       "traits": []
@@ -1355,17 +1413,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 6,
           "damageDice": "1",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 1 piercing damage plus 7 (3d4) poison damage."
+          "desc": "Ataque corpo a corpo: +6 pra acertar, alcance 5 pés, um alvo. Acerto: 1 de dano perfuração mais 7 (3d4) de dano veneno."
         }
       ],
       "traits": [
         {
-          "name": "Flyby",
-          "desc": "The snake doesn't provoke opportunity attacks when it flies out of an enemy's reach."
+          "name": "Voo Rasante",
+          "nameEn": "Flyby",
+          "desc": "Não provoca ataques de oportunidade ao voar para fora do alcance de um inimigo."
         }
       ]
     },
@@ -1401,17 +1461,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 5,
           "damageDice": "1d4+3",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 5 (1d4 + 3) piercing damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 5 (1d4 + 3) de dano perfuração."
         }
       ],
       "traits": [
         {
-          "name": "Keen Hearing and Smell",
-          "desc": "The weasel has advantage on Wisdom (Perception) checks that rely on hearing or smell."
+          "name": "Audição e Olfato Aguçados",
+          "nameEn": "Keen Hearing and Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam da audição ou olfato."
         }
       ]
     },
@@ -1452,11 +1514,12 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Blood Drain",
+          "name": "Drenar Sangue",
+          "nameEn": "Blood Drain",
           "attackBonus": 5,
           "damageDice": "1d4+3",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one creature. Hit: 5 (1d4 + 3) piercing damage, and the stirge attaches to the target. While attached, the stirge doesn't attack. Instead, at the start of each of the stirge's turns, the target loses 5 (1d4 + 3) hit points due to blood loss.\nThe stirge can detach itself by spending 5 feet of its movement. It does so after it drains 10 hit points of blood from the target or the target dies. A creature, including the target, can use its action to detach the stirge."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, uma criatura. Acerto: 5 (1d4 + 3) de dano perfuração, e stirge attaches to o alvo. While agarrada, stirge doesn't ataque. Instead, at start of cada of stirge's turns, o alvo loses 5 (1d4 + 3) PV due to blood loss. stirge can detach itself by gastando 5 pés of its deslocamento. It does so após ela drains 10 PV of blood de o alvo ou o alvo dies. A criatura, incluindo o alvo, can usar seus ação to detach stirge."
         }
       ],
       "traits": []
@@ -1497,21 +1560,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Beak",
+          "name": "Bicada",
+          "nameEn": "Beak",
           "attackBonus": 4,
           "damageDice": "1d4+2",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) piercing damage."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, um alvo. Acerto: 4 (1d4 + 2) de dano perfuração."
         }
       ],
       "traits": [
         {
-          "name": "Keen Sight",
-          "desc": "The hawk has advantage on Wisdom (Perception) checks that rely on sight."
+          "name": "Visão Aguçada",
+          "nameEn": "Keen Sight",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam da visão."
         },
         {
-          "name": "Pack Tactics",
-          "desc": "The hawk has advantage on an attack roll against a creature if at least one of the hawk's allies is within 5 ft. of the creature and the ally isn't incapacitated."
+          "name": "Táticas de Matilha",
+          "nameEn": "Pack Tactics",
+          "desc": "Tem vantagem em jogadas de ataque contra uma criatura se pelo menos um aliado estiver a até 1,5m do alvo e não estiver incapacitado."
         }
       ]
     },
@@ -1546,17 +1612,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 3,
           "damageDice": "1d6+1",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) piercing damage. If the target is a creature, it must succeed on a DC 11 Strength saving throw or be knocked prone."
+          "desc": "Ataque corpo a corpo: +3 pra acertar, alcance 5 pés, um alvo. Acerto: 4 (1d6 + 1) de dano perfuração. Se o alvo for criatura, ela precisa passar em TR de Força CD 11 ou cair caída."
         }
       ],
       "traits": [
         {
-          "name": "Keen Hearing and Smell",
-          "desc": "The mastiff has advantage on Wisdom (Perception) checks that rely on hearing or smell."
+          "name": "Audição e Olfato Aguçados",
+          "nameEn": "Keen Hearing and Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam da audição ou olfato."
         }
       ]
     },
@@ -1591,21 +1659,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Hooves",
+          "name": "Cascos",
+          "nameEn": "Hooves",
           "attackBonus": 2,
           "damageDice": "1d4+2",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) bludgeoning damage."
+          "desc": "Ataque corpo a corpo: +2 pra acertar, alcance 5 pés, um alvo. Acerto: 4 (1d4 + 2) de dano concussão."
         }
       ],
       "traits": [
         {
-          "name": "Beast of Burden",
-          "desc": "The mule is considered to be a Large animal for the purpose of determining its carrying capacity."
+          "name": "Animal de Carga",
+          "nameEn": "Beast of Burden",
+          "desc": "Conta como animal Grande pra determinar capacidade de carga."
         },
         {
-          "name": "Sure-Footed",
-          "desc": "The mule has advantage on Strength and Dexterity saving throws made against effects that would knock it prone."
+          "name": "Pisada Firme",
+          "nameEn": "Sure-Footed",
+          "desc": "Tem vantagem em TR de Força e Destreza contra efeitos que a derrubariam."
         }
       ]
     },
@@ -1640,11 +1711,12 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Hooves",
+          "name": "Cascos",
+          "nameEn": "Hooves",
           "attackBonus": 4,
           "damageDice": "2d4+2",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (2d4 + 2) bludgeoning damage."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, um alvo. Acerto: 7 (2d4 + 2) de dano concussão."
         }
       ],
       "traits": []
@@ -1681,21 +1753,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 4,
           "damageDice": "1d4+2",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) piercing damage."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, um alvo. Acerto: 4 (1d4 + 2) de dano perfuração."
         }
       ],
       "traits": [
         {
-          "name": "Keen Smell",
-          "desc": "The rat has advantage on Wisdom (Perception) checks that rely on smell."
+          "name": "Olfato Aguçado",
+          "nameEn": "Keen Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam do olfato."
         },
         {
-          "name": "Pack Tactics",
-          "desc": "The rat has advantage on an attack roll against a creature if at least one of the rat's allies is within 5 ft. of the creature and the ally isn't incapacitated."
+          "name": "Táticas de Matilha",
+          "nameEn": "Pack Tactics",
+          "desc": "Tem vantagem em jogadas de ataque contra uma criatura se pelo menos um aliado estiver a até 1,5m do alvo e não estiver incapacitado."
         }
       ]
     },
@@ -1731,21 +1806,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 4,
           "damageDice": "1d4+2",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 3 (1d4 + 2) piercing damage. If the target is a creature, it must succeed on a DC 10 Constitution saving throw or contract a disease. Until the disease is cured, the target can't regain hit points except by magical means, and the target's hit point maximum decreases by 3 (1d6) every 24 hours. If the target's hit point maximum drops to 0 as a result of this disease, the target dies."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, um alvo. Acerto: 3 (1d4 + 2) de dano perfuração. Se o alvo for criatura, ela precisa passar em TR de Constituição CD 10 ou contract a disease. Until disease is curada, não pode regain PV except by magical means, e o alvo's hit point maximum decreases by 3 (1d6) every 24 horas. Se o alvo's hit point maximum drops to 0 as a result of isso disease, o alvo dies."
         }
       ],
       "traits": [
         {
-          "name": "Keen Smell",
-          "desc": "The rat has advantage on Wisdom (Perception) checks that rely on smell."
+          "name": "Olfato Aguçado",
+          "nameEn": "Keen Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam do olfato."
         },
         {
-          "name": "Pack Tactics",
-          "desc": "The rat has advantage on an attack roll against a creature if at least one of the rat's allies is within 5 ft. of the creature and the ally isn't incapacitated."
+          "name": "Táticas de Matilha",
+          "nameEn": "Pack Tactics",
+          "desc": "Tem vantagem em jogadas de ataque contra uma criatura se pelo menos um aliado estiver a até 1,5m do alvo e não estiver incapacitado."
         }
       ]
     },
@@ -1780,24 +1858,27 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Ram",
+          "name": "Investida",
+          "nameEn": "Ram",
           "attackBonus": 5,
           "damageDice": "1d6+3",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) bludgeoning damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 6 (1d6 + 3) de dano concussão."
         },
         {
-          "name": "Hooves",
+          "name": "Cascos",
+          "nameEn": "Hooves",
           "attackBonus": 5,
           "damageDice": "2d4+3",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one prone creature. Hit: 8 (2d4 + 3) bludgeoning damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, uma criatura caída. Acerto: 8 (2d4 + 3) de dano concussão."
         }
       ],
       "traits": [
         {
-          "name": "Charge",
-          "desc": "If the elk moves at least 20 ft. straight toward a target and then hits it with a ram attack on the same turn, the target takes an extra 7 (2d6) damage. If the target is a creature, it must succeed on a DC 13 Strength saving throw or be knocked prone."
+          "name": "Investida",
+          "nameEn": "Charge",
+          "desc": "Se mover pelo menos 6m em linha reta em direção a um alvo e acertar com um ataque na mesma rodada, o alvo sofre +3 (1d6) de dano extra. Se for criatura, precisa passar em TR de Força CD 11 ou cair caída."
         }
       ]
     },
@@ -1839,25 +1920,29 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 3,
           "damageDice": "1d6+1",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +3 to hit, reach 5 ft., one creature. Hit: 4 (1d6 + 1) piercing damage, and the target must make a DC 11 Constitution saving throw, taking 7 (2d6) poison damage on a failed save, or half as much damage on a successful one. If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way."
+          "desc": "Ataque corpo a corpo: +3 pra acertar, alcance 5 pés, uma criatura. Acerto: 4 (1d6 + 1) de dano perfuração, e o alvo precisa fazer um TR de Constituição CD 11, sofrendo 7 (2d6) de dano veneno em falha, ou metade do dano em sucesso. Se o dano de veneno reduzir o alvo a 0 PV, o alvo fica estabilizada mas envenenada por 1 hora, mesmo após recuperar PV, e fica paralisada enquanto envenenada dessa forma."
         }
       ],
       "traits": [
         {
-          "name": "Spider Climb",
-          "desc": "The spider can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check."
+          "name": "Escalada de Aranha",
+          "nameEn": "Spider Climb",
+          "desc": "Pode escalar superfícies difíceis, incluindo de cabeça pra baixo em tetos, sem teste."
         },
         {
-          "name": "Web Sense",
-          "desc": "While in contact with a web, the spider knows the exact location of any other creature in contact with the same web."
+          "name": "Sentido das Teias",
+          "nameEn": "Web Sense",
+          "desc": "Em contato com uma teia, sabe a localização exata de qualquer criatura em contato com a mesma teia."
         },
         {
-          "name": "Web Walker",
-          "desc": "The spider ignores movement restrictions caused by webbing."
+          "name": "Caminhar em Teias",
+          "nameEn": "Web Walker",
+          "desc": "Ignora restrições de movimento causadas por teias."
         }
       ]
     },
@@ -1892,11 +1977,12 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Beak",
+          "name": "Bicada",
+          "nameEn": "Beak",
           "attackBonus": 4,
           "damageDice": "1d8+2",
           "damageType": "corte",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 6 (1d8 + 2) slashing damage."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, um alvo. Acerto: 6 (1d8 + 2) de dano corte."
         }
       ],
       "traits": []
@@ -1932,11 +2018,12 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Hooves",
+          "name": "Cascos",
+          "nameEn": "Hooves",
           "attackBonus": 6,
           "damageDice": "2d4+4",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 9 (2d4 + 4) bludgeoning damage."
+          "desc": "Ataque corpo a corpo: +6 pra acertar, alcance 5 pés, um alvo. Acerto: 9 (2d4 + 4) de dano concussão."
         }
       ],
       "traits": []
@@ -1972,11 +2059,12 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Hooves",
+          "name": "Cascos",
+          "nameEn": "Hooves",
           "attackBonus": 5,
           "damageDice": "2d4+3",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 8 (2d4 + 3) bludgeoning damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 8 (2d4 + 3) de dano concussão."
         }
       ],
       "traits": []
@@ -2018,11 +2106,12 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 4,
           "damageDice": "1d4+2",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one creature. Hit: 4 (1d4 + 2) piercing damage, and the target must succeed on a DC 11 Constitution saving throw or take 10 (3d6) poison damage. If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, uma criatura. Acerto: 4 (1d4 + 2) de dano perfuração, e o alvo precisa passar em TR de Constituição CD 11 ou sofrer 10 (3d6) veneno damage. Se o dano de veneno reduzir o alvo a 0 PV, o alvo fica estabilizada mas envenenada por 1 hora, mesmo após recuperar PV, e fica paralisada enquanto envenenada dessa forma."
         }
       ],
       "traits": []
@@ -2064,18 +2153,20 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 4,
           "damageDice": "1d6+2",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one creature. Hit: 5 (1d6 + 2) piercing damage."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, uma criatura. Acerto: 5 (1d6 + 2) de dano perfuração."
         },
         {
-          "name": "Constrict",
+          "name": "Constrição",
+          "nameEn": "Constrict",
           "attackBonus": 4,
           "damageDice": "1d8+2",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one creature. Hit: 6 (1d8 + 2) bludgeoning damage, and the target is grappled (escape DC 14). Until this grapple ends, the creature is restrained, and the snake can't constrict another target."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, uma criatura. Acerto: 6 (1d8 + 2) de dano concussão, e o alvo fica agarrada (CD pra escapar 14). Enquanto agarrada, criatura fica restringido, e não pode constringir outro alvo."
         }
       ],
       "traits": []
@@ -2117,11 +2208,12 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 6,
           "damageDice": "1d4+4",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +6 to hit, reach 10 ft., one target. Hit: 6 (1d4 + 4) piercing damage, and the target must make a DC 11 Constitution saving throw, taking 10 (3d6) poison damage on a failed save, or half as much damage on a successful one."
+          "desc": "Ataque corpo a corpo: +6 pra acertar, alcance 10 pés, um alvo. Acerto: 6 (1d4 + 4) de dano perfuração, e o alvo precisa fazer um TR de Constituição CD 11, sofrendo 10 (3d6) de dano veneno em falha, ou metade do dano em sucesso."
         }
       ],
       "traits": []
@@ -2163,21 +2255,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Talons",
+          "name": "Garras",
+          "nameEn": "Talons",
           "attackBonus": 3,
           "damageDice": "2d6+1",
           "damageType": "corte",
-          "desc": "Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 8 (2d6 + 1) slashing damage."
+          "desc": "Ataque corpo a corpo: +3 pra acertar, alcance 5 pés, um alvo. Acerto: 8 (2d6 + 1) de dano corte."
         }
       ],
       "traits": [
         {
-          "name": "Flyby",
-          "desc": "The owl doesn't provoke opportunity attacks when it flies out of an enemy's reach."
+          "name": "Voo Rasante",
+          "nameEn": "Flyby",
+          "desc": "Não provoca ataques de oportunidade ao voar para fora do alcance de um inimigo."
         },
         {
-          "name": "Keen Hearing and Sight",
-          "desc": "The owl has advantage on Wisdom (Perception) checks that rely on hearing or sight."
+          "name": "Audição e Visão Aguçadas",
+          "nameEn": "Keen Hearing and Sight",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam da audição ou visão."
         }
       ]
     },
@@ -2212,21 +2307,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Tusk",
+          "name": "Presa",
+          "nameEn": "Tusk",
           "attackBonus": 3,
           "damageDice": "1d6+1",
           "damageType": "corte",
-          "desc": "Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage."
+          "desc": "Ataque corpo a corpo: +3 pra acertar, alcance 5 pés, um alvo. Acerto: 4 (1d6 + 1) de dano corte."
         }
       ],
       "traits": [
         {
-          "name": "Charge",
-          "desc": "If the boar moves at least 20 ft. straight toward a target and then hits it with a tusk attack on the same turn, the target takes an extra 3 (1d6) slashing damage. If the target is a creature, it must succeed on a DC 11 Strength saving throw or be knocked prone."
+          "name": "Investida",
+          "nameEn": "Charge",
+          "desc": "Se mover pelo menos 6m em linha reta em direção a um alvo e acertar com um ataque na mesma rodada, o alvo sofre +3 (1d6) de dano extra. Se for criatura, precisa passar em TR de Força CD 11 ou cair caída."
         },
         {
-          "name": "Relentless",
-          "desc": "If the boar takes 7 damage or less that would reduce it to 0 hit points, it is reduced to 1 hit point instead."
+          "name": "Implacável",
+          "nameEn": "Relentless",
+          "desc": "Se sofrer 7 ou menos pontos de dano que a reduziriam a 0 PV, fica com 1 PV."
         }
       ]
     },
@@ -2267,11 +2365,12 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 4,
           "damageDice": "1d8+2",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 6 (1d8 + 2) piercing damage."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, um alvo. Acerto: 6 (1d8 + 2) de dano perfuração."
         }
       ],
       "traits": []
@@ -2307,21 +2406,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 4,
           "damageDice": "2d4+2",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (2d4 + 2) piercing damage. If the target is a creature, it must succeed on a DC 11 Strength saving throw or be knocked prone."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, um alvo. Acerto: 7 (2d4 + 2) de dano perfuração. Se o alvo for criatura, ela precisa passar em TR de Força CD 11 ou cair caída."
         }
       ],
       "traits": [
         {
-          "name": "Keen Hearing and Smell",
-          "desc": "The wolf has advantage on Wisdom (Perception) checks that rely on hearing or smell."
+          "name": "Audição e Olfato Aguçados",
+          "nameEn": "Keen Hearing and Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam da audição ou olfato."
         },
         {
-          "name": "Pack Tactics",
-          "desc": "The wolf has advantage on an attack roll against a creature if at least one of the wolf's allies is within 5 ft. of the creature and the ally isn't incapacitated."
+          "name": "Táticas de Matilha",
+          "nameEn": "Pack Tactics",
+          "desc": "Tem vantagem em jogadas de ataque contra uma criatura se pelo menos um aliado estiver a até 1,5m do alvo e não estiver incapacitado."
         }
       ]
     },
@@ -2362,21 +2464,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 4,
           "damageDice": "1d6+2",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one creature. Hit: 5 (1d6 + 2) piercing damage."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, uma criatura. Acerto: 5 (1d6 + 2) de dano perfuração."
         }
       ],
       "traits": [
         {
-          "name": "Echolocation",
-          "desc": "The bat can't use its blindsight while deafened."
+          "name": "Ecolocalização",
+          "nameEn": "Echolocation",
+          "desc": "Não pode usar visão cega enquanto estiver ensurdecida."
         },
         {
-          "name": "Keen Hearing",
-          "desc": "The bat has advantage on Wisdom (Perception) checks that rely on hearing."
+          "name": "Audição Aguçada",
+          "nameEn": "Keen Hearing",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam da audição."
         }
       ]
     },
@@ -2416,28 +2521,32 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 4,
           "damageDice": "1d6+2",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, um alvo. Acerto: 5 (1d6 + 2) de dano perfuração."
         },
         {
-          "name": "Claw",
+          "name": "Garras",
+          "nameEn": "Claw",
           "attackBonus": 4,
           "damageDice": "1d4+2",
           "damageType": "corte",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) slashing damage."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, um alvo. Acerto: 4 (1d4 + 2) de dano corte."
         }
       ],
       "traits": [
         {
-          "name": "Keen Smell",
-          "desc": "The panther has advantage on Wisdom (Perception) checks that rely on smell."
+          "name": "Olfato Aguçado",
+          "nameEn": "Keen Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam do olfato."
         },
         {
-          "name": "Pounce",
-          "desc": "If the panther moves at least 20 ft. straight toward a creature and then hits it with a claw attack on the same turn, that target must succeed on a DC 12 Strength saving throw or be knocked prone. If the target is prone, the panther can make one bite attack against it as a bonus action."
+          "name": "Bote",
+          "nameEn": "Pounce",
+          "desc": "Se mover pelo menos 6m em linha reta em direção a uma criatura e acertar com garras na mesma rodada, o alvo precisa passar em TR de Força CD 13 ou cair caída. Se cair, pode fazer um ataque de mordida como ação bônus."
         }
       ]
     },
@@ -2478,21 +2587,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 3,
           "damageDice": "1d6+1",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) piercing damage, and the target is grappled (escape DC 11). Until this grapple ends, the target is restrained, and the frog can't bite another target."
+          "desc": "Ataque corpo a corpo: +3 pra acertar, alcance 5 pés, um alvo. Acerto: 4 (1d6 + 1) de dano perfuração, e o alvo fica agarrada (CD pra escapar 11). Enquanto agarrada, o alvo fica restringido, e não pode morder outro alvo."
         }
       ],
       "traits": [
         {
-          "name": "Amphibious",
-          "desc": "The frog can breathe air and water"
+          "name": "Anfíbio",
+          "nameEn": "Amphibious",
+          "desc": "Respira tanto ar quanto água."
         },
         {
-          "name": "Standing Leap",
-          "desc": "The frog's long jump is up to 20 ft. and its high jump is up to 10 ft., with or without a running start."
+          "name": "Salto Parado",
+          "nameEn": "Standing Leap",
+          "desc": "Salto em distância de até 3m e salto em altura de até 1,5m, com ou sem corrida."
         }
       ]
     },
@@ -2533,24 +2645,27 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 3,
           "damageDice": "1d6+1",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) piercing damage."
+          "desc": "Ataque corpo a corpo: +3 pra acertar, alcance 5 pés, um alvo. Acerto: 4 (1d6 + 1) de dano perfuração."
         },
         {
-          "name": "Claws",
+          "name": "Garras",
+          "nameEn": "Claws",
           "attackBonus": 3,
           "damageDice": "2d4+1",
           "damageType": "corte",
-          "desc": "Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 6 (2d4 + 1) slashing damage."
+          "desc": "Ataque corpo a corpo: +3 pra acertar, alcance 5 pés, um alvo. Acerto: 6 (2d4 + 1) de dano corte."
         }
       ],
       "traits": [
         {
-          "name": "Keen Smell",
-          "desc": "The badger has advantage on Wisdom (Perception) checks that rely on smell."
+          "name": "Olfato Aguçado",
+          "nameEn": "Keen Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam do olfato."
         }
       ]
     },
@@ -2585,21 +2700,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Ram",
+          "name": "Investida",
+          "nameEn": "Ram",
           "attackBonus": 5,
           "damageDice": "2d4+3",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 8 (2d4 + 3) bludgeoning damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 8 (2d4 + 3) de dano concussão."
         }
       ],
       "traits": [
         {
-          "name": "Charge",
-          "desc": "If the goat moves at least 20 ft. straight toward a target and then hits it with a ram attack on the same turn, the target takes an extra 5 (2d4) bludgeoning damage. If the target is a creature, it must succeed on a DC 13 Strength saving throw or be knocked prone."
+          "name": "Investida",
+          "nameEn": "Charge",
+          "desc": "Se mover pelo menos 6m em linha reta em direção a um alvo e acertar com um ataque na mesma rodada, o alvo sofre +3 (1d6) de dano extra. Se for criatura, precisa passar em TR de Força CD 11 ou cair caída."
         },
         {
-          "name": "Sure-Footed",
-          "desc": "The goat has advantage on Strength and Dexterity saving throws made against effects that would knock it prone."
+          "name": "Pisada Firme",
+          "nameEn": "Sure-Footed",
+          "desc": "Tem vantagem em TR de Força e Destreza contra efeitos que a derrubariam."
         }
       ]
     },
@@ -2634,17 +2752,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Hooves",
+          "name": "Cascos",
+          "nameEn": "Hooves",
           "attackBonus": 6,
           "damageDice": "2d6+4",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 11 (2d6 + 4) bludgeoning damage."
+          "desc": "Ataque corpo a corpo: +6 pra acertar, alcance 5 pés, um alvo. Acerto: 11 (2d6 + 4) de dano concussão."
         }
       ],
       "traits": [
         {
-          "name": "Trampling Charge",
-          "desc": "If the horse moves at least 20 ft. straight toward a creature and then hits it with a hooves attack on the same turn, that target must succeed on a DC 14 Strength saving throw or be knocked prone. If the target is prone, the horse can make another attack with its hooves against it as a bonus action."
+          "name": "Investida Atropeladora",
+          "nameEn": "Trampling Charge",
+          "desc": "Se mover pelo menos 6m em linha reta e acertar uma criatura com cascos na mesma rodada, ela precisa passar em TR de Força CD 14 ou cair caída. Se cair, pode fazer um ataque de cascos extra como ação bônus."
         }
       ]
     },
@@ -2684,21 +2804,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Ram",
+          "name": "Investida",
+          "nameEn": "Ram",
           "attackBonus": 3,
           "damageDice": "1d6+1",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) bludgeoning damage."
+          "desc": "Ataque corpo a corpo: +3 pra acertar, alcance 5 pés, um alvo. Acerto: 4 (1d6 + 1) de dano concussão."
         }
       ],
       "traits": [
         {
-          "name": "Charge",
-          "desc": "If the sea horse moves at least 20 ft. straight toward a target and then hits it with a ram attack on the same turn, the target takes an extra 7 (2d6) bludgeoning damage. If the target is a creature, it must succeed on a DC 11 Strength saving throw or be knocked prone."
+          "name": "Investida",
+          "nameEn": "Charge",
+          "desc": "Se mover pelo menos 6m em linha reta em direção a um alvo e acertar com um ataque na mesma rodada, o alvo sofre +3 (1d6) de dano extra. Se for criatura, precisa passar em TR de Força CD 11 ou cair caída."
         },
         {
-          "name": "Water Breathing",
-          "desc": "The sea horse can breathe only underwater."
+          "name": "Respiração Aquática",
+          "nameEn": "Water Breathing",
+          "desc": "Só consegue respirar debaixo d'água."
         }
       ]
     },
@@ -2738,17 +2861,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 4,
           "damageDice": "1d10+2",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one creature. Hit: 7 (1d10 + 2) piercing damage, and the target is grappled (escape DC 12). Until this grapple ends, the target is restrained, and the crocodile can't bite another target"
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, uma criatura. Acerto: 7 (1d10 + 2) de dano perfuração, e o alvo fica agarrada (CD pra escapar 12). Enquanto agarrada, o alvo fica restringido, e não pode morder outro alvo"
         }
       ],
       "traits": [
         {
-          "name": "Hold Breath",
-          "desc": "The crocodile can hold its breath for 15 minutes."
+          "name": "Prender Fôlego",
+          "nameEn": "Hold Breath",
+          "desc": "Pode prender o fôlego por 15 minutos."
         }
       ]
     },
@@ -2789,17 +2914,19 @@
       "attacks": [
         {
           "name": "Fist",
+          "nameEn": "Fist",
           "attackBonus": 5,
           "damageDice": "1d6+3",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) bludgeoning damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 6 (1d6 + 3) de dano concussão."
         },
         {
           "name": "Rock",
+          "nameEn": "Rock",
           "attackBonus": 5,
           "damageDice": "1d6+3",
           "damageType": "concussão",
-          "desc": "Ranged Weapon Attack: +5 to hit, range 25/50 ft., one target. Hit: 6 (1d6 + 3) bludgeoning damage."
+          "desc": "Ataque à distância: +5 pra acertar, distância 25/50 pés, um alvo. Acerto: 6 (1d6 + 3) de dano concussão."
         }
       ],
       "traits": []
@@ -2836,21 +2963,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 4,
           "damageDice": "1d8+2",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 6 (1d8 + 2) piercing damage."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, um alvo. Acerto: 6 (1d8 + 2) de dano perfuração."
         }
       ],
       "traits": [
         {
-          "name": "Pack Tactics",
-          "desc": "The shark has advantage on an attack roll against a creature if at least one of the shark's allies is within 5 ft. of the creature and the ally isn't incapacitated."
+          "name": "Táticas de Matilha",
+          "nameEn": "Pack Tactics",
+          "desc": "Tem vantagem em jogadas de ataque contra uma criatura se pelo menos um aliado estiver a até 1,5m do alvo e não estiver incapacitado."
         },
         {
-          "name": "Water Breathing",
-          "desc": "The shark can breathe only underwater."
+          "name": "Respiração Aquática",
+          "nameEn": "Water Breathing",
+          "desc": "Só consegue respirar debaixo d'água."
         }
       ]
     },
@@ -2890,24 +3020,27 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 3,
           "damageDice": "1d6+2",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage."
+          "desc": "Ataque corpo a corpo: +3 pra acertar, alcance 5 pés, um alvo. Acerto: 5 (1d6 + 2) de dano perfuração."
         },
         {
-          "name": "Claws",
+          "name": "Garras",
+          "nameEn": "Claws",
           "attackBonus": 3,
           "damageDice": "2d4+2",
           "damageType": "corte",
-          "desc": "Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 7 (2d4 + 2) slashing damage."
+          "desc": "Ataque corpo a corpo: +3 pra acertar, alcance 5 pés, um alvo. Acerto: 7 (2d4 + 2) de dano corte."
         }
       ],
       "traits": [
         {
-          "name": "Keen Smell",
-          "desc": "The bear has advantage on Wisdom (Perception) checks that rely on smell."
+          "name": "Olfato Aguçado",
+          "nameEn": "Keen Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam do olfato."
         }
       ]
     },
@@ -2952,11 +3085,12 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Sting",
+          "name": "Ferrão",
+          "nameEn": "Sting",
           "attackBonus": 4,
           "damageDice": "1d6+2",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one creature. Hit: 5 (1d6 + 2) piercing damage, and the target must make a DC 11 Constitution saving throw, taking 10 (3d6) poison damage on a failed save, or half as much damage on a successful one. If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, uma criatura. Acerto: 5 (1d6 + 2) de dano perfuração, e o alvo precisa fazer um TR de Constituição CD 11, sofrendo 10 (3d6) de dano veneno em falha, ou metade do dano em sucesso. Se o dano de veneno reduzir o alvo a 0 PV, o alvo fica estabilizada mas envenenada por 1 hora, mesmo após recuperar PV, e fica paralisada enquanto envenenada dessa forma."
         }
       ],
       "traits": []
@@ -2997,28 +3131,32 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Beak",
+          "name": "Bicada",
+          "nameEn": "Beak",
           "attackBonus": 4,
           "damageDice": "2d4+2",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (2d4 + 2) piercing damage."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, um alvo. Acerto: 7 (2d4 + 2) de dano perfuração."
         },
         {
-          "name": "Talons",
+          "name": "Garras",
+          "nameEn": "Talons",
           "attackBonus": 4,
           "damageDice": "2d6+2",
           "damageType": "corte",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 9 (2d6 + 2) slashing damage."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, um alvo. Acerto: 9 (2d6 + 2) de dano corte."
         }
       ],
       "traits": [
         {
-          "name": "Keen Sight and Smell",
-          "desc": "The vulture has advantage on Wisdom (Perception) checks that rely on sight or smell."
+          "name": "Visão e Olfato Aguçados",
+          "nameEn": "Keen Sight and Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam da visão ou olfato."
         },
         {
-          "name": "Pack Tactics",
-          "desc": "The vulture has advantage on an attack roll against a creature if at least one of the vulture's allies is within 5 ft. of the creature and the ally isn't incapacitated."
+          "name": "Táticas de Matilha",
+          "nameEn": "Pack Tactics",
+          "desc": "Tem vantagem em jogadas de ataque contra uma criatura se pelo menos um aliado estiver a até 1,5m do alvo e não estiver incapacitado."
         }
       ]
     },
@@ -3058,24 +3196,27 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Beak",
+          "name": "Bicada",
+          "nameEn": "Beak",
           "attackBonus": 5,
           "damageDice": "1d6+3",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) piercing damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 6 (1d6 + 3) de dano perfuração."
         },
         {
-          "name": "Talons",
+          "name": "Garras",
+          "nameEn": "Talons",
           "attackBonus": 5,
           "damageDice": "2d6+3",
           "damageType": "corte",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6 + 3) slashing damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 10 (2d6 + 3) de dano corte."
         }
       ],
       "traits": [
         {
-          "name": "Keen Sight",
-          "desc": "The eagle has advantage on Wisdom (Perception) checks that rely on sight."
+          "name": "Visão Aguçada",
+          "nameEn": "Keen Sight",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam da visão."
         }
       ]
     },
@@ -3117,25 +3258,29 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 5,
           "damageDice": "1d8+3",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one creature. Hit: 7 (1d8 + 3) piercing damage, and the target must make a DC 11 Constitution saving throw, taking 9 (2d8) poison damage on a failed save, or half as much damage on a successful one. If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, uma criatura. Acerto: 7 (1d8 + 3) de dano perfuração, e o alvo precisa fazer um TR de Constituição CD 11, sofrendo 9 (2d8) de dano veneno em falha, ou metade do dano em sucesso. Se o dano de veneno reduzir o alvo a 0 PV, o alvo fica estabilizada mas envenenada por 1 hora, mesmo após recuperar PV, e fica paralisada enquanto envenenada dessa forma."
         }
       ],
       "traits": [
         {
-          "name": "Spider Climb",
-          "desc": "The spider can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check."
+          "name": "Escalada de Aranha",
+          "nameEn": "Spider Climb",
+          "desc": "Pode escalar superfícies difíceis, incluindo de cabeça pra baixo em tetos, sem teste."
         },
         {
-          "name": "Web Sense",
-          "desc": "While in contact with a web, the spider knows the exact location of any other creature in contact with the same web."
+          "name": "Sentido das Teias",
+          "nameEn": "Web Sense",
+          "desc": "Em contato com uma teia, sabe a localização exata de qualquer criatura em contato com a mesma teia."
         },
         {
-          "name": "Web Walker",
-          "desc": "The spider ignores movement restrictions caused by webbing."
+          "name": "Caminhar em Teias",
+          "nameEn": "Web Walker",
+          "desc": "Ignora restrições de movimento causadas por teias."
         }
       ]
     },
@@ -3170,17 +3315,19 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 5,
           "damageDice": "2d6+3",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6 + 3) piercing damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 10 (2d6 + 3) de dano perfuração."
         }
       ],
       "traits": [
         {
-          "name": "Rampage",
-          "desc": "When the hyena reduces a creature to 0 hit points with a melee attack on its turn, the hyena can take a bonus action to move up to half its speed and make a bite attack."
+          "name": "Massacre",
+          "nameEn": "Rampage",
+          "desc": "Ao reduzir uma criatura a 0 PV com ataque corpo a corpo no próprio turno, pode usar ação bônus pra mover metade do deslocamento e fazer um ataque de mordida."
         }
       ]
     },
@@ -3215,36 +3362,42 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 5,
           "damageDice": "1d8+3",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) piercing damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 7 (1d8 + 3) de dano perfuração."
         },
         {
-          "name": "Claw",
+          "name": "Garras",
+          "nameEn": "Claw",
           "attackBonus": 5,
           "damageDice": "1d6+3",
           "damageType": "corte",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) slashing damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 6 (1d6 + 3) de dano corte."
         }
       ],
       "traits": [
         {
-          "name": "Keen Smell",
-          "desc": "The lion has advantage on Wisdom (Perception) checks that rely on smell."
+          "name": "Olfato Aguçado",
+          "nameEn": "Keen Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam do olfato."
         },
         {
-          "name": "Pack Tactics",
-          "desc": "The lion has advantage on an attack roll against a creature if at least one of the lion's allies is within 5 ft. of the creature and the ally isn't incapacitated."
+          "name": "Táticas de Matilha",
+          "nameEn": "Pack Tactics",
+          "desc": "Tem vantagem em jogadas de ataque contra uma criatura se pelo menos um aliado estiver a até 1,5m do alvo e não estiver incapacitado."
         },
         {
-          "name": "Pounce",
-          "desc": "If the lion moves at least 20 ft. straight toward a creature and then hits it with a claw attack on the same turn, that target must succeed on a DC 13 Strength saving throw or be knocked prone. If the target is prone, the lion can make one bite attack against it as a bonus action."
+          "name": "Bote",
+          "nameEn": "Pounce",
+          "desc": "Se mover pelo menos 6m em linha reta em direção a uma criatura e acertar com garras na mesma rodada, o alvo precisa passar em TR de Força CD 13 ou cair caída. Se cair, pode fazer um ataque de mordida como ação bônus."
         },
         {
-          "name": "Running Leap",
-          "desc": "With a 10-foot running start, the lion can long jump up to 25 ft.."
+          "name": "Salto com Corrida",
+          "nameEn": "Running Leap",
+          "desc": "Com 3m de corrida, pode dar salto em distância de até 7,5m."
         }
       ]
     },
@@ -3279,21 +3432,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 5,
           "damageDice": "2d6+3",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6 + 3) piercing damage. If the target is a creature, it must succeed on a DC 13 Strength saving throw or be knocked prone."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 10 (2d6 + 3) de dano perfuração. Se o alvo for criatura, ela precisa passar em TR de Força CD 13 ou cair caída."
         }
       ],
       "traits": [
         {
-          "name": "Keen Hearing and Smell",
-          "desc": "The wolf has advantage on Wisdom (Perception) checks that rely on hearing or smell."
+          "name": "Audição e Olfato Aguçados",
+          "nameEn": "Keen Hearing and Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam da audição ou olfato."
         },
         {
-          "name": "Pack Tactics",
-          "desc": "The wolf has advantage on an attack roll against a creature if at least one of the wolf's allies is within 5 ft. of the creature and the ally isn't incapacitated."
+          "name": "Táticas de Matilha",
+          "nameEn": "Pack Tactics",
+          "desc": "Tem vantagem em jogadas de ataque contra uma criatura se pelo menos um aliado estiver a até 1,5m do alvo e não estiver incapacitado."
         }
       ]
     },
@@ -3334,25 +3490,29 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Tentacles",
+          "name": "Tentáculos",
+          "nameEn": "Tentacles",
           "attackBonus": 5,
           "damageDice": "2d6+3",
           "damageType": "concussão",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 15 ft., one target. Hit: 10 (2d6 + 3) bludgeoning damage. If the target is a creature, it is grappled (escape DC 16). Until this grapple ends, the target is restrained, and the octopus can't use its tentacles on another target."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 15 pés, um alvo. Acerto: 10 (2d6 + 3) de dano concussão. Se o alvo for criatura, ela fica agarrada (CD pra escapar 16). Enquanto agarrada, o alvo fica restringido, e não pode usar seus tentáculos em outro alvo."
         }
       ],
       "traits": [
         {
-          "name": "Hold Breath",
-          "desc": "While out of water, the octopus can hold its breath for 1 hour."
+          "name": "Prender Fôlego",
+          "nameEn": "Hold Breath",
+          "desc": "Pode prender o fôlego por 15 minutos."
         },
         {
-          "name": "Underwater Camouflage",
-          "desc": "The octopus has advantage on Dexterity (Stealth) checks made while underwater."
+          "name": "Camuflagem Submersa",
+          "nameEn": "Underwater Camouflage",
+          "desc": "Tem vantagem em testes de Destreza (Furtividade) feitos debaixo d'água."
         },
         {
-          "name": "Water Breathing",
-          "desc": "The octopus can breathe only underwater."
+          "name": "Respiração Aquática",
+          "nameEn": "Water Breathing",
+          "desc": "Só consegue respirar debaixo d'água."
         }
       ]
     },
@@ -3393,21 +3553,24 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 4,
           "damageDice": "1d10+2",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (1d10 + 2) piercing damage plus 5 (1d10) poison damage, and the target is grappled (escape DC 13). Until this grapple ends, the target is restrained, and the toad can't bite another target."
+          "desc": "Ataque corpo a corpo: +4 pra acertar, alcance 5 pés, um alvo. Acerto: 7 (1d10 + 2) de dano perfuração mais 5 (1d10) de dano veneno, e o alvo fica agarrada (CD pra escapar 13). Enquanto agarrada, o alvo fica restringido, e não pode morder outro alvo."
         }
       ],
       "traits": [
         {
-          "name": "Amphibious",
-          "desc": "The toad can breathe air and water"
+          "name": "Anfíbio",
+          "nameEn": "Amphibious",
+          "desc": "Respira tanto ar quanto água."
         },
         {
-          "name": "Standing Leap",
-          "desc": "The toad's long jump is up to 20 ft. and its high jump is up to 10 ft., with or without a running start."
+          "name": "Salto Parado",
+          "nameEn": "Standing Leap",
+          "desc": "Salto em distância de até 3m e salto em altura de até 1,5m, com ou sem corrida."
         }
       ]
     },
@@ -3443,28 +3606,32 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 5,
           "damageDice": "1d10+3",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 8 (1d10 + 3) piercing damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 8 (1d10 + 3) de dano perfuração."
         },
         {
-          "name": "Claw",
+          "name": "Garras",
+          "nameEn": "Claw",
           "attackBonus": 5,
           "damageDice": "1d8+3",
           "damageType": "corte",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) slashing damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 7 (1d8 + 3) de dano corte."
         }
       ],
       "traits": [
         {
-          "name": "Keen Smell",
-          "desc": "The tiger has advantage on Wisdom (Perception) checks that rely on smell."
+          "name": "Olfato Aguçado",
+          "nameEn": "Keen Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam do olfato."
         },
         {
-          "name": "Pounce",
-          "desc": "If the tiger moves at least 20 ft. straight toward a creature and then hits it with a claw attack on the same turn, that target must succeed on a DC 13 Strength saving throw or be knocked prone. If the target is prone, the tiger can make one bite attack against it as a bonus action."
+          "name": "Bote",
+          "nameEn": "Pounce",
+          "desc": "Se mover pelo menos 6m em linha reta em direção a uma criatura e acertar com garras na mesma rodada, o alvo precisa passar em TR de Força CD 13 ou cair caída. Se cair, pode fazer um ataque de mordida como ação bônus."
         }
       ]
     },
@@ -3504,24 +3671,27 @@
       "conditionImmunities": [],
       "attacks": [
         {
-          "name": "Bite",
+          "name": "Mordida",
+          "nameEn": "Bite",
           "attackBonus": 5,
           "damageDice": "1d8+4",
           "damageType": "perfuração",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 8 (1d8 + 4) piercing damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 8 (1d8 + 4) de dano perfuração."
         },
         {
-          "name": "Claws",
+          "name": "Garras",
+          "nameEn": "Claws",
           "attackBonus": 5,
           "damageDice": "2d6+4",
           "damageType": "corte",
-          "desc": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 11 (2d6 + 4) slashing damage."
+          "desc": "Ataque corpo a corpo: +5 pra acertar, alcance 5 pés, um alvo. Acerto: 11 (2d6 + 4) de dano corte."
         }
       ],
       "traits": [
         {
-          "name": "Keen Smell",
-          "desc": "The bear has advantage on Wisdom (Perception) checks that rely on smell."
+          "name": "Olfato Aguçado",
+          "nameEn": "Keen Smell",
+          "desc": "Tem vantagem em testes de Sabedoria (Percepção) que dependam do olfato."
         }
       ]
     }

@@ -105,7 +105,7 @@ function SheetTabsBase({ activeTab, onChange }) {
               {tab.icon}
             </span>
             {/* Mobile: short label below icon. sm+: full label inline. */}
-            <span className="text-[10px] leading-tight sm:hidden truncate max-w-full">
+            <span className="text-xs leading-tight sm:hidden truncate max-w-full">
               {tab.shortLabel}
             </span>
             <span className="hidden sm:inline text-sm">

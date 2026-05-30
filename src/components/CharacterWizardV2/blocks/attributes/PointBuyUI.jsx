@@ -48,7 +48,7 @@ export function PointBuyUI({ draft, updateDraft }) {
           return (
             <div key={key} className="flex items-center gap-2 border-2 border-parchment-600 bg-parchment-100 rounded-sm px-3 py-2">
               <div className="w-10 shrink-0">
-                <p className="text-[10px] font-display tracking-widest uppercase text-ink-300">{abbr}</p>
+                <p className="text-xs font-display tracking-widest uppercase text-ink-300">{abbr}</p>
                 <p className="text-xs text-ink-300">{name}</p>
               </div>
               <div className="flex items-center gap-1 flex-1">
@@ -73,9 +73,9 @@ export function PointBuyUI({ draft, updateDraft }) {
                 </button>
               </div>
               <div className="shrink-0 text-right min-w-[52px]">
-                {bonus > 0 && <p className="text-[10px] italic text-ink-300">{base} +{bonus}</p>}
+                {bonus > 0 && <p className="text-xs italic text-ink-300">{base} +{bonus}</p>}
                 <p className="text-sm font-display text-ink-500">{final}</p>
-                <p className="text-[10px] text-ink-200">{formatModifier(getModifier(final))}</p>
+                <p className="text-xs text-ink-200">{formatModifier(getModifier(final))}</p>
               </div>
             </div>
           )
@@ -83,7 +83,7 @@ export function PointBuyUI({ draft, updateDraft }) {
       </div>
 
       <div className="border-2 border-parchment-600 bg-parchment-50 rounded-sm p-3">
-        <p className="text-[10px] font-display tracking-widest uppercase text-ink-300 mb-2">Custo por valor:</p>
+        <p className="text-xs font-display tracking-widest uppercase text-ink-300 mb-2">Custo por valor:</p>
         <div className="flex gap-2 flex-wrap">
           {Object.entries(POINT_BUY_COST).map(([score, cost]) => (
             <span key={score} className="text-xs text-ink-300">

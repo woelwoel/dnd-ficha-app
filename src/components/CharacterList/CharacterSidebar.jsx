@@ -48,7 +48,7 @@ export function CharacterSidebar({ characters = [], onSelect, onDelete, onFilter
 
   return (
     <aside className="flex flex-col h-full p-3 rounded border border-shell-border bg-gradient-to-b from-shell-800 to-shell-900 text-ink-inverse font-redesign-sans">
-      <h6 className="text-center pb-1.5 mb-2 text-[11px] uppercase tracking-[0.18em] font-bold border-b border-shell-border text-gold-400 font-display">
+      <h6 className="text-center pb-1.5 mb-2 text-[13px] uppercase tracking-[0.18em] font-bold border-b border-shell-border text-gold-400 font-display">
         Companhia
       </h6>
 
@@ -100,11 +100,11 @@ export function CharacterSidebar({ characters = [], onSelect, onDelete, onFilter
                   <span className="block text-[12px] font-semibold leading-tight truncate font-body text-ink-inverse">
                     {c.info?.name || 'Sem nome'}
                   </span>
-                  <span className="block text-[10px] italic mt-0.5 text-gold-500">
+                  <span className="block text-xs italic mt-0.5 text-gold-500">
                     {c.info?.class || '—'}
                   </span>
                 </span>
-                <span className="text-[11px] font-bold flex-shrink-0 mr-1 font-display text-gold-400">
+                <span className="text-[13px] font-bold flex-shrink-0 mr-1 font-display text-gold-400">
                   {toRoman(c.info?.level ?? 1)}
                 </span>
               </button>
@@ -118,14 +118,14 @@ export function CharacterSidebar({ characters = [], onSelect, onDelete, onFilter
                       if (onDelete) onDelete(c.id)
                       setConfirmDeleteId(null)
                     }}
-                    className="text-[10px] px-2 py-0.5 rounded font-bold border border-[#5a0000] bg-blood text-ink-inverse font-display tracking-[0.08em]"
+                    className="text-xs px-2 py-0.5 rounded font-bold border border-[#5a0000] bg-blood text-ink-inverse font-display tracking-[0.08em]"
                   >
                     Riscar
                   </button>
                   <button
                     type="button"
                     onClick={() => setConfirmDeleteId(null)}
-                    className="text-[10px] px-2 py-0.5 rounded border border-shell-border bg-transparent text-gold-400 font-display tracking-[0.08em]"
+                    className="text-xs px-2 py-0.5 rounded border border-shell-border bg-transparent text-gold-400 font-display tracking-[0.08em]"
                     aria-label="Cancelar exclusão"
                   >
                     Cancelar
@@ -146,7 +146,7 @@ export function CharacterSidebar({ characters = [], onSelect, onDelete, onFilter
           )
         })}
         {hidden > 0 && (
-          <div className="mt-2 p-2 rounded text-[10px] text-center italic border border-dashed border-shell-border bg-[rgba(212,173,106,0.1)] text-gold-500">
+          <div className="mt-2 p-2 rounded text-xs text-center italic border border-dashed border-shell-border bg-[rgba(212,173,106,0.1)] text-gold-500">
             + {hidden} outros
           </div>
         )}

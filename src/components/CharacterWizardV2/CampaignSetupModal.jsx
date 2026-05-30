@@ -70,7 +70,7 @@ function Seal({ selected, kind = 'radio' }) {
       ].join(' ')}
     >
       {selected && (
-        <span className="text-[10px] leading-none">
+        <span className="text-xs leading-none">
           {kind === 'check' ? '✓' : '●'}
         </span>
       )}
@@ -171,7 +171,7 @@ export function CampaignSetupModal({
         <span aria-hidden className="absolute bottom-2 right-2 w-3 h-3 border-r-2 border-b-2 border-parchment-600/70" />
 
         <header className="text-center">
-          <p className="text-[10px] ink-italic tracking-[0.4em] uppercase mb-1 text-ink-300">Forjar Herói</p>
+          <p className="text-xs ink-italic tracking-[0.4em] uppercase mb-1 text-ink-300">Forjar Herói</p>
           <h2 className="text-2xl font-display text-ink-500 tracking-widest uppercase leading-tight">
             Como vai ser<br />essa campanha?
           </h2>

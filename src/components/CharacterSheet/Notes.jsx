@@ -15,7 +15,7 @@ function TraitField({ field, label, value, onUpdate, suggestions }) {
         {suggestions?.length > 0 && (
           <button
             onClick={() => setShowSuggestions(v => !v)}
-            className="text-[10px] text-amber-500 hover:text-amber-300 transition-colors"
+            className="text-xs text-amber-500 hover:text-amber-300 transition-colors"
           >
             {showSuggestions ? 'Fechar' : 'Sugestões do antecedente'}
           </button>

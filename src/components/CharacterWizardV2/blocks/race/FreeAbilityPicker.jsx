@@ -32,7 +32,7 @@ export function FreeAbilityPicker({ label, count, chosen, exclude, onToggle }) {
               ].join(' ')}
             >
               <span className="font-display block">{abbr}</span>
-              <span className="text-[10px] text-ink-200">{name}</span>
+              <span className="text-xs text-ink-200">{name}</span>
             </button>
           )
         })}

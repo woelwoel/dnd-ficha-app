@@ -60,7 +60,7 @@ export function CharacterListView({ characters = [], onSelect }) {
               </span>
             </span>
             {last && (
-              <span className="text-[11px] italic flex-shrink-0 text-ink-muted">
+              <span className="text-[13px] italic flex-shrink-0 text-ink-muted">
                 {last}
               </span>
             )}

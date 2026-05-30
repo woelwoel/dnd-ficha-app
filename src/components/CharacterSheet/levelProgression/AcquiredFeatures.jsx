@@ -23,7 +23,7 @@ export function AcquiredFeatures({ levels, currentLevel, onFeatureClick }) {
         <div className="px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
           {acquired.map((f, i) => (
             <div key={i} className="flex items-center gap-2 py-0.5">
-              <span className="text-[10px] text-gray-600 shrink-0 w-8 text-right">Nv{f.level}</span>
+              <span className="text-xs text-gray-600 shrink-0 w-8 text-right">Nv{f.level}</span>
               <button
                 onClick={() => onFeatureClick(f)}
                 className="text-xs text-amber-300 hover:text-amber-200 text-left underline decoration-dotted leading-tight"

@@ -152,6 +152,191 @@ function translateSpeed(speedObj) {
   return out
 }
 
+// Nomes de ataque comuns (PT-BR)
+const ATTACK_NAME_PT = {
+  'Bite':           'Mordida',
+  'Claw':           'Garras',
+  'Claws':          'Garras',
+  'Beak':           'Bicada',
+  'Talons':         'Garras',
+  'Gore':           'Chifrada',
+  'Tusk':           'Presa',
+  'Tusks':          'Presas',
+  'Hooves':         'Cascos',
+  'Sting':          'Ferrão',
+  'Constrict':      'Constrição',
+  'Tentacles':      'Tentáculos',
+  'Ram':            'Investida',
+  'Swarm of Bites': 'Enxame de Mordidas',
+  'Bites':          'Mordidas',
+  'Proboscis':      'Probóscide',
+  'Blood Drain':    'Drenar Sangue',
+  'Pincer':         'Pinça',
+}
+
+/** Traduz descrição de ataque do SRD com regex. Pattern padrão:
+ *  "Melee/Ranged Weapon Attack: +X to hit, reach Y ft. (or range Y/Z ft.), one target. Hit: N (Xdy+z) TYPE damage. [extra clauses]"
+ */
+function translateAttackDesc(desc) {
+  if (!desc) return ''
+  let s = desc
+
+  // Cabeçalho
+  s = s.replace(/Melee Weapon Attack:/g,  'Ataque corpo a corpo:')
+  s = s.replace(/Ranged Weapon Attack:/g, 'Ataque à distância:')
+  s = s.replace(/Melee or Ranged Weapon Attack:/g, 'Ataque corpo a corpo ou à distância:')
+
+  // "+X to hit"
+  s = s.replace(/\+(\d+) to hit/g, '+$1 pra acertar')
+
+  // "reach 5 ft."
+  s = s.replace(/reach (\d+) ft\./g, 'alcance $1 pés')
+
+  // "range 30/120 ft."
+  s = s.replace(/range (\d+)\/(\d+) ft\./g, 'distância $1/$2 pés')
+  s = s.replace(/range (\d+) ft\./g, 'distância $1 pés')
+
+  // "one target", "one creature" — \b pra não casar com final de "prone" etc.
+  s = s.replace(/\bone target\b/g, 'um alvo')
+  s = s.replace(/\bone creature\b/g, 'uma criatura')
+  s = s.replace(/\bone prone creature\b/g, 'uma criatura caída')
+  s = s.replace(/\bcreature\b/g, 'criatura')
+
+  // "Hit: N (XdY+Z) TYPE damage"
+  s = s.replace(/Hit: (\d+) \(([^)]+)\) (\w+) damage/g, (_, n, dice, type) => {
+    const pt = DAMAGE_PT[type.toLowerCase()] ?? type
+    return `Acerto: ${n} (${dice}) de dano ${pt}`
+  })
+  // "Hit: N TYPE damage" (sem dados — dano fixo, ex: Polvo)
+  s = s.replace(/Hit: (\d+) (\w+) damage/g, (_, n, type) => {
+    const pt = DAMAGE_PT[type.toLowerCase()] ?? type
+    return `Acerto: ${n} de dano ${pt}`
+  })
+
+  // "+N (XdY+Z) TYPE damage" (segunda parcela, ex: lobo morde + arrasto)
+  s = s.replace(/plus (\d+) \(([^)]+)\) (\w+) damage/g, (_, n, dice, type) => {
+    const pt = DAMAGE_PT[type.toLowerCase()] ?? type
+    return `mais ${n} (${dice}) de dano ${pt}`
+  })
+
+  // Saving throws
+  s = s.replace(/DC (\d+) Strength saving throw/g,    'TR de Força CD $1')
+  s = s.replace(/DC (\d+) Dexterity saving throw/g,   'TR de Destreza CD $1')
+  s = s.replace(/DC (\d+) Constitution saving throw/g,'TR de Constituição CD $1')
+  s = s.replace(/DC (\d+) Wisdom saving throw/g,      'TR de Sabedoria CD $1')
+  s = s.replace(/DC (\d+) Intelligence saving throw/g,'TR de Inteligência CD $1')
+  s = s.replace(/DC (\d+) Charisma saving throw/g,    'TR de Carisma CD $1')
+
+  // Condições comuns
+  s = s.replace(/be knocked prone/g, 'cair caída')
+  s = s.replace(/knocked prone/g,    'caída')
+  s = s.replace(/be (?:grappled|grabbed)/g, 'ficar agarrada')
+  s = s.replace(/be poisoned/g,      'ficar envenenada')
+  s = s.replace(/be restrained/g,    'ficar restringida')
+  s = s.replace(/be paralyzed/g,     'ficar paralisada')
+  s = s.replace(/be blinded/g,       'ficar cega')
+  s = s.replace(/be stunned/g,       'ficar atordoada')
+  s = s.replace(/be frightened/g,    'ficar amedrontada')
+  s = s.replace(/be charmed/g,       'ficar enfeitiçada')
+  s = s.replace(/be swallowed/g,     'ser engolida')
+
+  // Frases comuns — note: "succeed on a" captura o "a" pra não sobrar.
+  s = s.replace(/If the target is a creature,? it must succeed on a /g,
+    'Se o alvo for uma criatura, ele precisa passar em ')
+  s = s.replace(/must succeed on a /g, 'precisa passar em ')
+  s = s.replace(/On a failed save,?/g, 'Em falha,')
+  s = s.replace(/On a successful save,?/g, 'Em sucesso,')
+  s = s.replace(/On a success,?/g, 'Em sucesso,')
+  s = s.replace(/or take/g, 'ou sofrer')
+  s = s.replace(/until the (?:grapple|grab) ends/g, 'até o agarre terminar')
+  s = s.replace(/escape DC (\d+)/g, 'CD pra escapar $1')
+
+  // Limpa "the X" em casos comuns (substantivos) — sempre vira "não pode".
+  // Trata variantes de apostrofe (' reto e ' curvo) com classe de caracteres.
+  s = s.replace(/the \w+ can['']?t/g, 'não pode')
+  s = s.replace(/the \w+ cannot/g, 'não pode')
+  s = s.replace(/it can['']?t/g, 'não pode')
+  s = s.replace(/it cannot/g, 'não pode')
+
+  // Agarre / restringir — primeiro a frase completa, depois conectores
+  // IMPORTANTE: este bloco precisa rodar ANTES do "the X can" mais genérico,
+  // se não o "can't ... another target" some.
+  s = s.replace(/the \w+ can'?t (\w+) another target/g, 'não pode usar essa habilidade em outro alvo')
+  s = s.replace(/it can'?t (\w+) another target/g, 'não pode usar essa habilidade em outro alvo')
+  s = s.replace(/is grappled \(escape DC (\d+)\)/g, 'fica agarrada (CD pra escapar $1)')
+  s = s.replace(/the target is grappled \(escape DC (\d+)\)/g, 'o alvo fica agarrado (CD pra escapar $1)')
+  s = s.replace(/is grappled/g, 'fica agarrada')
+  s = s.replace(/Until this grapple ends,?/g, 'Enquanto agarrada,')
+  s = s.replace(/the (?:creature|target) is restrained/g, 'o alvo fica restringido')
+  s = s.replace(/is restrained/g, 'fica restringido')
+  s = s.replace(/If the target is a creature,?/g, 'Se o alvo for criatura,')
+  s = s.replace(/If it is a creature,?/g, 'Se for criatura,')
+
+  // Padrões multi-cláusula (saves com efeito + dano)
+  s = s.replace(/must make a /g, 'precisa fazer um ')
+  s = s.replace(/taking (\d+) \(([^)]+)\) (\w+) damage on a failed save/g,
+    (_, n, dice, type) => `sofrendo ${n} (${dice}) de dano ${DAMAGE_PT[type.toLowerCase()] ?? type} em falha`)
+  s = s.replace(/half as much damage on a successful one/g, 'metade do dano em sucesso')
+  s = s.replace(/half as much damage/g, 'metade do dano')
+  s = s.replace(/to 0 hit points/g, 'a 0 PV')
+  s = s.replace(/hit points/g, 'PV')
+  s = s.replace(/regaining (\w+)/g, 'recuperar $1')
+  s = s.replace(/is stable but poisoned/g, 'fica estabilizada mas envenenada')
+  s = s.replace(/is paralyzed while poisoned in this way/g, 'fica paralisada enquanto envenenada dessa forma')
+  s = s.replace(/even after/g, 'mesmo após')
+  s = s.replace(/for (\d+) hour/g, 'por $1 hora')
+  s = s.replace(/for (\d+) minute/g, 'por $1 minuto')
+  s = s.replace(/If the (\w+) damage reduces/g, 'Se o dano de $1 reduzir')
+
+  // Conectores soltos no final (após substituições acima)
+  s = s.replace(/\bIf\b/g, 'Se')
+  s = s.replace(/\bif\b/g, 'se')
+  s = s.replace(/\bor\b/g, 'ou')
+  s = s.replace(/\band\b/g, 'e')
+  s = s.replace(/\bthe target\b/gi, 'o alvo')
+  s = s.replace(/\bthe creature\b/gi, 'a criatura')
+  s = s.replace(/\bin addition\b/gi, 'além disso')
+  s = s.replace(/\bturn\b/g, 'turno')
+  s = s.replace(/\bit\b/g, 'ela')
+  s = s.replace(/\buse its (\w+)\b/g, 'usar seus $1')
+  s = s.replace(/\bon another target\b/g, 'em outro alvo')
+  s = s.replace(/\banother target\b/g, 'outro alvo')
+  s = s.replace(/\baction\b/g, 'ação')
+  s = s.replace(/\bmovement\b/g, 'deslocamento')
+  s = s.replace(/\bfeet\b/g, 'pés')
+  s = s.replace(/\bfoot\b/g, 'pé')
+  s = s.replace(/\bhours?\b/g, 'horas')
+  s = s.replace(/\bminutes?\b/g, 'minutos')
+  s = s.replace(/\battack\b/g, 'ataque')
+  s = s.replace(/\battacks\b/g, 'ataques')
+  s = s.replace(/\beach\b/g, 'cada')
+  s = s.replace(/\bspending\b/g, 'gastando')
+  s = s.replace(/\bonly\b/g, 'apenas')
+  s = s.replace(/\bwhile\b/g, 'enquanto')
+  s = s.replace(/\bafter\b/g, 'após')
+  s = s.replace(/\bfrom\b/g, 'de')
+  s = s.replace(/\bincluding\b/g, 'incluindo')
+  s = s.replace(/\bcured\b/g, 'curada')
+  s = s.replace(/\bthis\b/g, 'isso')
+  s = s.replace(/\battached\b/g, 'agarrada')
+  s = s.replace(/\bpoison\b/g, 'veneno')
+  s = s.replace(/\btentacles\b/g, 'tentáculos')
+  s = s.replace(/\bconstrict\b/g, 'constringir')
+  s = s.replace(/\bbite\b/g, 'morder')
+  s = s.replace(/\bis a\b/g, 'for')
+  // Remove "the/The" antes de substantivos comuns (já que tradução fica solta)
+  s = s.replace(/\bthe\b/gi, '')
+  // Normaliza espaços/pontuação após as substituições
+  s = s.replace(/\s{2,}/g, ' ')
+  s = s.replace(/\(\s+/g, '(').replace(/\s+\)/g, ')')
+
+  // Limpeza de espaços duplos e pontuação solta
+  s = s.replace(/  +/g, ' ')
+  s = s.replace(/ ,/g, ',').replace(/ \./g, '.').trim()
+
+  return s
+}
+
 function translateAttacks(actions) {
   if (!Array.isArray(actions)) return []
   return actions
@@ -160,18 +345,139 @@ function translateAttacks(actions) {
       const dmg = a.damage[0]
       const dmgTypeEn = dmg?.damage_type?.index ?? 'bludgeoning'
       return {
-        name: a.name,
+        name: ATTACK_NAME_PT[a.name] ?? a.name,
+        nameEn: a.name,
         attackBonus: a.attack_bonus,
         damageDice: dmg.damage_dice,
         damageType: DAMAGE_PT[dmgTypeEn] ?? dmgTypeEn,
-        desc: a.desc, // mantém em EN; tradução completa seria grande
+        desc: translateAttackDesc(a.desc),
       }
     })
 }
 
+// Traços PT-BR — nome + tradução. Cobre os 28 traços únicos de bestas SRD CR ≤ 1.
+const TRAITS_PT = {
+  'Pack Tactics': {
+    name: 'Táticas de Matilha',
+    desc: 'Tem vantagem em jogadas de ataque contra uma criatura se pelo menos um aliado estiver a até 1,5m do alvo e não estiver incapacitado.',
+  },
+  'Keen Smell': {
+    name: 'Olfato Aguçado',
+    desc: 'Tem vantagem em testes de Sabedoria (Percepção) que dependam do olfato.',
+  },
+  'Echolocation': {
+    name: 'Ecolocalização',
+    desc: 'Não pode usar visão cega enquanto estiver ensurdecida.',
+  },
+  'Keen Hearing': {
+    name: 'Audição Aguçada',
+    desc: 'Tem vantagem em testes de Sabedoria (Percepção) que dependam da audição.',
+  },
+  'Keen Sight': {
+    name: 'Visão Aguçada',
+    desc: 'Tem vantagem em testes de Sabedoria (Percepção) que dependam da visão.',
+  },
+  'Charge': {
+    name: 'Investida',
+    desc: 'Se mover pelo menos 6m em linha reta em direção a um alvo e acertar com um ataque na mesma rodada, o alvo sofre +3 (1d6) de dano extra. Se for criatura, precisa passar em TR de Força CD 11 ou cair caída.',
+  },
+  'Relentless': {
+    name: 'Implacável',
+    desc: 'Se sofrer 7 ou menos pontos de dano que a reduziriam a 0 PV, fica com 1 PV.',
+  },
+  'Amphibious': {
+    name: 'Anfíbio',
+    desc: 'Respira tanto ar quanto água.',
+  },
+  'Hold Breath': {
+    name: 'Prender Fôlego',
+    desc: 'Pode prender o fôlego por 15 minutos.',
+  },
+  'Keen Hearing and Smell': {
+    name: 'Audição e Olfato Aguçados',
+    desc: 'Tem vantagem em testes de Sabedoria (Percepção) que dependam da audição ou olfato.',
+  },
+  'Flyby': {
+    name: 'Voo Rasante',
+    desc: 'Não provoca ataques de oportunidade ao voar para fora do alcance de um inimigo.',
+  },
+  'Standing Leap': {
+    name: 'Salto Parado',
+    desc: 'Salto em distância de até 3m e salto em altura de até 1,5m, com ou sem corrida.',
+  },
+  'Illumination': {
+    name: 'Iluminação',
+    desc: 'Emite luz brilhante num raio de 3m e luz fraca por mais 3m.',
+  },
+  'Sure-Footed': {
+    name: 'Pisada Firme',
+    desc: 'Tem vantagem em TR de Força e Destreza contra efeitos que a derrubariam.',
+  },
+  'Rampage': {
+    name: 'Massacre',
+    desc: 'Ao reduzir uma criatura a 0 PV com ataque corpo a corpo no próprio turno, pode usar ação bônus pra mover metade do deslocamento e fazer um ataque de mordida.',
+  },
+  'Underwater Camouflage': {
+    name: 'Camuflagem Submersa',
+    desc: 'Tem vantagem em testes de Destreza (Furtividade) feitos debaixo d\'água.',
+  },
+  'Water Breathing': {
+    name: 'Respiração Aquática',
+    desc: 'Só consegue respirar debaixo d\'água.',
+  },
+  'Keen Hearing and Sight': {
+    name: 'Audição e Visão Aguçadas',
+    desc: 'Tem vantagem em testes de Sabedoria (Percepção) que dependam da audição ou visão.',
+  },
+  'Spider Climb': {
+    name: 'Escalada de Aranha',
+    desc: 'Pode escalar superfícies difíceis, incluindo de cabeça pra baixo em tetos, sem teste.',
+  },
+  'Web Sense': {
+    name: 'Sentido das Teias',
+    desc: 'Em contato com uma teia, sabe a localização exata de qualquer criatura em contato com a mesma teia.',
+  },
+  'Web Walker': {
+    name: 'Caminhar em Teias',
+    desc: 'Ignora restrições de movimento causadas por teias.',
+  },
+  'Keen Sight and Smell': {
+    name: 'Visão e Olfato Aguçados',
+    desc: 'Tem vantagem em testes de Sabedoria (Percepção) que dependam da visão ou olfato.',
+  },
+  'Pounce': {
+    name: 'Bote',
+    desc: 'Se mover pelo menos 6m em linha reta em direção a uma criatura e acertar com garras na mesma rodada, o alvo precisa passar em TR de Força CD 13 ou cair caída. Se cair, pode fazer um ataque de mordida como ação bônus.',
+  },
+  'Running Leap': {
+    name: 'Salto com Corrida',
+    desc: 'Com 3m de corrida, pode dar salto em distância de até 7,5m.',
+  },
+  'Beast of Burden': {
+    name: 'Animal de Carga',
+    desc: 'Conta como animal Grande pra determinar capacidade de carga.',
+  },
+  'Blood Frenzy': {
+    name: 'Frenesi Sanguinário',
+    desc: 'Tem vantagem em ataques corpo a corpo contra qualquer criatura que não esteja com PV cheios.',
+  },
+  'Mimicry': {
+    name: 'Mimetismo',
+    desc: 'Pode imitar sons simples que tenha ouvido (sussurros, choro de bebê, animais). Uma criatura pode identificar como imitação com teste de Sabedoria (Intuição) CD 10.',
+  },
+  'Trampling Charge': {
+    name: 'Investida Atropeladora',
+    desc: 'Se mover pelo menos 6m em linha reta e acertar uma criatura com cascos na mesma rodada, ela precisa passar em TR de Força CD 14 ou cair caída. Se cair, pode fazer um ataque de cascos extra como ação bônus.',
+  },
+}
+
 function translateTraits(specials) {
   if (!Array.isArray(specials)) return []
-  return specials.map(t => ({ name: t.name, desc: t.desc }))
+  return specials.map(t => {
+    const pt = TRAITS_PT[t.name]
+    if (pt) return { name: pt.name, nameEn: t.name, desc: pt.desc }
+    return { name: t.name, nameEn: t.name, desc: t.desc }
+  })
 }
 
 function reach(beast) {

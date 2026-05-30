@@ -76,7 +76,7 @@ export function SkillsBlock({ draft, updateDraft, classData }) {
                   'w-4 h-4 rounded-sm border-2 flex items-center justify-center shrink-0',
                   isChosen ? 'border-ink-500 bg-ink-500' : 'border-parchment-600',
                 ].join(' ')}>
-                  {isChosen && <span className="text-parchment-50 text-[10px]">✓</span>}
+                  {isChosen && <span className="text-parchment-50 text-xs">✓</span>}
                 </span>
               )}
               <span className={[

@@ -219,7 +219,7 @@ function LanguageSelector({ raceIndex, backgroundLanguages, selectedLanguages, o
         <div className="flex items-center gap-2">
           <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">Idiomas</span>
           {hasSlots && (
-            <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold ${
+            <span className={`text-xs px-1.5 py-0.5 rounded-full font-semibold ${
               atLimit ? 'bg-amber-900/40 text-amber-400 border border-amber-700' : 'bg-gray-700 text-gray-400'
             }`}>
               {selectedLanguages.length}/{maxCount} extras
@@ -242,7 +242,7 @@ function LanguageSelector({ raceIndex, backgroundLanguages, selectedLanguages, o
         <div className="flex flex-wrap gap-1">
           {raceLangs.map(lang => (
             <span key={lang} className="text-xs bg-gray-700 border border-gray-500 px-2 py-0.5 rounded-full text-amber-300">
-              {lang} <span className="text-gray-500 text-[10px]">(raça)</span>
+              {lang} <span className="text-gray-500 text-xs">(raça)</span>
             </span>
           ))}
         </div>
@@ -345,7 +345,7 @@ function PortraitUpload({ portrait, onUpload }) {
       {portrait && (
         <button
           onClick={() => onUpload(null)}
-          className="text-[10px] text-gray-600 hover:text-red-400 transition-colors"
+          className="text-xs text-gray-600 hover:text-red-400 transition-colors"
         >
           remover
         </button>
@@ -367,12 +367,12 @@ function XpTracker({ xp = 0, level = 1, onUpdate }) {
       <div className="flex items-center justify-between">
         <span className="text-xs text-gray-400 font-semibold">XP</span>
         {nextThreshold && (
-          <span className="text-[10px] text-gray-500">
+          <span className="text-xs text-gray-500">
             {xp.toLocaleString()} / {nextThreshold.toLocaleString()} para Nível {level + 1}
           </span>
         )}
         {!nextThreshold && (
-          <span className="text-[10px] text-amber-500">Nível máximo ✦</span>
+          <span className="text-xs text-amber-500">Nível máximo ✦</span>
         )}
       </div>
       <div className="flex items-center gap-2">
@@ -390,7 +390,7 @@ function XpTracker({ xp = 0, level = 1, onUpdate }) {
             style={{ width: `${progress}%` }}
           />
         </div>
-        <span className="text-[10px] text-gray-500 w-8 text-right">{Math.round(progress)}%</span>
+        <span className="text-xs text-gray-500 w-8 text-right">{Math.round(progress)}%</span>
       </div>
     </div>
   )
@@ -553,7 +553,7 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
             const parts = (info.multiclasses ?? []).map(m => `${m.class} ${m.level}`).join(' / ')
             return (
               <span className="ml-2 text-amber-500 font-normal">
-                Total: {totalLevel} <span className="text-gray-500 text-[10px]">({info.class} {info.level} / {parts})</span>
+                Total: {totalLevel} <span className="text-gray-500 text-xs">({info.class} {info.level} / {parts})</span>
               </span>
             )
           })()}

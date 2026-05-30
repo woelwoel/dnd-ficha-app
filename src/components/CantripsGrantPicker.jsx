@@ -56,7 +56,7 @@ export function CantripsGrantPicker({ needed, chosen, onChosenChange }) {
             >
               <span className={`w-3 h-3 rounded-full border-2 shrink-0 ${isChosen ? 'border-blue-400 bg-blue-500' : 'border-gray-600'}`} />
               <span className="flex-1">{spell.name}</span>
-              {spell.school && <span className="text-gray-500 text-[10px]">{spell.school}</span>}
+              {spell.school && <span className="text-gray-500 text-xs">{spell.school}</span>}
             </button>
           )
         })}

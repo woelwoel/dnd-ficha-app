@@ -82,7 +82,7 @@ export function ASIPicker({ attributes, onBoostsChange }) {
                   const cur = attributes[key], atMax = cur >= 20, taken = key === other, sel = pick === key
                   return (
                     <button key={key} disabled={atMax || taken} onClick={() => selectSplit(slot, key)}
-                      className={`flex flex-col items-center px-2.5 py-1.5 rounded border text-[11px] transition-all ${
+                      className={`flex flex-col items-center px-2.5 py-1.5 rounded border text-[13px] transition-all ${
                         atMax || taken ? 'opacity-25 cursor-not-allowed border-gray-700 bg-gray-800' :
                         sel ? 'border-amber-400 bg-amber-900/40 text-amber-200' :
                         'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-400'

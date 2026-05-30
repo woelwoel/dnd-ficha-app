@@ -123,7 +123,7 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
           </h1>
           <span
             aria-label={`${completedCount} de ${totalCount} blocos prontos`}
-            className="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-display tracking-[0.2em] uppercase text-ink-300"
+            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-display tracking-[0.2em] uppercase text-ink-300"
           >
             <span className="text-emerald-700 font-bold">{completedCount}</span>
             <span>/</span>
@@ -181,7 +181,7 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
                   </div>
                   <span
                     aria-hidden
-                    className="hidden sm:flex items-center gap-2 text-[10px] font-display tracking-[0.2em] uppercase text-ink-300 shrink-0"
+                    className="hidden sm:flex items-center gap-2 text-xs font-display tracking-[0.2em] uppercase text-ink-300 shrink-0"
                   >
                     <span className={completeInGroup === groupBlocks.length ? 'text-emerald-700 font-bold' : ''}>
                       {completeInGroup}

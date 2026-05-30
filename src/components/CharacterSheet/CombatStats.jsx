@@ -27,7 +27,7 @@ function DeathSavesTracker({ deathSaves, isStable, isDead, onUpdate, onRoll, onS
           ☠ Morto
         </p>
         {!compact && (
-          <p className="text-[11px] text-ink-200 italic">
+          <p className="text-[13px] text-ink-200 italic">
             Personagem morreu. Reviver requer magia (Reviver os Mortos, Ressurreição).
           </p>
         )}
@@ -45,12 +45,12 @@ function DeathSavesTracker({ deathSaves, isStable, isDead, onUpdate, onRoll, onS
           🛡 Estabilizado
         </p>
         {!compact && (
-          <p className="text-[11px] text-ink-200 italic">
+          <p className="text-[13px] text-ink-200 italic">
             A 0 PV, mas não faz testes de morte. Recupera 1 PV após 1d4 horas (PHB p.197).
           </p>
         )}
         {compact && (
-          <span className="text-[10px] ink-italic text-ink-300">
+          <span className="text-xs ink-italic text-ink-300">
             0 PV · recupera 1 PV após 1d4h
           </span>
         )}
@@ -69,7 +69,7 @@ function DeathSavesTracker({ deathSaves, isStable, isDead, onUpdate, onRoll, onS
             <button
               onClick={onRoll}
               title="Rolar 1d20 (PHB p.197): ≤9 falha, ≥10 sucesso, Nat 1 = 2 falhas, Nat 20 recupera com 1 PV"
-              className="text-[10px] px-2 py-0.5 rounded bg-ink-500 hover:bg-ink-600 text-parchment-50 font-display tracking-wide"
+              className="text-xs px-2 py-0.5 rounded bg-ink-500 hover:bg-ink-600 text-parchment-50 font-display tracking-wide"
             >
               🎲 Rolar
             </button>
@@ -78,7 +78,7 @@ function DeathSavesTracker({ deathSaves, isStable, isDead, onUpdate, onRoll, onS
             <button
               onClick={onStabilize}
               title="Estabilizar (DC 10 Medicina ou spare-the-dying — PHB p.197)"
-              className="text-[10px] px-2 py-0.5 rounded bg-parchment-300 hover:bg-parchment-400 border border-parchment-600 text-ink-500"
+              className="text-xs px-2 py-0.5 rounded bg-parchment-300 hover:bg-parchment-400 border border-parchment-600 text-ink-500"
             >
               Estabilizar
             </button>
@@ -146,7 +146,7 @@ function DamageHealControls({ onApplyDamage, onApplyHealing, disabled }) {
           Sofrer Dano / Curar
         </label>
         {needsValue && (
-          <span className="text-[10px] text-amber-700 italic">
+          <span className="text-xs text-amber-700 italic">
             ↳ Digite quanto dano/cura primeiro
           </span>
         )}
@@ -245,7 +245,7 @@ function ConcentrationCheckPrompt({ dc, conMod, spellName, onPass, onFail, onDis
         </p>
         <button
           onClick={rollNow}
-          className="text-[10px] px-2 py-0.5 rounded bg-purple-700 hover:bg-purple-600 text-parchment-50 font-display tracking-wide shrink-0"
+          className="text-xs px-2 py-0.5 rounded bg-purple-700 hover:bg-purple-600 text-parchment-50 font-display tracking-wide shrink-0"
         >
           🎲 Rolar Save
         </button>
@@ -324,14 +324,14 @@ function ConditionButton({ condition, isActive, onToggle }) {
         >
           <span aria-hidden>{condition.icon}</span>
           <span>{condition.label}</span>
-          {isActive && <span className="ml-auto text-parchment-50 text-[10px]" aria-hidden>✕</span>}
+          {isActive && <span className="ml-auto text-parchment-50 text-xs" aria-hidden>✕</span>}
         </button>
         <button
           onClick={() => setShowRule(v => !v)}
           aria-label={`Ler regra de ${condition.label}`}
           aria-expanded={showRule}
           title="Ler regra (PHB)"
-          className={`px-2 text-[11px] border-l ${
+          className={`px-2 text-[13px] border-l ${
             isActive
               ? 'border-ink-600/40 text-parchment-50 hover:bg-ink-600'
               : 'border-parchment-600 text-ink-300 hover:text-ink-500 hover:bg-parchment-200'
@@ -341,7 +341,7 @@ function ConditionButton({ condition, isActive, onToggle }) {
         </button>
       </div>
       {showRule && (
-        <p className={`text-[10px] leading-relaxed px-2 py-1.5 border border-t-0 rounded-b ${
+        <p className={`text-xs leading-relaxed px-2 py-1.5 border border-t-0 rounded-b ${
           isActive
             ? 'border-ink-600 bg-ink-500/10 text-ink-500'
             : 'border-parchment-600 bg-parchment-50 text-ink-300 italic'
@@ -368,7 +368,7 @@ function ConditionsTracker({ conditions = [], onToggle }) {
           Condições
         </span>
         {active.length > 0 && (
-          <span className="text-[10px] bg-parchment-300 border border-ink-300 text-ink-500 px-1.5 py-0.5 rounded-full">
+          <span className="text-xs bg-parchment-300 border border-ink-300 text-ink-500 px-1.5 py-0.5 rounded-full">
             {active.length} ativa{active.length > 1 ? 's' : ''}
           </span>
         )}
@@ -383,7 +383,7 @@ function ConditionsTracker({ conditions = [], onToggle }) {
               key={c.id}
               onClick={() => onToggle(c.id)}
               title="Remover condição"
-              className="text-[11px] bg-parchment-300 border border-ink-300 text-ink-500
+              className="text-[13px] bg-parchment-300 border border-ink-300 text-ink-500
                 px-2 py-0.5 rounded-full hover:bg-parchment-400 transition-colors"
             >
               {c.icon} {c.label} ×
@@ -495,15 +495,15 @@ function CombatStatsBase({
       {compact ? (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
           <span className="flex items-baseline gap-1">
-            <span className="text-[10px] font-display tracking-widest uppercase text-ink-300">Prof</span>
+            <span className="text-xs font-display tracking-widest uppercase text-ink-300">Prof</span>
             <span className="font-bold text-ink-500 tabular-nums">{formatModifier(profBonus)}</span>
           </span>
           <span className="flex items-baseline gap-1">
-            <span className="text-[10px] font-display tracking-widest uppercase text-ink-300">DV</span>
+            <span className="text-xs font-display tracking-widest uppercase text-ink-300">DV</span>
             <span className="font-bold text-ink-500 tabular-nums">{formatHitDicePool(combat.hitDice)}</span>
           </span>
           <span className="flex items-baseline gap-1">
-            <span className="text-[10px] font-display tracking-widest uppercase text-ink-300">Perc. Passiva</span>
+            <span className="text-xs font-display tracking-widest uppercase text-ink-300">Perc. Passiva</span>
             <span className="font-bold text-ink-500 tabular-nums">{passivePerception ?? '—'}</span>
           </span>
         </div>
@@ -535,7 +535,7 @@ function CombatStatsBase({
             <button
               onClick={onConsumeInspiration}
               title="Consumir Inspiração para ganhar vantagem em uma rolagem (PHB p.125)"
-              className="text-[10px] px-2 py-0.5 rounded bg-amber-700 hover:bg-amber-600 text-parchment-50 font-display tracking-wide"
+              className="text-xs px-2 py-0.5 rounded bg-amber-700 hover:bg-amber-600 text-parchment-50 font-display tracking-wide"
             >
               💡 Usar (vantagem)
             </button>
@@ -553,7 +553,7 @@ function CombatStatsBase({
                   (combat.exhaustion ?? 0) >= lvl ? lvl - 1 : lvl
                 )}
                 title={`Nível ${lvl}: ${EXHAUSTION_EFFECTS[lvl]}`}
-                className={`w-4 h-4 rounded-sm text-[10px] font-bold border transition-colors ${
+                className={`w-4 h-4 rounded-sm text-xs font-bold border transition-colors ${
                   (combat.exhaustion ?? 0) >= lvl
                     ? 'bg-ink-500 border-ink-600 text-parchment-50'
                     : 'bg-parchment-50 border-parchment-600 text-ink-200 hover:border-ink-300'
@@ -564,7 +564,7 @@ function CombatStatsBase({
             ))}
           </div>
           {(combat.exhaustion ?? 0) > 0 && (
-            <span className="text-[10px] ink-italic truncate">
+            <span className="text-xs ink-italic truncate">
               {EXHAUSTION_EFFECTS[combat.exhaustion ?? 0]}
             </span>
           )}
@@ -575,22 +575,22 @@ function CombatStatsBase({
       {(exh.abilityCheckDisadvantage || exh.attackDisadvantage || exh.saveDisadvantage || exh.maxHpMultiplier < 1) && (
         <div className="flex flex-wrap gap-1.5">
           {exh.abilityCheckDisadvantage && (
-            <span className="text-[10px] bg-amber-50 border border-amber-700 text-amber-700 px-2 py-0.5 rounded-full">
+            <span className="text-xs bg-amber-50 border border-amber-700 text-amber-700 px-2 py-0.5 rounded-full">
               ⚠ Desv. em testes de habilidade
             </span>
           )}
           {exh.attackDisadvantage && (
-            <span className="text-[10px] bg-red-50 border border-red-700 text-red-700 px-2 py-0.5 rounded-full">
+            <span className="text-xs bg-red-50 border border-red-700 text-red-700 px-2 py-0.5 rounded-full">
               ⚠ Desv. em ataques
             </span>
           )}
           {exh.saveDisadvantage && (
-            <span className="text-[10px] bg-red-50 border border-red-700 text-red-700 px-2 py-0.5 rounded-full">
+            <span className="text-xs bg-red-50 border border-red-700 text-red-700 px-2 py-0.5 rounded-full">
               ⚠ Desv. em salvaguardas
             </span>
           )}
           {exh.maxHpMultiplier < 1 && (
-            <span className="text-[10px] bg-red-50 border border-red-700 text-red-700 px-2 py-0.5 rounded-full">
+            <span className="text-xs bg-red-50 border border-red-700 text-red-700 px-2 py-0.5 rounded-full">
               ⚠ PV máx. à metade
             </span>
           )}
@@ -646,7 +646,7 @@ function CombatStatsBase({
             {(combat.tempHp ?? 0) > 0 && (
               <button
                 onClick={() => onUpdateCombat('tempHp', 0)}
-                className="text-[10px] text-ink-200 hover:text-red-400 underline"
+                className="text-xs text-ink-200 hover:text-red-400 underline"
                 title="Zerar PV temporários"
               >
                 zerar
@@ -670,7 +670,7 @@ function CombatStatsBase({
             {suggestedMaxHp != null && suggestedMaxHp !== combat.maxHp && (
               <button
                 onClick={() => onUpdateCombat('maxHp', suggestedMaxHp)}
-                className="text-[10px] text-amber-500 hover:text-amber-300 underline"
+                className="text-xs text-amber-500 hover:text-amber-300 underline"
                 title="Aplica o PV calculado pela classe e CON"
               >
                 Sugerido: {suggestedMaxHp}
@@ -765,18 +765,18 @@ const StatBox = memo(function StatBox({ label, value, editable, onChange, hint, 
       {hint && (
         <button
           onClick={hint.onApply}
-          className="text-[9px] text-amber-500 hover:text-amber-300 underline mt-0.5 leading-none"
+          className="text-[13px] text-amber-500 hover:text-amber-300 underline mt-0.5 leading-none"
         >
           {hint.label}
         </button>
       )}
       {warning && (
-        <span className="text-[9px] text-red-600 mt-0.5 leading-none text-center">
+        <span className="text-[13px] text-red-600 mt-0.5 leading-none text-center">
           {warning}
         </span>
       )}
       {error && (
-        <p id={errId} role="alert" className="text-[9px] text-red-400 mt-0.5 text-center leading-none">
+        <p id={errId} role="alert" className="text-[13px] text-red-400 mt-0.5 text-center leading-none">
           {error}
         </p>
       )}

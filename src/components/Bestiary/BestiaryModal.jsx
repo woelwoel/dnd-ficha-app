@@ -171,9 +171,9 @@ export function BestiaryModal({ isOpen, onClose }) {
                 >
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium text-white truncate">{m.name}</div>
-                    <div className="text-[11px] text-gray-500 capitalize">{m.size?.toLowerCase()} {m.type}</div>
+                    <div className="text-[13px] text-gray-500 capitalize">{m.size?.toLowerCase()} {m.type}</div>
                   </div>
-                  <span className={`text-[10px] px-2 py-0.5 rounded border font-bold ${crBadgeColor(m.challenge_rating)}`}>
+                  <span className={`text-xs px-2 py-0.5 rounded border font-bold ${crBadgeColor(m.challenge_rating)}`}>
                     CR {formatCR(m.challenge_rating)}
                   </span>
                 </button>
@@ -229,7 +229,7 @@ function MonsterFilterPanel({ filters, onChange }) {
     })
   }
   const chip = (active) =>
-    `text-[11px] px-2 py-1 rounded border transition-colors capitalize ${
+    `text-[13px] px-2 py-1 rounded border transition-colors capitalize ${
       active
         ? 'border-amber-500 bg-amber-900/40 text-amber-200'
         : 'border-gray-700 text-gray-400 hover:border-gray-500 hover:text-gray-200'
@@ -238,7 +238,7 @@ function MonsterFilterPanel({ filters, onChange }) {
   return (
     <div className="bg-gray-900/60 border border-gray-700 rounded-lg p-2.5 space-y-2.5">
       <div>
-        <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Challenge Rating</div>
+        <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">Challenge Rating</div>
         <div className="flex items-center gap-2 text-xs text-gray-300">
           <span>min</span>
           <input
@@ -258,7 +258,7 @@ function MonsterFilterPanel({ filters, onChange }) {
       </div>
 
       <div>
-        <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Tipo</div>
+        <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">Tipo</div>
         <div className="flex flex-wrap gap-1">
           {MONSTER_TYPES.map(t => (
             <button key={t} type="button" onClick={() => toggleInSet('types', t)} className={chip(filters.types.has(t))}>
@@ -269,7 +269,7 @@ function MonsterFilterPanel({ filters, onChange }) {
       </div>
 
       <div>
-        <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Tamanho</div>
+        <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">Tamanho</div>
         <div className="flex flex-wrap gap-1">
           {MONSTER_SIZES.map(s => (
             <button key={s} type="button" onClick={() => toggleInSet('sizes', s)} className={chip(filters.sizes.has(s))}>
@@ -280,7 +280,7 @@ function MonsterFilterPanel({ filters, onChange }) {
       </div>
 
       <div>
-        <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Alinhamento</div>
+        <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">Alinhamento</div>
         <div className="flex flex-wrap gap-1">
           {ALIGNMENTS.map(a => (
             <button key={a} type="button" onClick={() => toggleInSet('alignments', a)} className={chip(filters.alignments.has(a))}>
@@ -294,7 +294,7 @@ function MonsterFilterPanel({ filters, onChange }) {
         <button
           type="button"
           onClick={reset}
-          className="text-[11px] text-gray-500 hover:text-amber-400 transition-colors"
+          className="text-[13px] text-gray-500 hover:text-amber-400 transition-colors"
         >
           Limpar filtros
         </button>

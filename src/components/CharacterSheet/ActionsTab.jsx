@@ -64,12 +64,12 @@ function ActionCard({ name, type, desc, source, used, max, onSpend, onRegain }) 
           <div className="min-w-0">
             <p className="text-sm font-semibold text-gray-100 leading-tight">{name}</p>
             {source && (
-              <p className="text-[10px] text-gray-500 capitalize mt-0.5">{source}</p>
+              <p className="text-xs text-gray-500 capitalize mt-0.5">{source}</p>
             )}
           </div>
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${meta.badge}`}>
+          <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${meta.badge}`}>
             {meta.label}
           </span>
           {max != null && (

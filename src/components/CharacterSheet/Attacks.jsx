@@ -44,7 +44,7 @@ function AttackForm({ value, onChange, onSave, onCancel, title }) {
   }
   return (
     <div className="mb-3 p-3 bg-gray-900 rounded-lg space-y-2">
-      <div className="text-[11px] uppercase tracking-widest text-amber-400 font-display">{title}</div>
+      <div className="text-[13px] uppercase tracking-widest text-amber-400 font-display">{title}</div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <input type="text" placeholder="Nome da arma *"
           value={value.name}
@@ -193,7 +193,7 @@ function AttackRow({
               title={versatileMode
                 ? 'Usando 2 mãos (versátil). Clique para voltar a 1 mão.'
                 : 'Usando 1 mão. Clique para empunhar com 2 mãos (versátil).'}
-              className={`text-[10px] px-1.5 py-0.5 rounded border transition-colors ${
+              className={`text-xs px-1.5 py-0.5 rounded border transition-colors ${
                 versatileMode
                   ? 'bg-amber-700/40 border-amber-500 text-amber-200'
                   : 'bg-gray-800 border-gray-600 text-gray-400 hover:border-amber-500 hover:text-amber-300'
@@ -210,12 +210,12 @@ function AttackRow({
             <RollButton notation={dmgNotation} label={`Dano avulso · ${atk.name}`} size="xs" />
           </div>
           {atk.versatileDice && !versatileMode && (
-            <div className="text-gray-500 text-[10px]">
+            <div className="text-gray-500 text-xs">
               2 mãos: {calculateWeaponDamage(atk, attributes, { versatileTwoHanded: true }).expression}
             </div>
           )}
           {ammoItem && (
-            <div className={`text-[10px] mt-0.5 ${noAmmo ? 'text-red-400' : 'text-sky-400'}`}>
+            <div className={`text-xs mt-0.5 ${noAmmo ? 'text-red-400' : 'text-sky-400'}`}>
               {noAmmo ? '⚠ Sem' : '🏹'} {ammoItem.name}: {ammoItem.qty ?? 0}
             </div>
           )}
@@ -256,7 +256,7 @@ function AttackRow({
         {atk.versatileDice && (
           <button
             onClick={toggleVersatile}
-            className={`text-[10px] px-1.5 py-0.5 rounded border transition-colors ${
+            className={`text-xs px-1.5 py-0.5 rounded border transition-colors ${
               versatileMode
                 ? 'bg-amber-700/40 border-amber-500 text-amber-200'
                 : 'bg-gray-800 border-gray-600 text-gray-400'
@@ -281,7 +281,7 @@ function AttackRow({
         </div>
       )}
       {ammoItem && (
-        <div className={`text-[11px] mt-0.5 ${noAmmo ? 'text-red-400' : 'text-sky-400'}`}>
+        <div className={`text-[13px] mt-0.5 ${noAmmo ? 'text-red-400' : 'text-sky-400'}`}>
           {noAmmo ? '⚠ Sem' : '🏹'} {ammoItem.name}: {ammoItem.qty ?? 0}
         </div>
       )}
@@ -416,7 +416,7 @@ export function Attacks({
       )}
 
       {attacks.length > 0 && (
-        <p className="mt-2 text-[11px] text-gray-600">
+        <p className="mt-2 text-[13px] text-gray-600">
           Dica: clique no nome da arma para editar. Use o toggle ⚔/✊ pra alternar versátil (1 mão ↔ 2 mãos).
         </p>
       )}

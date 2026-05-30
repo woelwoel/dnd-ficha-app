@@ -10,7 +10,7 @@ export function HighElfCantripPicker({ value, onChange }) {
       <legend className="px-2 text-xs font-display tracking-widest uppercase text-ink-500">
         Truque de Mago <span className="text-red-700">*</span>
       </legend>
-      <p className="text-[11px] italic text-ink-300 mb-2">
+      <p className="text-[13px] italic text-ink-300 mb-2">
         Você conhece 1 truque do Mago (Inteligência como atributo de conjuração).
       </p>
       <select

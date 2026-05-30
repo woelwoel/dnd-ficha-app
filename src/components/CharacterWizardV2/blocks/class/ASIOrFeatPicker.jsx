@@ -39,7 +39,7 @@ export function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) 
         <p className="text-xs font-display tracking-widest uppercase text-ink-500 flex-1">
           Aumento de Atributo {allowFeats ? 'ou Talento' : ''} <span className="text-red-700">*</span>
         </p>
-        {isDone && <span className="text-[10px] text-emerald-700 font-display">✓</span>}
+        {isDone && <span className="text-xs text-emerald-700 font-display">✓</span>}
       </div>
 
       {allowFeats && (
@@ -48,7 +48,7 @@ export function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) 
             type="button"
             onClick={() => switchMode('asi')}
             className={[
-              'flex-1 py-1 text-[10px] rounded-sm border-2 font-display tracking-wide transition-colors',
+              'flex-1 py-1 text-xs rounded-sm border-2 font-display tracking-wide transition-colors',
               mode === 'asi'
                 ? 'border-ink-500 bg-parchment-200 text-ink-500'
                 : 'border-parchment-600 bg-parchment-50 text-ink-300 hover:border-ink-300',
@@ -60,7 +60,7 @@ export function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) 
             type="button"
             onClick={() => switchMode('feat')}
             className={[
-              'flex-1 py-1 text-[10px] rounded-sm border-2 font-display tracking-wide transition-colors',
+              'flex-1 py-1 text-xs rounded-sm border-2 font-display tracking-wide transition-colors',
               mode === 'feat'
                 ? 'border-ink-500 bg-parchment-200 text-ink-500'
                 : 'border-parchment-600 bg-parchment-50 text-ink-300 hover:border-ink-300',
@@ -73,7 +73,7 @@ export function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) 
 
       {mode === 'asi' && (
         <div className="flex flex-col gap-1.5">
-          <p className="text-[10px] italic text-ink-300">
+          <p className="text-xs italic text-ink-300">
             Pontos restantes:{' '}
             <span className={remaining === 0 ? 'text-emerald-700 font-bold' : 'text-amber-700 font-bold'}>
               {remaining}
@@ -90,18 +90,18 @@ export function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) 
                   'flex items-center gap-1 px-2 py-1.5 rounded-sm border-2',
                   bonus > 0 ? 'border-ink-500 bg-parchment-200' : 'border-parchment-600 bg-parchment-50',
                 ].join(' ')}>
-                  <span className="text-[10px] font-display text-ink-300 w-6 shrink-0">{ATTR_ABR[attr]}</span>
+                  <span className="text-xs font-display text-ink-300 w-6 shrink-0">{ATTR_ABR[attr]}</span>
                   <button
                     type="button"
                     onClick={() => adjustBonus(attr, -1)}
                     disabled={!canDec}
                     aria-label={`-1 ${ATTR_ABR[attr]}`}
-                    className="w-4 h-4 rounded-sm flex items-center justify-center text-[11px] bg-parchment-100 hover:bg-parchment-200 border border-parchment-600 text-ink-500 disabled:opacity-25 disabled:cursor-not-allowed"
+                    className="w-4 h-4 rounded-sm flex items-center justify-center text-[13px] bg-parchment-100 hover:bg-parchment-200 border border-parchment-600 text-ink-500 disabled:opacity-25 disabled:cursor-not-allowed"
                   >
                     −
                   </button>
                   <span className={[
-                    'text-[11px] font-display flex-1 text-center',
+                    'text-[13px] font-display flex-1 text-center',
                     bonus > 0 ? 'text-ink-500' : 'text-ink-200',
                   ].join(' ')}>
                     {bonus > 0 ? `+${bonus}` : '0'}
@@ -111,7 +111,7 @@ export function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) 
                     onClick={() => adjustBonus(attr, 1)}
                     disabled={!canInc}
                     aria-label="+"
-                    className="w-4 h-4 rounded-sm flex items-center justify-center text-[11px] bg-parchment-100 hover:bg-parchment-200 border border-parchment-600 text-ink-500 disabled:opacity-25 disabled:cursor-not-allowed"
+                    className="w-4 h-4 rounded-sm flex items-center justify-center text-[13px] bg-parchment-100 hover:bg-parchment-200 border border-parchment-600 text-ink-500 disabled:opacity-25 disabled:cursor-not-allowed"
                   >
                     +
                   </button>
@@ -133,7 +133,7 @@ export function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) 
           />
           <div className="max-h-44 overflow-y-auto flex flex-col gap-1 pr-0.5">
             {filteredFeats.length === 0 && (
-              <p className="text-[10px] text-ink-200 italic text-center py-3">Nenhum talento encontrado.</p>
+              <p className="text-xs text-ink-200 italic text-center py-3">Nenhum talento encontrado.</p>
             )}
             {filteredFeats.map(feat => {
               const isSelected = currentChoice?.type === 'feat' && currentChoice.featIndex === feat.index
@@ -169,7 +169,7 @@ export function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) 
                     <span className="font-display block">
                       {feat.name}
                       {feat.attrBonus && (
-                        <span className="ml-1.5 text-[9px] text-ink-300 italic">
+                        <span className="ml-1.5 text-[13px] text-ink-300 italic">
                           +{feat.attrBonus.amount} {feat.attrBonus.choices.map(c => ATTR_ABR[c]).join('/')}
                         </span>
                       )}
@@ -182,7 +182,7 @@ export function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) 
 
           {currentChoice?.type === 'feat' && currentChoice.featAttrBonus && (currentChoice.featAttrBonus.choices?.length ?? 0) > 1 && (
             <div className="mt-2 pt-2 border-t-2 border-parchment-600/50 flex flex-col gap-1.5">
-              <p className="text-[10px] font-display text-ink-500">
+              <p className="text-xs font-display text-ink-500">
                 Onde aplicar +{currentChoice.featAttrBonus.amount}? <span className="text-red-700">*</span>
               </p>
               <div className="flex gap-1.5 flex-wrap">
@@ -194,7 +194,7 @@ export function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) 
                       type="button"
                       onClick={() => onChoose({ ...currentChoice, featChosenAttr: attrKey })}
                       className={[
-                        'px-2.5 py-1 text-[11px] rounded-sm border-2 font-display transition-colors',
+                        'px-2.5 py-1 text-[13px] rounded-sm border-2 font-display transition-colors',
                         isSel
                           ? 'border-ink-500 bg-parchment-200 text-ink-500'
                           : 'border-parchment-600 bg-parchment-50 text-ink-300 hover:border-ink-300',

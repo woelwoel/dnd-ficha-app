@@ -85,12 +85,12 @@ export function LevelUpChoicePicker({
                 <span className={`w-3.5 h-3.5 rounded-full border-2 shrink-0 ${currentVal === opt.value ? 'border-amber-400 bg-amber-500' : 'border-gray-600'}`} />
                 <span className="font-semibold text-sm">{opt.name}</span>
                 {opt.grants?.bonusCantrips > 0 && (
-                  <span className="text-[10px] bg-blue-900/40 border border-blue-700/50 text-blue-300 px-1.5 py-0.5 rounded-full ml-auto shrink-0">
+                  <span className="text-xs bg-blue-900/40 border border-blue-700/50 text-blue-300 px-1.5 py-0.5 rounded-full ml-auto shrink-0">
                     +{opt.grants.bonusCantrips} truques
                   </span>
                 )}
                 {opt.grants?.spells?.length > 0 && (
-                  <span className="text-[10px] bg-green-900/40 border border-green-700/50 text-green-300 px-1.5 py-0.5 rounded-full ml-auto shrink-0">
+                  <span className="text-xs bg-green-900/40 border border-green-700/50 text-green-300 px-1.5 py-0.5 rounded-full ml-auto shrink-0">
                     +magia
                   </span>
                 )}

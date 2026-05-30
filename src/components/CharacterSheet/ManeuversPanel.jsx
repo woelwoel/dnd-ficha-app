@@ -116,13 +116,13 @@ export function ManeuversPanel({ character, featureUses, onSpend }) {
                 title={m.desc}
                 className="flex items-center gap-2 px-2 py-1.5 rounded border border-parchment-600 bg-parchment-50"
               >
-                <span className={`text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded border shrink-0 font-bold ${typeColor}`}>
+                <span className={`text-[13px] uppercase tracking-wider px-1.5 py-0.5 rounded border shrink-0 font-bold ${typeColor}`}>
                   {typeAbbr}
                 </span>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-display text-ink-500 truncate">{m.name}</p>
                   {m.trigger && (
-                    <p className="text-[10px] italic text-ink-300 truncate">{m.trigger}</p>
+                    <p className="text-xs italic text-ink-300 truncate">{m.trigger}</p>
                   )}
                 </div>
                 <button
@@ -145,7 +145,7 @@ export function ManeuversPanel({ character, featureUses, onSpend }) {
         </div>
       )}
 
-      <p className="mt-2 text-[10px] text-ink-300 italic leading-relaxed">
+      <p className="mt-2 text-xs text-ink-300 italic leading-relaxed">
         Click no 🎲 para gastar 1 Dado de Superioridade e rolar. Passe o mouse no nome pra ver a regra completa.
         Recarrega em descanso curto ou longo.
       </p>

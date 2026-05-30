@@ -35,13 +35,13 @@ export function LevelTimeline({ currentLevel, levels, onJump }) {
             >
               {lvl}
               {isASI && (
-                <span className="absolute -top-1.5 -right-1 text-[9px] text-amber-400 font-black leading-none">★</span>
+                <span className="absolute -top-1.5 -right-1 text-[13px] text-amber-400 font-black leading-none">★</span>
               )}
             </button>
           )
         })}
       </div>
-      <p className="text-[10px] text-gray-600 mt-1">★ = Aumento de Habilidade disponível</p>
+      <p className="text-xs text-gray-600 mt-1">★ = Aumento de Habilidade disponível</p>
     </div>
   )
 }

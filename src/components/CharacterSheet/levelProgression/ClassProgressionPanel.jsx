@@ -173,7 +173,7 @@ export function ClassProgressionPanel({
                     <div className="flex flex-wrap gap-1 mt-1">
                       {entry.spell_slots.map((n, i) =>
                         n > 0 ? (
-                          <span key={i} className="text-[10px] bg-gray-700 px-1.5 py-0.5 rounded text-gray-400">
+                          <span key={i} className="text-xs bg-gray-700 px-1.5 py-0.5 rounded text-gray-400">
                             {i + 1}°:{n}
                           </span>
                         ) : null
@@ -186,7 +186,7 @@ export function ClassProgressionPanel({
           })}
         </div>
         {!showAll && (
-          <p className="text-[10px] text-center text-gray-600 py-2 border-t border-gray-700">
+          <p className="text-xs text-center text-gray-600 py-2 border-t border-gray-700">
             Exibindo níveis próximos ao atual.{' '}
             <button onClick={() => setShowAll(true)} className="text-amber-600 hover:text-amber-400">Ver todos</button>
           </p>

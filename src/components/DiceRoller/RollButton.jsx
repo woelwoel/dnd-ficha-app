@@ -41,7 +41,7 @@ export function RollButton({ notation, label, size = 'sm', className = '', crit 
       className={`inline-flex items-center justify-center active:scale-95
         transition-all select-none leading-none
         ${crit ? 'text-amber-700 hover:text-amber-900' : 'text-gilt-500 hover:text-ink-500'}
-        ${size === 'xs' ? 'text-[11px]' : 'text-sm'}
+        ${size === 'xs' ? 'text-[13px]' : 'text-sm'}
         ${className}`}
     >
       {glyph}

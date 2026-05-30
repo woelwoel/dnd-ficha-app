@@ -227,9 +227,9 @@ export function Inventory({
               style={{ width: `${weightPct}%` }}
             />
           </div>
-          {isHeavyLoad && <p className="text-[10px] text-red-400">Carga excessiva — velocidade −20ft</p>}
-          {isEncumbered && !isHeavyLoad && <p className="text-[10px] text-orange-400">Sobrecarregado — velocidade −10ft (opcional)</p>}
-          <p className="text-[10px] text-gray-600">FOR ({attributes?.str ?? 10}) × 15 = {capacity} lb</p>
+          {isHeavyLoad && <p className="text-xs text-red-400">Carga excessiva — velocidade −20ft</p>}
+          {isEncumbered && !isHeavyLoad && <p className="text-xs text-orange-400">Sobrecarregado — velocidade −10ft (opcional)</p>}
+          <p className="text-xs text-gray-600">FOR ({attributes?.str ?? 10}) × 15 = {capacity} lb</p>
         </div>
 
         {/* Atunamento */}
@@ -252,7 +252,7 @@ export function Inventory({
               />
             ))}
           </div>
-          <p className="text-[10px] text-gray-600">Máx. 3 itens mágicos (PHB p.136)</p>
+          <p className="text-xs text-gray-600">Máx. 3 itens mágicos (PHB p.136)</p>
         </div>
       </div>
 
@@ -467,11 +467,11 @@ export function Inventory({
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-sm font-medium text-white">{mag.name}</span>
-                  <span className={`text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded border ${rar.text} ${rar.border} ${rar.bg}`}>
+                  <span className={`text-xs uppercase tracking-wider px-1.5 py-0.5 rounded border ${rar.text} ${rar.border} ${rar.bg}`}>
                     {rar.label}
                   </span>
                   {mag.requiresAttunement && (
-                    <span className="text-[10px] text-purple-300">💎 atunamento</span>
+                    <span className="text-xs text-purple-300">💎 atunamento</span>
                   )}
                 </div>
                 {mag.description && (
@@ -516,11 +516,11 @@ export function Inventory({
                     {/* Linha 1: nome + ações */}
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-1.5 min-w-0 flex-1 flex-wrap">
-                        {item.source === 'background' && <span className="text-[11px] shrink-0">🎒</span>}
-                        {isAttuned && <span className="text-[11px] shrink-0">💎</span>}
+                        {item.source === 'background' && <span className="text-[13px] shrink-0">🎒</span>}
+                        {isAttuned && <span className="text-[13px] shrink-0">💎</span>}
                         <span className="text-sm text-white font-medium truncate">{item.name}</span>
                         {rarInfo && (
-                          <span className={`text-[9px] uppercase tracking-wider px-1 rounded border shrink-0 ${rarInfo.text} ${rarInfo.border}`}>
+                          <span className={`text-[13px] uppercase tracking-wider px-1 rounded border shrink-0 ${rarInfo.text} ${rarInfo.border}`}>
                             {rarInfo.label}
                           </span>
                         )}
@@ -607,15 +607,15 @@ export function Inventory({
                     } ${isEquipped ? 'ring-1 ring-amber-600/50' : ''} ${isAttuned ? 'ring-1 ring-purple-600/50' : ''}`}
                   >
                     <span className="text-sm text-white truncate flex items-center gap-1.5">
-                      {item.source === 'background' && <span title="Item do antecedente" className="text-[10px]">🎒</span>}
-                      {isAttuned && <span title="Atunado" className="text-[10px]">💎</span>}
+                      {item.source === 'background' && <span title="Item do antecedente" className="text-xs">🎒</span>}
+                      {isAttuned && <span title="Atunado" className="text-xs">💎</span>}
                       {isEquippable && (
                         <button
                           onClick={() => toggleEquip(item, isEquipped)}
                           title={isWeapon
                             ? (isEquipped ? 'Desempunhar (remove dos Ataques)' : 'Empunhar (cria entrada em Ataques)')
                             : (isEquipped ? 'Desequipar' : 'Equipar')}
-                          className={`text-[10px] px-1.5 py-0.5 rounded border transition-colors ${
+                          className={`text-xs px-1.5 py-0.5 rounded border transition-colors ${
                             isEquipped ? 'border-amber-500 bg-amber-900/30 text-amber-300' : 'border-gray-600 text-gray-500 hover:text-gray-300 hover:border-gray-500'
                           }`}
                         >
@@ -623,7 +623,7 @@ export function Inventory({
                         </button>
                       )}
                       {isEquippable && (
-                        <span className="text-[9px] text-gray-500 uppercase">
+                        <span className="text-[13px] text-gray-500 uppercase">
                           {resolvedArmor
                             ? (resolvedArmor.type === 'shield' ? 'escudo' : resolvedArmor.category)
                             : 'arma'}
@@ -631,7 +631,7 @@ export function Inventory({
                       )}
                       <span className="truncate">{item.name}</span>
                       {rarInfo && (
-                        <span className={`text-[9px] uppercase tracking-wider px-1 rounded border shrink-0 ${rarInfo.text} ${rarInfo.border}`}>
+                        <span className={`text-[13px] uppercase tracking-wider px-1 rounded border shrink-0 ${rarInfo.text} ${rarInfo.border}`}>
                           {rarInfo.label}
                         </span>
                       )}

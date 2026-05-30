@@ -68,14 +68,14 @@ export function PreparedSpellsList() {
           <h3 className="text-sm font-display text-ink-500 uppercase tracking-widest">
             Magias Preparadas
           </h3>
-          <span className="text-[10px] ink-italic text-ink-300">
+          <span className="text-xs ink-italic text-ink-300">
             {totalPrepared} {totalPrepared === 1 ? 'pronta' : 'prontas'}
           </span>
         </div>
         {onNavigateToSpells && (
           <button
             onClick={() => onNavigateToSpells()}
-            className="text-[10px] font-display tracking-wide text-ink-300 hover:text-ink-500 underline"
+            className="text-xs font-display tracking-wide text-ink-300 hover:text-ink-500 underline"
             title="Abrir aba Magias pra preparar/conjurar"
           >
             gerenciar →
@@ -86,7 +86,7 @@ export function PreparedSpellsList() {
       {/* Resumo de espaços disponíveis */}
       {slotLevels.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5 mb-3">
-          <span className="text-[10px] font-display tracking-widest uppercase text-ink-300">
+          <span className="text-xs font-display tracking-widest uppercase text-ink-300">
             Espaços
           </span>
           {slotLevels.map(lvl => {
@@ -99,7 +99,7 @@ export function PreparedSpellsList() {
                 key={lvl}
                 title={`Nível ${lvl}: ${avail}/${max} disponíveis`}
                 className={[
-                  'px-1.5 py-0.5 rounded-sm border text-[10px] font-display tabular-nums',
+                  'px-1.5 py-0.5 rounded-sm border text-xs font-display tabular-nums',
                   allUsed
                     ? 'bg-parchment-200 border-parchment-600 text-ink-300 line-through'
                     : 'bg-parchment-50 border-parchment-600 text-ink-500',
@@ -114,14 +114,14 @@ export function PreparedSpellsList() {
 
       {/* Lista de magias preparadas, agrupada por nível */}
       {groupLevels.length === 0 ? (
-        <p className="text-[11px] ink-italic text-ink-300 text-center py-2">
+        <p className="text-[13px] ink-italic text-ink-300 text-center py-2">
           Nenhuma magia preparada ainda — abra a aba Magias pra preparar.
         </p>
       ) : (
         <div className="space-y-2">
           {groupLevels.map(lvl => (
             <div key={lvl}>
-              <p className="text-[10px] font-display tracking-widest uppercase text-ink-300 mb-1">
+              <p className="text-xs font-display tracking-widest uppercase text-ink-300 mb-1">
                 {lvl === 0 ? 'Truques (sempre prontas)' : `Nível ${lvl}`}
               </p>
               <div className="flex flex-wrap gap-1.5">

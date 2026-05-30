@@ -55,7 +55,7 @@ function ResourceTracker({ use, onSpend, onRegain }) {
     <div className="flex items-center justify-between gap-3 bg-gray-800/60 border border-gray-700 rounded-lg px-3 py-2">
       <div className="min-w-0">
         <p className="text-sm font-semibold text-gray-200">{use.name}</p>
-        <span className={`inline-block text-[10px] px-1.5 py-0.5 rounded-full border font-medium leading-tight mt-0.5 ${meta.color}`}>
+        <span className={`inline-block text-xs px-1.5 py-0.5 rounded-full border font-medium leading-tight mt-0.5 ${meta.color}`}>
           {meta.label}
         </span>
       </div>
@@ -96,11 +96,11 @@ function ActionCard({ name, type, desc, source, used, max, onSpend, onRegain }) 
           <span className="text-base shrink-0">{meta.icon}</span>
           <div className="min-w-0">
             <p className="text-sm font-semibold text-gray-100 leading-tight">{name}</p>
-            {source && <p className="text-[10px] text-gray-500 capitalize mt-0.5">{source}</p>}
+            {source && <p className="text-xs text-gray-500 capitalize mt-0.5">{source}</p>}
           </div>
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${meta.badge}`}>
+          <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${meta.badge}`}>
             {meta.label}
           </span>
           {max != null && (
@@ -142,7 +142,7 @@ function FeatureCard({ name, desc, source, level, tracker, onSpend, onRegain }) 
           <div className="min-w-0">
             <span className="text-sm font-semibold text-gray-100">{name}</span>
             {(source || level != null) && (
-              <span className="text-[10px] text-gray-500 ml-2 capitalize">
+              <span className="text-xs text-gray-500 ml-2 capitalize">
                 {source}{level != null ? ` · Nv ${level}` : ''}
               </span>
             )}
@@ -319,7 +319,7 @@ function PendingChoicesSection({
           Escolhas pendentes <span className="text-amber-500 font-normal normal-case">({pending.length})</span>
         </h3>
       </div>
-      <p className="text-[11px] text-amber-200/70 leading-relaxed">
+      <p className="text-[13px] text-amber-200/70 leading-relaxed">
         Essas escolhas faltam pra ficha ficar completa. Pode escolher aqui mesmo —
         elas vão aparecer logo abaixo em Habilidades.
       </p>
@@ -327,7 +327,7 @@ function PendingChoicesSection({
         {pending.map(({ choice, scopeLevel, scopeLabel }) => (
           <div key={`${scopeLabel ?? 'main'}-${choice.id}`}>
             {scopeLabel && (
-              <p className="text-[10px] uppercase tracking-wider text-ink-300 mb-1 font-display">
+              <p className="text-xs uppercase tracking-wider text-ink-300 mb-1 font-display">
                 Multiclasse: {scopeLabel}
               </p>
             )}
@@ -546,7 +546,7 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
               <span aria-hidden>{f.icon}</span>
               {f.label}
               {count > 0 && (
-                <span className={`text-[10px] px-1.5 rounded-full ${
+                <span className={`text-xs px-1.5 rounded-full ${
                   f.id === 'recursos' && usedCount > 0
                     ? 'bg-amber-800/80 text-amber-200'
                     : 'bg-gray-700 text-gray-300'

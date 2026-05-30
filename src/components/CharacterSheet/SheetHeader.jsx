@@ -75,7 +75,7 @@ export function SheetHeader({
             <button
               onClick={() => setMoveOpen(true)}
               className={
-                'hidden sm:inline-flex items-center px-2 py-0.5 rounded text-[10px] uppercase tracking-wider shrink-0 transition-colors ' +
+                'hidden sm:inline-flex items-center px-2 py-0.5 rounded text-xs uppercase tracking-wider shrink-0 transition-colors ' +
                 (campaignId
                   ? 'bg-amber-900 text-amber-200 hover:bg-amber-800'
                   : 'bg-parchment-300 text-ink-300 hover:bg-parchment-400')
@@ -87,7 +87,7 @@ export function SheetHeader({
           )}
           {readOnly && campaignId && (
             <span
-              className="hidden sm:inline-flex items-center px-2 py-0.5 rounded bg-amber-900 text-amber-200 text-[10px] uppercase tracking-wider shrink-0"
+              className="hidden sm:inline-flex items-center px-2 py-0.5 rounded bg-amber-900 text-amber-200 text-xs uppercase tracking-wider shrink-0"
               title="Ficha vinculada a uma mesa"
             >
               Mesa
