@@ -287,7 +287,7 @@ export function Inventory({
           <div className="flex gap-2">
             <button
               onClick={() => setMagicSearchOpen(true)}
-              className="text-xs px-3 py-1 rounded bg-purple-700 hover:bg-purple-600 text-white font-semibold"
+              className="text-xs px-3 py-1 rounded bg-purple-700 hover:bg-purple-600 text-parchment-50 font-semibold"
             >
               Buscar Mágico
             </button>
@@ -362,7 +362,7 @@ export function Inventory({
             <button
               onClick={handleAdd}
               disabled={!newItem.name.trim()}
-              className="w-full py-1.5 rounded bg-green-700 hover:bg-green-600 disabled:opacity-40 text-white text-sm font-semibold"
+              className="w-full py-1.5 rounded bg-green-700 hover:bg-green-600 disabled:opacity-40 text-parchment-50 text-sm font-semibold"
             >
               Salvar Item
             </button>

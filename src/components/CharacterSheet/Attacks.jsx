@@ -118,7 +118,7 @@ function AttackForm({ value, onChange, onSave, onCancel, title }) {
         <button
           onClick={onSave}
           disabled={!value.name?.trim()}
-          className="flex-1 py-1.5 rounded bg-green-700 hover:bg-green-600 disabled:opacity-40 text-white text-sm font-semibold"
+          className="flex-1 py-1.5 rounded bg-green-700 hover:bg-green-600 disabled:opacity-40 text-parchment-50 text-sm font-semibold"
         >Salvar</button>
         <button
           onClick={onCancel}

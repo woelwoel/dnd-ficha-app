@@ -55,7 +55,7 @@ export function DeleteAccountModal({ onClose }) {
           <button
             onClick={onDelete}
             disabled={busy || typed !== CONFIRM_WORD}
-            className="px-4 py-1.5 rounded bg-red-700 hover:bg-red-600 disabled:bg-gray-700 disabled:text-gray-500 text-white text-sm transition"
+            className="px-4 py-1.5 rounded bg-red-700 hover:bg-red-600 disabled:bg-gray-700 disabled:text-gray-500 text-parchment-50 text-sm transition"
           >
             {busy ? 'Apagando…' : 'Apagar para sempre'}
           </button>

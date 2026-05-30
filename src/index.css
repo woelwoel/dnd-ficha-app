@@ -65,107 +65,123 @@
   --color-gray-900: #f4ead3;  /* parchment-50 — fundo mais claro */
   --color-gray-950: #f4ead3;
 
-  /* Âmbar (era destaque vermelho-sangue) → sépia-escuro / tinta */
-  --color-amber-50:  #ede0c2;
-  --color-amber-100: #dccaa3;
-  --color-amber-200: #c9b896;
-  --color-amber-300: #a88a4a;
-  --color-amber-400: #8b6f3a;
-  --color-amber-500: #6e572b;
-  --color-amber-600: #5a4530;
-  --color-amber-700: #4a3826;
+  /* ─────────────────────────────────────────────────────────────
+     Paletas semânticas — sépia-compatíveis mas DISTINTAS.
+
+     Histórico: todas as paletas colapsavam pra ink-300 (#4a3826) no
+     range 600-900, apagando a distinção entre dano/cura/info/magia
+     em runtime. Esta versão recupera a semântica mantendo
+     dessaturação suficiente pra conviver com o tema pergaminho.
+
+     Convenção:
+       50-100  → backgrounds suaves (pills, banners)
+       200-300 → bordas e tintas claras
+       400-500 → ícones e acentos médios
+       600-700 → fundos de botão saturados
+       800-900 → texto sobre fundo claro (alto contraste)
+     ───────────────────────────────────────────────────────────── */
+
+  /* Âmbar (dourado/destaque — botões secundários, "sempre preparada", inspiração) */
+  --color-amber-50:  #fbf2dc;
+  --color-amber-100: #f0deae;
+  --color-amber-200: #e0c280;
+  --color-amber-300: #c9a455;
+  --color-amber-400: #a88a4a;
+  --color-amber-500: #8b6f3a;
+  --color-amber-600: #6e572b;
+  --color-amber-700: #5a4530;
   --color-amber-800: #3a2b1c;
   --color-amber-900: #2a1f14;
   --color-amber-950: #15100a;
 
-  /* Vermelho (perigo/HP) → mantém leve diferenciação como sépia-escuro com tom mais quente */
-  --color-red-50:  #ede0c2;
-  --color-red-100: #dccaa3;
-  --color-red-200: #c9b896;
-  --color-red-300: #a88a4a;
-  --color-red-400: #8b6f3a;
-  --color-red-500: #6e572b;
-  --color-red-600: #5a4530;
-  --color-red-700: #4a3826;
-  --color-red-800: #3a2b1c;
-  --color-red-900: #2a1f14;
-  --color-red-950: #15100a;
+  /* Vermelho (dano, perigo, morte, HP crítico) — terracota/vinho */
+  --color-red-50:  #fbeae2;
+  --color-red-100: #f5d0bf;
+  --color-red-200: #e5a78b;
+  --color-red-300: #d27a55;
+  --color-red-400: #b85530;
+  --color-red-500: #8b3a2b;
+  --color-red-600: #6e2b1f;
+  --color-red-700: #5a1f15;
+  --color-red-800: #3a1208;
+  --color-red-900: #2a0c05;
+  --color-red-950: #1a0604;
 
-  /* Azul (ações de combate) → sépia */
-  --color-blue-50:  #ede0c2;
-  --color-blue-100: #dccaa3;
-  --color-blue-200: #c9b896;
-  --color-blue-300: #a88a4a;
-  --color-blue-400: #8b6f3a;
-  --color-blue-500: #6e572b;
-  --color-blue-600: #5a4530;
-  --color-blue-700: #4a3826;
-  --color-blue-800: #3a2b1c;
-  --color-blue-900: #2a1f14;
-  --color-blue-950: #15100a;
+  /* Azul (info, condições, multiclasse) — tinta azul-acinzentada */
+  --color-blue-50:  #e3e8ed;
+  --color-blue-100: #c8d3dc;
+  --color-blue-200: #9aafc0;
+  --color-blue-300: #6e8aa3;
+  --color-blue-400: #4a6c87;
+  --color-blue-500: #3a5570;
+  --color-blue-600: #2b4055;
+  --color-blue-700: #1f2e3d;
+  --color-blue-800: #131f29;
+  --color-blue-900: #0c151a;
+  --color-blue-950: #060a0e;
 
-  /* Sky (descanso curto) → sépia */
-  --color-sky-50:  #ede0c2;
-  --color-sky-100: #dccaa3;
-  --color-sky-200: #c9b896;
-  --color-sky-300: #a88a4a;
-  --color-sky-400: #8b6f3a;
-  --color-sky-500: #6e572b;
-  --color-sky-600: #5a4530;
-  --color-sky-700: #4a3826;
-  --color-sky-800: #3a2b1c;
-  --color-sky-900: #2a1f14;
-  --color-sky-950: #15100a;
+  /* Sky (descanso curto, recuperação leve) — azul-cinza levemente mais frio */
+  --color-sky-50:  #e0e8ec;
+  --color-sky-100: #c3d2da;
+  --color-sky-200: #94afbb;
+  --color-sky-300: #698a9c;
+  --color-sky-400: #466880;
+  --color-sky-500: #355068;
+  --color-sky-600: #283e4f;
+  --color-sky-700: #1c2b37;
+  --color-sky-800: #121c25;
+  --color-sky-900: #0a1218;
+  --color-sky-950: #050a0e;
 
-  /* Purple (magia sombria) → sépia */
-  --color-purple-50:  #ede0c2;
-  --color-purple-100: #dccaa3;
-  --color-purple-200: #c9b896;
-  --color-purple-300: #a88a4a;
-  --color-purple-400: #8b6f3a;
-  --color-purple-500: #6e572b;
-  --color-purple-600: #5a4530;
-  --color-purple-700: #4a3826;
-  --color-purple-800: #3a2b1c;
-  --color-purple-900: #2a1f14;
-  --color-purple-950: #15100a;
+  /* Purple (magia sombria, bruxo, Pact Magic, concentração) — ameixa sépia */
+  --color-purple-50:  #ede4eb;
+  --color-purple-100: #dbc6d5;
+  --color-purple-200: #ba94ad;
+  --color-purple-300: #966581;
+  --color-purple-400: #7a4762;
+  --color-purple-500: #6b3a55;
+  --color-purple-600: #552b40;
+  --color-purple-700: #401f30;
+  --color-purple-800: #2a1320;
+  --color-purple-900: #1a0c14;
+  --color-purple-950: #0e0608;
 
-  /* Green (vida) → sépia */
-  --color-green-50:  #ede0c2;
-  --color-green-100: #dccaa3;
-  --color-green-200: #c9b896;
-  --color-green-300: #a88a4a;
-  --color-green-400: #8b6f3a;
-  --color-green-500: #6e572b;
-  --color-green-600: #5a4530;
-  --color-green-700: #4a3826;
-  --color-green-800: #3a2b1c;
-  --color-green-900: #2a1f14;
-  --color-green-950: #15100a;
+  /* Green (cura, sucesso, estabilizado, "Salvo") — musgo escuro */
+  --color-green-50:  #ecefde;
+  --color-green-100: #d6dec0;
+  --color-green-200: #b3c094;
+  --color-green-300: #8aa363;
+  --color-green-400: #688540;
+  --color-green-500: #4a6b2b;
+  --color-green-600: #3a5520;
+  --color-green-700: #2b4017;
+  --color-green-800: #1c2a0e;
+  --color-green-900: #121b09;
+  --color-green-950: #0a1005;
 
-  /* Yellow (inspiração) → dourado-sépia */
-  --color-yellow-50:  #f4ead3;
-  --color-yellow-100: #ede0c2;
-  --color-yellow-200: #dccaa3;
-  --color-yellow-300: #c9a86a;
-  --color-yellow-400: #a88a4a;
-  --color-yellow-500: #8b6f3a;
-  --color-yellow-600: #6e572b;
-  --color-yellow-700: #5a4530;
-  --color-yellow-800: #3a2b1c;
-  --color-yellow-900: #2a1f14;
+  /* Yellow (dourado luminoso, "Sugerido", crítico) */
+  --color-yellow-50:  #f9f2dc;
+  --color-yellow-100: #f1e3b6;
+  --color-yellow-200: #e6cf86;
+  --color-yellow-300: #d4b35a;
+  --color-yellow-400: #b89540;
+  --color-yellow-500: #9b7a30;
+  --color-yellow-600: #7d6225;
+  --color-yellow-700: #5e4a1c;
+  --color-yellow-800: #3f3213;
+  --color-yellow-900: #251d0b;
 
-  /* Orange → sépia-quente */
-  --color-orange-50:  #ede0c2;
-  --color-orange-100: #dccaa3;
-  --color-orange-200: #c9a86a;
-  --color-orange-300: #a88a4a;
-  --color-orange-400: #8b6f3a;
-  --color-orange-500: #6e572b;
-  --color-orange-600: #5a4530;
-  --color-orange-700: #4a3826;
-  --color-orange-800: #3a2b1c;
-  --color-orange-900: #2a1f14;
+  /* Orange (warning, encumbered, alerta intermediário) — laranja-terra */
+  --color-orange-50:  #f5e3d3;
+  --color-orange-100: #ebc8a6;
+  --color-orange-200: #d8a06d;
+  --color-orange-300: #c47745;
+  --color-orange-400: #a85a2b;
+  --color-orange-500: #8b4520;
+  --color-orange-600: #6e3318;
+  --color-orange-700: #552510;
+  --color-orange-800: #3a180a;
+  --color-orange-900: #240e05;
 
   /* ─────────────────────────────────────────────────────────────
      Redesign tokens — paleta clara híbrida (B), introduzida com
