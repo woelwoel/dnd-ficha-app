@@ -178,8 +178,11 @@ const combatSchema = z.object({
   conditions: z.array(z.string()).default([]),
   /** Bárbaro: Rage ativa (PHB p.48). */
   rageActive: z.boolean().default(false),
-  /** Druida: Wild Shape ativa (PHB p.66). */
-  wildShape: z.boolean().default(false),
+  /**
+   * Druida: Forma Selvagem (PHB p.66). Aceita boolean (legado) ou objeto com
+   * dados da besta ativa. Schema solto via passthrough no nível do combat.
+   */
+  wildShape: z.any().default(false),
   /**
    * Ataques registrados na ficha (armas + bônus mágicos). Schema aberto
    * para tolerar dados antigos; campos calculados vêm de `src/utils/attacks`.

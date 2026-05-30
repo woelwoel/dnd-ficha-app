@@ -6,6 +6,40 @@ import { CombatClassActions } from '../../components/CharacterSheet/CombatClassA
 import { DiceRollerProvider } from '../../context/DiceRollerContext'
 import { defaultClassFeatureUses } from '../../domain/rules'
 
+// Catálogo de bestas mockado pro WildShapePanel
+const BEASTS_FIXTURE = {
+  beasts: [
+    {
+      index: 'wolf', name: 'Lobo', nameEn: 'Wolf', cr: 0.25, crLabel: '1/4',
+      size: 'Médio', ac: 13, hp: 11, hitDice: '2d8+2',
+      speed: { walk: { ft: 40, m: 12, label: 'caminhar' } },
+      str: 12, dex: 15, con: 12, int: 3, wis: 12, cha: 6,
+      senses: { passive_perception: 13 },
+      damageResistances: [], damageImmunities: [], conditionImmunities: [],
+      attacks: [{ name: 'Mordida', attackBonus: 4, damageDice: '2d4+2', damageType: 'perfuração', desc: '' }],
+      traits: [],
+    },
+    {
+      index: 'brown-bear', name: 'Urso Pardo', nameEn: 'Brown Bear', cr: 1, crLabel: '1',
+      size: 'Grande', ac: 11, hp: 34, hitDice: '4d10+12',
+      speed: { walk: { ft: 40, m: 12, label: 'caminhar' }, climb: { ft: 30, m: 9, label: 'escalar' } },
+      str: 19, dex: 10, con: 16, int: 2, wis: 13, cha: 7,
+      senses: {}, damageResistances: [], damageImmunities: [], conditionImmunities: [],
+      attacks: [{ name: 'Mordida', attackBonus: 5, damageDice: '1d8+4', damageType: 'perfuração', desc: '' }],
+      traits: [],
+    },
+    {
+      index: 'eagle', name: 'Águia', nameEn: 'Eagle', cr: 0, crLabel: '0',
+      size: 'Pequeno', ac: 12, hp: 3, hitDice: '1d6',
+      speed: { walk: { ft: 10, m: 3, label: 'caminhar' }, fly: { ft: 60, m: 18, label: 'voar' } },
+      str: 6, dex: 15, con: 10, int: 2, wis: 14, cha: 7,
+      senses: {}, damageResistances: [], damageImmunities: [], conditionImmunities: [],
+      attacks: [{ name: 'Garras', attackBonus: 4, damageDice: '1d4+2', damageType: 'corte', desc: '' }],
+      traits: [],
+    },
+  ],
+}
+
 /* ─────────────────────────────────────────────────────────────────────
    E2E — Recursos de Classe em Combate
 
@@ -79,6 +113,8 @@ function ControlledActions({ initial }) {
 describe('CombatClassActions E2E', () => {
   beforeEach(() => {
     vi.spyOn(Math, 'random').mockReturnValue(0.5)
+    // Mock fetch para o catálogo de bestas usado pelo WildShapePanel
+    global.fetch = vi.fn(() => Promise.resolve({ json: () => Promise.resolve(BEASTS_FIXTURE) }))
   })
 
   afterEach(() => {
@@ -231,21 +267,18 @@ describe('CombatClassActions E2E', () => {
       expect(screen.getByText(/CR ≤ 1/i)).toBeInTheDocument()
     })
 
-    it('transformação cria estado wildShape ativo', async () => {
+    it('transformação via picker de bestas cria estado wildShape ativo', async () => {
       const user = userEvent.setup()
       render(<ControlledActions initial={baseCharacter('druida', 4)} />)
       await user.click(screen.getByRole('button', { name: /^Transformar$/i }))
-      // Form aparece
-      const nameInput = await screen.findByPlaceholderText(/Nome da besta/i)
-      await user.type(nameInput, 'Lobo')
-      const hpInput = screen.getByPlaceholderText(/HP máx/i)
-      await user.type(hpInput, '11')
-      // Botão "Transformar" dentro do form
-      const transformBtns = screen.getAllByRole('button', { name: /Transformar/i })
-      await user.click(transformBtns[transformBtns.length - 1])
+      // Picker aparece e carrega catálogo — Lobo está disponível (CR 1/4)
+      const lobo = await screen.findByRole('button', { name: /Lobo/i })
+      await user.click(lobo)
       // Banner verde aparece
       await waitFor(() => expect(screen.getByText(/EM FORMA SELVAGEM — Lobo/)).toBeInTheDocument())
       expect(screen.getByText('11/11')).toBeInTheDocument()
+      // Stat block mostra AC e ataque
+      expect(screen.getByText('Mordida')).toBeInTheDocument()
     })
   })
 

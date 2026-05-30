@@ -196,6 +196,7 @@ export function SheetContent({ activeTab }) {
               onRegainFeatureUse={regainFeatureUse}
               onToggleSlot={toggleSlot}
               onSetWildShape={setWildShape}
+              onApplyDamage={applyDamage}
             />
 
             <RestActions character={character} onApply={setCharacter} />

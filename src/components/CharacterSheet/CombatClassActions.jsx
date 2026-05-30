@@ -3,6 +3,7 @@ import { RollButton } from '../DiceRoller/RollButton'
 import { getModifier, formatModifier } from '../../utils/calculations'
 import { getSpellSlots } from '../../utils/spellcasting'
 import { useDiceRoller } from '../../hooks/useDiceRoller'
+import { WildShapePanel } from './WildShapePanel'
 
 /* ── Helpers ───────────────────────────────────────────────────── */
 
@@ -396,133 +397,7 @@ function SorceryPanel({ feiticeiroLevel, sorceryUse, onSpendPoints, onRegainPoin
   )
 }
 
-/* ── Limites de CR de Forma Selvagem (PHB p.66) ──────────────── */
-function wildShapeCRDesc(druidaLevel) {
-  if (druidaLevel < 2) return null
-  if (druidaLevel >= 8) return 'CR ≤ 1'
-  if (druidaLevel >= 4) return 'CR ≤ 1/2 · sem voo'
-  return 'CR ≤ 1/4 · sem voo nem natação'
-}
-
-/* ── Painel de Forma Selvagem (Druida) ──────────────────────── */
-
-function WildShapePanel({ druidaLevel, wsUse, usesRemaining, onSpend, character, onSetWildShape }) {
-  const ws = character.combat?.wildShape ?? { active: false, beastName: '', currentHp: 0, maxHp: 0 }
-  const [draft, setDraft] = useState({ beastName: '', maxHp: '' })
-  const [showForm, setShowForm] = useState(false)
-  const crDesc = wildShapeCRDesc(druidaLevel)
-
-  function activate() {
-    const max = parseInt(draft.maxHp, 10) || 0
-    if (!draft.beastName.trim() || max <= 0) return
-    onSetWildShape({
-      active:    true,
-      beastName: draft.beastName.trim(),
-      currentHp: max,
-      maxHp:     max,
-    })
-    if (wsUse) onSpend?.(wsUse.id)
-    setDraft({ beastName: '', maxHp: '' })
-    setShowForm(false)
-  }
-
-  function revert() {
-    onSetWildShape(null)
-  }
-
-  function adjustBeastHp(delta) {
-    const next = Math.max(0, Math.min(ws.maxHp, ws.currentHp + delta))
-    onSetWildShape({ ...ws, currentHp: next })
-  }
-
-  if (druidaLevel < 2) return null
-
-  return (
-    <div className={`rounded-lg border-2 p-3 transition-colors ${
-      ws.active ? 'border-emerald-700 bg-emerald-50' : 'border-parchment-600 bg-parchment-50'
-    }`}>
-      <div className="flex items-center gap-3">
-        <span className="text-2xl shrink-0" aria-hidden>{ws.active ? '🐺' : '🌿'}</span>
-        <div className="min-w-0 flex-1">
-          <p className={`text-sm font-display tracking-wide ${ws.active ? 'text-emerald-800' : 'text-ink-500'}`}>
-            {ws.active ? `EM FORMA SELVAGEM — ${ws.beastName}` : 'Forma Selvagem'}
-          </p>
-          <p className="text-[11px] ink-italic">
-            {ws.active
-              ? 'Não conjura magias. Mantém concentração. Dano excessivo passa para forma humanoide.'
-              : `Bestas com ${crDesc}. Duração: ½ nível em horas. 2 usos por descanso curto.`}
-          </p>
-        </div>
-        {!ws.active && (
-          <button
-            onClick={() => setShowForm(v => !v)}
-            disabled={usesRemaining != null && usesRemaining <= 0 && druidaLevel < 20}
-            className={`shrink-0 text-xs px-3 py-1.5 rounded border-2 font-display tracking-wide transition-all ${
-              (usesRemaining != null && usesRemaining <= 0 && druidaLevel < 20)
-                ? 'border-parchment-600 bg-parchment-100 text-ink-200 cursor-not-allowed'
-                : 'border-ink-300 bg-parchment-100 text-ink-500 hover:bg-parchment-200'
-            }`}
-          >
-            {showForm ? 'Cancelar' : 'Transformar'}
-          </button>
-        )}
-        {ws.active && (
-          <button
-            onClick={revert}
-            className="shrink-0 text-xs px-3 py-1.5 rounded border-2 border-emerald-700 bg-emerald-700 text-white font-display tracking-wide hover:bg-emerald-800 transition-all"
-          >
-            Reverter
-          </button>
-        )}
-      </div>
-
-      {ws.active && (
-        <div className="mt-2 pt-2 border-t border-emerald-700/30 flex items-center gap-2">
-          <span className="text-[10px] text-emerald-800 font-bold uppercase tracking-wide shrink-0">HP da Besta:</span>
-          <button
-            onClick={() => adjustBeastHp(-1)}
-            className="w-7 h-7 rounded bg-emerald-200 hover:bg-emerald-300 text-emerald-900 font-bold"
-          >−</button>
-          <span className="font-mono text-sm text-emerald-900 min-w-[4ch] text-center font-bold">
-            {ws.currentHp}/{ws.maxHp}
-          </span>
-          <button
-            onClick={() => adjustBeastHp(+1)}
-            className="w-7 h-7 rounded bg-emerald-200 hover:bg-emerald-300 text-emerald-900 font-bold"
-          >+</button>
-        </div>
-      )}
-
-      {!ws.active && showForm && (
-        <div className="mt-2 pt-2 border-t border-parchment-600 space-y-2">
-          <input
-            type="text"
-            value={draft.beastName}
-            onChange={e => setDraft(d => ({ ...d, beastName: e.target.value }))}
-            placeholder="Nome da besta (ex: Lobo, Águia, Urso)"
-            className="w-full bg-parchment-50 border border-parchment-600 rounded px-2 py-1 text-xs text-ink-500 placeholder:text-ink-200 focus:outline-none focus:border-ink-300"
-          />
-          <div className="flex gap-2 items-center">
-            <input
-              type="number"
-              value={draft.maxHp}
-              onChange={e => setDraft(d => ({ ...d, maxHp: e.target.value }))}
-              placeholder="HP máx da besta"
-              className="flex-1 bg-parchment-50 border border-parchment-600 rounded px-2 py-1 text-xs text-ink-500 placeholder:text-ink-200 focus:outline-none focus:border-ink-300"
-            />
-            <button
-              onClick={activate}
-              disabled={!draft.beastName.trim() || !(parseInt(draft.maxHp, 10) > 0)}
-              className="text-xs px-3 py-1 rounded bg-emerald-700 hover:bg-emerald-800 disabled:bg-parchment-200 disabled:text-ink-200 text-white font-bold transition-colors"
-            >
-              Transformar
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
+/* ── Painel de Forma Selvagem está em WildShapePanel.jsx ─────── */
 
 /* ── Painel de Ki (Monge) ─────────────────────────────────────── */
 
@@ -788,7 +663,7 @@ function RagePanel({ character, barbLevel, attributes, onToggleRage, ragesRemain
  * Hoje: Ataque Furtivo (Ladino), Fúria (Bárbaro).
  * Futuro: Bardic Inspiration (Bardo), Channel Divinity, Wild Shape, etc.
  */
-export function CombatClassActions({ character, onToggleRage, onSpendFeatureUse, onRegainFeatureUse, onToggleSlot, onSetWildShape }) {
+export function CombatClassActions({ character, onToggleRage, onSpendFeatureUse, onRegainFeatureUse, onToggleSlot, onSetWildShape, onApplyDamage }) {
   const attrs = character.attributes ?? {}
   const rogueLevel    = levelInClass(character, 'ladino')
   const barbLevel     = levelInClass(character, 'barbaro')
@@ -914,6 +789,9 @@ export function CombatClassActions({ character, onToggleRage, onSpendFeatureUse,
           onSpend={onSpendFeatureUse}
           character={character}
           onSetWildShape={onSetWildShape}
+          onApplyDamage={onApplyDamage}
+          slotsAvailable={slotsAvailable}
+          onConsumeSlot={handleConsumeSlot}
         />
       )}
       {barbLevel >= 1 && (
