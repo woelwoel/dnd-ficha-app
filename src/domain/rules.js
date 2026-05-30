@@ -721,6 +721,28 @@ export function defaultClassFeatureUses(character) {
     if (cls === 'feiticeiro' && level >= 2) {
       out.push({ id: 'feiticeiro-sorcery-points', name: 'Pontos de Feitiçaria', max: level, used: 0, recharge: 'long', source: 'feiticeiro' })
     }
+    // Mago — Recuperação Arcana (PHB p.115, nv 1+).
+    if (cls === 'mago' && level >= 1) {
+      out.push({ id: 'mago-arcane-recovery', name: 'Recuperação Arcana', max: 1, used: 0, recharge: 'long', source: 'mago' })
+    }
+    // Clérigo — Domínios específicos (PHB p.60+):
+    if (cls === 'clerigo') {
+      const domain = character.info?.chosenFeatures?.divine_domain
+      // Domínio da Guerra (PHB p.63): Ataque Bélico Bônus 1+CHA mod /desc curto.
+      if (domain === 'guerra' && level >= 1) {
+        out.push({
+          id: 'clerigo-war-priest', name: 'Ataque Bélico Bônus',
+          max: Math.max(1, cha), used: 0, recharge: 'short', source: 'clerigo',
+        })
+      }
+      // Domínio da Tempestade (PHB p.62): Investida Furiosa CHA mod /desc longo.
+      if (domain === 'tempestade' && level >= 1) {
+        out.push({
+          id: 'clerigo-wrath-of-storm', name: 'Investida Furiosa',
+          max: Math.max(1, cha), used: 0, recharge: 'long', source: 'clerigo',
+        })
+      }
+    }
   }
 
   return out

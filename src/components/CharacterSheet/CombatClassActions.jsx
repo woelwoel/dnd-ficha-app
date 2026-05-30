@@ -5,6 +5,10 @@ import { getSpellSlots } from '../../utils/spellcasting'
 import { useDiceRoller } from '../../hooks/useDiceRoller'
 import { WildShapePanel } from './WildShapePanel'
 import { LandCirclePanel } from './LandCirclePanel'
+import { WizardArcanePanel } from './WizardArcanePanel'
+import { RangerPanel } from './RangerPanel'
+import { ClericDomainPanel } from './ClericDomainPanel'
+import { WarlockPactPanel } from './WarlockPactPanel'
 
 /* ── Helpers ───────────────────────────────────────────────────── */
 
@@ -664,7 +668,11 @@ function RagePanel({ character, barbLevel, attributes, onToggleRage, ragesRemain
  * Hoje: Ataque Furtivo (Ladino), Fúria (Bárbaro).
  * Futuro: Bardic Inspiration (Bardo), Channel Divinity, Wild Shape, etc.
  */
-export function CombatClassActions({ character, onToggleRage, onSpendFeatureUse, onRegainFeatureUse, onToggleSlot, onSetWildShape, onApplyDamage }) {
+export function CombatClassActions({
+  character, onToggleRage, onSpendFeatureUse, onRegainFeatureUse,
+  onToggleSlot, onSetWildShape, onApplyDamage,
+  onSetRangerCompanion, onUpdatePortent,
+}) {
   const attrs = character.attributes ?? {}
   const rogueLevel    = levelInClass(character, 'ladino')
   const barbLevel     = levelInClass(character, 'barbaro')
@@ -674,6 +682,9 @@ export function CombatClassActions({ character, onToggleRage, onSpendFeatureUse,
   const druidaLevel     = levelInClass(character, 'druida')
   const monkLevel       = levelInClass(character, 'monge')
   const fighterLevel    = levelInClass(character, 'guerreiro')
+  const magoLevel       = levelInClass(character, 'mago')
+  const patrulheiroLevel= levelInClass(character, 'patrulheiro')
+  const bruxoLevel      = levelInClass(character, 'bruxo')
 
   // Recurso de Fúria (já gerado por defaultClassFeatureUses)
   const rageUse = (character.combat?.classFeatureUses ?? []).find(u => u.id === 'barbaro-rage')
@@ -722,9 +733,13 @@ export function CombatClassActions({ character, onToggleRage, onSpendFeatureUse,
     onToggleSlot?.(slotLevel, Math.max(0, (usedSlots[slotLevel] ?? 0) - 1))
   }
 
+  // Clérigo
+  const clericoLevel = levelInClass(character, 'clerigo')
+
   // Não renderiza nada se não há nenhuma ação relevante
   if (rogueLevel < 1 && barbLevel < 1 && paladinoLevel < 1 && bardLevel < 1
-      && feiticeiroLevel < 2 && druidaLevel < 2 && monkLevel < 2 && fighterLevel < 1) return null
+      && feiticeiroLevel < 2 && druidaLevel < 2 && monkLevel < 2 && fighterLevel < 1
+      && magoLevel < 1 && patrulheiroLevel < 1 && bruxoLevel < 1 && clericoLevel < 1) return null
 
   return (
     <div className="space-y-2">
@@ -804,6 +819,39 @@ export function CombatClassActions({ character, onToggleRage, onSpendFeatureUse,
           slotsMax={slotsMax}
           usedSlots={usedSlots}
           onToggleSlot={onToggleSlot}
+        />
+      )}
+      {magoLevel >= 1 && (
+        <WizardArcanePanel
+          magoLevel={magoLevel}
+          character={character}
+          featureUses={character.combat?.classFeatureUses ?? []}
+          onSpend={onSpendFeatureUse}
+          slotsMax={slotsMax}
+          usedSlots={usedSlots}
+          onToggleSlot={onToggleSlot}
+          onUpdatePortent={onUpdatePortent}
+        />
+      )}
+      {patrulheiroLevel >= 1 && (
+        <RangerPanel
+          ranger={patrulheiroLevel}
+          character={character}
+          onUpdateCompanion={onSetRangerCompanion}
+        />
+      )}
+      {clericoLevel >= 1 && (
+        <ClericDomainPanel
+          clericoLevel={clericoLevel}
+          character={character}
+          featureUses={character.combat?.classFeatureUses ?? []}
+          onSpend={onSpendFeatureUse}
+        />
+      )}
+      {bruxoLevel >= 1 && (
+        <WarlockPactPanel
+          bruxoLevel={bruxoLevel}
+          character={character}
         />
       )}
       {barbLevel >= 1 && (

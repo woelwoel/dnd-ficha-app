@@ -93,6 +93,7 @@ export function SheetContent({ activeTab }) {
     setChosenFeature,
     spendFeatureUse, regainFeatureUse,
     updateDeathSaves, toggleCondition, setInspiration, setExhaustion, setRageActive, setWildShape,
+    setRangerCompanion, updatePortent,
     // Sistema de dano/cura/testes de morte
     applyDamage, applyHealing, stabilize, rollDeathSave,
     lastDamageEvent, clearLastDamageEvent, consumeInspiration,
@@ -197,6 +198,8 @@ export function SheetContent({ activeTab }) {
               onToggleSlot={toggleSlot}
               onSetWildShape={setWildShape}
               onApplyDamage={applyDamage}
+              onSetRangerCompanion={setRangerCompanion}
+              onUpdatePortent={updatePortent}
             />
 
             <RestActions character={character} onApply={setCharacter} />

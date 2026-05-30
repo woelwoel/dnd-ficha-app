@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
+import { SlotRecoveryPicker } from './SlotRecoveryPicker'
 
 /**
  * Painel de features do Círculo da Terra (PHB p.69).
@@ -9,136 +10,11 @@ import { useMemo, useState } from 'react'
  *    ser recuperados. 1×/descanso longo.
  *  - Refúgio da Natureza (nv 14+): conjura forma de planta em si, 1×/desc
  *    longo. Não há tracking detalhado — botão "Usar" consome o recurso.
- *
- * Não renderiza nada se o personagem não for druida do Círculo da Terra
- * com nível ≥ 2 (PHB).
  */
 
 function naturalRecoveryBudget(druidaLevel) {
   // ⌈nv ÷ 2⌉ níveis de slot recuperáveis. PHB p.69.
   return Math.ceil(druidaLevel / 2)
-}
-
-/* ── Picker de slots a recuperar ───────────────────────────────── */
-function SlotRecoveryPicker({
-  budget, slotsMax, usedSlots, onApply, onCancel,
-}) {
-  // Slots gastos disponíveis pra recuperar — apenas níveis 1-5 (regra PHB p.69)
-  const recoverable = useMemo(() => {
-    const out = []
-    for (let lvl = 1; lvl <= 5; lvl++) {
-      const max  = slotsMax[lvl] ?? 0
-      const used = usedSlots[lvl] ?? 0
-      if (max > 0 && used > 0) out.push({ level: lvl, max, used })
-    }
-    return out
-  }, [slotsMax, usedSlots])
-
-  // Estado: { [level]: número a recuperar }
-  const [selection, setSelection] = useState({})
-
-  const totalBudgetUsed = Object.entries(selection).reduce(
-    (sum, [lvl, n]) => sum + Number(lvl) * n,
-    0
-  )
-  const remaining = budget - totalBudgetUsed
-
-  function setN(level, n) {
-    setSelection(s => ({ ...s, [level]: Math.max(0, n) }))
-  }
-
-  function canIncrease(level) {
-    const row = recoverable.find(r => r.level === level)
-    if (!row) return false
-    const cur = selection[level] ?? 0
-    return cur < row.used && (remaining - level) >= 0
-  }
-
-  function apply() {
-    onApply(selection)
-  }
-
-  if (recoverable.length === 0) {
-    return (
-      <div className="mt-2 pt-2 border-t border-emerald-700/30">
-        <p className="text-xs italic text-ink-300">
-          Sem espaços gastos pra recuperar.
-        </p>
-        <button
-          onClick={onCancel}
-          className="mt-1 text-xs px-2 py-1 rounded border border-parchment-600 bg-parchment-100 text-ink-300 hover:bg-parchment-200"
-        >
-          Fechar
-        </button>
-      </div>
-    )
-  }
-
-  return (
-    <div className="mt-2 pt-2 border-t border-emerald-700/30 space-y-2">
-      <div className="flex items-center justify-between gap-2 flex-wrap">
-        <p className="text-xs uppercase tracking-widest font-bold text-emerald-900">
-          Escolher espaços pra recuperar
-        </p>
-        <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded border ${
-          remaining < 0
-            ? 'border-rose-700 bg-rose-100 text-rose-800'
-            : remaining === 0
-              ? 'border-emerald-700 bg-emerald-200 text-emerald-900'
-              : 'border-emerald-700 bg-emerald-100 text-emerald-900'
-        }`}>
-          Orçamento: {budget - remaining}/{budget} níveis
-        </span>
-      </div>
-
-      <div className="space-y-1">
-        {recoverable.map(row => {
-          const cur = selection[row.level] ?? 0
-          return (
-            <div key={row.level} className="flex items-center gap-2 bg-emerald-50 rounded px-2 py-1.5 border border-emerald-700/30">
-              <span className="text-sm font-bold text-emerald-900 shrink-0 w-12">Nv {row.level}</span>
-              <span className="text-xs text-emerald-900/70 shrink-0">gastos: {row.used}/{row.max}</span>
-              <div className="flex-1" />
-              <button
-                onClick={() => setN(row.level, cur - 1)}
-                disabled={cur <= 0}
-                className="w-7 h-7 rounded bg-emerald-200 hover:bg-emerald-300 disabled:bg-parchment-200 disabled:text-ink-200 disabled:cursor-not-allowed text-emerald-900 font-bold"
-              >−</button>
-              <span className="font-mono text-sm text-emerald-900 min-w-[3ch] text-center font-bold">{cur}</span>
-              <button
-                onClick={() => setN(row.level, cur + 1)}
-                disabled={!canIncrease(row.level)}
-                className="w-7 h-7 rounded bg-emerald-200 hover:bg-emerald-300 disabled:bg-parchment-200 disabled:text-ink-200 disabled:cursor-not-allowed text-emerald-900 font-bold"
-              >+</button>
-              <span className="text-xs text-emerald-900/70 font-mono shrink-0 w-12 text-right">
-                = {cur * row.level} nv
-              </span>
-            </div>
-          )
-        })}
-      </div>
-
-      <p className="text-xs italic text-ink-300">
-        Slots de Nv 6+ não podem ser recuperados (PHB p.69). Recuperação acontece durante descanso curto.
-      </p>
-
-      <div className="flex items-center gap-2">
-        <button
-          onClick={apply}
-          disabled={totalBudgetUsed === 0 || remaining < 0}
-          className="text-xs px-3 py-1.5 rounded border-2 border-emerald-700 bg-emerald-700 text-white font-bold hover:bg-emerald-800 disabled:border-parchment-600 disabled:bg-parchment-200 disabled:text-ink-200 disabled:cursor-not-allowed transition-colors"
-        >
-          Recuperar
-        </button>
-        <button
-          onClick={onCancel}
-          className="text-xs px-3 py-1 rounded border border-parchment-600 bg-parchment-100 text-ink-300 hover:bg-parchment-200"
-        >
-          Cancelar
-        </button>
-      </div>
-    </div>
-  )
 }
 
 /* ── Componente principal ──────────────────────────────────────── */
@@ -225,6 +101,7 @@ export function LandCirclePanel({
           usedSlots={usedSlots}
           onApply={applyRecovery}
           onCancel={() => setShowPicker(false)}
+          palette="emerald"
         />
       )}
 

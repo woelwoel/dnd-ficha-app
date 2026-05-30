@@ -611,6 +611,28 @@ export function useCharacter(initialCharacter = null) {
   }, [setCharacter])
 
   /**
+   * Atualiza o estado do Companheiro Animal do Patrulheiro (Mestre das Bestas).
+   * Estrutura: { name, currentHp, maxHp, ac }.
+   */
+  const setRangerCompanion = useCallback(companion => {
+    setCharacter(prev => ({
+      ...prev,
+      combat: { ...prev.combat, rangerCompanion: companion ?? { name: '', currentHp: 0, maxHp: 0, ac: 13 } },
+    }))
+  }, [setCharacter])
+
+  /**
+   * Atualiza os dados de Portento do Mago (Adivinhação).
+   * Estrutura: { dice: number[] }.
+   */
+  const updatePortent = useCallback(portent => {
+    setCharacter(prev => ({
+      ...prev,
+      combat: { ...prev.combat, portent: portent ?? { dice: [] } },
+    }))
+  }, [setCharacter])
+
+  /**
    * Define a magia em concentração (PHB p.203). Passar null/''  encerra.
    * Substituição é intencional: apenas uma magia de concentração por vez.
    */
@@ -665,6 +687,8 @@ export function useCharacter(initialCharacter = null) {
     setExhaustion,
     setRageActive,
     setWildShape,
+    setRangerCompanion,
+    updatePortent,
     // v5 — sistema de dano/cura/testes de morte
     applyDamage,
     applyHealing,
@@ -688,6 +712,7 @@ export function useCharacter(initialCharacter = null) {
     setChosenFeature,
     setClassFeatureUses, spendFeatureUse, regainFeatureUse,
     updateDeathSaves, toggleCondition, setInspiration, setExhaustion, setRageActive, setWildShape,
+    setRangerCompanion, updatePortent,
     applyDamage, applyHealing, gainTempHp, stabilize, rollDeathSave,
     lastDamageEvent, clearLastDamageEvent, consumeInspiration,
   ])
