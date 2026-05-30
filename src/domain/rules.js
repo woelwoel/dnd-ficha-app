@@ -709,6 +709,15 @@ export function defaultClassFeatureUses(character) {
     if (cls === 'druida' && level >= 2 && level < 20) {
       out.push({ id: 'druida-wild-shape', name: 'Forma Selvagem', max: 2, used: 0, recharge: 'short', source: 'druida' })
     }
+    // Círculo da Terra (PHB p.69): Recuperação Natural (nv 2+) + Refúgio da Natureza (nv 14+).
+    if (cls === 'druida' && character.info?.chosenFeatures?.druid_circle === 'terra') {
+      if (level >= 2) {
+        out.push({ id: 'druida-natural-recovery', name: 'Recuperação Natural', max: 1, used: 0, recharge: 'long', source: 'druida' })
+      }
+      if (level >= 14) {
+        out.push({ id: 'druida-natures-sanctuary', name: 'Refúgio da Natureza', max: 1, used: 0, recharge: 'long', source: 'druida' })
+      }
+    }
     if (cls === 'feiticeiro' && level >= 2) {
       out.push({ id: 'feiticeiro-sorcery-points', name: 'Pontos de Feitiçaria', max: level, used: 0, recharge: 'long', source: 'feiticeiro' })
     }

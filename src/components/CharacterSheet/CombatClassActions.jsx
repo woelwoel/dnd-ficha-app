@@ -4,6 +4,7 @@ import { getModifier, formatModifier } from '../../utils/calculations'
 import { getSpellSlots } from '../../utils/spellcasting'
 import { useDiceRoller } from '../../hooks/useDiceRoller'
 import { WildShapePanel } from './WildShapePanel'
+import { LandCirclePanel } from './LandCirclePanel'
 
 /* ── Helpers ───────────────────────────────────────────────────── */
 
@@ -792,6 +793,17 @@ export function CombatClassActions({ character, onToggleRage, onSpendFeatureUse,
           onApplyDamage={onApplyDamage}
           slotsAvailable={slotsAvailable}
           onConsumeSlot={handleConsumeSlot}
+        />
+      )}
+      {druidaLevel >= 2 && (
+        <LandCirclePanel
+          druidaLevel={druidaLevel}
+          character={character}
+          featureUses={character.combat?.classFeatureUses ?? []}
+          onSpend={onSpendFeatureUse}
+          slotsMax={slotsMax}
+          usedSlots={usedSlots}
+          onToggleSlot={onToggleSlot}
         />
       )}
       {barbLevel >= 1 && (
