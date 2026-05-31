@@ -297,6 +297,18 @@ const inventorySchema = z.object({
   items: z.array(itemSchema).default([]),
 }).passthrough()
 
+/**
+ * Entrada do diário de sessões — uma anotação datada (sessão de jogo,
+ * resumo de evento, plano pra próxima vez). Cada entrada tem um id
+ * estável (timestamp serve) e título opcional.
+ */
+const sessionEntrySchema = z.object({
+  id: z.string(),
+  createdAt: z.number().int(),  // epoch ms
+  title: z.string().default(''),
+  body: z.string().default(''),
+}).passthrough()
+
 const traitsSchema = z.object({
   personalityTraits: z.string().default(''),
   ideals: z.string().default(''),
@@ -304,6 +316,12 @@ const traitsSchema = z.object({
   flaws: z.string().default(''),
   featuresAndTraits: z.string().default(''),
   notes: z.string().default(''),
+  /**
+   * Diário de sessões — array de anotações datadas. Coexiste com
+   * `notes` (textarea livre) — `notes` serve pra info persistente
+   * (NPCs/locais/backstory), `sessionEntries` pra crônica por sessão.
+   */
+  sessionEntries: z.array(sessionEntrySchema).default([]),
 }).passthrough()
 
 export const characterSchema = z.object({
