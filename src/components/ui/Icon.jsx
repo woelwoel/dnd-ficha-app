@@ -2,7 +2,7 @@ import {
   Dices, Shield, Sword, Swords, Heart, Skull, Footprints, Lock, Info,
   Flame, Check, X, AlertTriangle, Sparkles, Music, ArrowUp, ArrowDown,
   Wand2, Lightbulb, Backpack, ScrollText, BookOpen, Leaf, Target,
-  PawPrint, Eye, Zap, Download, Upload, Printer,
+  PawPrint, Eye, EyeOff, Zap, Download, Upload, Printer,
 } from 'lucide-react'
 
 /**
@@ -47,6 +47,7 @@ const REGISTRY = {
   target:       Target,
   paw:          PawPrint,
   eye:          Eye,
+  'eye-off':    EyeOff,
   bolt:         Zap,
   download:     Download,
   upload:       Upload,
