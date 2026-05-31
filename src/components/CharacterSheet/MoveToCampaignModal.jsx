@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { listMyCampaigns, moveCharacterToCampaign } from '../../lib/campaigns'
 import { Button } from '../ui/Button'
+import { Modal } from '../ui/Modal'
 
 /**
  * Modal pra mover ficha existente entre "pessoal" e uma mesa.
@@ -31,18 +32,24 @@ export function MoveToCampaignModal({ characterId, currentCampaignId, onClose, o
   }
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"
-      onClick={onClose}
+    <Modal
+      open={true}
+      onClose={onClose}
+      title="Mover ficha"
+      size="md"
+      dismissOnBackdrop={!busy}
+      footer={
+        <button
+          type="button"
+          onClick={onClose}
+          className="text-xs ink-italic text-ink-300 hover:text-ink-500 underline"
+        >
+          Cancelar
+        </button>
+      }
     >
-      <div
-        className="bg-parchment-100 border-2 border-parchment-600 rounded p-6 max-w-md w-full shadow-parchment"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h2 className="text-ink-500 font-display tracking-wide text-lg mb-1">
-          Mover ficha
-        </h2>
-        <p className="text-ink-300 text-xs mb-4">
+      <div className="space-y-3">
+        <p className="text-ink-300 text-xs">
           A ficha pode ficar como pessoal ou vinculada a uma mesa em que você é membro.
           O DM da mesa passa a poder ler (em modo leitura).
         </p>
@@ -52,18 +59,18 @@ export function MoveToCampaignModal({ characterId, currentCampaignId, onClose, o
           size="md"
           disabled={busy || currentCampaignId === null}
           onClick={() => choose(null)}
-          className="w-full mb-2"
+          className="w-full"
         >
           {currentCampaignId === null ? '✓ Pessoal (atual)' : 'Tornar pessoal'}
         </Button>
 
         {loading ? (
-          <p className="text-amber-700 text-xs">Carregando mesas…</p>
+          <p className="text-ink-300 ink-italic text-xs">Carregando mesas…</p>
         ) : campaigns.length === 0 ? (
-          <p className="text-ink-300 text-xs">Você ainda não tem mesas.</p>
+          <p className="text-ink-300 ink-italic text-xs">Você ainda não tem mesas.</p>
         ) : (
           <>
-            <p className="text-xs uppercase tracking-wider text-ink-500 mt-3 mb-1">
+            <p className="text-xs font-display uppercase tracking-widest text-ink-500 mt-1">
               Vincular a mesa:
             </p>
             <div className="flex flex-col gap-1">
@@ -72,7 +79,7 @@ export function MoveToCampaignModal({ characterId, currentCampaignId, onClose, o
                 return (
                   <Button
                     key={c.id}
-                    variant="ghost-dark"
+                    variant="ghost"
                     size="sm"
                     disabled={busy || isCurrent}
                     onClick={() => choose(c.id)}
@@ -85,18 +92,12 @@ export function MoveToCampaignModal({ characterId, currentCampaignId, onClose, o
           </>
         )}
 
-        {err && <p className="text-red-700 text-xs mt-3">{err}</p>}
-
-        <div className="flex justify-end mt-4">
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-xs text-ink-300 hover:text-ink-500 underline"
-          >
-            Cancelar
-          </button>
-        </div>
+        {err && (
+          <p role="alert" className="text-xs text-red-700 bg-red-50 border border-red-300 rounded-sm px-2 py-1.5">
+            {err}
+          </p>
+        )}
       </div>
-    </div>
+    </Modal>
   )
 }

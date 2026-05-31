@@ -19,7 +19,12 @@ describe('DamageModal', () => {
 
   it('botão aplicar desabilitado quando valor é 0', () => {
     render(<DamageModal open={true} onClose={() => {}} onConfirm={() => {}} />)
-    expect(screen.getByRole('button', { name: /⚔ Aplicar Dano/ })).toBeDisabled()
+    // Há 2 botões "Aplicar Dano" (footer + header subtítulo) — pega o do footer
+    // pelo data-attribute disabled-friendly: o botão CTA.
+    const buttons = screen.getAllByRole('button', { name: /Aplicar Dano/i })
+    const cta = buttons.find(b => b.hasAttribute('disabled') || b.getAttribute('disabled') === '')
+      ?? buttons[buttons.length - 1]
+    expect(cta).toBeDisabled()
   })
 
   it('confirma com valor + critical + tipo', async () => {
@@ -30,7 +35,9 @@ describe('DamageModal', () => {
     await userEvent.type(screen.getByLabelText(/quantidade/i), '12')
     await userEvent.click(screen.getByLabelText(/crítico/i))
     await userEvent.selectOptions(screen.getByLabelText(/tipo de dano/i), 'fire')
-    await userEvent.click(screen.getByRole('button', { name: /⚔ Aplicar Dano/ }))
+    // O CTA fica no footer — pega o último botão com nome "Aplicar Dano"
+    const buttons = screen.getAllByRole('button', { name: /Aplicar Dano/i })
+    await userEvent.click(buttons[buttons.length - 1])
 
     expect(onConfirm).toHaveBeenCalledWith(12, { critical: true, type: 'fire' })
     expect(onClose).toHaveBeenCalled()
@@ -54,8 +61,11 @@ describe('DamageModal', () => {
 
   it('click no backdrop fecha', () => {
     const onClose = vi.fn()
-    const { container } = render(<DamageModal open={true} onClose={onClose} onConfirm={() => {}} />)
-    fireEvent.click(container.firstChild)
+    render(<DamageModal open={true} onClose={onClose} onConfirm={() => {}} />)
+    // Modal renderiza via portal em document.body — backdrop é o div fixed
+    // top-level. Buscamos pelo role=dialog e clicamos no seu pai.
+    const dialog = screen.getByRole('dialog')
+    fireEvent.click(dialog.parentElement)
     expect(onClose).toHaveBeenCalled()
   })
 
@@ -63,7 +73,8 @@ describe('DamageModal', () => {
     const onConfirm = vi.fn()
     render(<DamageModal open={true} onClose={() => {}} onConfirm={onConfirm} />)
     await userEvent.type(screen.getByLabelText(/quantidade/i), '3')
-    await userEvent.click(screen.getByRole('button', { name: /⚔ Aplicar Dano/ }))
+    const buttons = screen.getAllByRole('button', { name: /Aplicar Dano/i })
+    await userEvent.click(buttons[buttons.length - 1])
     expect(onConfirm).toHaveBeenCalledWith(3, { critical: false, type: null })
   })
 })

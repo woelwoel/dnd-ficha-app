@@ -2,22 +2,24 @@
 // Modal opcional pra aplicar dano com crítico e tipo de dano.
 // O fluxo padrão (sem modal) continua sendo inline em DamageHealControls.
 import { useState } from 'react'
+import { Modal } from '../ui/Modal'
+import { Icon } from '../ui/Icon'
 
 const DAMAGE_TYPES = [
   { value: '',           label: '— Não especificado —' },
-  { value: 'slashing',   label: '🗡 Cortante' },
-  { value: 'piercing',   label: '🏹 Perfurante' },
-  { value: 'bludgeoning',label: '🔨 Contundente' },
-  { value: 'fire',       label: '🔥 Fogo' },
-  { value: 'cold',       label: '❄ Frio' },
-  { value: 'lightning',  label: '⚡ Elétrico' },
-  { value: 'thunder',    label: '🌩 Trovejante' },
-  { value: 'acid',       label: '🧪 Ácido' },
-  { value: 'poison',     label: '☠ Veneno' },
-  { value: 'radiant',    label: '✨ Radiante' },
-  { value: 'necrotic',   label: '💀 Necrótico' },
-  { value: 'psychic',    label: '🧠 Psíquico' },
-  { value: 'force',      label: '💥 Força' },
+  { value: 'slashing',   label: 'Cortante' },
+  { value: 'piercing',   label: 'Perfurante' },
+  { value: 'bludgeoning',label: 'Contundente' },
+  { value: 'fire',       label: 'Fogo' },
+  { value: 'cold',       label: 'Frio' },
+  { value: 'lightning',  label: 'Elétrico' },
+  { value: 'thunder',    label: 'Trovejante' },
+  { value: 'acid',       label: 'Ácido' },
+  { value: 'poison',     label: 'Veneno' },
+  { value: 'radiant',    label: 'Radiante' },
+  { value: 'necrotic',   label: 'Necrótico' },
+  { value: 'psychic',    label: 'Psíquico' },
+  { value: 'force',      label: 'Força' },
 ]
 
 export function DamageModal({ open, onClose, onConfirm }) {
@@ -47,90 +49,91 @@ export function DamageModal({ open, onClose, onConfirm }) {
   }
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-      onClick={handleClose}
-    >
-      <div
-        className="bg-parchment-100 border-2 border-parchment-600 rounded-sm w-full max-w-sm shadow-parchment"
-        onClick={e => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between px-4 py-3 border-b-2 border-parchment-600">
-          <h3 className="text-sm font-display text-ink-500 uppercase tracking-widest">
-            ⚔ Aplicar Dano
-          </h3>
+    <Modal
+      open={open}
+      onClose={handleClose}
+      title={(
+        <span className="inline-flex items-center gap-2">
+          <Icon name="sword" size={16} strokeWidth={1.75} />
+          <span>Aplicar Dano</span>
+        </span>
+      )}
+      size="sm"
+      footer={
+        <>
           <button
+            type="button"
             onClick={handleClose}
-            className="text-ink-200 hover:text-ink-500 text-lg leading-none"
-          >✕</button>
-        </div>
-
-        <div className="p-4 space-y-3">
-          {/* Valor */}
-          <div>
-            <label htmlFor="damage-modal-amount" className="block text-xs text-ink-200 mb-1.5">Quantidade</label>
-            <input
-              id="damage-modal-amount"
-              type="number"
-              min={1}
-              value={amount}
-              onChange={e => setAmount(e.target.value)}
-              onWheel={e => e.currentTarget.blur()}
-              onKeyDown={e => { if (e.key === 'Enter') handleSubmit() }}
-              placeholder="0"
-              autoFocus
-              className="w-full text-center text-xl font-bold bg-parchment-50 border border-parchment-600 rounded px-2 py-1.5 text-ink-500 focus:outline-none focus:border-ink-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            />
-          </div>
-
-          {/* Tipo de dano */}
-          <div>
-            <label htmlFor="damage-modal-type" className="block text-xs text-ink-200 mb-1.5">Tipo de dano</label>
-            <select
-              id="damage-modal-type"
-              value={type}
-              onChange={e => setType(e.target.value)}
-              className="w-full bg-parchment-50 border border-parchment-600 rounded px-2 py-1.5 text-sm text-ink-500 focus:outline-none focus:border-ink-300"
-            >
-              {DAMAGE_TYPES.map(t => (
-                <option key={t.value} value={t.value}>{t.label}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Crítico */}
-          <label className="flex items-center gap-2 cursor-pointer p-2 bg-parchment-50 border border-parchment-600 rounded hover:border-ink-300">
-            <input
-              type="checkbox"
-              checked={critical}
-              onChange={e => setCritical(e.target.checked)}
-              className="w-4 h-4"
-            />
-            <span className="text-sm text-ink-500">
-              💥 Crítico
-              <span className="ml-2 text-xs text-ink-200">
-                (dobra falhas de morte se a 0 PV — PHB p.197)
-              </span>
-            </span>
-          </label>
-        </div>
-
-        <div className="flex gap-2 px-4 py-3 border-t-2 border-parchment-600">
-          <button
-            onClick={handleClose}
-            className="px-4 py-1.5 rounded-sm bg-parchment-300 hover:bg-parchment-400 border border-parchment-600 text-ink-500 text-sm"
+            className="px-4 py-1.5 rounded-sm border-2 border-parchment-600 hover:border-ink-300 text-ink-300 hover:text-ink-500 text-sm font-display tracking-wide"
           >
             Cancelar
           </button>
           <button
+            type="button"
             onClick={handleSubmit}
             disabled={!canSubmit}
-            className="flex-1 px-4 py-1.5 rounded-sm bg-red-700 hover:bg-red-600 text-parchment-50 text-sm font-display tracking-wide disabled:opacity-40 disabled:cursor-not-allowed"
+            className="px-5 py-1.5 rounded-sm bg-red-700 hover:bg-red-600 border-2 border-red-800 text-parchment-50 text-sm font-display tracking-wide disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
           >
-            ⚔ Aplicar Dano
+            <Icon name="sword" size={14} strokeWidth={2} />
+            Aplicar Dano
           </button>
+        </>
+      }
+    >
+      <div className="space-y-3">
+        {/* Valor */}
+        <div>
+          <label htmlFor="damage-modal-amount" className="block text-xs font-display tracking-widest uppercase text-ink-300 mb-1.5">
+            Quantidade
+          </label>
+          <input
+            id="damage-modal-amount"
+            type="number"
+            min={1}
+            value={amount}
+            onChange={e => setAmount(e.target.value)}
+            onWheel={e => e.currentTarget.blur()}
+            onKeyDown={e => { if (e.key === 'Enter') handleSubmit() }}
+            placeholder="0"
+            autoFocus
+            className="w-full text-center text-xl font-bold bg-parchment-100 border-2 border-parchment-600 rounded-sm px-2 py-1.5 text-ink-500 focus:outline-none focus:border-ink-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          />
         </div>
+
+        {/* Tipo de dano */}
+        <div>
+          <label htmlFor="damage-modal-type" className="block text-xs font-display tracking-widest uppercase text-ink-300 mb-1.5">
+            Tipo de dano
+          </label>
+          <select
+            id="damage-modal-type"
+            value={type}
+            onChange={e => setType(e.target.value)}
+            className="w-full bg-parchment-100 border-2 border-parchment-600 rounded-sm px-2 py-1.5 text-sm text-ink-500 focus:outline-none focus:border-ink-300"
+          >
+            {DAMAGE_TYPES.map(t => (
+              <option key={t.value} value={t.value}>{t.label}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Crítico */}
+        <label className="flex items-center gap-2 cursor-pointer p-2 bg-parchment-100 border-2 border-parchment-600 rounded-sm hover:border-ink-300">
+          <input
+            type="checkbox"
+            checked={critical}
+            onChange={e => setCritical(e.target.checked)}
+            className="w-4 h-4 accent-ink-500"
+          />
+          <span className="text-sm text-ink-500 inline-flex items-center gap-1.5">
+            <Icon name="bolt" size={14} strokeWidth={2} className="text-amber-700" />
+            Crítico
+            <span className="text-xs ink-italic text-ink-300">
+              (dobra falhas de morte se a 0 PV — PHB p.197)
+            </span>
+          </span>
+        </label>
       </div>
-    </div>
+    </Modal>
   )
 }

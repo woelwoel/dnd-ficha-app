@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import {
   totalAttributes, meetsPrereqs, formatPrereqs, totalLevels, takenClassIndices,
 } from './blocks/class/multiclass-helpers'
+import { Modal } from '../ui/Modal'
 
 const fieldCls =
   'w-full px-3 py-2 rounded-sm border-2 border-parchment-600 bg-parchment-50 text-ink-500 ' +
@@ -47,23 +48,33 @@ export function MulticlassModal({ open, draft, classes, multiclassData, onAdd, o
   }
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/60 p-4"
-      onClick={onCancel}
+    <Modal
+      open={open}
+      onClose={onCancel}
+      title="Adicionar Classe"
+      size="md"
+      footer={
+        <>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-4 py-1.5 rounded-sm border-2 border-parchment-600 hover:border-ink-300 text-ink-300 hover:text-ink-500 text-sm font-display tracking-wide"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onClick={handleConfirm}
+            disabled={!canAdd}
+            className="px-5 py-1.5 rounded-sm bg-ink-500 hover:bg-ink-600 border-2 border-ink-600 text-parchment-50 text-sm font-display tracking-wide disabled:opacity-35 disabled:cursor-not-allowed"
+          >
+            Adicionar
+          </button>
+        </>
+      }
     >
-      <div
-        role="dialog"
-        aria-label="Adicionar Multiclasse"
-        className="w-full max-w-md flex flex-col gap-4 bg-parchment-50 border-2 border-parchment-600 rounded-sm p-6 shadow-parchment-lg"
-        onClick={e => e.stopPropagation()}
-      >
-        <header className="text-center">
-          <p className="text-xs ink-italic tracking-[0.3em] uppercase mb-1">Forjar Herói</p>
-          <h2 className="text-xl font-display text-ink-500 tracking-widest uppercase">
-            Adicionar Classe
-          </h2>
-        </header>
-
+      <div className="space-y-4">
+        <p className="text-xs ink-italic tracking-[0.3em] uppercase text-ink-300 text-center -mt-1">Forjar Herói</p>
         <div>
           <label htmlFor="mc-class-select" className="block text-xs font-display tracking-widest uppercase text-ink-500 mb-1">
             Classe <span className="text-red-700">*</span>
@@ -125,21 +136,7 @@ export function MulticlassModal({ open, draft, classes, multiclassData, onAdd, o
             ⚠ Total de níveis excederia 20 ({currentTotal} + {level} = {currentTotal + level})
           </div>
         )}
-
-        <div className="flex justify-end gap-3 mt-2">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="px-4 py-1.5 rounded-sm border-2 border-parchment-600 hover:border-ink-300 text-ink-300 hover:text-ink-500 text-sm font-display tracking-wide"
-          >Cancelar</button>
-          <button
-            type="button"
-            onClick={handleConfirm}
-            disabled={!canAdd}
-            className="px-5 py-1.5 rounded-sm bg-ink-500 hover:bg-ink-600 border-2 border-ink-600 text-parchment-50 text-sm font-display tracking-wide disabled:opacity-35 disabled:cursor-not-allowed"
-          >Adicionar</button>
-        </div>
       </div>
-    </div>
+    </Modal>
   )
 }
