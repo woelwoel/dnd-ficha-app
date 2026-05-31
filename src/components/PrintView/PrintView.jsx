@@ -591,7 +591,10 @@ function SpellsPage({ character, profBonus }) {
 /* ══════════════════════════════════════════════════════════════════
    COMPONENTE PRINCIPAL
    ══════════════════════════════════════════════════════════════════ */
-export function PrintView({ character, calc, classData, backgrounds }) {
+export function PrintView({ character, calc, classData, backgrounds, options }) {
+  // Opções controladas pelo PrintPreviewModal. Default = incluir tudo.
+  const includePersonality = options?.includePersonality !== false
+  const includeSpells      = options?.includeSpells      !== false
   const { progression, races } = useSrd()
   const { info, attributes, combat, proficiencies, inventory, spellcasting, traits } = character
 
@@ -676,26 +679,28 @@ export function PrintView({ character, calc, classData, backgrounds }) {
       </div>
 
       {/* ══ PÁGINA 2: Características + Personalidade ════════════ */}
-      <div style={{ pageBreakBefore: 'always', breakBefore: 'page', padding: '10mm 8mm', boxSizing: 'border-box' }}>
-        <h2 style={{
-          margin: '0 0 8px', fontSize: '12pt',
-          fontFamily: 'Georgia, serif', fontVariant: 'small-caps',
-          color: HEAD, borderBottom: `1px solid ${BORDER}`, paddingBottom: '4px',
-        }}>
-          {info.name || 'Personagem'} — Características &amp; Personalidade
-        </h2>
+      {includePersonality && (
+        <div style={{ pageBreakBefore: 'always', breakBefore: 'page', padding: '10mm 8mm', boxSizing: 'border-box' }}>
+          <h2 style={{
+            margin: '0 0 8px', fontSize: '12pt',
+            fontFamily: 'Georgia, serif', fontVariant: 'small-caps',
+            color: HEAD, borderBottom: `1px solid ${BORDER}`, paddingBottom: '4px',
+          }}>
+            {info.name || 'Personagem'} — Características &amp; Personalidade
+          </h2>
 
-        <div style={{ display: 'flex', gap: '14px' }}>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={headStyle()}>Características</div>
-            <FeaturesSection classFeatures={classFeatures} raceFeatures={raceFeatures} />
+          <div style={{ display: 'flex', gap: '14px' }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={headStyle()}>Características</div>
+              <FeaturesSection classFeatures={classFeatures} raceFeatures={raceFeatures} />
+            </div>
+            <PersonalitySection traits={traits} />
           </div>
-          <PersonalitySection traits={traits} />
         </div>
-      </div>
+      )}
 
       {/* ══ PÁGINA 3: Magias (conjuradores) ══════════════════════ */}
-      {isSpellcaster && (
+      {isSpellcaster && includeSpells && (
         <div style={{ pageBreakBefore: 'always', breakBefore: 'page', padding: '10mm 8mm', boxSizing: 'border-box' }}>
           <h2 style={{
             margin: '0 0 8px', fontSize: '12pt',

@@ -13,6 +13,7 @@ import { SheetContent } from './SheetContent'
 import { CharacterProvider } from './CharacterContext'
 import { useSheetHandlers } from './useSheetHandlers'
 import { PrintView } from '../PrintView/PrintView'
+import { PrintPreviewModal } from '../PrintView/PrintPreviewModal'
 import { defaultClassFeatureUses, mergeFeatureUses } from '../../domain/rules'
 
 /**
@@ -202,6 +203,18 @@ function SheetBody({ initialCharacter, onBack }) {
     clearFocusSpell: () => setFocusSpellId(null),
   }), [character, setCharacter, calc, classData, races, classes, backgrounds, updaters, handlers, fichaErrors, featureUses, focusSpellId, readOnly])
 
+  // Preview/opções de impressão. Antes o clique em "Imprimir" disparava
+  // window.print() na hora — gastando tinta/papel sem chance de revisar.
+  // Agora abrimos um modal de confirmação com toggles do que incluir.
+  const [printOpen, setPrintOpen] = useState(false)
+  const [printOptions, setPrintOptions] = useState({
+    includePersonality: true,
+    includeSpells: true,
+  })
+  const isSpellcaster = (character.spellcasting?.spells?.length ?? 0) > 0
+    || (character.spellcasting?.slots ?? []).some(s => s?.total > 0)
+    || !!character.spellcasting?.ability
+
   return (
     <CharacterProvider value={contextValue}>
       <div className="min-h-screen flex flex-col">
@@ -218,7 +231,7 @@ function SheetBody({ initialCharacter, onBack }) {
             onExport={handleExport}
             onImport={handleImport}
             onImportError={setImportError}
-            onPrint={() => window.print()}
+            onPrint={() => setPrintOpen(true)}
             showPrint={true}
             quickStats={quickStats}
             readOnly={readOnly}
@@ -264,6 +277,24 @@ function SheetBody({ initialCharacter, onBack }) {
           calc={calc}
           classData={classData}
           backgrounds={backgrounds}
+          options={printOptions}
+        />
+
+        {/* Confirmação antes de window.print() */}
+        <PrintPreviewModal
+          open={printOpen}
+          onClose={() => setPrintOpen(false)}
+          onConfirm={() => {
+            setPrintOpen(false)
+            // setTimeout pra dar tempo da React reagir ao close + DOM
+            // settle antes do print. Sem isso, o modal pode "aparecer"
+            // no PDF/print em alguns browsers.
+            setTimeout(() => window.print(), 50)
+          }}
+          characterName={character.info.name}
+          isSpellcaster={isSpellcaster}
+          options={printOptions}
+          onChangeOptions={patch => setPrintOptions(prev => ({ ...prev, ...patch }))}
         />
       </div>
     </CharacterProvider>
