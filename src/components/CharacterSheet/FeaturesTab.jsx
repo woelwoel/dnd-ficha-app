@@ -4,6 +4,7 @@ import { enrichDraconicTopics } from '../../utils/draconicAncestors'
 import { getFeatureTypeMeta } from '../../domain/featureMeta'
 import { ChosenFeaturePicker } from '../CharacterWizardV2/blocks/class/ChosenFeaturePicker'
 import { resolveMultiSelect, isChoiceDone } from '../CharacterWizardV2/blocks/class-helpers'
+import { Icon } from '../ui/Icon'
 
 /* ══════════════════════════════════════════════════════════════════
    DETECTOR DE TIPO DE AÇÃO
@@ -243,9 +244,9 @@ function ActionGroup({ title, icon, actions, featureUses, onSpend, onRegain }) {
    FILTROS
    ══════════════════════════════════════════════════════════════════ */
 const FILTERS = [
-  { id: 'acoes',       label: 'Ações',       icon: '⚔️' },
-  { id: 'habilidades', label: 'Habilidades',  icon: '📖' },
-  { id: 'recursos',    label: 'Recursos',     icon: '🎯' },
+  { id: 'acoes',       label: 'Ações',       icon: <Icon name="sword" size={12} strokeWidth={1.75} /> },
+  { id: 'habilidades', label: 'Habilidades', icon: <Icon name="book" size={12} strokeWidth={1.75} /> },
+  { id: 'recursos',    label: 'Recursos',    icon: <Icon name="target" size={12} strokeWidth={1.75} /> },
 ]
 
 /* ══════════════════════════════════════════════════════════════════
@@ -562,14 +563,16 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
       {/* ══ Vista: Ações ══ */}
       {activeFilter === 'acoes' && (
         <div className="space-y-6">
-          <ActionGroup title="Ações"       icon="⚔️" actions={classActions}      featureUses={featureUses} onSpend={onSpend} onRegain={onRegain} />
-          <ActionGroup title="Ações Bônus" icon="⚡" actions={classBonusActions} featureUses={featureUses} onSpend={onSpend} onRegain={onRegain} />
-          <ActionGroup title="Reações"     icon="🛡️" actions={classReactions}    featureUses={featureUses} onSpend={onSpend} onRegain={onRegain} />
-          <ActionGroup title="Ações Raciais" icon="🌿" actions={raceActions}     featureUses={featureUses} onSpend={onSpend} onRegain={onRegain} />
+          <ActionGroup title="Ações"         icon={<Icon name="sword" size={12} strokeWidth={1.75} />}    actions={classActions}      featureUses={featureUses} onSpend={onSpend} onRegain={onRegain} />
+          <ActionGroup title="Ações Bônus"   icon={<Icon name="bolt" size={12} strokeWidth={1.75} />}     actions={classBonusActions} featureUses={featureUses} onSpend={onSpend} onRegain={onRegain} />
+          <ActionGroup title="Reações"       icon={<Icon name="shield" size={12} strokeWidth={1.75} />}   actions={classReactions}    featureUses={featureUses} onSpend={onSpend} onRegain={onRegain} />
+          <ActionGroup title="Ações Raciais" icon={<Icon name="leaf" size={12} strokeWidth={1.75} />}     actions={raceActions}       featureUses={featureUses} onSpend={onSpend} onRegain={onRegain} />
 
           {totalActions === 0 && (
             <div className="text-center py-12 text-gray-600">
-              <p className="text-4xl mb-3">⚔️</p>
+              <div className="flex justify-center mb-3">
+                <Icon name="sword" size={36} strokeWidth={1.5} />
+              </div>
               <p className="text-sm">Nenhuma ação de classe ou raça detectada.</p>
               <p className="text-xs mt-1 text-gray-700">
                 As ações são detectadas automaticamente a partir das características da classe e raça.
@@ -593,7 +596,8 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
             />
           )}
           <FeatureGroup
-            title="Características de Classe" icon="📖"
+            title="Características de Classe"
+            icon={<Icon name="book" size={12} strokeWidth={1.75} />}
             features={classFeatures} featureUses={featureUses} onSpend={onSpend} onRegain={onRegain}
           />
           {multiFeatures.length > 0 && (
@@ -603,18 +607,22 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
             />
           )}
           <FeatureGroup
-            title="Traços Raciais" icon="🌿"
+            title="Traços Raciais"
+            icon={<Icon name="leaf" size={12} strokeWidth={1.75} />}
             features={raceFeatures} featureUses={featureUses} onSpend={onSpend} onRegain={onRegain}
           />
           {featFeatures.length > 0 && (
             <FeatureGroup
-              title="Talentos" icon="🌟"
+              title="Talentos"
+              icon={<Icon name="sparkle" size={12} strokeWidth={1.75} />}
               features={featFeatures} featureUses={featureUses} onSpend={onSpend} onRegain={onRegain}
             />
           )}
           {totalFeatures === 0 && (
             <div className="text-center py-12 text-gray-600">
-              <p className="text-4xl mb-3">📜</p>
+              <div className="flex justify-center mb-3">
+                <Icon name="scroll" size={36} strokeWidth={1.5} />
+              </div>
               <p className="text-sm">Nenhuma característica encontrada.</p>
               <p className="text-xs mt-1">Selecione raça e classe para ver as habilidades.</p>
             </div>
@@ -643,7 +651,9 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
             </>
           ) : (
             <div className="text-center py-12 text-gray-600">
-              <p className="text-4xl mb-3">🎯</p>
+              <div className="flex justify-center mb-3">
+                <Icon name="target" size={36} strokeWidth={1.5} />
+              </div>
               <p className="text-sm">Nenhum recurso rastreável.</p>
               <p className="text-xs mt-1 text-gray-700">
                 Recursos limitados de classe (ex: Fúria, Canalizar Divindade) aparecem aqui.

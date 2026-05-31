@@ -127,7 +127,7 @@ describe('CombatStats — DeathSavesTracker', () => {
       combat: { ...baseCombat, currentHp: 0 },
       onRollDeathSave,
     })
-    fireEvent.click(screen.getByRole('button', { name: /🎲 Rolar/ }))
+    fireEvent.click(screen.getByRole('button', { name: /^Rolar$/i }))
     expect(onRollDeathSave).toHaveBeenCalled()
   })
 
@@ -147,7 +147,7 @@ describe('CombatStats — DeathSavesTracker', () => {
       onRollDeathSave: vi.fn(),
       onStabilize: vi.fn(),
     })
-    expect(screen.queryByRole('button', { name: /🎲 Rolar/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /^Rolar$/i })).not.toBeInTheDocument()
   })
 })
 

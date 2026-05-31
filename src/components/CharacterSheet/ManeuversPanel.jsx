@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDiceRoller } from '../../hooks/useDiceRoller'
+import { Icon } from '../ui/Icon'
 
 /**
  * Painel rápido de Manobras (Mestre de Combate) — aparece na aba Ficha
@@ -93,12 +94,13 @@ export function ManeuversPanel({ character, featureUses, onSpend }) {
             {chosenIds.length} conhecida{chosenIds.length !== 1 ? 's' : ''}
           </span>
         </h3>
-        <span className={`text-xs px-2.5 py-1 rounded-full border font-mono font-semibold ${
+        <span className={`inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border font-mono font-semibold ${
           noDice
             ? 'border-red-500 text-red-700 bg-red-50'
             : 'border-amber-500 text-amber-700 bg-amber-50'
         }`}>
-          🎲 {remaining}/{supDice.max} {dieType}
+          <Icon name="dice" size={11} strokeWidth={2} />
+          {remaining}/{supDice.max} {dieType}
         </span>
       </div>
 
@@ -131,13 +133,14 @@ export function ManeuversPanel({ character, featureUses, onSpend }) {
                   title={noDice
                     ? 'Sem dados de superioridade — descanse curto/longo'
                     : `Gastar 1 dado e rolar 1${dieType} para ${m.name}`}
-                  className={`text-xs px-2.5 py-1 rounded border transition-colors min-h-[28px] font-semibold ${
+                  className={`inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded border transition-colors min-h-[28px] font-semibold ${
                     noDice
                       ? 'border-gray-400 bg-gray-100 text-gray-400 cursor-not-allowed'
                       : 'border-amber-500 bg-amber-100 text-amber-800 hover:bg-amber-200'
                   }`}
                 >
-                  🎲 {dieType}
+                  <Icon name="dice" size={11} strokeWidth={2} />
+                  {dieType}
                 </button>
               </div>
             )
@@ -146,7 +149,7 @@ export function ManeuversPanel({ character, featureUses, onSpend }) {
       )}
 
       <p className="mt-2 text-xs text-ink-300 italic leading-relaxed">
-        Click no 🎲 para gastar 1 Dado de Superioridade e rolar. Passe o mouse no nome pra ver a regra completa.
+        Click no dado para gastar 1 Dado de Superioridade e rolar. Passe o mouse no nome pra ver a regra completa.
         Recarrega em descanso curto ou longo.
       </p>
     </div>

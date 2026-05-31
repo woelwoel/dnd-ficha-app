@@ -5,6 +5,7 @@ import { FormFieldError } from '../FormFieldError'
 import { RollButton } from '../DiceRoller/RollButton'
 import { DamageModal } from './DamageModal'
 import { CONDITIONS, EXHAUSTION_EFFECTS } from '../../domain/conditions'
+import { Icon } from '../ui/Icon'
 
 /* ── Death Saves ───────────────────────────────────────────── */
 function DeathSavesTracker({ deathSaves, isStable, isDead, onUpdate, onRoll, onStabilize, compact = false }) {
@@ -69,9 +70,10 @@ function DeathSavesTracker({ deathSaves, isStable, isDead, onUpdate, onRoll, onS
             <button
               onClick={onRoll}
               title="Rolar 1d20 (PHB p.197): ≤9 falha, ≥10 sucesso, Nat 1 = 2 falhas, Nat 20 recupera com 1 PV"
-              className="text-xs px-2 py-0.5 rounded bg-ink-500 hover:bg-ink-600 text-parchment-50 font-display tracking-wide"
+              className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-ink-500 hover:bg-ink-600 text-parchment-50 font-display tracking-wide"
             >
-              🎲 Rolar
+              <Icon name="dice" size={12} strokeWidth={2} />
+              Rolar
             </button>
           )}
           {onStabilize && (
@@ -226,9 +228,10 @@ function ConcentrationCheckPrompt({ dc, conMod, spellName, onPass, onFail, onDis
           ? 'border-green-700 bg-green-50 text-green-700'
           : 'border-red-700 bg-red-50 text-red-700'
       }`}>
-        <button onClick={onDismiss} className="absolute top-1 right-2 text-xs opacity-60 hover:opacity-100">✕</button>
-        <p className="text-xs">
-          🎲 1d20 ({rolled.d20}) {bonus >= 0 ? '+' : ''}{bonus} = <strong>{rolled.total}</strong>{' '}
+        <button onClick={onDismiss} className="absolute top-1 right-2 text-xs opacity-60 hover:opacity-100" aria-label="Fechar">✕</button>
+        <p className="text-xs inline-flex items-center gap-1 flex-wrap">
+          <Icon name="dice" size={11} strokeWidth={2} />
+          1d20 ({rolled.d20}) {bonus >= 0 ? '+' : ''}{bonus} = <strong>{rolled.total}</strong>{' '}
           vs CD {dc} — {rolled.passed ? '✓ Concentração mantida' : `✗ ${spellName ?? 'Magia'} interrompida!`}
         </p>
       </div>
@@ -237,17 +240,19 @@ function ConcentrationCheckPrompt({ dc, conMod, spellName, onPass, onFail, onDis
 
   return (
     <div className="relative border-2 border-purple-700 bg-purple-50 rounded-sm px-3 py-2">
-      <button onClick={onDismiss} className="absolute top-1 right-2 text-xs opacity-60 hover:opacity-100">✕</button>
+      <button onClick={onDismiss} className="absolute top-1 right-2 text-xs opacity-60 hover:opacity-100" aria-label="Fechar">✕</button>
       <div className="flex items-center justify-between gap-2 pr-4">
-        <p className="text-xs text-purple-800">
-          🔮 Teste de Concentração: <strong>CON CD {dc}</strong>
+        <p className="text-xs text-purple-800 inline-flex items-center gap-1 flex-wrap">
+          <Icon name="target" size={11} strokeWidth={2} />
+          Teste de Concentração: <strong>CON CD {dc}</strong>
           {spellName && <span className="ml-1 italic text-purple-700">({spellName})</span>}
         </p>
         <button
           onClick={rollNow}
-          className="text-xs px-2 py-0.5 rounded bg-purple-700 hover:bg-purple-600 text-parchment-50 font-display tracking-wide shrink-0"
+          className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-purple-700 hover:bg-purple-600 text-parchment-50 font-display tracking-wide shrink-0"
         >
-          🎲 Rolar Save
+          <Icon name="dice" size={11} strokeWidth={2} />
+          Rolar Save
         </button>
       </div>
     </div>
@@ -535,9 +540,10 @@ function CombatStatsBase({
             <button
               onClick={onConsumeInspiration}
               title="Consumir Inspiração para ganhar vantagem em uma rolagem (PHB p.125)"
-              className="text-xs px-2 py-0.5 rounded bg-amber-700 hover:bg-amber-600 text-parchment-50 font-display tracking-wide"
+              className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-amber-700 hover:bg-amber-600 text-parchment-50 font-display tracking-wide"
             >
-              💡 Usar (vantagem)
+              <Icon name="idea" size={11} strokeWidth={2} />
+              Usar (vantagem)
             </button>
           )}
         </div>
