@@ -284,22 +284,26 @@ export function Inventory({
               {inventory.items.length} item{inventory.items.length !== 1 ? 's' : ''}
             </span>
           </h3>
+          {/* Hierarquia clara: "Buscar SRD" é o uso comum (primário ink),
+              "Mágico" é raro (secundário roxo discreto), "+ Manual" é
+              fallback pra item homebrew (terciário ghost). */}
           <div className="flex gap-2">
             <button
-              onClick={() => setMagicSearchOpen(true)}
-              className="text-xs px-3 py-1 rounded bg-purple-700 hover:bg-purple-600 text-parchment-50 font-semibold"
-            >
-              Buscar Mágico
-            </button>
-            <button
               onClick={() => setSearchOpen(true)}
-              className="text-xs px-3 py-1 rounded bg-gray-600 hover:bg-gray-500 text-white font-semibold"
+              className="text-xs px-3 py-1.5 rounded-sm bg-ink-500 hover:bg-ink-600 border-2 border-ink-600 text-parchment-50 font-display tracking-wide"
             >
               Buscar SRD
             </button>
             <button
+              onClick={() => setMagicSearchOpen(true)}
+              className="text-xs px-3 py-1.5 rounded-sm border-2 border-purple-600 bg-parchment-50 text-purple-800 hover:bg-purple-100 font-display tracking-wide"
+              title="Itens mágicos (precisam de atunamento)"
+            >
+              Mágicos
+            </button>
+            <button
               onClick={() => setShowForm(v => !v)}
-              className="text-xs px-3 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white font-semibold"
+              className="text-xs px-3 py-1.5 rounded-sm border-2 border-parchment-600 bg-parchment-50 text-ink-500 hover:bg-parchment-200 hover:border-ink-300 font-display tracking-wide"
             >
               {showForm ? 'Cancelar' : '+ Manual'}
             </button>

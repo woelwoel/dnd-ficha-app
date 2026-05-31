@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { AttributeBox } from './AttributeBox'
 import {
   ABILITY_SCORES,
@@ -30,6 +30,11 @@ export function AttributesSection({
   // o wizard, pra evitar trancar um personagem point-buy no range 8-15 pra sempre.
   hideMethodSelector = false,
 }) {
+  // Quando hideMethodSelector=true (modo Ficha em jogo), bloqueamos
+  // edição por padrão pra evitar mudar FOR 13 por engano clicando no
+  // botão "+/-". Usuário precisa clicar "Editar" pra liberar — protege
+  // o atributo em mesa real.
+  const [editEnabled, setEditEnabled] = useState(!hideMethodSelector)
   const effectiveMethod = hideMethodSelector ? 'manual' : scoreMethod
   // Quais atributos têm proficiência de salva (definidas pela classe)
   const saveProficientKeys = useMemo(() => {
@@ -64,7 +69,7 @@ export function AttributesSection({
     <section>
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <h2 className="text-base font-display text-ink-500 uppercase tracking-widest border-b-2 border-parchment-600 pb-1 flex-1">Atributos</h2>
-        {!hideMethodSelector && (
+        {!hideMethodSelector ? (
           <div className="flex gap-1 text-xs">
             {[
               { id: 'manual',         label: 'Manual'         },
@@ -84,6 +89,24 @@ export function AttributesSection({
               </button>
             ))}
           </div>
+        ) : (
+          // Modo Ficha em jogo: chave de edição. Bloqueia mudança
+          // acidental de atributos durante combate.
+          <button
+            type="button"
+            onClick={() => setEditEnabled(v => !v)}
+            aria-pressed={editEnabled}
+            title={editEnabled
+              ? 'Bloquear edição dos atributos (proteção contra cliques acidentais)'
+              : 'Liberar edição dos atributos (ASI, modificações temporárias)'}
+            className={`text-xs px-2 py-1 rounded-sm border-2 font-display tracking-wide transition-colors inline-flex items-center gap-1 ${
+              editEnabled
+                ? 'bg-amber-100 border-amber-600 text-amber-800'
+                : 'bg-parchment-50 border-parchment-600 text-ink-300 hover:border-ink-300 hover:text-ink-500'
+            }`}
+          >
+            {editEnabled ? 'Editar ✓' : 'Travado'}
+          </button>
         )}
       </div>
 
@@ -115,7 +138,12 @@ export function AttributesSection({
         )}
       </div>
 
-      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-2.5">
+      <fieldset
+        disabled={!editEnabled}
+        className={`grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-2.5 border-0 m-0 p-0 min-w-0 ${
+          !editEnabled ? 'opacity-95' : ''
+        }`}
+      >
         {ABILITY_SCORES.map(({ key, abbr, name }) => {
           const racialBonus = appliedRacialBonuses[key] ?? 0
           const baseValue = baseValues[key]
@@ -148,7 +176,7 @@ export function AttributesSection({
             />
           )
         })}
-      </div>
+      </fieldset>
     </section>
   )
 }

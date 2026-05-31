@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { SKILLS, ABILITY_SCORES, formatModifier, calculateSkillModifier, getModifier } from '../../utils/calculations'
 import { Tooltip } from '../Tooltip'
 import { RollButton } from '../DiceRoller/RollButton'
@@ -69,8 +70,16 @@ export function SkillsList({ attributes, proficiencies, profBonus, onToggle, onT
   const atLimit      = skillLimit !== null && selectedCount >= skillLimit
   const backgroundSkills = proficiencies.backgroundSkills ?? []
 
+  // Filtro por atributo — quando o DM grita "Sabedoria!" o jogador
+  // clica em SAB e vê só as perícias de SAB sem ler a lista inteira.
+  // null = sem filtro (mostra tudo, alfabético).
+  const [filterAbility, setFilterAbility] = useState(null)
+
   // Lista ordenada alfabeticamente — flat, sem agrupar por atributo
   const orderedSkills = [...SKILLS].sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
+  const visibleSkills = filterAbility
+    ? orderedSkills.filter(s => s.ability === filterAbility)
+    : orderedSkills
 
   return (
     <div className="bg-parchment-100 border border-parchment-600 rounded-lg p-4 shadow-parchment-sm">
@@ -91,10 +100,45 @@ export function SkillsList({ attributes, proficiencies, profBonus, onToggle, onT
         </div>
       </div>
 
+      {/* Filtro por atributo — 6 chips compactos. Em mesa: DM grita
+          "Sabedoria!" → clica SAB → lê só as 4 perícias relevantes. */}
+      <div role="group" aria-label="Filtrar perícias por atributo" className="flex items-center gap-1 mb-3 flex-wrap">
+        <span className="text-xs ink-italic text-ink-300 mr-1">Filtrar:</span>
+        {ABILITY_SCORES.map(({ key, abbr }) => {
+          const active = filterAbility === key
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setFilterAbility(active ? null : key)}
+              aria-pressed={active}
+              title={active ? `Mostrar todas as perícias` : `Mostrar apenas perícias de ${abbr}`}
+              className={[
+                'text-xs px-1.5 py-0.5 rounded-sm border font-display tracking-widest transition-colors',
+                active
+                  ? 'bg-ink-500 border-ink-600 text-parchment-50'
+                  : 'bg-parchment-50 border-parchment-600 text-ink-300 hover:border-ink-300 hover:text-ink-500',
+              ].join(' ')}
+            >
+              {abbr}
+            </button>
+          )
+        })}
+        {filterAbility && (
+          <button
+            type="button"
+            onClick={() => setFilterAbility(null)}
+            className="text-xs ink-italic text-ink-300 hover:text-ink-500 underline ml-1"
+          >
+            limpar
+          </button>
+        )}
+      </div>
+
       {/* Grid flat: 1 col mobile, 2 cols a partir de sm, 3 cols em lg.
           Continuação alfabética entre colunas; nada de cards por atributo. */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-0">
-        {orderedSkills.map(skill => {
+        {visibleSkills.map(skill => {
           const isClassSkill      = proficiencies.skills.includes(skill.key)
           const isBackgroundSkill = backgroundSkills.includes(skill.key)
           const proficient        = isClassSkill || isBackgroundSkill
