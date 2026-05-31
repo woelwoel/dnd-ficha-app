@@ -63,8 +63,8 @@ function Section({ label, value }) {
   if (!value) return null
   return (
     <div className="text-sm">
-      <span className="font-bold text-amber-300">{label}</span>{' '}
-      <span className="text-gray-200">{value}</span>
+      <span className="font-display font-bold text-ink-500">{label}</span>{' '}
+      <span className="text-ink-500">{value}</span>
     </div>
   )
 }
@@ -73,11 +73,11 @@ function Block({ title, items }) {
   if (!items || items.length === 0) return null
   return (
     <div className="space-y-2">
-      <h4 className="text-xs uppercase tracking-widest font-bold text-amber-400 border-b border-amber-700/40 pb-1">{title}</h4>
+      <h4 className="text-xs uppercase tracking-widest font-display font-bold text-ink-500 border-b-2 border-parchment-600 pb-1">{title}</h4>
       {items.map((it, i) => (
         <div key={i} className="text-sm">
-          <span className="font-bold italic text-gray-100">{it.name}.</span>{' '}
-          <span className="text-gray-300">{it.desc}</span>
+          <span className="font-display font-bold text-ink-500">{it.name}.</span>{' '}
+          <span className="text-ink-500">{it.desc}</span>
         </div>
       ))}
     </div>
@@ -97,24 +97,24 @@ export function MonsterStatBlock({ monster, lang = 'en' }) {
   return (
     <div className="space-y-4">
       <div className="space-y-1">
-        <h2 className="text-2xl font-bold text-amber-400">{monster.name}</h2>
-        <p className="italic text-sm text-gray-400">
+        <h2 className="text-2xl font-display font-bold text-ink-500 tracking-wide">{monster.name}</h2>
+        <p className="ink-italic text-sm text-ink-300">
           {monster.size} {monster.type}{subtypeText}, {monster.alignment}
         </p>
       </div>
 
-      <div className="space-y-1 border-y border-amber-700/40 py-3">
+      <div className="space-y-1 border-y-2 border-parchment-600 py-3">
         <Section label={t('Armor Class')}  value={joinACs(monster.armor_class)} />
         <Section label={t('Hit Points')}   value={`${monster.hit_points}${monster.hit_dice ? ` (${monster.hit_dice})` : ''}`} />
         <Section label={t('Speed')}        value={joinSpeed(monster.speed, lang)} />
       </div>
 
-      <div className="grid grid-cols-6 gap-2 text-center border-b border-amber-700/40 pb-3">
+      <div className="grid grid-cols-6 gap-2 text-center border-b-2 border-parchment-600 pb-3">
         {ABILITY_LABELS.map(({ key, label }) => (
-          <div key={key} className="bg-gray-900/60 rounded px-1 py-1.5">
-            <div className="text-xs uppercase tracking-wider text-amber-400">{label}</div>
-            <div className="text-sm font-bold text-white">{monster[key]}</div>
-            <div className="text-xs text-gray-400">{modOf(monster[key])}</div>
+          <div key={key} className="bg-parchment-100 border border-parchment-600 rounded-sm px-1 py-1.5">
+            <div className="text-xs font-display uppercase tracking-widest text-ink-500">{label}</div>
+            <div className="text-sm font-bold text-ink-500">{monster[key]}</div>
+            <div className="text-xs ink-italic text-ink-300">{modOf(monster[key])}</div>
           </div>
         ))}
       </div>
