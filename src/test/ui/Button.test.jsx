@@ -19,7 +19,9 @@ describe('<Button>', () => {
 
   it('aplica classe distinta para variant="gold"', () => {
     render(<Button variant="gold">G</Button>)
-    expect(screen.getByRole('button').className).toMatch(/gold-/)
+    // Variant "gold" usa gradiente dourado (amber-300 → amber-400) pra CTAs heróicos.
+    expect(screen.getByRole('button').className).toMatch(/bg-gradient-to-b/)
+    expect(screen.getByRole('button').className).toMatch(/amber-300/)
   })
 
   it('aplica classe distinta para variant="ghost"', () => {

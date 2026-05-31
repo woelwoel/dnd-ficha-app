@@ -30,7 +30,7 @@ export function AccountMenu() {
       <div ref={ref} className="relative">
         <button
           onClick={() => setOpen(v => !v)}
-          className="w-9 h-9 rounded-full bg-amber-900 text-amber-200 text-sm font-bold flex items-center justify-center hover:bg-amber-800 transition"
+          className="w-9 h-9 rounded-full bg-ink-500 text-parchment-50 text-sm font-bold font-display flex items-center justify-center hover:bg-ink-600 transition shadow-[var(--shadow-parchment-sm)]"
           aria-label="Menu da conta"
           aria-expanded={open}
         >
@@ -38,25 +38,25 @@ export function AccountMenu() {
         </button>
         {open && (
           <div
-            className="absolute right-0 mt-2 w-56 rounded border border-shell-border bg-shell-800 shadow-lg z-40"
+            className="absolute right-0 mt-2 w-56 rounded-sm border-2 border-parchment-600 bg-parchment-50 shadow-parchment-lg z-40 overflow-hidden"
             role="menu"
           >
             <div
-              className="px-3 py-2 text-xs text-gray-400 border-b border-shell-border truncate"
+              className="px-3 py-2 text-xs ink-italic text-ink-300 border-b border-parchment-600 truncate bg-parchment-100"
               title={user?.email}
             >
               {user?.email}
             </div>
             <button
               onClick={() => { setOpen(false); signOut() }}
-              className="w-full text-left px-3 py-2 text-sm text-gray-200 hover:bg-gray-800"
+              className="w-full text-left px-3 py-2 text-sm text-ink-500 hover:bg-parchment-200 font-display tracking-wide"
               role="menuitem"
             >
               Sair
             </button>
             <button
               onClick={() => { setOpen(false); setShowDelete(true) }}
-              className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-gray-800 border-t border-shell-border"
+              className="w-full text-left px-3 py-2 text-sm text-red-700 hover:bg-red-50 border-t border-parchment-600 font-display tracking-wide"
               role="menuitem"
             >
               Apagar conta

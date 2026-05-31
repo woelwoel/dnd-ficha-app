@@ -47,14 +47,14 @@ export function MembersList({ campaignId, currentUserId, isDM, onChanged }) {
   const targetName = targetMember?.profiles?.display_name?.trim()
     || (targetMember ? `${targetMember.user_id.slice(0, 8)}…` : '')
 
-  if (loading) return <p className="text-amber-400 text-sm p-4">Carregando membros…</p>
+  if (loading) return <p className="text-ink-300 ink-italic text-sm p-4">Carregando membros…</p>
 
   return (
-    <div className="rounded border border-shell-border bg-gray-900">
-      <div className="px-4 py-2 text-xs uppercase tracking-wider text-gray-400 border-b border-shell-border">
+    <div className="rounded-sm border-2 border-parchment-600 bg-parchment-50 shadow-parchment-sm overflow-hidden">
+      <div className="px-4 py-2 text-xs font-display uppercase tracking-widest text-ink-500 border-b border-parchment-600 bg-parchment-100">
         Membros ({members.length})
       </div>
-      <ul className="divide-y divide-shell-border">
+      <ul className="divide-y divide-parchment-600">
         {members.map(m => {
           const isSelf = m.user_id === currentUserId
           return (
@@ -67,18 +67,23 @@ export function MembersList({ campaignId, currentUserId, isDM, onChanged }) {
                     className="w-6 h-6 rounded-full object-cover shrink-0"
                   />
                 )}
-                <span className="text-gray-200 truncate">
+                <span className="text-ink-500 truncate font-display tracking-wide">
                   {isSelf
                     ? 'Você'
                     : (m.profiles?.display_name?.trim() || `${m.user_id.slice(0, 8)}…`)}
                 </span>
-                <span className="ml-2 text-xs uppercase text-gray-500 shrink-0">
+                <span className={
+                  'ml-2 text-xs uppercase tracking-widest font-display px-1.5 py-0.5 rounded-sm shrink-0 ' +
+                  (m.role === 'dm'
+                    ? 'bg-amber-100 text-amber-800 border border-amber-600'
+                    : 'text-ink-300')
+                }>
                   {m.role === 'dm' ? 'Mestre' : 'Jogador'}
                 </span>
               </div>
               {isDM && !isSelf && (
                 <Button
-                  variant="ghost-dark"
+                  variant="ghost"
                   size="sm"
                   disabled={busyMember === m.user_id}
                   onClick={() => setRemoveTarget(m.user_id)}
@@ -87,7 +92,7 @@ export function MembersList({ campaignId, currentUserId, isDM, onChanged }) {
                 </Button>
               )}
               {!isDM && isSelf && (
-                <Button variant="ghost-dark" size="sm" disabled={busyLeave} onClick={() => setLeaveOpen(true)}>
+                <Button variant="ghost" size="sm" disabled={busyLeave} onClick={() => setLeaveOpen(true)}>
                   {busyLeave ? 'Saindo…' : 'Sair'}
                 </Button>
               )}

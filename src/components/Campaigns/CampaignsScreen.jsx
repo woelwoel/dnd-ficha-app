@@ -33,13 +33,13 @@ export function CampaignsScreen() {
   const showSearch = campaigns.length >= 5
 
   return (
-    <div className="min-h-screen p-4 bg-bg-canvas">
+    <div className="min-h-screen p-4 bg-parchment-100 text-ink-500">
       <header className="flex items-center justify-between mb-6 max-w-4xl mx-auto">
-        <h1 className="text-2xl text-amber-400 font-display">
+        <h1 className="text-2xl font-display tracking-widest uppercase text-ink-500">
           Mesas
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="ghost-dark" size="sm" onClick={() => navigate('/')}>← Personagens</Button>
+          <Button variant="ghost" size="sm" onClick={() => navigate('/')}>← Personagens</Button>
           <AccountMenu />
         </div>
       </header>
@@ -51,24 +51,24 @@ export function CampaignsScreen() {
 
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between gap-3 mb-3">
-          <h2 className="text-sm uppercase tracking-wider text-gray-400">Suas mesas</h2>
+          <h2 className="text-sm font-display uppercase tracking-widest text-ink-500">Suas mesas</h2>
           {showSearch && (
             <input
               type="search"
               placeholder="Buscar…"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="px-3 py-1 bg-gray-900 border border-shell-border rounded text-gray-100 text-sm w-48"
+              className="px-3 py-1 bg-parchment-50 border-2 border-parchment-600 rounded-sm text-ink-500 placeholder:text-ink-200 text-sm w-48 focus:outline-none focus:border-ink-300"
               aria-label="Buscar mesa pelo nome"
             />
           )}
         </div>
         {loading ? (
-          <p className="text-amber-400 text-sm">Carregando…</p>
+          <p className="text-ink-300 ink-italic text-sm">Carregando…</p>
         ) : campaigns.length === 0 ? (
-          <p className="text-gray-500 text-sm">Você ainda não tem mesas. Crie uma ou entre com código.</p>
+          <p className="text-ink-300 ink-italic text-sm">Você ainda não tem mesas. Crie uma ou entre com código.</p>
         ) : filtered.length === 0 ? (
-          <p className="text-gray-500 text-sm">Nenhuma mesa corresponde a "{query}".</p>
+          <p className="text-ink-300 ink-italic text-sm">Nenhuma mesa corresponde a "{query}".</p>
         ) : (
           <div className="grid gap-3 md:grid-cols-2">
             {filtered.map(c => (

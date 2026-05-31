@@ -95,9 +95,9 @@ export function CharacterList({ onSelect, onCreate }) {
   const isEmpty = !loading && characters.length === 0
 
   return (
-    <div className="min-h-screen flex flex-col bg-bg-canvas text-ink-primary">
-      <header className="flex items-center justify-between px-4 py-3 border-b border-shell-border bg-gradient-to-b from-shell-800 to-shell-900 text-ink-inverse">
-        <h1 className="text-base font-bold font-display tracking-[0.12em] text-gold-400">
+    <div className="min-h-screen flex flex-col bg-parchment-100 text-ink-500">
+      <header className="flex items-center justify-between px-4 py-3 border-b-2 border-parchment-600 bg-parchment-200 text-ink-500 shadow-parchment-sm">
+        <h1 className="text-base font-bold font-display tracking-[0.12em] uppercase text-ink-500">
           {campaignName.replace(/⚜\s*/g, '')}
         </h1>
 
@@ -105,7 +105,7 @@ export function CharacterList({ onSelect, onCreate }) {
 
         <div className="flex items-center gap-2" role="group" aria-label="Modo de visualização">
           <Button
-            variant={view === VIEW_MAP ? 'gold' : 'ghost-dark'}
+            variant={view === VIEW_MAP ? 'gold' : 'ghost'}
             size="sm"
             onClick={() => switchView(VIEW_MAP)}
             aria-pressed={view === VIEW_MAP}
@@ -113,7 +113,7 @@ export function CharacterList({ onSelect, onCreate }) {
             ▦ Mapa
           </Button>
           <Button
-            variant={view === VIEW_LIST ? 'gold' : 'ghost-dark'}
+            variant={view === VIEW_LIST ? 'gold' : 'ghost'}
             size="sm"
             onClick={() => switchView(VIEW_LIST)}
             aria-pressed={view === VIEW_LIST}
@@ -123,7 +123,7 @@ export function CharacterList({ onSelect, onCreate }) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost-dark" size="sm" onClick={() => navigate('/campaigns')}>
+          <Button variant="ghost" size="sm" onClick={() => navigate('/campaigns')}>
             ⚜ Mesas
           </Button>
           <BackupMenu
@@ -143,7 +143,7 @@ export function CharacterList({ onSelect, onCreate }) {
 
       <main className="flex-1 flex overflow-hidden w-full max-w-[1800px] mx-auto">
         {loading ? (
-          <div className="flex-1 flex items-center justify-center text-amber-400 text-sm">
+          <div className="flex-1 flex items-center justify-center text-ink-300 ink-italic text-sm">
             Carregando heróis…
           </div>
         ) : view === VIEW_MAP ? (

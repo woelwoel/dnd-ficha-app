@@ -51,12 +51,12 @@ export function CampaignDetail({ campaignId, onBack }) {
 
   useEffect(() => { reload() }, [reload])
 
-  if (loading) return <div className="p-6 text-amber-400 text-sm">Carregando mesa…</div>
+  if (loading) return <div className="p-6 text-ink-300 ink-italic text-sm">Carregando mesa…</div>
   if (!campaign) {
     return (
-      <div className="p-6 flex flex-col gap-2 text-amber-400 text-sm">
+      <div className="p-6 flex flex-col gap-2 text-ink-500 text-sm">
         <p>Mesa não encontrada (ou sem permissão).</p>
-        <Button variant="ghost-dark" size="sm" onClick={onBack}>Voltar</Button>
+        <Button variant="ghost" size="sm" onClick={onBack}>Voltar</Button>
       </div>
     )
   }
@@ -64,14 +64,14 @@ export function CampaignDetail({ campaignId, onBack }) {
   const isDM = campaign.dm_id === userId
 
   return (
-    <div className="min-h-screen p-4 bg-bg-canvas">
+    <div className="min-h-screen p-4 bg-parchment-100 text-ink-500">
       <header className="flex items-center justify-between mb-6 max-w-4xl mx-auto">
         <div>
-          <button onClick={onBack} className="text-xs text-gray-400 hover:text-amber-300">← Mesas</button>
-          <h1 className="text-2xl text-amber-400 mt-1 font-display">
+          <button onClick={onBack} className="text-xs ink-italic text-ink-300 hover:text-ink-500">← Mesas</button>
+          <h1 className="text-2xl font-display tracking-widest uppercase text-ink-500 mt-1">
             {campaign.name}
           </h1>
-          <p className="text-xs text-gray-500">{isDM ? 'Você é o Mestre' : 'Você é Jogador'}</p>
+          <p className="text-xs ink-italic text-ink-300">{isDM ? 'Você é o Mestre' : 'Você é Jogador'}</p>
         </div>
         <AccountMenu />
       </header>
@@ -97,17 +97,17 @@ export function CampaignDetail({ campaignId, onBack }) {
         )}
 
         {isDM && (
-          <div className="mt-6 pt-4 border-t border-shell-border flex flex-col gap-2">
-            <p className="text-xs text-gray-500">
+          <div className="mt-6 pt-4 border-t-2 border-parchment-600 flex flex-col gap-2">
+            <p className="text-xs ink-italic text-ink-300">
               Zona de perigo — apagar a mesa remove os membros e desvincula as fichas (elas voltam a ser pessoais dos donos).
             </p>
             <div>
               <Button
-                variant="ghost-dark"
+                variant="ghost"
                 size="sm"
                 onClick={() => setConfirmOpen(true)}
                 disabled={deleting}
-                className="!text-red-400 !border-red-900/60 hover:!bg-red-950/30"
+                className="!text-red-700 !border-red-700 hover:!bg-red-50"
               >
                 Apagar mesa
               </Button>

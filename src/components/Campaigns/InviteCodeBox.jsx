@@ -34,15 +34,15 @@ export function InviteCodeBox({ campaignId, code, isDM, onRotated }) {
   }
 
   return (
-    <div className="p-4 rounded border border-shell-border bg-gray-900">
-      <div className="text-xs uppercase tracking-wider text-gray-400 mb-1">Código de convite</div>
+    <div className="p-4 rounded-sm border-2 border-parchment-600 bg-parchment-50 shadow-parchment-sm">
+      <div className="text-xs font-display uppercase tracking-widest text-ink-500 mb-1">Código de convite</div>
       <div className="flex items-center gap-2 flex-wrap">
-        <span className="font-mono text-2xl text-amber-300 tracking-wider">{code}</span>
-        <Button variant="ghost-dark" size="sm" onClick={onCopy}>
+        <span className="font-mono text-2xl text-ink-500 tracking-wider font-bold">{code}</span>
+        <Button variant="ghost" size="sm" onClick={onCopy}>
           {copied ? '✓ Copiado' : 'Copiar'}
         </Button>
         {isDM && (
-          <Button variant="ghost-dark" size="sm" onClick={() => setConfirmOpen(true)} disabled={busy}>
+          <Button variant="ghost" size="sm" onClick={() => setConfirmOpen(true)} disabled={busy}>
             {busy ? '...' : rotated ? '✓ Código atualizado' : '↻ Rotacionar'}
           </Button>
         )}
