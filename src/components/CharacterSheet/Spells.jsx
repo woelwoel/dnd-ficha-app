@@ -5,6 +5,7 @@ import { getSpellcastingRules, getWarlockPactSlots, getClassSpellMath, getSpellS
 import { useClassSpells } from '../../hooks/useClassSpells'
 import { SpellDetailModal } from '../SpellDetailModal'
 import { ConfirmDialog } from '../ui/ConfirmDialog'
+import { Icon } from '../ui/Icon'
 import {
   matchesFilters,
   EMPTY_FILTERS,
@@ -148,17 +149,21 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
 
   return (
     <div className="space-y-4">
-      {/* Banner de concentração ativa (PHB p.203) */}
+      {/* Banner de concentração ativa (PHB p.203) — duplica o chip do
+          SheetCombatBar mas com mais contexto (mensagem de regra completa
+          + botão Romper labelado). Aparece só nesta aba. */}
       {concentrating?.spellIndex && (
-        <div className="bg-blue-950/40 border border-blue-700/50 rounded-lg px-4 py-2 flex items-center gap-3">
-          <span className="text-blue-400 text-lg">⊙</span>
-          <span className="text-sm text-blue-200 flex-1">
+        <div className="bg-blue-50 border-2 border-blue-600 rounded-sm px-4 py-2 flex items-center gap-3">
+          <Icon name="target" size={18} strokeWidth={2} className="text-blue-700 shrink-0" />
+          <span className="text-sm text-blue-900 flex-1">
             Concentrando em <strong>{concentrating.spellName}</strong>
-            <span className="text-xs text-blue-400 ml-2">· teste de Concentração ao sofrer dano (CD 10 ou metade do dano)</span>
+            <span className="text-xs ink-italic text-blue-700 ml-2">
+              · teste de Concentração ao sofrer dano (CD 10 ou metade do dano)
+            </span>
           </span>
           <button
             onClick={() => onSetConcentration?.(null)}
-            className="text-xs text-blue-400 hover:text-blue-200 px-2 py-1 rounded border border-blue-700 hover:bg-blue-900/30"
+            className="text-xs text-blue-700 hover:text-blue-900 px-2 py-1 rounded-sm border-2 border-blue-600 hover:bg-blue-100 font-display tracking-wide"
           >
             Romper
           </button>
@@ -503,8 +508,16 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
         {spell.name}
       </button>
       <div className="flex items-center gap-1.5 text-xs flex-shrink-0">
-        {spell.ritual && <span className="text-green-400" title="Ritual">📿</span>}
-        {spell.concentration && <span className="text-blue-400" title="Concentração">⊙</span>}
+        {spell.ritual && (
+          <span className="text-green-700 inline-flex" title="Ritual">
+            <Icon name="scroll" size={12} strokeWidth={2} />
+          </span>
+        )}
+        {spell.concentration && (
+          <span className="text-blue-700 inline-flex" title="Concentração">
+            <Icon name="target" size={12} strokeWidth={2} />
+          </span>
+        )}
         <span className="text-gray-600">{schoolAbbr}</span>
         <span className="text-gray-600 text-xs">{spell.castingTime || ''}</span>
       </div>
@@ -512,13 +525,14 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
         <button
           onClick={onToggleConcentration}
           title={isConcentrating ? 'Romper concentração' : 'Concentrar (substitui a magia atual em concentração)'}
-          className={`flex-shrink-0 text-xs px-1.5 py-0.5 rounded border transition-colors ${
+          className={`flex-shrink-0 inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded border transition-colors ${
             isConcentrating
               ? 'border-blue-500 bg-blue-900/30 text-blue-300'
               : 'border-gray-700 text-gray-500 hover:text-blue-300 hover:border-blue-700'
           }`}
         >
-          {isConcentrating ? '⊙ ativa' : '⊙'}
+          <Icon name="target" size={11} strokeWidth={2} />
+          {isConcentrating && <span>ativa</span>}
         </button>
       )}
       <button
@@ -539,13 +553,14 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
                 ? 'Sem espaços disponíveis'
                 : 'Conjurar (escolher nível do espaço)'
           }
-          className={`flex-shrink-0 text-xs px-1.5 py-0.5 rounded border transition-colors ${
+          className={`flex-shrink-0 inline-flex items-center justify-center text-xs px-1.5 py-1 rounded border transition-colors ${
             availableSlots.length > 0 && canCast
               ? 'border-amber-700 bg-amber-900/20 text-amber-300 hover:bg-amber-900/40'
               : 'border-gray-700 text-gray-600 cursor-not-allowed'
           }`}
+          aria-label="Conjurar"
         >
-          ⚡
+          <Icon name="bolt" size={12} strokeWidth={2} />
         </button>
       )}
       {castedAt && (
@@ -557,15 +572,17 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
         <button
           onClick={onRemove}
           className="text-red-500 hover:text-red-400 text-lg leading-none flex-shrink-0"
+          aria-label="Remover magia"
         >
           ×
         </button>
       ) : (
         <span
-          className="text-gray-700 text-base leading-none flex-shrink-0 cursor-help"
+          className="text-gray-700 leading-none flex-shrink-0 cursor-help inline-flex"
           title="Concedida pela subclasse — não pode ser removida"
+          aria-label="Concedida pela subclasse"
         >
-          🔒
+          <Icon name="lock" size={12} strokeWidth={2} />
         </span>
       )}
     </div>
@@ -703,8 +720,16 @@ function SpellPicker({
                 >
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <span className="text-sm font-medium text-white hover:text-amber-300 transition-colors">{spell.name}</span>
-                    {spell.ritual && <span className="text-green-400 text-xs" title="Ritual">📿</span>}
-                    {spell.concentration && <span className="text-blue-400 text-xs" title="Concentração">⊙</span>}
+                    {spell.ritual && (
+                      <span className="text-green-700 inline-flex" title="Ritual">
+                        <Icon name="scroll" size={11} strokeWidth={2} />
+                      </span>
+                    )}
+                    {spell.concentration && (
+                      <span className="text-blue-700 inline-flex" title="Concentração">
+                        <Icon name="target" size={11} strokeWidth={2} />
+                      </span>
+                    )}
                     <span className="text-xs text-gray-500">{schoolAbbr}</span>
                   </div>
                   <div className="text-xs text-gray-600 mt-0.5">{spell.casting_time} · {spell.range}</div>

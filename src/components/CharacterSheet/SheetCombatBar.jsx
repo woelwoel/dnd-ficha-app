@@ -207,6 +207,8 @@ export function SheetCombatBar() {
   const activeConditions = combat.conditions ?? []
   const exhaustion = combat.exhaustion ?? 0
   const turnState = combat.turnState ?? {}
+  const concentrating = combat.concentrating ?? null
+  const isConcentrating = !!concentrating?.spellIndex
 
   const isBarbarian = (info.class === 'barbarian' || info.class === 'Barbarian')
   const rageActive = !!character.rageActive
@@ -330,6 +332,24 @@ export function SheetCombatBar() {
           >
             <Icon name={rageActive ? 'fire' : 'bolt'} size={14} strokeWidth={1.75} />
             <span>{rageActive ? 'Em Fúria' : 'Fúria'}</span>
+          </button>
+        )}
+
+        {/* Concentração ativa — chip persistente quando há magia em conc.
+            PHB p.203: sofrer dano força CON save; só uma concentração por vez.
+            Click no × rompe (não pede confirmação porque é toggle natural). */}
+        {isConcentrating && (
+          <button
+            type="button"
+            onClick={() => updaters.setConcentration?.(null)}
+            title={`Concentrando em "${concentrating.spellName}" — clique pra romper`}
+            className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm bg-blue-100 border border-blue-600 text-blue-800 text-xs font-semibold hover:bg-blue-200 transition-colors"
+          >
+            <Icon name="target" size={12} strokeWidth={2} />
+            <span className="font-display tracking-wide normal-case">
+              Concentrando: <span className="font-bold not-italic">{concentrating.spellName}</span>
+            </span>
+            <span aria-hidden className="text-blue-600 ml-0.5">×</span>
           </button>
         )}
 
