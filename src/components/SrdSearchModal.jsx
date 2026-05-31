@@ -1,25 +1,24 @@
 import { useState, useEffect, useRef } from 'react'
+import { Modal } from './ui/Modal'
 
 export function SrdSearchModal({ isOpen, onClose, title, items, onSelect, renderItem, filterFn, categories }) {
   const [query, setQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState(null)
   const inputRef = useRef(null)
-  const titleId = 'srd-search-modal-title'
 
   useEffect(() => {
-    function onKey(e) {
-      if (e.key === 'Escape') onClose()
+    if (!isOpen) return
+    const t = setTimeout(() => inputRef.current?.focus(), 50)
+    return () => clearTimeout(t)
+  }, [isOpen])
+
+  // Reset busca/categoria ao fechar
+  useEffect(() => {
+    if (!isOpen) {
+      setQuery('')
+      setSelectedCategory(null)
     }
-    if (isOpen) {
-      const t = setTimeout(() => inputRef.current?.focus(), 50)
-      document.addEventListener('keydown', onKey)
-      return () => {
-        clearTimeout(t)
-        document.removeEventListener('keydown', onKey)
-      }
-    }
-    return () => document.removeEventListener('keydown', onKey)
-  }, [isOpen, onClose])
+  }, [isOpen])
 
   if (!isOpen) return null
 
@@ -38,88 +37,85 @@ export function SrdSearchModal({ isOpen, onClose, title, items, onSelect, render
     : baseFiltered.slice(0, 80)
 
   return (
-    <div
-      className="fixed inset-0 bg-ink-700/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-      onClick={e => e.target === e.currentTarget && onClose()}
+    <Modal
+      open={isOpen}
+      onClose={onClose}
+      title={title}
+      size="lg"
+      footer={
+        (query.length >= 2 || selectedCategory) && filtered.length > 0 ? (
+          <span className="text-xs ink-italic text-ink-300">
+            {filtered.length} resultado{filtered.length !== 1 ? 's' : ''}
+          </span>
+        ) : null
+      }
     >
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        className="bg-parchment-50 border-2 border-parchment-600 rounded-sm w-full max-w-lg max-h-[80vh] flex flex-col shadow-parchment-lg"
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700">
-          <h3 id={titleId} className="font-bold text-amber-400">{title}</h3>
-          <button onClick={onClose} aria-label="Fechar" className="text-gray-400 hover:text-white text-2xl leading-none">×</button>
-        </div>
-
-        {/* Search */}
-        <div className="px-4 py-3 border-b border-gray-700 space-y-2">
-          <input
-            ref={inputRef}
-            type="text"
-            placeholder="Buscar pelo nome..."
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-400"
-          />
-          {query.length > 0 && query.length < 2 && (
-            <p className="text-xs text-gray-500">Digite pelo menos 2 caracteres para buscar.</p>
-          )}
-          {/* Category filter chips */}
-          {categories?.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              <button
-                onClick={() => setSelectedCategory(null)}
-                className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
-                  !selectedCategory
-                    ? 'bg-amber-600 border-amber-500 text-white'
-                    : 'bg-gray-700 border-gray-600 text-gray-400 hover:border-gray-500 hover:text-gray-200'
-                }`}
-              >
-                Todos
-              </button>
-              {categories.map(cat => (
+      {/* Busca + chips de categoria */}
+      <div className="space-y-2 mb-3 pb-3 border-b border-parchment-600 -mx-5 px-5">
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder="Buscar pelo nome..."
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          className="w-full px-3 py-2 bg-parchment-100 border-2 border-parchment-600 rounded-sm text-sm text-ink-500 placeholder:text-ink-200 focus:outline-none focus:border-ink-300"
+        />
+        {query.length > 0 && query.length < 2 && (
+          <p className="text-xs ink-italic text-ink-300">Digite pelo menos 2 caracteres para buscar.</p>
+        )}
+        {categories?.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              onClick={() => setSelectedCategory(null)}
+              aria-pressed={!selectedCategory}
+              className={`text-xs px-2.5 py-1 rounded-sm border-2 font-display tracking-wide transition-colors ${
+                !selectedCategory
+                  ? 'bg-ink-500 border-ink-600 text-parchment-50'
+                  : 'bg-parchment-50 border-parchment-600 text-ink-300 hover:border-ink-300 hover:text-ink-500'
+              }`}
+            >
+              Todos
+            </button>
+            {categories.map(cat => {
+              const active = selectedCategory === cat.key
+              return (
                 <button
                   key={cat.key}
-                  onClick={() => setSelectedCategory(selectedCategory === cat.key ? null : cat.key)}
-                  className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
-                    selectedCategory === cat.key
-                      ? 'bg-amber-600 border-amber-500 text-white'
-                      : 'bg-gray-700 border-gray-600 text-gray-400 hover:border-gray-500 hover:text-gray-200'
+                  type="button"
+                  onClick={() => setSelectedCategory(active ? null : cat.key)}
+                  aria-pressed={active}
+                  className={`text-xs px-2.5 py-1 rounded-sm border-2 font-display tracking-wide transition-colors ${
+                    active
+                      ? 'bg-ink-500 border-ink-600 text-parchment-50'
+                      : 'bg-parchment-50 border-parchment-600 text-ink-300 hover:border-ink-300 hover:text-ink-500'
                   }`}
                 >
                   {cat.label}
                 </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Results */}
-        <div className="overflow-y-auto flex-1">
-          {filtered.length === 0 ? (
-            <p className="text-gray-500 text-sm text-center py-8">Nenhum resultado encontrado.</p>
-          ) : (
-            filtered.map(item => (
-              <button
-                key={item.index}
-                onClick={() => { onSelect(item); onClose() }}
-                className="w-full text-left px-4 py-2.5 hover:bg-gray-700 border-b border-gray-700/50 last:border-0 transition-colors"
-              >
-                {renderItem(item)}
-              </button>
-            ))
-          )}
-        </div>
-
-        {(query.length >= 2 || selectedCategory) && filtered.length > 0 && (
-          <div className="px-4 py-2 border-t border-gray-700 text-xs text-gray-500">
-            {filtered.length} resultado{filtered.length !== 1 ? 's' : ''}
+              )
+            })}
           </div>
         )}
       </div>
-    </div>
+
+      {/* Resultados */}
+      <div className="-mx-5">
+        {filtered.length === 0 ? (
+          <p className="text-ink-300 ink-italic text-sm text-center py-8">Nenhum resultado encontrado.</p>
+        ) : (
+          filtered.map(item => (
+            <button
+              key={item.index}
+              type="button"
+              onClick={() => { onSelect(item); onClose() }}
+              className="w-full text-left px-5 py-2.5 hover:bg-parchment-200 border-b border-parchment-600/50 last:border-0 transition-colors text-ink-500"
+            >
+              {renderItem(item)}
+            </button>
+          ))
+        )}
+      </div>
+    </Modal>
   )
 }

@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react'
+import { Modal } from './ui/Modal'
+import { Icon } from './ui/Icon'
 
 const SCHOOL_PT = {
   abjuração: 'Abjuração', conjuração: 'Conjuração', adivinhação: 'Adivinhação',
@@ -9,35 +10,21 @@ const SCHOOL_PT = {
   necromancy: 'Necromancia', transmutation: 'Transmutação',
 }
 
+/* Pill por escola com cor pastel sépia — distingue sem destoar do tema parchment. */
 function schoolColor(school) {
   const s = (school || '').toLowerCase()
-  if (s.includes('evoc'))   return 'bg-red-900/60 text-red-300 border-red-700'
-  if (s.includes('abj'))    return 'bg-blue-900/60 text-blue-300 border-blue-700'
-  if (s.includes('conj'))   return 'bg-purple-900/60 text-purple-300 border-purple-700'
-  if (s.includes('enc'))    return 'bg-pink-900/60 text-pink-300 border-pink-700'
-  if (s.includes('ilu'))    return 'bg-indigo-900/60 text-indigo-300 border-indigo-700'
-  if (s.includes('necro'))  return 'bg-gray-800 text-gray-400 border-gray-600'
-  if (s.includes('trans'))  return 'bg-yellow-900/60 text-yellow-300 border-yellow-700'
-  if (s.includes('adiv') || s.includes('divin')) return 'bg-teal-900/60 text-teal-300 border-teal-700'
-  return 'bg-gray-800 text-gray-400 border-gray-600'
+  if (s.includes('evoc'))   return 'bg-red-100 text-red-800 border-red-600'
+  if (s.includes('abj'))    return 'bg-blue-100 text-blue-800 border-blue-600'
+  if (s.includes('conj'))   return 'bg-purple-100 text-purple-800 border-purple-600'
+  if (s.includes('enc'))    return 'bg-amber-100 text-amber-800 border-amber-600'
+  if (s.includes('ilu'))    return 'bg-purple-100 text-purple-800 border-purple-600'
+  if (s.includes('necro'))  return 'bg-parchment-200 text-ink-500 border-parchment-600'
+  if (s.includes('trans'))  return 'bg-yellow-100 text-yellow-800 border-yellow-600'
+  if (s.includes('adiv') || s.includes('divin')) return 'bg-sky-100 text-sky-800 border-sky-600'
+  return 'bg-parchment-200 text-ink-500 border-parchment-600'
 }
 
-const SPELL_DETAIL_TITLE_ID = 'spell-detail-modal-title'
-
 export function SpellDetailModal({ spell, onClose }) {
-  const closeRef = useRef(null)
-
-  // Fechar com Escape + foco automático no botão de fechar
-  useEffect(() => {
-    function handler(e) { if (e.key === 'Escape') onClose() }
-    window.addEventListener('keydown', handler)
-    const t = setTimeout(() => closeRef.current?.focus(), 50)
-    return () => {
-      window.removeEventListener('keydown', handler)
-      clearTimeout(t)
-    }
-  }, [onClose])
-
   if (!spell) return null
 
   const school     = (spell.school?.name || spell.school || '').toLowerCase()
@@ -50,94 +37,84 @@ export function SpellDetailModal({ spell, onClose }) {
   const components  = Array.isArray(spell.components) ? spell.components.join(', ') : (spell.components || '')
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-700/70 backdrop-blur-sm"
-      onClick={e => { if (e.target === e.currentTarget) onClose() }}
+    <Modal
+      open={true}
+      onClose={onClose}
+      size="md"
+      closeLabel="Fechar detalhes da magia"
+      title={(
+        <span className="flex items-center gap-2 min-w-0">
+          <span className="font-display tracking-wide text-ink-500 truncate">{spell.name}</span>
+        </span>
+      )}
+      footer={null}
     >
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={SPELL_DETAIL_TITLE_ID}
-        className="bg-parchment-50 border-2 border-parchment-600 rounded-sm w-full max-w-md max-h-[85vh] flex flex-col shadow-parchment-lg"
-      >
-        {/* Header */}
-        <div className="flex items-start gap-3 p-4 border-b border-gray-700">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className={`text-xs font-semibold px-2 py-0.5 rounded border ${schoolColor(school)}`}>
-                {schoolName}
-              </span>
-              <span className="text-xs text-gray-500">{levelLabel}</span>
-              {spell.ritual && (
-                <span className="text-xs font-semibold px-2 py-0.5 rounded border bg-green-900/50 text-green-300 border-green-700">
-                  📿 Ritual
-                </span>
-              )}
-              {spell.concentration && (
-                <span className="text-xs font-semibold px-2 py-0.5 rounded border bg-blue-900/50 text-blue-300 border-blue-700">
-                  ⊙ Concentração
-                </span>
-              )}
-            </div>
-            <h2 id={SPELL_DETAIL_TITLE_ID} className="text-lg font-bold text-amber-300 font-display leading-tight">{spell.name}</h2>
-          </div>
-          <button
-            ref={closeRef}
-            onClick={onClose}
-            aria-label="Fechar detalhes da magia"
-            className="text-gray-500 hover:text-gray-300 text-xl leading-none flex-shrink-0 mt-0.5 transition-colors"
-          >
-            ×
-          </button>
-        </div>
-
-        {/* Stats rápidos */}
-        <div className="grid grid-cols-2 gap-x-4 gap-y-1 px-4 py-3 border-b border-gray-700/60 bg-gray-800/40">
-          {castingTime && (
-            <div>
-              <span className="text-xs text-gray-500 uppercase tracking-wide">Tempo</span>
-              <p className="text-xs text-gray-200">{castingTime}</p>
-            </div>
-          )}
-          {spell.range && (
-            <div>
-              <span className="text-xs text-gray-500 uppercase tracking-wide">Alcance</span>
-              <p className="text-xs text-gray-200">{spell.range}</p>
-            </div>
-          )}
-          {components && (
-            <div>
-              <span className="text-xs text-gray-500 uppercase tracking-wide">Componentes</span>
-              <p className="text-xs text-gray-200">{components}</p>
-            </div>
-          )}
-          {spell.duration && (
-            <div>
-              <span className="text-xs text-gray-500 uppercase tracking-wide">Duração</span>
-              <p className="text-xs text-gray-200">{spell.duration}</p>
-            </div>
-          )}
-          {spell.material && (
-            <div className="col-span-2">
-              <span className="text-xs text-gray-500 uppercase tracking-wide">Material</span>
-              <p className="text-xs text-gray-400 italic">{spell.material}</p>
-            </div>
-          )}
-        </div>
-
-        {/* Descrição — scrollável */}
-        <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
-          {desc && (
-            <p className="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap">{desc}</p>
-          )}
-          {higherLevel && (
-            <div>
-              <p className="text-xs text-amber-600 uppercase tracking-wide font-semibold mb-1">Em Nível Superior</p>
-              <p className="text-sm text-gray-400 italic leading-relaxed">{higherLevel}</p>
-            </div>
-          )}
-        </div>
+      {/* Badges de meta (escola, nível, ritual, concentração) */}
+      <div className="flex items-center gap-1.5 flex-wrap mb-3 pb-3 border-b border-parchment-600">
+        <span className={`text-xs font-semibold px-2 py-0.5 rounded-sm border ${schoolColor(school)}`}>
+          {schoolName}
+        </span>
+        <span className="text-xs ink-italic text-ink-300">{levelLabel}</span>
+        {spell.ritual && (
+          <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-sm border bg-green-100 text-green-800 border-green-600">
+            <Icon name="scroll" size={11} strokeWidth={2} />
+            Ritual
+          </span>
+        )}
+        {spell.concentration && (
+          <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-sm border bg-blue-100 text-blue-800 border-blue-600">
+            <Icon name="target" size={11} strokeWidth={2} />
+            Concentração
+          </span>
+        )}
       </div>
-    </div>
+
+      {/* Stats em grid 2x2 */}
+      <div className="grid grid-cols-2 gap-x-4 gap-y-2 pb-3 mb-3 border-b border-parchment-600">
+        {castingTime && (
+          <div>
+            <p className="text-xs font-display tracking-widest uppercase text-ink-300">Tempo</p>
+            <p className="text-sm text-ink-500">{castingTime}</p>
+          </div>
+        )}
+        {spell.range && (
+          <div>
+            <p className="text-xs font-display tracking-widest uppercase text-ink-300">Alcance</p>
+            <p className="text-sm text-ink-500">{spell.range}</p>
+          </div>
+        )}
+        {components && (
+          <div>
+            <p className="text-xs font-display tracking-widest uppercase text-ink-300">Componentes</p>
+            <p className="text-sm text-ink-500">{components}</p>
+          </div>
+        )}
+        {spell.duration && (
+          <div>
+            <p className="text-xs font-display tracking-widest uppercase text-ink-300">Duração</p>
+            <p className="text-sm text-ink-500">{spell.duration}</p>
+          </div>
+        )}
+        {spell.material && (
+          <div className="col-span-2">
+            <p className="text-xs font-display tracking-widest uppercase text-ink-300">Material</p>
+            <p className="text-sm ink-italic text-ink-300">{spell.material}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Descrição */}
+      {desc && (
+        <p className="text-sm text-ink-500 leading-relaxed whitespace-pre-wrap">{desc}</p>
+      )}
+      {higherLevel && (
+        <div className="mt-3 pt-3 border-t border-parchment-600">
+          <p className="text-xs font-display uppercase tracking-widest text-ink-500 mb-1">
+            Em Nível Superior
+          </p>
+          <p className="text-sm ink-italic text-ink-300 leading-relaxed">{higherLevel}</p>
+        </div>
+      )}
+    </Modal>
   )
 }

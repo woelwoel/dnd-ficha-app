@@ -32,6 +32,7 @@ import { Icon } from './Icon'
  *  - dismissOnBackdrop boolean — default true
  *  - initialFocusRef  ref — onde colocar foco ao abrir (default: botão ✕)
  *  - hideCloseButton  boolean — esconde o ✕ no header (raro)
+ *  - closeLabel       string — aria-label do botão ✕ (default "Fechar modal")
  */
 const SIZE_CLS = {
   sm: 'max-w-sm',
@@ -49,6 +50,7 @@ export function Modal({
   dismissOnBackdrop = true,
   initialFocusRef,
   hideCloseButton = false,
+  closeLabel = 'Fechar modal',
 }) {
   const closeRef = useRef(null)
   const titleId = useRef(`modal-title-${Math.random().toString(36).slice(2, 9)}`).current
@@ -102,7 +104,7 @@ export function Modal({
                 ref={closeRef}
                 type="button"
                 onClick={onClose}
-                aria-label="Fechar modal"
+                aria-label={closeLabel}
                 className="text-ink-300 hover:text-ink-500 transition-colors shrink-0 inline-flex items-center justify-center w-6 h-6 -mr-1"
               >
                 <Icon name="close" size={18} strokeWidth={1.75} />
