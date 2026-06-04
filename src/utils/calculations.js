@@ -267,19 +267,36 @@ export const SKILLS = [
 export function parseBackgroundEquipment(equipmentStr) {
   if (!equipmentStr || typeof equipmentStr !== 'string') return { items: [], gold: 0 }
 
-  // Separa lista de itens de eventual "lore" (sequência de maiúsculas sinaliza início de nome próprio)
-  const loreIdx = equipmentStr.search(/\s[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ]{5,15}/)
+  // Corta a "lore" do antecedente. No phb-backgrounds-pt.json o equipamento
+  // termina e em seguida vem o título da seção em CAIXA ALTA (ex:
+  // "VIDA DE ISOLAMENTO", "ESQUEMAS PREDILETOS", "ROTINAS DE ARTISTA").
+  // Detectamos a transição como DUAS+ palavras MAIÚSCULAS consecutivas
+  // (cada uma com 2+ letras) — robusto contra palavras curtas tipo "DE/DA".
+  // A regex anterior exigia 1 palavra com 5–15 chars, falhando no Eremita
+  // ("VIDA DE" — 4+2 chars, ambas curtas) e vazando "po. VIDA DE" como item.
+  const loreRe = /[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ]{2,}(\s+[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ]{2,})+/
+  const loreMatch = equipmentStr.match(loreRe)
+  const loreIdx = loreMatch ? equipmentStr.indexOf(loreMatch[0]) : -1
   const clean = loreIdx > 0 ? equipmentStr.slice(0, loreIdx).trim() : equipmentStr.trim()
   const rawParts = clean.split(/,\s*(?:e\s+)?|\s+e\s+(?=[^,]+$)/)
-    .map(s => s.trim())
+    .map(s => s.trim().replace(/[.,;:]+$/, '')) // tira pontuação terminal residual
     .filter(Boolean)
 
   const items = []
   let gold = 0
   for (const part of rawParts) {
-    const goldMatch = part.match(/(\d+)\s*po\b/i)
-    if (goldMatch && /algibeira|bolsa|saco/i.test(part)) {
-      gold = parseInt(goldMatch[1], 10) || 0
+    // Detecção de "po" (peças de ouro). Trata como GOLD em três casos:
+    //   1) parte é só "N po" / "5 po." → standalone (ex: Eremita)
+    //   2) parte menciona algibeira/bolsa/saco — pouch tradicional
+    //   3) parte é "uma algibeira contendo N po" sem mais palavras
+    const goldStandalone = part.match(/^(\d+)\s*po\.?$/i)
+    const goldInPouch    = part.match(/(\d+)\s*po\b/i)
+    if (goldStandalone) {
+      gold = parseInt(goldStandalone[1], 10) || 0
+      continue
+    }
+    if (goldInPouch && /algibeira|bolsa|saco/i.test(part)) {
+      gold = parseInt(goldInPouch[1], 10) || 0
       continue
     }
     const qtyMatch = part.match(/^(\d+)\s+(.+)/)
