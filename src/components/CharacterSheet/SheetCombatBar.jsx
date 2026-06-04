@@ -99,7 +99,7 @@ function ActionEconomy({ turnState, speed, onToggle, onResetTurn, onSetMovement 
   ]
 
   return (
-    <div className="flex items-center gap-1.5 flex-wrap">
+    <div className="flex items-center gap-1 flex-wrap">
       {chips.map(c => {
         const used = !!t[c.key]
         return (
@@ -112,14 +112,16 @@ function ActionEconomy({ turnState, speed, onToggle, onResetTurn, onSetMovement 
               : `Marcar ${c.label} como gasta`}
             aria-pressed={used}
             className={[
-              'inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs font-display tracking-widest uppercase border transition-colors',
+              // Mais compacto: padding-x reduzido pra caber mais coisa
+              // numa linha; em ≥md o label completo volta a aparecer
+              'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm text-xs font-display tracking-widest uppercase border transition-colors',
               used
                 ? 'bg-ink-500 border-ink-600 text-parchment-50 line-through'
                 : 'bg-parchment-50 border-parchment-600 text-ink-500 hover:border-ink-300',
             ].join(' ')}
           >
             <span aria-hidden className="font-bold not-italic">{c.short}</span>
-            <span className="hidden sm:inline">{c.label}</span>
+            <span className="hidden md:inline">{c.label}</span>
           </button>
         )
       })}
@@ -128,7 +130,7 @@ function ActionEconomy({ turnState, speed, onToggle, onResetTurn, onSetMovement 
       <div
         title={`Movimento gasto neste turno: ${moveUsed} de ${moveTotal} pés`}
         className={[
-          'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm border text-xs',
+          'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm border text-xs shrink-0',
           moveExceeded
             ? 'bg-red-100 border-red-600 text-red-800'
             : moveUsed === 0
@@ -144,16 +146,17 @@ function ActionEconomy({ turnState, speed, onToggle, onResetTurn, onSetMovement 
           onChange={e => onSetMovement?.(e.target.value)}
           onWheel={e => e.currentTarget.blur()}
           aria-label="Pés de movimento gastos no turno"
-          className="w-9 text-center bg-transparent text-xs font-bold leading-none focus:outline-none focus:bg-parchment-50 rounded-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          className="w-8 text-center bg-transparent text-xs font-bold leading-none focus:outline-none focus:bg-parchment-50 rounded-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         />
-        <span className="font-mono leading-none">/{moveTotal}</span>
+        <span className="font-mono leading-none text-[11px]">/{moveTotal}</span>
       </div>
 
       <button
         type="button"
         onClick={onResetTurn}
         title="Iniciar novo turno — reseta Ação, Bônus, Reação e Movimento"
-        className="inline-flex items-center justify-center w-6 h-6 rounded-sm border border-parchment-600 text-ink-300 hover:text-ink-500 hover:border-ink-300 hover:bg-parchment-200 transition-colors text-xs leading-none"
+        aria-label="Resetar turno"
+        className="inline-flex items-center justify-center w-6 h-6 rounded-sm border border-parchment-600 text-ink-300 hover:text-ink-500 hover:border-ink-300 hover:bg-parchment-200 transition-colors text-xs leading-none shrink-0"
       >
         ↻
       </button>
@@ -234,10 +237,11 @@ export function SheetCombatBar() {
       className="border-t border-parchment-600/60 bg-parchment-200/60"
       aria-label="Barra de combate"
     >
-      <div className="max-w-7xl mx-auto px-4 py-2 flex flex-wrap items-center gap-x-4 gap-y-2">
+      <div className="max-w-7xl mx-auto px-4 py-2 flex flex-wrap items-center gap-x-3 gap-y-2">
 
-        {/* HP — bloco compacto (largura reduzida pra dar espaço aos chips) */}
-        <div className="flex items-center gap-2 min-w-[180px] max-w-[280px] flex-1">
+        {/* HP — bloco compacto. flex-shrink-0 garante que ele NÃO encolha
+            (PV é o número mais importante em combate, nunca espreme). */}
+        <div className="flex items-center gap-2 w-full sm:w-auto sm:min-w-[240px] sm:max-w-[280px] flex-shrink-0">
           <span aria-hidden className="text-red-700">
             <Icon name="heart" size={18} strokeWidth={2} />
           </span>

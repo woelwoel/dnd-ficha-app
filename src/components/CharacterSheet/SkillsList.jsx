@@ -14,7 +14,7 @@ function SkillRow({
   notation, tooltip, limitReached, onToggle, onToggleExpertise,
 }) {
   return (
-    <div className={`flex items-center gap-2 py-1 ${limitReached && !proficient ? 'opacity-60' : ''}`}>
+    <div className={`flex items-center gap-2 py-1 min-w-0 ${limitReached && !proficient ? 'opacity-60' : ''}`}>
       {/* Checkbox de proficiência — travado quando vem do antecedente */}
       {isBackgroundSkill && !isClassSkill ? (
         <span
@@ -51,9 +51,14 @@ function SkillRow({
         }`}>{formatModifier(mod)}</span>
       </Tooltip>
       {/* Botão de rolar — sempre ativo (qualquer perícia é rollável) */}
-      <RollButton notation={notation} label={skill.name} size="xs" />
-      {/* Nome + atributo */}
-      <span className={`text-sm leading-tight ${proficient ? 'text-ink-500' : 'text-ink-300'}`}>
+      <div className="shrink-0">
+        <RollButton notation={notation} label={skill.name} size="xs" />
+      </div>
+      {/* Nome + atributo — truncate evita overflow na 3ª coluna do grid */}
+      <span
+        className={`text-sm leading-tight min-w-0 truncate flex-1 ${proficient ? 'text-ink-500' : 'text-ink-300'}`}
+        title={`${skill.name} (${skill.abbr})`}
+      >
         {skill.name}
         <span className="text-ink-200 text-xs ml-1 font-display tracking-widest">
           {skill.abbr}
