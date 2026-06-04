@@ -649,12 +649,27 @@ export function defaultClassFeatureUses(character) {
   const out = []
   const cha = getModifier(character.attributes?.cha ?? 10)
 
+  // Cada entrada carrega seu PRÓPRIO chosenFeatures. Antes lia-se
+  // `character.info?.chosenFeatures` direto, o que só refletia escolhas
+  // do primário — bugs reais aconteciam quando jogador tinha Clérigo MC
+  // com Domínio da Guerra (sem Ataque Bélico Bônus), Druida MC com
+  // Círculo da Terra (sem Recuperação Natural), Guerreiro MC Mestre de
+  // Combate (sem Dado de Superioridade). Multiclasses agora têm
+  // `chosenFeatures` por entrada (vide build-character.js).
   const classes = [
-    { class: character.info?.class, level: character.info?.level ?? 0 },
-    ...(character.info?.multiclasses ?? []),
+    {
+      class: character.info?.class,
+      level: character.info?.level ?? 0,
+      chosen: character.info?.chosenFeatures ?? {},
+    },
+    ...(character.info?.multiclasses ?? []).map(mc => ({
+      class: mc.class,
+      level: mc.level,
+      chosen: mc.chosenFeatures ?? {},
+    })),
   ]
 
-  for (const { class: cls, level } of classes) {
+  for (const { class: cls, level, chosen } of classes) {
     if (!cls || !level) continue
 
     if (cls === 'guerreiro') {
@@ -665,7 +680,7 @@ export function defaultClassFeatureUses(character) {
       out.push({ id: 'guerreiro-second-wind', name: 'Retomar o Fôlego', max: 1, used: 0, recharge: 'short', source: 'guerreiro' })
 
       // Mestre de Combate: Dado de Superioridade (4→5→6, d8→d10→d12). PHB p.73.
-      const isMestreCombate = character.info?.chosenFeatures?.martial_archetype === 'mestre_combate'
+      const isMestreCombate = chosen.martial_archetype === 'mestre_combate'
       if (isMestreCombate && level >= 3) {
         const dice = level >= 15 ? 6 : level >= 7 ? 5 : 4
         const dieType = level >= 18 ? 'd12' : level >= 10 ? 'd10' : 'd8'
@@ -710,7 +725,7 @@ export function defaultClassFeatureUses(character) {
       out.push({ id: 'druida-wild-shape', name: 'Forma Selvagem', max: 2, used: 0, recharge: 'short', source: 'druida' })
     }
     // Círculo da Terra (PHB p.69): Recuperação Natural (nv 2+) + Refúgio da Natureza (nv 14+).
-    if (cls === 'druida' && character.info?.chosenFeatures?.druid_circle === 'terra') {
+    if (cls === 'druida' && chosen.druid_circle === 'terra') {
       if (level >= 2) {
         out.push({ id: 'druida-natural-recovery', name: 'Recuperação Natural', max: 1, used: 0, recharge: 'long', source: 'druida' })
       }
@@ -727,7 +742,7 @@ export function defaultClassFeatureUses(character) {
     }
     // Clérigo — Domínios específicos (PHB p.60+):
     if (cls === 'clerigo') {
-      const domain = character.info?.chosenFeatures?.divine_domain
+      const domain = chosen.divine_domain
       // Domínio da Guerra (PHB p.63): Ataque Bélico Bônus 1+CHA mod /desc curto.
       if (domain === 'guerra' && level >= 1) {
         out.push({
