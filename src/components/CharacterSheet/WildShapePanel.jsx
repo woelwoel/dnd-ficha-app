@@ -398,14 +398,17 @@ export function WildShapePanel({
       <div className="flex items-center gap-3">
         <span className="text-2xl shrink-0" aria-hidden>{ws.active ? '🐺' : '🌿'}</span>
         <div className="min-w-0 flex-1">
-          <p className={`text-sm font-display tracking-wide ${ws.active ? 'text-emerald-800' : 'text-ink-500'}`}>
-            {ws.active ? `EM FORMA SELVAGEM — ${ws.beastName}` : 'Forma Selvagem'}
+          {/* Título + badge em FLEX, não inline — antes o chip "Círculo
+              da Lua" quebrava no meio (📷 print do usuário). Flex-wrap
+              permite o chip cair na linha de baixo INTEIRO. */}
+          <div className={`flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-display tracking-wide ${ws.active ? 'text-emerald-800' : 'text-ink-500'}`}>
+            <span>{ws.active ? `EM FORMA SELVAGEM — ${ws.beastName}` : 'Forma Selvagem'}</span>
             {isMoon && !ws.active && (
-              <span className="ml-2 text-xs px-1.5 py-0.5 rounded border border-emerald-700 bg-emerald-100 text-emerald-800 font-bold normal-case tracking-normal">
+              <span className="text-xs px-1.5 py-0.5 rounded border border-emerald-700 bg-emerald-100 text-emerald-800 font-bold normal-case tracking-normal whitespace-nowrap">
                 🌙 Círculo da Lua
               </span>
             )}
-          </p>
+          </div>
           <p className="text-[13px] ink-italic">
             {ws.active
               ? `Não conjura magias${isMoon ? ' (exceto Círculo da Lua nv 18)' : ''}. Mantém concentração. Reverter como ação bônus.`
