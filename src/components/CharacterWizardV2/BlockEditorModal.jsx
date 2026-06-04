@@ -1,45 +1,28 @@
-import { useEffect } from 'react'
+import { Modal } from '../ui/Modal'
 
 /**
- * Modal de edição de bloco no Wizard.
+ * Modal de edição de bloco no Wizard. Wrapper sobre <Modal> primitivo
+ * com footer customizado (Limpar | Fechar | Continuar →).
  *
- * `onNext` (opcional): se fornecido, mostra botão "Salvar e continuar →"
- * em vez (ao lado) do botão "Fechar". Resolve o débito de UX "qual o
- * próximo passo?" depois de fechar — auto-abre o próximo bloco recomendado.
+ * `onNext` (opcional): se fornecido, mostra botão "Continuar: <label>"
+ * Resolve o débito de UX "qual o próximo passo?" depois de fechar —
+ * auto-abre o próximo bloco recomendado.
+ *
  * `nextLabel` é o label do próximo bloco (ex: "Classe").
+ *
+ * `onClear` (opcional): botão "Limpar" no canto esquerdo do footer pra
+ * zerar o bloco atual. Aparece só quando faz sentido pro bloco.
  */
 export function BlockEditorModal({ open, title, onClose, onClear, onNext, nextLabel, children }) {
-  useEffect(() => {
-    if (!open) return
-    function onKey(e) { if (e.key === 'Escape') onClose() }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [open, onClose])
-
-  if (!open) return null
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/60 p-4"
-      onClick={onClose}
-    >
-      <div
-        role="dialog"
-        aria-label={title}
-        className="w-full max-w-2xl max-h-[90vh] flex flex-col bg-parchment-50 border-2 border-parchment-600 rounded-sm overflow-hidden shadow-parchment-lg"
-        onClick={e => e.stopPropagation()}
-      >
-        <header className="flex items-center justify-between px-5 py-3 border-b-2 border-parchment-600 bg-parchment-100">
-          <h2 className="text-base font-display text-ink-500 tracking-widest uppercase">{title}</h2>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Fechar modal"
-            className="text-ink-300 hover:text-ink-500 text-lg leading-none"
-          >✕</button>
-        </header>
-        <div className="flex-1 overflow-y-auto px-5 py-4">{children}</div>
-        <footer className="flex items-center justify-between gap-3 px-5 py-3 border-t-2 border-parchment-600 bg-parchment-100">
+    <Modal
+      open={open}
+      onClose={onClose}
+      title={title}
+      size="lg"
+      closeLabel="Fechar bloco"
+      footer={
+        <div className="flex items-center justify-between gap-3 flex-1">
           {onClear ? (
             <button
               type="button"
@@ -64,8 +47,10 @@ export function BlockEditorModal({ open, title, onClose, onClear, onNext, nextLa
               </button>
             )}
           </div>
-        </footer>
-      </div>
-    </div>
+        </div>
+      }
+    >
+      {children}
+    </Modal>
   )
 }
