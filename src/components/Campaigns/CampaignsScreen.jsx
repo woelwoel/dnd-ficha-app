@@ -6,6 +6,7 @@ import { CreateCampaignForm } from './CreateCampaignForm'
 import { JoinCampaignForm } from './JoinCampaignForm'
 import { Button } from '../ui/Button'
 import { AccountMenu } from '../ui/AccountMenu'
+import { Icon } from '../ui/Icon'
 
 /**
  * Tela /campaigns: lista de mesas onde sou membro + forms inline pra criar
@@ -66,9 +67,30 @@ export function CampaignsScreen() {
         {loading ? (
           <p className="text-ink-300 ink-italic text-sm">Carregando…</p>
         ) : campaigns.length === 0 ? (
-          <p className="text-ink-300 ink-italic text-sm">Você ainda não tem mesas. Crie uma ou entre com código.</p>
+          <div className="text-center py-10 px-4 border-2 border-dashed border-parchment-600 rounded-sm bg-parchment-50/50">
+            <div className="flex justify-center mb-3 text-ink-500" aria-hidden>
+              <Icon name="scroll" size={36} strokeWidth={1.5} />
+            </div>
+            <p className="text-sm font-display tracking-wide text-ink-500 mb-1">
+              Nenhuma mesa ainda
+            </p>
+            <p className="text-xs ink-italic text-ink-300 max-w-sm mx-auto">
+              Crie uma mesa nova pra ser o Mestre, ou peça o código de uma mesa existente pra entrar como Jogador.
+            </p>
+          </div>
         ) : filtered.length === 0 ? (
-          <p className="text-ink-300 ink-italic text-sm">Nenhuma mesa corresponde a "{query}".</p>
+          <div className="text-center py-8 px-4">
+            <p className="text-sm ink-italic text-ink-300">
+              Nenhuma mesa corresponde a <strong className="not-italic text-ink-500">"{query}"</strong>.
+            </p>
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              className="mt-2 text-xs ink-italic text-ink-300 hover:text-ink-500 underline"
+            >
+              limpar busca
+            </button>
+          </div>
         ) : (
           <div className="grid gap-3 md:grid-cols-2">
             {filtered.map(c => (
