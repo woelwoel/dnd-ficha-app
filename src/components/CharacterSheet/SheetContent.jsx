@@ -192,6 +192,7 @@ export function SheetContent({ activeTab }) {
 
             <CombatClassActions
               character={character}
+              featureUses={featureUses}
               onToggleRage={setRageActive}
               onSpendFeatureUse={spendFeatureUse}
               onRegainFeatureUse={regainFeatureUse}

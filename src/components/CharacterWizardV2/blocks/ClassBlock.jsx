@@ -38,6 +38,31 @@ export function ClassBlock({
     updateDraft({ multiclasses: multiclasses.filter((_, i) => i !== idx) })
   }
 
+  // ── Handlers de multiclasse (escolhas por sub-classe) ──────────────
+  // Antes a UI de multiclasse só mostrava nome+nível e o jogador não tinha
+  // como escolher origem de Feiticeiro, domínio de Clérigo, etc. Agora cada
+  // MC ganha sua própria LevelProgressionList e estes handlers escrevem em
+  // mc.chosenFeatures / mc.asiChoices, no índice certo do array.
+  function updateMulticlassAt(mcIdx, patch) {
+    updateDraft({
+      multiclasses: multiclasses.map((mc, i) => i === mcIdx ? { ...mc, ...patch } : mc),
+    })
+  }
+  function handleMcFeatureChoice(mcIdx, choiceId, value) {
+    const mc = multiclasses[mcIdx]
+    if (!mc) return
+    updateMulticlassAt(mcIdx, {
+      chosenFeatures: { ...(mc.chosenFeatures ?? {}), [choiceId]: value },
+    })
+  }
+  function handleMcASIChoice(mcIdx, level, choice) {
+    const mc = multiclasses[mcIdx]
+    if (!mc) return
+    updateMulticlassAt(mcIdx, {
+      asiChoices: { ...(mc.asiChoices ?? {}), [level]: choice },
+    })
+  }
+
   const leveledChoices = getLeveledChoices(classChoices[draft.class], draft.level, draft.chosenFeatures)
   const progressionLevels = getProgressionLevels(classProgression[draft.class], draft.level)
   const bonusCantripsNeeded = computeBonusCantripsNeeded(leveledChoices, draft.chosenFeatures ?? {})
@@ -165,17 +190,51 @@ export function ClassBlock({
 
               {multiclasses.map((mc, idx) => {
                 const cls = classes.find(c => c.index === mc.class)
+                // Calcula choices/progressão pra ESTA multiclasse, usando
+                // as escolhas que vivem no objeto mc (e não no draft do primário).
+                const mcLeveledChoices = getLeveledChoices(
+                  classChoices[mc.class],
+                  mc.level,
+                  mc.chosenFeatures ?? {},
+                )
+                const mcProgressionLevels = getProgressionLevels(
+                  classProgression[mc.class],
+                  mc.level,
+                )
+                // Draft "sintético" pra LevelProgressionList ler o estado certo.
+                // Mantém atributos/baseAttributes do draft real (ASIs precisam),
+                // mas chosenFeatures/asiChoices vêm do mc.
+                const mcDraft = {
+                  ...draft,
+                  chosenFeatures: mc.chosenFeatures ?? {},
+                  asiChoices:     mc.asiChoices ?? {},
+                }
                 return (
-                  <div key={idx} className="flex items-center gap-2 border-2 border-parchment-600 bg-parchment-50 rounded-sm px-3 py-2">
-                    <span className="text-sm font-display text-ink-500 flex-1">
-                      {cls?.name ?? mc.class} <span className="text-ink-300">Nível {mc.level}</span>
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveMulticlass(idx)}
-                      aria-label={`Remover ${cls?.name ?? mc.class}`}
-                      className="text-ink-300 hover:text-red-700 text-sm transition-colors"
-                    >🗑</button>
+                  <div key={idx} className="border-2 border-parchment-600 bg-parchment-50 rounded-sm px-3 py-2 flex flex-col gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-display text-ink-500 flex-1">
+                        {cls?.name ?? mc.class} <span className="text-ink-300">Nível {mc.level}</span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveMulticlass(idx)}
+                        aria-label={`Remover ${cls?.name ?? mc.class}`}
+                        className="text-ink-300 hover:text-red-700 text-sm transition-colors"
+                      >🗑</button>
+                    </div>
+                    {/* Pickers de subclasse/ASI desta multiclasse — antes
+                        ausentes (jogador não conseguia escolher Origem do
+                        Feiticeiro, Domínio do Clérigo etc. via MC). */}
+                    <LevelProgressionList
+                      level={mc.level}
+                      progressionLevels={mcProgressionLevels}
+                      leveledChoices={mcLeveledChoices}
+                      draft={mcDraft}
+                      onFeatureChoice={(choiceId, value) => handleMcFeatureChoice(idx, choiceId, value)}
+                      onASIChoice={(level, choice) => handleMcASIChoice(idx, level, choice)}
+                      allowFeats={draft.settings?.allowFeats ?? false}
+                      feats={feats}
+                    />
                   </div>
                 )
               })}

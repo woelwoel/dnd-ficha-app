@@ -669,10 +669,16 @@ function RagePanel({ character, barbLevel, attributes, onToggleRage, ragesRemain
  * Futuro: Bardic Inspiration (Bardo), Channel Divinity, Wild Shape, etc.
  */
 export function CombatClassActions({
-  character, onToggleRage, onSpendFeatureUse, onRegainFeatureUse,
+  character, featureUses, onToggleRage, onSpendFeatureUse, onRegainFeatureUse,
   onToggleSlot, onSetWildShape, onApplyDamage,
   onSetRangerCompanion, onUpdatePortent,
 }) {
+  // Fonte da verdade: array DERIVADO (mergeFeatureUses(persistido, default)) que
+  // sempre reflete o estado atual do personagem — incluindo multiclasses recém
+  // adicionadas (cujos recursos podem ainda não estar no `character.combat`
+  // persistido até o próximo save). Antes esse componente lia de
+  // `character.combat?.classFeatureUses` direto e perdia recursos de MC.
+  const uses = featureUses ?? character.combat?.classFeatureUses ?? []
   const attrs = character.attributes ?? {}
   const rogueLevel    = levelInClass(character, 'ladino')
   const barbLevel     = levelInClass(character, 'barbaro')
@@ -687,25 +693,25 @@ export function CombatClassActions({
   const bruxoLevel      = levelInClass(character, 'bruxo')
 
   // Recurso de Fúria (já gerado por defaultClassFeatureUses)
-  const rageUse = (character.combat?.classFeatureUses ?? []).find(u => u.id === 'barbaro-rage')
+  const rageUse = uses.find(u => u.id === 'barbaro-rage')
   const ragesRemaining = rageUse ? rageUse.max - (rageUse.used ?? 0) : null
 
   // Recurso de Inspiração de Bardo
-  const bardicUse = (character.combat?.classFeatureUses ?? []).find(u => u.id === 'bardo-bardic-inspiration')
+  const bardicUse = uses.find(u => u.id === 'bardo-bardic-inspiration')
   const bardicRemaining = bardicUse ? bardicUse.max - (bardicUse.used ?? 0) : null
 
   // Recurso de Pontos de Feitiçaria
-  const sorceryUse = (character.combat?.classFeatureUses ?? []).find(u => u.id === 'feiticeiro-sorcery-points')
+  const sorceryUse = uses.find(u => u.id === 'feiticeiro-sorcery-points')
 
   // Recurso de Forma Selvagem
-  const wsUse = (character.combat?.classFeatureUses ?? []).find(u => u.id === 'druida-wild-shape')
+  const wsUse = uses.find(u => u.id === 'druida-wild-shape')
   const wsRemaining = wsUse ? wsUse.max - (wsUse.used ?? 0) : null
 
   // Recursos do Monge, Paladino LoH, Guerreiro
-  const kiUse        = (character.combat?.classFeatureUses ?? []).find(u => u.id === 'monge-ki')
-  const lohUse       = (character.combat?.classFeatureUses ?? []).find(u => u.id === 'paladino-lay-on-hands')
-  const surgeUse     = (character.combat?.classFeatureUses ?? []).find(u => u.id === 'guerreiro-action-surge')
-  const secondWindUse= (character.combat?.classFeatureUses ?? []).find(u => u.id === 'guerreiro-second-wind')
+  const kiUse        = uses.find(u => u.id === 'monge-ki')
+  const lohUse       = uses.find(u => u.id === 'paladino-lay-on-hands')
+  const surgeUse     = uses.find(u => u.id === 'guerreiro-action-surge')
+  const secondWindUse= uses.find(u => u.id === 'guerreiro-second-wind')
 
   // Slots disponíveis para Golpe Divino — sem importar a classe primária
   const slotsMax = getSpellSlots(
@@ -814,7 +820,7 @@ export function CombatClassActions({
         <LandCirclePanel
           druidaLevel={druidaLevel}
           character={character}
-          featureUses={character.combat?.classFeatureUses ?? []}
+          featureUses={uses}
           onSpend={onSpendFeatureUse}
           slotsMax={slotsMax}
           usedSlots={usedSlots}
@@ -825,7 +831,7 @@ export function CombatClassActions({
         <WizardArcanePanel
           magoLevel={magoLevel}
           character={character}
-          featureUses={character.combat?.classFeatureUses ?? []}
+          featureUses={uses}
           onSpend={onSpendFeatureUse}
           slotsMax={slotsMax}
           usedSlots={usedSlots}
@@ -844,7 +850,7 @@ export function CombatClassActions({
         <ClericDomainPanel
           clericoLevel={clericoLevel}
           character={character}
-          featureUses={character.combat?.classFeatureUses ?? []}
+          featureUses={uses}
           onSpend={onSpendFeatureUse}
         />
       )}
