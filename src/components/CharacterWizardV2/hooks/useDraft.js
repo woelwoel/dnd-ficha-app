@@ -65,11 +65,21 @@ export function useDraft({ initialSettings = null, resume = false } = {}) {
   })
 
   const timerRef = useRef(null)
+  // Status do auto-save pra exibir indicador no header do wizard
+  // ('idle' → 'saving' enquanto debounce roda → 'saved' após escrever).
+  const [saveStatus, setSaveStatus] = useState('idle')
+  const isFirstRender = useRef(true)
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
     if (timerRef.current) clearTimeout(timerRef.current)
+    setSaveStatus('saving')
     timerRef.current = setTimeout(() => {
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify(draft))
+      setSaveStatus('saved')
     }, AUTOSAVE_MS)
     return () => { if (timerRef.current) clearTimeout(timerRef.current) }
   }, [draft])
@@ -88,5 +98,5 @@ export function useDraft({ initialSettings = null, resume = false } = {}) {
     [draft],
   )
 
-  return { draft, updateDraft, resetDraft, hasChanges }
+  return { draft, updateDraft, resetDraft, hasChanges, saveStatus }
 }

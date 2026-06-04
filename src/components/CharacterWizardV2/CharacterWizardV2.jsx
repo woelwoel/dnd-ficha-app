@@ -69,7 +69,7 @@ const LABEL_BY_ID = Object.fromEntries(BLOCKS.map(b => [b.id, b.label]))
 // Sub-componente que monta apenas quando phase='grid'.
 // Isso garante que useDraft receba as options corretas na montagem inicial.
 function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete }) {
-  const { draft, updateDraft, hasChanges, resetDraft } = useDraft({ initialSettings, resume })
+  const { draft, updateDraft, hasChanges, resetDraft, saveStatus } = useDraft({ initialSettings, resume })
   const { races, classes, classChoices, progression: classProgression, backgrounds, spells: srdSpells } = useSrd()
   // Datasets só usados no wizard — carregados sob demanda.
   const feats          = useLazySrdDataset('feats')
@@ -144,6 +144,18 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
               {allReady ? 'pronto pra forjar' : 'prontos'}
             </span>
           </span>
+          {/* Indicador de auto-save do draft em sessionStorage */}
+          {(saveStatus === 'saving' || saveStatus === 'saved') && (
+            <span
+              aria-live="polite"
+              className={`hidden md:inline-flex items-center text-xs ink-italic normal-case tracking-normal transition-opacity ${
+                saveStatus === 'saving' ? 'text-ink-300' : 'text-emerald-700 opacity-70'
+              }`}
+              title={saveStatus === 'saving' ? 'Salvando rascunho…' : 'Rascunho salvo localmente'}
+            >
+              {saveStatus === 'saving' ? 'salvando…' : '✓ salvo'}
+            </span>
+          )}
           <button
             type="button"
             disabled={!allReady}

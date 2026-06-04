@@ -4,8 +4,25 @@ const fieldCls =
   'w-full px-3 py-2 rounded-sm border-2 border-parchment-600 bg-parchment-50 text-ink-500 ' +
   'focus:outline-none focus:border-ink-300 placeholder:text-ink-200 placeholder:italic'
 
+/**
+ * Nomes sugeridos por gênero/origem fantasy comum em D&D 5e. Os jogadores
+ * costumavam digitar o nome da classe ("DRUIDA", "bruxo") como nome próprio
+ * — listar exemplos curtos ensina o padrão sem ser intrusivo.
+ */
+const NAME_SUGGESTIONS = [
+  'Aelar Folha-de-Outono',
+  'Mira Voz-do-Trovão',
+  'Thorin Forjarrocha',
+  'Sahir al-Madi',
+  'Rowan Trilha-de-Cinzas',
+  'Lyanna Lâmina-Sussurrante',
+]
+
 export function ConceptBlock({ draft, updateDraft }) {
   const nameMissing = !draft.name?.trim()
+  // Mantém um placeholder estável durante a vida do componente
+  // (não muda a cada keystroke).
+  const placeholder = NAME_SUGGESTIONS[Math.floor(Math.random() * NAME_SUGGESTIONS.length)]
   return (
     <div className="flex flex-col gap-4">
       <div>
@@ -20,10 +37,13 @@ export function ConceptBlock({ draft, updateDraft }) {
           type="text"
           value={draft.name ?? ''}
           onChange={e => updateDraft({ name: e.target.value })}
-          placeholder="Ex: Thorin Ironforge"
+          placeholder={`ex: ${placeholder}`}
           className={`${fieldCls} text-base font-display`}
           autoFocus
         />
+        <p className="text-xs ink-italic text-ink-300 mt-1">
+          Nome próprio do herói (não digite o nome da classe).
+        </p>
         {nameMissing && (
           <p className="text-xs text-red-700 mt-1 italic">O nome é obrigatório.</p>
         )}
