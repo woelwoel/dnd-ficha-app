@@ -84,6 +84,10 @@ function SelectableCard({ selected, children, inputProps, kind = 'radio' }) {
     <label
       className={[
         'relative flex items-start gap-3 p-3 rounded-sm border-2 cursor-pointer transition-all group',
+        // focus-within destaca o card quando o input nativo recebe foco
+        // (Tab/setas no radio group) — restaura a affordance que
+        // opacity:0 mantinha invisível.
+        'focus-within:ring-2 focus-within:ring-ink-200 focus-within:ring-offset-1',
         selected
           ? 'border-ink-500 bg-parchment-100 shadow-[var(--shadow-parchment-sm)]'
           : 'border-parchment-600/50 hover:border-parchment-600 hover:bg-parchment-100/60',
@@ -93,9 +97,14 @@ function SelectableCard({ selected, children, inputProps, kind = 'radio' }) {
       {selected && (
         <span aria-hidden className="absolute left-0 top-2 bottom-2 w-0.5 bg-ink-500 rounded-full" />
       )}
+      {/* sr-only mantém o input NO FLUXO de tab/setas (radio groups
+          do browser dependem dele pra navegação) mas invisível visualmente.
+          Antes usávamos `opacity:0 w-0 h-0 pointer-events-none`, que
+          removia ele completamente do fluxo — quebrava setas-do-teclado
+          em radio groups. Acessibilidade fail apontado na audit. */}
       <input
         {...inputProps}
-        className="absolute opacity-0 w-0 h-0 pointer-events-none"
+        className="sr-only"
       />
       <Seal selected={selected} kind={kind} />
       <div className="flex-1 min-w-0">{children}</div>
