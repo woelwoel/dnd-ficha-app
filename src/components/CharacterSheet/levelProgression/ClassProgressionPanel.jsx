@@ -1,59 +1,80 @@
 // src/components/CharacterSheet/levelProgression/ClassProgressionPanel.jsx
 //
-// Painel de progressão de UMA classe. Após a audit de UX:
+// Progressão de UMA classe, em 3 zonas claras (estilo tabela da classe no PHB):
 //
-//  1. Características adquiridas EXPANDIDAS por default + 1ª seção visível.
-//  2. Removido a duplicação Timeline ↔ Lista. Mantida só a lista, organizada
-//     em tiers narrativos D&D (Aventureiros, Heróis, Mestres, Mestres do mundo).
-//  3. Cada linha da lista mostra: features clicáveis, bônus de proficiência
-//     SÓ quando muda, novos slots de magia, novo tier de magia destacado.
-//  4. Card "Próxima conquista" no topo dá meta clara ao jogador.
-//  5. Botão "Descer nível" movido pra menu discreto à esquerda, longe do
-//     CTA principal "Subir nível" — evita click acidental.
+//   📜 Histórico  → colapsado por default. Lista plana de níveis ganhos.
+//   ◆ Você está aqui → linha do nível atual + Prof.
+//   ✦ O que vem → só os PRÓXIMOS MARCOS (feature, ASI, nova categoria de magia).
+//                 Níveis sem marco (só +PV/+Prof) somem.
+//
+// Sem tiers, sem labels narrativos inventados. Espelha como o jogador olha a
+// tabela da classe no Livro do Jogador: olha pra trás (o que sei) e pra frente
+// (o que vou ganhar).
 //
 import { useState } from 'react'
 import { DetailsModal } from '../../DetailsModal'
 import { ConfirmDialog } from '../../ui/ConfirmDialog'
 import { Icon } from '../../ui/Icon'
 import {
-  isASIEntry, getTierForLevel, TIERS,
-  getNextMilestone, formatSlotsCompact, categorizeLevel,
+  isASIEntry, realFeaturesOf, newSpellTierOf, isMilestoneLevel,
+  formatSlotsCompact,
 } from './helpers'
 import { LevelUpPanel } from './LevelUpPanel'
-import { AcquiredFeatures } from './AcquiredFeatures'
 
-/* ── Card "Próxima conquista" ──────────────────────────────────── */
-function NextMilestoneCard({ currentLevel, levels, onJumpToLevelUp }) {
-  const next = getNextMilestone(currentLevel, levels)
-  if (!next) {
-    if (currentLevel >= 20) {
-      return (
-        <div className="bg-amber-50 border-2 border-amber-700 rounded-sm px-4 py-3">
-          <p className="text-sm font-display tracking-wide text-amber-800">
-            ✦ Nível máximo alcançado. Você é uma lenda viva.
-          </p>
-        </div>
-      )
-    }
-    return null
-  }
-  const distance = next.level - currentLevel
+/* ── Botão de feature (link sublinhado pontilhado) ──────────────── */
+function FeatureLink({ feature, onClick }) {
   return (
-    <div className="bg-amber-50 border-2 border-amber-700 rounded-sm px-4 py-3 flex items-start gap-3">
-      <Icon name="target" size={20} strokeWidth={1.75} className="text-amber-800 mt-0.5 shrink-0" />
-      <div className="flex-1 min-w-0">
-        <p className="text-xs font-display tracking-widest uppercase text-amber-800 mb-0.5">
-          Próxima conquista {distance === 1 ? '(próximo nível)' : `(em ${distance} níveis)`}
-        </p>
-        <p className="text-sm text-ink-500 leading-snug">
-          <strong className="font-display tracking-wide">Nível {next.level}:</strong>{' '}
-          {next.label}
-        </p>
+    <button
+      type="button"
+      onClick={() => onClick(feature)}
+      className="text-sm text-ink-500 hover:text-amber-700 underline decoration-dotted underline-offset-2 font-display tracking-wide text-left"
+      title="Ver descrição completa"
+    >
+      {feature.name}
+    </button>
+  )
+}
+
+/* ── Badge ASI ──────────────────────────────────────────────────── */
+function ASIBadge() {
+  return (
+    <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-600 px-1.5 py-0.5 rounded-sm">
+      <span aria-hidden>★</span>
+      <span>Aumento de Habilidade</span>
+    </span>
+  )
+}
+
+/* ── Badge nova categoria de magia ─────────────────────────────── */
+function SpellTierBadge({ tier }) {
+  return (
+    <span className="text-xs font-semibold text-purple-800 bg-purple-50 border border-purple-600 px-1.5 py-0.5 rounded-sm inline-flex items-center gap-1">
+      <Icon name="sparkle" size={11} strokeWidth={2} />
+      Magias de {tier}º nível
+    </span>
+  )
+}
+
+/* ── Linha de um nível futuro (marco) ──────────────────────────── */
+function FutureMilestoneRow({ entry, prevEntry, isNext, onFeatureClick, onLevelUp }) {
+  const isASI        = isASIEntry(entry)
+  const realFeatures = realFeaturesOf(entry)
+  const newSpellTier = newSpellTierOf(entry, prevEntry)
+  return (
+    <div className="flex items-start gap-3 px-3 py-2">
+      <div className="w-8 shrink-0 text-right">
+        <span className="text-xs font-display tracking-wider text-ink-300">Nv</span>{' '}
+        <span className="text-sm font-bold text-ink-500 font-display">{entry.level}</span>
       </div>
-      {distance === 1 && onJumpToLevelUp && (
+      <div className="flex-1 min-w-0 flex flex-wrap items-center gap-x-2 gap-y-1">
+        {isASI && <ASIBadge />}
+        {realFeatures.map((f, i) => <FeatureLink key={i} feature={f} onClick={onFeatureClick} />)}
+        {newSpellTier != null && <SpellTierBadge tier={newSpellTier} />}
+      </div>
+      {isNext && onLevelUp && (
         <button
           type="button"
-          onClick={onJumpToLevelUp}
+          onClick={onLevelUp}
           className="text-xs px-3 py-1 rounded-sm bg-ink-500 hover:bg-ink-600 border-2 border-ink-600 text-parchment-50 font-display tracking-wide shrink-0"
         >
           Subir agora →
@@ -63,168 +84,102 @@ function NextMilestoneCard({ currentLevel, levels, onJumpToLevelUp }) {
   )
 }
 
-/* ── Linha individual da Jornada ──────────────────────────────── */
-function LevelRow({ entry, prevEntry, currentLevel, onFeatureClick }) {
-  const lvl = entry.level
-  const isCurrent = lvl === currentLevel
-  const isPast    = lvl < currentLevel
-  const isFuture  = lvl > currentLevel
-  const isASI     = isASIEntry(entry)
-  const realFeatures = (entry.features ?? []).filter(
-    f => !f.name?.includes('Aumento') && !f.name?.includes('Melhoria'),
-  )
-  const slots = formatSlotsCompact(entry)
-  const profChanged = prevEntry ? entry.proficiency_bonus !== prevEntry.proficiency_bonus : true
-  const category = categorizeLevel(entry, prevEntry)
-
-  // Slots "novos" — categoria que apareceu pela primeira vez
-  const newSlotTier = (() => {
-    if (!entry.spell_slots || !prevEntry?.spell_slots) return null
-    for (let idx = 0; idx < entry.spell_slots.length; idx++) {
-      const before = prevEntry.spell_slots[idx] ?? 0
-      const after  = entry.spell_slots[idx] ?? 0
-      if (before === 0 && after > 0) return idx + 1
-    }
-    return null
-  })()
-
+/* ── Histórico recolhido (lista plana de features adquiridas) ─── */
+function HistorySection({ levels, currentLevel, onFeatureClick }) {
+  const [open, setOpen] = useState(false)
+  const acquired = []
+  for (const entry of levels) {
+    if (entry.level >= currentLevel) break // só até nv anterior (atual é "agora")
+    for (const f of (entry.features ?? [])) acquired.push({ ...f, level: entry.level })
+  }
+  if (!acquired.length) return null
   return (
-    <div
-      className={[
-        'flex items-start gap-3 px-3 py-2 transition-colors',
-        isCurrent
-          ? 'bg-amber-100 border-l-4 border-amber-700'
-          : isFuture
-            ? 'border-l-4 border-transparent hover:bg-parchment-100/50'
-            : 'border-l-4 border-transparent hover:bg-parchment-100/30',
-        isFuture ? 'opacity-80' : '',
-      ].join(' ')}
-    >
-      {/* Selo do nível */}
-      <div className={[
-        'w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-xs font-bold border-2 font-display',
-        isCurrent
-          ? 'bg-amber-700 border-amber-800 text-parchment-50 shadow-sm'
-          : isPast
-            ? 'bg-parchment-200 border-parchment-600 text-ink-500'
-            : 'bg-parchment-50 border-parchment-600 text-ink-300',
-      ].join(' ')}>
-        {lvl}
-      </div>
-
-      <div className="flex-1 min-w-0">
-        {/* Linha principal: features + ASI + slots novos */}
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          {isASI && (
-            <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-600 px-1.5 py-0.5 rounded-sm">
-              <span aria-hidden>★</span>
-              <span>Aumento de Habilidade</span>
-            </span>
-          )}
-          {realFeatures.map((f, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => onFeatureClick(f)}
-              className="text-sm text-ink-500 hover:text-amber-700 underline decoration-dotted underline-offset-2 font-display tracking-wide text-left"
-              title="Ver descrição completa"
-            >
-              {f.name}
-            </button>
-          ))}
-          {newSlotTier != null && (
-            <span className="text-xs font-semibold text-purple-800 bg-purple-50 border border-purple-600 px-1.5 py-0.5 rounded-sm inline-flex items-center gap-1">
-              <Icon name="sparkle" size={11} strokeWidth={2} />
-              Magias de {newSlotTier}º
-            </span>
-          )}
-          {category === 'empty' && (
-            <span className="text-xs ink-italic text-ink-300">Sem nova característica</span>
-          )}
-        </div>
-
-        {/* Linha meta: prof + slots resumidos */}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1">
-          {profChanged && (
-            <span className="text-xs font-bold text-emerald-800 inline-flex items-center gap-1">
-              <span aria-hidden>↑</span> Prof +{entry.proficiency_bonus}
-            </span>
-          )}
-          {slots && (
-            <div className="flex flex-wrap gap-1">
-              {slots.map(s => (
-                <span
-                  key={s.level}
-                  className="text-xs bg-parchment-200 border border-parchment-600 px-1.5 py-0 rounded-sm text-ink-500 font-mono"
-                  title={`${s.count} espaço${s.count !== 1 ? 's' : ''} de magia de ${s.level}º nível`}
-                >
-                  {s.level}°:{s.count}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-/* ── Tier (collapsável) ──────────────────────────────────────── */
-function TierSection({ tier, entries, currentLevel, onFeatureClick }) {
-  const [open, setOpen] = useState(() => {
-    // Default open = tier contém o nível atual; ou tier completo
-    const [from, to] = tier.range
-    return currentLevel >= from && currentLevel <= to + 4 // atual + 4 níveis seguintes pra dar contexto
-  })
-  if (!entries.length) return null
-  const allPast = entries.every(e => e.level < currentLevel)
-  const hasCurrent = entries.some(e => e.level === currentLevel)
-  return (
-    <section className="border-2 border-parchment-600 rounded-sm bg-parchment-50 overflow-hidden">
+    <section className="bg-parchment-50 border-2 border-parchment-600 rounded-sm shadow-parchment-sm">
       <button
         type="button"
         onClick={() => setOpen(v => !v)}
         aria-expanded={open}
-        className="w-full flex items-center justify-between gap-3 px-3 py-2 bg-parchment-100 hover:bg-parchment-200 border-b border-parchment-600 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 text-sm font-display tracking-widest uppercase text-ink-500 hover:bg-parchment-100"
       >
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="text-xs font-display font-bold tracking-widest text-parchment-700 w-6 text-center">
-            {tier.roman}
+        <span className="inline-flex items-center gap-2">
+          <span aria-hidden className="text-base">📜</span>
+          <span>Histórico</span>
+          <span className="ink-italic text-ink-300 font-normal normal-case tracking-normal">
+            — níveis 1 a {currentLevel - 1} · {acquired.length} {acquired.length === 1 ? 'característica' : 'características'}
           </span>
-          <div className="text-left min-w-0">
-            <p className="text-sm font-display tracking-wide uppercase text-ink-500">
-              {tier.label}
-            </p>
-            <p className="text-xs ink-italic text-ink-300">
-              Níveis {tier.range[0]}–{tier.range[1]}
-              {hasCurrent && (
-                <span className="ml-2 text-amber-800 font-semibold not-italic">
-                  · Você está aqui
-                </span>
-              )}
-              {allPast && !hasCurrent && (
-                <span className="ml-2 text-emerald-800 font-semibold not-italic">✓ completo</span>
-              )}
-            </p>
-          </div>
-        </div>
-        <span aria-hidden className="text-ink-300 text-xs shrink-0">
-          {open ? '▴' : '▾'}
         </span>
+        <span aria-hidden className="text-ink-300 text-xs">{open ? '▴' : '▾'}</span>
       </button>
       {open && (
-        <div className="divide-y divide-parchment-600/50">
-          {entries.map((entry, i) => (
-            <LevelRow
-              key={entry.level}
-              entry={entry}
-              prevEntry={i === 0 ? null : entries[i - 1]}
-              currentLevel={currentLevel}
-              onFeatureClick={onFeatureClick}
-            />
+        <div className="px-4 pb-4 pt-1 border-t border-parchment-600 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
+          {acquired.map((f, i) => (
+            <div key={i} className="flex items-baseline gap-2 py-1">
+              <span className="text-xs ink-italic text-ink-300 shrink-0 w-9 text-right font-mono">
+                Nv{f.level}
+              </span>
+              <button
+                type="button"
+                onClick={() => onFeatureClick(f)}
+                className="text-sm text-ink-500 hover:text-amber-700 text-left underline decoration-dotted underline-offset-2 leading-tight font-display tracking-wide"
+                title="Ver descrição completa"
+              >
+                {f.name}
+              </button>
+            </div>
           ))}
         </div>
       )}
+    </section>
+  )
+}
+
+/* ── Linha "Você está aqui" ────────────────────────────────────── */
+function CurrentLevelRow({ entry, prevEntry, onFeatureClick }) {
+  const isASI        = isASIEntry(entry)
+  const realFeatures = realFeaturesOf(entry)
+  const newSpellTier = newSpellTierOf(entry, prevEntry)
+  const slots        = formatSlotsCompact(entry)
+  const hasContent   = isASI || realFeatures.length > 0 || newSpellTier != null
+  return (
+    <section className="bg-amber-50 border-2 border-amber-700 rounded-sm shadow-parchment-sm">
+      <div className="px-4 py-3 border-b border-amber-700/40">
+        <p className="text-xs font-display tracking-widest uppercase text-amber-800 inline-flex items-center gap-1.5">
+          <span aria-hidden>◆</span> Você está aqui
+        </p>
+        <p className="text-sm text-ink-500 mt-0.5">
+          <strong className="font-display tracking-wide">Nível {entry.level}</strong>
+          <span className="mx-2 text-parchment-600">·</span>
+          <span className="ink-italic">Proficiência</span>{' '}
+          <strong className="text-ink-500">+{entry.proficiency_bonus}</strong>
+        </p>
+      </div>
+      <div className="px-4 py-3 space-y-2">
+        {hasContent ? (
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            {isASI && <ASIBadge />}
+            {realFeatures.map((f, i) => <FeatureLink key={i} feature={f} onClick={onFeatureClick} />)}
+            {newSpellTier != null && <SpellTierBadge tier={newSpellTier} />}
+          </div>
+        ) : (
+          <p className="text-xs ink-italic text-ink-300">
+            Nenhuma característica nova neste nível — só evolução de recursos.
+          </p>
+        )}
+        {slots && (
+          <div className="flex flex-wrap gap-1 pt-1 border-t border-amber-700/20">
+            <span className="text-xs ink-italic text-ink-300 mr-1">Espaços de magia:</span>
+            {slots.map(s => (
+              <span
+                key={s.level}
+                className="text-xs bg-parchment-100 border border-parchment-600 px-1.5 py-0 rounded-sm text-ink-500 font-mono"
+                title={`${s.count} espaço${s.count !== 1 ? 's' : ''} de magia de ${s.level}º nível`}
+              >
+                {s.level}°:{s.count}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
     </section>
   )
 }
@@ -235,63 +190,56 @@ export function ClassProgressionPanel({
   onLevelChange, onApplyLevelUp, multiclassIndex,
   levelChoices, chosenFeatures, allowFeats = false,
 }) {
-  const [wizardOpen, setWizardOpen] = useState(false)
-  const [selectedFeat, setSelectedFeat] = useState(null)
+  const [wizardOpen, setWizardOpen]       = useState(false)
+  const [selectedFeat, setSelectedFeat]   = useState(null)
   const [confirmDescer, setConfirmDescer] = useState(false)
 
   const levels       = progression?.levels ?? []
   const currentEntry = levels.find(l => l.level === currentLevel)
+  const prevEntry    = levels.find(l => l.level === currentLevel - 1)
   const nextEntry    = levels.find(l => l.level === currentLevel + 1)
-  const currentTier  = getTierForLevel(currentLevel)
 
   function handleConfirmLevelUp(payload) {
     onApplyLevelUp?.({ ...payload, multiclassIndex: multiclassIndex ?? null })
     setWizardOpen(false)
   }
 
-  // Agrupa níveis por tier
-  const tieredLevels = TIERS.map(tier => ({
-    tier,
-    entries: levels.filter(l => l.level >= tier.range[0] && l.level <= tier.range[1]),
-  }))
+  // Marcos futuros: só níveis que ganham algo notável.
+  const futureMilestones = levels
+    .map((entry, i) => ({ entry, prev: levels[i - 1] }))
+    .filter(({ entry, prev }) => entry.level > currentLevel && isMilestoneLevel(entry, prev))
+  const firstFutureLevel = futureMilestones[0]?.entry.level
 
   return (
     <div className="space-y-4">
-      {/* ── Header de classe ──────────────────────────────────── */}
+      {/* ── Header simples ─────────────────────────────────────── */}
       <header className="bg-parchment-100 border-2 border-parchment-600 rounded-sm shadow-parchment-sm px-4 py-3">
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div className="min-w-0">
-            <p className="text-xs font-display tracking-[0.3em] uppercase text-ink-300 mb-0.5">
-              {currentTier.label}
-            </p>
             <p className="text-xs ink-italic text-ink-500">
-              Nível atual <strong className="not-italic text-base text-ink-500">{currentLevel}</strong>
+              Nível atual{' '}
+              <strong className="not-italic text-base text-ink-500">{currentLevel}</strong>
               <span className="mx-2 text-parchment-600">·</span>
-              Proficiência <strong className="not-italic text-ink-500">+{currentEntry?.proficiency_bonus ?? Math.ceil(currentLevel / 4) + 1}</strong>
+              Proficiência{' '}
+              <strong className="not-italic text-ink-500">
+                +{currentEntry?.proficiency_bonus ?? Math.ceil(currentLevel / 4) + 1}
+              </strong>
             </p>
           </div>
-
-          <div className="flex items-center gap-2">
-            {currentLevel < 20 && !wizardOpen && (
-              <button
-                type="button"
-                onClick={() => setWizardOpen(true)}
-                className="text-xs px-4 py-2 rounded-sm bg-ink-500 hover:bg-ink-600 border-2 border-ink-600 text-parchment-50 font-display tracking-wide inline-flex items-center gap-1.5"
-              >
-                Subir para Nível {currentLevel + 1}
-                <span aria-hidden>→</span>
-              </button>
-            )}
-          </div>
+          {currentLevel < 20 && !wizardOpen && (
+            <button
+              type="button"
+              onClick={() => setWizardOpen(true)}
+              className="text-xs px-4 py-2 rounded-sm bg-ink-500 hover:bg-ink-600 border-2 border-ink-600 text-parchment-50 font-display tracking-wide inline-flex items-center gap-1.5"
+            >
+              Subir para Nível {currentLevel + 1}
+              <span aria-hidden>→</span>
+            </button>
+          )}
         </div>
-
-        {/* Botão de descer fica DENTRO do header mas separado visualmente
-            do CTA principal. Em linha própria, pequeno, com ink-italic. */}
         {!isMulticlass && currentLevel > 1 && (
           <div className="mt-2 pt-2 border-t border-parchment-600/50 flex items-center justify-between">
-            <p className="text-[11px] ink-italic text-ink-300">
-              Subiu de nível por engano?
-            </p>
+            <p className="text-[11px] ink-italic text-ink-300">Subiu por engano?</p>
             <button
               type="button"
               onClick={() => setConfirmDescer(true)}
@@ -303,7 +251,7 @@ export function ClassProgressionPanel({
         )}
       </header>
 
-      {/* ── Wizard de Level Up (aparece inline quando ativado) ── */}
+      {/* ── Wizard de Level Up inline ──────────────────────────── */}
       {wizardOpen && nextEntry && (
         <LevelUpPanel
           nextLevel={currentLevel + 1}
@@ -319,41 +267,57 @@ export function ClassProgressionPanel({
         />
       )}
 
-      {/* ── Card "Próxima conquista" ─────────────────────────── */}
-      {!wizardOpen && (
-        <NextMilestoneCard
-          currentLevel={currentLevel}
+      {/* ── Histórico (recolhido) ──────────────────────────────── */}
+      {!wizardOpen && currentLevel > 1 && (
+        <HistorySection
           levels={levels}
-          onJumpToLevelUp={() => setWizardOpen(true)}
+          currentLevel={currentLevel}
+          onFeatureClick={setSelectedFeat}
         />
       )}
 
-      {/* ── Features adquiridas (expandido por default) ──────── */}
-      <AcquiredFeatures
-        levels={levels}
-        currentLevel={currentLevel}
-        onFeatureClick={setSelectedFeat}
-        defaultOpen={true}
-      />
+      {/* ── Você está aqui ─────────────────────────────────────── */}
+      {!wizardOpen && currentEntry && (
+        <CurrentLevelRow
+          entry={currentEntry}
+          prevEntry={prevEntry}
+          onFeatureClick={setSelectedFeat}
+        />
+      )}
 
-      {/* ── Jornada por tier ──────────────────────────────────── */}
-      <section className="space-y-3">
-        <h3 className="text-xs font-display tracking-widest uppercase text-ink-500 px-1">
-          Jornada Completa
-          <span className="ml-2 ink-italic font-normal normal-case tracking-normal text-ink-300">
-            — clique numa feature pra ver o texto completo
-          </span>
-        </h3>
-        {tieredLevels.map(({ tier, entries }) => (
-          <TierSection
-            key={tier.id}
-            tier={tier}
-            entries={entries}
-            currentLevel={currentLevel}
-            onFeatureClick={setSelectedFeat}
-          />
-        ))}
-      </section>
+      {/* ── O que vem por aí ───────────────────────────────────── */}
+      {!wizardOpen && futureMilestones.length > 0 && (
+        <section className="bg-parchment-50 border-2 border-parchment-600 rounded-sm shadow-parchment-sm">
+          <header className="px-4 py-2.5 border-b border-parchment-600 bg-parchment-100">
+            <p className="text-xs font-display tracking-widest uppercase text-ink-500 inline-flex items-center gap-1.5">
+              <span aria-hidden>✦</span> O que vem por aí
+              <span className="ink-italic font-normal normal-case tracking-normal text-ink-300">
+                — só os níveis que ganham característica nova
+              </span>
+            </p>
+          </header>
+          <div className="divide-y divide-parchment-600/40">
+            {futureMilestones.map(({ entry, prev }) => (
+              <FutureMilestoneRow
+                key={entry.level}
+                entry={entry}
+                prevEntry={prev}
+                isNext={entry.level === firstFutureLevel}
+                onFeatureClick={setSelectedFeat}
+                onLevelUp={() => setWizardOpen(true)}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {!wizardOpen && currentLevel >= 20 && (
+        <div className="bg-amber-50 border-2 border-amber-700 rounded-sm px-4 py-3">
+          <p className="text-sm font-display tracking-wide text-amber-800">
+            ✦ Nível máximo alcançado. Você é uma lenda viva.
+          </p>
+        </div>
+      )}
 
       <DetailsModal
         isOpen={!!selectedFeat}
