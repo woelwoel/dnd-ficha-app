@@ -6,10 +6,40 @@
 
 const MAX_PAYLOAD = 4 * 1024 // 4 KiB — evita abuso
 
+// Rate limit por IP, in-memory. Não é distribuído (cada instância tem seu
+// Map), mas com Fluid Compute as instâncias são reusadas, então corta a maior
+// parte de um flood vindo de um único IP. Para garantia forte, complementar
+// com regra de rate limit no Vercel WAF.
+const RL_WINDOW_MS = 60_000
+const RL_MAX = 60 // 60 logs/min/IP
+const hits = new Map() // ip -> number[] (timestamps dentro da janela)
+
+function isRateLimited(ip) {
+  const now = Date.now()
+  const recent = (hits.get(ip) ?? []).filter(t => now - t < RL_WINDOW_MS)
+  recent.push(now)
+  hits.set(ip, recent)
+  // Limpeza preguiçosa pra não vazar memória se muitos IPs aparecerem.
+  if (hits.size > 5000) {
+    for (const [k, v] of hits) {
+      if (v.every(t => now - t >= RL_WINDOW_MS)) hits.delete(k)
+    }
+  }
+  return recent.length > RL_MAX
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST')
     return res.status(405).json({ error: 'method_not_allowed' })
+  }
+
+  const fwd = req.headers['x-forwarded-for']
+  const ip = (Array.isArray(fwd) ? fwd[0] : fwd)?.split(',')[0]?.trim()
+    || req.socket?.remoteAddress
+    || 'unknown'
+  if (isRateLimited(ip)) {
+    return res.status(429).json({ error: 'rate_limited' })
   }
 
   const raw = typeof req.body === 'string'

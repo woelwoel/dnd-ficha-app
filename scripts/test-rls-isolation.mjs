@@ -53,8 +53,13 @@ async function main() {
   const dm     = await signIn(process.env.TEST_DM_EMAIL,     process.env.TEST_DM_PASSWORD)
   const player = await signIn(process.env.TEST_PLAYER_EMAIL, process.env.TEST_PLAYER_PASSWORD)
 
-  let campaignId = null
+  const { data: { user: playerUser } } = await player.auth.getUser()
+  const playerId = playerUser?.id
+
+  let campaignId = null      // mesa que o player ENTRA
+  let otherCampaignId = null // mesa que o player NUNCA entra (teste #1)
   let inviteCode = null
+  let charId = null          // ficha do player (testes #1/#2)
 
   try {
     console.log('\n▶ DM cria mesa')
@@ -122,8 +127,50 @@ async function main() {
       assert(!!error && /not_dm_of_campaign/.test(error.message), 'player bloqueado em rotate')
     }
 
-    console.log('\n▶ update characters segue owner-only (verificado em pg_policies)')
-    pass('policy de update permanece owner-only')
+    console.log('\n▶ [#1] Não-membro NÃO consegue vincular ficha a mesa alheia')
+    {
+      // DM cria uma 2ª mesa que o player NUNCA entra.
+      const { data: oc } = await dm.rpc('create_campaign', { p_name: 'Mesa Alheia' })
+      otherCampaignId = oc
+      // Player cria uma ficha pessoal.
+      charId = crypto.randomUUID()
+      const { error: insErr } = await player.from('characters').insert({
+        id: charId, data: { info: { name: 'Furtador de Mesa' } },
+      })
+      assert(!insErr, `player cria ficha pessoal (err=${insErr?.message})`)
+      // Tenta setar campaign_id pra mesa onde NÃO é membro → bloqueado pelo
+      // WITH CHECK de characters_update_own (migration 0007).
+      const { error: updErr } = await player.from('characters')
+        .update({ campaign_id: otherCampaignId }).eq('id', charId)
+      assert(!!updErr, `update pra mesa não-membro bloqueado (err=${updErr?.message})`)
+      // Confirma que a ficha continua pessoal.
+      const { data: still } = await player.from('characters')
+        .select('campaign_id').eq('id', charId).maybeSingle()
+      assert(still?.campaign_id == null, 'ficha permanece sem campaign_id')
+    }
+
+    console.log('\n▶ [#2] Sair da mesa desvincula a ficha (DM não lê ex-membro)')
+    {
+      // Player É membro de campaignId (entrou acima). Vincula a ficha — agora
+      // permitido pelo WITH CHECK (é membro).
+      const { error: linkErr } = await player.from('characters')
+        .update({ campaign_id: campaignId }).eq('id', charId)
+      assert(!linkErr, `membro vincula ficha à própria mesa (err=${linkErr?.message})`)
+      // DM enxerga a ficha vinculada.
+      const { data: dmSees } = await dm.from('characters').select('id').eq('campaign_id', campaignId)
+      assert(Array.isArray(dmSees) && dmSees.some(c => c.id === charId), 'DM vê a ficha vinculada')
+      // Player sai da mesa (apaga a própria membership).
+      const { error: leaveErr } = await player.from('campaign_members')
+        .delete().eq('campaign_id', campaignId).eq('user_id', playerId)
+      assert(!leaveErr, `player sai da mesa (err=${leaveErr?.message})`)
+      // Trigger detach_characters_on_member_removal → campaign_id = null.
+      const { data: afterLeave } = await player.from('characters')
+        .select('campaign_id').eq('id', charId).maybeSingle()
+      assert(afterLeave?.campaign_id == null, 'ficha desvinculada automaticamente ao sair')
+      // DM não lê mais a ficha do ex-membro.
+      const { data: dmAfter } = await dm.from('characters').select('id').eq('id', charId).maybeSingle()
+      assert(!dmAfter, 'DM não lê mais ficha de ex-membro')
+    }
 
     console.log('\n▶ Rate limit: 11 tentativas em sequência → última falha com rate_limited')
     {
@@ -135,8 +182,13 @@ async function main() {
       assert(!!last && /rate_limited/.test(last.message), `rate limit dispara (got "${last?.message}")`)
     }
   } finally {
-    console.log('\n▶ Cleanup: DM apaga a mesa')
+    console.log('\n▶ Cleanup: DM apaga as mesas + player apaga a ficha de teste')
     await cleanup(dm, campaignId)
+    await cleanup(dm, otherCampaignId)
+    if (charId) {
+      const { error } = await player.from('characters').delete().eq('id', charId)
+      if (error) console.warn(`cleanup char: ${error.message}`)
+    }
   }
 
   console.log(process.exitCode ? '\n✗ FALHOU' : '\n✓ Tudo verde')

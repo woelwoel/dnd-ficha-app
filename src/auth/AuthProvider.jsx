@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
-import { deleteMyAccount } from '../lib/campaigns'
+import { deleteMyAccount, ensureMyProfile } from '../lib/campaigns'
 
 // Endpoint da serverless function que apaga auth.users via admin API.
 // Em dev (Vite) a chamada vai falhar — desenvolvedor precisa rodar
@@ -16,11 +16,20 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let mounted = true
+    // Garante o profile no máximo uma vez por sessão de app (idempotente no
+    // servidor; ref evita round-trips redundantes em refresh de token).
+    let profileEnsured = false
+    const ensureProfileOnce = () => {
+      if (profileEnsured) return
+      profileEnsured = true
+      ensureMyProfile()
+    }
 
     supabase.auth.getSession().then(({ data }) => {
       if (!mounted) return
       setUser(data.session?.user ?? null)
       setLoading(false)
+      if (data.session?.user) ensureProfileOnce()
     })
 
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
@@ -33,7 +42,9 @@ export function AuthProvider({ children }) {
       }
       if (event === 'SIGNED_OUT') {
         setRecoveryMode(false)
+        profileEnsured = false
       }
+      if (event === 'SIGNED_IN') ensureProfileOnce()
       setUser(session?.user ?? null)
       setLoading(false)
     })

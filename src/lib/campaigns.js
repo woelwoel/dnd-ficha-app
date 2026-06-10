@@ -151,3 +151,15 @@ export async function deleteMyAccount() {
   if (error) { logDev('deleteMyAccount', error); return { ok: false, reason: 'unknown' } }
   return { ok: true }
 }
+
+/**
+ * Garante (idempotente) que o profile do usuário corrente existe. Recupera o
+ * cenário "conta zumbi" (#17): se um delete-account parcial deixou auth.users
+ * vivo sem profile, o login recria o profile e destrava os INSERTs de fichas
+ * (que falhavam por FK). No-op quando o profile já existe.
+ */
+export async function ensureMyProfile() {
+  const { error } = await supabase.rpc('ensure_my_profile')
+  if (error) { logDev('ensureMyProfile', error); return { ok: false, reason: 'unknown' } }
+  return { ok: true }
+}
