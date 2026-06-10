@@ -11,10 +11,10 @@ function logDev(label, payload) {
 
 /**
  * Move uma ficha existente pra uma mesa (ou destaca da mesa atual com null).
- * RLS já garante que só o owner consegue update; e o check de
- * characters_insert_own_in_own_campaign exige membership na mesa
- * (a policy de update herda — mas confirmamos com `is_campaign_member`
- * antes pra mostrar mensagem amigável em vez de erro genérico de RLS).
+ * RLS garante que só o owner consegue update; e o WITH CHECK da policy
+ * characters_update_own (migration 0007) exige membership na mesa quando
+ * campaign_id != null. Confirmamos com `is_campaign_member` antes só pra
+ * mostrar mensagem amigável em vez do erro genérico de RLS.
  *
  * @param {string} characterId UUID da ficha
  * @param {string|null} campaignId UUID da mesa (ou null pra destacar)
