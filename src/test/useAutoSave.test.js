@@ -26,12 +26,28 @@ describe('useAutoSave', () => {
     expect(upsertMock).not.toHaveBeenCalled()
   })
 
-  it('dispara save após debounce quando enabled=true', async () => {
+  it('NÃO salva no carregamento inicial (skip-first)', async () => {
     const character = { id: 'c1', info: {} }
     renderHook(() => useAutoSave(character, { enabled: true, delayMs: 50 }))
+    await vi.advanceTimersByTimeAsync(200)
+    // Abrir a ficha não deve reescrever o que acabou de ser carregado.
+    expect(upsertMock).not.toHaveBeenCalled()
+  })
+
+  it('salva após uma EDIÇÃO (mudança de character)', async () => {
+    const character = { id: 'c1', info: { name: 'A' } }
+    const { rerender } = renderHook(
+      ({ ch }) => useAutoSave(ch, { enabled: true, delayMs: 50 }),
+      { initialProps: { ch: character } },
+    )
+    await vi.advanceTimersByTimeAsync(60) // load: não salva
+    expect(upsertMock).not.toHaveBeenCalled()
+
+    const edited = { id: 'c1', info: { name: 'B' } }
+    rerender({ ch: edited })
     await vi.advanceTimersByTimeAsync(60)
     expect(upsertMock).toHaveBeenCalledTimes(1)
-    expect(upsertMock).toHaveBeenCalledWith(character)
+    expect(upsertMock).toHaveBeenCalledWith(edited)
   })
 
   it('não dispara quando character.id é null', async () => {
@@ -40,11 +56,49 @@ describe('useAutoSave', () => {
     expect(upsertMock).not.toHaveBeenCalled()
   })
 
-  it('expõe error quando upsert falha', async () => {
+  it('expõe error quando upsert falha (após edição)', async () => {
     upsertMock.mockResolvedValue({ ok: false, reason: 'limit' })
-    const character = { id: 'c1', info: {} }
-    const { result } = renderHook(() => useAutoSave(character, { enabled: true, delayMs: 10 }))
-    await act(async () => { await vi.advanceTimersByTimeAsync(50) })
+    const character = { id: 'c1', info: { name: 'A' } }
+    const { result, rerender } = renderHook(
+      ({ ch }) => useAutoSave(ch, { enabled: true, delayMs: 10 }),
+      { initialProps: { ch: character } },
+    )
+    await act(async () => { await vi.advanceTimersByTimeAsync(20) })
+    rerender({ ch: { id: 'c1', info: { name: 'B' } } })
+    await act(async () => { await vi.advanceTimersByTimeAsync(20) })
     expect(result.current.error).toBe('limit')
+  })
+
+  it('faz FLUSH de edição pendente no unmount', async () => {
+    const character = { id: 'c1', info: { name: 'A' } }
+    const { rerender, unmount } = renderHook(
+      ({ ch }) => useAutoSave(ch, { enabled: true, delayMs: 500 }),
+      { initialProps: { ch: character } },
+    )
+    await vi.advanceTimersByTimeAsync(10) // consome o skip-first
+    const edited = { id: 'c1', info: { name: 'B' } }
+    rerender({ ch: edited })
+    // Desmonta ANTES do debounce de 500ms disparar.
+    unmount()
+    expect(upsertMock).toHaveBeenCalledWith(edited)
+  })
+
+  it('re-tenta o save pendente quando a conexão volta (online)', async () => {
+    upsertMock.mockResolvedValue({ ok: false, reason: 'unknown' })
+    const character = { id: 'c1', info: { name: 'A' } }
+    const { rerender } = renderHook(
+      ({ ch }) => useAutoSave(ch, { enabled: true, delayMs: 10 }),
+      { initialProps: { ch: character } },
+    )
+    await act(async () => { await vi.advanceTimersByTimeAsync(20) }) // skip-first
+    const edited = { id: 'c1', info: { name: 'B' } }
+    rerender({ ch: edited })
+    await act(async () => { await vi.advanceTimersByTimeAsync(20) }) // falha
+    expect(upsertMock).toHaveBeenCalledTimes(1)
+
+    upsertMock.mockResolvedValue({ ok: true })
+    await act(async () => { window.dispatchEvent(new Event('online')) })
+    expect(upsertMock).toHaveBeenCalledTimes(2)
+    expect(upsertMock).toHaveBeenLastCalledWith(edited)
   })
 })
