@@ -23,6 +23,8 @@ const { authState, supabaseMock } = vi.hoisted(() => {
       resetPasswordForEmail: vi.fn(async () => ({ data: {}, error: null })),
       updateUser: vi.fn(async () => ({ data: {}, error: null })),
     },
+    // AuthProvider chama ensureMyProfile() (supabase.rpc) ao autenticar.
+    rpc: vi.fn(async () => ({ data: null, error: null })),
   }
 
   return { authState, supabaseMock }
