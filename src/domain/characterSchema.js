@@ -253,8 +253,10 @@ const spellcastingSchema = z.object({
    */
   abilitiesByClass: z.record(z.string()).default({}),
   /**
-   * Slots usados por nível de magia. Validado em `safeParseCharacter` contra
-   * o máximo computado a partir de classes/níveis.
+   * Slots usados por nível de magia. O schema só garante inteiros ≥ 0; o clamp
+   * ao MÁXIMO computado (classes/níveis) acontece na leitura, em
+   * `clampUsedSlots` (useCharacterCalculations) — não aqui. Um valor acima do
+   * máximo persiste no JSONB mas é inócuo (a UI sempre re-clampa ao ler).
    */
   usedSlots: z.record(z.number().int().min(0)).default({}),
   /** Slots de Pact Magic do Bruxo usados (separado de usedSlots). */
