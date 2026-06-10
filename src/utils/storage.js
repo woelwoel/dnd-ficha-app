@@ -27,8 +27,8 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 
 function rowToCharacter(row) {
   // O payload da ficha vive em row.data. Outros campos (owner_id, campaign_id,
-  // short_id, last_opened_at) são metadados relacionais e são espelhados no
-  // objeto pra que o cliente possa consultar sem fazer outra query.
+  // short_id, last_opened_at, version) são metadados relacionais e são
+  // espelhados no objeto pra que o cliente possa consultar sem outra query.
   if (!row?.data) return null
   return {
     ...row.data,
@@ -36,6 +36,9 @@ function rowToCharacter(row) {
     ownerId: row.owner_id ?? row.data.ownerId ?? null,
     campaignId: row.campaign_id ?? row.data.campaignId ?? null,
     lastOpenedAt: row.last_opened_at ? Date.parse(row.last_opened_at) : (row.data.lastOpenedAt ?? null),
+    // Versão otimista (characters.version) — consumida por saveCharacterVersioned.
+    // null = banco ainda sem a migration 0009 (cai no upsert legado).
+    version: Number.isInteger(row.version) ? row.version : null,
   }
 }
 
@@ -54,9 +57,12 @@ function logDev(label, payload) {
  *   - { campaignId: '<uuid>' }    → só dessa mesa
  */
 export async function loadCharacters(scope = 'mine') {
+  // `*` em vez de colunas explícitas: tolera o banco ainda sem a coluna
+  // `version` (migration 0009) — pedir uma coluna inexistente falharia com
+  // 42703 e derrubaria TODAS as leituras até a migration ser aplicada.
   let q = supabase
     .from(TABLE)
-    .select('id, data, last_opened_at, created_at, short_id, owner_id, campaign_id')
+    .select('*')
     .order('created_at', { ascending: true })
 
   if (scope === 'personal') q = q.is('campaign_id', null)
@@ -93,7 +99,9 @@ export async function loadCharacters(scope = 'mine') {
 // Batch F #29). Precisam estar no SELECT pra rowToCharacter conseguir
 // expor ownerId/campaignId no objeto — sem isso, ownerId vira null no
 // cliente e a detecção de readOnly (DM lendo ficha de player) falha.
-const CHARACTER_COLUMNS = 'id, data, last_opened_at, short_id, owner_id, campaign_id'
+// `*` (e não lista explícita) pra tolerar banco sem a coluna `version`
+// enquanto a migration 0009 não foi aplicada — ver loadCharacters.
+const CHARACTER_COLUMNS = '*'
 
 export async function loadCharacterById(id) {
   const { data, error } = await supabase
@@ -135,11 +143,11 @@ export async function upsertCharacter(character, opts = {}) {
     logDev('upsert: ficha inválida', v.errors.slice(0, 3))
     return { ok: false, reason: 'invalid', errors: v.errors }
   }
-  // #29 super review: ownerId/campaignId vivem como colunas relacionais;
-  // não devem ser persistidos dentro do JSONB `data`. Strip antes de salvar
-  // pra evitar divergência entre coluna e JSON em mudanças futuras.
-  const { ownerId: _omitOwnerId, campaignId: _omitCampaignId, ...dataToSave } = v.data
-  void _omitOwnerId; void _omitCampaignId
+  // #29 super review: ownerId/campaignId/version vivem como colunas
+  // relacionais; não devem ser persistidos dentro do JSONB `data`. Strip
+  // antes de salvar pra evitar divergência entre coluna e JSON.
+  const { ownerId: _omitOwnerId, campaignId: _omitCampaignId, version: _omitVersion, ...dataToSave } = v.data
+  void _omitOwnerId; void _omitCampaignId; void _omitVersion
 
   const baseRow = {
     id: v.data.id,
@@ -187,6 +195,58 @@ export async function upsertCharacter(character, opts = {}) {
     return { ok: false, reason }
   }
   return { ok: true, shortId: data?.short_id ?? null, campaignId: data?.campaign_id ?? null }
+}
+
+/**
+ * Save com lock otimista (#3 super review). Usa a RPC `save_character`
+ * (migration 0009): o UPDATE só aplica se `characters.version` no banco for
+ * a esperada — se outro dispositivo da mesma conta salvou no meio, retorna
+ * `{ ok: false, reason: 'conflict' }` e o caller refetcha em vez de
+ * sobrescrever às cegas (era o last-write-wins silencioso do upsert).
+ *
+ * Fallbacks pro upsert legado (sem proteção, comportamento pré-#3):
+ *   - `character.version == null` → ficha lida antes da migration 0009;
+ *   - RPC inexistente no banco (PGRST202/42883) → migration não aplicada.
+ *
+ * @returns {{ok:true, version:number} | {ok:false, reason:string, errors?:[]}}
+ */
+export async function saveCharacterVersioned(character) {
+  const expected = Number.isInteger(character?.version) ? character.version : null
+  if (expected == null) return upsertCharacter(character)
+
+  const v = validateForSave(character)
+  if (!v.ok) {
+    logDev('saveVersioned: ficha inválida', v.errors.slice(0, 3))
+    return { ok: false, reason: 'invalid', errors: v.errors }
+  }
+  const { ownerId: _omitOwnerId, campaignId: _omitCampaignId, version: _omitVersion, ...dataToSave } = v.data
+  void _omitOwnerId; void _omitCampaignId; void _omitVersion
+
+  const { data, error } = await supabase.rpc('save_character', {
+    p_id: v.data.id,
+    p_data: dataToSave,
+    p_expected_version: expected,
+    p_last_opened_at: v.data.lastOpenedAt ? new Date(v.data.lastOpenedAt).toISOString() : null,
+  })
+
+  if (error) {
+    if (error.code === 'P0010' || error.message?.includes('version_conflict')) {
+      return { ok: false, reason: 'conflict' }
+    }
+    // PGRST202 = function not found no schema cache do PostgREST;
+    // 42883 = undefined_function no Postgres. Ambos = 0009 não aplicada.
+    if (error.code === 'PGRST202' || error.code === '42883') {
+      logDev('saveVersioned: RPC ausente, fallback pro upsert', error.message)
+      return upsertCharacter(character)
+    }
+    if (error.code === '23514' || error.message?.includes('characters_data_size')) {
+      return { ok: false, reason: 'too-large' }
+    }
+    logDev('saveVersioned falhou', error)
+    return { ok: false, reason: 'unknown' }
+  }
+
+  return { ok: true, version: data }
 }
 
 export async function deleteCharacter(id) {

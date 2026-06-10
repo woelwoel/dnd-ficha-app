@@ -9,6 +9,7 @@ const SAVE_ERROR_MESSAGES = {
   limit: 'Limite de 100 fichas por conta atingido.',
   'too-large': 'Ficha grande demais para salvar (limite ~200 KB).',
   invalid: 'A ficha tem dados inválidos e não pôde ser salva.',
+  conflict: 'Ficha alterada em outro dispositivo — recarregando a versão mais recente.',
   unknown: 'Não foi possível salvar. Verifique a conexão.',
 }
 

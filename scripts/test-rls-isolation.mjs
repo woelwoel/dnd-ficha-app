@@ -172,6 +172,42 @@ async function main() {
       assert(!dmAfter, 'DM não lê mais ficha de ex-membro')
     }
 
+    console.log('\n▶ [#3] save_character: lock otimista de versão')
+    {
+      // Lê a versão atual da ficha do player (charId, criada no bloco #1).
+      const { data: row, error: selErr } = await player.from('characters')
+        .select('version, data').eq('id', charId).maybeSingle()
+      assert(!selErr && Number.isInteger(row?.version),
+        `ficha expõe version (got ${row?.version}, err=${selErr?.message}) — migration 0009 aplicada?`)
+
+      // Save com a versão correta → aplica e devolve a versão bumpada.
+      const newData = { ...row.data, info: { ...(row.data.info ?? {}), name: 'Renomeado Dev A' } }
+      const { data: vNew, error: okErr } = await player.rpc('save_character', {
+        p_id: charId, p_data: newData, p_expected_version: row.version,
+      })
+      assert(!okErr && vNew === row.version + 1,
+        `save com versão correta bumpa (got ${vNew}, err=${okErr?.message})`)
+
+      // Save com a versão VELHA (simula o outro dispositivo atrasado) → conflito.
+      const { error: confErr } = await player.rpc('save_character', {
+        p_id: charId, p_data: { ...newData, conflictMarker: true }, p_expected_version: row.version,
+      })
+      assert(!!confErr && /version_conflict/.test(confErr.message),
+        `versão velha detecta conflito (got "${confErr?.message}")`)
+
+      // A edição vencedora sobreviveu intacta (sem last-write-wins).
+      const { data: after } = await player.from('characters')
+        .select('data, version').eq('id', charId).maybeSingle()
+      assert(after?.data?.info?.name === 'Renomeado Dev A' && !after?.data?.conflictMarker,
+        'edição vencedora preservada; perdedora descartada')
+
+      // DM não salva ficha alheia nem com a versão certa (owner check no RPC).
+      const { error: dmErr } = await dm.rpc('save_character', {
+        p_id: charId, p_data: newData, p_expected_version: vNew,
+      })
+      assert(!!dmErr, `DM bloqueado em save de ficha alheia (err=${dmErr?.message})`)
+    }
+
     console.log('\n▶ Rate limit: 11 tentativas em sequência → última falha com rate_limited')
     {
       let last = null

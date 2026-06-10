@@ -20,6 +20,12 @@ vi.mock('../../utils/storage', () => ({
     else store.rows.push(c)
     return { ok: true }
   },
+  saveCharacterVersioned: async (c) => {
+    const idx = store.rows.findIndex(r => r.id === c.id)
+    if (idx >= 0) store.rows[idx] = c
+    else store.rows.push(c)
+    return { ok: true, version: 1 }
+  },
   deleteCharacter: async (id) => {
     store.rows = store.rows.filter(c => c.id !== id)
     return { ok: true }

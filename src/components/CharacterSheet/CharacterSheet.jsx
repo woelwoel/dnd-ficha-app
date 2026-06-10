@@ -5,7 +5,7 @@ import { useTabValidation } from '../../hooks/useTabValidation'
 import { useAutoSave } from '../../hooks/useAutoSave'
 import { useCharacterRealtime } from '../../hooks/useCharacterRealtime'
 import { useSrd, useClassDataMap } from '../../providers/SrdProvider'
-import { loadCharacterByRouteParam } from '../../utils/storage'
+import { loadCharacterByRouteParam, loadCharacterById } from '../../utils/storage'
 import { useAuth } from '../../auth'
 import { SheetHeader } from './SheetHeader'
 import { SheetTabs, TABS, NavBlockedBanner, ImportErrorBanner } from './SheetTabs'
@@ -106,7 +106,18 @@ function SheetBody({ initialCharacter, onBack }) {
   const currentUserId = user?.id ?? null
   const readOnly = !!(character?.ownerId && currentUserId && character.ownerId !== currentUserId)
 
-  const { saving, saved, error: saveError } = useAutoSave(character, { enabled: !readOnly })
+  // #3 super review: conflito de versão = outro dispositivo da mesma conta
+  // salvou esta ficha no meio da edição. Refetcha (a versão do servidor vence)
+  // e avisa — a alternativa era sobrescrever silenciosamente o outro lado.
+  const [conflictNotice, setConflictNotice] = useState(false)
+  const { saving, saved, error: saveError } = useAutoSave(character, {
+    enabled: !readOnly,
+    onConflict: async () => {
+      const fresh = await loadCharacterById(character.id)
+      if (fresh) setCharacter(fresh)
+      setConflictNotice(true)
+    },
+  })
 
   // Realtime: quando DM está em modo leitura, refetch ao vivo conforme
   // o player edita a ficha. Não ativa pro próprio dono pra não conflitar
@@ -256,6 +267,13 @@ function SheetBody({ initialCharacter, onBack }) {
                 <ImportErrorBanner
                   message={importError}
                   onDismiss={() => setImportError(null)}
+                />
+              )}
+
+              {conflictNotice && (
+                <ImportErrorBanner
+                  message="Esta ficha foi alterada em outro dispositivo. Recarregamos a versão mais recente — confira sua última edição."
+                  onDismiss={() => setConflictNotice(false)}
                 />
               )}
 

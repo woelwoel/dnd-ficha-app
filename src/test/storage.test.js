@@ -38,6 +38,10 @@ const supabaseMock = vi.hoisted(() => {
           // Auto-gera short_id no insert (simula trigger characters_set_short_id).
           const idx = store.rows.findIndex(x => x.id === r.id)
           const isInsert = idx < 0
+          // Simula characters_bump_version (0009): bump só quando data muda.
+          const prevVersion = isInsert ? null : (store.rows[idx].version ?? 1)
+          const dataChanged = !isInsert
+            && JSON.stringify(store.rows[idx].data) !== JSON.stringify(r.data)
           const stamped = {
             owner_id: store.uid,
             campaign_id: r.campaign_id ?? null,
@@ -45,6 +49,7 @@ const supabaseMock = vi.hoisted(() => {
             updated_at: new Date().toISOString(),
             short_id: isInsert ? `mock${Math.random().toString(36).slice(2, 8)}` : store.rows[idx].short_id,
             ...r,
+            version: isInsert ? 1 : (dataChanged ? prevVersion + 1 : prevVersion),
           }
           if (idx >= 0) store.rows[idx] = { ...store.rows[idx], ...stamped, updated_at: new Date().toISOString() }
           else store.rows.push(stamped)
@@ -83,6 +88,22 @@ const supabaseMock = vi.hoisted(() => {
     auth: { getUser: vi.fn(async () => ({ data: { user: { id: store.uid } }, error: null })) },
     from,
     rpc: vi.fn(async (name, args) => {
+      if (name === 'save_character') {
+        // Simula banco sem a migration 0009 (RPC ausente no schema cache).
+        if (store.noVersionRpc) {
+          return { data: null, error: { code: 'PGRST202', message: 'Could not find the function public.save_character' } }
+        }
+        const row = store.rows.find(r => r.id === args.p_id && r.owner_id === store.uid)
+        if (!row) return { data: null, error: { code: '42704', message: 'character_not_found_or_not_owner' } }
+        if ((row.version ?? 1) !== args.p_expected_version) {
+          return { data: null, error: { code: 'P0010', message: 'version_conflict' } }
+        }
+        const changed = JSON.stringify(row.data) !== JSON.stringify(args.p_data)
+        row.data = args.p_data
+        if (args.p_last_opened_at) row.last_opened_at = args.p_last_opened_at
+        if (changed) row.version = (row.version ?? 1) + 1
+        return { data: row.version ?? 1, error: null }
+      }
       if (name === 'update_character_position') {
         const row = store.rows.find(r => r.id === args.p_id)
         if (!row) return { data: null, error: { message: 'not found' } }
@@ -106,6 +127,7 @@ import {
   loadCharacters,
   loadCharacterById,
   upsertCharacter,
+  saveCharacterVersioned,
   deleteCharacter,
   updateCharacterPosition,
   touchCharacterLastOpened,
@@ -136,6 +158,7 @@ function makeChar(id, name = 'Frodo', level = 1) {
 describe('storage (Supabase backend)', () => {
   beforeEach(() => {
     store.rows = []
+    store.noVersionRpc = false
   })
 
   it('loadCharacters() retorna [] quando vazio', async () => {
@@ -252,5 +275,78 @@ describe('storage (Supabase backend)', () => {
     const r = await upsertCharacter(makeChar('a'), { campaignId: 'camp-1' })
     expect(r.ok).toBe(true)
     expect(r.campaignId).toBe('camp-1')
+  })
+})
+
+describe('saveCharacterVersioned — lock otimista (#3 super review)', () => {
+  beforeEach(() => {
+    store.rows = []
+    store.noVersionRpc = false
+  })
+
+  it('expõe version nas leituras (rowToCharacter)', async () => {
+    await upsertCharacter(makeChar('id-a'))
+    const ch = await loadCharacterById('id-a')
+    expect(ch.version).toBe(1)
+  })
+
+  it('salva com versão correta e devolve a nova versão', async () => {
+    await upsertCharacter(makeChar('id-a', 'Frodo', 1))
+    const ch = await loadCharacterById('id-a') // version 1
+    const edited = { ...ch, info: { ...ch.info, level: 5 } }
+    const r = await saveCharacterVersioned(edited)
+    expect(r.ok).toBe(true)
+    expect(r.version).toBe(2)
+    const after = await loadCharacterById('id-a')
+    expect(after.info.level).toBe(5)
+    expect(after.version).toBe(2)
+  })
+
+  it('conflito: versão divergente → reason=conflict e banco intacto', async () => {
+    await upsertCharacter(makeChar('id-a', 'Frodo', 1))
+    const deviceA = await loadCharacterById('id-a') // version 1 nos dois devices
+
+    // Device B salva primeiro → banco vai pra version 2.
+    const fromB = { ...deviceA, info: { ...deviceA.info, level: 9 } }
+    await saveCharacterVersioned(fromB)
+
+    // Device A tenta salvar com a versão velha (1) → conflito, sem overwrite.
+    const fromA = { ...deviceA, info: { ...deviceA.info, level: 3 } }
+    const r = await saveCharacterVersioned(fromA)
+    expect(r.ok).toBe(false)
+    expect(r.reason).toBe('conflict')
+    const after = await loadCharacterById('id-a')
+    expect(after.info.level).toBe(9) // a edição do device B sobreviveu
+  })
+
+  it('character sem version → fallback pro upsert legado', async () => {
+    const r = await saveCharacterVersioned(makeChar('id-novo'))
+    expect(r.ok).toBe(true)
+    expect(await loadCharacterById('id-novo')).toBeTruthy()
+  })
+
+  it('RPC ausente (migration 0009 não aplicada) → fallback pro upsert', async () => {
+    await upsertCharacter(makeChar('id-a', 'Frodo', 1))
+    const ch = await loadCharacterById('id-a')
+    store.noVersionRpc = true
+    const edited = { ...ch, info: { ...ch.info, level: 7 } }
+    const r = await saveCharacterVersioned(edited)
+    expect(r.ok).toBe(true)
+    const after = await loadCharacterById('id-a')
+    expect(after.info.level).toBe(7)
+  })
+
+  it('save redundante (mesmo data) não bumpa a versão', async () => {
+    await upsertCharacter(makeChar('id-a'))
+    // 1º save versionado pode bumpar (Zod materializa defaults/espelhos no
+    // payload — data muda de verdade). O no-op vale entre dois saves
+    // versionados consecutivos do MESMO conteúdo.
+    const ch1 = await loadCharacterById('id-a')
+    const r1 = await saveCharacterVersioned({ ...ch1 })
+    expect(r1.ok).toBe(true)
+    const ch2 = await loadCharacterById('id-a')
+    const r2 = await saveCharacterVersioned({ ...ch2 })
+    expect(r2.ok).toBe(true)
+    expect(r2.version).toBe(r1.version) // sem mudança real → trigger não bumpa
   })
 })

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { upsertCharacter } from '../utils/storage'
+import { saveCharacterVersioned } from '../utils/storage'
 import { reportError } from '../lib/report'
 
 /**
@@ -9,6 +9,9 @@ import { reportError } from '../lib/report'
  *   - delayMs (default 500) — debounce
  *   - enabled (default true) — quando false, não dispara save (modo readonly,
  *     ex: DM lendo ficha de jogador)
+ *   - onConflict — chamado quando o save falha por conflito de versão (#3:
+ *     outro dispositivo da mesma conta salvou no meio). O caller deve
+ *     refetchar a ficha e avisar o usuário.
  *
  * Garantias:
  *   - NÃO salva no carregamento inicial (abrir uma ficha não reescreve o que
@@ -17,10 +20,12 @@ import { reportError } from '../lib/report'
  *     cancelar o timeout — não perde a última alteração feita antes de sair.
  *   - Re-tenta o save pendente quando a conexão volta (evento `online`), pra
  *     cumprir o que o OfflineBanner promete.
+ *   - Lock otimista: cada save envia a versão esperada; conflito → onConflict
+ *     em vez de sobrescrever silenciosamente (last-write-wins).
  *
  * Retorna `{ saving, saved, error }` para feedback visual.
  */
-export function useAutoSave(character, { delayMs = 500, enabled = true } = {}) {
+export function useAutoSave(character, { delayMs = 500, enabled = true, onConflict = null } = {}) {
   const [status, setStatus] = useState({ saving: false, saved: false, error: null })
   const debounceRef = useRef(null)
   const flashRef = useRef(null)
@@ -30,16 +35,36 @@ export function useAutoSave(character, { delayMs = 500, enabled = true } = {}) {
   const pendingRef = useRef(null)
   // Char cujo último save FALHOU — alvo do retry no reconnect.
   const lastFailedRef = useRef(null)
+  // Última versão confirmada pelo servidor. O state do React não recebe a
+  // versão nova após cada save (este hook não tem setCharacter), então
+  // rastreamos aqui. O componente remonta por characterId (SheetBody é
+  // keyed), então a ref nunca mistura fichas diferentes.
+  const versionRef = useRef(null)
   const enabledRef = useRef(enabled)
-  enabledRef.current = enabled
+  const onConflictRef = useRef(onConflict)
+  useEffect(() => {
+    enabledRef.current = enabled
+    onConflictRef.current = onConflict
+  })
+
+  // Versão esperada = max(ref, character.version). O max cobre o refetch
+  // pós-conflito: a ficha fresca (versão maior) entra pelo state, enquanto a
+  // ref ainda guarda a versão antiga. Versões só crescem, então max é seguro.
+  const withKnownVersion = useCallback((char) => {
+    const fromChar = Number.isInteger(char?.version) ? char.version : null
+    const known = versionRef.current
+    const expected = known == null ? fromChar : (fromChar == null ? known : Math.max(known, fromChar))
+    return expected == null ? char : { ...char, version: expected }
+  }, [])
 
   const doSave = useCallback(async (char) => {
     // Limpa o pendente já no início: se desmontarmos durante o save em vôo,
     // o flush não dispara um segundo save do mesmo char.
     pendingRef.current = null
     if (mountedRef.current) setStatus(s => ({ ...s, saving: true }))
-    const result = await upsertCharacter(char)
+    const result = await saveCharacterVersioned(withKnownVersion(char))
     if (result.ok) {
+      if (Number.isInteger(result.version)) versionRef.current = result.version
       lastFailedRef.current = null
       if (!mountedRef.current) return
       setStatus({ saving: false, saved: true, error: null })
@@ -47,6 +72,13 @@ export function useAutoSave(character, { delayMs = 500, enabled = true } = {}) {
       flashRef.current = setTimeout(() => {
         if (mountedRef.current) setStatus(s => ({ ...s, saved: false }))
       }, 1500)
+    } else if (result.reason === 'conflict') {
+      // Outro dispositivo salvou no meio. Retry não resolve (a versão local
+      // continua velha) — quem resolve é o refetch do caller via onConflict.
+      lastFailedRef.current = null
+      if (!mountedRef.current) return
+      setStatus({ saving: false, saved: false, error: 'conflict' })
+      onConflictRef.current?.()
     } else {
       // Guarda o char pra re-tentar quando a conexão voltar.
       lastFailedRef.current = char
@@ -57,7 +89,7 @@ export function useAutoSave(character, { delayMs = 500, enabled = true } = {}) {
         errors: result.errors?.slice?.(0, 3),
       })
     }
-  }, [])
+  }, [withKnownVersion])
 
   // Cleanup no unmount: cancela timers e FAZ FLUSH do save pendente.
   useEffect(() => () => {
@@ -65,11 +97,12 @@ export function useAutoSave(character, { delayMs = 500, enabled = true } = {}) {
     if (debounceRef.current) clearTimeout(debounceRef.current)
     if (flashRef.current) clearTimeout(flashRef.current)
     if (pendingRef.current) {
-      // Fire-and-forget: o componente já está desmontando.
-      upsertCharacter(pendingRef.current)
+      // Fire-and-forget: o componente já está desmontando. Conflito aqui é
+      // irrecuperável (não há mais UI pra avisar) — aceito como perda rara.
+      saveCharacterVersioned(withKnownVersion(pendingRef.current))
       pendingRef.current = null
     }
-  }, [])
+  }, [withKnownVersion])
 
   // Retry quando a conexão volta (cumpre a promessa do OfflineBanner).
   useEffect(() => {
