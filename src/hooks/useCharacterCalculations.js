@@ -193,9 +193,13 @@ export function useCharacterCalculations(character, classData = null, classDataM
       fmt: formatModifier,
     }
   }, [
-    // NOTA: `attributes` e `character` estão aqui para compatibilidade com o
-    // React Compiler (que faz análise de dependências). Os primitivos
-    // str/dex/con/intel/wis/cha cobrem `attributes` conceitualmente.
+    // NOTA HONESTA (#19 super review): `character` é lido direto no corpo
+    // (calculateMaxHpMulticlass, listSpellcastingClasses, chosenFeatures) e como
+    // ele é um objeto novo a cada edição imutável, este memo recomputa a cada
+    // keystroke — os primitivos abaixo NÃO evitam o recompute, só satisfazem o
+    // exhaustive-deps. Mantido assim de propósito: os cálculos são baratos e a
+    // correção (sem stale) vale mais que a micro-otimização. Não é dead code,
+    // é um trade-off consciente.
     character, attributes,
     level, multiclasses, classIndex, feats,
     str, dex, con, intel, wis, cha,

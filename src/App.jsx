@@ -15,16 +15,40 @@ import { LoginScreen } from './auth/LoginScreen'
 import { ResetPasswordScreen } from './auth/ResetPasswordScreen'
 import './index.css'
 
-const CharacterSheet = lazy(() =>
+// Após um deploy, uma aba antiga ainda em memória pode pedir um chunk lazy
+// cujo hash sumiu do servidor (e do precache do SW) → ChunkLoadError. Sem
+// tratamento, o ErrorBoundary derruba o app inteiro. lazyWithReload recarrega
+// a página UMA vez (flag em sessionStorage evita loop) pra puxar o bundle novo.
+function lazyWithReload(factory) {
+  return lazy(() =>
+    factory()
+      .then(mod => {
+        sessionStorage.removeItem('chunkReloaded')
+        return mod
+      })
+      .catch(err => {
+        const msg = err?.message ?? ''
+        const isChunkError = /Loading chunk|dynamically imported module|Failed to fetch|importing a module script failed/i.test(msg)
+        if (isChunkError && !sessionStorage.getItem('chunkReloaded')) {
+          sessionStorage.setItem('chunkReloaded', '1')
+          window.location.reload()
+          return new Promise(() => {}) // nunca resolve — aguarda o reload
+        }
+        throw err
+      })
+  )
+}
+
+const CharacterSheet = lazyWithReload(() =>
   import('./components/CharacterSheet/CharacterSheet').then(m => ({ default: m.CharacterSheet }))
 )
-const CharacterWizard = lazy(() =>
+const CharacterWizard = lazyWithReload(() =>
   import('./components/CharacterWizardV2').then(m => ({ default: m.CharacterWizardV2 }))
 )
-const CampaignsScreen = lazy(() =>
+const CampaignsScreen = lazyWithReload(() =>
   import('./components/Campaigns').then(m => ({ default: m.CampaignsScreen }))
 )
-const CampaignDetail = lazy(() =>
+const CampaignDetail = lazyWithReload(() =>
   import('./components/Campaigns').then(m => ({ default: m.CampaignDetail }))
 )
 
@@ -33,6 +57,17 @@ function Loader() {
     <div className="min-h-screen flex items-center justify-center text-amber-400 text-sm">
       Carregando…
     </div>
+  )
+}
+
+// ErrorBoundary POR ROTA: um erro numa tela (ex: chunk órfão, crash de
+// componente) não derruba mais o app inteiro — só aquela rota mostra o
+// fallback, com botão de recarregar. (#18 da super review)
+function RouteShell({ children }) {
+  return (
+    <ErrorBoundary>
+      <Suspense fallback={<Loader />}>{children}</Suspense>
+    </ErrorBoundary>
   )
 }
 
@@ -68,13 +103,13 @@ function NewRoute() {
   const campaignId = raw && UUID_RE.test(raw) ? raw : null
   const initialCampaignId = params.has('campaignId') && campaignId ? campaignId : undefined
   return (
-    <Suspense fallback={<Loader />}>
+    <RouteShell>
       <CharacterWizard
         initialCampaignId={initialCampaignId}
         onBack={() => navigate('/')}
         onComplete={(id) => navigate(`/c/${id}`, { replace: true })}
       />
-    </Suspense>
+    </RouteShell>
   )
 }
 
@@ -82,12 +117,12 @@ function SheetRoute() {
   const navigate = useNavigate()
   const { id } = useParams()
   return (
-    <Suspense fallback={<Loader />}>
+    <RouteShell>
       <CharacterSheet
         characterId={id}
         onBack={() => navigate('/')}
       />
-    </Suspense>
+    </RouteShell>
   )
 }
 
@@ -95,9 +130,9 @@ function CampaignDetailRoute() {
   const navigate = useNavigate()
   const { id } = useParams()
   return (
-    <Suspense fallback={<Loader />}>
+    <RouteShell>
       <CampaignDetail campaignId={id} onBack={() => navigate('/campaigns')} />
-    </Suspense>
+    </RouteShell>
   )
 }
 
@@ -107,10 +142,10 @@ function AuthedRoutes() {
       <OfflineBanner />
       <div className="flex-1">
         <Routes>
-          <Route path="/" element={<ListRoute />} />
+          <Route path="/" element={<ErrorBoundary><ListRoute /></ErrorBoundary>} />
           <Route path="/new" element={<NewRoute />} />
           <Route path="/c/:id" element={<SheetRoute />} />
-          <Route path="/campaigns" element={<Suspense fallback={<Loader />}><CampaignsScreen /></Suspense>} />
+          <Route path="/campaigns" element={<RouteShell><CampaignsScreen /></RouteShell>} />
           <Route path="/campaigns/:id" element={<CampaignDetailRoute />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

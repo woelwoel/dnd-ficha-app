@@ -4,6 +4,14 @@ import { SheetCombatBar } from './SheetCombatBar'
 import { MoveToCampaignModal } from './MoveToCampaignModal'
 import { Icon } from '../ui/Icon'
 
+// Razões de falha de save → mensagem amigável no tooltip do "Sem salvar".
+const SAVE_ERROR_MESSAGES = {
+  limit: 'Limite de 100 fichas por conta atingido.',
+  'too-large': 'Ficha grande demais para salvar (limite ~200 KB).',
+  invalid: 'A ficha tem dados inválidos e não pôde ser salva.',
+  unknown: 'Não foi possível salvar. Verifique a conexão.',
+}
+
 /**
  * Barra superior única da ficha (header + combat bar fundidos).
  *
@@ -107,7 +115,7 @@ export function SheetHeader({
           ) : saveError ? (
             <span
               className="text-xs text-red-700 font-display"
-              title={`Erro: ${saveError}`}
+              title={SAVE_ERROR_MESSAGES[saveError] ?? `Erro: ${saveError}`}
               aria-label="Falha ao salvar"
               aria-live="polite"
             >⚠ Sem salvar</span>

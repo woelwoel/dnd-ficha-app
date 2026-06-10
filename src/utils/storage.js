@@ -179,7 +179,12 @@ export async function upsertCharacter(character, opts = {}) {
 
   if (error) {
     logDev('upsert falhou', error)
-    return { ok: false, reason: error.message?.includes('character_limit_reached') ? 'limit' : 'unknown' }
+    let reason = 'unknown'
+    if (error.message?.includes('character_limit_reached')) reason = 'limit'
+    // check constraint characters_data_size (< 200KB) → reason amigável em vez
+    // de "Sem salvar" opaco. 23514 = check_violation.
+    else if (error.code === '23514' || error.message?.includes('characters_data_size')) reason = 'too-large'
+    return { ok: false, reason }
   }
   return { ok: true, shortId: data?.short_id ?? null, campaignId: data?.campaign_id ?? null }
 }

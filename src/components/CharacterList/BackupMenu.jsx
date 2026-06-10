@@ -25,6 +25,7 @@ const REASON_MESSAGES = {
   'quota': 'Sem espaço no armazenamento do navegador.',
   'save-failed': 'Falha ao gravar no armazenamento.',
   'limit': 'Você atingiu o limite de 100 fichas por conta.',
+  'too-large': 'Uma das fichas é grande demais para salvar (limite ~200 KB).',
 }
 
 export function BackupMenu({ characterCount, onImported }) {
