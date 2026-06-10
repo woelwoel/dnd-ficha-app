@@ -18,7 +18,10 @@ import {
 export function useSheetHandlers({ setCharacter, races, classes, backgrounds }) {
   const handleClassChange = useCallback(newClassIndex => {
     const classData = classes.find(c => c.index === newClassIndex) ?? { index: newClassIndex }
-    setCharacter(prev => applyClassChange(prev, classData))
+    // Mapa classIndex → SRD pra reconstruir o pool de HD com os dados corretos
+    // de cada multiclasse (sem isso, multiclasses caem em d8).
+    const classDataByIndex = Object.fromEntries((classes ?? []).map(c => [c.index, c]))
+    setCharacter(prev => applyClassChange(prev, classData, classDataByIndex))
   }, [classes, setCharacter])
 
   const handleRaceChange = useCallback(idx => {

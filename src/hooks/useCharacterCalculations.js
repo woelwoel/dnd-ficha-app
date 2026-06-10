@@ -102,12 +102,14 @@ export function useCharacterCalculations(character, classData = null, classDataM
       ? calculateMaxHpMulticlass(character, fullClassMap)
       : null
 
-    // Iniciativa com Alert (+5) via feats.
-    const initiative = calculateInitiative(dex, { feats })
+    // Iniciativa com Alert (+5) via feats. Usa DES efetiva (itens mágicos
+    // que setam/aumentam DES devem refletir na iniciativa).
+    const initiative = calculateInitiative(effectiveAttrs.dex, { feats })
 
-    // Atributo de magia (compat: classe primária)
+    // Atributo de magia (compat: classe primária). Usa atributo EFETIVO —
+    // ex: Tiara da Inteligência muda a CD do Mago.
     const spellAbilityKey = resolveAbilityKey(spellAbilityLabel)
-    const spellScore = spellAbilityKey ? (attributes?.[spellAbilityKey] ?? 10) : 10
+    const spellScore = spellAbilityKey ? (effectiveAttrs?.[spellAbilityKey] ?? 10) : 10
 
     const spellSaveDC = spellAbilityKey
       ? calculateSpellSaveDC(spellScore, profBonus)
@@ -118,9 +120,10 @@ export function useCharacterCalculations(character, classData = null, classDataM
       : null
 
     // Slots unificados (single ou multiclasse) — sempre passa pelo mesmo caminho.
-    // `getSpellSlots` espera (primaryClass, primaryLevel, multiclasses) e
-    // devolve null para single-class não-conjurador / só-bruxo.
-    const maxSlots = getSpellSlots(classIndex, level, mcs) ?? {}
+    // `getSpellSlots` espera (primaryClass, primaryLevel, multiclasses, chosen) e
+    // devolve null para single-class não-conjurador / só-bruxo. `chosen` habilita
+    // third casters (Cavaleiro Místico / Trapaceiro Arcano via subclasse).
+    const maxSlots = getSpellSlots(classIndex, level, mcs, info?.chosenFeatures) ?? {}
     const safeUsedSlots = clampUsedSlots(usedSlots ?? {}, maxSlots)
 
     // Pact Magic (Bruxo) — slots separados; precisa do nível de bruxo agregado.
@@ -135,7 +138,7 @@ export function useCharacterCalculations(character, classData = null, classDataM
     const spellcastingClasses = listSpellcastingClasses(character) ?? []
     const spellMathByClass = {}
     for (const cls of spellcastingClasses) {
-      spellMathByClass[cls] = getClassSpellMath(cls, profBonus, attributes)
+      spellMathByClass[cls] = getClassSpellMath(cls, profBonus, effectiveAttrs)
     }
 
     const savingThrows = {}
@@ -150,7 +153,7 @@ export function useCharacterCalculations(character, classData = null, classDataM
     const isPerceptionProficient = skills?.includes('perception') ?? false
     const isPerceptionExpert     = expertiseSkills?.includes('perception') ?? false
     const passivePerception = calculatePassivePerception(
-      wis, profBonus, isPerceptionProficient, isPerceptionExpert, { feats }
+      effectiveAttrs.wis, profBonus, isPerceptionProficient, isPerceptionExpert, { feats }
     )
 
     const hpPercent = maxHp > 0

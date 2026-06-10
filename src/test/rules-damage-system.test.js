@@ -306,8 +306,17 @@ describe('rollDeathSave', () => {
     const spy = vi.spyOn(Math, 'random').mockReturnValue(0.5)
     const c = makeChar({ combat: { currentHp: 0 } })
     const { result } = rollDeathSave(c)
-    expect(result.roll).toBe(10) // ceil(0.5*20) = 10
+    expect(result.roll).toBe(11) // floor(0.5*20)+1 = 11
     expect(result.success).toBe(true)
+    spy.mockRestore()
+  })
+
+  it('random=0 produz 1 (nunca 0) — fix do ceil', () => {
+    // Antes: Math.ceil(0*20) = 0 (impossível num d20). Agora: floor(0)+1 = 1.
+    const spy = vi.spyOn(Math, 'random').mockReturnValue(0)
+    const c = makeChar({ combat: { currentHp: 0 } })
+    const { result } = rollDeathSave(c)
+    expect(result.roll).toBe(1)
     spy.mockRestore()
   })
 

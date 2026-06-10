@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { calculateMulticlassSpellSlots, getWarlockPactSlots, getSpellcastingRules } from '../utils/spellcasting'
+import { calculateMulticlassSpellSlots, getSpellSlots, getWarlockPactSlots, getSpellcastingRules } from '../utils/spellcasting'
 
 describe('calculateMulticlassSpellSlots', () => {
   it('monoclasse sem multiclasse retorna null', () => {
@@ -37,11 +37,53 @@ describe('calculateMulticlassSpellSlots', () => {
     expect(slots).toBeNull()
   })
 
-  it('patrulheiro5/ladino2 → nível efetivo 2 (half-caster) → slots corretos', () => {
-    // patrulheiro é half (5 → floor(5/2)=2), ladino é non-caster
+  it('patrulheiro5/ladino2 → conjurador ÚNICO → tabela publicada do Patrulheiro', () => {
+    // Ladino (sem subclasse arcana) não é conjurador, então só o Patrulheiro
+    // conta → conjurador único → ceil(5/2)=3 → linha 3 = 4×1° + 2×2°.
+    // (A regra floor(level/2) só vale quando há 2+ classes conjuradoras.)
     const slots = calculateMulticlassSpellSlots('patrulheiro', 5, [{ class: 'ladino', level: 2 }])
     expect(slots).not.toBeNull()
-    expect(slots[1]).toBe(3)
+    expect(slots[1]).toBe(4)
+    expect(slots[2]).toBe(2)
+  })
+})
+
+describe('getSpellSlots — third casters (subclasse)', () => {
+  const ek = { martial_archetype: 'cavaleiro_mistico' }
+  const at = { roguish_archetype: 'trapaceiro_arcano' }
+
+  it('Guerreiro 3 Cavaleiro Místico → 2 slots de nível 1 (PHB p.75)', () => {
+    const slots = getSpellSlots('guerreiro', 3, [], ek)
+    expect(slots).toEqual({ 1: 2 })
+  })
+
+  it('Guerreiro 7 Cavaleiro Místico → ceil(7/3)=3 → 4×1° + 2×2°', () => {
+    const slots = getSpellSlots('guerreiro', 7, [], ek)
+    expect(slots[1]).toBe(4)
+    expect(slots[2]).toBe(2)
+  })
+
+  it('Guerreiro 2 Cavaleiro Místico (antes do nível 3) → sem slots', () => {
+    expect(getSpellSlots('guerreiro', 2, [], ek)).toBeNull()
+  })
+
+  it('Guerreiro 3 SEM subclasse arcana → sem slots', () => {
+    expect(getSpellSlots('guerreiro', 3, [])).toBeNull()
+  })
+
+  it('Ladino 13 Trapaceiro Arcano → ceil(13/3)=5 → até 3° círculo', () => {
+    const slots = getSpellSlots('ladino', 13, [], at)
+    expect(slots[1]).toBe(4)
+    expect(slots[2]).toBe(3)
+    expect(slots[3]).toBe(2)
+  })
+
+  it('Cavaleiro Místico 6 / Mago 3 → multiclasse: floor(6/3)+3 = 5', () => {
+    // 2 conjuradores → regra floor por classe (PHB p.164): EK floor(6/3)=2 + mago 3 = 5.
+    const slots = getSpellSlots('guerreiro', 6, [{ class: 'mago', level: 3, chosenFeatures: {} }], ek)
+    expect(slots[1]).toBe(4)
+    expect(slots[2]).toBe(3)
+    expect(slots[3]).toBe(2)
   })
 })
 

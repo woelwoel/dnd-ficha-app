@@ -80,8 +80,8 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   // getSpellSlots ignora o nível de Bruxo (Pact Magic é separado), então
   // Bruxo primário + Mago MC mostra os slots do Mago aqui corretamente.
   const unifiedSlots = useMemo(
-    () => getSpellSlots(classIndex, level, mcs) ?? {},
-    [classIndex, level, mcs]
+    () => getSpellSlots(classIndex, level, mcs, character.info?.chosenFeatures) ?? {},
+    [classIndex, level, mcs, character.info?.chosenFeatures]
   )
   const unifiedSlotLevels = useMemo(
     () => Object.keys(unifiedSlots).map(Number).sort((a, b) => a - b),

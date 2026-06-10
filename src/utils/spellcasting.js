@@ -17,6 +17,44 @@ export const CASTER_TYPE = {
   patrulheiro:'half',
 }
 
+/**
+ * Resolve o tipo de conjurador de UMA classe considerando a SUBCLASSE.
+ * Além de full/half (CASTER_TYPE), trata os "third casters" cuja conjuração
+ * vem da subclasse escolhida (PHB p.75 / p.98):
+ *   - Guerreiro Cavaleiro Místico (chosenFeatures.martial_archetype)
+ *   - Ladino Trapaceiro Arcano    (chosenFeatures.roguish_archetype)
+ *
+ * @param {string} classIndex
+ * @param {object} [chosen] - chosenFeatures DAQUELA classe (não o do primário!)
+ * @returns {'full'|'half'|'third'|null}
+ */
+export function casterTypeForClass(classIndex, chosen = {}) {
+  const base = CASTER_TYPE[classIndex]
+  if (base) return base
+  if (classIndex === 'guerreiro' && chosen?.martial_archetype === 'cavaleiro_mistico') return 'third'
+  if (classIndex === 'ladino'    && chosen?.roguish_archetype === 'trapaceiro_arcano') return 'third'
+  return null
+}
+
+/**
+ * Constrói a lista de classes conjuradoras (full/half/third) do personagem,
+ * cada uma com seu nível e tipo. O Bruxo é EXCLUÍDO (Pact Magic é separado).
+ * Cada entrada de multiclasse lê seu PRÓPRIO `chosenFeatures`.
+ */
+function collectCasterEntries(primaryClass, primaryLevel, multiclasses, primaryChosen) {
+  const all = [
+    { class: primaryClass, level: primaryLevel, chosen: primaryChosen ?? {} },
+    ...(multiclasses ?? []).map(m => ({ class: m.class, level: m.level, chosen: m.chosenFeatures ?? {} })),
+  ]
+  const out = []
+  for (const e of all) {
+    if (!e.class || !e.level) continue
+    const type = casterTypeForClass(e.class, e.chosen)
+    if (type) out.push({ class: e.class, level: e.level, type })
+  }
+  return out
+}
+
 const SPELLCASTING_CLASSES_INCL_PACT = new Set([
   ...Object.keys(CASTER_TYPE),
   'bruxo',
@@ -93,29 +131,31 @@ export function getWarlockPactSlots(warlockLevel) {
 }
 
 /**
- * Calcula o "nível efetivo de conjurador" (PHB p.164) somando:
+ * Calcula o "nível efetivo de conjurador" em MULTICLASSE (PHB p.164) somando:
  *   - níveis completos das classes 'full'
- *   - floor(level/2) das classes 'half', POR CLASSE (não na soma).
+ *   - floor(level/2) das classes 'half', POR CLASSE (não na soma)
+ *   - floor(level/3) das classes 'third' (Cavaleiro Místico / Trapaceiro Arcano)
  *
  * O Bruxo (Pact Magic) é IGNORADO aqui — ele tem slots próprios.
  *
+ * NOTA: a regra floor() só vale com 2+ classes conjuradoras. Conjurador ÚNICO
+ * usa a tabela publicada da classe (ceil) — tratado em `getSpellSlots`.
+ *
  * @param {string} primaryClass
  * @param {number} primaryLevel
- * @param {Array<{class:string, level:number}>} multiclasses
+ * @param {Array<{class:string, level:number, chosenFeatures?:object}>} multiclasses
+ * @param {object} [primaryChosen] - chosenFeatures da classe primária
  * @returns {{ effectiveLevel:number, hasUnifiedCaster:boolean }}
  */
-export function computeEffectiveCasterLevel(primaryClass, primaryLevel, multiclasses = []) {
-  const all = [{ class: primaryClass, level: primaryLevel }, ...(multiclasses ?? [])]
+export function computeEffectiveCasterLevel(primaryClass, primaryLevel, multiclasses = [], primaryChosen = {}) {
+  const casters = collectCasterEntries(primaryClass, primaryLevel, multiclasses, primaryChosen)
   let eff = 0
-  let has = false
-  for (const { class: cls, level } of all) {
-    if (!cls || !level) continue
-    const t = CASTER_TYPE[cls]
-    if (t === 'full')      { eff += level;                     has = true }
-    else if (t === 'half') { eff += Math.floor(level / 2);     has = true }
-    // bruxo, ladino-arcano, guerreiro-cavaleiro etc. ficam fora.
+  for (const { level, type } of casters) {
+    if (type === 'full')       eff += level
+    else if (type === 'half')  eff += Math.floor(level / 2)
+    else if (type === 'third') eff += Math.floor(level / 3)
   }
-  return { effectiveLevel: eff, hasUnifiedCaster: has }
+  return { effectiveLevel: eff, hasUnifiedCaster: casters.length > 0 }
 }
 
 /**
@@ -129,40 +169,45 @@ export function computeEffectiveCasterLevel(primaryClass, primaryLevel, multicla
  *
  * @param {string} primaryClass
  * @param {number} primaryLevel
- * @param {Array<{class:string, level:number}>} [multiclasses]
+ * @param {Array<{class:string, level:number, chosenFeatures?:object}>} [multiclasses]
+ * @param {object} [primaryChosen] - chosenFeatures da classe primária (third casters)
  * @returns {Object<number, number>|null}  { 1: 4, 2: 3, ... } ou null
  */
-export function getSpellSlots(primaryClass, primaryLevel, multiclasses = []) {
+export function getSpellSlots(primaryClass, primaryLevel, multiclasses = [], primaryChosen = {}) {
   const mcs = multiclasses ?? []
-  const t = CASTER_TYPE[primaryClass]
+  const casters = collectCasterEntries(primaryClass, primaryLevel, mcs, primaryChosen)
+  if (casters.length === 0) return null
 
-  // Solo half-caster (Paladino/Patrulheiro): usa a tabela PUBLICADA da
-  // classe (PHB p.84/p.91), que equivale a `effectiveLevel = ceil(level/2)`
-  // na tabela unificada. A regra `floor(level/2)` so vale em MULTICLASSE
-  // (PHB p.165). Sem essa exceção, um Paladino 5 solo veria 3 slots
-  // de nv 1 em vez dos 4+2 corretos.
-  const isSoloHalfCaster = t === 'half' && mcs.length === 0
-  if (isSoloHalfCaster) {
-    if (primaryLevel < 2) return null
-    const eff = Math.ceil(primaryLevel / 2)
-    const row = SPELL_SLOTS_TABLE[Math.min(20, eff) - 1]
-    const result = {}
-    for (let i = 0; i < 9; i++) {
-      if (row[i] > 0) result[i + 1] = row[i]
+  let effectiveLevel
+  if (casters.length === 1) {
+    // Conjurador ÚNICO: usa a tabela PUBLICADA da classe, que equivale a
+    // ceil(level/2) (half: Paladino/Patrulheiro, PHB p.84/p.91) ou
+    // ceil(level/3) (third: Cavaleiro Místico/Trapaceiro Arcano, PHB p.75/p.98).
+    // A regra floor() só vale em MULTICLASSE (PHB p.165). Sem essa exceção,
+    // um Paladino 5 solo veria 3 slots de nv 1 em vez dos 4+2 corretos, e um
+    // Patrulheiro/Ladino seria subcontado.
+    const c = casters[0]
+    if (c.type === 'full') {
+      effectiveLevel = c.level
+    } else if (c.type === 'half') {
+      if (c.level < 2) return null
+      effectiveLevel = Math.ceil(c.level / 2)
+    } else { // third
+      if (c.level < 3) return null
+      effectiveLevel = Math.ceil(c.level / 3)
     }
-    return Object.keys(result).length > 0 ? result : null
+  } else {
+    // 2+ conjuradores: nível efetivo combinado (floor por classe — PHB p.164).
+    effectiveLevel = computeEffectiveCasterLevel(primaryClass, primaryLevel, mcs, primaryChosen).effectiveLevel
   }
 
-  const { effectiveLevel, hasUnifiedCaster } = computeEffectiveCasterLevel(
-    primaryClass, primaryLevel, mcs
-  )
-  if (!hasUnifiedCaster || effectiveLevel < 1) return null
+  if (effectiveLevel < 1) return null
   const row = SPELL_SLOTS_TABLE[Math.min(20, effectiveLevel) - 1]
   const result = {}
   for (let i = 0; i < 9; i++) {
     if (row[i] > 0) result[i + 1] = row[i]
   }
-  return result
+  return Object.keys(result).length > 0 ? result : null
 }
 
 /**

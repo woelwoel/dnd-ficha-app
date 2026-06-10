@@ -3,7 +3,7 @@
 // Sub-componentes vivem em ./levelProgression/.
 import { useState } from 'react'
 import { getModifier } from '../../utils/calculations'
-import { calculateMulticlassSpellSlots } from '../../utils/spellcasting'
+import { getSpellSlots } from '../../utils/spellcasting'
 import { useSrd } from '../../providers/SrdProvider'
 import { useClassProgressionData } from './levelProgression/useClassProgressionData'
 import { enrichWithSubclassSpells } from '../../domain/subclassSpells'
@@ -47,7 +47,7 @@ export function LevelProgression({
   const usedClasses    = new Set([classIndex, ...multiclasses.map(m => m.class)])
   const availableForMC = (classes ?? []).filter(c => !usedClasses.has(c.index))
   const fusedSlots     = multiclasses.length > 0
-    ? calculateMulticlassSpellSlots(classIndex, currentLevel, multiclasses)
+    ? getSpellSlots(classIndex, currentLevel, multiclasses, chosenFeatures)
     : null
 
   // Wrapper para o onApplyLevelUp: injeta magias de subclasse automaticamente

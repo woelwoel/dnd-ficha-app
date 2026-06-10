@@ -147,23 +147,44 @@ export function evaluateMulticlassPrerequisites(attributes = {}, reqs) {
  *    PHB p.164)
  *  - spellcasting.ability (compat — UI antigas)
  *  - spellcasting.abilitiesByClass[novaClasse] (sem destruir as outras)
- *  - combat.hitDice.pool[dN] (preserva used)
+ *  - combat.hitDice.pool — RECONSTRUÍDO a partir das classes atuais (nova
+ *    primária + multiclasses), preservando `used` por tipo de dado. Sem isso,
+ *    o pool antigo vazava (Mago 5 d6 → vira Guerreiro = {d6:5, d10:5} = 10 HD
+ *    num personagem de nível 5).
+ *
+ * @param {object} character
+ * @param {object} classData - SRD da NOVA classe primária (hit_die, saves…)
+ * @param {object} [classDataByIndex] - mapa classIndex → SRD, p/ os hit_die
+ *                 das multiclasses. Sem ele, multiclasses caem em d8.
  */
-export function applyClassChange(character, classData) {
+export function applyClassChange(character, classData, classDataByIndex = {}) {
   if (!classData) return character
 
   const saveKeys = (classData.saving_throws ?? [])
     .map(keyFromName)
     .filter(Boolean)
 
-  const die = classData.hit_die ?? 8
-  const dieKey = `d${die}`
   const level = character.info?.level ?? 1
 
   const existingPool = (character.combat?.hitDice && typeof character.combat.hitDice === 'object'
     ? character.combat.hitDice.pool
     : null) ?? {}
-  const nextPool = { ...existingPool, [dieKey]: { total: level, used: existingPool[dieKey]?.used ?? 0 } }
+
+  // Reconstrói o pool do zero a partir das classes ATUAIS, agregando níveis
+  // por tipo de dado e preservando `used` (clampado ao novo total).
+  const totalsByDie = {}
+  const addDie = (hitDie, levels) => {
+    const k = `d${hitDie ?? 8}`
+    totalsByDie[k] = (totalsByDie[k] ?? 0) + (levels ?? 0)
+  }
+  addDie(classData.hit_die, level)
+  for (const mc of character.info?.multiclasses ?? []) {
+    addDie(classDataByIndex?.[mc.class]?.hit_die, mc.level)
+  }
+  const nextPool = {}
+  for (const [k, total] of Object.entries(totalsByDie)) {
+    nextPool[k] = { total, used: Math.min(total, existingPool[k]?.used ?? 0) }
+  }
 
   const newClassIndex = classData.index
   const classAbility = CLASS_SPELL_ABILITY[newClassIndex]
@@ -1040,7 +1061,7 @@ export function rollDeathSave(character, { roll } = {}) {
 
   const d20 = Number.isInteger(roll) && roll >= 1 && roll <= 20
     ? roll
-    : Math.ceil(Math.random() * 20)
+    : Math.floor(Math.random() * 20) + 1
 
   const ds = combat.deathSaves ?? emptyDeathSaves()
   let successes = ds.successes ?? 0

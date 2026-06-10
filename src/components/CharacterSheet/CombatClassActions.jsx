@@ -717,7 +717,8 @@ export function CombatClassActions({
   const slotsMax = getSpellSlots(
     character.info?.class,
     character.info?.level ?? 0,
-    character.info?.multiclasses ?? []
+    character.info?.multiclasses ?? [],
+    character.info?.chosenFeatures
   ) ?? {}
   const usedSlots = character.spellcasting?.usedSlots ?? {}
   const slotsAvailable = Object.fromEntries(
