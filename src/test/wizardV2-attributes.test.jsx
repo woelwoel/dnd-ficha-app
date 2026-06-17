@@ -11,10 +11,10 @@ import { INITIAL_DRAFT_V2 } from '../components/CharacterWizardV2/hooks/useDraft
 const empty = INITIAL_DRAFT_V2
 
 describe('attribute-helpers', () => {
-  it('rollFourD6Drop retorna entre 3 e 18', () => {
-    for (let i = 0; i < 100; i++) {
+  it('rollFourD6Drop retorna entre 8 e 18 (piso de 8 por re-roll)', () => {
+    for (let i = 0; i < 200; i++) {
       const v = rollFourD6Drop()
-      expect(v).toBeGreaterThanOrEqual(3)
+      expect(v).toBeGreaterThanOrEqual(8)
       expect(v).toBeLessThanOrEqual(18)
     }
   })
@@ -155,7 +155,7 @@ describe('FourD6UI', () => {
     const call = updateDraft.mock.calls[0][0]
     expect(call.rolledScores).toHaveLength(6)
     call.rolledScores.forEach(v => {
-      expect(v).toBeGreaterThanOrEqual(3)
+      expect(v).toBeGreaterThanOrEqual(8)
       expect(v).toBeLessThanOrEqual(18)
     })
   })

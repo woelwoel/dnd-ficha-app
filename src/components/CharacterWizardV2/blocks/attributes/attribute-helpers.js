@@ -1,9 +1,17 @@
 // src/components/CharacterWizardV2/blocks/attributes/attribute-helpers.js
 import { STANDARD_ARRAY } from '../../../../utils/calculations'
 
+// Valor mínimo aceito num dado de atributo: re-rolamos qualquer resultado
+// abaixo disso para não nascerem atributos fracos (faixa efetiva 8–18).
+export const MIN_ABILITY_ROLL = 8
+
 export function rollFourD6Drop() {
-  const dice = Array.from({ length: 4 }, () => Math.ceil(Math.random() * 6))
-  return dice.reduce((a, b) => a + b, 0) - Math.min(...dice)
+  let result
+  do {
+    const dice = Array.from({ length: 4 }, () => Math.ceil(Math.random() * 6))
+    result = dice.reduce((a, b) => a + b, 0) - Math.min(...dice)
+  } while (result < MIN_ABILITY_ROLL)
+  return result
 }
 
 export function rollFourD6DropSix() {
