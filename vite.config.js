@@ -55,10 +55,13 @@ export default defineConfig({
             //    (catálogo de 70 bestas SRD pra Forma Selvagem do Druida).
             //  v3 → v4 (2026-05-30): traduções completas (ataques + traços)
             //    no wild-shape-beasts-pt.json.
+            //  v4 → v5 (2026-06-17): marcação de combate (combat/category/
+            //    actionType) nas features de phb-class-progression-pt.json e
+            //    phb-class-choices-pt.json, consumida pela aba Combate.
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v4',
+              cacheName: 'srd-data-v5',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
