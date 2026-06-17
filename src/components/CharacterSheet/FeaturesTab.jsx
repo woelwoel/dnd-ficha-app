@@ -377,6 +377,7 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
           combat:     f.combat,
           category:   f.category,
           actionType: f.actionType,
+          placeholder: Boolean((f.subclass || f.choice_id) && !chosen),
         }
       })
     )
@@ -397,6 +398,7 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
             combat:     f.combat,
             category:   f.category,
             actionType: f.actionType,
+            placeholder: Boolean((f.subclass || f.choice_id) && !chosen),
           }
         })
       )
@@ -424,7 +426,7 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
      * o traço é de combate e vai pra aba Combate; senão fica em Habilidades. */
     const raceCombatFeatures = raceTraitsAll
       .filter(f => detectActionType(f.desc) !== null)
-      .map(f => ({ ...f, tier: 'essencial', type: actionTypeOf(f) })) // tier consumido na Task 6 (segmentado Essencial/Situacional)
+      .map(f => ({ ...f, tier: 'essencial', type: actionTypeOf(f) })) // tier alimenta o controle segmentado Essencial/Situacional
     const raceFeatures = raceTraitsAll.filter(f => detectActionType(f.desc) === null)
 
     /* ── Talentos ── */
@@ -467,17 +469,20 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
           combat:     opt.combat,
           category:   opt.category,
           actionType: opt.actionType,
+          placeholder: false,
         })
       }
     }
     const classFeaturesAll = [...classFeatures, ...subChoiceFeatures]
 
-    /* ── Dois baldes derivados de uma única lista enriquecida ── */
-    const enriched = [...classFeaturesAll, ...multiFeatures]
+    /* ── Dois baldes derivados de uma única lista enriquecida ──
+     * Placeholders genéricos de subclasse não-resolvidos (ex.: "Característica
+     * do Arquétipo Marcial") são removidos pra não poluir nenhuma das listas. */
+    const enriched = [...classFeaturesAll, ...multiFeatures].filter(f => !f.placeholder)
     const combatFeatures = [
       ...enriched
         .filter(f => combatTier(f) !== null)
-        .map(f => ({ ...f, tier: combatTier(f), type: actionTypeOf(f) })), // tier consumido na Task 6 (segmentado Essencial/Situacional)
+        .map(f => ({ ...f, tier: combatTier(f), type: actionTypeOf(f) })), // tier alimenta o controle segmentado Essencial/Situacional
       ...raceCombatFeatures,
     ]
     const nonCombatFeatures = enriched.filter(f => combatTier(f) === null)
