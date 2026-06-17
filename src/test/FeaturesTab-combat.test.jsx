@@ -54,6 +54,18 @@ describe('FeaturesTab — aba Combate', () => {
     expect(screen.queryByText(/Aumento de Atributo/i)).not.toBeInTheDocument()
   })
 
+  it('segmenta essencial vs situacional', async () => {
+    const user = userEvent.setup()
+    render(<FeaturesTab character={character} featureUses={[]} />)
+    // Essencial (padrão): Ataque Furtivo visível, Sentido Cego não
+    expect(screen.getByText(/Ataque Furtivo/i)).toBeInTheDocument()
+    expect(screen.queryByText(/Sentido Cego/i)).not.toBeInTheDocument()
+    // Trocar pro segmento Situacional
+    await user.click(screen.getByRole('button', { name: /Situacional/i }))
+    expect(screen.getByText(/Sentido Cego/i)).toBeInTheDocument()
+    expect(screen.queryByText(/Ataque Furtivo/i)).not.toBeInTheDocument()
+  })
+
   it('traço racial de combate (heurística) aparece em Combate; passivo fica em Habilidades', async () => {
     const user = userEvent.setup()
     render(<FeaturesTab character={character} featureUses={[]} />)

@@ -336,6 +336,7 @@ function PendingChoicesSection({
    ══════════════════════════════════════════════════════════════════ */
 export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetChosenFeature }) {
   const [activeFilter, setActiveFilter] = useState('combate')
+  const [combatTierView, setCombatTierView] = useState('essencial')
   const { progression, races, classChoices } = useSrd()
   const allFeats = useLazySrdDataset('feats')
   const { info } = character
@@ -525,14 +526,79 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
       {/* ══ Vista: Combate ══ */}
       {activeFilter === 'combate' && (
         <div className="space-y-6">
-          <ActionGroup
-            title="Combate"
-            icon={<Icon name="sword" size={12} strokeWidth={1.75} />}
-            actions={combatFeatures}
-            featureUses={featureUses}
-            onSpend={onSpend}
-            onRegain={onRegain}
-          />
+          {/* Controle segmentado Essencial / Situacional */}
+          <div className="inline-flex rounded-lg border border-gray-700 overflow-hidden mb-4">
+            {[['essencial', 'Essencial'], ['situacional', 'Situacional']].map(([id, label]) => (
+              <button
+                key={id}
+                onClick={() => setCombatTierView(id)}
+                className={[
+                  'px-4 py-1.5 text-sm font-medium transition-colors',
+                  combatTierView === id
+                    ? 'bg-blue-700/50 text-blue-200'
+                    : 'bg-gray-800/60 text-gray-400 hover:text-gray-200',
+                ].join(' ')}
+              >{label}</button>
+            ))}
+          </div>
+
+          {/* Features do tier ativo, agrupadas por tipo de ação */}
+          {(() => {
+            const tierFeatures = combatFeatures.filter(f => f.tier === combatTierView)
+            const byType = t => tierFeatures.filter(f => f.type === t)
+
+            if (tierFeatures.length === 0) {
+              return (
+                <div className="text-center py-12 text-gray-600">
+                  <div className="flex justify-center mb-3">
+                    <Icon name="sword" size={36} strokeWidth={1.5} />
+                  </div>
+                  <p className="text-sm">
+                    {combatTierView === 'situacional'
+                      ? 'Nenhuma habilidade situacional neste nível.'
+                      : 'Nenhuma habilidade essencial de combate.'}
+                  </p>
+                </div>
+              )
+            }
+
+            return (
+              <>
+                <ActionGroup
+                  title="Ações"
+                  icon={<Icon name="sword" size={12} strokeWidth={1.75} />}
+                  actions={byType('ação')}
+                  featureUses={featureUses}
+                  onSpend={onSpend}
+                  onRegain={onRegain}
+                />
+                <ActionGroup
+                  title="Ações Bônus"
+                  icon={<Icon name="bolt" size={12} strokeWidth={1.75} />}
+                  actions={byType('ação bônus')}
+                  featureUses={featureUses}
+                  onSpend={onSpend}
+                  onRegain={onRegain}
+                />
+                <ActionGroup
+                  title="Reações"
+                  icon={<Icon name="shield" size={12} strokeWidth={1.75} />}
+                  actions={byType('reação')}
+                  featureUses={featureUses}
+                  onSpend={onSpend}
+                  onRegain={onRegain}
+                />
+                <ActionGroup
+                  title="Passivas"
+                  icon={<Icon name="sparkle" size={12} strokeWidth={1.75} />}
+                  actions={byType('passiva')}
+                  featureUses={featureUses}
+                  onSpend={onSpend}
+                  onRegain={onRegain}
+                />
+              </>
+            )
+          })()}
 
           {combatFeatures.length === 0 && (
             <div className="text-center py-12 text-gray-600">
