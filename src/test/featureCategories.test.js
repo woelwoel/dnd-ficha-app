@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   detectActionType, combatTier, featureCategory, actionTypeOf,
-  isAttributeIncrease, COMBAT_TIERS, FEATURE_CATEGORIES,
+  isAttributeIncrease, featureUseId, COMBAT_TIERS, FEATURE_CATEGORIES,
 } from '../domain/featureCategories'
 
 describe('featureCategories', () => {
@@ -45,5 +45,27 @@ describe('featureCategories', () => {
   it('expõe as listas de valores válidos', () => {
     expect(COMBAT_TIERS).toEqual(['essencial', 'situacional'])
     expect(FEATURE_CATEGORIES).toEqual(['defesa', 'exploracao', 'social', 'magia'])
+  })
+
+  it('featureUseId liga feature ao recurso rastreável', () => {
+    // nome exato
+    expect(featureUseId('barbaro', 'Fúria')).toBe('barbaro-rage')
+    // nome do recurso diverge do nome da feature
+    expect(featureUseId('guerreiro', 'Segunda Rajada')).toBe('guerreiro-second-wind')
+    expect(featureUseId('feiticeiro', 'Fonte de Magia')).toBe('feiticeiro-sorcery-points')
+    // variantes de nível (sufixo entre parênteses) casam o mesmo recurso
+    expect(featureUseId('guerreiro', 'Surto de Ação (1 uso)')).toBe('guerreiro-action-surge')
+    expect(featureUseId('bardo', 'Inspiração Bárdica (d8)')).toBe('bardo-bardic-inspiration')
+    expect(featureUseId('clerigo', 'Canalizar Divindade (2/descanso)')).toBe('clerigo-channel-divinity')
+  })
+
+  it('featureUseId NÃO casa nomes parecidos nem desconhecidos', () => {
+    // "Fúria Implacável"/"Fúria Persistente" não são a Fúria (recurso)
+    expect(featureUseId('barbaro', 'Fúria Implacável')).toBe(null)
+    expect(featureUseId('barbaro', 'Fúria Persistente')).toBe(null)
+    // feature sem recurso
+    expect(featureUseId('ladino', 'Ataque Furtivo (1d6)')).toBe(null)
+    // classe errada
+    expect(featureUseId('mago', 'Fúria')).toBe(null)
   })
 })

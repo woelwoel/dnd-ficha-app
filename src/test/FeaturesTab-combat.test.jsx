@@ -24,6 +24,14 @@ const PROGRESSION = {
       ] },
     ],
   },
+  barbaro: {
+    name: 'Bárbaro',
+    levels: [
+      { level: 1, features: [
+        { name: 'Fúria', desc: 'Como ação bônus, você entra em fúria.', combat: 'essencial' },
+      ] },
+    ],
+  },
 }
 
 // Raça Draconato: traço de combate (heurística "Como ação") + traço passivo.
@@ -95,6 +103,28 @@ describe('FeaturesTab — aba Combate', () => {
     expect(screen.getByText(/Resistência a Dano/i)).toBeInTheDocument()
     // O traço de combate não deve estar duplicado em Habilidades
     expect(screen.queryByText(/Sopro do Dragão/i)).not.toBeInTheDocument()
+  })
+})
+
+describe('FeaturesTab — tracker inline na aba Combate', () => {
+  const barbaro = { info: { class: 'barbaro', level: 1, race: '', multiclasses: [], feats: [], chosenFeatures: {} } }
+
+  it('Fúria mostra o contador de usos inline mesmo com id de recurso divergente', () => {
+    // O recurso da Fúria tem id "barbaro-rage" (≠ id da feature). O useId liga os dois.
+    const featureUses = [{ id: 'barbaro-rage', name: 'Fúria', max: 3, used: 1, recharge: 'long' }]
+    render(<FeaturesTab character={barbaro} featureUses={featureUses} />)
+    expect(screen.getByText('Fúria')).toBeInTheDocument()
+    // ActionCard mostra "restantes/max" = (3-1)/3 = 2/3
+    expect(screen.getByText('2/3')).toBeInTheDocument()
+  })
+
+  it('gastar um uso da Fúria chama onSpend com o id do recurso (barbaro-rage)', async () => {
+    const user = userEvent.setup()
+    const onSpend = vi.fn()
+    const featureUses = [{ id: 'barbaro-rage', name: 'Fúria', max: 3, used: 0, recharge: 'long' }]
+    render(<FeaturesTab character={barbaro} featureUses={featureUses} onSpend={onSpend} />)
+    await user.click(screen.getByRole('button', { name: /Gastar uso/i }))
+    expect(onSpend).toHaveBeenCalledWith('barbaro-rage')
   })
 })
 

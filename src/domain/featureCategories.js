@@ -48,3 +48,38 @@ export function actionTypeOf(feature) {
 export function isAttributeIncrease(feature) {
   return (feature?.name ?? '').trim().toLowerCase().startsWith('aumento de atributo')
 }
+
+/* ──────────────────────────────────────────────────────────────────
+   Ligação feature → recurso rastreável (featureUses de domain/rules.js)
+
+   Os ids/nomes dos recursos divergem dos nomes PT das features (ex.:
+   "Segunda Rajada" usa o recurso "Retomar o Fôlego"/guerreiro-second-wind;
+   "Fonte de Magia" usa feiticeiro-sorcery-points). Mapeamos por
+   classe + nome-base (sem o sufixo entre parênteses) para casar variantes
+   de nível (ex.: "Surto de Ação (1 uso)"/"(2 usos)").
+   ────────────────────────────────────────────────────────────────── */
+const FEATURE_USE_LINKS = {
+  'barbaro/Fúria':                'barbaro-rage',
+  'guerreiro/Segunda Rajada':     'guerreiro-second-wind',
+  'guerreiro/Surto de Ação':      'guerreiro-action-surge',
+  'monge/Ki':                     'monge-ki',
+  'bardo/Inspiração Bárdica':     'bardo-bardic-inspiration',
+  'clerigo/Canalizar Divindade':  'clerigo-channel-divinity',
+  'paladino/Cura pelas Mãos':     'paladino-lay-on-hands',
+  'druida/Forma Selvagem':        'druida-wild-shape',
+  'feiticeiro/Fonte de Magia':    'feiticeiro-sorcery-points',
+}
+
+/** Remove o sufixo "(...)" final do nome para casar variantes de nível. */
+function baseFeatureName(name = '') {
+  return name.replace(/\s*\([^)]*\)\s*$/, '').trim()
+}
+
+/**
+ * Retorna o id do recurso rastreável (featureUses) ligado a esta feature,
+ * ou null se ela não concede um recurso. Casa por nome-base EXATO para não
+ * confundir "Fúria" com "Fúria Implacável".
+ */
+export function featureUseId(classIndex, featureName) {
+  return FEATURE_USE_LINKS[`${classIndex}/${baseFeatureName(featureName)}`] ?? null
+}

@@ -6,7 +6,7 @@ import { ChosenFeaturePicker } from '../CharacterWizardV2/blocks/class/ChosenFea
 import { resolveMultiSelect, isChoiceDone } from '../CharacterWizardV2/blocks/class-helpers'
 import { Icon } from '../ui/Icon'
 import {
-  detectActionType, combatTier, featureCategory, actionTypeOf, isAttributeIncrease,
+  detectActionType, combatTier, featureCategory, actionTypeOf, isAttributeIncrease, featureUseId,
 } from '../../domain/featureCategories'
 
 /* ══════════════════════════════════════════════════════════════════
@@ -209,15 +209,18 @@ function ActionGroup({ title, icon, actions, featureUses, onSpend, onRegain }) {
       </h3>
       <div className="space-y-2">
         {actions.map((a, i) => {
-          const tracker = featureUses?.find(u => u.id === a.id)
+          // Recurso rastreável: usa o useId ligado (ex.: "Segunda Rajada" →
+          // guerreiro-second-wind) ou cai no próprio id da feature.
+          const useId = a.useId ?? a.id
+          const tracker = featureUses?.find(u => u.id === useId)
           return (
             <ActionCard
               key={a.id ?? `${a.name}-${i}`}
               {...a}
               used={tracker?.used}
               max={tracker?.max}
-              onSpend={() => onSpend?.(a.id)}
-              onRegain={() => onRegain?.(a.id)}
+              onSpend={() => onSpend?.(useId)}
+              onRegain={() => onRegain?.(useId)}
             />
           )
         })}
@@ -377,6 +380,7 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
           combat:     f.combat,
           category:   f.category,
           actionType: f.actionType,
+          useId:      featureUseId(classIndex, f.name),
           placeholder: Boolean((f.subclass || f.choice_id) && !chosen),
         }
       })
@@ -398,6 +402,7 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
             combat:     f.combat,
             category:   f.category,
             actionType: f.actionType,
+            useId:      featureUseId(mc.class, f.name),
             placeholder: Boolean((f.subclass || f.choice_id) && !chosen),
           }
         })
