@@ -10,12 +10,14 @@
           {
             "value": "berserker",
             "name": "Caminho do Berserker",
-            "desc": "Caminho do Berserker é a senda da raiva pura — fúria desenfreada, dor ignorada, ofensa máxima.\n\nFeatures por nível:\n• Nv 3 — Frenesi: ao entrar em Fúria, pode escolher entrar em frenesi. Ganha 1 ataque corpo a corpo bônus a cada turno enquanto durar a Fúria. Quando ela acaba, sofre 1 nível de exaustão.\n• Nv 6 — Fúria Implacável: ao falhar em TR contra ser enfeitiçado ou amedrontado enquanto em Fúria, pode repetir o TR no início do próximo turno.\n• Nv 10 — Presença Intimidante: como ação, escolhe criatura a 9m; TR de Sabedoria; falha = amedrontada até fim do próximo turno seu (concentração). Pode estender no próximo turno como ação.\n• Nv 14 — Retaliação: como reação, quando sofrer dano de criatura a 1,5m, pode fazer um ataque corpo a corpo contra ela."
+            "desc": "Caminho do Berserker é a senda da raiva pura — fúria desenfreada, dor ignorada, ofensa máxima.\n\nFeatures por nível:\n• Nv 3 — Frenesi: ao entrar em Fúria, pode escolher entrar em frenesi. Ganha 1 ataque corpo a corpo bônus a cada turno enquanto durar a Fúria. Quando ela acaba, sofre 1 nível de exaustão.\n• Nv 6 — Fúria Implacável: ao falhar em TR contra ser enfeitiçado ou amedrontado enquanto em Fúria, pode repetir o TR no início do próximo turno.\n• Nv 10 — Presença Intimidante: como ação, escolhe criatura a 9m; TR de Sabedoria; falha = amedrontada até fim do próximo turno seu (concentração). Pode estender no próximo turno como ação.\n• Nv 14 — Retaliação: como reação, quando sofrer dano de criatura a 1,5m, pode fazer um ataque corpo a corpo contra ela.",
+            "combat": "essencial"
           },
           {
             "value": "totem",
             "name": "Caminho do Guerreiro Totêmico",
-            "desc": "Caminho do Guerreiro Totêmico é a conexão com espíritos animais ancestrais que conferem força mística.\n\nFeatures por nível:\n• Nv 3 — Buscador de Espíritos: ritualisticamente aprende as magias Falar com Animais e Sentido de Caçador (rituais 1×/dia).\n• Nv 3 — Espírito Totem: escolhe um animal-totem que define passivas durante Fúria (escolha aqui é manual no campo Notas até o picker interativo): URSO (resistência a todo dano exceto psíquico) / LOBO (aliados a 1,5m com vantagem contra inimigos que você possa ver) / ÁGUIA (desengajar/atacar+correr como ação bônus) / ALCE (velocidade +4,5m) / TIGRE (salto de 3m).\n• Nv 6 — Aspecto da Besta: ganha característica permanente do mesmo animal escolhido (urso = capacidade de carga dobrada; lobo = rastrear melhor; etc.).\n• Nv 10 — Caminhante Espiritual: pode lançar Comungar com a Natureza como ritual.\n• Nv 14 — Totem Definitivo: passiva poderosa do animal (urso = ataques contra você têm desvantagem se atacarem aliado a 1,5m; lobo = derrubar inimigo a 1,5m ao acertar com arma corpo a corpo; etc.)."
+            "desc": "Caminho do Guerreiro Totêmico é a conexão com espíritos animais ancestrais que conferem força mística.\n\nFeatures por nível:\n• Nv 3 — Buscador de Espíritos: ritualisticamente aprende as magias Falar com Animais e Sentido de Caçador (rituais 1×/dia).\n• Nv 3 — Espírito Totem: escolhe um animal-totem que define passivas durante Fúria (escolha aqui é manual no campo Notas até o picker interativo): URSO (resistência a todo dano exceto psíquico) / LOBO (aliados a 1,5m com vantagem contra inimigos que você possa ver) / ÁGUIA (desengajar/atacar+correr como ação bônus) / ALCE (velocidade +4,5m) / TIGRE (salto de 3m).\n• Nv 6 — Aspecto da Besta: ganha característica permanente do mesmo animal escolhido (urso = capacidade de carga dobrada; lobo = rastrear melhor; etc.).\n• Nv 10 — Caminhante Espiritual: pode lançar Comungar com a Natureza como ritual.\n• Nv 14 — Totem Definitivo: passiva poderosa do animal (urso = ataques contra você têm desvantagem se atacarem aliado a 1,5m; lobo = derrubar inimigo a 1,5m ao acertar com arma corpo a corpo; etc.).",
+            "combat": "essencial"
           }
         ]
       },
@@ -28,27 +30,32 @@
           {
             "value": "urso",
             "name": "Urso",
-            "desc": "Enquanto em Fúria: resistência a todo tipo de dano EXCETO psíquico. O espírito do urso te torna durável o suficiente para enfrentar qualquer perigo."
+            "desc": "Enquanto em Fúria: resistência a todo tipo de dano EXCETO psíquico. O espírito do urso te torna durável o suficiente para enfrentar qualquer perigo.",
+            "combat": "essencial"
           },
           {
             "value": "lobo",
             "name": "Lobo",
-            "desc": "Enquanto em Fúria: seus aliados têm vantagem em ataques corpo a corpo contra qualquer criatura a até 1,5m de você que seja hostil a você."
+            "desc": "Enquanto em Fúria: seus aliados têm vantagem em ataques corpo a corpo contra qualquer criatura a até 1,5m de você que seja hostil a você.",
+            "combat": "essencial"
           },
           {
             "value": "aguia",
             "name": "Águia",
-            "desc": "Enquanto em Fúria (sem armadura pesada): outras criaturas têm desvantagem em ataques de oportunidade contra você. Pode usar a ação Disparada como ação bônus."
+            "desc": "Enquanto em Fúria (sem armadura pesada): outras criaturas têm desvantagem em ataques de oportunidade contra você. Pode usar a ação Disparada como ação bônus.",
+            "combat": "situacional"
           },
           {
             "value": "alce",
             "name": "Alce",
-            "desc": "Enquanto em Fúria (sem armadura pesada): velocidade de deslocamento aumenta em 4,5m."
+            "desc": "Enquanto em Fúria (sem armadura pesada): velocidade de deslocamento aumenta em 4,5m.",
+            "category": "exploracao"
           },
           {
             "value": "tigre",
             "name": "Tigre",
-            "desc": "Enquanto em Fúria: sua distância de salto longo aumenta em 3m e o salto alto em 90cm."
+            "desc": "Enquanto em Fúria: sua distância de salto longo aumenta em 3m e o salto alto em 90cm.",
+            "category": "exploracao"
           }
         ],
         "requires": {
@@ -64,27 +71,32 @@
           {
             "value": "urso_6",
             "name": "Aspecto do Urso",
-            "desc": "Você ganha o poder de carregar peso pesado: capacidade de carga, levantar e arrastar dobra."
+            "desc": "Você ganha o poder de carregar peso pesado: capacidade de carga, levantar e arrastar dobra.",
+            "category": "exploracao"
           },
           {
             "value": "lobo_6",
             "name": "Aspecto do Lobo",
-            "desc": "Você pode rastrear outras criaturas em ritmo rápido, e se move furtivamente em ritmo normal (PHB p.182)."
+            "desc": "Você pode rastrear outras criaturas em ritmo rápido, e se move furtivamente em ritmo normal (PHB p.182).",
+            "category": "exploracao"
           },
           {
             "value": "aguia_6",
             "name": "Aspecto da Águia",
-            "desc": "Você ganha visão de águia: pode ver até 1,5km sem dificuldade. Em luz baixa, sua visão não é prejudicada além de 30m."
+            "desc": "Você ganha visão de águia: pode ver até 1,5km sem dificuldade. Em luz baixa, sua visão não é prejudicada além de 30m.",
+            "category": "exploracao"
           },
           {
             "value": "alce_6",
             "name": "Aspecto do Alce",
-            "desc": "Pode percorrer longas distâncias: você e até 10 companheiros viajam 2× mais rápido (modo trip)."
+            "desc": "Pode percorrer longas distâncias: você e até 10 companheiros viajam 2× mais rápido (modo trip).",
+            "category": "exploracao"
           },
           {
             "value": "tigre_6",
             "name": "Aspecto do Tigre",
-            "desc": "Ganha proficiência em 2 perícias à sua escolha entre: Atletismo, Acrobacia, Furtividade ou Sobrevivência."
+            "desc": "Ganha proficiência em 2 perícias à sua escolha entre: Atletismo, Acrobacia, Furtividade ou Sobrevivência.",
+            "category": "social"
           }
         ],
         "requires": {
@@ -100,27 +112,32 @@
           {
             "value": "urso_14",
             "name": "Totem do Urso",
-            "desc": "Em Fúria, qualquer criatura a 1,5m hostil a você tem desvantagem em ataques contra alvos que não sejam você. Imune se não puder vê-lo ou ouvi-lo."
+            "desc": "Em Fúria, qualquer criatura a 1,5m hostil a você tem desvantagem em ataques contra alvos que não sejam você. Imune se não puder vê-lo ou ouvi-lo.",
+            "combat": "essencial"
           },
           {
             "value": "lobo_14",
             "name": "Totem do Lobo",
-            "desc": "Em Fúria, ao acertar criatura com ataque corpo a corpo, você pode usar ação bônus pra derrubá-la se for Grande ou menor."
+            "desc": "Em Fúria, ao acertar criatura com ataque corpo a corpo, você pode usar ação bônus pra derrubá-la se for Grande ou menor.",
+            "combat": "essencial"
           },
           {
             "value": "aguia_14",
             "name": "Totem da Águia",
-            "desc": "Em Fúria, ganha velocidade de voo igual à velocidade normal de deslocamento. Não funciona com armadura pesada."
+            "desc": "Em Fúria, ganha velocidade de voo igual à velocidade normal de deslocamento. Não funciona com armadura pesada.",
+            "category": "exploracao"
           },
           {
             "value": "alce_14",
             "name": "Totem do Alce",
-            "desc": "Em Fúria, ao se mover pelo menos 6m em linha reta e acertar ataque corpo a corpo, alvo tem TR de Força; falha = derrubado."
+            "desc": "Em Fúria, ao se mover pelo menos 6m em linha reta e acertar ataque corpo a corpo, alvo tem TR de Força; falha = derrubado.",
+            "combat": "essencial"
           },
           {
             "value": "tigre_14",
             "name": "Totem do Tigre",
-            "desc": "Em Fúria, na sua vez ganha um ataque corpo a corpo adicional como ação bônus contra uma criatura diferente da já atacada."
+            "desc": "Em Fúria, na sua vez ganha um ataque corpo a corpo adicional como ação bônus contra uma criatura diferente da já atacada.",
+            "combat": "essencial"
           }
         ],
         "requires": {
@@ -140,12 +157,14 @@
           {
             "value": "conhecimento",
             "name": "Colégio do Conhecimento",
-            "desc": "O Colégio do Conhecimento valoriza a aprendizagem e a sabedoria — bardos estudiosos, peritos em mil tópicos.\n\nFeatures por nível:\n• Nv 3 — Proficiências Bônus: ganha proficiência em 3 perícias à sua escolha.\n• Nv 3 — Palavras Cortantes: como reação quando uma criatura a 18m faz teste de ataque/atributo/dano, gasta 1 Inspiração de Bardo pra subtrair o dado do resultado dela (a criatura é imune se não pode ouvir ou se é imune a enfeitiçado).\n• Nv 6 — Segredos Mágicos Adicionais: aprende 2 magias de qualquer classe (incluindo truques). Contam como magias de bardo.\n• Nv 14 — Habilidades Inigualáveis: pode adicionar metade do bônus de proficiência (round down) em qualquer teste de habilidade que ainda não tenha proficiência."
+            "desc": "O Colégio do Conhecimento valoriza a aprendizagem e a sabedoria — bardos estudiosos, peritos em mil tópicos.\n\nFeatures por nível:\n• Nv 3 — Proficiências Bônus: ganha proficiência em 3 perícias à sua escolha.\n• Nv 3 — Palavras Cortantes: como reação quando uma criatura a 18m faz teste de ataque/atributo/dano, gasta 1 Inspiração de Bardo pra subtrair o dado do resultado dela (a criatura é imune se não pode ouvir ou se é imune a enfeitiçado).\n• Nv 6 — Segredos Mágicos Adicionais: aprende 2 magias de qualquer classe (incluindo truques). Contam como magias de bardo.\n• Nv 14 — Habilidades Inigualáveis: pode adicionar metade do bônus de proficiência (round down) em qualquer teste de habilidade que ainda não tenha proficiência.",
+            "combat": "essencial"
           },
           {
             "value": "valor",
             "name": "Colégio do Valor",
-            "desc": "O Colégio do Valor é a tradição dos bardos-guerreiros — música que ecoa de batalha em batalha.\n\nFeatures por nível:\n• Nv 3 — Proficiências de Combate: ganha proficiência em armaduras médias, escudos e armas marciais.\n• Nv 3 — Inspiração de Combate: aliado com Inspiração de Bardo pode usá-la pra somar à CA contra um ataque OU somar ao dano de uma jogada de arma.\n• Nv 6 — Ataque Extra: ao usar a ação Atacar, faz dois ataques em vez de um.\n• Nv 14 — Aprovação da Batalha: pode usar Inspiração de Bardo como ação bônus em si mesmo pra ganhar +1 CA até início do próximo turno."
+            "desc": "O Colégio do Valor é a tradição dos bardos-guerreiros — música que ecoa de batalha em batalha.\n\nFeatures por nível:\n• Nv 3 — Proficiências de Combate: ganha proficiência em armaduras médias, escudos e armas marciais.\n• Nv 3 — Inspiração de Combate: aliado com Inspiração de Bardo pode usá-la pra somar à CA contra um ataque OU somar ao dano de uma jogada de arma.\n• Nv 6 — Ataque Extra: ao usar a ação Atacar, faz dois ataques em vez de um.\n• Nv 14 — Aprovação da Batalha: pode usar Inspiração de Bardo como ação bônus em si mesmo pra ganhar +1 CA até início do próximo turno.",
+            "combat": "essencial"
           }
         ]
       },
@@ -159,92 +178,110 @@
           {
             "value": "acrobatics",
             "name": "Acrobacia",
-            "desc": "Você dobra o bônus de proficiência em testes de Acrobacia."
+            "desc": "Você dobra o bônus de proficiência em testes de Acrobacia.",
+            "category": "social"
           },
           {
             "value": "animal-handling",
             "name": "Adestramento",
-            "desc": "Você dobra o bônus de proficiência em testes de Adestramento."
+            "desc": "Você dobra o bônus de proficiência em testes de Adestramento.",
+            "category": "social"
           },
           {
             "value": "arcana",
             "name": "Arcanismo",
-            "desc": "Você dobra o bônus de proficiência em testes de Arcanismo."
+            "desc": "Você dobra o bônus de proficiência em testes de Arcanismo.",
+            "category": "social"
           },
           {
             "value": "athletics",
             "name": "Atletismo",
-            "desc": "Você dobra o bônus de proficiência em testes de Atletismo."
+            "desc": "Você dobra o bônus de proficiência em testes de Atletismo.",
+            "category": "social"
           },
           {
             "value": "deception",
             "name": "Enganação",
-            "desc": "Você dobra o bônus de proficiência em testes de Enganação."
+            "desc": "Você dobra o bônus de proficiência em testes de Enganação.",
+            "category": "social"
           },
           {
             "value": "history",
             "name": "História",
-            "desc": "Você dobra o bônus de proficiência em testes de História."
+            "desc": "Você dobra o bônus de proficiência em testes de História.",
+            "category": "social"
           },
           {
             "value": "insight",
             "name": "Intuição",
-            "desc": "Você dobra o bônus de proficiência em testes de Intuição."
+            "desc": "Você dobra o bônus de proficiência em testes de Intuição.",
+            "category": "social"
           },
           {
             "value": "intimidation",
             "name": "Intimidação",
-            "desc": "Você dobra o bônus de proficiência em testes de Intimidação."
+            "desc": "Você dobra o bônus de proficiência em testes de Intimidação.",
+            "category": "social"
           },
           {
             "value": "investigation",
             "name": "Investigação",
-            "desc": "Você dobra o bônus de proficiência em testes de Investigação."
+            "desc": "Você dobra o bônus de proficiência em testes de Investigação.",
+            "category": "social"
           },
           {
             "value": "medicine",
             "name": "Medicina",
-            "desc": "Você dobra o bônus de proficiência em testes de Medicina."
+            "desc": "Você dobra o bônus de proficiência em testes de Medicina.",
+            "category": "social"
           },
           {
             "value": "nature",
             "name": "Natureza",
-            "desc": "Você dobra o bônus de proficiência em testes de Natureza."
+            "desc": "Você dobra o bônus de proficiência em testes de Natureza.",
+            "category": "social"
           },
           {
             "value": "perception",
             "name": "Percepção",
-            "desc": "Você dobra o bônus de proficiência em testes de Percepção."
+            "desc": "Você dobra o bônus de proficiência em testes de Percepção.",
+            "category": "social"
           },
           {
             "value": "performance",
             "name": "Atuação",
-            "desc": "Você dobra o bônus de proficiência em testes de Atuação."
+            "desc": "Você dobra o bônus de proficiência em testes de Atuação.",
+            "category": "social"
           },
           {
             "value": "persuasion",
             "name": "Persuasão",
-            "desc": "Você dobra o bônus de proficiência em testes de Persuasão."
+            "desc": "Você dobra o bônus de proficiência em testes de Persuasão.",
+            "category": "social"
           },
           {
             "value": "religion",
             "name": "Religião",
-            "desc": "Você dobra o bônus de proficiência em testes de Religião."
+            "desc": "Você dobra o bônus de proficiência em testes de Religião.",
+            "category": "social"
           },
           {
             "value": "sleight-of-hand",
             "name": "Prestidigitação",
-            "desc": "Você dobra o bônus de proficiência em testes de Prestidigitação."
+            "desc": "Você dobra o bônus de proficiência em testes de Prestidigitação.",
+            "category": "social"
           },
           {
             "value": "stealth",
             "name": "Furtividade",
-            "desc": "Você dobra o bônus de proficiência em testes de Furtividade."
+            "desc": "Você dobra o bônus de proficiência em testes de Furtividade.",
+            "category": "social"
           },
           {
             "value": "survival",
             "name": "Sobrevivência",
-            "desc": "Você dobra o bônus de proficiência em testes de Sobrevivência."
+            "desc": "Você dobra o bônus de proficiência em testes de Sobrevivência.",
+            "category": "social"
           }
         ]
       }
@@ -261,37 +298,44 @@
           {
             "value": "conhecimento",
             "name": "Domínio do Conhecimento",
-            "desc": "Deuses do conhecimento valorizam a aprendizagem e a compreensão acima de tudo.\n\nCanalizar Divindade do Domínio:\n• Leitura de Pensamentos (Nv 2) — como ação, escolha uma criatura a até 18m. Ela faz TR de Sabedoria; falha = você lê seus pensamentos por 1 min (concentração). Pode terminar como ação para tentar conjurar sugestão telepática (CD do domínio).\n\nFeatures de Domínio por nível:\n• Nv 1 — Bênçãos do Conhecimento: aprende 2 idiomas; ganha proficiência em 2 perícias entre Arcanismo, História, Natureza ou Religião — e dobra a proficiência nelas (expertise).\n• Nv 2 — Canalizar Divindade: Leitura de Pensamentos (acima).\n• Nv 6 — Canal do Saber: como ação, ganha proficiência em qualquer perícia ou ferramenta por 10 min (2×/desc. curto).\n• Nv 8 — Golpe Potencializado: ataques de arma causam +1d8 dano (radiante ou necrótico, à escolha) — sobe para 2d8 no nv 14.\n• Nv 17 — Visões do Passado: ação de 1 min para receber visões sobre um objeto ou pessoa próxima (até 1×/desc. curto).\n\nMagias de Domínio sempre preparadas: Comando, Identificação (nv1); Augúrio, Sugestão (nv3); Sem Rastros, Falar com os Mortos (nv5); Adivinhação, Confusão (nv7); Lendas e Histórias, Scrying (nv9)."
+            "desc": "Deuses do conhecimento valorizam a aprendizagem e a compreensão acima de tudo.\n\nCanalizar Divindade do Domínio:\n• Leitura de Pensamentos (Nv 2) — como ação, escolha uma criatura a até 18m. Ela faz TR de Sabedoria; falha = você lê seus pensamentos por 1 min (concentração). Pode terminar como ação para tentar conjurar sugestão telepática (CD do domínio).\n\nFeatures de Domínio por nível:\n• Nv 1 — Bênçãos do Conhecimento: aprende 2 idiomas; ganha proficiência em 2 perícias entre Arcanismo, História, Natureza ou Religião — e dobra a proficiência nelas (expertise).\n• Nv 2 — Canalizar Divindade: Leitura de Pensamentos (acima).\n• Nv 6 — Canal do Saber: como ação, ganha proficiência em qualquer perícia ou ferramenta por 10 min (2×/desc. curto).\n• Nv 8 — Golpe Potencializado: ataques de arma causam +1d8 dano (radiante ou necrótico, à escolha) — sobe para 2d8 no nv 14.\n• Nv 17 — Visões do Passado: ação de 1 min para receber visões sobre um objeto ou pessoa próxima (até 1×/desc. curto).\n\nMagias de Domínio sempre preparadas: Comando, Identificação (nv1); Augúrio, Sugestão (nv3); Sem Rastros, Falar com os Mortos (nv5); Adivinhação, Confusão (nv7); Lendas e Histórias, Scrying (nv9).",
+            "category": "social"
           },
           {
             "value": "vida",
             "name": "Domínio da Vida",
-            "desc": "O domínio da Vida foca na energia positiva que sustenta toda a vida. Clérigos da vida são curadores por excelência.\n\nCanalizar Divindade do Domínio:\n• Preservar a Vida (Nv 2) — como ação, apresenta seu símbolo sagrado e cura criaturas vivas a até 9m. Divide um pool igual a 5×nível entre as escolhidas (ninguém pode receber mais que metade do PV máximo). Não funciona em mortos-vivos ou constructos.\n\nFeatures de Domínio por nível:\n• Nv 1 — Bônus de Proficiência em Armaduras Pesadas; Discípulo da Vida: toda magia de cura de nv 1+ que você conjurar restaura PV adicional igual a 2 + nv da magia.\n• Nv 2 — Canalizar Divindade: Preservar a Vida (acima).\n• Nv 6 — Curador Abençoado: magias de cura que você conjurar restauram PV em si mesmo igual a 2 + nv da magia (além da cura no alvo).\n• Nv 8 — Golpe Divino: ataques de arma causam +1d8 dano radiante (sobe para 2d8 no nv 14), 1×/turno.\n• Nv 17 — Cura Suprema: ao usar magia de cura com dado, use o valor máximo no lugar de rolar.\n\nMagias de Domínio sempre preparadas: Bênção, Curar Ferimentos (nv1); Restauração Menor, Magia da Paz (nv3); Pedido (Beacon of Hope), Reviver os Mortos (nv5); Guardião da Fé, Pancada Devastadora (nv7); Levantar Mortos, Curar Massivo (nv9)."
+            "desc": "O domínio da Vida foca na energia positiva que sustenta toda a vida. Clérigos da vida são curadores por excelência.\n\nCanalizar Divindade do Domínio:\n• Preservar a Vida (Nv 2) — como ação, apresenta seu símbolo sagrado e cura criaturas vivas a até 9m. Divide um pool igual a 5×nível entre as escolhidas (ninguém pode receber mais que metade do PV máximo). Não funciona em mortos-vivos ou constructos.\n\nFeatures de Domínio por nível:\n• Nv 1 — Bônus de Proficiência em Armaduras Pesadas; Discípulo da Vida: toda magia de cura de nv 1+ que você conjurar restaura PV adicional igual a 2 + nv da magia.\n• Nv 2 — Canalizar Divindade: Preservar a Vida (acima).\n• Nv 6 — Curador Abençoado: magias de cura que você conjurar restauram PV em si mesmo igual a 2 + nv da magia (além da cura no alvo).\n• Nv 8 — Golpe Divino: ataques de arma causam +1d8 dano radiante (sobe para 2d8 no nv 14), 1×/turno.\n• Nv 17 — Cura Suprema: ao usar magia de cura com dado, use o valor máximo no lugar de rolar.\n\nMagias de Domínio sempre preparadas: Bênção, Curar Ferimentos (nv1); Restauração Menor, Magia da Paz (nv3); Pedido (Beacon of Hope), Reviver os Mortos (nv5); Guardião da Fé, Pancada Devastadora (nv7); Levantar Mortos, Curar Massivo (nv9).",
+            "combat": "essencial"
           },
           {
             "value": "luz",
             "name": "Domínio da Luz",
-            "desc": "Deuses da luz promovem renascimento, verdade e vigilância — frequentemente usando o sol como símbolo.\n\nCanalizar Divindade do Domínio:\n• Chama Radiante (Nv 2) — como ação, apresenta seu símbolo sagrado. Cada criatura à escolha em uma esfera de 9m de raio centrada em um ponto que você escolha a até 18m deve fazer TR de Destreza; falha = 2d10+nível dano radiante (metade se sucesso). Cobertura total bloqueia.\n\nFeatures de Domínio por nível:\n• Nv 1 — Truque Bônus: você ganha o truque Luz se ainda não o conhecer.\n• Nv 1 — Aura de Aviso: como reação, quando uma criatura faz um ataque contra você, pode impor desvantagem nele. Usos = 1 + mod. de Sabedoria; recupera no desc. longo.\n• Nv 2 — Canalizar Divindade: Chama Radiante (acima).\n• Nv 6 — Aurora Improvisada: ao falhar em TR contra ser cego ou ofuscado por luz, você passa; aliados próximos também.\n• Nv 8 — Golpe Potencializado: +1d8 dano radiante em ataques de arma (2d8 no nv 14).\n• Nv 17 — Coroa da Luz: como ação, emite aura por 1 min — desvantagem em ataques contra você em 9m, criaturas que te ataquem sofrem dano radiante igual ao seu nível.\n\nMagias de Domínio sempre preparadas: Chamas Sagradas, Mãos Flamejantes (nv1); Esfera Flamejante, Raio Ardente (nv3); Luz do Dia, Tempestade de Frio (nv5); Muralha de Fogo, Olhos Cintilantes (nv7); Chama Estritante, Luz do Sol (nv9)."
+            "desc": "Deuses da luz promovem renascimento, verdade e vigilância — frequentemente usando o sol como símbolo.\n\nCanalizar Divindade do Domínio:\n• Chama Radiante (Nv 2) — como ação, apresenta seu símbolo sagrado. Cada criatura à escolha em uma esfera de 9m de raio centrada em um ponto que você escolha a até 18m deve fazer TR de Destreza; falha = 2d10+nível dano radiante (metade se sucesso). Cobertura total bloqueia.\n\nFeatures de Domínio por nível:\n• Nv 1 — Truque Bônus: você ganha o truque Luz se ainda não o conhecer.\n• Nv 1 — Aura de Aviso: como reação, quando uma criatura faz um ataque contra você, pode impor desvantagem nele. Usos = 1 + mod. de Sabedoria; recupera no desc. longo.\n• Nv 2 — Canalizar Divindade: Chama Radiante (acima).\n• Nv 6 — Aurora Improvisada: ao falhar em TR contra ser cego ou ofuscado por luz, você passa; aliados próximos também.\n• Nv 8 — Golpe Potencializado: +1d8 dano radiante em ataques de arma (2d8 no nv 14).\n• Nv 17 — Coroa da Luz: como ação, emite aura por 1 min — desvantagem em ataques contra você em 9m, criaturas que te ataquem sofrem dano radiante igual ao seu nível.\n\nMagias de Domínio sempre preparadas: Chamas Sagradas, Mãos Flamejantes (nv1); Esfera Flamejante, Raio Ardente (nv3); Luz do Dia, Tempestade de Frio (nv5); Muralha de Fogo, Olhos Cintilantes (nv7); Chama Estritante, Luz do Sol (nv9).",
+            "combat": "essencial"
           },
           {
             "value": "natureza",
             "name": "Domínio da Natureza",
-            "desc": "Deuses da natureza variam entre selvageria feroz e benignidade — pastores de florestas, mares e fertilidade.\n\nCanalizar Divindade do Domínio:\n• Encantar Animais e Plantas (Nv 2) — como ação, apresenta seu símbolo sagrado. Bestas e vegetais à escolha em 9m de raio devem fazer TR de Sabedoria; falha = encantadas por 1 minuto ou até sofrerem dano. Falam com você de forma rudimentar.\n\nFeatures de Domínio por nível:\n• Nv 1 — Acólito da Natureza: aprende 1 truque de druida e ganha proficiência em uma perícia entre Adestrar Animais, Natureza ou Sobrevivência.\n• Nv 1 — Proficiência em Armaduras Pesadas.\n• Nv 2 — Canalizar Divindade: Encantar Animais e Plantas (acima).\n• Nv 6 — Andarilho Divino: você e aliados a até 9m de você ganham resistência a uma escolha entre frio, fogo ou raio por 1 min (1×/desc. curto).\n• Nv 8 — Golpe Divino: +1d8 dano de frio, fogo ou raio em ataques de arma (2d8 no nv 14), 1×/turno.\n• Nv 17 — Mestre da Natureza: pode dar ordens telepáticas a feras e plantas que estejam encantadas por você.\n\nMagias de Domínio sempre preparadas: Falar com Animais, Enredar (nv1); Erupção Espinhosa, Marca Ardente (nv3); Plantas Conjuradas, Crescimento Vegetal (nv5); Dominar Besta, Crescimento Vegetal Maior (nv7); Insetos Gigantes, Comungar com a Natureza (nv9)."
+            "desc": "Deuses da natureza variam entre selvageria feroz e benignidade — pastores de florestas, mares e fertilidade.\n\nCanalizar Divindade do Domínio:\n• Encantar Animais e Plantas (Nv 2) — como ação, apresenta seu símbolo sagrado. Bestas e vegetais à escolha em 9m de raio devem fazer TR de Sabedoria; falha = encantadas por 1 minuto ou até sofrerem dano. Falam com você de forma rudimentar.\n\nFeatures de Domínio por nível:\n• Nv 1 — Acólito da Natureza: aprende 1 truque de druida e ganha proficiência em uma perícia entre Adestrar Animais, Natureza ou Sobrevivência.\n• Nv 1 — Proficiência em Armaduras Pesadas.\n• Nv 2 — Canalizar Divindade: Encantar Animais e Plantas (acima).\n• Nv 6 — Andarilho Divino: você e aliados a até 9m de você ganham resistência a uma escolha entre frio, fogo ou raio por 1 min (1×/desc. curto).\n• Nv 8 — Golpe Divino: +1d8 dano de frio, fogo ou raio em ataques de arma (2d8 no nv 14), 1×/turno.\n• Nv 17 — Mestre da Natureza: pode dar ordens telepáticas a feras e plantas que estejam encantadas por você.\n\nMagias de Domínio sempre preparadas: Falar com Animais, Enredar (nv1); Erupção Espinhosa, Marca Ardente (nv3); Plantas Conjuradas, Crescimento Vegetal (nv5); Dominar Besta, Crescimento Vegetal Maior (nv7); Insetos Gigantes, Comungar com a Natureza (nv9).",
+            "combat": "essencial"
           },
           {
             "value": "tempestade",
             "name": "Domínio da Tempestade",
-            "desc": "Deuses dos céus e mares — ventos, trovões e relâmpagos. Clérigos da tempestade são guerreiros poderosos.\n\nCanalizar Divindade do Domínio:\n• Rajada Destrutiva (Nv 2) — como ação, escolhe um ponto a até 18m. Cada criatura a 3m do ponto faz TR de Força; falha = 2d6+nível dano trovejante e é empurrada 3m para longe (metade do dano se sucesso, sem empurrão).\n\nFeatures de Domínio por nível:\n• Nv 1 — Proficiência em Armaduras Pesadas e Armas Marciais.\n• Nv 1 — Punição Tempestuosa: como reação, quando uma criatura a 1,5m te causa dano, ela sofre 2d8 dano de raio ou trovão (à escolha) — escala com nível.\n• Nv 2 — Canalizar Divindade: Rajada Destrutiva (acima).\n• Nv 6 — Trovão e Raio: como ação bônus, 1×/turno quando lança uma magia de raio ou trovão de nv 1+, pode causar 5 dano extra do mesmo tipo a outra criatura a até 1,5m.\n• Nv 8 — Golpe Divino: +1d8 dano trovejante em ataques de arma (2d8 no nv 14).\n• Nv 17 — Filho da Tempestade: ganha resistência permanente a dano de raio e trovão; em forma natural pode voar a velocidade igual à terrestre.\n\nMagias de Domínio sempre preparadas: Trovão Estridente, Onda Trovejante (nv1); Pancada na Cabeça, Subir nos Ventos (nv3); Convocar Raio, Insanidade da Tempestade (nv5); Controlar a Água, Tempestade de Gelo (nv7); Destruição, Insufflação (nv9)."
+            "desc": "Deuses dos céus e mares — ventos, trovões e relâmpagos. Clérigos da tempestade são guerreiros poderosos.\n\nCanalizar Divindade do Domínio:\n• Rajada Destrutiva (Nv 2) — como ação, escolhe um ponto a até 18m. Cada criatura a 3m do ponto faz TR de Força; falha = 2d6+nível dano trovejante e é empurrada 3m para longe (metade do dano se sucesso, sem empurrão).\n\nFeatures de Domínio por nível:\n• Nv 1 — Proficiência em Armaduras Pesadas e Armas Marciais.\n• Nv 1 — Punição Tempestuosa: como reação, quando uma criatura a 1,5m te causa dano, ela sofre 2d8 dano de raio ou trovão (à escolha) — escala com nível.\n• Nv 2 — Canalizar Divindade: Rajada Destrutiva (acima).\n• Nv 6 — Trovão e Raio: como ação bônus, 1×/turno quando lança uma magia de raio ou trovão de nv 1+, pode causar 5 dano extra do mesmo tipo a outra criatura a até 1,5m.\n• Nv 8 — Golpe Divino: +1d8 dano trovejante em ataques de arma (2d8 no nv 14).\n• Nv 17 — Filho da Tempestade: ganha resistência permanente a dano de raio e trovão; em forma natural pode voar a velocidade igual à terrestre.\n\nMagias de Domínio sempre preparadas: Trovão Estridente, Onda Trovejante (nv1); Pancada na Cabeça, Subir nos Ventos (nv3); Convocar Raio, Insanidade da Tempestade (nv5); Controlar a Água, Tempestade de Gelo (nv7); Destruição, Insufflação (nv9).",
+            "combat": "essencial"
           },
           {
             "value": "enganacao",
             "name": "Domínio da Enganação",
-            "desc": "Deuses caprichosos que inspiram vigaristas e trapaceiros — ladinos com bênção divina.\n\nCanalizar Divindade do Domínio:\n• Invocação de Duplicata (Nv 2) — como ação, cria uma ilusão perfeita de si mesmo em um espaço desocupado a até 9m por 1 min (concentração). Pode movê-la 9m/turno como ação bônus. Você lança magias e ataques como se estivesse no espaço dela.\n\nFeatures de Domínio por nível:\n• Nv 1 — Bênção do Trapaceiro: como ação, toca uma criatura voluntária — ela ganha vantagem em testes de Furtividade por 1 hora (1×/desc. curto).\n• Nv 2 — Canalizar Divindade: Invocação de Duplicata (acima).\n• Nv 6 — Bênção do Trapaceiro Maior: a bênção também impõe desvantagem em rolls de Percepção contra o alvo.\n• Nv 8 — Golpe Divino: +1d8 dano venenoso em ataques de arma (2d8 no nv 14), 1×/turno.\n• Nv 17 — Cativador Improvisado: como ação, alvo a 9m fica sob efeito de Sugestão até desc. longo (sem precisar gastar magia, 1×/desc. longo).\n\nMagias de Domínio sempre preparadas: Disfarce, Caída Suave (nv1); Sutilezas, Espelho da Imagem (nv3); Caminhar nas Sombras, Voo (nv5); Mobilidade Polimórfica, Polimorfismo (nv7); Aniquilação, Forma Mística (nv9)."
+            "desc": "Deuses caprichosos que inspiram vigaristas e trapaceiros — ladinos com bênção divina.\n\nCanalizar Divindade do Domínio:\n• Invocação de Duplicata (Nv 2) — como ação, cria uma ilusão perfeita de si mesmo em um espaço desocupado a até 9m por 1 min (concentração). Pode movê-la 9m/turno como ação bônus. Você lança magias e ataques como se estivesse no espaço dela.\n\nFeatures de Domínio por nível:\n• Nv 1 — Bênção do Trapaceiro: como ação, toca uma criatura voluntária — ela ganha vantagem em testes de Furtividade por 1 hora (1×/desc. curto).\n• Nv 2 — Canalizar Divindade: Invocação de Duplicata (acima).\n• Nv 6 — Bênção do Trapaceiro Maior: a bênção também impõe desvantagem em rolls de Percepção contra o alvo.\n• Nv 8 — Golpe Divino: +1d8 dano venenoso em ataques de arma (2d8 no nv 14), 1×/turno.\n• Nv 17 — Cativador Improvisado: como ação, alvo a 9m fica sob efeito de Sugestão até desc. longo (sem precisar gastar magia, 1×/desc. longo).\n\nMagias de Domínio sempre preparadas: Disfarce, Caída Suave (nv1); Sutilezas, Espelho da Imagem (nv3); Caminhar nas Sombras, Voo (nv5); Mobilidade Polimórfica, Polimorfismo (nv7); Aniquilação, Forma Mística (nv9).",
+            "combat": "situacional"
           },
           {
             "value": "guerra",
             "name": "Domínio da Guerra",
-            "desc": "A guerra forja heróis. Clérigos da guerra são guerreiros mágicos no front da batalha.\n\nCanalizar Divindade do Domínio:\n• Ataque Guiado (Nv 2) — quando você ou criatura a 9m faz ataque, pode (sem ação) conceder +10 na jogada de ataque após rolar mas antes de saber o resultado.\n\nFeatures de Domínio por nível:\n• Nv 1 — Proficiência em Armaduras Pesadas e Armas Marciais.\n• Nv 1 — Sacerdote Guerreiro: 1×/desc. curto, pode fazer um ataque extra como ação bônus quando usa a ação Atacar no seu turno.\n• Nv 2 — Canalizar Divindade: Ataque Guiado (acima).\n• Nv 6 — Canalizar Divindade: Bênção da Guerra — como reação, quando uma criatura a 9m faz um ataque, dá +10 em ataque ou TR (mesma mecânica de Ataque Guiado).\n• Nv 8 — Golpe Divino: +1d8 dano (radiante ou tipo da arma — à escolha) em ataques de arma (2d8 no nv 14), 1×/turno.\n• Nv 17 — Avatar da Batalha: ganha resistência a dano cortante, perfurante e contundente de armas não-mágicas.\n\nMagias de Domínio sempre preparadas: Punição Vingadora, Escudo da Fé (nv1); Arma Mágica, Conduzir o Soco (nv3); Crepúsculo, Trovão Marcial (nv5); Crescimento Vegetal Maior, Pancada Devastadora (nv7); Despedaçar, Flecha do Espírito (nv9)."
+            "desc": "A guerra forja heróis. Clérigos da guerra são guerreiros mágicos no front da batalha.\n\nCanalizar Divindade do Domínio:\n• Ataque Guiado (Nv 2) — quando você ou criatura a 9m faz ataque, pode (sem ação) conceder +10 na jogada de ataque após rolar mas antes de saber o resultado.\n\nFeatures de Domínio por nível:\n• Nv 1 — Proficiência em Armaduras Pesadas e Armas Marciais.\n• Nv 1 — Sacerdote Guerreiro: 1×/desc. curto, pode fazer um ataque extra como ação bônus quando usa a ação Atacar no seu turno.\n• Nv 2 — Canalizar Divindade: Ataque Guiado (acima).\n• Nv 6 — Canalizar Divindade: Bênção da Guerra — como reação, quando uma criatura a 9m faz um ataque, dá +10 em ataque ou TR (mesma mecânica de Ataque Guiado).\n• Nv 8 — Golpe Divino: +1d8 dano (radiante ou tipo da arma — à escolha) em ataques de arma (2d8 no nv 14), 1×/turno.\n• Nv 17 — Avatar da Batalha: ganha resistência a dano cortante, perfurante e contundente de armas não-mágicas.\n\nMagias de Domínio sempre preparadas: Punição Vingadora, Escudo da Fé (nv1); Arma Mágica, Conduzir o Soco (nv3); Crepúsculo, Trovão Marcial (nv5); Crescimento Vegetal Maior, Pancada Devastadora (nv7); Despedaçar, Flecha do Espírito (nv9).",
+            "combat": "essencial"
           }
         ]
       }
@@ -308,12 +352,14 @@
           {
             "value": "terra",
             "name": "Círculo da Terra",
-            "desc": "O Círculo da Terra é a tradição de místicos sábios que tiram poder da própria terra — magias adicionais conforme o bioma escolhido.\n\nFeatures por nível:\n• Nv 2 — Truque Bônus: aprende 1 truque de druida adicional.\n• Nv 2 — Recuperação Natural: durante descanso curto pode recuperar espaços de magia até metade do nível de druida (round up). Só 1×/dia.\n• Nv 3 — Magias do Círculo: aprende 2 magias de nível 1 baseadas no Terreno escolhido (ártico/costa/deserto/floresta/grama/montanha/pântano/Subterrâneo). Magias adicionais nos nv 5, 7 e 9 conforme tabela do PHB p.69.\n• Nv 6 — Passos da Terra: passar por terreno difícil natural (vegetação, etc.) sem gastar movimento extra; também passa sem deixar rastros e sem ativar armadilhas naturais.\n• Nv 10 — Vínculo com a Terra: imune a dano venenoso e doenças. Não precisa comer/beber.\n• Nv 14 — Refúgio da Natureza: como ação, lança Refúgio das Plantas (Plant Form) em si mesmo (1×/desc. longo)."
+            "desc": "O Círculo da Terra é a tradição de místicos sábios que tiram poder da própria terra — magias adicionais conforme o bioma escolhido.\n\nFeatures por nível:\n• Nv 2 — Truque Bônus: aprende 1 truque de druida adicional.\n• Nv 2 — Recuperação Natural: durante descanso curto pode recuperar espaços de magia até metade do nível de druida (round up). Só 1×/dia.\n• Nv 3 — Magias do Círculo: aprende 2 magias de nível 1 baseadas no Terreno escolhido (ártico/costa/deserto/floresta/grama/montanha/pântano/Subterrâneo). Magias adicionais nos nv 5, 7 e 9 conforme tabela do PHB p.69.\n• Nv 6 — Passos da Terra: passar por terreno difícil natural (vegetação, etc.) sem gastar movimento extra; também passa sem deixar rastros e sem ativar armadilhas naturais.\n• Nv 10 — Vínculo com a Terra: imune a dano venenoso e doenças. Não precisa comer/beber.\n• Nv 14 — Refúgio da Natureza: como ação, lança Refúgio das Plantas (Plant Form) em si mesmo (1×/desc. longo).",
+            "category": "magia"
           },
           {
             "value": "lua",
             "name": "Círculo da Lua",
-            "desc": "O Círculo da Lua é a tradição de druidas-guerreiros que dominam Forma Selvagem para batalha — assumem formas predatórias devastadoras.\n\nFeatures por nível:\n• Nv 2 — Forma de Combate: pode usar Forma Selvagem como ação bônus (em vez de ação). Pode transformar-se em qualquer besta com CR igual ao nível de druida / 3 (round down, mín. 1) no nv 2 — escalas mais altas em nv 6.\n• Nv 2 — Combate Primal: usa Forma Selvagem como ação bônus + magias adicionais permitidas em forma.\n• Nv 6 — Golpes Primais: ataques em Forma Selvagem contam como mágicos pra superar resistências.\n• Nv 10 — Forma Elemental: pode lançar Forma Elemental usando Forma Selvagem (sem gastar slots).\n• Nv 14 — Mil Formas: pode lançar Mudar de Forma à vontade."
+            "desc": "O Círculo da Lua é a tradição de druidas-guerreiros que dominam Forma Selvagem para batalha — assumem formas predatórias devastadoras.\n\nFeatures por nível:\n• Nv 2 — Forma de Combate: pode usar Forma Selvagem como ação bônus (em vez de ação). Pode transformar-se em qualquer besta com CR igual ao nível de druida / 3 (round down, mín. 1) no nv 2 — escalas mais altas em nv 6.\n• Nv 2 — Combate Primal: usa Forma Selvagem como ação bônus + magias adicionais permitidas em forma.\n• Nv 6 — Golpes Primais: ataques em Forma Selvagem contam como mágicos pra superar resistências.\n• Nv 10 — Forma Elemental: pode lançar Forma Elemental usando Forma Selvagem (sem gastar slots).\n• Nv 14 — Mil Formas: pode lançar Mudar de Forma à vontade.",
+            "combat": "essencial"
           }
         ]
       },
@@ -329,42 +375,50 @@
           {
             "value": "artico",
             "name": "Ártico",
-            "desc": "Frio, neve, gelo. Bônus de Resistência (nv 3, 5, 7, 9)."
+            "desc": "Frio, neve, gelo. Bônus de Resistência (nv 3, 5, 7, 9).",
+            "category": "magia"
           },
           {
             "value": "costa",
             "name": "Costa",
-            "desc": "Praias, falésias, mar. Bônus com criaturas aquáticas."
+            "desc": "Praias, falésias, mar. Bônus com criaturas aquáticas.",
+            "category": "magia"
           },
           {
             "value": "deserto",
             "name": "Deserto",
-            "desc": "Calor, areia, dunas. Magias contra calor e desidratação."
+            "desc": "Calor, areia, dunas. Magias contra calor e desidratação.",
+            "category": "magia"
           },
           {
             "value": "floresta",
             "name": "Floresta",
-            "desc": "Bosques, matas densas. Magias de movimento entre árvores."
+            "desc": "Bosques, matas densas. Magias de movimento entre árvores.",
+            "category": "magia"
           },
           {
             "value": "montanha",
             "name": "Montanha",
-            "desc": "Pedras, altitudes. Magias terráqueas."
+            "desc": "Pedras, altitudes. Magias terráqueas.",
+            "category": "magia"
           },
           {
             "value": "pantano",
             "name": "Pântano",
-            "desc": "Brejos, água parada. Magias de obscurecimento e veneno."
+            "desc": "Brejos, água parada. Magias de obscurecimento e veneno.",
+            "category": "magia"
           },
           {
             "value": "pradaria",
             "name": "Pradaria",
-            "desc": "Campos abertos. Magias de velocidade e visão."
+            "desc": "Campos abertos. Magias de velocidade e visão.",
+            "category": "magia"
           },
           {
             "value": "submontano",
             "name": "Submontano (Underdark)",
-            "desc": "Cavernas, profundezas. Magias de furtividade e veneno."
+            "desc": "Cavernas, profundezas. Magias de furtividade e veneno.",
+            "category": "magia"
           }
         ]
       }
@@ -381,12 +435,14 @@
           {
             "value": "linhagem_draconico",
             "name": "Linhagem Dracônica",
-            "desc": "Sua magia vem do sangue de um dragão ancestral — escamas começam a brotar, garras crescem, força inata desperta.\n\nFeatures por nível:\n• Nv 1 — Ancestralidade Dracônica: escolhe um dragão ancestral (cromático ou metálico). Define o tipo de dano (negro=ácido; azul/bronze=raio; verde=veneno; vermelho/dourado=fogo; branco/prata=frio; latão=fogo; cobre=ácido). Dobra o bônus de proficiência em testes de Carisma com dragões.\n• Nv 1 — Resiliência Dracônica: ganha +1 PV/nível e CA = 13 + mod. DES (apenas se desarmado).\n• Nv 6 — Magia Elemental: ao conjurar magia que cause dano do seu tipo dracônico, gasta 1 ponto de feitiçaria pra ganhar bônus = mod. CAR ao dano.\n• Nv 14 — Asas Dracônicas: como ação bônus, manifesta asas espectrais. Velocidade de voo = velocidade normal.\n• Nv 18 — Presença Dracônica: como ação, gasta 5 pontos de feitiçaria pra emanar aura intimidante por 1 min. Criaturas a 18m fazem TR de Sabedoria; falha = amedrontadas ou enfeitiçadas (à escolha)."
+            "desc": "Sua magia vem do sangue de um dragão ancestral — escamas começam a brotar, garras crescem, força inata desperta.\n\nFeatures por nível:\n• Nv 1 — Ancestralidade Dracônica: escolhe um dragão ancestral (cromático ou metálico). Define o tipo de dano (negro=ácido; azul/bronze=raio; verde=veneno; vermelho/dourado=fogo; branco/prata=frio; latão=fogo; cobre=ácido). Dobra o bônus de proficiência em testes de Carisma com dragões.\n• Nv 1 — Resiliência Dracônica: ganha +1 PV/nível e CA = 13 + mod. DES (apenas se desarmado).\n• Nv 6 — Magia Elemental: ao conjurar magia que cause dano do seu tipo dracônico, gasta 1 ponto de feitiçaria pra ganhar bônus = mod. CAR ao dano.\n• Nv 14 — Asas Dracônicas: como ação bônus, manifesta asas espectrais. Velocidade de voo = velocidade normal.\n• Nv 18 — Presença Dracônica: como ação, gasta 5 pontos de feitiçaria pra emanar aura intimidante por 1 min. Criaturas a 18m fazem TR de Sabedoria; falha = amedrontadas ou enfeitiçadas (à escolha).",
+            "combat": "essencial"
           },
           {
             "value": "magia_selvagem",
             "name": "Magia Selvagem",
-            "desc": "Sua magia é caótica, imprevisível, conectada ao próprio Caos. Cada feitiço pode disparar efeitos selvagens.\n\nFeatures por nível:\n• Nv 1 — Surto Selvagem: após conjurar uma magia de nv 1+, o Mestre pode pedir 1d20; se rolar 1, rola na tabela de Surto Selvagem (efeito aleatório imediato).\n• Nv 1 — Sorte do Caos: ao falhar TR/ataque/teste de habilidade, pode repetir 1×/desc. longo.\n• Nv 6 — Curvar a Sorte: como reação, gasta 2 pontos de feitiçaria pra somar 1d4 a um teste/TR/ataque de outra criatura.\n• Nv 14 — Caos Controlado: ao rolar na tabela de Surto Selvagem, rola 2× e escolhe o resultado.\n• Nv 18 — Surto Espiritual: pode forçar Surto Selvagem como ação bônus, mas não recebe pontos de feitiçaria por isso."
+            "desc": "Sua magia é caótica, imprevisível, conectada ao próprio Caos. Cada feitiço pode disparar efeitos selvagens.\n\nFeatures por nível:\n• Nv 1 — Surto Selvagem: após conjurar uma magia de nv 1+, o Mestre pode pedir 1d20; se rolar 1, rola na tabela de Surto Selvagem (efeito aleatório imediato).\n• Nv 1 — Sorte do Caos: ao falhar TR/ataque/teste de habilidade, pode repetir 1×/desc. longo.\n• Nv 6 — Curvar a Sorte: como reação, gasta 2 pontos de feitiçaria pra somar 1d4 a um teste/TR/ataque de outra criatura.\n• Nv 14 — Caos Controlado: ao rolar na tabela de Surto Selvagem, rola 2× e escolhe o resultado.\n• Nv 18 — Surto Espiritual: pode forçar Surto Selvagem como ação bônus, mas não recebe pontos de feitiçaria por isso.",
+            "combat": "essencial"
           }
         ]
       },
@@ -404,42 +460,50 @@
           {
             "value": "cuidadosa",
             "name": "Magia Cuidadosa",
-            "desc": "Ao conjurar uma magia que força outras criaturas a fazer um TR, você pode proteger algumas delas do pleno poder da magia. Gaste 1 ponto de magia para escolher um número de criaturas iguais ao modificador de Carisma (mín. 1). A criatura escolhida automaticamente passa no TR contra a magia."
+            "desc": "Ao conjurar uma magia que força outras criaturas a fazer um TR, você pode proteger algumas delas do pleno poder da magia. Gaste 1 ponto de magia para escolher um número de criaturas iguais ao modificador de Carisma (mín. 1). A criatura escolhida automaticamente passa no TR contra a magia.",
+            "combat": "situacional"
           },
           {
             "value": "distante",
             "name": "Magia Distante",
-            "desc": "Ao conjurar uma magia que tenha alcance de 1,5 metro ou maior, pode gastar 1 ponto de magia para dobrar o alcance dela. Ao conjurar uma magia com alcance de Toque, você pode gastar 1 ponto de magia para tornar o alcance dela 9 metros."
+            "desc": "Ao conjurar uma magia que tenha alcance de 1,5 metro ou maior, pode gastar 1 ponto de magia para dobrar o alcance dela. Ao conjurar uma magia com alcance de Toque, você pode gastar 1 ponto de magia para tornar o alcance dela 9 metros.",
+            "combat": "situacional"
           },
           {
             "value": "potenciada",
             "name": "Magia Potenciada",
-            "desc": "Ao rolar dano para uma magia, você pode gastar 1 ponto de magia para rolar novamente até um número de dados de dano iguais ao seu modificador de Carisma (mín. 1). Deve usar os novos resultados. Pode usá-la com outra Metamagia na mesma magia."
+            "desc": "Ao rolar dano para uma magia, você pode gastar 1 ponto de magia para rolar novamente até um número de dados de dano iguais ao seu modificador de Carisma (mín. 1). Deve usar os novos resultados. Pode usá-la com outra Metamagia na mesma magia.",
+            "combat": "essencial"
           },
           {
             "value": "expandida",
             "name": "Magia Expandida",
-            "desc": "Ao conjurar uma magia que tenha uma área de efeito do tipo cone, cubo, linha ou esfera, pode gastar 1 ponto de magia para aumentar seu tamanho ao dobro."
+            "desc": "Ao conjurar uma magia que tenha uma área de efeito do tipo cone, cubo, linha ou esfera, pode gastar 1 ponto de magia para aumentar seu tamanho ao dobro.",
+            "combat": "essencial"
           },
           {
             "value": "estendida",
             "name": "Magia Estendida",
-            "desc": "Ao conjurar uma magia que tenha duração de 1 minuto ou maior, pode gastar 1 ponto de magia para dobrar a duração da magia, até o máximo de 24 horas."
+            "desc": "Ao conjurar uma magia que tenha duração de 1 minuto ou maior, pode gastar 1 ponto de magia para dobrar a duração da magia, até o máximo de 24 horas.",
+            "combat": "situacional"
           },
           {
             "value": "intensificada",
             "name": "Magia Intensificada",
-            "desc": "Ao conjurar uma magia que force uma criatura a fazer um TR para resistir aos seus efeitos, pode gastar 3 pontos de magia para dar a uma criatura desvantagem no primeiro TR que fizer contra ela."
+            "desc": "Ao conjurar uma magia que force uma criatura a fazer um TR para resistir aos seus efeitos, pode gastar 3 pontos de magia para dar a uma criatura desvantagem no primeiro TR que fizer contra ela.",
+            "combat": "essencial"
           },
           {
             "value": "rapida",
             "name": "Magia Rápida",
-            "desc": "Ao conjurar uma magia que tenha tempo de conjuração de 1 ação, pode gastar 2 pontos de magia para mudar o tempo de conjuração para 1 ação bônus para esse conjuro."
+            "desc": "Ao conjurar uma magia que tenha tempo de conjuração de 1 ação, pode gastar 2 pontos de magia para mudar o tempo de conjuração para 1 ação bônus para esse conjuro.",
+            "combat": "essencial"
           },
           {
             "value": "sutil",
             "name": "Magia Sutil",
-            "desc": "Ao conjurar uma magia, pode gastar 1 ponto de magia para conjurá-la sem componentes somáticos ou verbais."
+            "desc": "Ao conjurar uma magia, pode gastar 1 ponto de magia para conjurá-la sem componentes somáticos ou verbais.",
+            "combat": "situacional"
           }
         ]
       }
@@ -456,32 +520,38 @@
           {
             "value": "arqueiro",
             "name": "Arqueiro",
-            "desc": "Você ganha um bônus de +2 em jogadas de ataque que fizer com armas de alcance."
+            "desc": "Você ganha um bônus de +2 em jogadas de ataque que fizer com armas de alcance.",
+            "combat": "essencial"
           },
           {
             "value": "defesa",
             "name": "Defesa",
-            "desc": "Enquanto estiver usando armadura, você ganha um bônus de +1 na Classe de Armadura."
+            "desc": "Enquanto estiver usando armadura, você ganha um bônus de +1 na Classe de Armadura.",
+            "combat": "essencial"
           },
           {
             "value": "duelo",
             "name": "Duelo",
-            "desc": "Quando estiver empunhando uma arma corpo a corpo em uma mão e sem outras armas, você ganha um bônus de +2 nas jogadas de dano com essa arma."
+            "desc": "Quando estiver empunhando uma arma corpo a corpo em uma mão e sem outras armas, você ganha um bônus de +2 nas jogadas de dano com essa arma.",
+            "combat": "essencial"
           },
           {
             "value": "duas_maos",
             "name": "Combate com Duas Armas",
-            "desc": "Quando você se engajar em combate com duas armas, você pode adicionar seu modificador de habilidade ao dano do segundo ataque."
+            "desc": "Quando você se engajar em combate com duas armas, você pode adicionar seu modificador de habilidade ao dano do segundo ataque.",
+            "combat": "essencial"
           },
           {
             "value": "protecao",
             "name": "Proteção",
-            "desc": "Quando uma criatura que você pode ver ataca um alvo que não seja você a até 1,5 metro de você, pode usar sua reação para impor desvantagem na jogada de ataque. Deve estar empunhando um escudo."
+            "desc": "Quando uma criatura que você pode ver ataca um alvo que não seja você a até 1,5 metro de você, pode usar sua reação para impor desvantagem na jogada de ataque. Deve estar empunhando um escudo.",
+            "combat": "situacional"
           },
           {
             "value": "grande_arma",
             "name": "Grande Arma",
-            "desc": "Quando você rolar 1 ou 2 no dado de dano de um ataque que fizer com uma arma corpo a corpo que esteja empunhando com as duas mãos, você pode rolar o dado novamente e deve usar o novo resultado, mesmo que seja 1 ou 2. A arma deve ter a propriedade Duas Mãos ou Versátil para você ganhar esse benefício."
+            "desc": "Quando você rolar 1 ou 2 no dado de dano de um ataque que fizer com uma arma corpo a corpo que esteja empunhando com as duas mãos, você pode rolar o dado novamente e deve usar o novo resultado, mesmo que seja 1 ou 2. A arma deve ter a propriedade Duas Mãos ou Versátil para você ganhar esse benefício.",
+            "combat": "essencial"
           }
         ]
       },
@@ -494,17 +564,20 @@
           {
             "value": "campeao",
             "name": "Campeão",
-            "desc": "Foco em poder físico bruto e perfeição letal. Treinamento rigoroso para golpes devastadores — o arquétipo mais simples e direto.\n\nFeatures por nível:\n• Nv 3 — Crítico Aprimorado: seus ataques de arma causam crítico em 19-20 no d20.\n• Nv 7 — Atleta Notável: ganha meio bônus de proficiência (arredondado para cima) em testes de Força, Destreza e Constituição que ainda não tenha proficiência. Quando faz um teste de salto em distância, o salto aumenta em pés iguais ao seu mod. de Força.\n• Nv 10 — Estilo de Combate Adicional: escolhe um segundo Estilo de Combate.\n• Nv 15 — Crítico Superior: ataques de arma causam crítico em 18-20.\n• Nv 18 — Sobrevivente: no início de cada turno, se está com até metade do PV máximo (e pelo menos 1 PV), regenera 5 + mod. CON de PV (não funciona em 0 PV)."
+            "desc": "Foco em poder físico bruto e perfeição letal. Treinamento rigoroso para golpes devastadores — o arquétipo mais simples e direto.\n\nFeatures por nível:\n• Nv 3 — Crítico Aprimorado: seus ataques de arma causam crítico em 19-20 no d20.\n• Nv 7 — Atleta Notável: ganha meio bônus de proficiência (arredondado para cima) em testes de Força, Destreza e Constituição que ainda não tenha proficiência. Quando faz um teste de salto em distância, o salto aumenta em pés iguais ao seu mod. de Força.\n• Nv 10 — Estilo de Combate Adicional: escolhe um segundo Estilo de Combate.\n• Nv 15 — Crítico Superior: ataques de arma causam crítico em 18-20.\n• Nv 18 — Sobrevivente: no início de cada turno, se está com até metade do PV máximo (e pelo menos 1 PV), regenera 5 + mod. CON de PV (não funciona em 0 PV).",
+            "combat": "essencial"
           },
           {
             "value": "cavaleiro_batalla",
             "name": "Cavaleiro de Batalha",
-            "desc": "Combina magia arcana de Mago com combate marcial. Pequena conjuração para potencializar a espada.\n\nMecânica de Conjuração:\n• Inteligência é a habilidade de conjuração.\n• CD de magia = 8 + prof + mod. INT; bônus de ataque mágico = prof + mod. INT.\n• Usa um livro de magias (regras do Mago, mas só escolas de Abjuração e Evocação — exceto truques).\n\nMagias conhecidas por nível: 3 (nv 3) → 4 (nv 7) → 5 (nv 8) → 6 (nv 10) → 7 (nv 11) → 8 (nv 13) → 9 (nv 14) → 10 (nv 16) → 11 (nv 19) → 13 (nv 20). Truques: 2 (nv 3) → 3 (nv 10).\n\nFeatures por nível:\n• Nv 3 — Conjuração de Cavaleiro: aprende 2 truques + 3 magias de nv 1 do Mago (Abjuração/Evocação).\n• Nv 3 — Vínculo com Arma: ritual de 1h vincula até 2 armas. Pode invocá-las como ação bônus para sua mão.\n• Nv 7 — Golpe de Guerra: quando usa a ação Atacar, pode substituir um dos ataques por conjurar truque de Mago.\n• Nv 10 — Magia Marcial Avançada: ao acertar um ataque de arma no seu turno, pode conjurar magia de nv 1 ou 2 como ação bônus.\n• Nv 15 — Magia Aprimorada de Arma: ao atacar com arma vinculada, ataques causam +2 dano de força.\n• Nv 18 — Forma de Arma Aprimorada: ao reduzir alvo a 0 PV ou rolar crítico, pode usar reação para conjurar magia de Mago como ação bônus."
+            "desc": "Combina magia arcana de Mago com combate marcial. Pequena conjuração para potencializar a espada.\n\nMecânica de Conjuração:\n• Inteligência é a habilidade de conjuração.\n• CD de magia = 8 + prof + mod. INT; bônus de ataque mágico = prof + mod. INT.\n• Usa um livro de magias (regras do Mago, mas só escolas de Abjuração e Evocação — exceto truques).\n\nMagias conhecidas por nível: 3 (nv 3) → 4 (nv 7) → 5 (nv 8) → 6 (nv 10) → 7 (nv 11) → 8 (nv 13) → 9 (nv 14) → 10 (nv 16) → 11 (nv 19) → 13 (nv 20). Truques: 2 (nv 3) → 3 (nv 10).\n\nFeatures por nível:\n• Nv 3 — Conjuração de Cavaleiro: aprende 2 truques + 3 magias de nv 1 do Mago (Abjuração/Evocação).\n• Nv 3 — Vínculo com Arma: ritual de 1h vincula até 2 armas. Pode invocá-las como ação bônus para sua mão.\n• Nv 7 — Golpe de Guerra: quando usa a ação Atacar, pode substituir um dos ataques por conjurar truque de Mago.\n• Nv 10 — Magia Marcial Avançada: ao acertar um ataque de arma no seu turno, pode conjurar magia de nv 1 ou 2 como ação bônus.\n• Nv 15 — Magia Aprimorada de Arma: ao atacar com arma vinculada, ataques causam +2 dano de força.\n• Nv 18 — Forma de Arma Aprimorada: ao reduzir alvo a 0 PV ou rolar crítico, pode usar reação para conjurar magia de Mago como ação bônus.",
+            "combat": "essencial"
           },
           {
             "value": "mestre_combate",
             "name": "Mestre de Combate",
-            "desc": "Combatente tático — usa Dado de Superioridade pra executar manobras especiais. O arquétipo mais flexível do Guerreiro.\n\nDado de Superioridade:\n• Nv 3: 4 dados d8 (gasta 1 por manobra). Recupera no descanso curto ou longo.\n• Nv 7: 5 dados.\n• Nv 10: 5 dados d10.\n• Nv 15: 6 dados.\n• Nv 18: 6 dados d12.\n• CD de TR contra manobras = 8 + prof + mod. de Força OU Destreza (à escolha).\n\nManobras conhecidas: 3 (nv 3) → 5 (nv 7) → 7 (nv 10) → 9 (nv 15). Quando escolher Mestre de Combate aqui, o sistema vai pedir as manobras logo abaixo.\n\nFeatures por nível:\n• Nv 3 — Superioridade de Combate: Dado de Superioridade + manobras + Aluno da Guerra (proficiência em uma ferramenta de artesão e em uma das perícias entre Acrobacia, Atletismo, Persuasão ou outras).\n• Nv 7 — Conhecimento da Guerra: ganha proficiência em uma nova perícia/arma. Pode adicionar metade da proficiência em testes de Inteligência (História) sobre guerra.\n• Nv 10 — Manobras Aprimoradas: ganha +2 manobras (total 7). O dado vira d10.\n• Nv 15 — Manobras Relâmpago: pode usar Dado de Superioridade 2× em um único turno (ao invés de 1).\n• Nv 18 — Manobras Maiores: dado vira d12."
+            "desc": "Combatente tático — usa Dado de Superioridade pra executar manobras especiais. O arquétipo mais flexível do Guerreiro.\n\nDado de Superioridade:\n• Nv 3: 4 dados d8 (gasta 1 por manobra). Recupera no descanso curto ou longo.\n• Nv 7: 5 dados.\n• Nv 10: 5 dados d10.\n• Nv 15: 6 dados.\n• Nv 18: 6 dados d12.\n• CD de TR contra manobras = 8 + prof + mod. de Força OU Destreza (à escolha).\n\nManobras conhecidas: 3 (nv 3) → 5 (nv 7) → 7 (nv 10) → 9 (nv 15). Quando escolher Mestre de Combate aqui, o sistema vai pedir as manobras logo abaixo.\n\nFeatures por nível:\n• Nv 3 — Superioridade de Combate: Dado de Superioridade + manobras + Aluno da Guerra (proficiência em uma ferramenta de artesão e em uma das perícias entre Acrobacia, Atletismo, Persuasão ou outras).\n• Nv 7 — Conhecimento da Guerra: ganha proficiência em uma nova perícia/arma. Pode adicionar metade da proficiência em testes de Inteligência (História) sobre guerra.\n• Nv 10 — Manobras Aprimoradas: ganha +2 manobras (total 7). O dado vira d10.\n• Nv 15 — Manobras Relâmpago: pode usar Dado de Superioridade 2× em um único turno (ao invés de 1).\n• Nv 18 — Manobras Maiores: dado vira d12.",
+            "combat": "essencial"
           }
         ]
       },
@@ -526,82 +599,98 @@
           {
             "value": "ataque-ardiloso",
             "name": "Ataque Ardiloso",
-            "desc": "Ao acertar um ataque com arma, gasta 1 dado e soma ao dano."
+            "desc": "Ao acertar um ataque com arma, gasta 1 dado e soma ao dano.",
+            "combat": "essencial"
           },
           {
             "value": "comandar-ataque",
             "name": "Comandar Ataque",
-            "desc": "Ação bônus: aliado a 9m faz um ataque usando reação; soma o dado ao dano."
+            "desc": "Ação bônus: aliado a 9m faz um ataque usando reação; soma o dado ao dano.",
+            "combat": "essencial"
           },
           {
             "value": "ataque-avanco",
             "name": "Ataque de Avanço",
-            "desc": "Ao se mover ≥1,5m em direção ao alvo e atingi-lo, soma o dado ao dano."
+            "desc": "Ao se mover ≥1,5m em direção ao alvo e atingi-lo, soma o dado ao dano.",
+            "combat": "essencial"
           },
           {
             "value": "desarmar",
             "name": "Desarmar",
-            "desc": "Ao acertar, força TR FOR; falha = item cai a 3m. Soma o dado ao dano."
+            "desc": "Ao acertar, força TR FOR; falha = item cai a 3m. Soma o dado ao dano.",
+            "combat": "situacional"
           },
           {
             "value": "empurrar",
             "name": "Ataque Empurrar",
-            "desc": "Ao acertar, TR FOR; falha = empurra 4,5m. Soma o dado ao dano."
+            "desc": "Ao acertar, TR FOR; falha = empurra 4,5m. Soma o dado ao dano.",
+            "combat": "situacional"
           },
           {
             "value": "precisao",
             "name": "Ataque de Precisão",
-            "desc": "Antes de saber se o ataque acertou, gasta 1 dado e soma à jogada de ataque."
+            "desc": "Antes de saber se o ataque acertou, gasta 1 dado e soma à jogada de ataque.",
+            "combat": "essencial"
           },
           {
             "value": "provocante",
             "name": "Ataque Provocante",
-            "desc": "Ao acertar, alvo TR SAB; falha = desvantagem em ataques contra outros até próximo turno. Soma dado ao dano."
+            "desc": "Ao acertar, alvo TR SAB; falha = desvantagem em ataques contra outros até próximo turno. Soma dado ao dano.",
+            "combat": "situacional"
           },
           {
             "value": "sopro",
             "name": "Ataque com Sopro",
-            "desc": "Ao acertar, alvo TR CON; falha = sem reações até próximo turno seu. Soma dado ao dano."
+            "desc": "Ao acertar, alvo TR CON; falha = sem reações até próximo turno seu. Soma dado ao dano.",
+            "combat": "situacional"
           },
           {
             "value": "defesa-agil",
             "name": "Defesa Ágil",
-            "desc": "Reação: ao ser alvo de ataque, soma 1 dado à sua CA contra ele."
+            "desc": "Reação: ao ser alvo de ataque, soma 1 dado à sua CA contra ele.",
+            "combat": "situacional"
           },
           {
             "value": "distracao",
             "name": "Distração",
-            "desc": "Ação bônus: aliado a 9m tem vantagem no próximo ataque contra alvo que você sinalizar; +dado no dano."
+            "desc": "Ação bônus: aliado a 9m tem vantagem no próximo ataque contra alvo que você sinalizar; +dado no dano.",
+            "combat": "situacional"
           },
           {
             "value": "manobra-derrubar",
             "name": "Manobra de Derrubar",
-            "desc": "Ao acertar corpo a corpo, força TR FOR; falha = prona (até Grande). Soma dado ao dano."
+            "desc": "Ao acertar corpo a corpo, força TR FOR; falha = prona (até Grande). Soma dado ao dano.",
+            "combat": "situacional"
           },
           {
             "value": "estocada",
             "name": "Estocada (Lunging)",
-            "desc": "Aumenta alcance corpo a corpo em 1,5m no ataque; se acerta, soma o dado ao dano."
+            "desc": "Aumenta alcance corpo a corpo em 1,5m no ataque; se acerta, soma o dado ao dano.",
+            "combat": "situacional"
           },
           {
             "value": "joga-sopro",
             "name": "Finta (Feint)",
-            "desc": "Ação bônus: vantagem no próximo ataque contra criatura a 1,5m; +dado no dano."
+            "desc": "Ação bônus: vantagem no próximo ataque contra criatura a 1,5m; +dado no dano.",
+            "combat": "situacional"
           },
           {
             "value": "manobra-defensiva",
             "name": "Manobra Defensiva",
-            "desc": "Reação: aliado a 9m é alvo de ataque — soma 1 dado à CA dele contra esse ataque."
+            "desc": "Reação: aliado a 9m é alvo de ataque — soma 1 dado à CA dele contra esse ataque.",
+            "combat": "situacional"
           },
           {
             "value": "resposta",
             "name": "Resposta (Riposte)",
-            "desc": "Reação: criatura erra ataque corpo a corpo contra você — faz um ataque + dado no dano."
+            "desc": "Reação: criatura erra ataque corpo a corpo contra você — faz um ataque + dado no dano.",
+            "combat": "situacional"
           },
           {
             "value": "rally",
             "name": "Reorganização (Rally)",
-            "desc": "Ação bônus: aliado a 9m ganha PV temporários = dado + mod. CAR."
+            "desc": "Ação bônus: aliado a 9m ganha PV temporários = dado + mod. CAR.",
+            "combat": "situacional"
           }
         ]
       }
@@ -619,97 +708,116 @@
           {
             "value": "acrobatics",
             "name": "Acrobacia",
-            "desc": "Você dobra o bônus de proficiência em testes de Acrobacia."
+            "desc": "Você dobra o bônus de proficiência em testes de Acrobacia.",
+            "category": "social"
           },
           {
             "value": "animal-handling",
             "name": "Adestramento",
-            "desc": "Você dobra o bônus de proficiência em testes de Adestramento."
+            "desc": "Você dobra o bônus de proficiência em testes de Adestramento.",
+            "category": "social"
           },
           {
             "value": "arcana",
             "name": "Arcanismo",
-            "desc": "Você dobra o bônus de proficiência em testes de Arcanismo."
+            "desc": "Você dobra o bônus de proficiência em testes de Arcanismo.",
+            "category": "social"
           },
           {
             "value": "athletics",
             "name": "Atletismo",
-            "desc": "Você dobra o bônus de proficiência em testes de Atletismo."
+            "desc": "Você dobra o bônus de proficiência em testes de Atletismo.",
+            "category": "social"
           },
           {
             "value": "deception",
             "name": "Enganação",
-            "desc": "Você dobra o bônus de proficiência em testes de Enganação."
+            "desc": "Você dobra o bônus de proficiência em testes de Enganação.",
+            "category": "social"
           },
           {
             "value": "history",
             "name": "História",
-            "desc": "Você dobra o bônus de proficiência em testes de História."
+            "desc": "Você dobra o bônus de proficiência em testes de História.",
+            "category": "social"
           },
           {
             "value": "insight",
             "name": "Intuição",
-            "desc": "Você dobra o bônus de proficiência em testes de Intuição."
+            "desc": "Você dobra o bônus de proficiência em testes de Intuição.",
+            "category": "social"
           },
           {
             "value": "intimidation",
             "name": "Intimidação",
-            "desc": "Você dobra o bônus de proficiência em testes de Intimidação."
+            "desc": "Você dobra o bônus de proficiência em testes de Intimidação.",
+            "category": "social"
           },
           {
             "value": "investigation",
             "name": "Investigação",
-            "desc": "Você dobra o bônus de proficiência em testes de Investigação."
+            "desc": "Você dobra o bônus de proficiência em testes de Investigação.",
+            "category": "social"
           },
           {
             "value": "medicine",
             "name": "Medicina",
-            "desc": "Você dobra o bônus de proficiência em testes de Medicina."
+            "desc": "Você dobra o bônus de proficiência em testes de Medicina.",
+            "category": "social"
           },
           {
             "value": "nature",
             "name": "Natureza",
-            "desc": "Você dobra o bônus de proficiência em testes de Natureza."
+            "desc": "Você dobra o bônus de proficiência em testes de Natureza.",
+            "category": "social"
           },
           {
             "value": "perception",
             "name": "Percepção",
-            "desc": "Você dobra o bônus de proficiência em testes de Percepção."
+            "desc": "Você dobra o bônus de proficiência em testes de Percepção.",
+            "category": "social"
           },
           {
             "value": "performance",
             "name": "Atuação",
-            "desc": "Você dobra o bônus de proficiência em testes de Atuação."
+            "desc": "Você dobra o bônus de proficiência em testes de Atuação.",
+            "category": "social"
           },
           {
             "value": "persuasion",
             "name": "Persuasão",
-            "desc": "Você dobra o bônus de proficiência em testes de Persuasão."
+            "desc": "Você dobra o bônus de proficiência em testes de Persuasão.",
+            "category": "social"
           },
           {
             "value": "religion",
             "name": "Religião",
-            "desc": "Você dobra o bônus de proficiência em testes de Religião."
+            "desc": "Você dobra o bônus de proficiência em testes de Religião.",
+            "category": "social"
           },
           {
             "value": "sleight-of-hand",
             "name": "Prestidigitação",
-            "desc": "Você dobra o bônus de proficiência em testes de Prestidigitação."
+            "desc": "Você dobra o bônus de proficiência em testes de Prestidigitação.",
+            "category": "social"
           },
           {
             "value": "stealth",
             "name": "Furtividade",
-            "desc": "Você dobra o bônus de proficiência em testes de Furtividade."
+            "desc": "Você dobra o bônus de proficiência em testes de Furtividade.",
+            "category": "social"
           },
           {
             "value": "survival",
             "name": "Sobrevivência",
-            "desc": "Você dobra o bônus de proficiência em testes de Sobrevivência."
+            "desc": "Você dobra o bônus de proficiência em testes de Sobrevivência.",
+            "category": "social"
           },
           {
             "value": "thieves-tools",
             "name": "Ferramentas de Ladrão",
-            "desc": "Você dobra o bônus de proficiência ao usar Ferramentas de Ladrão."
+            "desc": "Você dobra o bônus de proficiência ao usar Ferramentas de Ladrão.",
+            "category": "social"
           }
         ]
       },
@@ -722,17 +830,20 @@
           {
             "value": "assassino",
             "name": "Assassino",
-            "desc": "O Assassino é o ladino do veneno e da emboscada — golpes silenciosos que matam em segundos.\n\nFeatures por nível:\n• Nv 3 — Treinamento de Assassino: proficiência com kit de venenos e kit de disfarce.\n• Nv 3 — Assassinato: tem vantagem em ataques contra criaturas que ainda não tomaram turno. Qualquer acerto contra criatura surpreendida é crítico automático.\n• Nv 9 — Infiltrador Letal: pode estabelecer falsas identidades crível (3 a 7 dias). Pode imitar voz, escrita e comportamento.\n• Nv 13 — Imitar Tomada: como ação, ao ler uma criatura por 1h, pode imitar perfeitamente seu jeito (vantagem em testes pra se passar por ela).\n• Nv 17 — Golpe Mortal: na primeira rodada de combate, qualquer dano causado a criatura surpreendida é o DOBRO."
+            "desc": "O Assassino é o ladino do veneno e da emboscada — golpes silenciosos que matam em segundos.\n\nFeatures por nível:\n• Nv 3 — Treinamento de Assassino: proficiência com kit de venenos e kit de disfarce.\n• Nv 3 — Assassinato: tem vantagem em ataques contra criaturas que ainda não tomaram turno. Qualquer acerto contra criatura surpreendida é crítico automático.\n• Nv 9 — Infiltrador Letal: pode estabelecer falsas identidades crível (3 a 7 dias). Pode imitar voz, escrita e comportamento.\n• Nv 13 — Imitar Tomada: como ação, ao ler uma criatura por 1h, pode imitar perfeitamente seu jeito (vantagem em testes pra se passar por ela).\n• Nv 17 — Golpe Mortal: na primeira rodada de combate, qualquer dano causado a criatura surpreendida é o DOBRO.",
+            "combat": "essencial"
           },
           {
             "value": "arcano",
             "name": "Trapaceiro Arcano",
-            "desc": "O Trapaceiro Arcano combina astúcia com magia arcana de Mago — pequenas magias de utilidade e dano.\n\nMecânica de Conjuração:\n• Inteligência é a habilidade de conjuração.\n• CD = 8 + prof + INT; ataque mágico = prof + INT.\n• Aprende magias APENAS da escola de Encantamento ou Ilusão (com 1 exceção a cada subida).\n\nMagias conhecidas: 3 truques + 3 magias nv 1 (nv 3) → escala conforme tabela do Mago dividida em 1/3.\n\nFeatures por nível:\n• Nv 3 — Conjuração Trapaceira: aprende 3 truques (1 deve ser Mão Mágica) + 3 magias de nv 1 (1 fora da escola).\n• Nv 3 — Mão Mágica Versátil: o truque Mão Mágica pode realizar ações furtivas a 9m (Prestidigitação, Furtividade).\n• Nv 9 — Magico Trapaceiro: pode usar Ataque Furtivo em ataques mágicos (1×/turno).\n• Nv 13 — Mago Verdadeiro: pode lançar uma magia de nv 1-4 como ação bônus.\n• Nv 17 — Encantamento Definitivo: como ação, aplica Sugestão sobre criatura a 9m (sem custo de slot, 1×/desc. curto)."
+            "desc": "O Trapaceiro Arcano combina astúcia com magia arcana de Mago — pequenas magias de utilidade e dano.\n\nMecânica de Conjuração:\n• Inteligência é a habilidade de conjuração.\n• CD = 8 + prof + INT; ataque mágico = prof + INT.\n• Aprende magias APENAS da escola de Encantamento ou Ilusão (com 1 exceção a cada subida).\n\nMagias conhecidas: 3 truques + 3 magias nv 1 (nv 3) → escala conforme tabela do Mago dividida em 1/3.\n\nFeatures por nível:\n• Nv 3 — Conjuração Trapaceira: aprende 3 truques (1 deve ser Mão Mágica) + 3 magias de nv 1 (1 fora da escola).\n• Nv 3 — Mão Mágica Versátil: o truque Mão Mágica pode realizar ações furtivas a 9m (Prestidigitação, Furtividade).\n• Nv 9 — Magico Trapaceiro: pode usar Ataque Furtivo em ataques mágicos (1×/turno).\n• Nv 13 — Mago Verdadeiro: pode lançar uma magia de nv 1-4 como ação bônus.\n• Nv 17 — Encantamento Definitivo: como ação, aplica Sugestão sobre criatura a 9m (sem custo de slot, 1×/desc. curto).",
+            "combat": "essencial"
           },
           {
             "value": "gatuno",
             "name": "Gatuno",
-            "desc": "O Gatuno é o ladino clássico — esgueirar-se, roubar bolsos, escalar muralhas, vencer com furtividade.\n\nFeatures por nível:\n• Nv 3 — Mãos Rápidas: pode usar a ação bônus de Astúcia pra fazer um teste de Prestidigitação, usar uma ferramenta de ladrão para desativar armadilha/abrir fechadura, ou pegar/usar/passar um objeto.\n• Nv 3 — Segundas Histórias: ao saltar em movimento, salta uma distância adicional = mod. DES. Pode escalar sem reduzir velocidade.\n• Nv 9 — Treinamento Suplementar: ganha proficiência em uma perícia/ferramenta + Especialização nessa perícia.\n• Nv 13 — Uso de Itens Mágicos: ignora restrições de classe/raça/alinhamento em itens mágicos.\n• Nv 17 — Reflexos Felinos: como reação ao ataque, faz mais um Ataque Furtivo (1×/turno extra)."
+            "desc": "O Gatuno é o ladino clássico — esgueirar-se, roubar bolsos, escalar muralhas, vencer com furtividade.\n\nFeatures por nível:\n• Nv 3 — Mãos Rápidas: pode usar a ação bônus de Astúcia pra fazer um teste de Prestidigitação, usar uma ferramenta de ladrão para desativar armadilha/abrir fechadura, ou pegar/usar/passar um objeto.\n• Nv 3 — Segundas Histórias: ao saltar em movimento, salta uma distância adicional = mod. DES. Pode escalar sem reduzir velocidade.\n• Nv 9 — Treinamento Suplementar: ganha proficiência em uma perícia/ferramenta + Especialização nessa perícia.\n• Nv 13 — Uso de Itens Mágicos: ignora restrições de classe/raça/alinhamento em itens mágicos.\n• Nv 17 — Reflexos Felinos: como reação ao ataque, faz mais um Ataque Furtivo (1×/turno extra).",
+            "combat": "essencial"
           }
         ]
       },
@@ -746,97 +857,116 @@
           {
             "value": "acrobatics",
             "name": "Acrobacia",
-            "desc": "Você dobra o bônus de proficiência em testes de Acrobacia."
+            "desc": "Você dobra o bônus de proficiência em testes de Acrobacia.",
+            "category": "social"
           },
           {
             "value": "animal-handling",
             "name": "Adestramento",
-            "desc": "Você dobra o bônus de proficiência em testes de Adestramento."
+            "desc": "Você dobra o bônus de proficiência em testes de Adestramento.",
+            "category": "social"
           },
           {
             "value": "arcana",
             "name": "Arcanismo",
-            "desc": "Você dobra o bônus de proficiência em testes de Arcanismo."
+            "desc": "Você dobra o bônus de proficiência em testes de Arcanismo.",
+            "category": "social"
           },
           {
             "value": "athletics",
             "name": "Atletismo",
-            "desc": "Você dobra o bônus de proficiência em testes de Atletismo."
+            "desc": "Você dobra o bônus de proficiência em testes de Atletismo.",
+            "category": "social"
           },
           {
             "value": "deception",
             "name": "Enganação",
-            "desc": "Você dobra o bônus de proficiência em testes de Enganação."
+            "desc": "Você dobra o bônus de proficiência em testes de Enganação.",
+            "category": "social"
           },
           {
             "value": "history",
             "name": "História",
-            "desc": "Você dobra o bônus de proficiência em testes de História."
+            "desc": "Você dobra o bônus de proficiência em testes de História.",
+            "category": "social"
           },
           {
             "value": "insight",
             "name": "Intuição",
-            "desc": "Você dobra o bônus de proficiência em testes de Intuição."
+            "desc": "Você dobra o bônus de proficiência em testes de Intuição.",
+            "category": "social"
           },
           {
             "value": "intimidation",
             "name": "Intimidação",
-            "desc": "Você dobra o bônus de proficiência em testes de Intimidação."
+            "desc": "Você dobra o bônus de proficiência em testes de Intimidação.",
+            "category": "social"
           },
           {
             "value": "investigation",
             "name": "Investigação",
-            "desc": "Você dobra o bônus de proficiência em testes de Investigação."
+            "desc": "Você dobra o bônus de proficiência em testes de Investigação.",
+            "category": "social"
           },
           {
             "value": "medicine",
             "name": "Medicina",
-            "desc": "Você dobra o bônus de proficiência em testes de Medicina."
+            "desc": "Você dobra o bônus de proficiência em testes de Medicina.",
+            "category": "social"
           },
           {
             "value": "nature",
             "name": "Natureza",
-            "desc": "Você dobra o bônus de proficiência em testes de Natureza."
+            "desc": "Você dobra o bônus de proficiência em testes de Natureza.",
+            "category": "social"
           },
           {
             "value": "perception",
             "name": "Percepção",
-            "desc": "Você dobra o bônus de proficiência em testes de Percepção."
+            "desc": "Você dobra o bônus de proficiência em testes de Percepção.",
+            "category": "social"
           },
           {
             "value": "performance",
             "name": "Atuação",
-            "desc": "Você dobra o bônus de proficiência em testes de Atuação."
+            "desc": "Você dobra o bônus de proficiência em testes de Atuação.",
+            "category": "social"
           },
           {
             "value": "persuasion",
             "name": "Persuasão",
-            "desc": "Você dobra o bônus de proficiência em testes de Persuasão."
+            "desc": "Você dobra o bônus de proficiência em testes de Persuasão.",
+            "category": "social"
           },
           {
             "value": "religion",
             "name": "Religião",
-            "desc": "Você dobra o bônus de proficiência em testes de Religião."
+            "desc": "Você dobra o bônus de proficiência em testes de Religião.",
+            "category": "social"
           },
           {
             "value": "sleight-of-hand",
             "name": "Prestidigitação",
-            "desc": "Você dobra o bônus de proficiência em testes de Prestidigitação."
+            "desc": "Você dobra o bônus de proficiência em testes de Prestidigitação.",
+            "category": "social"
           },
           {
             "value": "stealth",
             "name": "Furtividade",
-            "desc": "Você dobra o bônus de proficiência em testes de Furtividade."
+            "desc": "Você dobra o bônus de proficiência em testes de Furtividade.",
+            "category": "social"
           },
           {
             "value": "survival",
             "name": "Sobrevivência",
-            "desc": "Você dobra o bônus de proficiência em testes de Sobrevivência."
+            "desc": "Você dobra o bônus de proficiência em testes de Sobrevivência.",
+            "category": "social"
           },
           {
             "value": "thieves-tools",
             "name": "Ferramentas de Ladrão",
-            "desc": "Você dobra o bônus de proficiência ao usar Ferramentas de Ladrão."
+            "desc": "Você dobra o bônus de proficiência ao usar Ferramentas de Ladrão.",
+            "category": "social"
           }
         ]
       }
@@ -853,42 +983,50 @@
           {
             "value": "abjuracao",
             "name": "Abjuração",
-            "desc": "Escola de Abjuração — proteção, dissipar magia, banir, contra-feitiçaria. Magos que defendem.\n\nFeatures por nível:\n• Nv 2 — Escriba Abjurador: copiar magias de Abjuração custa metade.\n• Nv 2 — Salvaguarda Arcana: ao conjurar uma magia de Abjuração de nv 1+, cria um escudo com PV temporários = 2× nível da magia + mod. INT. Recarrega quando lança outra Abjuração.\n• Nv 6 — Salvaguarda Aprimorada: escudo agora também concede vantagem em TRs contra magias.\n• Nv 10 — Resistência Mágica: ganha vantagem em TRs contra magias.\n• Nv 14 — Anti-Magia Espectral: 1×/desc. longo pode lançar Dissipar Magia ou Contra-Feitiço sem gastar slot."
+            "desc": "Escola de Abjuração — proteção, dissipar magia, banir, contra-feitiçaria. Magos que defendem.\n\nFeatures por nível:\n• Nv 2 — Escriba Abjurador: copiar magias de Abjuração custa metade.\n• Nv 2 — Salvaguarda Arcana: ao conjurar uma magia de Abjuração de nv 1+, cria um escudo com PV temporários = 2× nível da magia + mod. INT. Recarrega quando lança outra Abjuração.\n• Nv 6 — Salvaguarda Aprimorada: escudo agora também concede vantagem em TRs contra magias.\n• Nv 10 — Resistência Mágica: ganha vantagem em TRs contra magias.\n• Nv 14 — Anti-Magia Espectral: 1×/desc. longo pode lançar Dissipar Magia ou Contra-Feitiço sem gastar slot.",
+            "combat": "essencial"
           },
           {
             "value": "conjuracao",
             "name": "Conjuração",
-            "desc": "Escola de Conjuração — invocar criaturas e objetos, teleporte, criação. Magos que materializam.\n\nFeatures por nível:\n• Nv 2 — Escriba Conjurador: copiar magias de Conjuração custa metade.\n• Nv 2 — Conjuração Menor: como ação, cria um objeto inanimado de até 3kg em mão livre ou espaço a até 3m. Some após 1h.\n• Nv 6 — Conjuração Benigna: criaturas invocadas têm +PV = 2× nível da magia.\n• Nv 10 — Foco Conjurador: pode usar reação pra teleportar até 9m após conjurar magia.\n• Nv 14 — Conjuração Fiel: invocações duram o dobro."
+            "desc": "Escola de Conjuração — invocar criaturas e objetos, teleporte, criação. Magos que materializam.\n\nFeatures por nível:\n• Nv 2 — Escriba Conjurador: copiar magias de Conjuração custa metade.\n• Nv 2 — Conjuração Menor: como ação, cria um objeto inanimado de até 3kg em mão livre ou espaço a até 3m. Some após 1h.\n• Nv 6 — Conjuração Benigna: criaturas invocadas têm +PV = 2× nível da magia.\n• Nv 10 — Foco Conjurador: pode usar reação pra teleportar até 9m após conjurar magia.\n• Nv 14 — Conjuração Fiel: invocações duram o dobro.",
+            "combat": "essencial"
           },
           {
             "value": "adivinhacao",
             "name": "Adivinhação",
-            "desc": "Escola de Adivinhação — prever, ver através do tempo, descobrir. Magos que sabem.\n\nFeatures por nível:\n• Nv 2 — Escriba Adivinhador: copiar magias de Adivinhação custa metade.\n• Nv 2 — Presciência: após desc. longo, rola 2d20 e guarda os resultados. Pode usar 1× cada como substituto pra qualquer d20 que você ou criatura visível a 9m rolar.\n• Nv 6 — Recarga: pode recuperar 1 slot de magia de nv 1-4 quando lança uma magia de Adivinhação de mesmo nível.\n• Nv 10 — Cara Decidida: gasta 1 dado de Presciência pra forçar criatura a refazer um TR.\n• Nv 14 — Visão da Verdade: 1×/desc. longo gasta 1 dado de Presciência pra lançar Adivinhação Maior."
+            "desc": "Escola de Adivinhação — prever, ver através do tempo, descobrir. Magos que sabem.\n\nFeatures por nível:\n• Nv 2 — Escriba Adivinhador: copiar magias de Adivinhação custa metade.\n• Nv 2 — Presciência: após desc. longo, rola 2d20 e guarda os resultados. Pode usar 1× cada como substituto pra qualquer d20 que você ou criatura visível a 9m rolar.\n• Nv 6 — Recarga: pode recuperar 1 slot de magia de nv 1-4 quando lança uma magia de Adivinhação de mesmo nível.\n• Nv 10 — Cara Decidida: gasta 1 dado de Presciência pra forçar criatura a refazer um TR.\n• Nv 14 — Visão da Verdade: 1×/desc. longo gasta 1 dado de Presciência pra lançar Adivinhação Maior.",
+            "combat": "situacional"
           },
           {
             "value": "encantamento",
             "name": "Encantamento",
-            "desc": "Escola de Encantamento — encantar mentes, alterar emoções. Magos que controlam.\n\nFeatures por nível:\n• Nv 2 — Escriba Encantador: copiar magias de Encantamento custa metade.\n• Nv 2 — Olhar Hipnótico: como ação, foca em criatura a 1,5m. Ela faz TR de Sabedoria; falha = velocidade 0 e incapacitada por 1 turno. Pode estender no próximo turno se mantiver olhar (gasta ação).\n• Nv 6 — Memória Instável: quando uma criatura erra um TR contra Encantamento sua, pode apagar a memória do ataque com reação.\n• Nv 10 — Encantamento Dividido: ao conjurar magia de Encantamento de nv 1+ visando 1 criatura, pode visar 2.\n• Nv 14 — Encantamento Definitivo: 1×/desc. longo, pode lançar Sugestão como ação livre + truque."
+            "desc": "Escola de Encantamento — encantar mentes, alterar emoções. Magos que controlam.\n\nFeatures por nível:\n• Nv 2 — Escriba Encantador: copiar magias de Encantamento custa metade.\n• Nv 2 — Olhar Hipnótico: como ação, foca em criatura a 1,5m. Ela faz TR de Sabedoria; falha = velocidade 0 e incapacitada por 1 turno. Pode estender no próximo turno se mantiver olhar (gasta ação).\n• Nv 6 — Memória Instável: quando uma criatura erra um TR contra Encantamento sua, pode apagar a memória do ataque com reação.\n• Nv 10 — Encantamento Dividido: ao conjurar magia de Encantamento de nv 1+ visando 1 criatura, pode visar 2.\n• Nv 14 — Encantamento Definitivo: 1×/desc. longo, pode lançar Sugestão como ação livre + truque.",
+            "combat": "essencial"
           },
           {
             "value": "evocacao",
             "name": "Evocação",
-            "desc": "Escola de Evocação — bolas de fogo, raios, dano. Magos que destroem.\n\nFeatures por nível:\n• Nv 2 — Escriba Evocador: copiar magias de Evocação custa metade.\n• Nv 2 — Reformar Magia: ao conjurar magia de Evocação de área (cone, cubo, esfera, linha), pode proteger até 1+nv da magia criaturas amigas no efeito (não sofrem dano).\n• Nv 6 — Evocador Atento: ao conjurar magia de dano, soma mod. INT ao dano de UMA criatura escolhida.\n• Nv 10 — Magia Empoderada: rola novamente 1d8 de dano de evocação 1×/turno.\n• Nv 14 — Sobrecarga: 1×/desc. longo lança magia de dano com nível +2 (sem gastar slot maior)."
+            "desc": "Escola de Evocação — bolas de fogo, raios, dano. Magos que destroem.\n\nFeatures por nível:\n• Nv 2 — Escriba Evocador: copiar magias de Evocação custa metade.\n• Nv 2 — Reformar Magia: ao conjurar magia de Evocação de área (cone, cubo, esfera, linha), pode proteger até 1+nv da magia criaturas amigas no efeito (não sofrem dano).\n• Nv 6 — Evocador Atento: ao conjurar magia de dano, soma mod. INT ao dano de UMA criatura escolhida.\n• Nv 10 — Magia Empoderada: rola novamente 1d8 de dano de evocação 1×/turno.\n• Nv 14 — Sobrecarga: 1×/desc. longo lança magia de dano com nível +2 (sem gastar slot maior).",
+            "combat": "essencial"
           },
           {
             "value": "ilusao",
             "name": "Ilusão",
-            "desc": "Escola de Ilusão — disfarce, miragem, engano. Magos que confundem.\n\nFeatures por nível:\n• Nv 2 — Escriba Ilusionista: copiar magias de Ilusão custa metade.\n• Nv 2 — Ilusão Aprimorada: efeitos de ilusão duram 5× mais. Pode lançar Imagem Menor como truque.\n• Nv 6 — Ilusão Maleável: como ação, modifica imagem ilusória (sua) ao longo da duração — sem precisar recriar.\n• Nv 10 — Ilusões Reais: parte da ilusão fica real (até 1m). Causa dano físico até dissipada.\n• Nv 14 — Eu Ilusório: como reação ao ser alvo de ataque, transforma você em ilusão por 1 turno (o ataque erra)."
+            "desc": "Escola de Ilusão — disfarce, miragem, engano. Magos que confundem.\n\nFeatures por nível:\n• Nv 2 — Escriba Ilusionista: copiar magias de Ilusão custa metade.\n• Nv 2 — Ilusão Aprimorada: efeitos de ilusão duram 5× mais. Pode lançar Imagem Menor como truque.\n• Nv 6 — Ilusão Maleável: como ação, modifica imagem ilusória (sua) ao longo da duração — sem precisar recriar.\n• Nv 10 — Ilusões Reais: parte da ilusão fica real (até 1m). Causa dano físico até dissipada.\n• Nv 14 — Eu Ilusório: como reação ao ser alvo de ataque, transforma você em ilusão por 1 turno (o ataque erra).",
+            "combat": "situacional"
           },
           {
             "value": "necromancia",
             "name": "Necromancia",
-            "desc": "Escola de Necromancia — manipular morte, animar cadáveres. Magos que dominam o limiar.\n\nFeatures por nível:\n• Nv 2 — Escriba Necromante: copiar magias de Necromancia custa metade.\n• Nv 2 — Sustento Cadavérico: ao matar criatura com magia de Necromancia de nv 1+, ganha PV temporários = 2× nv da magia.\n• Nv 6 — Comando Necromântico: criaturas mortas-vivas que você anima recebem +CR e seguem seus comandos por 24h em vez de 1 dia.\n• Nv 10 — Resistência Inerte: ganha resistência a dano necrótico e máximo de PV de necróticos não pode ser reduzido.\n• Nv 14 — Senhor dos Mortos-Vivos: ao animar criatura, pode adicionar mod. INT ao máximo de mortos-vivos sob seu controle."
+            "desc": "Escola de Necromancia — manipular morte, animar cadáveres. Magos que dominam o limiar.\n\nFeatures por nível:\n• Nv 2 — Escriba Necromante: copiar magias de Necromancia custa metade.\n• Nv 2 — Sustento Cadavérico: ao matar criatura com magia de Necromancia de nv 1+, ganha PV temporários = 2× nv da magia.\n• Nv 6 — Comando Necromântico: criaturas mortas-vivas que você anima recebem +CR e seguem seus comandos por 24h em vez de 1 dia.\n• Nv 10 — Resistência Inerte: ganha resistência a dano necrótico e máximo de PV de necróticos não pode ser reduzido.\n• Nv 14 — Senhor dos Mortos-Vivos: ao animar criatura, pode adicionar mod. INT ao máximo de mortos-vivos sob seu controle.",
+            "combat": "essencial"
           },
           {
             "value": "transmutacao",
             "name": "Transmutação",
-            "desc": "Escola de Transmutação — mudar forma, polimorfismo, alterar propriedades. Magos que reescrevem.\n\nFeatures por nível:\n• Nv 2 — Escriba Transmutador: copiar magias de Transmutação custa metade.\n• Nv 2 — Pedra de Transmutação: cria pedra que carrega 1 efeito (escolhe na criação): visão no escuro, +3m velocidade, proficiência em Constituição, ou resistência a um dano elemental. Recria após desc. longo.\n• Nv 6 — Transmutação Aprimorada: pode dar a pedra a outra criatura (em vez de ficar com você).\n• Nv 10 — Senhor da Forma: pode lançar Polimorfismo em si mesmo como reação ao ser atacado.\n• Nv 14 — Mestre Transmutador: 1×/desc. longo gasta a pedra para um efeito poderoso: cura Maior, dissipação de doença, polimorfismo permanente OU restauração de juventude (regride 3d10 anos)."
+            "desc": "Escola de Transmutação — mudar forma, polimorfismo, alterar propriedades. Magos que reescrevem.\n\nFeatures por nível:\n• Nv 2 — Escriba Transmutador: copiar magias de Transmutação custa metade.\n• Nv 2 — Pedra de Transmutação: cria pedra que carrega 1 efeito (escolhe na criação): visão no escuro, +3m velocidade, proficiência em Constituição, ou resistência a um dano elemental. Recria após desc. longo.\n• Nv 6 — Transmutação Aprimorada: pode dar a pedra a outra criatura (em vez de ficar com você).\n• Nv 10 — Senhor da Forma: pode lançar Polimorfismo em si mesmo como reação ao ser atacado.\n• Nv 14 — Mestre Transmutador: 1×/desc. longo gasta a pedra para um efeito poderoso: cura Maior, dissipação de doença, polimorfismo permanente OU restauração de juventude (regride 3d10 anos).",
+            "combat": "essencial"
           }
         ]
       }
@@ -905,17 +1043,20 @@
           {
             "value": "quatro_elementos",
             "name": "Caminho dos Quatro Elementos",
-            "desc": "O Caminho dos Quatro Elementos é a tradição monástica que canaliza fogo, água, ar e terra através do ki — magia elemental.\n\nFeatures por nível:\n• Nv 3 — Disciplina Elemental: aprende 1 disciplina elemental + magia Truque Menor adaptado. Ganha mais disciplinas em nv 6, 11, 17.\n• Nv 3 — Ki Elemental: pode gastar ki pra alimentar disciplinas (escala com nível da disciplina conjurada).\n\nDisciplinas elementais (PHB p.83) incluem:\n• Punho da Tempestade Sem Fim (nv 3): empurra criatura como Onda Trovejante.\n• Fôlego do Inverno (nv 5): congela criatura em cubo.\n• Chamejar da Fênix (nv 11): pequena Bola de Fogo.\n• Onda Apocalíptica (nv 17): grande Bola de Fogo.\n\nA escolha das disciplinas ainda é manual — anote em Notas qual escolheu por nível."
+            "desc": "O Caminho dos Quatro Elementos é a tradição monástica que canaliza fogo, água, ar e terra através do ki — magia elemental.\n\nFeatures por nível:\n• Nv 3 — Disciplina Elemental: aprende 1 disciplina elemental + magia Truque Menor adaptado. Ganha mais disciplinas em nv 6, 11, 17.\n• Nv 3 — Ki Elemental: pode gastar ki pra alimentar disciplinas (escala com nível da disciplina conjurada).\n\nDisciplinas elementais (PHB p.83) incluem:\n• Punho da Tempestade Sem Fim (nv 3): empurra criatura como Onda Trovejante.\n• Fôlego do Inverno (nv 5): congela criatura em cubo.\n• Chamejar da Fênix (nv 11): pequena Bola de Fogo.\n• Onda Apocalíptica (nv 17): grande Bola de Fogo.\n\nA escolha das disciplinas ainda é manual — anote em Notas qual escolheu por nível.",
+            "combat": "essencial"
           },
           {
             "value": "mao_aberta",
             "name": "Caminho da Mão Aberta",
-            "desc": "O Caminho da Mão Aberta é a tradição monástica clássica — golpes brutais que canalizam ki em técnicas devastadoras.\n\nFeatures por nível:\n• Nv 3 — Técnicas da Mão Aberta: quando acerta com Golpe Marcial, pode escolher 1 efeito: alvo cai prono OU é empurrado 4,5m OU não pode reagir até fim do próximo turno seu.\n• Nv 6 — Cura Mística: como ação, gasta 1 ki + nível em PV (cura a si mesmo).\n• Nv 11 — Manipulação do Ki: usa 1 ação pra entrar em transe de 1 min — silêncio mágico, ataque adicional ou perceber sem visão.\n• Nv 17 — Cair como Trovão: como ação, gasta 3 ki. Cada criatura a 4,5m faz TR de Constituição; falha = 10d10 dano necrótico (metade se sucesso). Você sofre dano necrótico igual ao máximo que seria recebido por uma criatura. Não pode usar se já estiver com PV ≤ 0."
+            "desc": "O Caminho da Mão Aberta é a tradição monástica clássica — golpes brutais que canalizam ki em técnicas devastadoras.\n\nFeatures por nível:\n• Nv 3 — Técnicas da Mão Aberta: quando acerta com Golpe Marcial, pode escolher 1 efeito: alvo cai prono OU é empurrado 4,5m OU não pode reagir até fim do próximo turno seu.\n• Nv 6 — Cura Mística: como ação, gasta 1 ki + nível em PV (cura a si mesmo).\n• Nv 11 — Manipulação do Ki: usa 1 ação pra entrar em transe de 1 min — silêncio mágico, ataque adicional ou perceber sem visão.\n• Nv 17 — Cair como Trovão: como ação, gasta 3 ki. Cada criatura a 4,5m faz TR de Constituição; falha = 10d10 dano necrótico (metade se sucesso). Você sofre dano necrótico igual ao máximo que seria recebido por uma criatura. Não pode usar se já estiver com PV ≤ 0.",
+            "combat": "essencial"
           },
           {
             "value": "sombra",
             "name": "Caminho da Sombra",
-            "desc": "O Caminho da Sombra é a tradição monástica das técnicas furtivas — ninjas que se movem entre as sombras.\n\nFeatures por nível:\n• Nv 3 — Artes das Sombras: pode gastar 2 ki pra lançar Escuridão, Pés Macios, Visão no Escuro ou Caminhos das Sombras. Aprende o truque Truque Menor.\n• Nv 6 — Passos das Sombras: enquanto em área pouco iluminada/escuridão, como ação bônus pode teleportar até 18m pra outra área pouco iluminada/escuridão. Ganha vantagem no próximo ataque do turno.\n• Nv 11 — Manto da Sombra: enquanto em pouca luz/escuridão, fica invisível até se mover ou atacar.\n• Nv 17 — Mestre Oportunista: pode gastar 1 ki pra ganhar vantagem em ataque contra criatura que já tenha sido atacada por outro aliado no turno."
+            "desc": "O Caminho da Sombra é a tradição monástica das técnicas furtivas — ninjas que se movem entre as sombras.\n\nFeatures por nível:\n• Nv 3 — Artes das Sombras: pode gastar 2 ki pra lançar Escuridão, Pés Macios, Visão no Escuro ou Caminhos das Sombras. Aprende o truque Truque Menor.\n• Nv 6 — Passos das Sombras: enquanto em área pouco iluminada/escuridão, como ação bônus pode teleportar até 18m pra outra área pouco iluminada/escuridão. Ganha vantagem no próximo ataque do turno.\n• Nv 11 — Manto da Sombra: enquanto em pouca luz/escuridão, fica invisível até se mover ou atacar.\n• Nv 17 — Mestre Oportunista: pode gastar 1 ki pra ganhar vantagem em ataque contra criatura que já tenha sido atacada por outro aliado no turno.",
+            "combat": "essencial"
           }
         ]
       }
@@ -932,22 +1073,26 @@
           {
             "value": "defesa",
             "name": "Defesa",
-            "desc": "Enquanto estiver usando armadura, você ganha um bônus de +1 na Classe de Armadura."
+            "desc": "Enquanto estiver usando armadura, você ganha um bônus de +1 na Classe de Armadura.",
+            "combat": "essencial"
           },
           {
             "value": "duelo",
             "name": "Duelo",
-            "desc": "Quando estiver empunhando uma arma corpo a corpo em uma mão e sem outras armas, você ganha um bônus de +2 nas jogadas de dano com essa arma."
+            "desc": "Quando estiver empunhando uma arma corpo a corpo em uma mão e sem outras armas, você ganha um bônus de +2 nas jogadas de dano com essa arma.",
+            "combat": "essencial"
           },
           {
             "value": "grande_arma",
             "name": "Grande Arma",
-            "desc": "Quando você rolar 1 ou 2 no dado de dano de um ataque com arma corpo a corpo de duas mãos, você pode rolar novamente e deve usar o novo resultado."
+            "desc": "Quando você rolar 1 ou 2 no dado de dano de um ataque com arma corpo a corpo de duas mãos, você pode rolar novamente e deve usar o novo resultado.",
+            "combat": "essencial"
           },
           {
             "value": "protecao",
             "name": "Proteção",
-            "desc": "Quando uma criatura que você pode ver ataca um alvo que não seja você a até 1,5 metro de você, pode usar sua reação para impor desvantagem na jogada de ataque. Deve estar empunhando um escudo."
+            "desc": "Quando uma criatura que você pode ver ataca um alvo que não seja você a até 1,5 metro de você, pode usar sua reação para impor desvantagem na jogada de ataque. Deve estar empunhando um escudo.",
+            "combat": "situacional"
           }
         ]
       },
@@ -960,17 +1105,20 @@
           {
             "value": "devocao",
             "name": "Juramento de Devoção",
-            "desc": "O Juramento de Devoção une um paladino ao mais brilhante ideal de justiça, virtude e ordem — cavaleiros brancos, sentinelas contra a escuridão.\n\nCanalizar Divindade (1 uso/descanso curto ou longo):\n• Arma Sagrada — como ação, infunde uma arma que você empunha com energia positiva por 1 minuto. Você adiciona seu mod. de Carisma (mín +1) nos ataques com ela e ela emite luz plena em 6m.\n• Virar os Ímpios — como ação, cada fiende ou morto-vivo a até 9m que possa vê-lo ou ouvi-lo deve fazer TR de Sabedoria (CD = 8 + prof + CAR); falha = virado por 1 minuto ou até sofrer dano.\n\nFeatures de Juramento por nível:\n• Nv 7 — Aura de Devoção: você e aliados a até 1,5m são imunes à condição enfeitiçado enquanto você estiver consciente (raio 9m no nv 18).\n• Nv 15 — Pureza de Espírito: você está sempre sob efeito de Proteção contra o Bem e o Mal.\n• Nv 20 — Campeão Sagrado: como ação, assume forma sagrada por 1 minuto (1×/desc. longo). Emite luz plena em 9m, aliados são curados em sua aura, ataques causam dano radiante extra.\n\nMagias sempre preparadas: Proteção contra o Bem e o Mal, Santuário (nv3); Auxílio, Restauração Menor (nv5); Luz do Dia, Despedaçar (nv9); Guardião da Fé, Liberdade de Movimento (nv13); Aceitar Encantamentos, Visão da Verdade (nv17)."
+            "desc": "O Juramento de Devoção une um paladino ao mais brilhante ideal de justiça, virtude e ordem — cavaleiros brancos, sentinelas contra a escuridão.\n\nCanalizar Divindade (1 uso/descanso curto ou longo):\n• Arma Sagrada — como ação, infunde uma arma que você empunha com energia positiva por 1 minuto. Você adiciona seu mod. de Carisma (mín +1) nos ataques com ela e ela emite luz plena em 6m.\n• Virar os Ímpios — como ação, cada fiende ou morto-vivo a até 9m que possa vê-lo ou ouvi-lo deve fazer TR de Sabedoria (CD = 8 + prof + CAR); falha = virado por 1 minuto ou até sofrer dano.\n\nFeatures de Juramento por nível:\n• Nv 7 — Aura de Devoção: você e aliados a até 1,5m são imunes à condição enfeitiçado enquanto você estiver consciente (raio 9m no nv 18).\n• Nv 15 — Pureza de Espírito: você está sempre sob efeito de Proteção contra o Bem e o Mal.\n• Nv 20 — Campeão Sagrado: como ação, assume forma sagrada por 1 minuto (1×/desc. longo). Emite luz plena em 9m, aliados são curados em sua aura, ataques causam dano radiante extra.\n\nMagias sempre preparadas: Proteção contra o Bem e o Mal, Santuário (nv3); Auxílio, Restauração Menor (nv5); Luz do Dia, Despedaçar (nv9); Guardião da Fé, Liberdade de Movimento (nv13); Aceitar Encantamentos, Visão da Verdade (nv17).",
+            "combat": "essencial"
           },
           {
             "value": "os_antigos",
             "name": "Juramento dos Anciões",
-            "desc": "O Juramento dos Anciões é tão antigo quanto elfos e druidas. Paladinos verdes que protegem a beleza e a vida contra a corrupção e o mal.\n\nCanalizar Divindade (1 uso/descanso curto ou longo):\n• Fúria da Natureza — como ação, faz vinhas espectrais brotarem ao redor de uma criatura a até 3m. Ela faz TR de Força OU Destreza (à escolha dela); falha = restringida pelas vinhas. Pode repetir o teste no fim de cada turno.\n• Virar a Impiedade — como ação, cada fiende ou aberração a até 9m que possa vê-lo ou ouvi-lo deve fazer TR de Sabedoria; falha = virado por 1 minuto ou até sofrer dano.\n\nFeatures de Juramento por nível:\n• Nv 7 — Aura de Vigilância: você e aliados a até 1,5m têm resistência a dano de magias (raio 9m no nv 18).\n• Nv 15 — Indomável Antiguidade: quando outra criatura na sua aura sofre dano, você pode usar sua reação para fazê-la ter resistência àquele dano.\n• Nv 20 — Antiga Campeã: como ação, assume forma antiga por 1 minuto (1×/desc. longo). Asas, olhos brilhantes (raio de fogo radiante), cura a si e aliados na aura.\n\nMagias sempre preparadas: Falar com Animais, Enredar (nv3); Erupção Espinhosa, Fragmentos Cintilantes (nv5); Plantas Conjuradas, Proteção Contra Energia (nv9); Forma Selvagem, Pele Pétrea (nv13); Comungar com a Natureza, Marcha das Árvores (nv17)."
+            "desc": "O Juramento dos Anciões é tão antigo quanto elfos e druidas. Paladinos verdes que protegem a beleza e a vida contra a corrupção e o mal.\n\nCanalizar Divindade (1 uso/descanso curto ou longo):\n• Fúria da Natureza — como ação, faz vinhas espectrais brotarem ao redor de uma criatura a até 3m. Ela faz TR de Força OU Destreza (à escolha dela); falha = restringida pelas vinhas. Pode repetir o teste no fim de cada turno.\n• Virar a Impiedade — como ação, cada fiende ou aberração a até 9m que possa vê-lo ou ouvi-lo deve fazer TR de Sabedoria; falha = virado por 1 minuto ou até sofrer dano.\n\nFeatures de Juramento por nível:\n• Nv 7 — Aura de Vigilância: você e aliados a até 1,5m têm resistência a dano de magias (raio 9m no nv 18).\n• Nv 15 — Indomável Antiguidade: quando outra criatura na sua aura sofre dano, você pode usar sua reação para fazê-la ter resistência àquele dano.\n• Nv 20 — Antiga Campeã: como ação, assume forma antiga por 1 minuto (1×/desc. longo). Asas, olhos brilhantes (raio de fogo radiante), cura a si e aliados na aura.\n\nMagias sempre preparadas: Falar com Animais, Enredar (nv3); Erupção Espinhosa, Fragmentos Cintilantes (nv5); Plantas Conjuradas, Proteção Contra Energia (nv9); Forma Selvagem, Pele Pétrea (nv13); Comungar com a Natureza, Marcha das Árvores (nv17).",
+            "combat": "essencial"
           },
           {
             "value": "vinganca",
             "name": "Juramento de Vingança",
-            "desc": "O Juramento de Vingança é um compromisso sério de punir aqueles que cometeram grande mal. Cavaleiros das Trevas, Sombras-mortais — caçadores implacáveis.\n\nCanalizar Divindade (1 uso/descanso curto ou longo):\n• Abjurar Inimigo — como ação, escolhe uma criatura a até 18m que possa ver. Ela faz TR de Sabedoria; falha = amedrontada e velocidade 0 por 1 min; sucesso = velocidade reduzida à metade pelo mesmo período.\n• Voto de Inimizade — como ação bônus, declara uma criatura a até 3m como inimiga jurada por 1 min. Você tem vantagem em ataques contra ela durante o voto.\n\nFeatures de Juramento por nível:\n• Nv 7 — Vingador Implacável: ao acertar um Ataque de Oportunidade, pode mover até metade do seu deslocamento em direção ao alvo como parte da mesma reação.\n• Nv 15 — Caçador da Alma: ao reduzir o alvo do seu Voto de Inimizade a 0 PV, recupera 1 espaço de magia (até nv 4).\n• Nv 20 — Avatar da Vingança: como ação, assume forma de vingador por 1 min (1×/desc. longo). +20 em iniciativa, ataques extras contra alvos do voto, ataques causam +10 dano necrótico ou radiante.\n\nMagias sempre preparadas: Caçar Magia, Punição Inquisidora (nv3); Imobilizar Pessoa, Risada Histérica de Tasha (nv5); Reza, Imobilizar Monstro (nv9); Adivinhação, Banimento (nv13); Marcar Caçador, Detém Monstro (nv17)."
+            "desc": "O Juramento de Vingança é um compromisso sério de punir aqueles que cometeram grande mal. Cavaleiros das Trevas, Sombras-mortais — caçadores implacáveis.\n\nCanalizar Divindade (1 uso/descanso curto ou longo):\n• Abjurar Inimigo — como ação, escolhe uma criatura a até 18m que possa ver. Ela faz TR de Sabedoria; falha = amedrontada e velocidade 0 por 1 min; sucesso = velocidade reduzida à metade pelo mesmo período.\n• Voto de Inimizade — como ação bônus, declara uma criatura a até 3m como inimiga jurada por 1 min. Você tem vantagem em ataques contra ela durante o voto.\n\nFeatures de Juramento por nível:\n• Nv 7 — Vingador Implacável: ao acertar um Ataque de Oportunidade, pode mover até metade do seu deslocamento em direção ao alvo como parte da mesma reação.\n• Nv 15 — Caçador da Alma: ao reduzir o alvo do seu Voto de Inimizade a 0 PV, recupera 1 espaço de magia (até nv 4).\n• Nv 20 — Avatar da Vingança: como ação, assume forma de vingador por 1 min (1×/desc. longo). +20 em iniciativa, ataques extras contra alvos do voto, ataques causam +10 dano necrótico ou radiante.\n\nMagias sempre preparadas: Caçar Magia, Punição Inquisidora (nv3); Imobilizar Pessoa, Risada Histérica de Tasha (nv5); Reza, Imobilizar Monstro (nv9); Adivinhação, Banimento (nv13); Marcar Caçador, Detém Monstro (nv17).",
+            "combat": "essencial"
           }
         ]
       }
@@ -987,67 +1135,80 @@
           {
             "value": "aberracoes",
             "name": "Aberrações",
-            "desc": "Você tem vantagem em testes de Sabedoria (Sobrevivência) para rastrear aberrações e em testes de Inteligência para lembrá-las. Você aprende um idioma falado por aberrações."
+            "desc": "Você tem vantagem em testes de Sabedoria (Sobrevivência) para rastrear aberrações e em testes de Inteligência para lembrá-las. Você aprende um idioma falado por aberrações.",
+            "category": "social"
           },
           {
             "value": "bestas",
             "name": "Bestas",
-            "desc": "Você tem vantagem em testes de Sabedoria (Sobrevivência) para rastrear bestas e em testes de Inteligência para lembrá-las. Você aprende Druídico ou um idioma natural."
+            "desc": "Você tem vantagem em testes de Sabedoria (Sobrevivência) para rastrear bestas e em testes de Inteligência para lembrá-las. Você aprende Druídico ou um idioma natural.",
+            "category": "social"
           },
           {
             "value": "celestiais",
             "name": "Celestiais",
-            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear celestiais e em testes de Inteligência para lembrá-los. Aprende Celestial."
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear celestiais e em testes de Inteligência para lembrá-los. Aprende Celestial.",
+            "category": "social"
           },
           {
             "value": "construtos",
             "name": "Construtos",
-            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear construtos e em testes de Inteligência para lembrá-los. Aprende Gnômico."
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear construtos e em testes de Inteligência para lembrá-los. Aprende Gnômico.",
+            "category": "social"
           },
           {
             "value": "draconicos",
             "name": "Dragões",
-            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear dragões e em testes de Inteligência para lembrá-los. Aprende Dracônico."
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear dragões e em testes de Inteligência para lembrá-los. Aprende Dracônico.",
+            "category": "social"
           },
           {
             "value": "elementais",
             "name": "Elementais",
-            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear elementais e em testes de Inteligência para lembrá-los. Aprende Primordial."
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear elementais e em testes de Inteligência para lembrá-los. Aprende Primordial.",
+            "category": "social"
           },
           {
             "value": "fadas",
             "name": "Fadas",
-            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear fadas e em testes de Inteligência para lembrá-las. Aprende Élfico ou Silvestre."
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear fadas e em testes de Inteligência para lembrá-las. Aprende Élfico ou Silvestre.",
+            "category": "social"
           },
           {
             "value": "gigantes",
             "name": "Gigantes",
-            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear gigantes e em testes de Inteligência para lembrá-los. Aprende Gigante."
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear gigantes e em testes de Inteligência para lembrá-los. Aprende Gigante.",
+            "category": "social"
           },
           {
             "value": "humanoides",
             "name": "Humanóides (2 tipos)",
-            "desc": "Escolha 2 raças de humanóides. Você tem vantagem em testes de Sobrevivência para rastreá-los e em testes de Inteligência para lembrá-los. Aprende os idiomas desses humanóides."
+            "desc": "Escolha 2 raças de humanóides. Você tem vantagem em testes de Sobrevivência para rastreá-los e em testes de Inteligência para lembrá-los. Aprende os idiomas desses humanóides.",
+            "category": "social"
           },
           {
             "value": "lamas",
             "name": "Lamas",
-            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear lamas e em testes de Inteligência para lembrá-las. Aprende Terrano."
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear lamas e em testes de Inteligência para lembrá-las. Aprende Terrano.",
+            "category": "social"
           },
           {
             "value": "monstrosidades",
             "name": "Monstrosidades",
-            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear monstrosidades e em testes de Inteligência para lembrá-las. Aprende um idioma falado por monstrosidades."
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear monstrosidades e em testes de Inteligência para lembrá-las. Aprende um idioma falado por monstrosidades.",
+            "category": "social"
           },
           {
             "value": "mortos_vivos",
             "name": "Mortos-Vivos",
-            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear mortos-vivos e em testes de Inteligência para lembrá-los. Aprende Abissal ou Infernal."
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear mortos-vivos e em testes de Inteligência para lembrá-los. Aprende Abissal ou Infernal.",
+            "category": "social"
           },
           {
             "value": "plantas",
             "name": "Plantas",
-            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear plantas e em testes de Inteligência para lembrá-las. Aprende Élfico ou Druídico."
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear plantas e em testes de Inteligência para lembrá-las. Aprende Élfico ou Druídico.",
+            "category": "social"
           }
         ]
       },
@@ -1060,22 +1221,26 @@
           {
             "value": "arqueiro",
             "name": "Arqueiro",
-            "desc": "Você ganha um bônus de +2 em jogadas de ataque que fizer com armas de alcance."
+            "desc": "Você ganha um bônus de +2 em jogadas de ataque que fizer com armas de alcance.",
+            "combat": "essencial"
           },
           {
             "value": "defesa",
             "name": "Defesa",
-            "desc": "Enquanto estiver usando armadura, você ganha um bônus de +1 na Classe de Armadura."
+            "desc": "Enquanto estiver usando armadura, você ganha um bônus de +1 na Classe de Armadura.",
+            "combat": "essencial"
           },
           {
             "value": "duelo",
             "name": "Duelo",
-            "desc": "Quando estiver empunhando uma arma corpo a corpo em uma mão e sem outras armas, você ganha um bônus de +2 nas jogadas de dano com essa arma."
+            "desc": "Quando estiver empunhando uma arma corpo a corpo em uma mão e sem outras armas, você ganha um bônus de +2 nas jogadas de dano com essa arma.",
+            "combat": "essencial"
           },
           {
             "value": "duas_maos",
             "name": "Combate com Duas Armas",
-            "desc": "Quando você se engajar em combate com duas armas, você pode adicionar seu modificador de habilidade ao dano do segundo ataque."
+            "desc": "Quando você se engajar em combate com duas armas, você pode adicionar seu modificador de habilidade ao dano do segundo ataque.",
+            "combat": "essencial"
           }
         ]
       },
@@ -1088,12 +1253,14 @@
           {
             "value": "cacador",
             "name": "Caçador",
-            "desc": "O Caçador é o patrulheiro dos campos de batalha — caça monstros e criaturas específicas com técnicas treinadas.\n\nFeatures por nível:\n• Nv 3 — Presa do Caçador: escolhe UMA técnica (manual no campo Notas até picker):\n  - Matador de Colosso: +1d8 dano contra criatura ferida (1×/turno).\n  - Assassino de Gigantes: vantagem em ataques contra Grandes ou maiores.\n  - Caçador de Hordas: +1 dano em alvos que estejam em conflito com aliado.\n• Nv 7 — Táticas Defensivas: escolhe UMA defesa:\n  - Manada Furiosa: vantagem em TRs contra ser amedrontado.\n  - Ataque Múltiplo: desvantagem em ataques contra você quando criaturas a 1,5m forem múltiplas.\n  - Veredas Espinhosas: criaturas que te ferem sofrem 1d6 dano corte.\n• Nv 11 — Ataques Múltiplos: escolhe UMA opção:\n  - Volley: lança um ataque à distância em todas criaturas em 3m de um ponto.\n  - Whirlwind Attack: ataque corpo a corpo contra todas criaturas a 1,5m.\n• Nv 15 — Defesa Superior: escolhe UMA passiva avançada (Evasão, Stand Against the Tide, Uncanny Dodge)."
+            "desc": "O Caçador é o patrulheiro dos campos de batalha — caça monstros e criaturas específicas com técnicas treinadas.\n\nFeatures por nível:\n• Nv 3 — Presa do Caçador: escolhe UMA técnica (manual no campo Notas até picker):\n  - Matador de Colosso: +1d8 dano contra criatura ferida (1×/turno).\n  - Assassino de Gigantes: vantagem em ataques contra Grandes ou maiores.\n  - Caçador de Hordas: +1 dano em alvos que estejam em conflito com aliado.\n• Nv 7 — Táticas Defensivas: escolhe UMA defesa:\n  - Manada Furiosa: vantagem em TRs contra ser amedrontado.\n  - Ataque Múltiplo: desvantagem em ataques contra você quando criaturas a 1,5m forem múltiplas.\n  - Veredas Espinhosas: criaturas que te ferem sofrem 1d6 dano corte.\n• Nv 11 — Ataques Múltiplos: escolhe UMA opção:\n  - Volley: lança um ataque à distância em todas criaturas em 3m de um ponto.\n  - Whirlwind Attack: ataque corpo a corpo contra todas criaturas a 1,5m.\n• Nv 15 — Defesa Superior: escolhe UMA passiva avançada (Evasão, Stand Against the Tide, Uncanny Dodge).",
+            "combat": "essencial"
           },
           {
             "value": "mestre_das_bestas",
             "name": "Mestre das Bestas",
-            "desc": "O Mestre das Bestas é o patrulheiro acompanhado por uma fera companheira — vínculo místico de amor e batalha.\n\nFeatures por nível:\n• Nv 3 — Companheiro Animal: ganha uma besta de CR ≤ 1/4, Pequena ou menor, que ele treina (anote em Notas: tipo de besta + características). A besta segue suas ordens (ataca, defende, segue, etc.). Pode usar ação pra comandá-la atacar.\n• Nv 7 — Treinamento Exemplar: a besta age no SEU turno e usa seu bônus de proficiência em ataques.\n• Nv 11 — Treinamento Avançado: pode comandar a besta a fazer 2 ataques quando você usa Ataque Extra.\n• Nv 15 — Maestria: a besta tem vantagem em TRs contra magias."
+            "desc": "O Mestre das Bestas é o patrulheiro acompanhado por uma fera companheira — vínculo místico de amor e batalha.\n\nFeatures por nível:\n• Nv 3 — Companheiro Animal: ganha uma besta de CR ≤ 1/4, Pequena ou menor, que ele treina (anote em Notas: tipo de besta + características). A besta segue suas ordens (ataca, defende, segue, etc.). Pode usar ação pra comandá-la atacar.\n• Nv 7 — Treinamento Exemplar: a besta age no SEU turno e usa seu bônus de proficiência em ataques.\n• Nv 11 — Treinamento Avançado: pode comandar a besta a fazer 2 ataques quando você usa Ataque Extra.\n• Nv 15 — Maestria: a besta tem vantagem em TRs contra magias.",
+            "combat": "essencial"
           }
         ]
       },
@@ -1106,17 +1273,20 @@
           {
             "value": "matador_colosso",
             "name": "Matador de Colossos",
-            "desc": "+1d8 dano contra criatura cujo PV máximo seja maior que o seu (1×/turno). Vantagem em ataques contra criaturas Grandes ou maiores que estejam feridas."
+            "desc": "+1d8 dano contra criatura cujo PV máximo seja maior que o seu (1×/turno). Vantagem em ataques contra criaturas Grandes ou maiores que estejam feridas.",
+            "combat": "essencial"
           },
           {
             "value": "assassino_gigante",
             "name": "Caçador de Gigantes",
-            "desc": "Vantagem em ataques contra criaturas Grandes ou maiores."
+            "desc": "Vantagem em ataques contra criaturas Grandes ou maiores.",
+            "combat": "situacional"
           },
           {
             "value": "cacador_horda",
             "name": "Caçador de Hordas",
-            "desc": "Pode fazer um ataque adicional contra uma criatura diferente quando você acerta o alvo principal com Ataque (1×/turno)."
+            "desc": "Pode fazer um ataque adicional contra uma criatura diferente quando você acerta o alvo principal com Ataque (1×/turno).",
+            "combat": "essencial"
           }
         ],
         "requires": {
@@ -1132,17 +1302,20 @@
           {
             "value": "manada_furiosa",
             "name": "Manada Furiosa",
-            "desc": "Vantagem em TRs contra ser amedrontado."
+            "desc": "Vantagem em TRs contra ser amedrontado.",
+            "combat": "situacional"
           },
           {
             "value": "ataque_multiplo",
             "name": "Combate em Múltiplos",
-            "desc": "Quando uma criatura faz ataque contra você enquanto você está em desvantagem (cercado por 3+ inimigos), o ataque ela faz com desvantagem em vez de você."
+            "desc": "Quando uma criatura faz ataque contra você enquanto você está em desvantagem (cercado por 3+ inimigos), o ataque ela faz com desvantagem em vez de você.",
+            "combat": "situacional"
           },
           {
             "value": "esquiva_provada",
             "name": "Esquiva Provada",
-            "desc": "Quando uma criatura erra ataque corpo a corpo contra você, pode usar reação pra fazer um ataque contra ela."
+            "desc": "Quando uma criatura erra ataque corpo a corpo contra você, pode usar reação pra fazer um ataque contra ela.",
+            "combat": "situacional"
           }
         ],
         "requires": {
@@ -1158,12 +1331,14 @@
           {
             "value": "volley",
             "name": "Volley",
-            "desc": "Como ação, faz um ataque à distância contra QUALQUER número de criaturas em uma esfera de 3m de raio centrada em um ponto a até alcance da arma."
+            "desc": "Como ação, faz um ataque à distância contra QUALQUER número de criaturas em uma esfera de 3m de raio centrada em um ponto a até alcance da arma.",
+            "combat": "essencial"
           },
           {
             "value": "whirlwind",
             "name": "Ataque Giratório",
-            "desc": "Como ação, faz um ataque corpo a corpo contra QUALQUER número de criaturas em 1,5m de você (cada com jogada separada)."
+            "desc": "Como ação, faz um ataque corpo a corpo contra QUALQUER número de criaturas em 1,5m de você (cada com jogada separada).",
+            "combat": "essencial"
           }
         ],
         "requires": {
@@ -1179,17 +1354,20 @@
           {
             "value": "defesa_evasiva",
             "name": "Defesa Evasiva",
-            "desc": "Quando uma criatura erra ataque contra você, pode usar reação pra forçar a criatura a redirecionar o ataque pra outra criatura a 1,5m dela (TR de Força/Destreza CD INT)."
+            "desc": "Quando uma criatura erra ataque contra você, pode usar reação pra forçar a criatura a redirecionar o ataque pra outra criatura a 1,5m dela (TR de Força/Destreza CD INT).",
+            "combat": "situacional"
           },
           {
             "value": "esquivar_marca",
             "name": "Andante de Sombras",
-            "desc": "Quando ataque contra você falha, ganha vantagem no próximo ataque contra essa criatura até fim do próximo turno."
+            "desc": "Quando ataque contra você falha, ganha vantagem no próximo ataque contra essa criatura até fim do próximo turno.",
+            "combat": "situacional"
           },
           {
             "value": "esquiva_sobrenat",
             "name": "Esquiva Sobrenatural",
-            "desc": "Quando uma criatura te acerta ataque, pode usar reação pra reduzir o dano à metade (similar ao Ladino nv 5)."
+            "desc": "Quando uma criatura te acerta ataque, pode usar reação pra reduzir o dano à metade (similar ao Ladino nv 5).",
+            "combat": "situacional"
           }
         ],
         "requires": {
@@ -1208,37 +1386,44 @@
           {
             "value": "lobo",
             "name": "Lobo",
-            "desc": "CR 1/4 — Médio. Velocidade 12m. Olfato apurado. Tática \"Bando\" (vantagem em ataques se aliado a 1,5m do alvo). Boa pra ataques corpo a corpo + derrubar."
+            "desc": "CR 1/4 — Médio. Velocidade 12m. Olfato apurado. Tática \"Bando\" (vantagem em ataques se aliado a 1,5m do alvo). Boa pra ataques corpo a corpo + derrubar.",
+            "combat": "essencial"
           },
           {
             "value": "falcao",
             "name": "Falcão (Hawk)",
-            "desc": "CR 0 — Pequeno. Voo 18m. Visão aguçada (vantagem em Percepção visual). Bom pra reconhecimento, mas baixo PV."
+            "desc": "CR 0 — Pequeno. Voo 18m. Visão aguçada (vantagem em Percepção visual). Bom pra reconhecimento, mas baixo PV.",
+            "combat": "situacional"
           },
           {
             "value": "pantera",
             "name": "Pantera",
-            "desc": "CR 1/4 — Médio. Velocidade 15m, escalada 6m. Camuflagem. Boas mordidas. Combina velocidade + furtividade."
+            "desc": "CR 1/4 — Médio. Velocidade 15m, escalada 6m. Camuflagem. Boas mordidas. Combina velocidade + furtividade.",
+            "combat": "essencial"
           },
           {
             "value": "javali",
             "name": "Javali",
-            "desc": "CR 1/4 — Médio. Velocidade 12m. Carga (dano extra ao se mover pelo menos 6m antes do ataque). Robusto."
+            "desc": "CR 1/4 — Médio. Velocidade 12m. Carga (dano extra ao se mover pelo menos 6m antes do ataque). Robusto.",
+            "combat": "essencial"
           },
           {
             "value": "gato_montes",
             "name": "Gato Montês",
-            "desc": "CR 1/4 — Pequeno. Velocidade 12m. Tática \"Bando\". Furtividade. Versão compacta da pantera."
+            "desc": "CR 1/4 — Pequeno. Velocidade 12m. Tática \"Bando\". Furtividade. Versão compacta da pantera.",
+            "combat": "essencial"
           },
           {
             "value": "aguia",
             "name": "Águia",
-            "desc": "CR 0 — Pequeno. Voo 18m. Vista de águia. Excelente para reconhecimento em terreno aberto."
+            "desc": "CR 0 — Pequeno. Voo 18m. Vista de águia. Excelente para reconhecimento em terreno aberto.",
+            "combat": "situacional"
           },
           {
             "value": "urso_pequeno",
             "name": "Urso (Filhote)",
-            "desc": "CR 1/4 (representando filhote/urso pequeno) — Médio. Velocidade 12m. Mordida + garras. Mais dano e PV que outras bestas de CR 1/4."
+            "desc": "CR 1/4 (representando filhote/urso pequeno) — Médio. Velocidade 12m. Mordida + garras. Mais dano e PV que outras bestas de CR 1/4.",
+            "combat": "essencial"
           }
         ]
       }
@@ -1255,17 +1440,20 @@
           {
             "value": "feerico",
             "name": "O Feérico",
-            "desc": "Senhor ou senhora do Feywild — reino de beleza, capricho e perigo. Magia encantadora e ilusória.\n\nFeatures de Patrono por nível:\n• Nv 1 — Presença Feérica: como ação, todas as criaturas em cone de 3m fazem TR de Sabedoria; falha = enfeitiçadas OU amedrontadas (à sua escolha) por 1 turno (1×/desc. curto ou longo).\n• Nv 6 — Fuga Misteriosa: como reação ao sofrer dano, fica invisível e teleporta até 18m para espaço desocupado que possa ver (1×/desc. curto ou longo).\n• Nv 10 — Defesas do Feywild: ganha imunidade à condição enfeitiçado e resistência permanente contra ela.\n• Nv 14 — Sequestro Feérico: como ação, força criatura a 3m a TR de Sabedoria; falha = teleportada com você para o Feywild ou Plano Material, e fica incapacitada até final do próximo turno seu (1×/desc. curto ou longo).\n\nMagias de Patrono sempre preparadas: Sono, Rir Histericamente de Tasha (nv1); Calmar Emoções, Embaraçamento (nv3); Aclamação, Sufocamento (nv5); Dominar Besta, Polimorfismo Maior (nv7); Dominar Pessoa, Dominar Monstro (nv9)."
+            "desc": "Senhor ou senhora do Feywild — reino de beleza, capricho e perigo. Magia encantadora e ilusória.\n\nFeatures de Patrono por nível:\n• Nv 1 — Presença Feérica: como ação, todas as criaturas em cone de 3m fazem TR de Sabedoria; falha = enfeitiçadas OU amedrontadas (à sua escolha) por 1 turno (1×/desc. curto ou longo).\n• Nv 6 — Fuga Misteriosa: como reação ao sofrer dano, fica invisível e teleporta até 18m para espaço desocupado que possa ver (1×/desc. curto ou longo).\n• Nv 10 — Defesas do Feywild: ganha imunidade à condição enfeitiçado e resistência permanente contra ela.\n• Nv 14 — Sequestro Feérico: como ação, força criatura a 3m a TR de Sabedoria; falha = teleportada com você para o Feywild ou Plano Material, e fica incapacitada até final do próximo turno seu (1×/desc. curto ou longo).\n\nMagias de Patrono sempre preparadas: Sono, Rir Histericamente de Tasha (nv1); Calmar Emoções, Embaraçamento (nv3); Aclamação, Sufocamento (nv5); Dominar Besta, Polimorfismo Maior (nv7); Dominar Pessoa, Dominar Monstro (nv9).",
+            "combat": "essencial"
           },
           {
             "value": "infernal",
             "name": "O Infernal",
-            "desc": "Pacto firmado com diabo dos planos inferiores — Asmodeus, Mefistófeles ou outro arquidiabo. Foco em fogo, dano e resiliência.\n\nFeatures de Patrono por nível:\n• Nv 1 — Resistência das Trevas: após desc. curto ou longo, escolhe uma resistência a dano entre: ácido, frio, fogo, raio, necrótico, perfurante, venenoso ou trovão.\n• Nv 6 — Aspecto Sombrio: como ação bônus, ganha PV temporários = nível + mod. CAR (mínimo 1). Recupera no desc. curto ou longo.\n• Nv 10 — Olhar das Duas Vidas: você pode falar e entender Infernal; ganha visão no escuro em 36m (atravessa escuridão mágica).\n• Nv 14 — Roubo da Alma: como ação bônus quando reduz criatura humanoide a 0 PV, rouba sua alma e ganha 8d8 PV temporários e ganha uma das suas magias preparadas (1×/desc. longo).\n\nMagias de Patrono sempre preparadas: Mãos Flamejantes, Ordem (nv1); Raio Ardente, Sugestão (nv3); Bola de Fogo, Praga da Vida (nv5); Muralha de Fogo, Pancada na Cabeça (nv7); Pés Flamejantes, Pancada Devastadora (nv9)."
+            "desc": "Pacto firmado com diabo dos planos inferiores — Asmodeus, Mefistófeles ou outro arquidiabo. Foco em fogo, dano e resiliência.\n\nFeatures de Patrono por nível:\n• Nv 1 — Resistência das Trevas: após desc. curto ou longo, escolhe uma resistência a dano entre: ácido, frio, fogo, raio, necrótico, perfurante, venenoso ou trovão.\n• Nv 6 — Aspecto Sombrio: como ação bônus, ganha PV temporários = nível + mod. CAR (mínimo 1). Recupera no desc. curto ou longo.\n• Nv 10 — Olhar das Duas Vidas: você pode falar e entender Infernal; ganha visão no escuro em 36m (atravessa escuridão mágica).\n• Nv 14 — Roubo da Alma: como ação bônus quando reduz criatura humanoide a 0 PV, rouba sua alma e ganha 8d8 PV temporários e ganha uma das suas magias preparadas (1×/desc. longo).\n\nMagias de Patrono sempre preparadas: Mãos Flamejantes, Ordem (nv1); Raio Ardente, Sugestão (nv3); Bola de Fogo, Praga da Vida (nv5); Muralha de Fogo, Pancada na Cabeça (nv7); Pés Flamejantes, Pancada Devastadora (nv9).",
+            "combat": "essencial"
           },
           {
             "value": "grande_antigo",
             "name": "O Grande Antigo",
-            "desc": "Ser cuja natureza é alheia à realidade — Cthulhu, Hastur, entidades do Plano Distante. Foco em mente, loucura e telepatia.\n\nFeatures de Patrono por nível:\n• Nv 1 — Sussurros Alheios: você tem telepatia mágica com qualquer criatura que veja a até 9m; pode falar com ela mesmo sem partilhar idioma.\n• Nv 6 — Ataque das Trevas: quando uma criatura a até 18m falha em TR contra magia sua, pode escolhê-la como alvo confuso até final do próximo turno seu (1×/desc. curto ou longo).\n• Nv 10 — Defesas do Pensamento: imune a psíquico; criaturas que tentem ler seus pensamentos sofrem 1d4 dano psíquico de retorno.\n• Nv 14 — Devorador de Pensamentos: como ação, força criatura a 18m a TR de Inteligência; falha = você ganha PV temporários = 1d10×nível e ela sofre psíquico igual (1×/desc. longo).\n\nMagias de Patrono sempre preparadas: Comando Telepático, Discos Subterrâneos de Tasha (nv1); Detectar Pensamentos, Ataque Psíquico (nv3); Clarividência, Esmagamento Mental (nv5); Dominar Besta, Polimorfismo Verdadeiro (nv7); Telepatia, Estágio Mental (nv9)."
+            "desc": "Ser cuja natureza é alheia à realidade — Cthulhu, Hastur, entidades do Plano Distante. Foco em mente, loucura e telepatia.\n\nFeatures de Patrono por nível:\n• Nv 1 — Sussurros Alheios: você tem telepatia mágica com qualquer criatura que veja a até 9m; pode falar com ela mesmo sem partilhar idioma.\n• Nv 6 — Ataque das Trevas: quando uma criatura a até 18m falha em TR contra magia sua, pode escolhê-la como alvo confuso até final do próximo turno seu (1×/desc. curto ou longo).\n• Nv 10 — Defesas do Pensamento: imune a psíquico; criaturas que tentem ler seus pensamentos sofrem 1d4 dano psíquico de retorno.\n• Nv 14 — Devorador de Pensamentos: como ação, força criatura a 18m a TR de Inteligência; falha = você ganha PV temporários = 1d10×nível e ela sofre psíquico igual (1×/desc. longo).\n\nMagias de Patrono sempre preparadas: Comando Telepático, Discos Subterrâneos de Tasha (nv1); Detectar Pensamentos, Ataque Psíquico (nv3); Clarividência, Esmagamento Mental (nv5); Dominar Besta, Polimorfismo Verdadeiro (nv7); Telepatia, Estágio Mental (nv9).",
+            "combat": "essencial"
           }
         ]
       },
@@ -1287,77 +1475,92 @@
           {
             "value": "forca_agonizante",
             "name": "Força Agonizante",
-            "desc": "Ao conjurar Explosão Eldritch, adicione seu modificador de Carisma ao dano de cada feixe."
+            "desc": "Ao conjurar Explosão Eldritch, adicione seu modificador de Carisma ao dano de cada feixe.",
+            "combat": "essencial"
           },
           {
             "value": "blast_repelente",
             "name": "Blast Repelente",
-            "desc": "Ao acertar uma criatura com Explosão Eldritch, você pode empurrá-la 3 metros em linha reta."
+            "desc": "Ao acertar uma criatura com Explosão Eldritch, você pode empurrá-la 3 metros em linha reta.",
+            "combat": "situacional"
           },
           {
             "value": "fala_das_bestas",
             "name": "Fala das Bestas",
-            "desc": "Você pode conjurar Falar com os Animais à vontade, sem gastar um espaço de magia."
+            "desc": "Você pode conjurar Falar com os Animais à vontade, sem gastar um espaço de magia.",
+            "category": "social"
           },
           {
             "value": "influencia_sedutora",
             "name": "Influência Sedutora",
-            "desc": "Você ganha proficiência nas perícias Enganação e Persuasão."
+            "desc": "Você ganha proficiência nas perícias Enganação e Persuasão.",
+            "category": "social"
           },
           {
             "value": "visao_do_diabo",
             "name": "Visão do Diabo",
-            "desc": "Você enxerga normalmente na escuridão (mágica e não mágica) a até 36 metros."
+            "desc": "Você enxerga normalmente na escuridão (mágica e não mágica) a até 36 metros.",
+            "category": "exploracao"
           },
           {
             "value": "visao_eldritch",
             "name": "Visão Eldritch",
-            "desc": "Você pode conjurar Detectar Magia à vontade, sem gastar um espaço de magia."
+            "desc": "Você pode conjurar Detectar Magia à vontade, sem gastar um espaço de magia.",
+            "category": "exploracao"
           },
           {
             "value": "lanca_eldritch",
             "name": "Lança Eldritch",
-            "desc": "Quando você usa Explosão Eldritch, seu alcance é de 90 metros."
+            "desc": "Quando você usa Explosão Eldritch, seu alcance é de 90 metros.",
+            "combat": "essencial"
           },
           {
             "value": "vigor_infernal",
             "name": "Vigor Infernal",
-            "desc": "Você pode conjurar Falsa Vida no nível mais baixo à vontade, sem gastar espaço de magia."
+            "desc": "Você pode conjurar Falsa Vida no nível mais baixo à vontade, sem gastar espaço de magia.",
+            "category": "defesa"
           },
           {
             "value": "olhos_runas",
             "name": "Olhos do Guardador de Runas",
-            "desc": "Você pode ler toda escrita, seja ela mágica ou em qualquer idioma."
+            "desc": "Você pode ler toda escrita, seja ela mágica ou em qualquer idioma.",
+            "category": "social"
           },
           {
             "value": "olhar_duas_mentes",
             "name": "Olhar de Duas Mentes",
-            "desc": "Você pode usar uma ação para tocar um humanoide voluntário e perceber através dos sentidos dele até o fim do seu próximo turno."
+            "desc": "Você pode usar uma ação para tocar um humanoide voluntário e perceber através dos sentidos dele até o fim do seu próximo turno.",
+            "category": "exploracao"
           },
           {
             "value": "mascara_faces",
             "name": "Máscara de Muitas Faces",
-            "desc": "Você pode conjurar Disfarçar-se à vontade, sem gastar um espaço de magia."
+            "desc": "Você pode conjurar Disfarçar-se à vontade, sem gastar um espaço de magia.",
+            "category": "social"
           },
           {
             "value": "visoes_nebulosas",
             "name": "Visões Nebulosas",
-            "desc": "Você pode conjurar Imagem Silenciosa à vontade, sem gastar um espaço de magia."
+            "desc": "Você pode conjurar Imagem Silenciosa à vontade, sem gastar um espaço de magia.",
+            "combat": "situacional"
           },
           {
             "value": "um_com_sombras",
             "name": "Um com as Sombras",
-            "desc": "Quando estiver em uma área de penumbra ou escuridão, você pode usar uma ação para se tornar invisível até se mover ou realizar qualquer ação ou reação."
+            "desc": "Quando estiver em uma área de penumbra ou escuridão, você pode usar uma ação para se tornar invisível até se mover ou realizar qualquer ação ou reação.",
+            "category": "exploracao"
           },
           {
             "value": "sinal_mau_agouro",
             "name": "Sinal de Mau Agouro",
-            "desc": "Você pode conjurar Enfeitiçar Pessoa uma vez, usando um espaço de magia de bruxo. Você não pode fazê-lo novamente até terminar um descanso longo."
+            "desc": "Você pode conjurar Enfeitiçar Pessoa uma vez, usando um espaço de magia de bruxo. Você não pode fazê-lo novamente até terminar um descanso longo.",
+            "combat": "situacional"
           },
           {
             "value": "ladrao_destinos",
             "name": "Ladrão dos Cinco Destinos",
-            "desc": "Você pode conjurar Enfeitiçar Monstro uma vez usando um espaço de magia de bruxo. Você não pode fazê-lo novamente até terminar um descanso longo."
+            "desc": "Você pode conjurar Enfeitiçar Monstro uma vez usando um espaço de magia de bruxo. Você não pode fazê-lo novamente até terminar um descanso longo.",
+            "combat": "situacional"
           }
         ]
       },
@@ -1370,17 +1573,20 @@
           {
             "value": "corrente",
             "name": "Pacto da Corrente",
-            "desc": "Você forja um vínculo com um espírito familiar — um servidor sobrenatural amarrado por correntes invisíveis.\n\nMecânica:\n• Aprende Achar Familiar (já preparada) e pode conjurá-la como ritual.\n• Ao invocar o familiar, escolhe uma forma normal OU uma destas formas especiais: imp, pseudodragão, quasit ou sprite.\n• Como ação, abre mão de um dos seus ataques do turno para deixar seu familiar atacar usando sua reação (gasta a reação dele, não a sua).\n\nInvocações Místicas recomendadas: Vozes do Coro do Caos, Olhos do Convocador de Pesadelos, Aspecto da Lua (interagem com o familiar)."
+            "desc": "Você forja um vínculo com um espírito familiar — um servidor sobrenatural amarrado por correntes invisíveis.\n\nMecânica:\n• Aprende Achar Familiar (já preparada) e pode conjurá-la como ritual.\n• Ao invocar o familiar, escolhe uma forma normal OU uma destas formas especiais: imp, pseudodragão, quasit ou sprite.\n• Como ação, abre mão de um dos seus ataques do turno para deixar seu familiar atacar usando sua reação (gasta a reação dele, não a sua).\n\nInvocações Místicas recomendadas: Vozes do Coro do Caos, Olhos do Convocador de Pesadelos, Aspecto da Lua (interagem com o familiar).",
+            "combat": "situacional"
           },
           {
             "value": "lamina",
             "name": "Pacto da Lâmina",
-            "desc": "Seu patrono te concede uma arma de pacto — uma manifestação física da sua ligação sobrenatural.\n\nMecânica:\n• Como ação, cria uma arma corpo a corpo em uma das suas mãos vazias (escolhe a forma a cada invocação: espada longa, machado, etc.).\n• Você é proficiente com ela enquanto a empunha.\n• Conta como mágica para superar resistências e imunidades a dano não-mágico.\n• Pode banir/reinvocar como ação a qualquer momento. Some se sair de seu corpo por mais de 1 min.\n• Pode realizar um ritual de 1h para vincular qualquer arma mágica existente como sua arma de pacto.\n\nInvocações Místicas recomendadas: Adágio Aprimorado (ataques extras), Punição Maldita (dano extra), Sede do Vampiro (cura ao dano), Escudo Lunar (bônus de CA)."
+            "desc": "Seu patrono te concede uma arma de pacto — uma manifestação física da sua ligação sobrenatural.\n\nMecânica:\n• Como ação, cria uma arma corpo a corpo em uma das suas mãos vazias (escolhe a forma a cada invocação: espada longa, machado, etc.).\n• Você é proficiente com ela enquanto a empunha.\n• Conta como mágica para superar resistências e imunidades a dano não-mágico.\n• Pode banir/reinvocar como ação a qualquer momento. Some se sair de seu corpo por mais de 1 min.\n• Pode realizar um ritual de 1h para vincular qualquer arma mágica existente como sua arma de pacto.\n\nInvocações Místicas recomendadas: Adágio Aprimorado (ataques extras), Punição Maldita (dano extra), Sede do Vampiro (cura ao dano), Escudo Lunar (bônus de CA).",
+            "combat": "essencial"
           },
           {
             "value": "tomo",
             "name": "Pacto do Tomo",
-            "desc": "Seu patrono te concede o Livro das Sombras — um grimório que registra segredos arcanos de todos os planos.\n\nMecânica:\n• Escolhe 3 truques (cantrips) de QUALQUER lista de magias (clérigo, druida, mago, etc.). Pode conjurá-los à vontade enquanto tiver o livro.\n• Os truques não contam contra seu limite de truques de bruxo conhecidos.\n• Se perder o livro, pode realizar ritual de 1h para criar uma cópia. O original some quando a cópia é feita.\n• Se morrer, o livro se transforma em cinzas.\n\nInvocações Místicas recomendadas: Pacto do Livro Insondável (mais magias de ritual), Caligrafia Aspecto Místico (mais truques no Livro), Olhos da Visão Arcana."
+            "desc": "Seu patrono te concede o Livro das Sombras — um grimório que registra segredos arcanos de todos os planos.\n\nMecânica:\n• Escolhe 3 truques (cantrips) de QUALQUER lista de magias (clérigo, druida, mago, etc.). Pode conjurá-los à vontade enquanto tiver o livro.\n• Os truques não contam contra seu limite de truques de bruxo conhecidos.\n• Se perder o livro, pode realizar ritual de 1h para criar uma cópia. O original some quando a cópia é feita.\n• Se morrer, o livro se transforma em cinzas.\n\nInvocações Místicas recomendadas: Pacto do Livro Insondável (mais magias de ritual), Caligrafia Aspecto Místico (mais truques no Livro), Olhos da Visão Arcana.",
+            "category": "magia"
           }
         ]
       }

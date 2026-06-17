@@ -83,3 +83,16 @@ describe('âncoras de classe base', () => {
     if (cat) expect(f?.category).toBe(cat)
   })
 })
+
+describe('âncoras de subclasse', () => {
+  const opt = (cls, choiceId, value) =>
+    (choices[cls].choices.find(c => c.id === choiceId)?.options ?? [])
+      .find(o => o.value === value) ?? null
+
+  it('Estilo de Combate / Defesa é combate essencial', () => {
+    expect(opt('guerreiro', 'fighting_style', 'defesa')?.combat).toBe('essencial')
+  })
+  it('Estilo de Combate / Arqueiro é combate essencial', () => {
+    expect(opt('guerreiro', 'fighting_style', 'arqueiro')?.combat).toBe('essencial')
+  })
+})
