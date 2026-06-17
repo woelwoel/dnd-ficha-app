@@ -40,6 +40,47 @@ describe('migração v1 → v2', () => {
   })
 })
 
+describe('migração v3 → v4 (bônus racial)', () => {
+  function v3(race, subrace, attributes, appliedRacialBonuses) {
+    return v1Character({
+      meta: { schemaVersion: 3, createdAt: '', updatedAt: '', version: '1.0' },
+      info: { name: 'n', playerName: '', race, subrace, class: 'guerreiro', level: 3, multiclasses: [], background: '', alignment: '', xp: 0 },
+      attributes,
+      appliedRacialBonuses,
+      combat: { maxHp: 20, currentHp: 20, tempHp: 0, armorClass: 10, speed: 30, hitDice: { pool: { d10: { total: 3, used: 0 } } }, deathSaves: { successes: 0, failures: 0 } },
+    })
+  }
+
+  it('meio-orc com bônus perdido ganha +2 Força e +1 Constituição', () => {
+    const m = migrateCharacter(v3('meio-orc', '', { str: 15, dex: 12, con: 13, int: 10, wis: 10, cha: 8 }, {}))
+    expect(m.attributes.str).toBe(17)
+    expect(m.attributes.con).toBe(14)
+    expect(m.attributes.dex).toBe(12) // inalterado
+    expect(m.appliedRacialBonuses).toEqual({ str: 2, con: 1 })
+    expect(m.meta.schemaVersion).toBe(SCHEMA_VERSION)
+  })
+
+  it('idempotente: ficha já correta não soma de novo', () => {
+    const m = migrateCharacter(v3('meio-orc', '', { str: 17, dex: 12, con: 14, int: 10, wis: 10, cha: 8 }, { str: 2, con: 1 }))
+    expect(m.attributes.str).toBe(17)
+    expect(m.attributes.con).toBe(14)
+    expect(m.appliedRacialBonuses).toEqual({ str: 2, con: 1 })
+  })
+
+  it('humano variante NÃO ganha +1 em tudo (escolhas livres intocadas)', () => {
+    const c = v3('humano', 'tracos-raciais-alternativos', { str: 16, dex: 14, con: 13, int: 10, wis: 10, cha: 8 }, { str: 1, dex: 1 })
+    const m = migrateCharacter(c)
+    expect(m.attributes).toEqual(c.attributes)
+    expect(m.appliedRacialBonuses).toEqual({ str: 1, dex: 1 })
+  })
+
+  it('raça vazia/desconhecida não quebra', () => {
+    const m = migrateCharacter(v3('', '', { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 }, {}))
+    expect(m.attributes.str).toBe(10)
+    expect(m.meta.schemaVersion).toBe(SCHEMA_VERSION)
+  })
+})
+
 describe('refine: nível total ≤ 20', () => {
   it('aceita soma exatamente 20', () => {
     const c = v1Character({ info: { name: 'n', playerName: '', race: '', class: 'guerreiro', level: 15, multiclasses: [{ class: 'mago', level: 5 }], background: '', alignment: '', xp: 0 } })

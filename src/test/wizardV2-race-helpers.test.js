@@ -36,6 +36,16 @@ describe('computeBonuses', () => {
     expect(computeBonuses(null, null, ['dex', 'wis'])).toEqual({ dex: 1, wis: 1 })
   })
 
+  it('humano variante NÃO leva o +1-em-tudo da raça base — só as escolhas livres', () => {
+    const humano = { ability_bonuses: [
+      { ability: 'Força', bonus: 1 }, { ability: 'Destreza', bonus: 1 },
+      { ability: 'Constituição', bonus: 1 }, { ability: 'Inteligência', bonus: 1 },
+      { ability: 'Sabedoria', bonus: 1 }, { ability: 'Carisma', bonus: 1 },
+    ] }
+    const variante = { index: 'tracos-raciais-alternativos', ability_bonuses: [{ ability: '2 à escolha', bonus: 1 }] }
+    expect(computeBonuses(humano, variante, ['str', 'con'])).toEqual({ str: 1, con: 1 })
+  })
+
   it('aceita race ou subrace null', () => {
     expect(computeBonuses(null, null, [])).toEqual({})
   })

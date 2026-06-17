@@ -5,6 +5,7 @@ import { FreeAbilityPicker } from './race/FreeAbilityPicker'
 import { RacialSkillPicker } from './race/RacialSkillPicker'
 import { RaceBonusPreview } from './race/RaceBonusPreview'
 import { computeBonuses, getRaceRequirements } from './race-helpers'
+import { VARIANT_HUMAN_SUBRACE } from '../../../domain/racialBonuses'
 
 export function RaceBlock({ draft, updateDraft, races }) {
   const selectedRace    = races.find(r => r.index === draft.race) ?? null
@@ -54,8 +55,10 @@ export function RaceBlock({ draft, updateDraft, races }) {
     updateDraft({ racialSkills: next })
   }
 
+  // Variante humano substitui o +1-em-tudo do humano base por escolhas livres.
+  const isVariantHuman = selectedSubrace?.index === VARIANT_HUMAN_SUBRACE
   const fixedBonuses = [
-    ...(selectedRace?.ability_bonuses ?? []),
+    ...(isVariantHuman ? [] : (selectedRace?.ability_bonuses ?? [])),
     ...(selectedSubrace?.ability_bonuses ?? []),
   ].filter(b => !b.ability.includes('escolha'))
 

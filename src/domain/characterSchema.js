@@ -23,8 +23,11 @@ import { z } from 'zod'
  *         limitados (Action Surge, Ki, Bardic Inspiration, etc.) com regra de
  *         recarga (short/long/dawn). `info.asiOrFeatByLevel` registra para
  *         cada nível de ASI a escolha do jogador (`asi` ou `feat`).
+ *  - v4 → corrige bônus racial de atributo que era descartado na criação
+ *         (mismatch nome/abreviação): soma os bônus fixos faltantes em
+ *         `attributes` para fichas afetadas (meio-orc, anão, elfo, etc.).
  */
-export const SCHEMA_VERSION = 3
+export const SCHEMA_VERSION = 4
 
 /**
  * Limite máximo absoluto (PHB p.13: "ability score maximum is 20" em criação;
@@ -440,6 +443,7 @@ export function migrateCharacter(raw) {
     }
     if (v === 1) doc = migrateV1ToV2(doc)
     if (v === 2) doc = migrateV2ToV3(doc)
+    if (v === 3) doc = migrateV3ToV4(doc)
   }
   return {
     ...doc,
@@ -517,4 +521,65 @@ function migrateV2ToV3(doc) {
       spellbook: doc.spellcasting?.spellbook ?? [],
     },
   }
+}
+
+/**
+ * v3 → v4: corrige bônus racial de atributo que era descartado na criação.
+ *
+ * `computeBonuses` casava `ability_bonuses` por abreviação ("FOR") enquanto o
+ * dado usa nome completo ("Força"), então toda raça padrão (meio-orc, anão,
+ * elfo, draconato...) tinha o bônus FIXO silenciosamente perdido. Como os
+ * atributos são congelados na criação, fichas antigas precisam ser corrigidas.
+ *
+ * Soma o que falta entre o bônus fixo esperado e o já aplicado
+ * (`appliedRacialBonuses`). Idempotente: depois de aplicar, o aplicado iguala
+ * o esperado, e o gate de schemaVersion impede re-execução. Não mexe em
+ * escolhas livres (humano variante / meio-elfo) nem subtrai.
+ */
+// Snapshot CONGELADO dos bônus raciais FIXOS de atributo (SRD PHB), usado só
+// pela migração — determinístico, independente do JSON vivo. Variante humano
+// (tracos-raciais-alternativos) substitui o +1-em-tudo do humano base por
+// escolhas livres, então não soma nada fixo aqui.
+const V4_RACE_BONUS = {
+  anao: { con: 2 }, elfo: { dex: 2 }, halfling: { dex: 2 },
+  humano: { str: 1, dex: 1, con: 1, int: 1, wis: 1, cha: 1 },
+  draconato: { str: 2, cha: 1 }, gnomo: { int: 2 },
+  'meio-elfo': { cha: 2 }, 'meio-orc': { str: 2, con: 1 },
+  tiefling: { int: 1, cha: 2 },
+}
+const V4_SUBRACE_BONUS = {
+  'anao-da-colina': { wis: 1 }, 'anao-da-montanha': { str: 2 }, duergar: { str: 1 },
+  'alto-elfo': { int: 1 }, 'elfo-da-floresta': { wis: 1 }, 'elfo-negro-drow': { cha: 1 },
+  'pes-leves': { cha: 1 }, robusto: { con: 1 },
+  'gnomo-da-floresta': { dex: 1 }, 'gnomo-das-rochas': { con: 1 },
+}
+const V4_VARIANT_HUMAN = 'tracos-raciais-alternativos'
+
+function expectedFixedBonusesV4(race, subrace) {
+  if (subrace === V4_VARIANT_HUMAN) return {}   // variante: só escolhas livres
+  const out = { ...(V4_RACE_BONUS[race] ?? {}) }
+  for (const [k, v] of Object.entries(V4_SUBRACE_BONUS[subrace] ?? {})) {
+    out[k] = (out[k] ?? 0) + v
+  }
+  return out
+}
+
+function migrateV3ToV4(doc) {
+  const expected = expectedFixedBonusesV4(doc.info?.race, doc.info?.subrace)
+  const applied = { ...(doc.appliedRacialBonuses ?? {}) }
+  const attrs = { ...(doc.attributes ?? {}) }
+  let changed = false
+
+  for (const [key, amount] of Object.entries(expected)) {
+    const have = applied[key] ?? 0
+    const delta = amount - have
+    if (delta > 0) {
+      attrs[key] = Math.min(30, (attrs[key] ?? 10) + delta)
+      applied[key] = have + delta
+      changed = true
+    }
+  }
+
+  if (!changed) return doc
+  return { ...doc, attributes: attrs, appliedRacialBonuses: applied }
 }

@@ -1,4 +1,4 @@
-import { ABBR_TO_KEY, ATTR_NAME_TO_KEY } from '../../../utils/calculations'
+import { fixedRacialBonuses } from '../../../domain/racialBonuses'
 
 export const MAGO_CANTRIPS = [
   'Amizade', 'Ataque Certeiro', 'Consertar', 'Espirro Ácido',
@@ -9,19 +9,7 @@ export const MAGO_CANTRIPS = [
 ]
 
 export function computeBonuses(race, subrace, freeChoices) {
-  const map = {}
-  const all = [
-    ...(race?.ability_bonuses ?? []),
-    ...(subrace?.ability_bonuses ?? []),
-  ]
-  for (const b of all) {
-    if (b.ability.includes('escolha')) continue
-    // O dado SRD usa nomes completos ("Força", "Constituição"); aceitamos
-    // também abreviações ("FOR") por robustez. Antes só usava ABBR_TO_KEY,
-    // então TODO bônus racial padrão (meio-orc, anão, elfo...) era descartado.
-    const key = ATTR_NAME_TO_KEY[b.ability] ?? ABBR_TO_KEY[b.ability]
-    if (key) map[key] = (map[key] ?? 0) + b.bonus
-  }
+  const map = fixedRacialBonuses(race, subrace)
   for (const key of (freeChoices ?? [])) {
     map[key] = (map[key] ?? 0) + 1
   }
