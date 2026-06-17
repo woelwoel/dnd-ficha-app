@@ -5,23 +5,9 @@ import { getFeatureTypeMeta } from '../../domain/featureMeta'
 import { ChosenFeaturePicker } from '../CharacterWizardV2/blocks/class/ChosenFeaturePicker'
 import { resolveMultiSelect, isChoiceDone } from '../CharacterWizardV2/blocks/class-helpers'
 import { Icon } from '../ui/Icon'
-
-/* ══════════════════════════════════════════════════════════════════
-   DETECTOR DE TIPO DE AÇÃO
-   ══════════════════════════════════════════════════════════════════ */
-const ACTION_KEYWORDS = [
-  { type: 'reação',     patterns: ['como reação', 'como sua reação', 'usa sua reação', 'usa a reação'] },
-  { type: 'ação bônus', patterns: ['ação bônus', 'como ação bônus', 'ação de bônus'] },
-  { type: 'ação',       patterns: ['como ação', 'usar a ação', 'use sua ação', 'usar uma ação', 'como uma ação'] },
-]
-
-function detectActionType(desc = '') {
-  const lower = desc.toLowerCase()
-  for (const { type, patterns } of ACTION_KEYWORDS) {
-    if (patterns.some(p => lower.includes(p))) return type
-  }
-  return null
-}
+import {
+  detectActionType, combatTier, featureCategory, actionTypeOf, isAttributeIncrease,
+} from '../../domain/featureCategories'
 
 /* ══════════════════════════════════════════════════════════════════
    META
@@ -244,7 +230,7 @@ function ActionGroup({ title, icon, actions, featureUses, onSpend, onRegain }) {
    FILTROS
    ══════════════════════════════════════════════════════════════════ */
 const FILTERS = [
-  { id: 'acoes',       label: 'Ações',       icon: <Icon name="sword" size={12} strokeWidth={1.75} /> },
+  { id: 'combate',     label: 'Combate',     icon: <Icon name="sword" size={12} strokeWidth={1.75} /> },
   { id: 'habilidades', label: 'Habilidades', icon: <Icon name="book" size={12} strokeWidth={1.75} /> },
   { id: 'recursos',    label: 'Recursos',    icon: <Icon name="target" size={12} strokeWidth={1.75} /> },
 ]
@@ -349,7 +335,7 @@ function PendingChoicesSection({
    COMPONENTE PRINCIPAL
    ══════════════════════════════════════════════════════════════════ */
 export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetChosenFeature }) {
-  const [activeFilter, setActiveFilter] = useState('acoes')
+  const [activeFilter, setActiveFilter] = useState('combate')
   const { progression, races, classChoices } = useSrd()
   const allFeats = useLazySrdDataset('feats')
   const { info } = character
@@ -360,8 +346,7 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
   const selectedSubrace = selectedRace?.subraces?.find(sr => sr.index === info?.subrace)
 
   const {
-    classActions, classBonusActions, classReactions, raceActions,
-    classFeatures, multiFeatures, raceFeatures, featFeatures,
+    combatFeatures, nonCombatFeatures, raceFeatures, featFeatures,
   } = useMemo(() => {
     const chosenFeatures = info?.chosenFeatures ?? {}
     const classData  = progression?.[classIndex]
@@ -377,6 +362,9 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
           desc:   chosen ? chosen.desc : f.desc,
           source: classData?.name ?? classIndex,
           level:  lvl.level,
+          combat:     f.combat,
+          category:   f.category,
+          actionType: f.actionType,
         }
       })
     )
@@ -394,6 +382,9 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
             desc:   chosen ? chosen.desc : f.desc,
             source: mcData?.name ?? mc.class,
             level:  lvl.level,
+            combat:     f.combat,
+            category:   f.category,
+            actionType: f.actionType,
           }
         })
       )
@@ -428,48 +419,16 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
       }
     })
 
-    /* ── Ações de combate (classe + raça, SEM ações básicas do livro) ── */
-    const allClassFeatures = [
-      ...levelsUpTo.flatMap(lvl =>
-        (lvl.features ?? []).map(f => ({ ...f, source: classIndex }))
-      ),
-      ...(info?.multiclasses ?? []).flatMap(mc => {
-        const mcData = progression?.[mc.class]
-        return (mcData?.levels?.filter(l => l.level <= mc.level) ?? [])
-          .flatMap(lvl => (lvl.features ?? []).map(f => ({ ...f, source: mc.class })))
-      }),
-    ]
-
-    const raceTraits = raceTopics
-      .map(t => ({ name: t.title ?? t.name, desc: t.desc, source: selectedRace?.name ?? 'Raça' }))
-
-    const toAction = f => ({
-      id:   `${f.source}-${f.name}`.toLowerCase().replace(/\s+/g, '-'),
-      name: f.name, desc: f.desc, source: f.source,
-      type: detectActionType(f.desc),
-    })
-
-    // Features que são slots de escolha (`choice_id`) ou placeholders de
-    // subclasse (`subclass: true` — ex. "Característica do Arquétipo Marcial"
-    // nv 7/10/15/18) NUNCA são ações — mesmo que a descrição mencione
-    // "como ação bônus" ao listar uma das opções de arquétipo. O conteúdo
-    // real aparece resolvido em Habilidades depois que o jogador escolhe.
-    const classWithType = allClassFeatures
-      .filter(f => !f.choice_id && !f.subclass)
-      .map(toAction)
-      .filter(a => a.type !== null)
-    const raceWithType  = raceTraits.map(toAction).filter(a => a.type !== null)
-
     /* ── Sub-escolhas condicionais (`requires`) ──
      * Algumas escolhas só fazem sentido depois que o jogador escolheu uma
      * opção parent (ex.: manobras do Mestre de Combate só aparecem se
      * martial_archetype === 'mestre_combate'; totens do Bárbaro só se
      * primal_path === 'totem'). Como elas não têm correspondência direta
      * em `levels[].features[]`, não são pegas por `resolveChosenFeature`.
-     * Renderizamos aqui como cards individuais (Habilidades + Ações).
+     * Renderizamos aqui como cards individuais, enriquecidos com
+     * combat/category/actionType vindos da `opt` quando existirem.
      */
     const subChoiceFeatures = []
-    const subChoiceActions  = []
     const allChoices        = classChoices?.[classIndex]?.choices ?? []
     for (const ch of allChoices) {
       if (!ch.requires) continue
@@ -486,29 +445,22 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
           desc: opt.desc,
           source: classData?.name ?? classIndex,
           level: ch.level,
+          combat:     opt.combat,
+          category:   opt.category,
+          actionType: opt.actionType,
         })
-        const detectedType = detectActionType(opt.desc)
-        if (detectedType) {
-          subChoiceActions.push({
-            id: featureId,
-            name: opt.name,
-            desc: opt.desc,
-            source: ch.featureName,
-            type: detectedType,
-          })
-        }
       }
     }
     const classFeaturesAll = [...classFeatures, ...subChoiceFeatures]
-    const allClassActions = [...classWithType, ...subChoiceActions]
 
-    return {
-      classActions:      allClassActions.filter(a => a.type === 'ação'),
-      classBonusActions: allClassActions.filter(a => a.type === 'ação bônus'),
-      classReactions:    allClassActions.filter(a => a.type === 'reação'),
-      raceActions:       raceWithType,
-      classFeatures: classFeaturesAll, multiFeatures, raceFeatures, featFeatures,
-    }
+    /* ── Dois baldes derivados de uma única lista enriquecida ── */
+    const enriched = [...classFeaturesAll, ...multiFeatures]
+    const combatFeatures = enriched
+      .filter(f => combatTier(f) !== null)
+      .map(f => ({ ...f, tier: combatTier(f), type: actionTypeOf(f) }))
+    const nonCombatFeatures = enriched.filter(f => combatTier(f) === null)
+
+    return { combatFeatures, nonCombatFeatures, raceFeatures, featFeatures }
   }, [
     progression, classIndex, level,
     info?.multiclasses, info?.feats, info?.race, info?.draconicAncestry, info?.chosenFeatures,
@@ -516,8 +468,8 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
     classChoices,
   ])
 
-  const totalActions  = classActions.length + classBonusActions.length + classReactions.length + raceActions.length
-  const totalFeatures = classFeatures.length + multiFeatures.length + raceFeatures.length + featFeatures.length
+  const combatCount   = combatFeatures.length
+  const habilidadesCount = nonCombatFeatures.length + raceFeatures.length + featFeatures.length
   const trackedCount  = featureUses?.length ?? 0
   const usedCount     = featureUses?.filter(u => (u.used ?? 0) > 0).length ?? 0
 
@@ -528,8 +480,8 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
       <div className="flex flex-wrap gap-2">
         {FILTERS.map(f => {
           const count =
-            f.id === 'acoes'       ? totalActions  :
-            f.id === 'habilidades' ? totalFeatures :
+            f.id === 'combate'     ? combatCount       :
+            f.id === 'habilidades' ? habilidadesCount  :
             trackedCount
           const isActive = activeFilter === f.id
 
@@ -560,22 +512,26 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
         })}
       </div>
 
-      {/* ══ Vista: Ações ══ */}
-      {activeFilter === 'acoes' && (
+      {/* ══ Vista: Combate ══ */}
+      {activeFilter === 'combate' && (
         <div className="space-y-6">
-          <ActionGroup title="Ações"         icon={<Icon name="sword" size={12} strokeWidth={1.75} />}    actions={classActions}      featureUses={featureUses} onSpend={onSpend} onRegain={onRegain} />
-          <ActionGroup title="Ações Bônus"   icon={<Icon name="bolt" size={12} strokeWidth={1.75} />}     actions={classBonusActions} featureUses={featureUses} onSpend={onSpend} onRegain={onRegain} />
-          <ActionGroup title="Reações"       icon={<Icon name="shield" size={12} strokeWidth={1.75} />}   actions={classReactions}    featureUses={featureUses} onSpend={onSpend} onRegain={onRegain} />
-          <ActionGroup title="Ações Raciais" icon={<Icon name="leaf" size={12} strokeWidth={1.75} />}     actions={raceActions}       featureUses={featureUses} onSpend={onSpend} onRegain={onRegain} />
+          <ActionGroup
+            title="Combate"
+            icon={<Icon name="sword" size={12} strokeWidth={1.75} />}
+            actions={combatFeatures}
+            featureUses={featureUses}
+            onSpend={onSpend}
+            onRegain={onRegain}
+          />
 
-          {totalActions === 0 && (
+          {combatFeatures.length === 0 && (
             <div className="text-center py-12 text-gray-600">
               <div className="flex justify-center mb-3">
                 <Icon name="sword" size={36} strokeWidth={1.5} />
               </div>
-              <p className="text-sm">Nenhuma ação de classe ou raça detectada.</p>
+              <p className="text-sm">Nenhuma característica de combate detectada.</p>
               <p className="text-xs mt-1 text-gray-700">
-                As ações são detectadas automaticamente a partir das características da classe e raça.
+                As características de combate vêm da marcação das características de classe e raça.
               </p>
             </div>
           )}
@@ -598,14 +554,8 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
           <FeatureGroup
             title="Características de Classe"
             icon={<Icon name="book" size={12} strokeWidth={1.75} />}
-            features={classFeatures} featureUses={featureUses} onSpend={onSpend} onRegain={onRegain}
+            features={nonCombatFeatures} featureUses={featureUses} onSpend={onSpend} onRegain={onRegain}
           />
-          {multiFeatures.length > 0 && (
-            <FeatureGroup
-              title="Características de Multiclasse" icon="✦"
-              features={multiFeatures} featureUses={featureUses} onSpend={onSpend} onRegain={onRegain}
-            />
-          )}
           <FeatureGroup
             title="Traços Raciais"
             icon={<Icon name="leaf" size={12} strokeWidth={1.75} />}
@@ -618,7 +568,7 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
               features={featFeatures} featureUses={featureUses} onSpend={onSpend} onRegain={onRegain}
             />
           )}
-          {totalFeatures === 0 && (
+          {habilidadesCount === 0 && (
             <div className="text-center py-12 text-gray-600">
               <div className="flex justify-center mb-3">
                 <Icon name="scroll" size={36} strokeWidth={1.5} />
