@@ -234,7 +234,7 @@ const CATEGORY_SECTIONS = [
   ['exploracao', 'Exploração & Viagem',       'leaf'],
   ['social',     'Social & Conhecimento',     'book'],
   ['magia',      'Magia & Recursos',          'sparkle'],
-  ['outras',     'Outras Características',    'book'],
+  ['outras',     'Outras Características',    'scroll'],
 ]
 
 /* ══════════════════════════════════════════════════════════════════
@@ -491,7 +491,9 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
   ])
 
   const combatCount   = combatFeatures.length
-  const habilidadesCount = nonCombatFeatures.length + raceFeatures.length + featFeatures.length
+  // Exclui ASI do contador para bater com o que a lista realmente exibe
+  const habilidadesCount = nonCombatFeatures.filter(f => !isAttributeIncrease(f)).length
+    + raceFeatures.length + featFeatures.length
   const trackedCount  = featureUses?.length ?? 0
   const usedCount     = featureUses?.filter(u => (u.used ?? 0) > 0).length ?? 0
 
