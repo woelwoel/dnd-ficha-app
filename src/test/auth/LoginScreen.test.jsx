@@ -15,7 +15,11 @@ vi.mock('../../auth/AuthProvider', () => ({
 import { LoginScreen } from '../../auth/LoginScreen'
 
 describe('LoginScreen', () => {
+  // delay:null evita timers reais entre teclas — sem isso, userEvent.type pode
+  // estourar o timeout de 5s sob carga da suíte completa (~1000+ testes).
+  let user
   beforeEach(() => {
+    user = userEvent.setup({ delay: null })
     vi.clearAllMocks()
     auth.signIn.mockResolvedValue({ data: {}, error: null })
     auth.signUp.mockResolvedValue({ data: {}, error: null })
@@ -30,54 +34,54 @@ describe('LoginScreen', () => {
 
   it('faz login ao submeter o form', async () => {
     render(<LoginScreen />)
-    await userEvent.type(screen.getByLabelText(/email/i), 'a@b.com')
-    await userEvent.type(screen.getByLabelText(/senha/i), 'segredo12')
-    await userEvent.click(screen.getByRole('button', { name: /^entrar$/i }))
+    await user.type(screen.getByLabelText(/email/i), 'a@b.com')
+    await user.type(screen.getByLabelText(/senha/i), 'segredo12')
+    await user.click(screen.getByRole('button', { name: /^entrar$/i }))
     expect(auth.signIn).toHaveBeenCalledWith({ email: 'a@b.com', password: 'segredo12' })
   })
 
   it('exibe erro quando signIn retorna error', async () => {
     auth.signIn.mockResolvedValue({ data: {}, error: { message: 'Invalid login credentials' } })
     render(<LoginScreen />)
-    await userEvent.type(screen.getByLabelText(/email/i), 'a@b.com')
-    await userEvent.type(screen.getByLabelText(/senha/i), 'segredo12')
-    await userEvent.click(screen.getByRole('button', { name: /^entrar$/i }))
+    await user.type(screen.getByLabelText(/email/i), 'a@b.com')
+    await user.type(screen.getByLabelText(/senha/i), 'segredo12')
+    await user.click(screen.getByRole('button', { name: /^entrar$/i }))
     expect(await screen.findByText(/credenciais inválidas/i)).toBeInTheDocument()
   })
 
   it('troca para aba Criar conta e chama signUp', async () => {
     render(<LoginScreen />)
-    await userEvent.click(screen.getByRole('tab', { name: /criar conta/i }))
-    await userEvent.type(screen.getByLabelText(/email/i), 'novo@b.com')
-    await userEvent.type(screen.getByLabelText(/senha/i), 'segredo12')
-    await userEvent.click(screen.getByRole('button', { name: /criar conta/i }))
+    await user.click(screen.getByRole('tab', { name: /criar conta/i }))
+    await user.type(screen.getByLabelText(/email/i), 'novo@b.com')
+    await user.type(screen.getByLabelText(/senha/i), 'segredo12')
+    await user.click(screen.getByRole('button', { name: /criar conta/i }))
     expect(auth.signUp).toHaveBeenCalledWith({ email: 'novo@b.com', password: 'segredo12' })
   })
 
   it('mostra mensagem após cadastro pedindo confirmação de email', async () => {
     render(<LoginScreen />)
-    await userEvent.click(screen.getByRole('tab', { name: /criar conta/i }))
-    await userEvent.type(screen.getByLabelText(/email/i), 'novo@b.com')
-    await userEvent.type(screen.getByLabelText(/senha/i), 'segredo12')
-    await userEvent.click(screen.getByRole('button', { name: /criar conta/i }))
+    await user.click(screen.getByRole('tab', { name: /criar conta/i }))
+    await user.type(screen.getByLabelText(/email/i), 'novo@b.com')
+    await user.type(screen.getByLabelText(/senha/i), 'segredo12')
+    await user.click(screen.getByRole('button', { name: /criar conta/i }))
     expect(await screen.findByText(/confirme seu email/i)).toBeInTheDocument()
   })
 
   it('valida senha mínima de 8 chars no cadastro antes de chamar signUp', async () => {
     render(<LoginScreen />)
-    await userEvent.click(screen.getByRole('tab', { name: /criar conta/i }))
-    await userEvent.type(screen.getByLabelText(/email/i), 'novo@b.com')
-    await userEvent.type(screen.getByLabelText(/senha/i), 'curta')
-    await userEvent.click(screen.getByRole('button', { name: /criar conta/i }))
+    await user.click(screen.getByRole('tab', { name: /criar conta/i }))
+    await user.type(screen.getByLabelText(/email/i), 'novo@b.com')
+    await user.type(screen.getByLabelText(/senha/i), 'curta')
+    await user.click(screen.getByRole('button', { name: /criar conta/i }))
     expect(auth.signUp).not.toHaveBeenCalled()
     expect(await screen.findByText(/pelo menos 8/i)).toBeInTheDocument()
   })
 
   it('fluxo de esqueci a senha pede email e chama requestPasswordReset', async () => {
     render(<LoginScreen />)
-    await userEvent.click(screen.getByRole('button', { name: /esqueci a senha/i }))
-    await userEvent.type(screen.getByLabelText(/email/i), 'a@b.com')
-    await userEvent.click(screen.getByRole('button', { name: /enviar link/i }))
+    await user.click(screen.getByRole('button', { name: /esqueci a senha/i }))
+    await user.type(screen.getByLabelText(/email/i), 'a@b.com')
+    await user.click(screen.getByRole('button', { name: /enviar link/i }))
     expect(auth.requestPasswordReset).toHaveBeenCalledWith('a@b.com')
     expect(await screen.findByText(/enviamos um link/i)).toBeInTheDocument()
   })
