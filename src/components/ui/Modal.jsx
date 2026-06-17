@@ -55,10 +55,18 @@ export function Modal({
   const closeRef = useRef(null)
   const titleId = useRef(`modal-title-${Math.random().toString(36).slice(2, 9)}`).current
 
-  // Esc fecha + foco inicial
+  // onClose via ref: o pai costuma passar uma arrow inline (referência nova a
+  // cada render). Se o efeito de foco dependesse de onClose, ele re-executaria
+  // a cada keystroke do conteúdo e roubaria o foco do input de volta pro "✕"
+  // ("digitando letra por letra"). A ref dá acesso ao onClose mais recente sem
+  // entrar nas dependências do efeito.
+  const onCloseRef = useRef(onClose)
+  useEffect(() => { onCloseRef.current = onClose }, [onClose])
+
+  // Esc fecha + foco inicial — roda só na transição de open (não a cada render).
   useEffect(() => {
     if (!open) return
-    function onKey(e) { if (e.key === 'Escape') onClose?.() }
+    function onKey(e) { if (e.key === 'Escape') onCloseRef.current?.() }
     document.addEventListener('keydown', onKey)
     const t = setTimeout(() => {
       (initialFocusRef?.current ?? closeRef.current)?.focus()
@@ -67,7 +75,7 @@ export function Modal({
       document.removeEventListener('keydown', onKey)
       clearTimeout(t)
     }
-  }, [open, onClose, initialFocusRef])
+  }, [open, initialFocusRef])
 
   // Trava scroll do body
   useEffect(() => {
