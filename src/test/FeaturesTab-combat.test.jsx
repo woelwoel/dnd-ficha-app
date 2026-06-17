@@ -137,6 +137,35 @@ describe('FeaturesTab — tracker inline na aba Combate', () => {
   })
 })
 
+describe('FeaturesTab — aba Recursos (pools grandes)', () => {
+  it('pool grande (Imposição das Mãos 65) usa stepper, não 65 caixinhas', async () => {
+    const user = userEvent.setup()
+    const featureUses = [
+      { id: 'lay', name: 'Imposição das Mãos', max: 65, used: 0, recharge: 'long' },
+      { id: 'rage', name: 'Fúria', max: 3, used: 0, recharge: 'long' },
+    ]
+    render(<FeaturesTab character={character} featureUses={featureUses} />)
+    await user.click(screen.getByRole('button', { name: /Recursos/i }))
+
+    expect(screen.getByText('65/65')).toBeInTheDocument()
+    // O pool grande tem UM botão "Gastar uso" (stepper); as caixinhas da Fúria
+    // têm aria-label numerado ("Gastar uso 1"), então o match exato é só o stepper.
+    expect(screen.getAllByRole('button', { name: /^Gastar uso$/ })).toHaveLength(1)
+    // A Fúria (max 3) continua em caixinhas: 3 botões "Gastar uso N"
+    expect(screen.getAllByRole('button', { name: /^Gastar uso \d+$/ })).toHaveLength(3)
+  })
+
+  it('stepper do pool grande gasta um ponto via onSpend', async () => {
+    const user = userEvent.setup()
+    const onSpend = vi.fn()
+    const featureUses = [{ id: 'lay', name: 'Imposição das Mãos', max: 65, used: 0, recharge: 'long' }]
+    render(<FeaturesTab character={character} featureUses={featureUses} onSpend={onSpend} />)
+    await user.click(screen.getByRole('button', { name: /Recursos/i }))
+    await user.click(screen.getByRole('button', { name: /^Gastar uso$/ }))
+    expect(onSpend).toHaveBeenCalledWith('lay')
+  })
+})
+
 describe('FeaturesTab — aba Habilidades', () => {
   it('agrupa não-combate por categoria e esconde Aumento de Atributo', async () => {
     const user = userEvent.setup()

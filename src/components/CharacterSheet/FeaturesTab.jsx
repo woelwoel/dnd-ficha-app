@@ -33,9 +33,14 @@ const RECHARGE_META = {
    BLOCOS VISUAIS
    ══════════════════════════════════════════════════════════════════ */
 
-/** Rastreador de uso com caixinhas clicáveis */
+// Acima deste máximo, caixinhas clicáveis viram uma tela cheia (ex.: Imposição
+// das Mãos = 5×nível = 65 no nv 13). Aí trocamos por um stepper −/valor/+.
+const TRACKER_BOX_LIMIT = 12
+
+/** Rastreador de uso: caixinhas pra contadores pequenos, stepper pra pools grandes */
 function ResourceTracker({ use, onSpend, onRegain }) {
-  const remaining = use.max - (use.used ?? 0)
+  const used = use.used ?? 0
+  const remaining = use.max - used
   const meta = RECHARGE_META[use.recharge] ?? RECHARGE_META.manual
 
   return (
@@ -47,24 +52,45 @@ function ResourceTracker({ use, onSpend, onRegain }) {
         </span>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <div className="flex gap-1">
-          {Array.from({ length: use.max }).map((_, i) => (
+        {use.max > TRACKER_BOX_LIMIT ? (
+          // Pool grande → stepper compacto
+          <div className="flex items-center gap-1">
             <button
-              key={i}
-              onClick={() => i < (use.used ?? 0) ? onRegain?.() : onSpend?.()}
-              title={i < (use.used ?? 0) ? 'Recuperar' : 'Gastar'}
-              className={`w-5 h-5 rounded border transition-colors ${
-                i < (use.used ?? 0)
-                  ? 'bg-gray-600 border-gray-500 hover:bg-green-800 hover:border-green-600'
-                  : 'bg-amber-600 border-amber-500 hover:bg-red-700 hover:border-red-500'
-              }`}
-              aria-label={i < (use.used ?? 0) ? `Recuperar uso ${i + 1}` : `Gastar uso ${i + 1}`}
-            />
-          ))}
-        </div>
-        <span className="text-xs text-gray-400 font-mono w-8 text-right">
-          {remaining}/{use.max}
-        </span>
+              onClick={onSpend}
+              disabled={remaining === 0}
+              className="w-6 h-6 rounded bg-amber-700 hover:bg-red-700 text-amber-100 text-sm flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed"
+              aria-label="Gastar uso"
+            >−</button>
+            <span className="text-xs text-gray-300 font-mono w-12 text-center">{remaining}/{use.max}</span>
+            <button
+              onClick={onRegain}
+              disabled={used === 0}
+              className="w-6 h-6 rounded bg-gray-700 hover:bg-green-800 text-gray-200 text-sm flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed"
+              aria-label="Recuperar uso"
+            >+</button>
+          </div>
+        ) : (
+          <>
+            <div className="flex gap-1">
+              {Array.from({ length: use.max }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => i < used ? onRegain?.() : onSpend?.()}
+                  title={i < used ? 'Recuperar' : 'Gastar'}
+                  className={`w-5 h-5 rounded border transition-colors ${
+                    i < used
+                      ? 'bg-gray-600 border-gray-500 hover:bg-green-800 hover:border-green-600'
+                      : 'bg-amber-600 border-amber-500 hover:bg-red-700 hover:border-red-500'
+                  }`}
+                  aria-label={i < used ? `Recuperar uso ${i + 1}` : `Gastar uso ${i + 1}`}
+                />
+              ))}
+            </div>
+            <span className="text-xs text-gray-400 font-mono w-8 text-right">
+              {remaining}/{use.max}
+            </span>
+          </>
+        )}
       </div>
     </div>
   )
