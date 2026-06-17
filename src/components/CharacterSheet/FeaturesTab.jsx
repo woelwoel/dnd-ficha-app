@@ -227,6 +227,17 @@ function ActionGroup({ title, icon, actions, featureUses, onSpend, onRegain }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════
+   CATEGORIAS DE HABILIDADES
+   ══════════════════════════════════════════════════════════════════ */
+const CATEGORY_SECTIONS = [
+  ['defesa',     'Defesas & Resistências',   'shield'],
+  ['exploracao', 'Exploração & Viagem',       'leaf'],
+  ['social',     'Social & Conhecimento',     'book'],
+  ['magia',      'Magia & Recursos',          'sparkle'],
+  ['outras',     'Outras Características',    'book'],
+]
+
+/* ══════════════════════════════════════════════════════════════════
    FILTROS
    ══════════════════════════════════════════════════════════════════ */
 const FILTERS = [
@@ -615,11 +626,27 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
               onSetChosenFeature={onSetChosenFeature}
             />
           )}
-          <FeatureGroup
-            title="Características de Classe"
-            icon={<Icon name="book" size={12} strokeWidth={1.75} />}
-            features={nonCombatFeatures} featureUses={featureUses} onSpend={onSpend} onRegain={onRegain}
-          />
+          {(() => {
+            // Agrupa nonCombatFeatures por categoria, excluindo ASI
+            const nonCombatByCategory = {}
+            for (const f of nonCombatFeatures) {
+              if (isAttributeIncrease(f)) continue
+              const cat = featureCategory(f)
+              ;(nonCombatByCategory[cat] ??= []).push(f)
+            }
+
+            return CATEGORY_SECTIONS.map(([cat, label, iconName]) => (
+              <FeatureGroup
+                key={cat}
+                title={label}
+                icon={<Icon name={iconName} size={12} strokeWidth={1.75} />}
+                features={nonCombatByCategory[cat] ?? []}
+                featureUses={featureUses}
+                onSpend={onSpend}
+                onRegain={onRegain}
+              />
+            ))
+          })()}
           <FeatureGroup
             title="Traços Raciais"
             icon={<Icon name="leaf" size={12} strokeWidth={1.75} />}

@@ -84,3 +84,17 @@ describe('FeaturesTab — aba Combate', () => {
     expect(screen.queryByText(/Sopro do Dragão/i)).not.toBeInTheDocument()
   })
 })
+
+describe('FeaturesTab — aba Habilidades', () => {
+  it('agrupa não-combate por categoria e esconde Aumento de Atributo', async () => {
+    const user = userEvent.setup()
+    render(<FeaturesTab character={character} featureUses={[]} />)
+    await user.click(screen.getByRole('button', { name: /Habilidades/i }))
+    // Gíria dos Ladrões (social) aparece
+    expect(screen.getByText(/Gíria dos Ladrões/i)).toBeInTheDocument()
+    // Cabeçalho de seção Social & Conhecimento
+    expect(screen.getByText(/Social & Conhecimento/i)).toBeInTheDocument()
+    // ASI não aparece
+    expect(screen.queryByText(/^Aumento de Atributo$/i)).not.toBeInTheDocument()
+  })
+})
