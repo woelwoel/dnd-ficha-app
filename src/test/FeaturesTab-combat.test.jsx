@@ -14,6 +14,9 @@ const PROGRESSION = {
       ] },
       { level: 3, features: [
         { name: 'Característica do Arquétipo de Gatuno', desc: 'Você recebe uma característica do seu arquétipo.', subclass: true },
+        // Feature ancorada em escolha (choice_id) MAS marcada como combate:
+        // não pode ser tratada como placeholder genérico.
+        { name: 'Estilo de Combate', desc: 'Escolha um estilo.', choice_id: 'fighting_style', combat: 'essencial' },
       ] },
       { level: 4, features: [
         { name: 'Aumento de Atributo', desc: 'Suba atributos.' },
@@ -75,6 +78,12 @@ describe('FeaturesTab — aba Combate', () => {
     await user.click(screen.getByRole('button', { name: /Situacional/i }))
     expect(screen.getByText(/Sentido Cego/i)).toBeInTheDocument()
     expect(screen.queryByText(/Ataque Furtivo/i)).not.toBeInTheDocument()
+  })
+
+  it('feature de combate ancorada em escolha (choice_id) aparece mesmo sem escolha feita', () => {
+    render(<FeaturesTab character={character} featureUses={[]} />)
+    // "Estilo de Combate" tem choice_id mas é combat:essencial → não é placeholder
+    expect(screen.getByText('Estilo de Combate')).toBeInTheDocument()
   })
 
   it('placeholder de subclasse não-resolvido não vaza pra nenhuma aba', async () => {

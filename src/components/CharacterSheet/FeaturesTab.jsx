@@ -381,7 +381,10 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
           category:   f.category,
           actionType: f.actionType,
           useId:      featureUseId(classIndex, f.name),
-          placeholder: Boolean((f.subclass || f.choice_id) && !chosen),
+          // Só escondemos placeholders GENÉRICOS de subclasse (sem tag de
+          // combate/categoria). Features ancoradas em escolha mas marcadas
+          // (ex.: "Estilo de Combate" = essencial) continuam aparecendo.
+          placeholder: Boolean((f.subclass || f.choice_id) && !chosen && !f.combat && !f.category),
         }
       })
     )
@@ -403,7 +406,10 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
             category:   f.category,
             actionType: f.actionType,
             useId:      featureUseId(mc.class, f.name),
-            placeholder: Boolean((f.subclass || f.choice_id) && !chosen),
+            // Só escondemos placeholders GENÉRICOS de subclasse (sem tag de
+          // combate/categoria). Features ancoradas em escolha mas marcadas
+          // (ex.: "Estilo de Combate" = essencial) continuam aparecendo.
+          placeholder: Boolean((f.subclass || f.choice_id) && !chosen && !f.combat && !f.category),
           }
         })
       )
