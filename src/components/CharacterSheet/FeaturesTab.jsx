@@ -599,18 +599,6 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
               </>
             )
           })()}
-
-          {combatFeatures.length === 0 && (
-            <div className="text-center py-12 text-gray-600">
-              <div className="flex justify-center mb-3">
-                <Icon name="sword" size={36} strokeWidth={1.5} />
-              </div>
-              <p className="text-sm">Nenhuma característica de combate detectada.</p>
-              <p className="text-xs mt-1 text-gray-700">
-                As características de combate vêm da marcação das características de classe e raça.
-              </p>
-            </div>
-          )}
         </div>
       )}
 
