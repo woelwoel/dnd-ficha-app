@@ -48,75 +48,125 @@ Marcação **explícita e inline** nos JSONs que já são fonte da verdade:
 - `public/srd-data/phb-class-choices-pt.json` — opções de subclasse
   (`choices[].options[]`).
 
-Cada feature/opção ganha **um campo booleano obrigatório**:
+Cada feature/opção recebe **um campo de classificação**. Dois campos
+mutuamente exclusivos, e uma feature tem no máximo um deles:
+
+- `combat`: `"essencial"` | `"situacional"` — a feature é de combate.
+- `category`: `"defesa"` | `"exploracao"` | `"social"` | `"magia"` — a feature
+  é não-combate (vai pra Habilidades, na seção correspondente).
 
 ```json
-{ "name": "Ataque Furtivo (1d6)", "desc": "...", "combat": true }
+{ "name": "Ataque Furtivo (1d6)", "desc": "...", "combat": "essencial" }
+{ "name": "Sentido de Perigo",    "desc": "...", "combat": "situacional" }
+{ "name": "Saúde Divina",         "desc": "...", "category": "defesa" }
+{ "name": "Passo da Terra",       "desc": "...", "category": "exploracao" }
 ```
 
-Opcionalmente, um campo `actionType` força o selo de tipo e sobrescreve a
-heurística:
+**Combat tiers:**
+- `essencial` — acionado proativamente quase toda luta (Fúria, Ataque Extra,
+  Golpe Divino, CA, Golpe Atordoante).
+- `situacional` — condicional, reativo raro, gatilho de nicho, capstone (Sentido
+  de Perigo, Indomável, Queda Lenta, Toque Purificador). **Regra de desempate:**
+  na dúvida entre essencial e situacional, vai pra **essencial** (melhor mostrar
+  demais que esconder).
+
+Opcionalmente, `actionType` força o selo de tipo e sobrescreve a heurística:
 
 ```json
-{ "name": "Fúria", "desc": "...", "combat": true, "actionType": "ação bônus" }
+{ "name": "Fúria", "desc": "...", "combat": "essencial", "actionType": "ação bônus" }
 ```
 
 Valores válidos de `actionType`: `"ação"`, `"ação bônus"`, `"reação"`,
 `"passiva"`.
 
-**Fallback seguro:** feature sem `combat` (ou `combat: false`) é tratada como
-não-combate e aparece em "Habilidades". Se uma feature de combate ficar sem
-marcação por engano, o pior caso é o comportamento atual — nada quebra.
+**Fallback seguro:** feature sem `combat` nem `category` cai em "Habilidades",
+numa seção genérica "Outras". Nada some; o pior caso é uma feature de combate
+não-marcada aparecer em Habilidades (comportamento de hoje).
 
-## 2. O selo de tipo
+## 2. O selo de tipo (na visão Combate)
 
 Reaproveita `detectActionType` (já existe em `FeaturesTab.jsx`) para inferir
 ação/ação bônus/reação a partir da descrição. Regras de resolução do selo:
 
 1. Se a feature tem `actionType` no dado → usa esse valor (vence tudo).
 2. Senão, roda `detectActionType(desc)`.
-3. Se `combat: true` e nada foi detectado → selo **"Passiva"**.
+3. Se é de combate e nada foi detectado → selo **"Passiva"**.
 
 ## 3. UI (`src/components/CharacterSheet/FeaturesTab.jsx`)
 
-- Filtro **"Ações" renomeado para "Combate"** e passa a ser o **filtro padrão**
-  (`activeFilter` inicial = `'combate'`).
-- A visão Combate agrupa por seções: **Ações · Ações Bônus · Reações ·
-  Passivas**. Mantém a economia de turno visível e traz as passivas de combate
-  (Ataque Furtivo, Ataque Extra, Crítico Brutal etc.) na seção Passivas.
-- **"Habilidades"** passa a listar **somente o não-combate**, limpo do ruído:
-  - "Aumento de Atributo" deixa de aparecer como feature (já é tratado no
-    sistema de atributos/ASI).
-  - Placeholders de arquétipo (`subclass: true` / `choice_id`) somem quando a
-    escolha correspondente já foi resolvida.
-- **"Recursos"** permanece igual.
-- Trackers de uso (Fúria, Ki, Canalizar Divindade) continuam aparecendo inline
-  no card da feature, inclusive na visão Combate.
+Filtros de primeiro nível: **Combate · Habilidades · Recursos**. "Combate" é o
+padrão (`activeFilter` inicial = `'combate'`).
 
-A categorização (combate vs. não-combate, e o balde de tipo) é extraída para um
+**Aba Combate** — controle segmentado no topo: `[ Essencial | Situacional ]`,
+alterna entre os dois tiers. Cada vista mostra os cards agrupados por economia
+de turno quando fizer sentido (Ações / Bônus / Reações / Passivas). Abre em
+Essencial.
+
+**Aba Habilidades** — só não-combate, em **seções recolhíveis por categoria**,
+com as menos usadas vindo recolhidas:
+- **Defesas & Resistências** (`category: "defesa"`)
+- **Exploração & Viagem** (`category: "exploracao"`)
+- **Social & Conhecimento** (`category: "social"`)
+- **Magia & Recursos** (`category: "magia"`)
+- **Outras** (fallback — sem marcação)
+
+Limpeza de ruído nesta aba:
+- "Aumento de Atributo" deixa de aparecer como feature (já tratado no sistema de
+  atributos/ASI).
+- Placeholders de arquétipo (`subclass: true` / `choice_id`) somem quando a
+  escolha correspondente já foi resolvida.
+
+O card de cada feature já expande inline para mostrar a descrição completa — não
+há popup/modal separado para features de utilidade.
+
+**Aba Recursos** — permanece igual. Trackers de uso (Fúria, Ki, Canalizar
+Divindade) continuam aparecendo inline no card da feature, inclusive na visão
+Combate.
+
+A classificação (combat tier / category / selo de tipo) é extraída para um
 helper puro e testável, em vez de ficar embutida no JSX.
 
 ## 4. Cobertura
 
 - 12 classes base (`phb-class-progression-pt.json`).
 - Opções de subclasse (`phb-class-choices-pt.json`).
-- Casos cinzentos (ex.: "Sentido Divino" do Paladino — mais utilidade que
-  combate) serão decididos na marcação e revisados pelo dono do projeto.
+- Casos cinzentos de classe base já adjudicados com o dono do projeto (ver
+  decisões abaixo); os de subclasse serão marcados pelo mesmo critério e trazidos
+  numa lista de revisão junto da primeira passada.
+
+### Decisões sobre casos cinzentos (classe base)
+
+Combate **situacional**: Sentido de Perigo, Movimentação Veloz, Campeão Primitivo,
+Fúria Implacável (Bárbaro); Inspiração Bárdica + recuperações, Contrafeitiço
+(Bardo); Invocações Eldritch, Dádiva de Pacto (Bruxo); Intervenção Divina
+(Clérigo); Forma Selvagem + derivados (Druida); Fonte de Magia, Metamagia,
+Restauração (Feiticeiro); Indomável (Guerreiro); Sentido Cego, Mente Escorregadia
+(Ladino); Movimento Desarmado, Tranquilidade Mental, Alma de Diamante, Eu Perfeito
+(Monge); Cura pelas Mãos, Toque Purificador (Paladino); Ocultar-se às Claras,
+Desaparecer, Sentidos Ferais (Patrulheiro).
+
+Não-combate (Habilidades): Força Indomável (Bárbaro); Canção de Descanso (Bardo);
+Queda Lenta, Mov. Desarmado Aprimorado, Pureza de Corpo (Monge); Sentido Divino,
+Saúde Divina (Paladino); Inimigo Favorito, Consciência Primeva, Passo da Terra
+(Patrulheiro). Mago não tem features base de combate (combate dele é magia).
 
 ## 5. Testes
 
-- **Helper de categorização** (unitário): dada uma feature com `combat`/
-  `actionType`, cai no balde certo (Ações/Bônus/Reações/Passivas vs.
-  Habilidades) e resolve o selo conforme as regras da seção 2.
-- **Teste-guarda por classe:** features-âncora de combate aparecem em
-  **Combate**, não em Habilidades — Ataque Furtivo (Ladino), Ataque Extra
-  (Guerreiro), Golpe Divino (Paladino), Crítico Brutal (Bárbaro), Golpe
-  Atordoante (Monge).
+- **Helper de classificação** (unitário): dada uma feature com `combat`/
+  `category`/`actionType`, cai no balde certo e resolve o selo conforme a seção 2.
+- **Teste-guarda por classe:** features-âncora aparecem onde devem — Ataque
+  Furtivo (Ladino), Ataque Extra (Guerreiro), Golpe Divino (Paladino), Crítico
+  Brutal (Bárbaro), Golpe Atordoante (Monge) em **Combate / Essencial**.
+- **Tier situacional:** Indomável (Guerreiro), Sentido de Perigo (Bárbaro) em
+  **Combate / Situacional**, não em Essencial.
+- **Agrupamento de Habilidades:** Saúde Divina em "Defesas", Passo da Terra em
+  "Exploração".
 - **De-ruído:** "Aumento de Atributo" não aparece em Habilidades.
-- **Fallback:** feature sem `combat` aparece em Habilidades (não some).
+- **Fallback:** feature sem marcação aparece em Habilidades (seção "Outras"),
+  não some.
 
 ## Esforço / divisão de trabalho
 
-Marcar `combat` em ~250 features base + opções de subclasse é trabalho manual de
+Classificar ~250 features base + opções de subclasse é trabalho manual de
 julgamento de regras de D&D. Claude faz a primeira passada completa; o dono do
-projeto revisa as marcações, com foco nos casos cinzentos.
+projeto revisa, com foco nos cinzentos de subclasse.
