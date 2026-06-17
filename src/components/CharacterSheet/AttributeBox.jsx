@@ -105,7 +105,7 @@ function AttributeBoxBase({
               id={fieldId}
               type="number"
               min={1}
-              max={20}
+              max={30}
               value={value}
               onChange={e => handleManualChange(e.target.value)}
               onWheel={e => e.currentTarget.blur()}
@@ -115,7 +115,7 @@ function AttributeBoxBase({
               }`}
             />
             <button
-              onClick={() => handleManualChange(Math.min(20, value + 1))}
+              onClick={() => handleManualChange(Math.min(30, value + 1))}
               className="w-6 h-6 rounded bg-parchment-200 hover:bg-parchment-300 active:bg-parchment-400 border border-parchment-600 text-ink-500 font-bold text-sm flex items-center justify-center transition-colors"
               aria-label={`Aumentar ${name}`}
             >+</button>
