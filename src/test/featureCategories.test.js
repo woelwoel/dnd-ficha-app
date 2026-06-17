@@ -11,6 +11,8 @@ describe('featureCategories', () => {
     expect(detectActionType('Como reação ao ser acertado')).toBe('reação')
     expect(detectActionType('Como ação, você assume a forma')).toBe('ação')
     expect(detectActionType('Você ganha +1 de CA')).toBe(null)
+    // case-insensitive por design
+    expect(detectActionType('COMO REAÇÃO ao ser acertado')).toBe('reação')
   })
 
   it('combatTier devolve só valores válidos, senão null', () => {
@@ -34,7 +36,10 @@ describe('featureCategories', () => {
 
   it('isAttributeIncrease pega "Aumento de Atributo"', () => {
     expect(isAttributeIncrease({ name: 'Aumento de Atributo' })).toBe(true)
+    expect(isAttributeIncrease({ name: 'Aumento de Atributo (Nível 4)' })).toBe(true)
+    expect(isAttributeIncrease({ name: '  Aumento de Atributo' })).toBe(true)
     expect(isAttributeIncrease({ name: 'Ataque Extra' })).toBe(false)
+    expect(isAttributeIncrease({})).toBe(false)
   })
 
   it('expõe as listas de valores válidos', () => {

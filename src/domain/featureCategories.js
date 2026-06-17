@@ -46,5 +46,5 @@ export function actionTypeOf(feature) {
 
 /** "Aumento de Atributo" é tratado no sistema de atributos — some das Habilidades. */
 export function isAttributeIncrease(feature) {
-  return (feature?.name ?? '').toLowerCase().startsWith('aumento de atributo')
+  return (feature?.name ?? '').trim().toLowerCase().startsWith('aumento de atributo')
 }
