@@ -398,7 +398,7 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
     const raceTopics = info?.race === 'draconato'
       ? enrichDraconicTopics(rawTopics, info?.draconicAncestry)
       : rawTopics
-    const raceFeatures = raceTopics
+    const raceTraitsAll = raceTopics
       .filter(t => (t.title ?? t.name) && t.desc)
       .map(t => ({
         id: `raca-${(t.title ?? t.name)}`.toLowerCase().replace(/\s+/g, '-'),
@@ -407,6 +407,13 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
           ? `${selectedRace?.name} / ${selectedSubrace.name}`
           : (selectedRace?.name ?? 'Raça'),
       }))
+    /* Traços raciais não têm marcação de combate (fora do escopo da marcação
+     * do SRD), então seguem a heurística atual: se a descrição denota uma ação,
+     * o traço é de combate e vai pra aba Combate; senão fica em Habilidades. */
+    const raceCombatFeatures = raceTraitsAll
+      .filter(f => detectActionType(f.desc) !== null)
+      .map(f => ({ ...f, tier: 'essencial', type: actionTypeOf(f) })) // tier consumido na Task 6 (segmentado Essencial/Situacional)
+    const raceFeatures = raceTraitsAll.filter(f => detectActionType(f.desc) === null)
 
     /* ── Talentos ── */
     const featFeatures = (info?.feats ?? []).map(f => {
@@ -455,9 +462,12 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
 
     /* ── Dois baldes derivados de uma única lista enriquecida ── */
     const enriched = [...classFeaturesAll, ...multiFeatures]
-    const combatFeatures = enriched
-      .filter(f => combatTier(f) !== null)
-      .map(f => ({ ...f, tier: combatTier(f), type: actionTypeOf(f) }))
+    const combatFeatures = [
+      ...enriched
+        .filter(f => combatTier(f) !== null)
+        .map(f => ({ ...f, tier: combatTier(f), type: actionTypeOf(f) })), // tier consumido na Task 6 (segmentado Essencial/Situacional)
+      ...raceCombatFeatures,
+    ]
     const nonCombatFeatures = enriched.filter(f => combatTier(f) === null)
 
     return { combatFeatures, nonCombatFeatures, raceFeatures, featFeatures }

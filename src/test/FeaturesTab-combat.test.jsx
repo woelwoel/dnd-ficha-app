@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { FeaturesTab } from '../components/CharacterSheet/FeaturesTab'
 
 // Fixture mínima de progressão (Ladino nv 5): âncora Ataque Furtivo + ruído ASI.
@@ -22,17 +23,52 @@ const PROGRESSION = {
   },
 }
 
+// Raça Draconato: traço de combate (heurística "Como ação") + traço passivo.
+const RACES = [
+  { index: 'draconato', name: 'Draconato', traits: [
+    { name: 'Sopro do Dragão', desc: 'Como ação, você exala energia destrutiva.' },
+    { name: 'Resistência a Dano', desc: 'Você tem resistência ao tipo de dano da sua ascendência.' },
+  ] },
+]
+
 vi.mock('../providers/SrdProvider', () => ({
-  useSrd: () => ({ progression: PROGRESSION, races: [], classChoices: {} }),
+  useSrd: () => ({ progression: PROGRESSION, races: RACES, classChoices: {} }),
   useLazySrdDataset: () => [],
 }))
 
-const character = { info: { class: 'ladino', level: 5, race: '', multiclasses: [], feats: [], chosenFeatures: {} } }
+const character = { info: { class: 'ladino', level: 5, race: 'draconato', multiclasses: [], feats: [], chosenFeatures: {} } }
 
 describe('FeaturesTab — aba Combate', () => {
   it('abre na aba Combate por padrão e mostra a feature essencial', () => {
     render(<FeaturesTab character={character} featureUses={[]} />)
     expect(screen.getByRole('button', { name: /Combate/i })).toBeInTheDocument()
     expect(screen.getByText(/Ataque Furtivo/i)).toBeInTheDocument()
+  })
+
+  it('na aba Combate mostra só features de combate, não as de habilidades', () => {
+    render(<FeaturesTab character={character} featureUses={[]} />)
+    // Segunda feature de combate aparece
+    expect(screen.getByText(/Esquiva Instintiva/i)).toBeInTheDocument()
+    // Features não-combate não vazam pra aba Combate
+    expect(screen.queryByText(/Gíria dos Ladrões/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Aumento de Atributo/i)).not.toBeInTheDocument()
+  })
+
+  it('traço racial de combate (heurística) aparece em Combate; passivo fica em Habilidades', async () => {
+    const user = userEvent.setup()
+    render(<FeaturesTab character={character} featureUses={[]} />)
+
+    // Aba Combate (padrão): traço racial com "Como ação" é detectado pela heurística
+    expect(screen.getByText(/Sopro do Dragão/i)).toBeInTheDocument()
+    // Traço racial passivo NÃO aparece em Combate
+    expect(screen.queryByText(/Resistência a Dano/i)).not.toBeInTheDocument()
+
+    // Troca pra Habilidades
+    await user.click(screen.getByRole('button', { name: /Habilidades/i }))
+
+    // Traço passivo aparece em Traços Raciais
+    expect(screen.getByText(/Resistência a Dano/i)).toBeInTheDocument()
+    // O traço de combate não deve estar duplicado em Habilidades
+    expect(screen.queryByText(/Sopro do Dragão/i)).not.toBeInTheDocument()
   })
 })
