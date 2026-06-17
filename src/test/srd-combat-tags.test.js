@@ -42,3 +42,44 @@ describe('integridade das marcações de combate', () => {
     expect(bad).toEqual([])
   })
 })
+
+describe('âncoras de classe base', () => {
+  const byName = (cls, name) => {
+    for (const lvl of progression[cls].levels ?? [])
+      for (const f of lvl.features ?? [])
+        if (f.name.startsWith(name)) return f
+    return null
+  }
+
+  const ESSENCIAL = [
+    ['barbaro', 'Fúria'], ['barbaro', 'Ataque Extra'], ['barbaro', 'Crítico Brutal'],
+    ['barbaro', 'Defesa Desarmada'],
+    ['guerreiro', 'Estilo de Combate'], ['guerreiro', 'Ataque Extra'], ['guerreiro', 'Surto de Ação'],
+    ['ladino', 'Ataque Furtivo'], ['ladino', 'Esquiva Instintiva'],
+    ['paladino', 'Golpe Divino'], ['paladino', 'Ataque Extra'],
+    ['monge', 'Artes Marciais'], ['monge', 'Golpe Atordoante'], ['monge', 'Ki'],
+  ]
+  const SITUACIONAL = [
+    ['barbaro', 'Sentido de Perigo'], ['barbaro', 'Fúria Implacável'],
+    ['guerreiro', 'Indomável'], ['ladino', 'Sentido Cego'], ['ladino', 'Mente Escorregadia'],
+    ['paladino', 'Toque Purificador'], ['monge', 'Tranquilidade Mental'],
+  ]
+  const NAO_COMBATE = [
+    ['barbaro', 'Força Indomável', undefined],
+    ['paladino', 'Saúde Divina', 'defesa'], ['paladino', 'Sentido Divino', undefined],
+    ['patrulheiro', 'Passo da Terra', 'exploracao'], ['patrulheiro', 'Inimigo Favorito', undefined],
+    ['monge', 'Pureza de Corpo', 'defesa'],
+  ]
+
+  it.each(ESSENCIAL)('%s/%s é combate essencial', (cls, name) => {
+    expect(byName(cls, name)?.combat).toBe('essencial')
+  })
+  it.each(SITUACIONAL)('%s/%s é combate situacional', (cls, name) => {
+    expect(byName(cls, name)?.combat).toBe('situacional')
+  })
+  it.each(NAO_COMBATE)('%s/%s não é combate (category=%s)', (cls, name, cat) => {
+    const f = byName(cls, name)
+    expect(f?.combat).toBeUndefined()
+    if (cat) expect(f?.category).toBe(cat)
+  })
+})
