@@ -30,4 +30,18 @@ describe('ReviewBlock', () => {
     render(<ReviewBlock draft={INITIAL_DRAFT_V2} races={races} backgrounds={backgrounds} classData={null} />)
     expect(screen.getByText(/array padrão/i)).toBeInTheDocument()
   })
+
+  it('reflete o ASI no total de atributo (Des 15 +2 racial +2 ASI = 19)', () => {
+    const draft = {
+      ...INITIAL_DRAFT_V2,
+      name: 'Allyson', race: 'humano', class: 'ladino', background: 'soldado', level: 5,
+      baseAttributes: { str: 12, dex: 15, con: 12, int: 10, wis: 12, cha: 11 },
+      racialBonuses: { dex: 2 },
+      asiChoices: { 4: { type: 'asi', bonuses: { dex: 2 } } },
+    }
+    render(<ReviewBlock draft={draft} races={races} backgrounds={backgrounds} classData={classData} />)
+    // Total final de Destreza = 19 (não 17), com a quebra "15+4".
+    expect(screen.getByText('19')).toBeInTheDocument()
+    expect(screen.getByText('15+4')).toBeInTheDocument()
+  })
 })

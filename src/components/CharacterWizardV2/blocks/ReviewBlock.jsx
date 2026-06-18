@@ -3,6 +3,7 @@ import {
   calculateMaxHp, SPELL_ABILITY_PT_TO_KEY,
   calculateSpellSaveDC, calculateSpellAttackBonus,
 } from '../../../utils/calculations'
+import { computeFinalAttributes } from './build-character'
 
 const METHOD_LABEL = {
   'standard-array': 'Array Padrão [15,14,13,12,10,8]',
@@ -46,12 +47,9 @@ export function ReviewBlock({ draft, races, backgrounds, classData }) {
   const selectedSubrace = selectedRace?.subraces?.find(sr => sr.index === draft.subrace)
   const selectedBg = backgrounds.find(b => b.index === draft.background)
 
-  const finalAttrs = {}
-  for (const { key } of ABILITY_SCORES) {
-    const base = draft.baseAttributes?.[key] ?? 10
-    const bonus = draft.racialBonuses?.[key] ?? 0
-    finalAttrs[key] = base > 0 ? base + bonus : 10
-  }
+  // Atributos finais = base + racial + ASIs/talentos (mesma fórmula do
+  // buildCharacter), pra a Revisão bater com o personagem real.
+  const finalAttrs = computeFinalAttributes(draft)
 
   const profBonus = getProficiencyBonus(draft.level ?? 1)
   const maxHp = calculateMaxHp(classData, draft.level ?? 1, finalAttrs.con ?? 10)
@@ -85,11 +83,12 @@ export function ReviewBlock({ draft, races, backgrounds, classData }) {
           {ABILITY_SCORES.map(({ key, abbr }) => {
             const score = finalAttrs[key]
             const base = draft.baseAttributes?.[key]
-            const bonus = draft.racialBonuses?.[key] ?? 0
+            // Bônus total (racial + ASI/talento) = final − base.
+            const totalBonus = base > 0 ? score - base : 0
             return (
               <div key={key} className="border-2 border-parchment-600 bg-parchment-50 rounded-sm px-2 py-2 text-center">
                 <p className="text-xs font-display tracking-widest uppercase text-ink-300 mb-1">{abbr}</p>
-                {bonus > 0 && <p className="text-xs italic text-ink-200">{base}+{bonus}</p>}
+                {totalBonus > 0 && <p className="text-xs italic text-ink-200">{base}+{totalBonus}</p>}
                 <p className="text-lg font-display text-ink-500">{score}</p>
                 <p className="text-xs text-ink-200">{formatModifier(getModifier(score))}</p>
               </div>

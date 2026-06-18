@@ -1,6 +1,36 @@
 import { describe, it, expect } from 'vitest'
-import { buildCharacter, resolveClassEquipmentItems } from '../components/CharacterWizardV2/blocks/build-character'
+import { buildCharacter, resolveClassEquipmentItems, computeFinalAttributes } from '../components/CharacterWizardV2/blocks/build-character'
 import { INITIAL_DRAFT_V2 } from '../components/CharacterWizardV2/hooks/useDraft'
+
+describe('computeFinalAttributes', () => {
+  it('soma base + racial + ASI (teto 20 no ASI, 30 no racial)', () => {
+    const draft = {
+      baseAttributes: { str: 15, dex: 15, con: 12, int: 10, wis: 12, cha: 11 },
+      racialBonuses: { dex: 2 },
+      asiChoices: { 4: { type: 'asi', bonuses: { dex: 2 } } },
+    }
+    expect(computeFinalAttributes(draft).dex).toBe(19) // 15 + 2 + 2
+  })
+
+  it('ASI não ultrapassa 20', () => {
+    const draft = {
+      baseAttributes: { str: 19, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+      racialBonuses: {},
+      asiChoices: { 4: { type: 'asi', bonuses: { str: 2 } } }, // 19+2 → capado em 20
+    }
+    expect(computeFinalAttributes(draft).str).toBe(20)
+  })
+
+  it('inclui talento com bônus de atributo e multiclasse', () => {
+    const draft = {
+      baseAttributes: { str: 14, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+      racialBonuses: {},
+      asiChoices: { 4: { type: 'feat', featAttrBonus: { amount: 1, choices: ['str'] }, featChosenAttr: 'str' } },
+      multiclasses: [{ class: 'guerreiro', level: 4, asiChoices: { 4: { type: 'asi', bonuses: { str: 2 } } } }],
+    }
+    expect(computeFinalAttributes(draft).str).toBe(17) // 14 + 1 (feat) + 2 (mc asi)
+  })
+})
 
 const guerreiro = { index: 'guerreiro', hit_die: 10, spellcasting_ability: '' }
 const baseDraft = {

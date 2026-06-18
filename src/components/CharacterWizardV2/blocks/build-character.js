@@ -37,14 +37,22 @@ export function resolveClassEquipmentItems(draft, classEquipment) {
   return items
 }
 
-export function buildCharacter(draft, classData, classEquipment, srdSpells = null) {
-  const attrs = { ...draft.baseAttributes }
-  for (const [k, v] of Object.entries(draft.racialBonuses ?? {})) {
+const FINAL_ATTR_KEYS = ['str', 'dex', 'con', 'int', 'wis', 'cha']
+
+/**
+ * Atributos FINAIS do personagem: base + bônus racial (teto 30) + ASIs/talentos
+ * de classe e multiclasse (teto 20). Fonte única de verdade — usada tanto no
+ * buildCharacter quanto na Revisão, pra a prévia bater com o personagem real.
+ */
+export function computeFinalAttributes(draft) {
+  const attrs = {}
+  for (const k of FINAL_ATTR_KEYS) attrs[k] = draft?.baseAttributes?.[k] ?? 10
+  for (const [k, v] of Object.entries(draft?.racialBonuses ?? {})) {
     attrs[k] = Math.min(30, (attrs[k] ?? 10) + v)
   }
   const allAsiChoices = [
-    ...Object.values(draft.asiChoices ?? {}),
-    ...((draft.multiclasses ?? []).flatMap(mc => Object.values(mc.asiChoices ?? {}))),
+    ...Object.values(draft?.asiChoices ?? {}),
+    ...((draft?.multiclasses ?? []).flatMap(mc => Object.values(mc.asiChoices ?? {}))),
   ]
   for (const choice of allAsiChoices) {
     if (choice?.type === 'asi') {
@@ -58,6 +66,11 @@ export function buildCharacter(draft, classData, classEquipment, srdSpells = nul
       }
     }
   }
+  return attrs
+}
+
+export function buildCharacter(draft, classData, classEquipment, srdSpells = null) {
+  const attrs = computeFinalAttributes(draft)
 
   const dexMod = getModifier(attrs.dex ?? 10)
   const maxHp = calculateMaxHp(classData, draft.level, attrs.con ?? 10)
