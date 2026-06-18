@@ -51,6 +51,9 @@ const CampaignsScreen = lazyWithReload(() =>
 const CampaignDetail = lazyWithReload(() =>
   import('./components/Campaigns').then(m => ({ default: m.CampaignDetail }))
 )
+const AdminScreen = lazyWithReload(() =>
+  import('./components/Admin/AdminScreen').then(m => ({ default: m.AdminScreen }))
+)
 
 function Loader() {
   return (
@@ -136,6 +139,17 @@ function CampaignDetailRoute() {
   )
 }
 
+function AdminRoute() {
+  const navigate = useNavigate()
+  const { isAdmin } = useAuth()
+  if (!isAdmin) return <Navigate to="/" replace />
+  return (
+    <RouteShell>
+      <AdminScreen onBack={() => navigate('/')} />
+    </RouteShell>
+  )
+}
+
 function AuthedRoutes() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-950 text-gray-100">
@@ -147,6 +161,7 @@ function AuthedRoutes() {
           <Route path="/c/:id" element={<SheetRoute />} />
           <Route path="/campaigns" element={<RouteShell><CampaignsScreen /></RouteShell>} />
           <Route path="/campaigns/:id" element={<CampaignDetailRoute />} />
+          <Route path="/admin" element={<AdminRoute />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

@@ -8,6 +8,7 @@ import { BackupMenu } from './BackupMenu'
 import { Button } from '../ui/Button'
 import { AccountMenu } from '../ui/AccountMenu'
 import { useCampaignContext } from '../../hooks/useCampaignContext'
+import { useAuth } from '../../auth/AuthProvider'
 import { CampaignSelector } from './CampaignSelector'
 import {
   loadCharacters,
@@ -47,6 +48,7 @@ export function CharacterList({ onSelect, onCreate }) {
   const [campaignName] = useState(readCampaignName)
   const navigate = useNavigate()
   const [scope, setScope] = useCampaignContext()
+  const { isAdmin } = useAuth()
 
   // Carga inicial + recarga.
   const reload = useCallback(async () => {
@@ -126,6 +128,11 @@ export function CharacterList({ onSelect, onCreate }) {
           <Button variant="ghost" size="sm" onClick={() => navigate('/campaigns')}>
             ⚜ Mesas
           </Button>
+          {isAdmin && (
+            <Button variant="ghost" size="sm" onClick={() => navigate('/admin')}>
+              Admin
+            </Button>
+          )}
           <BackupMenu
             characterCount={characters.length}
             onImported={reload}
