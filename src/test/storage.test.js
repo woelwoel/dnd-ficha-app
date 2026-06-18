@@ -276,6 +276,25 @@ describe('storage (Supabase backend)', () => {
     expect(r.ok).toBe(true)
     expect(r.campaignId).toBe('camp-1')
   })
+
+  it("loadCharacters('mine') só traz fichas do dono atual (não vaza de outros)", async () => {
+    store.rows = [
+      { id: 'a', owner_id: store.uid, campaign_id: null, data: makeChar('a'), version: 1 },
+      { id: 'b', owner_id: 'outro-user', campaign_id: null, data: makeChar('b'), version: 1 },
+    ]
+    const list = await loadCharacters('mine')
+    expect(list.map(c => c.id)).toEqual(['a'])
+  })
+
+  it("loadCharacters('personal') filtra por dono E por campaign_id null", async () => {
+    store.rows = [
+      { id: 'a', owner_id: store.uid, campaign_id: null, data: makeChar('a'), version: 1 },
+      { id: 'c', owner_id: store.uid, campaign_id: 'camp-1', data: makeChar('c'), version: 1 },
+      { id: 'b', owner_id: 'outro-user', campaign_id: null, data: makeChar('b'), version: 1 },
+    ]
+    const list = await loadCharacters('personal')
+    expect(list.map(c => c.id)).toEqual(['a'])
+  })
 })
 
 describe('saveCharacterVersioned — lock otimista (#3 super review)', () => {

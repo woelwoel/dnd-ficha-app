@@ -65,8 +65,16 @@ export async function loadCharacters(scope = 'mine') {
     .select('*')
     .order('created_at', { ascending: true })
 
-  if (scope === 'personal') q = q.is('campaign_id', null)
-  else if (scope && typeof scope === 'object' && scope.campaignId) q = q.eq('campaign_id', scope.campaignId)
+  if (scope === 'personal' || scope === 'mine') {
+    // Com o RLS aberto pro admin, sem este filtro a home traria fichas de
+    // todos. 'personal'/'mine' são sempre do próprio usuário; a visão de mesa
+    // do DM usa o escopo { campaignId }.
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) q = q.eq('owner_id', user.id)
+    if (scope === 'personal') q = q.is('campaign_id', null)
+  } else if (scope && typeof scope === 'object' && scope.campaignId) {
+    q = q.eq('campaign_id', scope.campaignId)
+  }
 
   const { data, error } = await q
   if (error) {
