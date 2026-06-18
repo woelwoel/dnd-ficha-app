@@ -520,11 +520,16 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
      * Placeholders genéricos de subclasse não-resolvidos (ex.: "Característica
      * do Arquétipo Marcial") são removidos pra não poluir nenhuma das listas. */
     const enriched = [...classFeaturesAll, ...multiFeatures].filter(f => !f.placeholder)
+    // Talentos entram na aba Combate sempre como Situacional (e seguem
+    // listados em Habilidades → Talentos). O tipo de ação é inferido da
+    // descrição (ex.: "como reação" → reação), caindo em "passiva".
+    const featCombatFeatures = featFeatures.map(f => ({ ...f, tier: 'situacional', type: actionTypeOf(f) }))
     const combatFeatures = [
       ...enriched
         .filter(f => combatTier(f) !== null)
         .map(f => ({ ...f, tier: combatTier(f), type: actionTypeOf(f) })), // tier alimenta o controle segmentado Essencial/Situacional
       ...raceCombatFeatures,
+      ...featCombatFeatures,
     ]
     const nonCombatFeatures = enriched.filter(f => combatTier(f) === null)
 
@@ -614,9 +619,15 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
                   </div>
                   <p className="text-sm">
                     {combatTierView === 'situacional'
-                      ? 'Nenhuma habilidade situacional neste nível.'
+                      ? 'Nenhuma habilidade situacional ainda.'
                       : 'Nenhuma habilidade essencial de combate.'}
                   </p>
+                  {combatTierView === 'situacional' && (
+                    <p className="text-xs mt-1 text-gray-700">
+                      Habilidades de nicho/condicionais e talentos aparecem aqui —
+                      muitas chegam em níveis mais altos.
+                    </p>
+                  )}
                 </div>
               )
             }

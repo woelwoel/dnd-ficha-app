@@ -101,6 +101,34 @@ describe('FeaturesTab — aba Combate', () => {
     expect(screen.queryByText(/Ataque Furtivo/i)).not.toBeInTheDocument()
   })
 
+  it('talentos aparecem na aba Combate como Situacional (e seguem em Habilidades)', async () => {
+    const user = userEvent.setup()
+    const comFeat = { info: {
+      class: 'ladino', level: 5, race: 'draconato', multiclasses: [],
+      feats: [{ index: 'sentinela', name: 'Sentinela', desc: 'Como reação, você ataca quem sai do seu alcance.' }],
+      chosenFeatures: {},
+    } }
+    render(<FeaturesTab character={comFeat} featureUses={[]} />)
+    // Essencial não mostra o talento
+    expect(screen.queryByText('Sentinela')).not.toBeInTheDocument()
+    // Situacional mostra
+    await user.click(screen.getByRole('button', { name: /Situacional/i }))
+    expect(screen.getByText('Sentinela')).toBeInTheDocument()
+    // E continua em Habilidades → Talentos
+    await user.click(screen.getByRole('button', { name: /Habilidades/i }))
+    expect(screen.getByText('Sentinela')).toBeInTheDocument()
+    expect(screen.getByText(/^Talentos$/i)).toBeInTheDocument()
+  })
+
+  it('tier Situacional vazio mostra aviso com dica de nível', async () => {
+    const user = userEvent.setup()
+    // Bárbaro nv 1: só tem Fúria (essencial), nada situacional, sem talentos.
+    const barb = { info: { class: 'barbaro', level: 1, race: '', multiclasses: [], feats: [], chosenFeatures: {} } }
+    render(<FeaturesTab character={barb} featureUses={[]} />)
+    await user.click(screen.getByRole('button', { name: /Situacional/i }))
+    expect(screen.getByText(/níveis mais altos/i)).toBeInTheDocument()
+  })
+
   it('feature de combate ancorada em escolha (choice_id) aparece mesmo sem escolha feita', () => {
     render(<FeaturesTab character={character} featureUses={[]} />)
     // "Estilo de Combate" tem choice_id mas é combat:essencial → não é placeholder
