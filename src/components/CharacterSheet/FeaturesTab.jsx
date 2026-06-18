@@ -16,6 +16,7 @@ const TYPE_THEME = {
   'ação':       { color: 'border-amber-600/40 bg-amber-900/10', badge: 'bg-amber-800/60 text-amber-200' },
   'ação bônus': { color: 'border-blue-600/40 bg-blue-900/10',   badge: 'bg-blue-800/60 text-blue-200' },
   'reação':     { color: 'border-purple-600/40 bg-purple-900/10', badge: 'bg-purple-800/60 text-purple-200' },
+  'passiva':    { color: 'border-gray-600/40 bg-gray-800/10',   badge: 'bg-gray-700/60 text-gray-200' },
 }
 
 // Cores pastéis com texto escuro pra ficarem legíveis tanto no tema parchment

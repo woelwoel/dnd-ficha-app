@@ -7,12 +7,13 @@
  * contexto visual.
  */
 
-export const FEATURE_TYPE_KEYS = ['ação', 'ação bônus', 'reação', 'livre']
+export const FEATURE_TYPE_KEYS = ['ação', 'ação bônus', 'reação', 'passiva', 'livre']
 
 export const FEATURE_TYPE_META = {
   'ação':       { icon: '⚔️',  label: 'Ação' },
   'ação bônus': { icon: '⚡',  label: 'Ação Bônus' },
   'reação':     { icon: '🛡️', label: 'Reação' },
+  'passiva':    { icon: '∞',   label: 'Passiva' },
   'livre':      { icon: '✦',   label: 'Livre' },
 }
 

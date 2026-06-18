@@ -59,6 +59,14 @@ describe('FeaturesTab — aba Combate', () => {
     expect(screen.getByText(/Ataque Furtivo/i)).toBeInTheDocument()
   })
 
+  it('feature de combate passiva mostra selo "Passiva" (não "Ação")', () => {
+    // Ataque Furtivo (essencial, desc sem verbo de ação) → tipo "passiva".
+    render(<FeaturesTab character={character} featureUses={[]} />)
+    const card = screen.getByText(/Ataque Furtivo/i).closest('.border')
+    expect(card).toHaveTextContent(/Passiva/)
+    expect(card).not.toHaveTextContent(/Ação/)
+  })
+
   it('na aba Combate mostra só features de combate, não as de habilidades', () => {
     render(<FeaturesTab character={character} featureUses={[]} />)
     // Segunda feature de combate aparece
