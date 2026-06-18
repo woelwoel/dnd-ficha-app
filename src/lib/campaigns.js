@@ -146,6 +146,23 @@ export async function deleteCampaign(campaignId) {
   return { ok: true }
 }
 
+/**
+ * Renomeia a mesa. RLS garante que só DM (ou admin via política
+ * campaigns_admin_all) consegue. Valida nome 1..80 antes de ir ao servidor.
+ */
+export async function renameCampaign(campaignId, name) {
+  const trimmed = (name ?? '').trim()
+  if (trimmed.length < 1 || trimmed.length > 80) {
+    return { ok: false, reason: 'invalid-name' }
+  }
+  const { error } = await supabase
+    .from(T_CAMPAIGNS)
+    .update({ name: trimmed })
+    .eq('id', campaignId)
+  if (error) { logDev('renameCampaign', error); return { ok: false, reason: 'unknown' } }
+  return { ok: true }
+}
+
 export async function deleteMyAccount() {
   const { error } = await supabase.rpc('delete_my_account')
   if (error) { logDev('deleteMyAccount', error); return { ok: false, reason: 'unknown' } }
