@@ -12,6 +12,7 @@ import { SheetTabs, TABS, NavBlockedBanner, ImportErrorBanner } from './SheetTab
 import { SheetContent } from './SheetContent'
 import { CharacterProvider } from './CharacterContext'
 import { useSheetHandlers } from './useSheetHandlers'
+import { isSheetReadOnly } from './sheet-access'
 import { PrintView } from '../PrintView/PrintView'
 import { PrintPreviewModal } from '../PrintView/PrintPreviewModal'
 import { defaultClassFeatureUses, mergeFeatureUses } from '../../domain/rules'
@@ -102,9 +103,9 @@ function SheetBody({ initialCharacter, onBack }) {
   const { character, setCharacter, ...updaters } = useCharacter(initialCharacter)
 
   // Detecta usuário corrente pra modo readonly (DM lendo ficha de jogador).
-  const { user } = useAuth()
+  const { user, isAdmin } = useAuth()
   const currentUserId = user?.id ?? null
-  const readOnly = !!(character?.ownerId && currentUserId && character.ownerId !== currentUserId)
+  const readOnly = isSheetReadOnly({ ownerId: character?.ownerId, currentUserId, isAdmin })
 
   // #3 super review: conflito de versão = outro dispositivo da mesma conta
   // salvou esta ficha no meio da edição. Refetcha (a versão do servidor vence)
