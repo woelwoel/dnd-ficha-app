@@ -76,6 +76,40 @@ function baseFeatureName(name = '') {
 }
 
 /**
+ * Colapsa famílias de features que escalam por nível repetindo o mesmo
+ * nome-base (ex.: "Ataque Furtivo (1d6)" … "(10d6)", "Artes Marciais (d4)"…,
+ * "Inspiração Bárdica (d6)"…). O SRD lista uma entrada por nível; sem isso a
+ * ficha mostra TODAS as variantes acumuladas.
+ *
+ * Mantém só a variante do nível mais alto já alcançado (o nome carrega o valor
+ * atual, ex.: "(5d6)"), preservando a descrição mais completa da família
+ * (normalmente a do 1º nível, que traz as regras inteiras) e o nível em que a
+ * feature foi adquirida. Agrupa por origem + nome-base para nunca fundir
+ * features de classes diferentes, e preserva a ordem de entrada.
+ */
+export function collapseScalingFeatures(features = []) {
+  const groups = new Map()
+  const order = []
+  for (const f of features) {
+    const key = `${f.source ?? ''}::${baseFeatureName(f.name ?? '')}`
+    if (!groups.has(key)) { groups.set(key, []); order.push(key) }
+    groups.get(key).push(f)
+  }
+  return order.map(key => {
+    const group = groups.get(key)
+    if (group.length === 1) return group[0]
+    const top = group.reduce((a, b) => ((b.level ?? 0) >= (a.level ?? 0) ? b : a))
+    const fullest = group.reduce((a, b) => ((b.desc ?? '').length > (a.desc ?? '').length ? b : a))
+    const firstLevel = group.reduce((min, f) => Math.min(min, f.level ?? Infinity), Infinity)
+    return {
+      ...top,
+      desc: fullest.desc,
+      level: Number.isFinite(firstLevel) ? firstLevel : top.level,
+    }
+  })
+}
+
+/**
  * Retorna o id do recurso rastreável (featureUses) ligado a esta feature,
  * ou null se ela não concede um recurso. Casa por nome-base EXATO para não
  * confundir "Fúria" com "Fúria Implacável".

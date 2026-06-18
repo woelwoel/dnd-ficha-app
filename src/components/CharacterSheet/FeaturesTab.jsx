@@ -6,7 +6,8 @@ import { ChosenFeaturePicker } from '../CharacterWizardV2/blocks/class/ChosenFea
 import { resolveMultiSelect, isChoiceDone } from '../CharacterWizardV2/blocks/class-helpers'
 import { Icon } from '../ui/Icon'
 import {
-  detectActionType, combatTier, featureCategory, actionTypeOf, isAttributeIncrease, featureUseId,
+  detectActionType, combatTier, featureCategory, actionTypeOf, isAttributeIncrease,
+  featureUseId, collapseScalingFeatures,
 } from '../../domain/featureCategories'
 
 /* ══════════════════════════════════════════════════════════════════
@@ -394,8 +395,10 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
     const classData  = progression?.[classIndex]
     const levelsUpTo = classData?.levels?.filter(l => l.level <= level) ?? []
 
-    /* ── Features da classe primária ── */
-    const classFeatures = levelsUpTo.flatMap(lvl =>
+    /* ── Features da classe primária ──
+     * collapseScalingFeatures funde variantes de nível do mesmo nome-base
+     * (ex.: "Ataque Furtivo (1d6)…(10d6)") em um único card com o valor atual. */
+    const classFeatures = collapseScalingFeatures(levelsUpTo.flatMap(lvl =>
       (lvl.features ?? []).map(f => {
         const chosen = resolveChosenFeature(classIndex, f.name, chosenFeatures, classChoices)
         return {
@@ -414,13 +417,13 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
           placeholder: Boolean((f.subclass || f.choice_id) && !chosen && !f.combat && !f.category),
         }
       })
-    )
+    ))
 
     /* ── Features de multiclasses ── */
     const multiFeatures = (info?.multiclasses ?? []).flatMap(mc => {
       const mcData   = progression?.[mc.class]
       const mcLevels = mcData?.levels?.filter(l => l.level <= mc.level) ?? []
-      return mcLevels.flatMap(lvl =>
+      return collapseScalingFeatures(mcLevels.flatMap(lvl =>
         (lvl.features ?? []).map(f => {
           const chosen = resolveChosenFeature(mc.class, f.name, chosenFeatures, classChoices)
           return {
@@ -439,7 +442,7 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
           placeholder: Boolean((f.subclass || f.choice_id) && !chosen && !f.combat && !f.category),
           }
         })
-      )
+      ))
     })
 
     /* ── Traços raciais ── */

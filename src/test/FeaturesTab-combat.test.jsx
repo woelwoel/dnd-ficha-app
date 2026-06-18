@@ -13,6 +13,7 @@ const PROGRESSION = {
         { name: 'Gíria dos Ladrões', desc: 'Idioma secreto.', category: 'social' },
       ] },
       { level: 3, features: [
+        { name: 'Ataque Furtivo (2d6)', desc: 'Aumenta para 2d6.', combat: 'essencial' },
         { name: 'Característica do Arquétipo de Gatuno', desc: 'Você recebe uma característica do seu arquétipo.', subclass: true },
         // Feature ancorada em escolha (choice_id) MAS marcada como combate:
         // não pode ser tratada como placeholder genérico.
@@ -22,6 +23,7 @@ const PROGRESSION = {
         { name: 'Aumento de Atributo', desc: 'Suba atributos.' },
       ] },
       { level: 5, features: [
+        { name: 'Ataque Furtivo (3d6)', desc: 'Aumenta para 3d6.', combat: 'essencial' },
         { name: 'Esquiva Instintiva', desc: 'Como reação, reduz dano pela metade.', combat: 'essencial' },
         { name: 'Sentido Cego', desc: 'Percebe invisíveis a 3m.', combat: 'situacional' },
       ] },
@@ -65,6 +67,17 @@ describe('FeaturesTab — aba Combate', () => {
     const card = screen.getByText(/Ataque Furtivo/i).closest('.border')
     expect(card).toHaveTextContent(/Passiva/)
     expect(card).not.toHaveTextContent(/Ação/)
+  })
+
+  it('colapsa variantes escalonadas: só um Ataque Furtivo, com o valor do nível atual', () => {
+    // Ladino nv 5: (1d6)/(2d6)/(3d6) viram um único card "(3d6)".
+    render(<FeaturesTab character={character} featureUses={[]} />)
+    expect(screen.getByText('Ataque Furtivo (3d6)')).toBeInTheDocument()
+    expect(screen.queryByText('Ataque Furtivo (1d6)')).not.toBeInTheDocument()
+    expect(screen.queryByText('Ataque Furtivo (2d6)')).not.toBeInTheDocument()
+    // descrição preserva as regras completas do 1º nível, não só "Aumenta para 3d6"
+    const card = screen.getByText('Ataque Furtivo (3d6)').closest('.border')
+    expect(card).toHaveTextContent(/Dano extra 1x por turno/)
   })
 
   it('na aba Combate mostra só features de combate, não as de habilidades', () => {
