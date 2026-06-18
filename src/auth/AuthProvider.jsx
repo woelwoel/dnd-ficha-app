@@ -13,6 +13,15 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [recoveryMode, setRecoveryMode] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  const refreshAdmin = useCallback(async (u) => {
+    if (!u) { setIsAdmin(false); return }
+    // Banco sem a migration 0010 → coluna is_admin ausente: trata como não-admin.
+    const { data } = await supabase
+      .from('profiles').select('is_admin').eq('id', u.id).maybeSingle()
+    setIsAdmin(data?.is_admin === true)
+  }, [])
 
   useEffect(() => {
     let mounted = true
@@ -28,6 +37,7 @@ export function AuthProvider({ children }) {
     supabase.auth.getSession().then(({ data }) => {
       if (!mounted) return
       setUser(data.session?.user ?? null)
+      refreshAdmin(data.session?.user ?? null)
       setLoading(false)
       if (data.session?.user) ensureProfileOnce()
     })
@@ -37,15 +47,18 @@ export function AuthProvider({ children }) {
       if (event === 'PASSWORD_RECOVERY') {
         setRecoveryMode(true)
         setUser(session?.user ?? null)
+        refreshAdmin(session?.user ?? null)
         setLoading(false)
         return
       }
       if (event === 'SIGNED_OUT') {
         setRecoveryMode(false)
         profileEnsured = false
+        setIsAdmin(false)
       }
       if (event === 'SIGNED_IN') ensureProfileOnce()
       setUser(session?.user ?? null)
+      refreshAdmin(session?.user ?? null)
       setLoading(false)
     })
 
@@ -53,7 +66,7 @@ export function AuthProvider({ children }) {
       mounted = false
       sub.subscription.unsubscribe()
     }
-  }, [])
+  }, [refreshAdmin])
 
   const signIn = useCallback(({ email, password }) => {
     return supabase.auth.signInWithPassword({ email, password })
@@ -130,6 +143,7 @@ export function AuthProvider({ children }) {
     user,
     loading,
     recoveryMode,
+    isAdmin,
     signIn,
     signUp,
     signInWithGoogle,
