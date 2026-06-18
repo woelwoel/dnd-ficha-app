@@ -62,10 +62,13 @@ export function LoginScreen() {
       return
     }
     setBusy(true)
-    const { error } = await signUp({ email, password })
+    const { data, error } = await signUp({ email, password })
     setBusy(false)
-    if (error) setError(translateError(error.message))
-    else setInfo('Confirme seu email para ativar a conta.')
+    if (error) { setError(translateError(error.message)); return }
+    // Com confirmação de e-mail DESLIGADA, o Supabase já devolve uma sessão e o
+    // usuário entra direto (o AuthProvider troca de tela). Só pedimos confirmação
+    // quando não veio sessão (confirmação ligada).
+    if (!data?.session) setInfo('Confirme seu email para ativar a conta.')
   }
 
   async function onSubmitForgot(e) {

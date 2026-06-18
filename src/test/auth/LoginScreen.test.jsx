@@ -58,13 +58,24 @@ describe('LoginScreen', () => {
     expect(auth.signUp).toHaveBeenCalledWith({ email: 'novo@b.com', password: 'segredo12' })
   })
 
-  it('mostra mensagem após cadastro pedindo confirmação de email', async () => {
+  it('mostra mensagem após cadastro pedindo confirmação de email (sem sessão)', async () => {
     render(<LoginScreen />)
     await user.click(screen.getByRole('tab', { name: /criar conta/i }))
     await user.type(screen.getByLabelText(/email/i), 'novo@b.com')
     await user.type(screen.getByLabelText(/senha/i), 'segredo12')
     await user.click(screen.getByRole('button', { name: /criar conta/i }))
     expect(await screen.findByText(/confirme seu email/i)).toBeInTheDocument()
+  })
+
+  it('NÃO pede confirmação quando o cadastro já devolve sessão (confirmação desligada)', async () => {
+    auth.signUp.mockResolvedValue({ data: { session: { access_token: 'x' } }, error: null })
+    render(<LoginScreen />)
+    await user.click(screen.getByRole('tab', { name: /criar conta/i }))
+    await user.type(screen.getByLabelText(/email/i), 'novo@b.com')
+    await user.type(screen.getByLabelText(/senha/i), 'segredo12')
+    await user.click(screen.getByRole('button', { name: /criar conta/i }))
+    expect(auth.signUp).toHaveBeenCalled()
+    expect(screen.queryByText(/confirme seu email/i)).not.toBeInTheDocument()
   })
 
   it('valida senha mínima de 8 chars no cadastro antes de chamar signUp', async () => {
