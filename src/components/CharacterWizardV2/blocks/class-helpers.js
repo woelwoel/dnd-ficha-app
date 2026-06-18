@@ -37,6 +37,39 @@ export function isASIChoiceComplete(choice) {
   return false
 }
 
+const ASI_ATTR_KEYS = ['str', 'dex', 'con', 'int', 'wis', 'cha']
+
+/** Soma o bônus de um asiChoice (asi ou talento) num mapa de atributos. */
+function applyAsiChoiceBonus(map, choice) {
+  if (!choice) return
+  if (choice.type === 'asi') {
+    for (const [k, v] of Object.entries(choice.bonuses ?? {})) {
+      map[k] = (map[k] ?? 0) + v
+    }
+  } else if (choice.type === 'feat' && choice.featAttrBonus) {
+    const attr = choice.featChosenAttr ?? choice.featAttrBonus.choices?.[0]
+    if (attr) map[attr] = (map[attr] ?? 0) + (choice.featAttrBonus.amount ?? 1)
+  }
+}
+
+/**
+ * Atributos "atuais" para exibir o ASI de um nível: base + bônus racial +
+ * todos os OUTROS ASIs/talentos já escolhidos (exceto o do nível `excludeLevel`).
+ * Permite mostrar "FOR 17 → 19" e respeitar o teto 20 considerando o que já
+ * foi alocado em outros níveis. O bônus racial entra no valor base.
+ */
+export function currentAttributesForASI(draft, excludeLevel) {
+  const map = {}
+  for (const k of ASI_ATTR_KEYS) {
+    map[k] = (draft?.baseAttributes?.[k] ?? 0) + (draft?.racialBonuses?.[k] ?? 0)
+  }
+  for (const [lvl, choice] of Object.entries(draft?.asiChoices ?? {})) {
+    if (Number(lvl) === Number(excludeLevel)) continue
+    applyAsiChoiceBonus(map, choice)
+  }
+  return map
+}
+
 export function isChoiceDone(choice, value, characterLevel = 1) {
   const effectiveMulti = resolveMultiSelect(choice, characterLevel)
   if (effectiveMulti > 0) {

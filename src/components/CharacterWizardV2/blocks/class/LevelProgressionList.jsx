@@ -1,10 +1,11 @@
 import { ASIOrFeatPicker } from './ASIOrFeatPicker'
 import { ChosenFeaturePicker } from './ChosenFeaturePicker'
-import { isASIChoiceComplete, isChoiceDone, resolveMultiSelect } from '../class-helpers'
+import { isASIChoiceComplete, isChoiceDone, resolveMultiSelect, currentAttributesForASI } from '../class-helpers'
 
 export function LevelProgressionList({
   level, progressionLevels, leveledChoices,
   draft, onFeatureChoice, onASIChoice, allowFeats, feats,
+  attributesReady = true,
 }) {
   return (
     <div className="flex flex-col gap-2 max-h-[55vh] overflow-y-auto pr-1">
@@ -60,12 +61,22 @@ export function LevelProgressionList({
             )}
 
             {hasASI && (
-              <ASIOrFeatPicker
-                currentChoice={asiChoice}
-                allowFeats={allowFeats}
-                feats={feats}
-                onChoose={choice => onASIChoice(lvl, choice)}
-              />
+              attributesReady ? (
+                <ASIOrFeatPicker
+                  currentChoice={asiChoice}
+                  currentAttrs={currentAttributesForASI(draft, lvl)}
+                  allowFeats={allowFeats}
+                  feats={feats}
+                  onChoose={choice => onASIChoice(lvl, choice)}
+                />
+              ) : (
+                <div className="pt-2 border-t-2 border-parchment-600/50">
+                  <p className="text-xs ink-italic text-ink-300 leading-relaxed">
+                    🔒 Aumento de Atributo disponível após definir os{' '}
+                    <span className="font-semibold">Atributos</span>.
+                  </p>
+                </div>
+              )
             )}
 
             {lvlChoices.map(choice => (

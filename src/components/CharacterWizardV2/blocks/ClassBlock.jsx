@@ -127,6 +127,7 @@ export function ClassBlock({
             onASIChoice={handleASIChoice}
             allowFeats={draft.settings?.allowFeats ?? false}
             feats={feats}
+            attributesReady={attributesReady}
           />
 
           {bonusCantripsNeeded > 0 && (
@@ -234,6 +235,7 @@ export function ClassBlock({
                       onASIChoice={(level, choice) => handleMcASIChoice(idx, level, choice)}
                       allowFeats={draft.settings?.allowFeats ?? false}
                       feats={feats}
+                      attributesReady={attributesReady}
                     />
                   </div>
                 )

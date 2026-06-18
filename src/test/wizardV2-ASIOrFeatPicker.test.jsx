@@ -28,6 +28,46 @@ describe('ASIOrFeatPicker — modo ASI', () => {
     await userEvent.click(plusButtons[0])
     expect(onChoose).toHaveBeenCalledWith({ type: 'asi', bonuses: { str: 1 } })
   })
+
+  it('mostra o valor atual e o projetado (FOR 17 → 19)', () => {
+    render(
+      <ASIOrFeatPicker
+        currentChoice={{ type: 'asi', bonuses: { str: 2 } }}
+        currentAttrs={{ str: 17 }}
+        allowFeats={false} feats={[]} onChoose={() => {}}
+      />
+    )
+    expect(screen.getByText('17→19')).toBeInTheDocument()
+  })
+
+  it('respeita o teto 20: + desabilita quando atual + bônus chega a 20', () => {
+    const onChoose = vi.fn()
+    render(
+      <ASIOrFeatPicker
+        currentChoice={{ type: 'asi', bonuses: {} }}
+        currentAttrs={{ str: 20 }}   // já no teto
+        allowFeats={false} feats={[]} onChoose={onChoose}
+      />
+    )
+    // 1º atributo (FOR) já está em 20 → botão + correspondente desabilitado
+    const plusButtons = screen.getAllByRole('button', { name: '+' })
+    expect(plusButtons[0]).toBeDisabled()
+  })
+
+  it('não deixa ultrapassar 20 via ASI (19 + 1 ok, +1 a mais bloqueia)', async () => {
+    const onChoose = vi.fn()
+    render(
+      <ASIOrFeatPicker
+        currentChoice={{ type: 'asi', bonuses: { str: 1 } }}  // 19 → 20
+        currentAttrs={{ str: 19 }}
+        allowFeats={false} feats={[]} onChoose={onChoose}
+      />
+    )
+    const plusButtons = screen.getAllByRole('button', { name: '+' })
+    await userEvent.click(plusButtons[0])           // tentaria 19+2=21
+    expect(onChoose).not.toHaveBeenCalled()         // bloqueado
+    expect(plusButtons[0]).toBeDisabled()
+  })
 })
 
 describe('ASIOrFeatPicker — modo Feat', () => {

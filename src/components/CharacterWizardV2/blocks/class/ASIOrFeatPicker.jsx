@@ -4,7 +4,9 @@ import { isASIChoiceComplete } from '../class-helpers'
 const ATTR_ABR = { str: 'FOR', dex: 'DES', con: 'CON', int: 'INT', wis: 'SAB', cha: 'CAR' }
 const ATTRS_ORDER = ['str', 'dex', 'con', 'int', 'wis', 'cha']
 
-export function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) {
+const ABILITY_MAX = 20  // teto de aumento por ASI (regra oficial)
+
+export function ASIOrFeatPicker({ currentChoice, currentAttrs = {}, allowFeats, feats, onChoose }) {
   const [featSearch, setFeatSearch] = useState('')
 
   const mode = currentChoice?.type ?? 'asi'
@@ -23,6 +25,8 @@ export function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) 
     const next = cur + delta
     if (next < 0 || next > 2) return
     if (delta > 0 && remaining <= 0) return
+    // Não deixa o ASI ultrapassar o teto 20 (base + racial + outros ASIs já contam).
+    if (delta > 0 && (currentAttrs[attr] ?? 0) + next > ABILITY_MAX) return
     const nb = { ...bonuses }
     if (next === 0) delete nb[attr]
     else nb[attr] = next
@@ -83,7 +87,10 @@ export function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) 
           <div className="grid grid-cols-3 gap-1.5">
             {ATTRS_ORDER.map(attr => {
               const bonus = bonuses[attr] ?? 0
-              const canInc = remaining > 0 && bonus < 2
+              const current = currentAttrs[attr] ?? 0
+              const projected = current + bonus
+              const atMax = current + bonus >= ABILITY_MAX
+              const canInc = remaining > 0 && bonus < 2 && !atMax
               const canDec = bonus > 0
               return (
                 <div key={attr} className={[
@@ -101,16 +108,19 @@ export function ASIOrFeatPicker({ currentChoice, allowFeats, feats, onChoose }) 
                     −
                   </button>
                   <span className={[
-                    'text-[13px] font-display flex-1 text-center',
-                    bonus > 0 ? 'text-ink-500' : 'text-ink-200',
+                    'text-[13px] font-display flex-1 text-center tabular-nums',
+                    bonus > 0 ? 'text-ink-500' : 'text-ink-300',
                   ].join(' ')}>
-                    {bonus > 0 ? `+${bonus}` : '0'}
+                    {current > 0
+                      ? (bonus > 0 ? `${current}→${projected}` : `${current}`)
+                      : (bonus > 0 ? `+${bonus}` : '0')}
                   </span>
                   <button
                     type="button"
                     onClick={() => adjustBonus(attr, 1)}
                     disabled={!canInc}
                     aria-label="+"
+                    title={atMax ? `Máximo ${ABILITY_MAX} atingido` : undefined}
                     className="w-4 h-4 rounded-sm flex items-center justify-center text-[13px] bg-parchment-100 hover:bg-parchment-200 border border-parchment-600 text-ink-500 disabled:opacity-25 disabled:cursor-not-allowed"
                   >
                     +

@@ -2,7 +2,37 @@ import { describe, it, expect } from 'vitest'
 import {
   isASIChoiceComplete, isChoiceDone, getLeveledChoices,
   computeBonusCantripsNeeded, getASILevels, getProgressionLevels,
+  currentAttributesForASI,
 } from '../components/CharacterWizardV2/blocks/class-helpers'
+
+describe('currentAttributesForASI', () => {
+  it('soma base + bônus racial', () => {
+    const draft = { baseAttributes: { str: 15, con: 13 }, racialBonuses: { str: 2, con: 1 } }
+    const r = currentAttributesForASI(draft, 4)
+    expect(r.str).toBe(17)
+    expect(r.con).toBe(14)
+  })
+
+  it('inclui ASIs de OUTROS níveis, exclui o do nível pedido', () => {
+    const draft = {
+      baseAttributes: { str: 15 }, racialBonuses: { str: 2 },
+      asiChoices: {
+        4: { type: 'asi', bonuses: { str: 2 } },   // outro nível → conta
+        8: { type: 'asi', bonuses: { str: 2 } },    // nível pedido → exclui
+      },
+    }
+    // base 15 + racial 2 + ASI nv4 (2) = 19, excluindo o nv8
+    expect(currentAttributesForASI(draft, 8).str).toBe(19)
+  })
+
+  it('inclui bônus de atributo de talento', () => {
+    const draft = {
+      baseAttributes: { dex: 14 }, racialBonuses: {},
+      asiChoices: { 4: { type: 'feat', featAttrBonus: { amount: 1, choices: ['dex'] }, featChosenAttr: 'dex' } },
+    }
+    expect(currentAttributesForASI(draft, 8).dex).toBe(15)
+  })
+})
 
 describe('isASIChoiceComplete', () => {
   it('false sem choice', () => expect(isASIChoiceComplete(null)).toBe(false))
