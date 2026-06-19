@@ -61,10 +61,13 @@ export default defineConfig({
             //  v5 → v6 (2026-06-18): correção das proficiências de multiclasse
             //    do Bárbaro (só Escudos, não armadura leve/média) em
             //    phb-multiclass-pt.json.
+            //  v6 → v7 (2026-06-18): metamágica do Feiticeiro (nv10/17) e
+            //    inimigo favorito do Patrulheiro (nv6/14) em
+            //    phb-class-choices-pt.json.
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v6',
+              cacheName: 'srd-data-v7',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias

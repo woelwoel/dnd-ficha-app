@@ -63,6 +63,42 @@ function buildAttackFromWeaponSrd(item, srd) {
   }
 }
 
+/**
+ * Editor de quantidade inline (− [n] +). Permite editar a qtd de qualquer
+ * item à mão — repor munição que zerou (flechas etc.) sem perder o item.
+ * Aceita 0 (item fica no inventário com qtd 0).
+ */
+function QtyEditor({ item, onUpdateItem }) {
+  const qty = item.qty ?? 1
+  const set = v => onUpdateItem?.(item.id, { qty: Math.max(0, v) })
+  return (
+    <div className="flex items-center gap-0.5">
+      <button
+        type="button"
+        onClick={() => set(qty - 1)}
+        disabled={qty <= 0}
+        aria-label={`Diminuir ${item.name}`}
+        className="w-5 h-5 rounded border border-gray-600 text-gray-400 hover:text-white hover:border-gray-400 disabled:opacity-30 disabled:cursor-not-allowed text-sm leading-none flex items-center justify-center shrink-0"
+      >−</button>
+      <input
+        type="number"
+        min={0}
+        value={qty}
+        onChange={e => set(parseInt(e.target.value, 10) || 0)}
+        onWheel={e => e.currentTarget.blur()}
+        aria-label={`Quantidade de ${item.name}`}
+        className="w-9 text-center bg-transparent text-sm text-gray-200 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+      />
+      <button
+        type="button"
+        onClick={() => set(qty + 1)}
+        aria-label={`Aumentar ${item.name}`}
+        className="w-5 h-5 rounded border border-gray-600 text-gray-400 hover:text-white hover:border-gray-400 text-sm leading-none flex items-center justify-center shrink-0"
+      >+</button>
+    </div>
+  )
+}
+
 export function Inventory({
   inventory, attributes,
   onUpdateCurrency, onAddItem, onRemoveItem, onUpdateItem,
@@ -553,10 +589,8 @@ export function Inventory({
                     </div>
                     {/* Linha 2: detalhes + equipar */}
                     <div className="flex items-center gap-3 mt-1 flex-wrap">
-                      <span className="text-xs text-gray-500">
-                        {item.qty > 1 ? `${item.qty}×` : ''}
-                        {enriched.weight ? ` · ${enriched.weight}` : ''}
-                      </span>
+                      <QtyEditor item={item} onUpdateItem={onUpdateItem} />
+                      {enriched.weight && <span className="text-xs text-gray-500">{enriched.weight}</span>}
                       {enriched.notes && <span className="text-xs text-gray-500 truncate flex-1">{enriched.notes}</span>}
                       {isEquippable && (
                         <button
@@ -578,7 +612,7 @@ export function Inventory({
             {/* ── Desktop: grid tabela ─────────────────────────── */}
             <div className="hidden sm:block space-y-1">
               {/* Header */}
-              <div className="grid grid-cols-[1fr_3rem_4rem_1fr_auto_2rem] gap-2 px-2 text-xs text-gray-500 uppercase">
+              <div className="grid grid-cols-[1fr_5.5rem_4rem_1fr_auto_2rem] gap-2 px-2 text-xs text-gray-500 uppercase">
                 <span>Nome</span>
                 <span className="text-center">Qtd</span>
                 <span className="text-center">Peso</span>
@@ -606,7 +640,7 @@ export function Inventory({
                 return (
                   <div
                     key={item.id}
-                    className={`grid grid-cols-[1fr_3rem_4rem_1fr_auto_2rem] gap-2 items-center rounded px-2 py-1.5 ${
+                    className={`grid grid-cols-[1fr_5.5rem_4rem_1fr_auto_2rem] gap-2 items-center rounded px-2 py-1.5 ${
                       item.source === 'background' ? 'bg-amber-950/30 border border-amber-900/40' : `bg-gray-900 ${rarityBorder}`
                     } ${isEquipped ? 'ring-1 ring-amber-600/50' : ''} ${isAttuned ? 'ring-1 ring-purple-600/50' : ''}`}
                   >
@@ -640,7 +674,9 @@ export function Inventory({
                         </span>
                       )}
                     </span>
-                    <span className="text-sm text-gray-300 text-center">{item.qty}</span>
+                    <div className="flex justify-center">
+                      <QtyEditor item={item} onUpdateItem={onUpdateItem} />
+                    </div>
                     <span className="text-sm text-gray-400 text-center">{enriched.weight || '—'}</span>
                     <span className="text-xs text-gray-500 truncate">{enriched.notes || '—'}</span>
                     <div className="flex items-center justify-center">

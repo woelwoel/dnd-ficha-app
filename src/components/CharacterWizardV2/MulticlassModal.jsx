@@ -42,7 +42,10 @@ export function MulticlassModal({ open, draft, classes, multiclassData, onAdd, o
   const originOk = failingOriginClasses.length === 0
   const prereqOk = !classIndex || (newClassOk && originOk)
   const currentTotal = totalLevels(draft)
-  const wouldExceed20 = currentTotal + level > 20
+  // Nível total não pode passar de 20: só ofereça os níveis ainda disponíveis.
+  const maxAddLevel = Math.max(1, 20 - currentTotal)
+  const safeLevel = Math.min(level, maxAddLevel)
+  const wouldExceed20 = currentTotal + safeLevel > 20
 
   const canAdd = !!classIndex && prereqOk && !wouldExceed20
 
@@ -51,7 +54,7 @@ export function MulticlassModal({ open, draft, classes, multiclassData, onAdd, o
     const cls = classes.find(c => c.index === classIndex)
     onAdd({
       class: classIndex,
-      level,
+      level: safeLevel,
       chosenFeatures: {},
       asiChoices: {},
       bonusSpells: [],
@@ -115,11 +118,11 @@ export function MulticlassModal({ open, draft, classes, multiclassData, onAdd, o
           </label>
           <select
             id="mc-level-select"
-            value={level}
+            value={safeLevel}
             onChange={e => setLevel(Number(e.target.value))}
             className={fieldCls}
           >
-            {Array.from({ length: 19 }, (_, i) => i + 1).map(n => (
+            {Array.from({ length: maxAddLevel }, (_, i) => i + 1).map(n => (
               <option key={n} value={n}>Nível {n}</option>
             ))}
           </select>

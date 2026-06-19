@@ -113,14 +113,22 @@ describe('MulticlassModal', () => {
     expect(onAdd).not.toHaveBeenCalled()
   })
 
-  it('mostra aviso se total de níveis exceder 20', async () => {
+  it('limita os níveis disponíveis para não passar de 20 no total', async () => {
+    // Primária nível 19 → só sobra 1 nível disponível.
     const draftLvl19 = { ...baseDraft, level: 19 }
     render(<MulticlassModal open={true} draft={draftLvl19} classes={classes}
       multiclassData={multiclassData} onAdd={() => {}} onCancel={() => {}} />)
-    await userEvent.selectOptions(screen.getByLabelText(/^classe/i), 'mago')
-    // level default = 1, total = 19+1 = 20 (OK)
-    await userEvent.selectOptions(screen.getByLabelText(/^nível/i), '5')
-    expect(screen.getByText(/excederia 20/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /^adicionar$/i })).toBeDisabled()
+    const levelSelect = screen.getByLabelText(/^nível/i)
+    const values = Array.from(levelSelect.querySelectorAll('option')).map(o => o.value)
+    expect(values).toEqual(['1'])
+  })
+
+  it('oferece níveis até o restante (primária 16 → até 4)', async () => {
+    const draftLvl16 = { ...baseDraft, level: 16 }
+    render(<MulticlassModal open={true} draft={draftLvl16} classes={classes}
+      multiclassData={multiclassData} onAdd={() => {}} onCancel={() => {}} />)
+    const levelSelect = screen.getByLabelText(/^nível/i)
+    const values = Array.from(levelSelect.querySelectorAll('option')).map(o => o.value)
+    expect(values).toEqual(['1', '2', '3', '4'])
   })
 })

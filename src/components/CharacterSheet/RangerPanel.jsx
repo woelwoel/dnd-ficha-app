@@ -152,7 +152,10 @@ export function RangerPanel({ ranger, character, onUpdateCompanion }) {
   if (!ranger || ranger < 1) return null
 
   const chosen = character.info?.chosenFeatures ?? {}
-  const favored      = chosen.favored_enemy
+  // Inimigos favoritos vêm de 3 escolhas por nível (1º, 6º e 14º — PHB p.91).
+  const favoredEnemies = [
+    chosen.favored_enemy, chosen.favored_enemy_6, chosen.favored_enemy_14,
+  ].filter(Boolean)
   const fightStyle   = chosen.fighting_style_ranger
   const archetype    = chosen.ranger_archetype
   const huntersPrey  = chosen.patrulheiro_hunters_prey
@@ -175,11 +178,11 @@ export function RangerPanel({ ranger, character, onUpdateCompanion }) {
 
       {/* Inimigo Favorito + Estilo de Luta — badges */}
       <div className="flex flex-wrap gap-1.5 pt-2 border-t border-emerald-700/30">
-        {favored && (
-          <span className="text-xs px-2 py-0.5 rounded-full border border-emerald-700 bg-emerald-100 text-emerald-900 font-bold">
-            🎯 Inimigo: {FAVORED_ENEMY_LABEL[favored] ?? favored}
+        {favoredEnemies.map(fav => (
+          <span key={fav} className="text-xs px-2 py-0.5 rounded-full border border-emerald-700 bg-emerald-100 text-emerald-900 font-bold">
+            🎯 Inimigo: {FAVORED_ENEMY_LABEL[fav] ?? fav}
           </span>
-        )}
+        ))}
         {fightStyle && ranger >= 2 && (
           <span className="text-xs px-2 py-0.5 rounded-full border border-emerald-700 bg-emerald-100 text-emerald-900 font-bold">
             ⚔ {FIGHTING_STYLE_LABEL[fightStyle] ?? fightStyle}

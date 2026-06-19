@@ -450,7 +450,130 @@
         "level": 3,
         "id": "metamagic",
         "featureName": "Metamagia",
-        "prompt": "Escolha opções de Metamagia. Ganha mais opções no nv 10 (3) e nv 17 (4).",
+        "prompt": "Escolha 2 Metamágicas",
+        "multiSelectByLevel": {
+          "3": 2,
+          "10": 3,
+          "17": 4
+        },
+        "options": [
+          {
+            "value": "cuidadosa",
+            "name": "Magia Cuidadosa",
+            "desc": "Ao conjurar uma magia que força outras criaturas a fazer um TR, você pode proteger algumas delas do pleno poder da magia. Gaste 1 ponto de magia para escolher um número de criaturas iguais ao modificador de Carisma (mín. 1). A criatura escolhida automaticamente passa no TR contra a magia.",
+            "combat": "situacional"
+          },
+          {
+            "value": "distante",
+            "name": "Magia Distante",
+            "desc": "Ao conjurar uma magia que tenha alcance de 1,5 metro ou maior, pode gastar 1 ponto de magia para dobrar o alcance dela. Ao conjurar uma magia com alcance de Toque, você pode gastar 1 ponto de magia para tornar o alcance dela 9 metros.",
+            "combat": "situacional"
+          },
+          {
+            "value": "potenciada",
+            "name": "Magia Potenciada",
+            "desc": "Ao rolar dano para uma magia, você pode gastar 1 ponto de magia para rolar novamente até um número de dados de dano iguais ao seu modificador de Carisma (mín. 1). Deve usar os novos resultados. Pode usá-la com outra Metamagia na mesma magia.",
+            "combat": "essencial"
+          },
+          {
+            "value": "expandida",
+            "name": "Magia Expandida",
+            "desc": "Ao conjurar uma magia que tenha uma área de efeito do tipo cone, cubo, linha ou esfera, pode gastar 1 ponto de magia para aumentar seu tamanho ao dobro.",
+            "combat": "essencial"
+          },
+          {
+            "value": "estendida",
+            "name": "Magia Estendida",
+            "desc": "Ao conjurar uma magia que tenha duração de 1 minuto ou maior, pode gastar 1 ponto de magia para dobrar a duração da magia, até o máximo de 24 horas.",
+            "combat": "situacional"
+          },
+          {
+            "value": "intensificada",
+            "name": "Magia Intensificada",
+            "desc": "Ao conjurar uma magia que force uma criatura a fazer um TR para resistir aos seus efeitos, pode gastar 3 pontos de magia para dar a uma criatura desvantagem no primeiro TR que fizer contra ela.",
+            "combat": "essencial"
+          },
+          {
+            "value": "rapida",
+            "name": "Magia Rápida",
+            "desc": "Ao conjurar uma magia que tenha tempo de conjuração de 1 ação, pode gastar 2 pontos de magia para mudar o tempo de conjuração para 1 ação bônus para esse conjuro.",
+            "combat": "essencial"
+          },
+          {
+            "value": "sutil",
+            "name": "Magia Sutil",
+            "desc": "Ao conjurar uma magia, pode gastar 1 ponto de magia para conjurá-la sem componentes somáticos ou verbais.",
+            "combat": "situacional"
+          }
+        ],
+        "multiSelect": 2
+      },
+      {
+        "level": 10,
+        "id": "metamagic_10",
+        "featureName": "Metamágica Adicional (nível 10)",
+        "prompt": "Escolha mais 1 Metamágica",
+        "multiSelectByLevel": {
+          "3": 2,
+          "10": 3,
+          "17": 4
+        },
+        "options": [
+          {
+            "value": "cuidadosa",
+            "name": "Magia Cuidadosa",
+            "desc": "Ao conjurar uma magia que força outras criaturas a fazer um TR, você pode proteger algumas delas do pleno poder da magia. Gaste 1 ponto de magia para escolher um número de criaturas iguais ao modificador de Carisma (mín. 1). A criatura escolhida automaticamente passa no TR contra a magia.",
+            "combat": "situacional"
+          },
+          {
+            "value": "distante",
+            "name": "Magia Distante",
+            "desc": "Ao conjurar uma magia que tenha alcance de 1,5 metro ou maior, pode gastar 1 ponto de magia para dobrar o alcance dela. Ao conjurar uma magia com alcance de Toque, você pode gastar 1 ponto de magia para tornar o alcance dela 9 metros.",
+            "combat": "situacional"
+          },
+          {
+            "value": "potenciada",
+            "name": "Magia Potenciada",
+            "desc": "Ao rolar dano para uma magia, você pode gastar 1 ponto de magia para rolar novamente até um número de dados de dano iguais ao seu modificador de Carisma (mín. 1). Deve usar os novos resultados. Pode usá-la com outra Metamagia na mesma magia.",
+            "combat": "essencial"
+          },
+          {
+            "value": "expandida",
+            "name": "Magia Expandida",
+            "desc": "Ao conjurar uma magia que tenha uma área de efeito do tipo cone, cubo, linha ou esfera, pode gastar 1 ponto de magia para aumentar seu tamanho ao dobro.",
+            "combat": "essencial"
+          },
+          {
+            "value": "estendida",
+            "name": "Magia Estendida",
+            "desc": "Ao conjurar uma magia que tenha duração de 1 minuto ou maior, pode gastar 1 ponto de magia para dobrar a duração da magia, até o máximo de 24 horas.",
+            "combat": "situacional"
+          },
+          {
+            "value": "intensificada",
+            "name": "Magia Intensificada",
+            "desc": "Ao conjurar uma magia que force uma criatura a fazer um TR para resistir aos seus efeitos, pode gastar 3 pontos de magia para dar a uma criatura desvantagem no primeiro TR que fizer contra ela.",
+            "combat": "essencial"
+          },
+          {
+            "value": "rapida",
+            "name": "Magia Rápida",
+            "desc": "Ao conjurar uma magia que tenha tempo de conjuração de 1 ação, pode gastar 2 pontos de magia para mudar o tempo de conjuração para 1 ação bônus para esse conjuro.",
+            "combat": "essencial"
+          },
+          {
+            "value": "sutil",
+            "name": "Magia Sutil",
+            "desc": "Ao conjurar uma magia, pode gastar 1 ponto de magia para conjurá-la sem componentes somáticos ou verbais.",
+            "combat": "situacional"
+          }
+        ]
+      },
+      {
+        "level": 17,
+        "id": "metamagic_17",
+        "featureName": "Metamágica Adicional (nível 17)",
+        "prompt": "Escolha mais 1 Metamágica",
         "multiSelectByLevel": {
           "3": 2,
           "10": 3,
@@ -1424,6 +1547,178 @@
             "name": "Urso (Filhote)",
             "desc": "CR 1/4 (representando filhote/urso pequeno) — Médio. Velocidade 12m. Mordida + garras. Mais dano e PV que outras bestas de CR 1/4.",
             "combat": "essencial"
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "id": "favored_enemy_6",
+        "featureName": "Inimigo Favorito (nível 6)",
+        "prompt": "Escolha mais um tipo de Inimigo Favorito",
+        "options": [
+          {
+            "value": "aberracoes",
+            "name": "Aberrações",
+            "desc": "Você tem vantagem em testes de Sabedoria (Sobrevivência) para rastrear aberrações e em testes de Inteligência para lembrá-las. Você aprende um idioma falado por aberrações.",
+            "category": "social"
+          },
+          {
+            "value": "bestas",
+            "name": "Bestas",
+            "desc": "Você tem vantagem em testes de Sabedoria (Sobrevivência) para rastrear bestas e em testes de Inteligência para lembrá-las. Você aprende Druídico ou um idioma natural.",
+            "category": "social"
+          },
+          {
+            "value": "celestiais",
+            "name": "Celestiais",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear celestiais e em testes de Inteligência para lembrá-los. Aprende Celestial.",
+            "category": "social"
+          },
+          {
+            "value": "construtos",
+            "name": "Construtos",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear construtos e em testes de Inteligência para lembrá-los. Aprende Gnômico.",
+            "category": "social"
+          },
+          {
+            "value": "draconicos",
+            "name": "Dragões",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear dragões e em testes de Inteligência para lembrá-los. Aprende Dracônico.",
+            "category": "social"
+          },
+          {
+            "value": "elementais",
+            "name": "Elementais",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear elementais e em testes de Inteligência para lembrá-los. Aprende Primordial.",
+            "category": "social"
+          },
+          {
+            "value": "fadas",
+            "name": "Fadas",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear fadas e em testes de Inteligência para lembrá-las. Aprende Élfico ou Silvestre.",
+            "category": "social"
+          },
+          {
+            "value": "gigantes",
+            "name": "Gigantes",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear gigantes e em testes de Inteligência para lembrá-los. Aprende Gigante.",
+            "category": "social"
+          },
+          {
+            "value": "humanoides",
+            "name": "Humanóides (2 tipos)",
+            "desc": "Escolha 2 raças de humanóides. Você tem vantagem em testes de Sobrevivência para rastreá-los e em testes de Inteligência para lembrá-los. Aprende os idiomas desses humanóides.",
+            "category": "social"
+          },
+          {
+            "value": "lamas",
+            "name": "Lamas",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear lamas e em testes de Inteligência para lembrá-las. Aprende Terrano.",
+            "category": "social"
+          },
+          {
+            "value": "monstrosidades",
+            "name": "Monstrosidades",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear monstrosidades e em testes de Inteligência para lembrá-las. Aprende um idioma falado por monstrosidades.",
+            "category": "social"
+          },
+          {
+            "value": "mortos_vivos",
+            "name": "Mortos-Vivos",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear mortos-vivos e em testes de Inteligência para lembrá-los. Aprende Abissal ou Infernal.",
+            "category": "social"
+          },
+          {
+            "value": "plantas",
+            "name": "Plantas",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear plantas e em testes de Inteligência para lembrá-las. Aprende Élfico ou Druídico.",
+            "category": "social"
+          }
+        ]
+      },
+      {
+        "level": 14,
+        "id": "favored_enemy_14",
+        "featureName": "Inimigo Favorito (nível 14)",
+        "prompt": "Escolha mais um tipo de Inimigo Favorito",
+        "options": [
+          {
+            "value": "aberracoes",
+            "name": "Aberrações",
+            "desc": "Você tem vantagem em testes de Sabedoria (Sobrevivência) para rastrear aberrações e em testes de Inteligência para lembrá-las. Você aprende um idioma falado por aberrações.",
+            "category": "social"
+          },
+          {
+            "value": "bestas",
+            "name": "Bestas",
+            "desc": "Você tem vantagem em testes de Sabedoria (Sobrevivência) para rastrear bestas e em testes de Inteligência para lembrá-las. Você aprende Druídico ou um idioma natural.",
+            "category": "social"
+          },
+          {
+            "value": "celestiais",
+            "name": "Celestiais",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear celestiais e em testes de Inteligência para lembrá-los. Aprende Celestial.",
+            "category": "social"
+          },
+          {
+            "value": "construtos",
+            "name": "Construtos",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear construtos e em testes de Inteligência para lembrá-los. Aprende Gnômico.",
+            "category": "social"
+          },
+          {
+            "value": "draconicos",
+            "name": "Dragões",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear dragões e em testes de Inteligência para lembrá-los. Aprende Dracônico.",
+            "category": "social"
+          },
+          {
+            "value": "elementais",
+            "name": "Elementais",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear elementais e em testes de Inteligência para lembrá-los. Aprende Primordial.",
+            "category": "social"
+          },
+          {
+            "value": "fadas",
+            "name": "Fadas",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear fadas e em testes de Inteligência para lembrá-las. Aprende Élfico ou Silvestre.",
+            "category": "social"
+          },
+          {
+            "value": "gigantes",
+            "name": "Gigantes",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear gigantes e em testes de Inteligência para lembrá-los. Aprende Gigante.",
+            "category": "social"
+          },
+          {
+            "value": "humanoides",
+            "name": "Humanóides (2 tipos)",
+            "desc": "Escolha 2 raças de humanóides. Você tem vantagem em testes de Sobrevivência para rastreá-los e em testes de Inteligência para lembrá-los. Aprende os idiomas desses humanóides.",
+            "category": "social"
+          },
+          {
+            "value": "lamas",
+            "name": "Lamas",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear lamas e em testes de Inteligência para lembrá-las. Aprende Terrano.",
+            "category": "social"
+          },
+          {
+            "value": "monstrosidades",
+            "name": "Monstrosidades",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear monstrosidades e em testes de Inteligência para lembrá-las. Aprende um idioma falado por monstrosidades.",
+            "category": "social"
+          },
+          {
+            "value": "mortos_vivos",
+            "name": "Mortos-Vivos",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear mortos-vivos e em testes de Inteligência para lembrá-los. Aprende Abissal ou Infernal.",
+            "category": "social"
+          },
+          {
+            "value": "plantas",
+            "name": "Plantas",
+            "desc": "Você tem vantagem em testes de Sobrevivência para rastrear plantas e em testes de Inteligência para lembrá-las. Aprende Élfico ou Druídico.",
+            "category": "social"
           }
         ]
       }

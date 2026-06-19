@@ -36,6 +36,10 @@ export function ASIOrFeatPicker({ currentChoice, currentAttrs = {}, allowFeats, 
   const filteredFeats = (feats ?? []).filter(f =>
     f.name.toLowerCase().includes(featSearch.toLowerCase())
   )
+  // Descrição do talento atualmente selecionado (para exibir o que ele faz).
+  const selectedFeatObj = currentChoice?.type === 'feat'
+    ? (feats ?? []).find(f => f.index === currentChoice.featIndex) ?? null
+    : null
 
   return (
     <div className="flex flex-col gap-2 pt-2 border-t-2 border-parchment-600/50">
@@ -189,6 +193,13 @@ export function ASIOrFeatPicker({ currentChoice, currentAttrs = {}, allowFeats, 
               )
             })}
           </div>
+
+          {selectedFeatObj?.desc && (
+            <div className="text-xs text-ink-500 bg-parchment-100 border-2 border-parchment-600 rounded-sm px-2.5 py-2 leading-relaxed max-h-40 overflow-y-auto">
+              <span className="font-display block text-ink-300 mb-1">{selectedFeatObj.name}</span>
+              {selectedFeatObj.desc}
+            </div>
+          )}
 
           {currentChoice?.type === 'feat' && currentChoice.featAttrBonus && (currentChoice.featAttrBonus.choices?.length ?? 0) > 1 && (
             <div className="mt-2 pt-2 border-t-2 border-parchment-600/50 flex flex-col gap-1.5">
