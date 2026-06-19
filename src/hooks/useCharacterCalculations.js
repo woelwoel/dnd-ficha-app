@@ -141,9 +141,15 @@ export function useCharacterCalculations(character, classData = null, classDataM
       spellMathByClass[cls] = getClassSpellMath(cls, profBonus, effectiveAttrs)
     }
 
+    // Alma de Diamante (Monge nível 14+, PHB p.79): proficiência em TODOS os
+    // testes de resistência.
+    const monkLevel = (classIndex === 'monge' ? level : 0)
+      + mcs.filter(m => m.class === 'monge').reduce((s, m) => s + (m.level ?? 0), 0)
+    const diamondSoul = monkLevel >= 14
+
     const savingThrows = {}
     for (const key of ['str', 'dex', 'con', 'int', 'wis', 'cha']) {
-      const isProficient = saves?.includes(key) ?? false
+      const isProficient = diamondSoul || (saves?.includes(key) ?? false)
       const magicGeneral  = magicEffects.saves ?? 0
       const magicSpecific = magicEffects.saveAbility?.[key] ?? 0
       savingThrows[key] = mods[key] + (isProficient ? profBonus : 0)

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ABILITY_SCORES, SKILLS, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, getModifier, getProficiencyBonus, RACE_LANGUAGES, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../utils/calculations'
 import { formatHitDicePool } from '../../utils/hitDice'
+import { getEffectiveSaveProficiencies } from '../../domain/rules'
 import { useSrd } from '../../providers/SrdProvider'
 import { LevelProgression } from './LevelProgression'
 
@@ -151,11 +152,12 @@ export function CharacterView({
   // Perícias ordenadas alfabeticamente
   const sortedSkills = [...SKILLS].sort((a, b) => a.name.localeCompare(b.name, 'pt'))
 
-  // Salvaguardas como CheckRows
+  // Salvaguardas como CheckRows — inclui Alma de Diamante (Monge 14+).
+  const saveProfs = new Set(getEffectiveSaveProficiencies(character))
   const saves = ABILITY_SCORES.map(({ key, name }) => ({
     key, name,
-    isProficient: proficiencies.savingThrows?.includes(key),
-    value: getModifier(attributes[key]) + (proficiencies.savingThrows?.includes(key) ? prof : 0),
+    isProficient: saveProfs.has(key),
+    value: getModifier(attributes[key]) + (saveProfs.has(key) ? prof : 0),
   }))
 
   // Percepção passiva

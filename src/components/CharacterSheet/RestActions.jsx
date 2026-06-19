@@ -51,10 +51,9 @@ export function RestActions({ character, onApply }) {
         : 0
       for (let i = 0; i < count; i++) spent.push({ die, roll: perDie })
     }
-    if (!spent.length) {
-      setShortOpen(false)
-      return
-    }
+    // Gastar HD é OPCIONAL (PHB p.186): mesmo com `spent` vazio aplicamos o
+    // descanso curto para recarregar recursos (Ki, Surto de Ação, Pact Magic
+    // etc.) sem forçar o gasto de Dado de Vida quando não se perdeu PV.
     onApply(prev => performShortRest(prev, { spent }))
     setCounts({})
     setRolls({})
@@ -96,8 +95,9 @@ export function RestActions({ character, onApply }) {
       {shortOpen && (
         <div className="mt-3 p-3 bg-parchment-50 border border-parchment-600 rounded-sm space-y-2">
           <p className="text-[13px] ink-italic text-ink-300 leading-relaxed">
-            Gaste HD para curar HP. Cada HD cura a rolagem + mod CON ({formatModifier(conMod)}), mínimo 1.
-            Em branco usa a média do dado.
+            Gastar HD é <strong>opcional</strong>: deixe em 0 para só recarregar recursos
+            (Ki, Surto de Ação, Pact Magic). Cada HD cura a rolagem + mod CON ({formatModifier(conMod)}),
+            mínimo 1. Em branco usa a média do dado.
           </p>
           {dice.length === 0 ? (
             <p className="text-xs ink-italic text-ink-300">Nenhum HD disponível.</p>
@@ -136,10 +136,11 @@ export function RestActions({ character, onApply }) {
           })}
           <button
             onClick={applyShort}
-            disabled={Object.values(counts).every(c => !c)}
-            className="w-full py-1.5 rounded-sm bg-ink-500 hover:bg-ink-600 disabled:opacity-40 disabled:cursor-not-allowed text-parchment-50 text-xs font-display tracking-wide transition-colors"
+            className="w-full py-1.5 rounded-sm bg-ink-500 hover:bg-ink-600 text-parchment-50 text-xs font-display tracking-wide transition-colors"
           >
-            Aplicar Descanso Curto
+            {Object.values(counts).some(c => c > 0)
+              ? 'Aplicar Descanso Curto'
+              : 'Descansar (sem gastar HD)'}
           </button>
         </div>
       )}

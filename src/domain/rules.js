@@ -644,6 +644,29 @@ export function calculateMaxHpMulticlass(character, classDataByIndex) {
   })
 }
 
+/* ── Nível por classe e salvaguardas efetivas ────────────────────── */
+
+/** Nível total numa classe específica (primária + multiclasses). */
+export function classLevel(character, classIndex) {
+  const info = character?.info ?? {}
+  return (info.class === classIndex ? (info.level ?? 0) : 0)
+    + (info.multiclasses ?? [])
+      .filter(m => m.class === classIndex)
+      .reduce((s, m) => s + (m.level ?? 0), 0)
+}
+
+const ALL_SAVE_KEYS = ['str', 'dex', 'con', 'int', 'wis', 'cha']
+
+/**
+ * Proficiências de salvaguarda EFETIVAS do personagem.
+ * Inclui Alma de Diamante do Monge (nível 14+, PHB p.79): proficiência em
+ * TODOS os testes de resistência.
+ */
+export function getEffectiveSaveProficiencies(character) {
+  if (classLevel(character, 'monge') >= 14) return [...ALL_SAVE_KEYS]
+  return [...(character?.proficiencies?.savingThrows ?? [])]
+}
+
 /* ── Class Features Uses ─────────────────────────────────────────── */
 
 /**

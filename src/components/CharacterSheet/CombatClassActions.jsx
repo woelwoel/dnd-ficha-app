@@ -410,7 +410,7 @@ const KI_FEATURES = [
   { name: 'Rajada de Golpes',  cost: 1, desc: 'Após Atacar, gaste 1 ki para 2 ataques desarmados como ação bônus.' },
   { name: 'Defesa Paciente',   cost: 1, desc: 'Gaste 1 ki para usar Esquiva como ação bônus.' },
   { name: 'Vento Veloz',       cost: 1, desc: 'Gaste 1 ki para Disengage/Correr como ação bônus; pulo dobrado.' },
-  { name: 'Atordoar Golpe',    cost: 2, desc: 'Ao acertar c/c (lvl 5+): CD Sab. Falha = atordoado até fim do próx turno.' },
+  { name: 'Golpe Atordoante',  cost: 1, desc: 'Ao acertar com ataque de arma (Monge nv 5+), gaste 1 ki: o alvo faz um TR de Constituição (CD 8 + prof. + mod. Sabedoria) ou fica atordoado até o fim do seu próximo turno.' },
   { name: 'Defletir Projétil', cost: 1, desc: 'Reação ao reduzir dano à distância a 0: arremessa de volta como ação.' },
 ]
 
@@ -601,10 +601,22 @@ function FighterPanel({ fighterLevel, surgeUse, secondWindUse, onSpendSurge, onS
 
 /* ── Painel de Fúria (Bárbaro) ────────────────────────────────── */
 
+// Benefício do Espírito Totem (nv 3) que se aplica DURANTE a Fúria (PHB p.50).
+const TOTEM_RAGE_BENEFIT = {
+  urso:  'Urso — resistência a TODO dano exceto psíquico',
+  lobo:  'Lobo — aliados têm vantagem em ataques corpo a corpo contra inimigos a até 1,5m de você',
+  aguia: 'Águia — inimigos têm desvantagem em ataques de oportunidade contra você; pode Disparar como ação bônus (sem armadura pesada)',
+  alce:  'Alce — deslocamento aumenta em 4,5m (sem armadura pesada)',
+  tigre: 'Tigre — salto em distância +3m e salto em altura +90cm',
+}
+
 function RagePanel({ character, barbLevel, attributes, onToggleRage, ragesRemaining }) {
   const active = !!character.combat?.rageActive
   const bonus = rageDamageBonus(barbLevel)
   const strMod = getModifier(attributes?.str ?? 10)
+  const chosen = character.info?.chosenFeatures ?? {}
+  const totemSpirit = chosen.primal_path === 'totem' ? chosen.barbaro_totem_spirit : null
+  const totemBenefit = totemSpirit ? TOTEM_RAGE_BENEFIT[totemSpirit] : null
 
   function handleToggle() {
     if (!onToggleRage) return
@@ -625,9 +637,14 @@ function RagePanel({ character, barbLevel, attributes, onToggleRage, ragesRemain
           </p>
           <p className="text-[13px] ink-italic">
             Bônus de dano: <strong className={active ? 'text-rose-800' : 'text-ink-500'}>+{bonus}</strong> em ataques c/c com FOR
-            · Resistência a B/P/S
+            · Resistência a dano Contundente, Perfurante e Cortante
             · Vantagem em testes/saves de FOR
           </p>
+          {totemBenefit && (
+            <p className={`text-[13px] mt-1 ${active ? 'text-rose-800 font-semibold' : 'text-ink-500'}`}>
+              🐾 {totemBenefit}
+            </p>
+          )}
         </div>
         <button
           onClick={handleToggle}

@@ -18,6 +18,7 @@ import {
   calculateSkillModifier, calculateSavingThrow,
   ATTR_NAME_TO_KEY,
 } from '../../utils/calculations'
+import { getEffectiveSaveProficiencies } from '../../domain/rules'
 
 /* ══════════════════════════════════════════════════════════════════
    Paleta de impressão (pergaminho arcano)
@@ -71,10 +72,15 @@ function dotStyle(filled) {
    ══════════════════════════════════════════════════════════════════ */
 
 /** Coluna esquerda: atributos + salvaguardas + prof bônus */
-function AttrColumn({ attributes, profBonus, classData }) {
+function AttrColumn({ attributes, profBonus, classData, character }) {
+  // Salvaguardas efetivas: classe primária + Alma de Diamante (Monge 14+).
   const savingProfs = useMemo(
-    () => (classData?.saving_throws ?? []).map(n => ATTR_NAME_TO_KEY[n]).filter(Boolean),
-    [classData],
+    () => {
+      const eff = getEffectiveSaveProficiencies(character)
+      if (eff.length > 0) return eff
+      return (classData?.saving_throws ?? []).map(n => ATTR_NAME_TO_KEY[n]).filter(Boolean)
+    },
+    [character, classData],
   )
 
   return (
@@ -666,7 +672,7 @@ export function PrintView({ character, calc, classData, backgrounds, options }) 
 
         {/* 3 colunas */}
         <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-          <AttrColumn   attributes={attributes}   profBonus={calc.profBonus}   classData={classData} />
+          <AttrColumn   attributes={attributes}   profBonus={calc.profBonus}   classData={classData} character={character} />
           <SkillsColumn attributes={attributes}   proficiencies={proficiencies} profBonus={calc.profBonus} passivePerception={calc.passivePerception} />
           <CombatColumn combat={combat}            calc={calc}                  classData={classData} />
         </div>
