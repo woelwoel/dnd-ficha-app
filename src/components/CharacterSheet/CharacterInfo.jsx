@@ -241,8 +241,8 @@ function LanguageSelector({ raceIndex, backgroundLanguages, selectedLanguages, o
       {raceLangs.length > 0 && (
         <div className="flex flex-wrap gap-1">
           {raceLangs.map(lang => (
-            <span key={lang} className="text-xs bg-gray-700 border border-gray-500 px-2 py-0.5 rounded-full text-amber-300">
-              {lang} <span className="text-gray-500 text-xs">(raça)</span>
+            <span key={lang} className="text-xs bg-gray-700 border border-gray-500 px-2 py-0.5 rounded-full text-gray-100 font-semibold">
+              {lang} <span className="text-gray-300 text-xs font-normal">(raça)</span>
             </span>
           ))}
         </div>
