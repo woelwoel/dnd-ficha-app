@@ -6,7 +6,46 @@ import {
   calculateSpellAttackBonus,
   calculateSkillModifier,
   calculatePassivePerception,
+  calculateMaxHp,
+  calculateMaxHpFromHitDice,
 } from '../utils/calculations'
+
+describe('calculateMaxHpFromHitDice', () => {
+  it('single-class nv1 = dado máximo + CON', () => {
+    // d10, CON 14 (+2) → 12
+    expect(calculateMaxHpFromHitDice({ primaryDie: 10, primaryLevel: 1, conScore: 14 })).toBe(12)
+  })
+  it('níveis 2+ usam média (floor(die/2)+1+CON)', () => {
+    // d10 nv3, CON 13 (+1): nv1=11; média = floor(10/2)+1+1 = 7 → 11 + 7 + 7 = 25
+    expect(calculateMaxHpFromHitDice({ primaryDie: 10, primaryLevel: 3, conScore: 13 })).toBe(25)
+  })
+  it('soma os dados das multiclasses (média por nível)', () => {
+    // Guerreiro 1 (d10) / Mago 2 (d6), CON 13 (+1): 11 + 5 + 5 = 21
+    const hp = calculateMaxHpFromHitDice({
+      primaryDie: 10, primaryLevel: 1, conScore: 13,
+      extras: [{ die: 6, level: 2 }],
+    })
+    expect(hp).toBe(21)
+  })
+  it('Robusto soma +2 por nível total', () => {
+    // d10 nv1 CON 13 = 11; Robusto +2*total(=3 se houver mc) ...
+    const hp = calculateMaxHpFromHitDice({
+      primaryDie: 10, primaryLevel: 1, conScore: 13,
+      extras: [{ die: 6, level: 2 }], robustoLevels: 3,
+    })
+    expect(hp).toBe(21 + 6)
+  })
+  it('mínimo +1 por nível mesmo com CON muito negativa', () => {
+    // d6, CON 1 (-5): nv1 max(1, 6-5)=1; nv2 média max(1, 3+1-5)=1 → total 2
+    expect(calculateMaxHpFromHitDice({ primaryDie: 6, primaryLevel: 2, conScore: 1 })).toBe(2)
+  })
+  it('calculateMaxHp (single-class) bate com o helper', () => {
+    const classData = { hit_die: 8 }
+    expect(calculateMaxHp(classData, 5, 12)).toBe(
+      calculateMaxHpFromHitDice({ primaryDie: 8, primaryLevel: 5, conScore: 12 })
+    )
+  })
+})
 
 describe('getProficiencyBonus', () => {
   it('nível 1-4 → +2', () => {

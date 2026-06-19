@@ -8,7 +8,7 @@ import { MulticlassModal } from '../MulticlassModal'
 import {
   getLeveledChoices, computeBonusCantripsNeeded, getProgressionLevels,
 } from './class-helpers'
-import { SPELL_ABILITY_PT_TO_KEY } from '../../../utils/calculations'
+import { SPELL_ABILITY_PT_TO_KEY, SKILLS } from '../../../utils/calculations'
 
 const ATTR_NAME_TO_KEY = {
   'Força': 'str', 'Destreza': 'dex', 'Constituição': 'con',
@@ -237,6 +237,17 @@ export function ClassBlock({
                       feats={feats}
                       attributesReady={attributesReady}
                     />
+
+                    {/* Perícia(s) concedida(s) pela multiclasse (Bardo/Ladino/
+                        Patrulheiro — PHB p.164). Antes não havia onde escolher. */}
+                    <MulticlassSkillPicker
+                      cls={cls}
+                      mc={mc}
+                      draft={draft}
+                      multiclasses={multiclasses}
+                      mcIdx={idx}
+                      onChange={skills => updateMulticlassAt(idx, { chosenSkills: skills })}
+                    />
                   </div>
                 )
               })}
@@ -253,6 +264,75 @@ export function ClassBlock({
         onAdd={handleAddMulticlass}
         onCancel={() => setMcModalOpen(false)}
       />
+    </div>
+  )
+}
+
+/**
+ * Seletor de perícia(s) concedida(s) por uma multiclasse (PHB p.164).
+ * Só aparece quando a classe concede perícias (`mc.proficiencies.skills > 0`).
+ * As opções vêm da lista da classe (`skill_choices.from`); "qualquer ..."
+ * (ex: Bardo) libera as 18. Perícias já proficientes por outra fonte são
+ * desabilitadas — não é possível ganhar a mesma perícia duas vezes.
+ */
+function MulticlassSkillPicker({ cls, mc, draft, multiclasses, mcIdx, onChange }) {
+  const limit = mc.proficiencies?.skills ?? 0
+  if (limit <= 0) return null
+
+  const fromNames = cls?.skill_choices?.from ?? []
+  const anySkill = fromNames.some(n => /qualquer/i.test(n))
+  const options = SKILLS.filter(s => anySkill || fromNames.includes(s.name))
+  const chosen = mc.chosenSkills ?? []
+  const ownedElsewhere = new Set([
+    ...(draft.chosenSkills ?? []),
+    ...(draft.backgroundSkills ?? []),
+    ...(draft.racialSkills ?? []),
+    ...multiclasses.flatMap((m, i) => (i === mcIdx ? [] : (m.chosenSkills ?? []))),
+  ])
+  const atLimit = chosen.length >= limit
+
+  function toggle(key) {
+    if (chosen.includes(key)) onChange(chosen.filter(k => k !== key))
+    else if (!atLimit && !ownedElsewhere.has(key)) onChange([...chosen, key])
+  }
+
+  return (
+    <div className="border-t border-parchment-600/60 pt-2 mt-1">
+      <p className="text-xs font-display tracking-widest uppercase text-ink-300 mb-1.5">
+        Perícias da classe — escolher {limit} <span className="text-ink-200">({chosen.length}/{limit})</span>
+      </p>
+      <div className="grid grid-cols-2 gap-1">
+        {options.map(s => {
+          const isChosen = chosen.includes(s.key)
+          const owned = ownedElsewhere.has(s.key)
+          const disabled = owned || (!isChosen && atLimit)
+          return (
+            <button
+              type="button"
+              key={s.key}
+              onClick={() => toggle(s.key)}
+              disabled={disabled}
+              title={owned ? 'Já proficiente por outra fonte' : undefined}
+              className={[
+                'flex items-center gap-1.5 px-2 py-1 rounded-sm border-2 text-xs font-display text-left transition-colors',
+                isChosen
+                  ? 'border-ink-500 bg-parchment-200 text-ink-500'
+                  : disabled
+                  ? 'border-parchment-600 bg-parchment-50 text-ink-200 opacity-40 cursor-not-allowed'
+                  : 'border-parchment-600 bg-parchment-50 text-ink-300 hover:border-ink-300 cursor-pointer',
+              ].join(' ')}
+            >
+              <span className={[
+                'w-3.5 h-3.5 rounded-sm border-2 flex items-center justify-center shrink-0',
+                isChosen ? 'border-ink-500 bg-ink-500' : 'border-parchment-600',
+              ].join(' ')}>
+                {isChosen && <span className="text-parchment-50 text-[10px]">✓</span>}
+              </span>
+              <span className="flex-1">{s.name}{owned ? ' 🎒' : ''}</span>
+            </button>
+          )
+        })}
+      </div>
     </div>
   )
 }

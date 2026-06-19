@@ -1,9 +1,9 @@
 import {
   ABILITY_SCORES, SKILLS, getProficiencyBonus, getModifier, formatModifier,
-  calculateMaxHp, SPELL_ABILITY_PT_TO_KEY,
+  SPELL_ABILITY_PT_TO_KEY,
   calculateSpellSaveDC, calculateSpellAttackBonus,
 } from '../../../utils/calculations'
-import { computeFinalAttributes } from './build-character'
+import { computeFinalAttributes, computeDraftMaxHp, totalCharacterLevel } from './build-character'
 
 const METHOD_LABEL = {
   'standard-array': 'Array Padrão [15,14,13,12,10,8]',
@@ -51,15 +51,32 @@ export function ReviewBlock({ draft, races, backgrounds, classData }) {
   // buildCharacter), pra a Revisão bater com o personagem real.
   const finalAttrs = computeFinalAttributes(draft)
 
-  const profBonus = getProficiencyBonus(draft.level ?? 1)
-  const maxHp = calculateMaxHp(classData, draft.level ?? 1, finalAttrs.con ?? 10)
+  // Nível TOTAL (primária + multiclasses) — bônus de proficiência e HP em D&D
+  // dependem do nível total, não só da classe primária (PHB p.164).
+  const totalLevel = totalCharacterLevel(draft)
+  const profBonus = getProficiencyBonus(totalLevel)
+  const maxHp = computeDraftMaxHp(draft, classData)
   const dexMod = getModifier(finalAttrs.dex ?? 10)
   const spellKey = draft.spellcastingAbility ?? SPELL_ABILITY_PT_TO_KEY[classData?.spellcasting_ability]
   const spellScore = finalAttrs[spellKey] ?? 10
   const spellSaveDC = spellKey ? calculateSpellSaveDC(spellScore, profBonus) : null
   const spellAtk = spellKey ? calculateSpellAttackBonus(spellScore, profBonus) : null
 
-  const allSkills = [...new Set([...(draft.chosenSkills ?? []), ...(draft.backgroundSkills ?? [])])]
+  // Linha de classe: inclui multiclasses e nível total quando houver.
+  const mcList = draft.multiclasses ?? []
+  const capitalize = s => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s)
+  const classLineValue = mcList.length > 0
+    ? `${classData?.name} ${draft.level}` +
+      mcList.map(mc => ` / ${capitalize(mc.class)} ${mc.level}`).join('') +
+      ` — Nível ${totalLevel}`
+    : `${classData?.name} Nível ${draft.level}`
+
+  const mcChosenSkills = mcList.flatMap(mc => mc.chosenSkills ?? [])
+  const allSkills = [...new Set([
+    ...(draft.chosenSkills ?? []),
+    ...(draft.backgroundSkills ?? []),
+    ...mcChosenSkills,
+  ])]
   const isComplete = draft.name?.trim() && draft.race && draft.class && draft.background
 
   return (
@@ -73,7 +90,7 @@ export function ReviewBlock({ draft, races, backgrounds, classData }) {
       <Section title="Identidade">
         <Row label="Nome" value={draft.name || '—'} highlight />
         <Row label="Raça" value={[selectedRace?.name, selectedSubrace?.name].filter(Boolean).join(' — ') || '—'} />
-        <Row label="Classe" value={classData ? `${classData.name} Nível ${draft.level}` : '—'} />
+        <Row label="Classe" value={classData ? classLineValue : '—'} />
         <Row label="Antecedente" value={selectedBg?.name || '—'} />
         <Row label="Alinhamento" value={draft.alignment || '—'} />
       </Section>

@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { buildCharacter, resolveClassEquipmentItems, computeFinalAttributes } from '../components/CharacterWizardV2/blocks/build-character'
+import {
+  buildCharacter, resolveClassEquipmentItems, computeFinalAttributes,
+  computeDraftMaxHp, totalCharacterLevel,
+} from '../components/CharacterWizardV2/blocks/build-character'
 import { INITIAL_DRAFT_V2 } from '../components/CharacterWizardV2/hooks/useDraft'
 
 describe('computeFinalAttributes', () => {
@@ -69,6 +72,34 @@ describe('buildCharacter', () => {
     expect(c.combat.maxHp).toBeGreaterThan(0)
   })
 
+  it('maxHp soma os dados de vida das multiclasses (PHB p.164)', () => {
+    // Guerreiro 1 (d10) / Mago 2 (d6), CON 13 (+1).
+    //  primária nv1: 10+1 = 11 | mago nv1 e nv2: avg d6 = 3+1+1 = 5 cada
+    //  total = 11 + 5 + 5 = 21
+    const draft = {
+      ...baseDraft, level: 1,
+      multiclasses: [{ class: 'mago', level: 2, hitDie: 6 }],
+    }
+    const c = buildCharacter(draft, guerreiro, {})
+    expect(c.combat.maxHp).toBe(21)
+    expect(c.combat.currentHp).toBe(21) // nasce com PV cheio
+  })
+
+  it('grava proficiências e perícia escolhida da multiclasse', () => {
+    const draft = {
+      ...baseDraft,
+      multiclasses: [{
+        class: 'ladino', level: 1, hitDie: 8,
+        proficiencies: { armor: ['leve'], weapons: [], tools: ['ferramentas de ladrão'], skills: 1 },
+        chosenSkills: ['stealth'],
+      }],
+    }
+    const c = buildCharacter(draft, guerreiro, {})
+    expect(c.proficiencies.armor).toContain('leve')
+    expect(c.proficiencies.tools).toContain('ferramentas de ladrão')
+    expect(c.proficiencies.skills).toContain('stealth')
+  })
+
   it('gp soma backgroundGold + classStartingGold (modo gold)', () => {
     const draft = {
       ...baseDraft, backgroundGold: 15,
@@ -119,6 +150,34 @@ describe('buildCharacter', () => {
   it('meta.creationMethod é wizard-v2', () => {
     const c = buildCharacter(baseDraft, guerreiro, {})
     expect(c.meta.creationMethod).toBe('wizard-v2')
+  })
+})
+
+describe('totalCharacterLevel', () => {
+  it('soma primária + multiclasses', () => {
+    expect(totalCharacterLevel({ level: 3, multiclasses: [{ class: 'mago', level: 2 }] })).toBe(5)
+  })
+  it('default nível 1 sem multiclasse', () => {
+    expect(totalCharacterLevel({})).toBe(1)
+  })
+})
+
+describe('computeDraftMaxHp', () => {
+  it('single-class = dado máximo no nv1 + média depois', () => {
+    // Guerreiro 3 (d10), CON 13 (+1): nv1=11; média d10 = 7 → 11 + 7 + 7 = 25
+    const draft = { ...baseDraft, level: 3 }
+    expect(computeDraftMaxHp(draft, guerreiro)).toBe(25)
+  })
+  it('aplica +2/nível total com talento Robusto', () => {
+    // Guerreiro 1 (d10) CON 13: base 11; Robusto +2*1 = 13
+    const draft = {
+      ...baseDraft, level: 1,
+      asiChoices: { 1: { type: 'feat', featIndex: 'robusto' } },
+    }
+    expect(computeDraftMaxHp(draft, guerreiro)).toBe(13)
+  })
+  it('retorna 0 sem classData', () => {
+    expect(computeDraftMaxHp(baseDraft, null)).toBe(0)
   })
 })
 

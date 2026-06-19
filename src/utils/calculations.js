@@ -77,26 +77,49 @@ export function getProficiencyBonus(level) {
 }
 
 /**
+ * HP máximo multiclasse a partir dos dados de vida por classe (PHB p.12 e p.164).
+ * Fonte única da fórmula — usada por `calculateMaxHp` (single-class),
+ * `calculateMaxHpMulticlass` (ficha) e pelo wizard de criação.
+ *
+ *  - Nível 1 da classe PRIMÁRIA: máximo do dado + CON.
+ *  - Demais níveis (primária e multiclasses): média = floor(die/2)+1 + CON.
+ *  - Cada nível garante no mínimo +1 (PHB p.15: "always gain at least 1 hp").
+ *  - Talento Robusto (PHB p.170): +2 PV por nível TOTAL (passe `robustoLevels`).
+ *
+ * @param {object} p
+ * @param {number} [p.primaryDie=8]    Dado de vida da classe primária (ex: 10).
+ * @param {number} [p.primaryLevel=1]  Nível da classe primária.
+ * @param {Array<{die:number, level:number}>} [p.extras=[]] Multiclasses.
+ * @param {number} [p.conScore=10]     Valor de Constituição.
+ * @param {number} [p.robustoLevels=0] Nível total se possui Robusto, senão 0.
+ * @returns {number}
+ */
+export function calculateMaxHpFromHitDice({
+  primaryDie = 8, primaryLevel = 1, extras = [], conScore = 10, robustoLevels = 0,
+} = {}) {
+  const conMod = getModifier(conScore)
+  const avg = die => Math.max(1, Math.floor((die || 8) / 2) + 1 + conMod)
+  let total = Math.max(1, (primaryDie || 8) + conMod)
+  for (let l = 2; l <= (primaryLevel || 0); l++) total += avg(primaryDie)
+  for (const e of extras) {
+    for (let l = 1; l <= (e?.level ?? 0); l++) total += avg(e?.die ?? 8)
+  }
+  if (robustoLevels > 0) total += 2 * robustoLevels
+  return Math.max(1, total)
+}
+
+/**
  * HP máximo para classe única (sem multiclasse). Para multiclasse, use
- * `calculateMaxHpMulticlass` em `domain/rules.js`.
- *
- * IMPORTANTE: esta função é equivalente a `calculateMaxHpMulticlass` com
- * `multiclasses: []` — preferir aquela em selectors novos. Mantida para
- * compatibilidade com o wizard de criação (single-class).
- *
- * Regra 5e (PHB p.12 e p.164):
- *  - Nível 1: hitDie + CON
- *  - Níveis 2+: max(1, floor(die/2) + 1 + CON) por nível adicional (mínimo 1)
+ * `calculateMaxHpMulticlass` em `domain/rules.js` (ficha) ou
+ * `calculateMaxHpFromHitDice` (wizard).
  */
 export function calculateMaxHp(classData, level, conScore) {
   if (!classData) return 0
-  const conMod = getModifier(conScore)
-  const hitDie = classData.hit_die || 8
-  const avgPerLevel = Math.floor(hitDie / 2) + 1
-  const first = Math.max(1, hitDie + conMod)
-  // Cada nível garante mínimo +1 (PHB p.15: "you can always gain at least 1 hp").
-  const rest = Math.max(0, level - 1) * Math.max(1, avgPerLevel + conMod)
-  return Math.max(1, first + rest)
+  return calculateMaxHpFromHitDice({
+    primaryDie: classData.hit_die || 8,
+    primaryLevel: level,
+    conScore,
+  })
 }
 
 /**

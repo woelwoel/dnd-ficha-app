@@ -2,7 +2,7 @@
   "barbaro": {
     "prerequisites": { "str": 13 },
     "proficiencies": {
-      "armor": ["leve", "media", "escudos"],
+      "armor": ["escudos"],
       "weapons": ["simples", "marciais"],
       "tools": [],
       "skills": 0

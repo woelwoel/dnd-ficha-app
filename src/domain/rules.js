@@ -4,7 +4,7 @@
  * Sem React, sem fetches, sem side effects — testável em isolamento.
  */
 
-import { getModifier, SKILLS } from '../utils/calculations'
+import { getModifier, SKILLS, calculateMaxHpFromHitDice } from '../utils/calculations'
 import { keyFromName } from './attributes'
 import { CASTER_TYPE } from '../utils/spellcasting'
 
@@ -621,29 +621,23 @@ export function calculateMaxHpMulticlass(character, classDataByIndex) {
   const primary = classDataByIndex?.[info?.class]
   if (!primary) return 0
 
-  const conMod = getModifier(attributes?.con ?? 10)
-  const primaryHitDie = primary.hit_die ?? 8
   const primaryLevel = info?.level ?? 1
-
-  let total = Math.max(1, primaryHitDie + conMod)
-  const avg = die => Math.max(1, Math.floor(die / 2) + 1 + conMod)
-
-  for (let l = 2; l <= primaryLevel; l++) total += avg(primaryHitDie)
-
-  for (const mc of info?.multiclasses ?? []) {
-    const mcData = classDataByIndex?.[mc.class]
-    const die = mcData?.hit_die ?? 8
-    for (let l = 1; l <= (mc.level ?? 0); l++) total += avg(die)
-  }
+  const multiclasses = info?.multiclasses ?? []
 
   // Talento Robusto: +2 PV por nível total (PHB p.170)
   const hasRobusto = (info?.feats ?? []).some(f => f.index === 'robusto')
-  if (hasRobusto) {
-    const totalLevel = primaryLevel + (info?.multiclasses ?? []).reduce((s, mc) => s + (mc.level ?? 0), 0)
-    total += 2 * totalLevel
-  }
+  const totalLevel = primaryLevel + multiclasses.reduce((s, mc) => s + (mc.level ?? 0), 0)
 
-  return Math.max(1, total)
+  return calculateMaxHpFromHitDice({
+    primaryDie: primary.hit_die ?? 8,
+    primaryLevel,
+    extras: multiclasses.map(mc => ({
+      die: classDataByIndex?.[mc.class]?.hit_die ?? 8,
+      level: mc.level ?? 0,
+    })),
+    conScore: attributes?.con ?? 10,
+    robustoLevels: hasRobusto ? totalLevel : 0,
+  })
 }
 
 /* ── Class Features Uses ─────────────────────────────────────────── */

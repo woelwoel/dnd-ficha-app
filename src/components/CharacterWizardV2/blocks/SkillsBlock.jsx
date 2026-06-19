@@ -17,7 +17,11 @@ export function SkillsBlock({ draft, updateDraft, classData }) {
     const bonus = draft.racialBonuses?.[key] ?? 0
     finalAttrs[key] = base > 0 ? base + bonus : 10
   }
-  const profBonus = getProficiencyBonus(draft.level ?? 1)
+  // Nível total (primária + multiclasses) — o bônus de proficiência usa o
+  // nível total do personagem (PHB p.164), não só o da classe primária.
+  const totalLevel = (draft.level ?? 1)
+    + (draft.multiclasses ?? []).reduce((s, mc) => s + (mc.level ?? 0), 0)
+  const profBonus = getProficiencyBonus(totalLevel)
 
   function toggle(key) {
     if (chosen.includes(key)) {

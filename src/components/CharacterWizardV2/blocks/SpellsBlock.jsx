@@ -25,7 +25,10 @@ export function SpellsBlock({ draft, updateDraft, classData }) {
     finalAttrs[key] = base > 0 ? base + bonus : 10
   }
 
-  const profBonus = getProficiencyBonus(draft.level ?? 1)
+  // CD/ataque mágico usam o bônus de proficiência do nível TOTAL (PHB p.164).
+  const totalLevel = (draft.level ?? 1)
+    + (draft.multiclasses ?? []).reduce((s, mc) => s + (mc.level ?? 0), 0)
+  const profBonus = getProficiencyBonus(totalLevel)
   const spellScore = finalAttrs[spellAbilityKey] ?? 10
   const spellSaveDC = spellAbilityKey ? calculateSpellSaveDC(spellScore, profBonus) : null
   const spellAttackBonus = spellAbilityKey ? calculateSpellAttackBonus(spellScore, profBonus) : null

@@ -1,6 +1,6 @@
 // src/components/CharacterWizardV2/blocks/build-character.js
 import { generateId } from '../../../hooks/useCharacter'
-import { calculateMaxHp, getModifier } from '../../../utils/calculations'
+import { calculateMaxHpFromHitDice, getModifier } from '../../../utils/calculations'
 import { injectSubclassSpellsAtBuild } from '../../../domain/subclassSpells'
 
 export function resolveClassEquipmentItems(draft, classEquipment) {
@@ -69,11 +69,61 @@ export function computeFinalAttributes(draft) {
   return attrs
 }
 
+/**
+ * Nível total = classe primária + soma das multiclasses.
+ */
+export function totalCharacterLevel(draft) {
+  return (draft?.level ?? 1)
+    + (draft?.multiclasses ?? []).reduce((s, mc) => s + (mc.level ?? 0), 0)
+}
+
+/**
+ * PV máximo do draft considerando multiclasse (PHB p.164) + talento Robusto.
+ * Fonte única usada tanto no buildCharacter quanto na prévia da Revisão, pra
+ * o número bater com o personagem real. Lê `mc.hitDie` (gravado ao adicionar
+ * a classe no MulticlassModal); fallback d8 quando ausente.
+ */
+export function computeDraftMaxHp(draft, classData) {
+  if (!classData) return 0
+  const attrs = computeFinalAttributes(draft)
+  const hasRobusto = [
+    ...Object.values(draft?.asiChoices ?? {}),
+    ...((draft?.multiclasses ?? []).flatMap(mc => Object.values(mc.asiChoices ?? {}))),
+  ].some(c => c?.type === 'feat' && c.featIndex === 'robusto')
+
+  return calculateMaxHpFromHitDice({
+    primaryDie: classData?.hit_die ?? 8,
+    primaryLevel: draft?.level ?? 1,
+    extras: (draft?.multiclasses ?? []).map(mc => ({ die: mc.hitDie ?? 8, level: mc.level ?? 0 })),
+    conScore: attrs.con ?? 10,
+    robustoLevels: hasRobusto ? totalCharacterLevel(draft) : 0,
+  })
+}
+
+/**
+ * Proficiências (armadura/arma/ferramenta) e perícias ganhas pelas
+ * multiclasses. As proficiências são gravadas em `mc.proficiencies` ao
+ * adicionar a classe; a perícia escolhida fica em `mc.chosenSkills`.
+ */
+function collectMulticlassProficiencies(draft) {
+  const uniq = arr => [...new Set(arr.filter(Boolean))]
+  const armor = [], weapons = [], tools = [], skills = []
+  for (const mc of draft?.multiclasses ?? []) {
+    const p = mc.proficiencies ?? {}
+    armor.push(...(p.armor ?? []))
+    weapons.push(...(p.weapons ?? []))
+    tools.push(...(p.tools ?? []))
+    skills.push(...(mc.chosenSkills ?? []))
+  }
+  return { armor: uniq(armor), weapons: uniq(weapons), tools: uniq(tools), skills: uniq(skills) }
+}
+
 export function buildCharacter(draft, classData, classEquipment, srdSpells = null) {
   const attrs = computeFinalAttributes(draft)
 
   const dexMod = getModifier(attrs.dex ?? 10)
-  const maxHp = calculateMaxHp(classData, draft.level, attrs.con ?? 10)
+  const maxHp = computeDraftMaxHp(draft, classData)
+  const mcProfs = collectMulticlassProficiencies(draft)
   const allClasses = new Set([
     draft.class,
     ...((draft.multiclasses ?? []).map(mc => mc.class).filter(Boolean)),
@@ -143,11 +193,15 @@ export function buildCharacter(draft, classData, classEquipment, srdSpells = nul
     },
     proficiencies: {
       savingThrows: draft.savingThrows ?? [],
-      skills: [...(draft.chosenSkills ?? []), ...(draft.racialSkills ?? [])],
+      skills: [...new Set([
+        ...(draft.chosenSkills ?? []),
+        ...(draft.racialSkills ?? []),
+        ...mcProfs.skills,
+      ])],
       expertiseSkills: Array.isArray(draft.chosenFeatures?.expertise_skills)
         ? draft.chosenFeatures.expertise_skills : [],
       backgroundSkills: draft.backgroundSkills ?? [],
-      armor: [], weapons: [], tools: [], languages: [],
+      armor: mcProfs.armor, weapons: mcProfs.weapons, tools: mcProfs.tools, languages: [],
     },
     spellcasting: {
       ability: draft.spellcastingAbility, usedSlots: {},

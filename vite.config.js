@@ -58,10 +58,13 @@ export default defineConfig({
             //  v4 → v5 (2026-06-17): marcação de combate (combat/category/
             //    actionType) nas features de phb-class-progression-pt.json e
             //    phb-class-choices-pt.json, consumida pela aba Combate.
+            //  v5 → v6 (2026-06-18): correção das proficiências de multiclasse
+            //    do Bárbaro (só Escudos, não armadura leve/média) em
+            //    phb-multiclass-pt.json.
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v5',
+              cacheName: 'srd-data-v6',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias

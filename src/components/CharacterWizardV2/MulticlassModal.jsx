@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import {
-  totalAttributes, meetsPrereqs, formatPrereqs, totalLevels, takenClassIndices,
+  meetsPrereqs, formatPrereqs, totalLevels, takenClassIndices,
 } from './blocks/class/multiclass-helpers'
+import { computeFinalAttributes } from './blocks/build-character'
 import { Modal } from '../ui/Modal'
 
 const fieldCls =
@@ -27,8 +28,19 @@ export function MulticlassModal({ open, draft, classes, multiclassData, onAdd, o
   const mcData = multiclassData?.[classIndex] ?? null
   const prereqs = mcData?.prerequisites ?? null
   const profs = mcData?.proficiencies ?? null
-  const attrs = totalAttributes(draft)
-  const prereqOk = !classIndex || meetsPrereqs(prereqs, attrs)
+  // Atributos FINAIS (base + racial + ASI) — mesma base usada na ficha e em RAW:
+  // o pré-requisito é checado contra os valores atuais (PHB p.163).
+  const attrs = computeFinalAttributes(draft)
+  const newClassOk = meetsPrereqs(prereqs, attrs)
+  // PHB p.163: para multiclassar é preciso atender o pré-requisito da classe
+  // NOVA *e* de todas as classes que o personagem JÁ possui (origem).
+  const failingOriginClasses = classIndex
+    ? [...taken]
+        .filter(ci => ci && !meetsPrereqs(multiclassData?.[ci]?.prerequisites, attrs))
+        .map(ci => classes.find(c => c.index === ci)?.name ?? ci)
+    : []
+  const originOk = failingOriginClasses.length === 0
+  const prereqOk = !classIndex || (newClassOk && originOk)
   const currentTotal = totalLevels(draft)
   const wouldExceed20 = currentTotal + level > 20
 
@@ -44,6 +56,11 @@ export function MulticlassModal({ open, draft, classes, multiclassData, onAdd, o
       asiChoices: {},
       bonusSpells: [],
       hitDie: cls?.hit_die ?? 8,
+      // Proficiências de multiclasse (PHB p.164) — gravadas para o build
+      // mesclar em proficiencies. A(s) perícia(s) são escolhidas depois,
+      // no card da multiclasse (mc.chosenSkills).
+      proficiencies: profs ?? { armor: [], weapons: [], tools: [], skills: 0 },
+      chosenSkills: [],
     })
   }
 
@@ -111,11 +128,17 @@ export function MulticlassModal({ open, draft, classes, multiclassData, onAdd, o
         {selectedClass && prereqs && (
           <div className={[
             'text-xs px-3 py-2 rounded-sm border-2 flex items-center gap-2',
-            prereqOk
+            newClassOk
               ? 'border-emerald-700 bg-emerald-50 text-emerald-700'
               : 'border-red-700 bg-red-50 text-red-700',
           ].join(' ')}>
-            {prereqOk ? '✓' : '✗'} Pré-requisito: {formatPrereqs(prereqs)}
+            {newClassOk ? '✓' : '✗'} Pré-requisito: {formatPrereqs(prereqs)}
+          </div>
+        )}
+
+        {selectedClass && !originOk && (
+          <div className="text-xs px-3 py-2 rounded-sm border-2 border-red-700 bg-red-50 text-red-700 flex items-center gap-2">
+            ✗ Pré-requisito da classe atual não atendido: {failingOriginClasses.join(', ')} (PHB p.163)
           </div>
         )}
 

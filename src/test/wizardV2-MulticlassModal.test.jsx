@@ -77,6 +77,32 @@ describe('MulticlassModal', () => {
     }))
   })
 
+  it('onAdd inclui proficiencies e chosenSkills da classe', async () => {
+    const onAdd = vi.fn()
+    render(<MulticlassModal open={true} draft={baseDraft} classes={classes}
+      multiclassData={multiclassData} onAdd={onAdd} onCancel={() => {}} />)
+    await userEvent.selectOptions(screen.getByLabelText(/^classe/i), 'mago')
+    await userEvent.click(screen.getByRole('button', { name: /^adicionar$/i }))
+    expect(onAdd).toHaveBeenCalledWith(expect.objectContaining({
+      proficiencies: expect.objectContaining({ armor: [], weapons: [], tools: [], skills: 0 }),
+      chosenSkills: [],
+    }))
+  })
+
+  it('bloqueia se o pré-requisito da classe de ORIGEM não for atendido (PHB p.163)', async () => {
+    // Guerreiro primário com FOR 8 e DES 8 não atende o próprio pré-requisito
+    // (FOR ou DES 13). Adicionar Mago (INT 14, ok) deve ser bloqueado.
+    const draftFracaOrigem = {
+      ...baseDraft,
+      baseAttributes: { str: 8, dex: 8, con: 13, int: 14, wis: 10, cha: 8 },
+    }
+    render(<MulticlassModal open={true} draft={draftFracaOrigem} classes={classes}
+      multiclassData={multiclassData} onAdd={() => {}} onCancel={() => {}} />)
+    await userEvent.selectOptions(screen.getByLabelText(/^classe/i), 'mago')
+    expect(screen.getByText(/classe atual não atendido/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /^adicionar$/i })).toBeDisabled()
+  })
+
   it('cancelar dispara onCancel sem chamar onAdd', async () => {
     const onAdd = vi.fn()
     const onCancel = vi.fn()
