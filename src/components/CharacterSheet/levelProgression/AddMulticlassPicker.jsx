@@ -1,14 +1,21 @@
 // src/components/CharacterSheet/levelProgression/AddMulticlassPicker.jsx
 // Picker de nova multiclasse: seletor de classe + warnings de pré-requisito
 // (PHB p.163) + lista de proficiências ganhas + botão confirmar.
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { abbrOfKey } from '../../../domain/attributes'
+import { SKILLS } from '../../../utils/calculations'
 
 export function AddMulticlassPicker({
   availableClasses, classes, mcRules, characterAttributes,
+  ownedSkills = [],
   onCancel, onConfirm,
 }) {
   const [addMCClass, setAddMCClass] = useState('')
+  // Perícia(s) concedida(s) pela multiclasse (Bardo/Ladino/Patrulheiro — PHB p.164).
+  const [chosenSkills, setChosenSkills] = useState([])
+
+  // Reseta a escolha de perícias ao trocar de classe.
+  useEffect(() => { setChosenSkills([]) }, [addMCClass])
 
   const { reqWarnings, orAttr, orMet, allPrereqsMet, addMCProfs } = useMemo(() => {
     const reqs  = addMCClass ? mcRules[addMCClass]?.prerequisites ?? {} : {}
@@ -30,17 +37,37 @@ export function AddMulticlassPicker({
     }
   }, [addMCClass, mcRules, characterAttributes])
 
+  const selectedClass = addMCClass
+    ? (classes ?? []).find(c => c.index === addMCClass) ?? null
+    : null
+  const selectedClassName = selectedClass?.name ?? addMCClass
+
+  // Perícia(s) da multiclasse: opções vêm de `skill_choices.from` (nomes PT);
+  // "qualquer ..." (Bardo) libera as 18. Perícias já proficientes (classe
+  // primária/antecedente) são desabilitadas — não dá pra ganhar duas vezes.
+  const skillsLimit = addMCProfs.skills ?? 0
+  const fromNames = selectedClass?.skill_choices?.from ?? []
+  const anySkill = fromNames.some(n => /qualquer/i.test(n))
+  const skillOptions = SKILLS.filter(s => anySkill || fromNames.includes(s.name))
+  const ownedSet = new Set(ownedSkills)
+  const skillsComplete = skillsLimit === 0 || chosenSkills.length === skillsLimit
+  const atSkillLimit = chosenSkills.length >= skillsLimit
+
+  function toggleSkill(key) {
+    if (chosenSkills.includes(key)) setChosenSkills(chosenSkills.filter(k => k !== key))
+    else if (!atSkillLimit && !ownedSet.has(key)) setChosenSkills([...chosenSkills, key])
+  }
+
+  const canConfirm = !!addMCClass && allPrereqsMet && skillsComplete
+
   function handleConfirm() {
-    if (!addMCClass || !allPrereqsMet) return
+    if (!canConfirm) return
     onConfirm({
       classIndex: addMCClass,
       proficiencies: mcRules[addMCClass]?.proficiencies ?? {},
+      chosenSkills,
     })
   }
-
-  const selectedClassName = addMCClass
-    ? (classes ?? []).find(c => c.index === addMCClass)?.name ?? addMCClass
-    : ''
 
   return (
     <div className="bg-gray-800 border border-amber-700/50 rounded-xl p-5 space-y-4">
@@ -118,6 +145,48 @@ export function AddMulticlassPicker({
               </div>
             </div>
           )}
+
+          {/* Seletor de perícia(s) da multiclasse */}
+          {skillsLimit > 0 && (
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 space-y-2">
+              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">
+                Escolha {skillsLimit} perícia(s){' '}
+                <span className={chosenSkills.length === skillsLimit ? 'text-green-400' : 'text-yellow-400'}>
+                  ({chosenSkills.length}/{skillsLimit})
+                </span>
+              </p>
+              <div className="grid grid-cols-2 gap-1.5">
+                {skillOptions.map(s => {
+                  const isChosen = chosenSkills.includes(s.key)
+                  const owned = ownedSet.has(s.key)
+                  const disabled = owned || (!isChosen && atSkillLimit)
+                  return (
+                    <button
+                      key={s.key}
+                      type="button"
+                      onClick={() => toggleSkill(s.key)}
+                      disabled={disabled}
+                      title={owned ? 'Já proficiente por outra fonte' : undefined}
+                      className={`flex items-center gap-1.5 px-2 py-1 rounded border text-xs text-left transition-colors ${
+                        isChosen
+                          ? 'border-amber-600 bg-amber-900/30 text-amber-200'
+                          : disabled
+                          ? 'border-gray-700 bg-gray-800/50 text-gray-600 opacity-50 cursor-not-allowed'
+                          : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-amber-700 cursor-pointer'
+                      }`}
+                    >
+                      <span className={`w-3.5 h-3.5 rounded-sm border flex items-center justify-center shrink-0 ${
+                        isChosen ? 'border-amber-500 bg-amber-600' : 'border-gray-600'
+                      }`}>
+                        {isChosen && <span className="text-white text-[10px]">✓</span>}
+                      </span>
+                      <span className="flex-1">{s.name}{owned ? ' 🎒' : ''}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
         </>
       )}
 
@@ -129,13 +198,15 @@ export function AddMulticlassPicker({
           Cancelar
         </button>
         <button
-          disabled={!addMCClass || !allPrereqsMet}
+          disabled={!canConfirm}
           onClick={handleConfirm}
           title={!allPrereqsMet && addMCClass ? 'Pré-requisitos de atributo não atendidos (PHB p.163)' : undefined}
           className="flex-1 px-4 py-2 rounded bg-amber-600 hover:bg-amber-500 text-white text-sm font-bold disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {addMCClass && !allPrereqsMet
             ? 'Pré-requisitos não atendidos'
+            : addMCClass && !skillsComplete
+            ? `Escolha ${skillsLimit} perícia(s)`
             : `Confirmar — ganhar proficiências e adicionar ${selectedClassName}`}
         </button>
       </div>

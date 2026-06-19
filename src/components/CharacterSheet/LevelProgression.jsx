@@ -60,11 +60,17 @@ export function LevelProgression({
     onApplyLevelUp?.(enriched)
   }
 
-  function handleConfirmAddMC({ classIndex: mcIndex, proficiencies }) {
-    onAddMulticlass?.({ classIndex: mcIndex, proficiencies })
+  function handleConfirmAddMC({ classIndex: mcIndex, proficiencies, chosenSkills }) {
+    onAddMulticlass?.({ classIndex: mcIndex, proficiencies, chosenSkills })
     setShowAddMC(false)
     setActiveTab(multiclasses.length) // switch to the new mc tab
   }
+
+  // Perícias já proficientes (não podem ser escolhidas de novo na multiclasse).
+  const ownedSkills = [
+    ...(character.proficiencies?.skills ?? []),
+    ...(character.proficiencies?.backgroundSkills ?? []),
+  ]
 
   // Determine se active tab ainda existe
   const tabExists = activeTab === 'primary' || (typeof activeTab === 'number' && activeTab < multiclasses.length)
@@ -105,6 +111,7 @@ export function LevelProgression({
           classes={classes}
           mcRules={mcRules}
           characterAttributes={character.attributes}
+          ownedSkills={ownedSkills}
           onCancel={() => setShowAddMC(false)}
           onConfirm={handleConfirmAddMC}
         />

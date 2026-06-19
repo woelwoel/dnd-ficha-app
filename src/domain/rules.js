@@ -320,6 +320,7 @@ export function applyBackgroundChange(character, newBgIndex, backgrounds, parseE
 export function addMulticlass(character, {
   classIndex: mcClass,
   proficiencies: mcProfs = {},
+  chosenSkills: mcSkills = [],
   multiclassData = null,
   classData = null,
 }) {
@@ -370,6 +371,9 @@ export function addMulticlass(character, {
         armor:   mergeUnique(prevProfs.armor,   mcProfs.armor   ?? []),
         weapons: mergeUnique(prevProfs.weapons, mcProfs.weapons ?? []),
         tools:   mergeUnique(prevProfs.tools,   mcProfs.tools   ?? []),
+        // Perícia(s) escolhida(s) ao multiclassar (Bardo/Ladino/Patrulheiro
+        // — PHB p.164). Dedupe contra as perícias já proficientes.
+        skills:  mergeUnique(prevProfs.skills,  mcSkills ?? []),
       },
       combat: { ...character.combat, hitDice: { pool: nextPool } },
       spellcasting: { ...character.spellcasting, abilitiesByClass: nextByClass },
