@@ -168,9 +168,9 @@ export function useCharacterCalculations(character, classData = null, classDataM
 
     const hpColor = hpPercent > 50 ? '#22c55e' : hpPercent > 25 ? '#f59e0b' : '#ef4444'
 
-    // Talento Mobilidade: +10ft de velocidade (PHB p.168)
+    // Talento Mobilidade: +3m de velocidade (10 pés — PHB p.168)
     const hasMobilidade = (feats ?? []).some(f => f.index === 'mobilidade')
-    const featSpeedBonus = hasMobilidade ? 10 : 0
+    const featSpeedBonus = hasMobilidade ? 3 : 0
 
     return {
       profBonus,

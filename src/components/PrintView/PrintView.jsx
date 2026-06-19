@@ -230,7 +230,7 @@ function CombatColumn({ combat, calc, classData }) {
         {[
           { label: 'CA',   value: combat?.armorClass ?? '—' },
           { label: 'Init', value: formatModifier(initiative ?? 0) },
-          { label: 'Vel',  value: `${speed}m` },
+          { label: 'Vel',  value: `${String(speed).replace('.', ',')}m` },
         ].map(({ label, value }) => (
           <div key={label} style={{
             textAlign: 'center',

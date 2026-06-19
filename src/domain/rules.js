@@ -4,7 +4,7 @@
  * Sem React, sem fetches, sem side effects — testável em isolamento.
  */
 
-import { getModifier, SKILLS, calculateMaxHpFromHitDice } from '../utils/calculations'
+import { getModifier, SKILLS, calculateMaxHpFromHitDice, racialHpPerLevel } from '../utils/calculations'
 import { keyFromName } from './attributes'
 import { CASTER_TYPE } from '../utils/spellcasting'
 
@@ -641,6 +641,7 @@ export function calculateMaxHpMulticlass(character, classDataByIndex) {
     })),
     conScore: attributes?.con ?? 10,
     robustoLevels: hasRobusto ? totalLevel : 0,
+    racialHpPerLevel: racialHpPerLevel(info?.subrace),
   })
 }
 
@@ -665,6 +666,34 @@ const ALL_SAVE_KEYS = ['str', 'dex', 'con', 'int', 'wis', 'cha']
 export function getEffectiveSaveProficiencies(character) {
   if (classLevel(character, 'monge') >= 14) return [...ALL_SAVE_KEYS]
   return [...(character?.proficiencies?.savingThrows ?? [])]
+}
+
+/* ── Deslocamento (em METROS) ────────────────────────────────────── */
+
+/**
+ * Bônus de deslocamento concedido por classe, em metros (PHB).
+ *  - Bárbaro: Movimento Rápido (nv 5+, sem armadura pesada) = +3m.
+ *  - Monge: Movimento sem Armadura (escala por nível, sem armadura/escudo).
+ */
+export function classSpeedBonusMeters(character) {
+  let bonus = 0
+  if (classLevel(character, 'barbaro') >= 5) bonus += 3
+  const mk = classLevel(character, 'monge')
+  if (mk >= 18) bonus += 9
+  else if (mk >= 14) bonus += 7.5
+  else if (mk >= 10) bonus += 6
+  else if (mk >= 6) bonus += 4.5
+  else if (mk >= 2) bonus += 3
+  return bonus
+}
+
+/**
+ * Deslocamento base do personagem em METROS = base racial + bônus de classe.
+ * @param {object} character
+ * @param {number} raceSpeed - deslocamento base da raça (metros; padrão 9)
+ */
+export function baseSpeedMeters(character, raceSpeed) {
+  return (raceSpeed ?? 9) + classSpeedBonusMeters(character)
 }
 
 /* ── Class Features Uses ─────────────────────────────────────────── */

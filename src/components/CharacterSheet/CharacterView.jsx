@@ -383,7 +383,7 @@ export function CharacterView({
                 return Math.max(combat.armorClass ?? 0, unarmoredAC)
               })() },
               { label: 'Iniciativa', value: fmt(getModifier(attributes.dex)) },
-              { label: 'Deslocamento', value: `${combat.speed}ft` },
+              { label: 'Deslocamento', value: `${String(combat.speed ?? 9).replace('.', ',')}m` },
             ].map(({ label, value }) => (
               <div key={label} className={`border-2 ${P.border} rounded text-center ${P.section} py-1`}>
                 <div className="text-base font-black leading-none">{value}</div>

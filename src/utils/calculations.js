@@ -92,10 +92,13 @@ export function getProficiencyBonus(level) {
  * @param {Array<{die:number, level:number}>} [p.extras=[]] Multiclasses.
  * @param {number} [p.conScore=10]     Valor de Constituição.
  * @param {number} [p.robustoLevels=0] Nível total se possui Robusto, senão 0.
+ * @param {number} [p.racialHpPerLevel=0] PV racial por nível (ex: Tenacidade
+ *        Anã do Anão da Colina = +1/nível, PHB p.20).
  * @returns {number}
  */
 export function calculateMaxHpFromHitDice({
-  primaryDie = 8, primaryLevel = 1, extras = [], conScore = 10, robustoLevels = 0,
+  primaryDie = 8, primaryLevel = 1, extras = [], conScore = 10,
+  robustoLevels = 0, racialHpPerLevel = 0,
 } = {}) {
   const conMod = getModifier(conScore)
   const avg = die => Math.max(1, Math.floor((die || 8) / 2) + 1 + conMod)
@@ -105,7 +108,19 @@ export function calculateMaxHpFromHitDice({
     for (let l = 1; l <= (e?.level ?? 0); l++) total += avg(e?.die ?? 8)
   }
   if (robustoLevels > 0) total += 2 * robustoLevels
+  if (racialHpPerLevel > 0) {
+    const totalLevels = (primaryLevel || 0) + extras.reduce((s, e) => s + (e?.level ?? 0), 0)
+    total += racialHpPerLevel * totalLevels
+  }
   return Math.max(1, total)
+}
+
+/**
+ * PV racial por nível concedido pela sub-raça (PHB). Hoje só o Anão da Colina
+ * (Tenacidade Anã: +1 PV por nível). Demais sub-raças = 0.
+ */
+export function racialHpPerLevel(subrace) {
+  return subrace === 'anao-da-colina' ? 1 : 0
 }
 
 /**

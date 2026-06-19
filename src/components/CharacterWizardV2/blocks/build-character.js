@@ -1,7 +1,8 @@
 // src/components/CharacterWizardV2/blocks/build-character.js
 import { generateId } from '../../../hooks/useCharacter'
-import { calculateMaxHpFromHitDice, getModifier } from '../../../utils/calculations'
+import { calculateMaxHpFromHitDice, racialHpPerLevel, getModifier } from '../../../utils/calculations'
 import { injectSubclassSpellsAtBuild } from '../../../domain/subclassSpells'
+import { classSpeedBonusMeters } from '../../../domain/rules'
 
 export function resolveClassEquipmentItems(draft, classEquipment) {
   if (draft.classEquipmentChoice !== 'equipment') return []
@@ -97,6 +98,7 @@ export function computeDraftMaxHp(draft, classData) {
     extras: (draft?.multiclasses ?? []).map(mc => ({ die: mc.hitDie ?? 8, level: mc.level ?? 0 })),
     conScore: attrs.con ?? 10,
     robustoLevels: hasRobusto ? totalCharacterLevel(draft) : 0,
+    racialHpPerLevel: racialHpPerLevel(draft?.subrace),
   })
 }
 
@@ -128,6 +130,10 @@ export function buildCharacter(draft, classData, classEquipment, srdSpells = nul
     draft.class,
     ...((draft.multiclasses ?? []).map(mc => mc.class).filter(Boolean)),
   ])
+  // Deslocamento (metros): base racial (draft.speed) + bônus de classe.
+  const speedMeters = (draft.speed ?? 9) + classSpeedBonusMeters({
+    info: { class: draft.class, level: draft.level, multiclasses: draft.multiclasses ?? [] },
+  })
   let unarmoredAC = 10 + dexMod
   if (allClasses.has('barbaro')) unarmoredAC += getModifier(attrs.con ?? 10)
   else if (allClasses.has('monge')) unarmoredAC += getModifier(attrs.wis ?? 10)
@@ -177,7 +183,7 @@ export function buildCharacter(draft, classData, classEquipment, srdSpells = nul
     appliedRacialBonuses: draft.racialBonuses ?? {},
     combat: {
       maxHp, currentHp: maxHp, tempHp: 0,
-      armorClass: unarmoredAC, speed: 30,
+      armorClass: unarmoredAC, speed: speedMeters,
       hitDice: (() => {
         const pool = { [`d${classData?.hit_die ?? 8}`]: { total: draft.level, used: 0 } }
         for (const mc of draft.multiclasses ?? []) {

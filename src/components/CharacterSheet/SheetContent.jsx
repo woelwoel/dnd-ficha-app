@@ -14,6 +14,7 @@ import { ManeuversPanel } from './ManeuversPanel'
 import { PreparedSpellsList } from './PreparedSpellsList'
 import { CombatClassActions } from './CombatClassActions'
 import { useCharacterContext } from './CharacterContext'
+import { baseSpeedMeters } from '../../domain/rules'
 
 /* ── Wrapper de painel de aba ─────────────────────────────── */
 function TabPanel({ id, readOnly, children }) {
@@ -214,6 +215,7 @@ export function SheetContent({ activeTab }) {
               onUpdateCombat={updateCombat}
               suggestedAC={calc.suggestedAC}
               suggestedMaxHp={calc.suggestedMaxHp}
+              suggestedSpeed={baseSpeedMeters(character, races.find(r => r.index === character.info?.race)?.speed) + (calc.featSpeedBonus ?? 0)}
               passivePerception={calc.passivePerception}
               featSpeedBonus={calc.featSpeedBonus}
               errors={fichaErrors}

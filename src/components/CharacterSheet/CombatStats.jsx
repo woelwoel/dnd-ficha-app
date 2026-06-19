@@ -420,7 +420,7 @@ function ConditionsTracker({ conditions = [], onToggle }) {
 /* ── Componente principal ──────────────────────────────────── */
 function CombatStatsBase({
   combat, attributes, profBonus, onUpdateCombat,
-  suggestedAC, suggestedMaxHp, passivePerception, featSpeedBonus = 0,
+  suggestedAC, suggestedMaxHp, suggestedSpeed = null, passivePerception, featSpeedBonus = 0,
   errors = {},
   onUpdateDeathSaves, onToggleCondition, onSetInspiration, onSetExhaustion,
   // Sistema de dano/cura/testes de morte (PR 2 do damage-system).
@@ -480,16 +480,16 @@ function CombatStatsBase({
           action={<RollButton notation={initNotation} label="Iniciativa" size="xs" className="mt-0.5" />}
         />
         <StatBox label="Velocidade"
-          value={exh.speedMultiplier < 1 ? `${effectiveSpeed}ft` : `${combat.speed}ft`}
+          value={(exh.speedMultiplier < 1 ? `${effectiveSpeed}` : `${combat.speed}`).replace('.', ',') + 'm'}
           editable={exh.speedMultiplier >= 1}
-          onChange={v => onUpdateCombat('speed', Math.max(0, parseInt(v) || 0))}
+          onChange={v => onUpdateCombat('speed', Math.max(0, parseFloat(String(v).replace(',', '.')) || 0))}
           warning={
             exh.speedMultiplier === 0 ? '⚠ Imóvel (Exaustão 5)'
             : exh.speedMultiplier < 1 ? '⚠ Metade (Exaustão 2+)'
             : null
           }
-          hint={exh.speedMultiplier >= 1 && featSpeedBonus > 0 && combat.speed < (30 + featSpeedBonus)
-            ? { label: `Mob: +${featSpeedBonus}ft`, onApply: () => onUpdateCombat('speed', combat.speed + featSpeedBonus) }
+          hint={exh.speedMultiplier >= 1 && suggestedSpeed != null && combat.speed !== suggestedSpeed
+            ? { label: `Sugerido: ${String(suggestedSpeed).replace('.', ',')}m`, onApply: () => onUpdateCombat('speed', suggestedSpeed) }
             : null}
         />
       </div>
@@ -675,9 +675,17 @@ function CombatStatsBase({
             <label className="text-xs text-ink-200">PV Máximo</label>
             {suggestedMaxHp != null && suggestedMaxHp !== combat.maxHp && (
               <button
-                onClick={() => onUpdateCombat('maxHp', suggestedMaxHp)}
+                onClick={() => {
+                  const oldMax = combat.maxHp ?? 0
+                  const cur = combat.currentHp ?? 0
+                  onUpdateCombat('maxHp', suggestedMaxHp)
+                  // Estava com PV cheio → sobe junto; novo máximo menor → clampa.
+                  if (cur >= oldMax || cur > suggestedMaxHp) {
+                    onUpdateCombat('currentHp', suggestedMaxHp)
+                  }
+                }}
                 className="text-xs text-amber-500 hover:text-amber-300 underline"
-                title="Aplica o PV calculado pela classe e CON"
+                title="Aplica o PV calculado por classe, CON, multiclasse e traços raciais (também ajusta o PV atual)"
               >
                 Sugerido: {suggestedMaxHp}
               </button>

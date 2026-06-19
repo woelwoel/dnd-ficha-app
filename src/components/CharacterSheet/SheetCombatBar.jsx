@@ -87,7 +87,7 @@ function StatChip({ icon, label, value, title, editable = false, onChange }) {
  */
 function ActionEconomy({ turnState, speed, onToggle, onResetTurn, onSetMovement }) {
   const t = turnState ?? {}
-  const moveTotal = Math.max(0, speed ?? 30)
+  const moveTotal = Math.max(0, speed ?? 9)
   const moveUsed  = Math.max(0, t.movementUsed ?? 0)
   const moveLeft  = Math.max(0, moveTotal - moveUsed)
   const moveExceeded = moveUsed > moveTotal
@@ -128,7 +128,7 @@ function ActionEconomy({ turnState, speed, onToggle, onResetTurn, onSetMovement 
 
       {/* Movimento: input + label "X/Y ft" */}
       <div
-        title={`Movimento gasto neste turno: ${moveUsed} de ${moveTotal} pés`}
+        title={`Movimento gasto neste turno: ${moveUsed} de ${moveTotal} metros`}
         className={[
           'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm border text-xs shrink-0',
           moveExceeded
@@ -145,7 +145,7 @@ function ActionEconomy({ turnState, speed, onToggle, onResetTurn, onSetMovement 
           value={moveUsed}
           onChange={e => onSetMovement?.(e.target.value)}
           onWheel={e => e.currentTarget.blur()}
-          aria-label="Pés de movimento gastos no turno"
+          aria-label="Metros de movimento gastos no turno"
           className="w-8 text-center bg-transparent text-xs font-bold leading-none focus:outline-none focus:bg-parchment-50 rounded-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         />
         <span className="font-mono leading-none text-[11px]">/{moveTotal}</span>
@@ -197,7 +197,7 @@ export function SheetCombatBar() {
   // Iniciativa: usa o cálculo (mod de DES + feats como Alert) em vez do override
   // armazenado em combat.initiative — esse só vale como display histórico/fallback.
   const init = calc?.initiative ?? combat.initiative ?? 0
-  const speed = combat.speed ?? 30
+  const speed = combat.speed ?? 9
 
   // Stats de conjuração — só aparecem se o personagem é caster (tem ability key).
   const spellAbilityKey = calc?.spellAbilityKey ?? null
@@ -283,8 +283,8 @@ export function SheetCombatBar() {
           <StatChip
             icon={<Icon name="move" size={14} strokeWidth={1.75} />}
             label="VEL"
-            value={speed}
-            title="Velocidade (em pés)"
+            value={`${String(speed).replace('.', ',')}m`}
+            title="Velocidade (em metros)"
           />
 
           {/* Stats de conjuração — só pra casters (mago, clérigo, paladino N2+, etc) */}

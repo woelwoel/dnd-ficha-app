@@ -22,6 +22,7 @@ export function RaceBlock({ draft, updateDraft, races }) {
       racialSkills: [],
       draconicAncestry: '',
       racialCantrip: '',
+      speed: race?.speed ?? 9, // deslocamento base da raça, em metros
     })
   }
 
