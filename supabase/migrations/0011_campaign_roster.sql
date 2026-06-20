@@ -22,7 +22,7 @@ returns table (
   max_hp         int,
   current_hp     int,
   armor_class    int,
-  position       jsonb,
+  "position"     jsonb,  -- aspas: `position` é palavra reservada no SQL
   last_opened_at timestamptz
 )
 language sql
@@ -44,7 +44,7 @@ as $$
     nullif(c.data->'combat'->>'maxHp', '')::int   as max_hp,
     nullif(c.data->'combat'->>'currentHp', '')::int as current_hp,
     nullif(c.data->'combat'->>'armorClass', '')::int as armor_class,
-    c.data->'position'                            as position,
+    c.data->'position'                            as "position",
     c.last_opened_at
   from public.characters c
   where c.campaign_id = p_campaign_id
