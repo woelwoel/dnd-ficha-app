@@ -580,14 +580,15 @@ export function CharacterInfo({ info, onUpdate, races, classes, backgrounds, err
        * Manobras). O bloco aqui também renderizava errado pra arrays
        * (mostrava IDs concatenados em vez dos nomes). */}
 
-      {/* Antecedente */}
-      <div>
+      {/* Antecedente — col-span-2 pra nomes longos (ex: "Artesão de Guilda")
+          não ficarem cortados no campo estreito. */}
+      <div className="sm:col-span-2">
         <label className="block text-xs text-gray-400 mb-1">Antecedente</label>
         <div className="flex gap-1">
           <select
             value={info.background}
             onChange={e => onBackgroundChange?.(e.target.value) ?? onUpdate('background', e.target.value)}
-            className="flex-1 bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-400"
+            className="flex-1 min-w-0 bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-400"
           >
             <option value="">Escolher...</option>
             {backgrounds.map(b => (
