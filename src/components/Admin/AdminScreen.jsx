@@ -68,7 +68,7 @@ export function AdminScreen({ onBack }) {
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <button
-                  onClick={() => navigate(`/c/${c.shortId ?? c.id}`)}
+                  onClick={() => navigate(`/c/${c.shortId ?? c.id}?adm=1`)}
                   aria-label={`Abrir ficha ${c.name}`}
                   className="text-xs px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 text-gray-200"
                 >Abrir</button>

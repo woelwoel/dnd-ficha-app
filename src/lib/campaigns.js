@@ -121,6 +121,41 @@ export async function leaveCampaign(campaignId) {
   return removeMember(campaignId, user.id)
 }
 
+/**
+ * Resumo das fichas da mesa (RPC campaign_roster, migration 0011), visível a
+ * QUALQUER membro — devolve só campos seguros (sem o `data` completo). Usado
+ * no mapa/Companhia pra todos verem a companhia sem conseguir abrir a ficha
+ * alheia. Molda cada linha no formato que token/sidebar/tooltip esperam.
+ *
+ * Retorna { ok } pra o chamador cair no fallback (loadCharacters) quando a
+ * migration 0011 ainda não foi aplicada (RPC inexistente → erro).
+ */
+export async function loadCampaignRoster(campaignId) {
+  const { data, error } = await supabase.rpc('campaign_roster', { p_campaign_id: campaignId })
+  if (error) { logDev('loadCampaignRoster', error); return { ok: false, rows: [] } }
+  const rows = (data ?? []).map(r => ({
+    id: r.id,
+    shortId: r.short_id ?? null,
+    ownerId: r.owner_id ?? null,
+    campaignId: r.campaign_id ?? null,
+    isSummary: true,
+    info: {
+      name: r.name ?? '',
+      class: r.class ?? '',
+      race: r.race ?? '',
+      level: r.level ?? 1,
+    },
+    combat: {
+      maxHp: r.max_hp ?? null,
+      currentHp: r.current_hp ?? null,
+      armorClass: r.armor_class ?? null,
+    },
+    position: r.position ?? null,
+    lastOpenedAt: r.last_opened_at ? Date.parse(r.last_opened_at) : null,
+  }))
+  return { ok: true, rows }
+}
+
 /** Carrega fichas DA MESA (apenas o DM vê via policy). */
 export async function loadCampaignCharacters(campaignId) {
   const { data, error } = await supabase

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CharacterMap } from './CharacterMap'
 import { CharacterSidebar } from './CharacterSidebar'
@@ -16,6 +16,7 @@ import {
   updateCharacterPosition,
   deleteCharacter,
 } from '../../utils/storage'
+import { loadCampaignRoster, listMyCampaigns } from '../../lib/campaigns'
 import {
   CAMPAIGN_NAME_DEFAULT,
   CAMPAIGN_NAME_STORAGE_KEY,
@@ -46,29 +47,68 @@ export function CharacterList({ onSelect, onCreate }) {
   const [loading, setLoading] = useState(true)
   const [view, setView] = useState(readView)
   const [campaignName] = useState(readCampaignName)
+  const [isDmOfScope, setIsDmOfScope] = useState(false)
   const navigate = useNavigate()
   const [scope, setScope] = useCampaignContext()
-  const { isAdmin } = useAuth()
+  const { isAdmin, user } = useAuth()
+  const currentUserId = user?.id ?? null
 
   // Carga inicial + recarga.
   const reload = useCallback(async () => {
     setLoading(true)
-    const list = await loadCharacters(scope)
-    setCharacters(list)
+    const inCampaign = scope && typeof scope === 'object' && scope.campaignId
+    if (inCampaign) {
+      // Visão de mesa: todos os membros enxergam a companhia via RESUMO
+      // (RPC campaign_roster) — sem o `data` completo das fichas alheias.
+      // Descobre o papel na mesa pra liberar a abertura só pra dono/DM.
+      const mine = await listMyCampaigns()
+      setIsDmOfScope(mine.some(c => c.id === scope.campaignId && c.role === 'dm'))
+      const res = await loadCampaignRoster(scope.campaignId)
+      // Fallback pro caminho antigo enquanto a migration 0011 não foi aplicada.
+      setCharacters(res.ok ? res.rows : await loadCharacters(scope))
+    } else {
+      setIsDmOfScope(false)
+      setCharacters(await loadCharacters(scope))
+    }
     setLoading(false)
   }, [scope])
 
   useEffect(() => { reload() }, [reload])
 
+  // Quem pode abrir/mover/excluir cada ficha. O admin NÃO entra aqui de
+  // propósito: no jogo normal é tratado como jogador comum (god-mode só na
+  // tela Admin). Dono: tudo. DM: abre (leitura), mas não move/exclui ficha
+  // alheia (RLS owner-only). Jogador comum: só a própria.
+  const enriched = useMemo(() => {
+    const inCampaign = scope && typeof scope === 'object' && scope.campaignId
+    return characters.map(c => {
+      // Escopo pessoal/mine: loadCharacters já devolve só as fichas do dono,
+      // então tudo é editável/movível. A checagem de dono só vale na mesa,
+      // onde o RESUMO traz fichas de outros membros.
+      if (!inCampaign) {
+        return { ...c, canOpen: true, canMove: true, canDelete: true }
+      }
+      const isOwn = !!(c.ownerId && currentUserId && c.ownerId === currentUserId)
+      return {
+        ...c,
+        canOpen: isOwn || isDmOfScope || (!c.ownerId),
+        canMove: isOwn,
+        canDelete: isOwn,
+      }
+    })
+  }, [characters, currentUserId, isDmOfScope, scope])
+
   const handleSelect = useCallback(async (id) => {
+    const ch = enriched.find(c => c.id === id)
+    // Não abre ficha alheia (token de outro jogador no mapa/Companhia).
+    if (ch && ch.canOpen === false) return
     await touchCharacterLastOpened(id)
     if (onSelect) {
       // Navega usando short_id quando disponível (URLs mais curtas);
       // fallback pro UUID em fichas ainda sem short_id (pre-migration 0003).
-      const ch = characters.find(c => c.id === id)
       onSelect(ch?.shortId ?? id)
     }
-  }, [onSelect, characters])
+  }, [onSelect, enriched])
 
   const switchView = useCallback((v) => {
     setView(v)
@@ -157,7 +197,7 @@ export function CharacterList({ onSelect, onCreate }) {
           <>
             <div className="flex-1 relative p-3 min-w-0">
               <CharacterMap
-                characters={characters}
+                characters={enriched}
                 campaignName={campaignName}
                 onSelect={handleSelect}
                 onPositionChange={handlePositionChange}
@@ -166,7 +206,7 @@ export function CharacterList({ onSelect, onCreate }) {
             </div>
             <div className="hidden md:block w-[260px] flex-shrink-0 p-3 pl-0">
               <CharacterSidebar
-                characters={characters}
+                characters={enriched}
                 onSelect={handleSelect}
                 onDelete={handleDelete}
               />
@@ -175,7 +215,7 @@ export function CharacterList({ onSelect, onCreate }) {
         ) : (
           <div className="flex-1 overflow-y-auto p-3 max-w-3xl mx-auto w-full">
             <CharacterListView
-              characters={characters}
+              characters={enriched}
               onSelect={handleSelect}
             />
           </div>

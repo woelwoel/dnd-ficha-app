@@ -31,10 +31,11 @@ describe('AdminScreen', () => {
     expect(screen.getByText('Mesa do Allyson')).toBeInTheDocument()
   })
 
-  it('clicar em abrir ficha navega pra /c/:id', async () => {
+  it('clicar em abrir ficha navega pra /c/:id com contexto admin (?adm=1)', async () => {
     render(<AdminScreen onBack={() => {}} />)
     await waitFor(() => expect(screen.getByText('Allyson')).toBeInTheDocument())
     await userEvent.click(screen.getByRole('button', { name: /abrir ficha allyson/i }))
-    expect(nav).toHaveBeenCalledWith('/c/S1')
+    // ?adm=1 destrava o god-mode só quando a ficha é aberta pela tela Admin.
+    expect(nav).toHaveBeenCalledWith('/c/S1?adm=1')
   })
 })

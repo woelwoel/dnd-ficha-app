@@ -128,14 +128,22 @@ export function CharacterMap({
         <text x="39" y="3.5" textAnchor="middle" fontSize="7" fill="var(--color-shell-800)" fontWeight="700">N</text>
       </svg>
 
-      {positioned.map(c => (
-        <CharacterToken
-          key={c.id}
-          character={c}
-          onSelect={noopSelect}
-          onDragStart={handleTokenDragStart}
-        />
-      ))}
+      {positioned.map(c => {
+        // Só o dono arrasta o próprio token (a RPC de posição é owner-only).
+        // Tokens sem drag abrem pelo onClick do botão, que cai no onSelect
+        // do parent (handleSelect) — onde o acesso (dono/DM) é verificado.
+        // Com drag, a seleção acontece no pointerup; o onSelect do token
+        // vira no-op pra não disparar duas vezes.
+        const canMove = c.canMove !== false
+        return (
+          <CharacterToken
+            key={c.id}
+            character={c}
+            onSelect={canMove ? noopSelect : (onSelect || noopSelect)}
+            onDragStart={canMove ? handleTokenDragStart : undefined}
+          />
+        )
+      })}
     </div>
   )
 }

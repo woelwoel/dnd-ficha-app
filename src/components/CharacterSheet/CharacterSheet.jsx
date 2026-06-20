@@ -7,6 +7,7 @@ import { useCharacterRealtime } from '../../hooks/useCharacterRealtime'
 import { useSrd, useClassDataMap } from '../../providers/SrdProvider'
 import { loadCharacterByRouteParam, loadCharacterById } from '../../utils/storage'
 import { useAuth } from '../../auth'
+import { listMyCampaigns } from '../../lib/campaigns'
 import { SheetHeader } from './SheetHeader'
 import { SheetTabs, TABS, NavBlockedBanner, ImportErrorBanner } from './SheetTabs'
 import { SheetContent } from './SheetContent'
@@ -26,21 +27,26 @@ import { defaultClassFeatureUses, mergeFeatureUses } from '../../domain/rules'
  * Se montássemos o body com `initialCharacter = null` e depois trocássemos via
  * `setState`, o useCharacter ignoraria a mudança — a ficha apareceria zerada.
  */
-export function CharacterSheet({ characterId, onBack }) {
+export function CharacterSheet({ characterId, adminContext = false, onBack }) {
+  const { user } = useAuth()
+  const currentUserId = user?.id ?? null
   const [initialCharacter, setInitialCharacter] = useState(null)
   const [loadingCharacter, setLoadingCharacter] = useState(true)
   const [loadError, setLoadError] = useState(null)
+  const [accessDenied, setAccessDenied] = useState(false)
 
   useEffect(() => {
     let alive = true
     setLoadError(null)
+    setAccessDenied(false)
     if (!characterId || characterId === 'new') {
       setInitialCharacter(null)
       setLoadingCharacter(false)
       return
     }
     setLoadingCharacter(true)
-    loadCharacterByRouteParam(characterId).then(ch => {
+    ;(async () => {
+      const ch = await loadCharacterByRouteParam(characterId)
       if (!alive) return
       if (!ch) {
         setLoadError('Ficha não encontrada (ou sem permissão de leitura).')
@@ -48,20 +54,47 @@ export function CharacterSheet({ characterId, onBack }) {
         setLoadingCharacter(false)
         return
       }
+      // Gate de acesso: a RLS de admin devolve QUALQUER ficha, então a
+      // restrição "só dono/DM abre" tem de ser reforçada aqui no cliente
+      // (admin só passa em adminContext, vindo do /admin). Ver sheet-access.js.
+      const isOwner = !!(ch.ownerId && currentUserId && ch.ownerId === currentUserId)
+      let canOpen = adminContext || isOwner || !ch.ownerId
+      if (!canOpen && ch.campaignId) {
+        const mine = await listMyCampaigns()
+        if (!alive) return
+        canOpen = mine.some(c => c.id === ch.campaignId && c.role === 'dm')
+      }
+      if (!canOpen) {
+        setAccessDenied(true)
+        setInitialCharacter(null)
+        setLoadingCharacter(false)
+        return
+      }
       setInitialCharacter(ch)
       setLoadingCharacter(false)
-    }).catch(err => {
+    })().catch(err => {
       if (!alive) return
       setLoadError(`Erro ao carregar ficha: ${err?.message ?? 'desconhecido'}`)
       setLoadingCharacter(false)
     })
     return () => { alive = false }
-  }, [characterId])
+  }, [characterId, adminContext, currentUserId])
 
   if (loadingCharacter) {
     return (
       <div className="min-h-screen flex items-center justify-center text-amber-400 text-sm">
         Carregando ficha…
+      </div>
+    )
+  }
+
+  if (accessDenied) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-amber-400 text-sm">
+        <p>Você não tem acesso a esta ficha — ela pertence a outro jogador.</p>
+        <button onClick={onBack} className="px-4 py-2 border border-amber-400 rounded">
+          Voltar
+        </button>
       </div>
     )
   }
@@ -79,7 +112,7 @@ export function CharacterSheet({ characterId, onBack }) {
 
   // Re-monta o body sempre que characterId mudar — garante que useCharacter
   // pegue o initialCharacter correto na sua primeira render.
-  return <SheetBody key={characterId ?? 'new'} initialCharacter={initialCharacter} onBack={onBack} />
+  return <SheetBody key={characterId ?? 'new'} initialCharacter={initialCharacter} adminContext={adminContext} onBack={onBack} />
 }
 
 /**
@@ -88,7 +121,7 @@ export function CharacterSheet({ characterId, onBack }) {
  *
  * Layout: header fixo + sidebar de navegação (desktop) + área de conteúdo scrollável.
  */
-function SheetBody({ initialCharacter, onBack }) {
+function SheetBody({ initialCharacter, adminContext = false, onBack }) {
   const { races, classes, backgrounds } = useSrd()
   const classDataMap = useClassDataMap()
 
@@ -103,9 +136,11 @@ function SheetBody({ initialCharacter, onBack }) {
   const { character, setCharacter, ...updaters } = useCharacter(initialCharacter)
 
   // Detecta usuário corrente pra modo readonly (DM lendo ficha de jogador).
-  const { user, isAdmin } = useAuth()
+  // O poder de admin só vale em adminContext (aberto pelo /admin) — fora dele
+  // o admin é jogador comum. Ver sheet-access.js.
+  const { user } = useAuth()
   const currentUserId = user?.id ?? null
-  const readOnly = isSheetReadOnly({ ownerId: character?.ownerId, currentUserId, isAdmin })
+  const readOnly = isSheetReadOnly({ ownerId: character?.ownerId, currentUserId, adminContext })
 
   // #3 super review: conflito de versão = outro dispositivo da mesma conta
   // salvou esta ficha no meio da edição. Refetcha (a versão do servidor vence)

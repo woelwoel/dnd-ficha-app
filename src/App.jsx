@@ -119,10 +119,16 @@ function NewRoute() {
 function SheetRoute() {
   const navigate = useNavigate()
   const { id } = useParams()
+  const [params] = useSearchParams()
+  // `?adm=1` só é setado quando a ficha é aberta a partir da tela Admin.
+  // É o que destrava o god-mode (ler/editar qualquer ficha); fora dele o
+  // admin é tratado como jogador comum. Ver sheet-access.js.
+  const adminContext = params.get('adm') === '1'
   return (
     <RouteShell>
       <CharacterSheet
         characterId={id}
+        adminContext={adminContext}
         onBack={() => navigate('/')}
       />
     </RouteShell>

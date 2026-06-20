@@ -109,8 +109,9 @@ export function CharacterSidebar({ characters = [], onSelect, onDelete, onFilter
                 </span>
               </button>
 
-              {/* Delete inline com confirmação */}
-              {confirming ? (
+              {/* Delete inline com confirmação — só na ficha do próprio dono
+                  (excluir ficha alheia falharia no RLS de qualquer forma). */}
+              {c.canDelete === false ? null : confirming ? (
                 <span className="flex items-center gap-1 flex-shrink-0">
                   <button
                     type="button"
