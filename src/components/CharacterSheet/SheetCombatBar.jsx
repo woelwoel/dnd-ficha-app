@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { useCharacterContext } from './CharacterContext'
 import { CONDITIONS_BY_ID } from '../../domain/conditions'
+import { baseSpeedMeters } from '../../domain/rules'
 import { Icon } from '../ui/Icon'
 
 /* Pequeno controle inline de dano/cura ──────────────────────── */
@@ -53,7 +54,7 @@ function HpQuickControls({ onDamage, onHeal, disabled }) {
 /* Chip de stat numérico (CA / INIT / VEL) ──────────────────────
  * Quando `editable` + `onChange` são passados, o valor vira input.
  */
-function StatChip({ icon, label, value, title, editable = false, onChange }) {
+function StatChip({ icon, label, value, title, editable = false, onChange, suggestion = null }) {
   return (
     <div
       title={title}
@@ -73,6 +74,16 @@ function StatChip({ icon, label, value, title, editable = false, onChange }) {
         />
       ) : (
         <span className="text-sm font-bold leading-none">{value}</span>
+      )}
+      {suggestion && (
+        <button
+          type="button"
+          onClick={suggestion.onApply}
+          title={suggestion.title}
+          className="text-[11px] text-amber-700 hover:text-amber-600 underline leading-none"
+        >
+          {suggestion.label}
+        </button>
       )}
     </div>
   )
@@ -184,7 +195,7 @@ function ConditionChip({ id, onToggle }) {
 
 /* Componente principal ───────────────────────────────────────── */
 export function SheetCombatBar() {
-  const { character, calc, updaters } = useCharacterContext()
+  const { character, calc, updaters, races } = useCharacterContext()
   const combat = character.combat ?? {}
   const info = character.info ?? {}
 
@@ -198,6 +209,10 @@ export function SheetCombatBar() {
   // armazenado em combat.initiative — esse só vale como display histórico/fallback.
   const init = calc?.initiative ?? combat.initiative ?? 0
   const speed = combat.speed ?? 9
+  // Deslocamento sugerido (metros) = base racial + bônus de classe + Mobilidade.
+  // Permite corrigir fichas antigas salvas com valor em pés (ex: 30 → 9m).
+  const raceSpeed = (races ?? []).find(r => r.index === info.race)?.speed
+  const suggestedSpeed = baseSpeedMeters(character, raceSpeed) + (calc?.featSpeedBonus ?? 0)
 
   // Stats de conjuração — só aparecem se o personagem é caster (tem ability key).
   const spellAbilityKey = calc?.spellAbilityKey ?? null
@@ -285,6 +300,13 @@ export function SheetCombatBar() {
             label="VEL"
             value={`${String(speed).replace('.', ',')}m`}
             title="Velocidade (em metros)"
+            suggestion={suggestedSpeed != null && speed !== suggestedSpeed
+              ? {
+                  label: `→${String(suggestedSpeed).replace('.', ',')}m`,
+                  title: `Aplicar deslocamento sugerido (raça + classe): ${String(suggestedSpeed).replace('.', ',')}m`,
+                  onApply: () => updaters.updateCombat('speed', suggestedSpeed),
+                }
+              : null}
           />
 
           {/* Stats de conjuração — só pra casters (mago, clérigo, paladino N2+, etc) */}
