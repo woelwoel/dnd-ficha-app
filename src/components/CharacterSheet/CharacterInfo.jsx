@@ -358,8 +358,10 @@ function PortraitUpload({ portrait, onUpload }) {
 function XpTracker({ xp = 0, level = 1, onUpdate }) {
   const currentThreshold = XP_THRESHOLDS[level - 1] ?? 0
   const nextThreshold    = XP_THRESHOLDS[level] ?? null  // null = nível 20
+  // Clampa em [0,100]: nível setado manualmente com XP abaixo do limiar do
+  // nível atual daria progresso negativo (ex: "-600%").
   const progress = nextThreshold
-    ? Math.min(100, ((xp - currentThreshold) / (nextThreshold - currentThreshold)) * 100)
+    ? Math.max(0, Math.min(100, ((xp - currentThreshold) / (nextThreshold - currentThreshold)) * 100))
     : 100
 
   return (
