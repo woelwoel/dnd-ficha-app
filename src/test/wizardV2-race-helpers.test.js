@@ -80,11 +80,17 @@ describe('integridade dos bônus raciais (dado real)', () => {
 })
 
 describe('getRaceRequirements', () => {
-  it('humano variante: 2 free abilities + 1 perícia', () => {
+  it('humano variante: 2 free abilities + 1 perícia + 1 talento', () => {
     const r = getRaceRequirements({ race: 'humano', subrace: 'tracos-raciais-alternativos' }, null, null)
     expect(r.freeAbility).toBe(2)
     expect(r.racialSkills).toBe(1)
+    expect(r.racialFeat).toBe(true)
     expect(r.freeAbilityExclude).toBeNull()
+  })
+
+  it('humano base (sem subraça): NÃO exige talento', () => {
+    const r = getRaceRequirements({ race: 'humano', subrace: '' }, null, null)
+    expect(r.racialFeat).toBe(false)
   })
 
   it('meio-elfo: 2 free abilities (exceto CHA) + 2 perícias', () => {

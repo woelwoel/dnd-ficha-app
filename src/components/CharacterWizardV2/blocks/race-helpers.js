@@ -32,5 +32,6 @@ export function getRaceRequirements(draft, _race, _subrace) {
     freeAbility:        isHumanVariant ? 2 : isMeioElfo ? 2 : 0,
     freeAbilityExclude: isMeioElfo ? 'cha' : null,
     racialSkills:       isHumanVariant ? 1 : isMeioElfo ? 2 : 0,
+    racialFeat:         isHumanVariant,
   }
 }
