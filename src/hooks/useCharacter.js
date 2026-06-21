@@ -653,6 +653,20 @@ export function useCharacter(initialCharacter = null) {
   }, [setCharacter])
 
   /**
+   * Liga/desliga uma besta na lista de conhecidas do druida (PHB p.66).
+   * Adiciona se ausente, remove se presente. Marcação feita pelo jogador.
+   */
+  const toggleKnownBeast = useCallback(beastIndex => {
+    setCharacter(prev => {
+      const list = prev.combat?.knownBeasts ?? []
+      const next = list.includes(beastIndex)
+        ? list.filter(i => i !== beastIndex)
+        : [...list, beastIndex]
+      return { ...prev, combat: { ...prev.combat, knownBeasts: next } }
+    })
+  }, [setCharacter])
+
+  /**
    * Atualiza o estado do Companheiro Animal do Patrulheiro (Mestre das Bestas).
    * Estrutura: { name, currentHp, maxHp, ac }.
    */
@@ -729,6 +743,7 @@ export function useCharacter(initialCharacter = null) {
     setExhaustion,
     setRageActive,
     setWildShape,
+    toggleKnownBeast,
     setRangerCompanion,
     updatePortent,
     // Economia de ação do turno (PHB p.189)
@@ -758,6 +773,7 @@ export function useCharacter(initialCharacter = null) {
     setChosenFeature,
     setClassFeatureUses, spendFeatureUse, regainFeatureUse,
     updateDeathSaves, toggleCondition, setInspiration, setExhaustion, setRageActive, setWildShape,
+    toggleKnownBeast,
     setRangerCompanion, updatePortent,
     applyDamage, applyHealing, gainTempHp, stabilize, rollDeathSave,
     lastDamageEvent, clearLastDamageEvent, consumeInspiration,
