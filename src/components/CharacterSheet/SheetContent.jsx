@@ -94,6 +94,7 @@ export function SheetContent({ activeTab }) {
     setChosenFeature,
     spendFeatureUse, regainFeatureUse,
     updateDeathSaves, toggleCondition, setInspiration, setExhaustion, setRageActive, setWildShape,
+    toggleKnownBeast,
     setRangerCompanion, updatePortent,
     // Sistema de dano/cura/testes de morte
     applyDamage, applyHealing, stabilize, rollDeathSave,
@@ -200,6 +201,7 @@ export function SheetContent({ activeTab }) {
               onToggleSlot={toggleSlot}
               onSetWildShape={setWildShape}
               onApplyDamage={applyDamage}
+              onToggleKnownBeast={toggleKnownBeast}
               onSetRangerCompanion={setRangerCompanion}
               onUpdatePortent={updatePortent}
             />

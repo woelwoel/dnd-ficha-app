@@ -63,6 +63,7 @@ function baseCharacter(classIndex, level, multiclasses = []) {
       attacks: [], deathSaves: { successes: 0, failures: 0 },
       concentrating: { spellIndex: null, spellName: null },
       classFeatureUses: [],
+      knownBeasts: [],
     },
     spellcasting: { ability: null, usedSlots: {}, spells: [] },
   }
@@ -104,6 +105,13 @@ function ControlledActions({ initial }) {
         }
         onSetWildShape={(ws) =>
           setCharacter(c => ({ ...c, combat: { ...c.combat, wildShape: ws ?? { active: false, beastName: '', currentHp: 0, maxHp: 0 } } }))
+        }
+        onToggleKnownBeast={(idx) =>
+          setCharacter(c => {
+            const list = c.combat.knownBeasts ?? []
+            const next = list.includes(idx) ? list.filter(i => i !== idx) : [...list, idx]
+            return { ...c, combat: { ...c.combat, knownBeasts: next } }
+          })
         }
       />
     </DiceRollerProvider>
@@ -267,17 +275,16 @@ describe('CombatClassActions E2E', () => {
       expect(screen.getByText(/CR ≤ 1/i)).toBeInTheDocument()
     })
 
-    it('transformação via picker de bestas cria estado wildShape ativo', async () => {
+    it('transformação via picker: marcar "já vi essa" libera transformar', async () => {
       const user = userEvent.setup()
       render(<ControlledActions initial={baseCharacter('druida', 4)} />)
       await user.click(screen.getByRole('button', { name: /^Transformar$/i }))
-      // Picker aparece e carrega catálogo — Lobo está disponível (CR 1/4)
-      const lobo = await screen.findByRole('button', { name: /Lobo/i })
-      await user.click(lobo)
-      // Banner verde aparece
+      // Lobo começa bloqueado — marca como vista
+      await user.click(await screen.findByRole('button', { name: /já vi essa/i }))
+      // Agora o Lobo é transformável
+      await user.click(await screen.findByRole('button', { name: /Lobo/i }))
       await waitFor(() => expect(screen.getByText(/EM FORMA SELVAGEM — Lobo/)).toBeInTheDocument())
       expect(screen.getByText('11/11')).toBeInTheDocument()
-      // Stat block mostra AC e ataque
       expect(screen.getByText('Mordida')).toBeInTheDocument()
     })
   })

@@ -4,6 +4,7 @@ import { getModifier, formatModifier } from '../../utils/calculations'
 import { getSpellSlots } from '../../utils/spellcasting'
 import { useDiceRoller } from '../../hooks/useDiceRoller'
 import { WildShapePanel } from './WildShapePanel'
+import { KnownBeastsPanel } from './KnownBeastsPanel'
 import { LandCirclePanel } from './LandCirclePanel'
 import { WizardArcanePanel } from './WizardArcanePanel'
 import { RangerPanel } from './RangerPanel'
@@ -687,7 +688,7 @@ function RagePanel({ character, barbLevel, attributes, onToggleRage, ragesRemain
  */
 export function CombatClassActions({
   character, featureUses, onToggleRage, onSpendFeatureUse, onRegainFeatureUse,
-  onToggleSlot, onSetWildShape, onApplyDamage,
+  onToggleSlot, onSetWildShape, onApplyDamage, onToggleKnownBeast,
   onSetRangerCompanion, onUpdatePortent,
 }) {
   // Fonte da verdade: array DERIVADO (mergeFeatureUses(persistido, default)) que
@@ -832,6 +833,14 @@ export function CombatClassActions({
           onApplyDamage={onApplyDamage}
           slotsAvailable={slotsAvailable}
           onConsumeSlot={handleConsumeSlot}
+          onToggleKnownBeast={onToggleKnownBeast}
+        />
+      )}
+      {druidaLevel >= 2 && (
+        <KnownBeastsPanel
+          druidaLevel={druidaLevel}
+          character={character}
+          onToggleKnownBeast={onToggleKnownBeast}
         />
       )}
       {druidaLevel >= 2 && (
