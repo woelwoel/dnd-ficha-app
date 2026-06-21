@@ -160,9 +160,10 @@ function BeastPicker({ beasts, crLimit, allowFly, allowSwim, isMoon, knownSet, o
                     className="text-left text-[13px] px-2 py-1.5 rounded border border-dashed border-parchment-600 bg-parchment-100/50 opacity-70"
                   >
                     <div className="flex items-center gap-1.5">
-                      <span className="font-bold text-ink-300 truncate flex-1">🔒 {b.name}</span>
+                      <span className="font-bold text-ink-300 truncate flex-1"><span aria-hidden>🔒</span> {b.name}</span>
                       <button
                         onClick={() => onMarkSeen(b.index)}
+                        aria-label={`já vi essa — ${b.name}`}
                         className="text-[11px] px-1.5 py-0.5 rounded border border-emerald-700 bg-emerald-100 text-emerald-900 hover:bg-emerald-200 font-bold shrink-0"
                       >
                         já vi essa
@@ -375,6 +376,7 @@ export function WildShapePanel({
   if (druidaLevel < 2) return null
 
   function selectBeast(beast) {
+    if (!knownSet.has(beast.index)) return
     onSetWildShape({
       active:    true,
       beastIndex: beast.index,
