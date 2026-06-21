@@ -47,6 +47,7 @@ export function KnownBeastsPanel({ druidaLevel, character, onToggleKnownBeast })
     <div className="rounded-lg border-2 border-parchment-600 bg-parchment-50 p-3">
       <button
         onClick={() => setOpen(v => !v)}
+        aria-expanded={open}
         className="w-full flex items-center justify-between text-sm font-display tracking-wide text-ink-500"
       >
         <span>📖 Bestas conhecidas</span>
