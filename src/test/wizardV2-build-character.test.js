@@ -33,6 +33,15 @@ describe('computeFinalAttributes', () => {
     }
     expect(computeFinalAttributes(draft).str).toBe(17) // 14 + 1 (feat) + 2 (mc asi)
   })
+
+  it('aplica bônus de atributo do talento racial (Humano Variante)', () => {
+    const draft = {
+      baseAttributes: { str: 10, dex: 14, con: 10, int: 10, wis: 10, cha: 10 },
+      racialBonuses: { dex: 1 },
+      racialFeat: { featIndex: 'atleta', featName: 'Atleta', featAttrBonus: { amount: 1, choices: ['str', 'dex'] }, featChosenAttr: 'dex' },
+    }
+    expect(computeFinalAttributes(draft).dex).toBe(16) // 14 + 1 racial + 1 talento
+  })
 })
 
 const guerreiro = { index: 'guerreiro', hit_die: 10, spellcasting_ability: '' }
@@ -65,6 +74,28 @@ describe('buildCharacter', () => {
     }
     const c = buildCharacter(draft, guerreiro, {})
     expect(c.attributes.str).toBe(17)
+  })
+
+  it('coleta o talento racial do Humano Variante em info.feats (nível 1)', () => {
+    const draft = {
+      ...baseDraft,
+      racialFeat: { featIndex: 'robusto', featName: 'Robusto', featAttrBonus: null, featChosenAttr: null },
+    }
+    const c = buildCharacter(draft, guerreiro, {})
+    expect(c.info.feats).toEqual(expect.arrayContaining([
+      expect.objectContaining({ index: 'robusto', name: 'Robusto', takenAtLevel: 1, source: 'race' }),
+    ]))
+  })
+
+  it('talento racial Robusto soma PV (Humano Variante)', () => {
+    // Robusto (PHB): +2 PV por nível. Guerreiro nv1 → +2.
+    const draft = { ...baseDraft, level: 1 }
+    const semRobusto = buildCharacter(draft, guerreiro, {}).combat.maxHp
+    const comRobusto = buildCharacter(
+      { ...draft, racialFeat: { featIndex: 'robusto', featName: 'Robusto' } },
+      guerreiro, {},
+    ).combat.maxHp
+    expect(comRobusto).toBe(semRobusto + 2)
   })
 
   it('calcula maxHp via classData', () => {

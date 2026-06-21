@@ -67,6 +67,14 @@ export function computeFinalAttributes(draft) {
       }
     }
   }
+  // Talento racial do Humano Variante (nível 1) — pode conceder +1 a um atributo.
+  const rf = draft?.racialFeat
+  if (rf?.featAttrBonus) {
+    const targetAttr = rf.featChosenAttr ?? rf.featAttrBonus.choices?.[0]
+    if (targetAttr) {
+      attrs[targetAttr] = Math.min(20, (attrs[targetAttr] ?? 10) + (rf.featAttrBonus.amount ?? 1))
+    }
+  }
   return attrs
 }
 
@@ -90,7 +98,8 @@ export function computeDraftMaxHp(draft, classData) {
   const hasRobusto = [
     ...Object.values(draft?.asiChoices ?? {}),
     ...((draft?.multiclasses ?? []).flatMap(mc => Object.values(mc.asiChoices ?? {}))),
-  ].some(c => c?.type === 'feat' && c.featIndex === 'robusto')
+    ...(draft?.racialFeat ? [draft.racialFeat] : []),
+  ].some(c => c?.featIndex === 'robusto')
 
   return calculateMaxHpFromHitDice({
     primaryDie: classData?.hit_die ?? 8,
@@ -159,6 +168,16 @@ export function buildCharacter(draft, classData, classEquipment, srdSpells = nul
       })),
       chosenFeatures: draft.chosenFeatures ?? {},
       feats: [
+        // Talento racial do Humano Variante (sempre nível 1).
+        ...(draft.racialFeat?.featIndex ? [{
+          index: draft.racialFeat.featIndex,
+          name: draft.racialFeat.featName,
+          takenAtLevel: 1,
+          source: 'race',
+          ...(draft.racialFeat.featAttrBonus
+            ? { chosenAttr: draft.racialFeat.featChosenAttr ?? draft.racialFeat.featAttrBonus.choices?.[0] ?? null }
+            : {}),
+        }] : []),
         ...Object.entries(draft.asiChoices ?? {})
           .filter(([, c]) => c?.type === 'feat' && c.featIndex)
           .map(([lvl, c]) => ({
