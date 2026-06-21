@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import { isASIChoiceComplete } from '../class-helpers'
+import { FeatPicker } from '../FeatPicker'
 
 const ATTR_ABR = { str: 'FOR', dex: 'DES', con: 'CON', int: 'INT', wis: 'SAB', cha: 'CAR' }
 const ATTRS_ORDER = ['str', 'dex', 'con', 'int', 'wis', 'cha']
@@ -7,8 +7,6 @@ const ATTRS_ORDER = ['str', 'dex', 'con', 'int', 'wis', 'cha']
 const ABILITY_MAX = 20  // teto de aumento por ASI (regra oficial)
 
 export function ASIOrFeatPicker({ currentChoice, currentAttrs = {}, allowFeats, feats, onChoose }) {
-  const [featSearch, setFeatSearch] = useState('')
-
   const mode = currentChoice?.type ?? 'asi'
   const bonuses = (mode === 'asi' ? currentChoice?.bonuses : null) ?? {}
   const totalSpent = Object.values(bonuses).reduce((s, v) => s + v, 0)
@@ -32,14 +30,6 @@ export function ASIOrFeatPicker({ currentChoice, currentAttrs = {}, allowFeats, 
     else nb[attr] = next
     onChoose({ type: 'asi', bonuses: nb })
   }
-
-  const filteredFeats = (feats ?? []).filter(f =>
-    f.name.toLowerCase().includes(featSearch.toLowerCase())
-  )
-  // Descrição do talento atualmente selecionado (para exibir o que ele faz).
-  const selectedFeatObj = currentChoice?.type === 'feat'
-    ? (feats ?? []).find(f => f.index === currentChoice.featIndex) ?? null
-    : null
 
   return (
     <div className="flex flex-col gap-2 pt-2 border-t-2 border-parchment-600/50">
@@ -137,98 +127,11 @@ export function ASIOrFeatPicker({ currentChoice, currentAttrs = {}, allowFeats, 
       )}
 
       {mode === 'feat' && (
-        <div className="flex flex-col gap-1.5">
-          <input
-            type="text"
-            placeholder="Buscar talento..."
-            value={featSearch}
-            onChange={e => setFeatSearch(e.target.value)}
-            className="w-full px-2.5 py-1 rounded-sm border-2 border-parchment-600 bg-parchment-50 text-xs text-ink-500 placeholder:text-ink-200 focus:outline-none focus:border-ink-300"
-          />
-          <div className="max-h-44 overflow-y-auto flex flex-col gap-1 pr-0.5">
-            {filteredFeats.length === 0 && (
-              <p className="text-xs text-ink-200 italic text-center py-3">Nenhum talento encontrado.</p>
-            )}
-            {filteredFeats.map(feat => {
-              const isSelected = currentChoice?.type === 'feat' && currentChoice.featIndex === feat.index
-              return (
-                <button
-                  key={feat.index}
-                  type="button"
-                  onClick={() => {
-                    const attrBonus = feat.attrBonus ?? null
-                    const autoAttr = attrBonus && attrBonus.choices?.length === 1
-                      ? attrBonus.choices[0]
-                      : null
-                    onChoose({
-                      type: 'feat',
-                      featIndex: feat.index,
-                      featName: feat.name,
-                      featAttrBonus: attrBonus,
-                      featChosenAttr: autoAttr,
-                    })
-                  }}
-                  className={[
-                    'flex items-start gap-2 text-left px-2.5 py-1.5 rounded-sm border-2 text-xs transition-colors',
-                    isSelected
-                      ? 'border-ink-500 bg-parchment-200 text-ink-500'
-                      : 'border-parchment-600 bg-parchment-50 text-ink-300 hover:border-ink-300',
-                  ].join(' ')}
-                >
-                  <span className={[
-                    'w-3 h-3 rounded-full border-2 shrink-0 mt-0.5',
-                    isSelected ? 'border-ink-500 bg-ink-500' : 'border-parchment-600',
-                  ].join(' ')} />
-                  <span className="flex-1 min-w-0">
-                    <span className="font-display block">
-                      {feat.name}
-                      {feat.attrBonus && (
-                        <span className="ml-1.5 text-[13px] text-ink-300 italic">
-                          +{feat.attrBonus.amount} {feat.attrBonus.choices.map(c => ATTR_ABR[c]).join('/')}
-                        </span>
-                      )}
-                    </span>
-                  </span>
-                </button>
-              )
-            })}
-          </div>
-
-          {selectedFeatObj?.desc && (
-            <div className="text-xs text-ink-500 bg-parchment-100 border-2 border-parchment-600 rounded-sm px-2.5 py-2 leading-relaxed max-h-40 overflow-y-auto">
-              <span className="font-display block text-ink-300 mb-1">{selectedFeatObj.name}</span>
-              {selectedFeatObj.desc}
-            </div>
-          )}
-
-          {currentChoice?.type === 'feat' && currentChoice.featAttrBonus && (currentChoice.featAttrBonus.choices?.length ?? 0) > 1 && (
-            <div className="mt-2 pt-2 border-t-2 border-parchment-600/50 flex flex-col gap-1.5">
-              <p className="text-xs font-display text-ink-500">
-                Onde aplicar +{currentChoice.featAttrBonus.amount}? <span className="text-red-700">*</span>
-              </p>
-              <div className="flex gap-1.5 flex-wrap">
-                {currentChoice.featAttrBonus.choices.map(attrKey => {
-                  const isSel = currentChoice.featChosenAttr === attrKey
-                  return (
-                    <button
-                      key={attrKey}
-                      type="button"
-                      onClick={() => onChoose({ ...currentChoice, featChosenAttr: attrKey })}
-                      className={[
-                        'px-2.5 py-1 text-[13px] rounded-sm border-2 font-display transition-colors',
-                        isSel
-                          ? 'border-ink-500 bg-parchment-200 text-ink-500'
-                          : 'border-parchment-600 bg-parchment-50 text-ink-300 hover:border-ink-300',
-                      ].join(' ')}
-                    >
-                      {ATTR_ABR[attrKey]}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-          )}
-        </div>
+        <FeatPicker
+          feats={feats}
+          value={currentChoice?.type === 'feat' ? currentChoice : null}
+          onChange={f => onChoose({ type: 'feat', ...f })}
+        />
       )}
     </div>
   )

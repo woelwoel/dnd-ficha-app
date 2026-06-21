@@ -91,7 +91,7 @@ describe('ASIOrFeatPicker — modo Feat', () => {
   it('selecionar feat sem attrBonus dispara onChoose com featIndex', async () => {
     const onChoose = vi.fn()
     render(<ASIOrFeatPicker currentChoice={{ type: 'feat', featIndex: null }} allowFeats={true} feats={feats} onChoose={onChoose} />)
-    await userEvent.click(screen.getByRole('button', { name: /^tough$/i }))
+    await userEvent.click(screen.getByRole('button', { name: /^Selecionar Tough$/i }))
     expect(onChoose).toHaveBeenCalledWith(expect.objectContaining({
       type: 'feat', featIndex: 'tough', featName: 'Tough',
     }))
@@ -100,7 +100,7 @@ describe('ASIOrFeatPicker — modo Feat', () => {
   it('busca filtra feats', async () => {
     render(<ASIOrFeatPicker currentChoice={{ type: 'feat', featIndex: null }} allowFeats={true} feats={feats} onChoose={() => {}} />)
     await userEvent.type(screen.getByPlaceholderText(/buscar talento/i), 'luck')
-    expect(screen.queryByRole('button', { name: /^tough$/i })).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /^lucky$/i })).toBeInTheDocument()
+    expect(screen.queryByText('Tough')).not.toBeInTheDocument()
+    expect(screen.getByText('Lucky')).toBeInTheDocument()
   })
 })
