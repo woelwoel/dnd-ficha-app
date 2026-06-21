@@ -19,6 +19,7 @@ function statusOf(blockId, draft, srdData = {}) {
       if (reqs.highElfCantrip && !draft.racialCantrip) return 'parcial'
       if (reqs.freeAbility > 0 && (draft.racialAbilityChoices?.length ?? 0) < reqs.freeAbility) return 'parcial'
       if (reqs.racialSkills > 0 && (draft.racialSkills?.length ?? 0) < reqs.racialSkills) return 'parcial'
+      if (reqs.racialFeat && !isASIChoiceComplete(draft.racialFeat ? { type: 'feat', ...draft.racialFeat } : null)) return 'parcial'
       return 'completo'
     }
 

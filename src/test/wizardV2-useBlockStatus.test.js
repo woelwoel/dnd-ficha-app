@@ -117,6 +117,32 @@ describe('getBlockStatus', () => {
     expect(getBlockStatus('race', { ...empty, race: 'anao' }).status).toBe('completo')
   })
 
+  it('race parcial: Humano Variante com atributos+perícia mas SEM talento', () => {
+    const draft = {
+      ...empty, race: 'humano', subrace: 'tracos-raciais-alternativos',
+      racialAbilityChoices: ['str', 'con'], racialSkills: ['atletismo'],
+    }
+    expect(getBlockStatus('race', draft).status).toBe('parcial')
+  })
+
+  it('race parcial: Humano Variante com talento que exige atributo, sem o atributo', () => {
+    const draft = {
+      ...empty, race: 'humano', subrace: 'tracos-raciais-alternativos',
+      racialAbilityChoices: ['str', 'con'], racialSkills: ['atletismo'],
+      racialFeat: { featIndex: 'atleta', featName: 'Atleta', featAttrBonus: { choices: ['str', 'dex'], amount: 1 }, featChosenAttr: null },
+    }
+    expect(getBlockStatus('race', draft).status).toBe('parcial')
+  })
+
+  it('race completo: Humano Variante com atributos+perícia+talento', () => {
+    const draft = {
+      ...empty, race: 'humano', subrace: 'tracos-raciais-alternativos',
+      racialAbilityChoices: ['str', 'con'], racialSkills: ['atletismo'],
+      racialFeat: { featIndex: 'robusto', featName: 'Robusto', featAttrBonus: null, featChosenAttr: null },
+    }
+    expect(getBlockStatus('race', draft).status).toBe('completo')
+  })
+
   it('class parcial: sem srdData, fallback é completo se preenchido', () => {
     expect(getBlockStatus('class', { ...empty, class: 'guerreiro' }).status).toBe('completo')
   })
