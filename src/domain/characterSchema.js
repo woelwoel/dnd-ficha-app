@@ -187,6 +187,12 @@ const combatSchema = z.object({
    */
   wildShape: z.any().default(false),
   /**
+   * Druida: bestas que o personagem já viu e pode assumir via Forma Selvagem
+   * (PHB p.66). Guarda o `index` do catálogo wild-shape-beasts-pt.json.
+   * Vazio por padrão — druida começa sem nenhuma besta conhecida.
+   */
+  knownBeasts: z.array(z.string()).default([]),
+  /**
    * Ataques registrados na ficha (armas + bônus mágicos). Schema aberto
    * para tolerar dados antigos; campos calculados vêm de `src/utils/attacks`.
    */
