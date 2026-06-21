@@ -4,10 +4,11 @@ import { HighElfCantripPicker } from './race/HighElfCantripPicker'
 import { FreeAbilityPicker } from './race/FreeAbilityPicker'
 import { RacialSkillPicker } from './race/RacialSkillPicker'
 import { RaceBonusPreview } from './race/RaceBonusPreview'
+import { FeatPicker } from './FeatPicker'
 import { computeBonuses, getRaceRequirements } from './race-helpers'
 import { VARIANT_HUMAN_SUBRACE } from '../../../domain/racialBonuses'
 
-export function RaceBlock({ draft, updateDraft, races }) {
+export function RaceBlock({ draft, updateDraft, races, feats = [] }) {
   const selectedRace    = races.find(r => r.index === draft.race) ?? null
   const selectedSubrace = selectedRace?.subraces?.find(s => s.index === draft.subrace) ?? null
   const reqs = getRaceRequirements(draft, selectedRace, selectedSubrace)
@@ -20,6 +21,7 @@ export function RaceBlock({ draft, updateDraft, races }) {
       racialBonuses: computeBonuses(race, null, []),
       racialAbilityChoices: [],
       racialSkills: [],
+      racialFeat: null,
       draconicAncestry: '',
       racialCantrip: '',
       speed: race?.speed ?? 9, // deslocamento base da raça, em metros
@@ -33,6 +35,7 @@ export function RaceBlock({ draft, updateDraft, races }) {
       racialBonuses: computeBonuses(selectedRace, subrace, []),
       racialAbilityChoices: [],
       racialSkills: [],
+      racialFeat: null,
       racialCantrip: '',
     })
   }
@@ -106,6 +109,22 @@ export function RaceBlock({ draft, updateDraft, races }) {
           chosen={draft.racialSkills ?? []}
           onToggle={k => handleSkillToggle(k, reqs.racialSkills)}
         />
+      )}
+
+      {reqs.racialFeat && (
+        <div className="flex flex-col gap-1.5">
+          <p className="text-xs font-display tracking-widest uppercase text-ink-500">
+            Talento <span className="text-red-700">*</span>
+            <span className="ml-1.5 normal-case tracking-normal italic text-ink-300">
+              (Humano Variante — escolha 1)
+            </span>
+          </p>
+          <FeatPicker
+            feats={feats}
+            value={draft.racialFeat ?? null}
+            onChange={f => updateDraft({ racialFeat: f })}
+          />
+        </div>
       )}
 
       {selectedRace && (

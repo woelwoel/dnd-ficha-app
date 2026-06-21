@@ -267,7 +267,7 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
           <ConceptBlock draft={draft} updateDraft={updateDraft} />
         )}
         {openBlockId === 'race' && (
-          <RaceBlock draft={draft} updateDraft={updateDraft} races={races} />
+          <RaceBlock draft={draft} updateDraft={updateDraft} races={races} feats={feats ?? []} />
         )}
         {openBlockId === 'class' && (
           <ClassBlock

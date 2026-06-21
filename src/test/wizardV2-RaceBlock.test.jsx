@@ -73,6 +73,19 @@ describe('RaceBlock', () => {
     expect(screen.getByText(/escolha 1 perícia/i)).toBeInTheDocument()
   })
 
+  it('Humano Variante mostra o FeatPicker e seleciona talento (racialFeat)', async () => {
+    const updateDraft = vi.fn()
+    const feats = [{ index: 'robusto', name: 'Robusto', prereq: null, desc: 'PV máximo aumenta.' }]
+    render(<RaceBlock
+      draft={{ ...empty, race: 'humano', subrace: 'tracos-raciais-alternativos' }}
+      updateDraft={updateDraft} races={races} feats={feats} />)
+    expect(screen.getByText(/Humano Variante — escolha 1/i)).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: /^Selecionar Robusto$/i }))
+    expect(updateDraft).toHaveBeenCalledWith({
+      racialFeat: expect.objectContaining({ featIndex: 'robusto', featName: 'Robusto' }),
+    })
+  })
+
   it('preview mostra bônus de raça simples', () => {
     render(<RaceBlock draft={{ ...empty, race: 'anao' }} updateDraft={() => {}} races={races} />)
     expect(screen.getByText(/\+2 CON/i)).toBeInTheDocument()
