@@ -68,7 +68,7 @@ function formatBonus(n) {
 }
 
 /* ── Catálogo de bestas (modal/dropdown inline) ──────────────── */
-function BeastPicker({ beasts, crLimit, allowFly, allowSwim, isMoon, onSelect, onCancel }) {
+function BeastPicker({ beasts, crLimit, allowFly, allowSwim, isMoon, knownSet, onSelect, onMarkSeen, onCancel }) {
   const [query, setQuery] = useState('')
 
   const filtered = useMemo(() => {
@@ -134,21 +134,44 @@ function BeastPicker({ beasts, crLimit, allowFly, allowSwim, isMoon, onSelect, o
               CR {list[0].crLabel} <span className="font-normal">({list.length})</span>
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
-              {list.map(b => (
-                <button
-                  key={b.index}
-                  onClick={() => onSelect(b)}
-                  title={`${b.name} (${b.nameEn}) — HP ${b.hp} · AC ${b.ac} · ${formatSpeed(b.speed)}`}
-                  className="text-left text-[13px] px-2 py-1.5 rounded border border-parchment-600 bg-parchment-50 hover:bg-emerald-50 hover:border-emerald-500 transition-colors"
-                >
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-bold text-ink-500 truncate flex-1">{b.name}</span>
-                    <span className="text-[13px] text-ink-300 font-mono shrink-0">HP{b.hp}</span>
-                    <span className="text-[13px] text-ink-300 font-mono shrink-0">AC{b.ac}</span>
+              {list.map(b => {
+                const known = knownSet.has(b.index)
+                if (known) {
+                  return (
+                    <button
+                      key={b.index}
+                      onClick={() => onSelect(b)}
+                      title={`${b.name} (${b.nameEn}) — HP ${b.hp} · AC ${b.ac} · ${formatSpeed(b.speed)}`}
+                      className="text-left text-[13px] px-2 py-1.5 rounded border border-parchment-600 bg-parchment-50 hover:bg-emerald-50 hover:border-emerald-500 transition-colors"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-bold text-ink-500 truncate flex-1">{b.name}</span>
+                        <span className="text-[13px] text-ink-300 font-mono shrink-0">HP{b.hp}</span>
+                        <span className="text-[13px] text-ink-300 font-mono shrink-0">AC{b.ac}</span>
+                      </div>
+                      <div className="text-[13px] text-ink-300 italic truncate">{formatSpeed(b.speed)}</div>
+                    </button>
+                  )
+                }
+                return (
+                  <div
+                    key={b.index}
+                    title={`${b.name} (${b.nameEn}) — ainda não vista`}
+                    className="text-left text-[13px] px-2 py-1.5 rounded border border-dashed border-parchment-600 bg-parchment-100/50 opacity-70"
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-bold text-ink-300 truncate flex-1">🔒 {b.name}</span>
+                      <button
+                        onClick={() => onMarkSeen(b.index)}
+                        className="text-[11px] px-1.5 py-0.5 rounded border border-emerald-700 bg-emerald-100 text-emerald-900 hover:bg-emerald-200 font-bold shrink-0"
+                      >
+                        já vi essa
+                      </button>
+                    </div>
+                    <div className="text-[13px] text-ink-300 italic truncate">{formatSpeed(b.speed)}</div>
                   </div>
-                  <div className="text-[13px] text-ink-300 italic truncate">{formatSpeed(b.speed)}</div>
-                </button>
-              ))}
+                )
+              })}
             </div>
           </div>
         ))}
@@ -327,6 +350,7 @@ export function WildShapePanel({
   onApplyDamage,
   slotsAvailable = {},
   onConsumeSlot,
+  onToggleKnownBeast,
 }) {
   const beasts = useBeasts()
   const [showPicker, setShowPicker] = useState(false)
@@ -343,6 +367,10 @@ export function WildShapePanel({
   const crLimit = isMoon ? moonCRLimit(druidaLevel) : standardCRLimit(druidaLevel)
   const movement = allowedMovement(druidaLevel, isMoon)
   const moonHeal = isMoon && druidaLevel >= 6
+  const knownSet = useMemo(
+    () => new Set(character.combat?.knownBeasts ?? []),
+    [character.combat?.knownBeasts]
+  )
 
   if (druidaLevel < 2) return null
 
@@ -447,7 +475,9 @@ export function WildShapePanel({
           allowFly={movement.fly}
           allowSwim={movement.swim}
           isMoon={isMoon}
+          knownSet={knownSet}
           onSelect={selectBeast}
+          onMarkSeen={onToggleKnownBeast}
           onCancel={() => setShowPicker(false)}
         />
       )}

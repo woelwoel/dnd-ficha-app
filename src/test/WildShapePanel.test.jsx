@@ -51,7 +51,7 @@ beforeEach(() => {
 function makeChar(overrides = {}) {
   return {
     info: { class: 'druida', level: 4, chosenFeatures: {}, ...overrides.info },
-    combat: { wildShape: { active: false }, ...overrides.combat },
+    combat: { wildShape: { active: false }, knownBeasts: [], ...overrides.combat },
   }
 }
 
@@ -99,7 +99,7 @@ describe('<WildShapePanel>', () => {
 
   it('picker filtra bestas por CR e movimento permitido', async () => {
     const user = userEvent.setup()
-    const char = makeChar({ info: { level: 4 } })
+    const char = makeChar({ info: { level: 4 }, combat: { knownBeasts: ['wolf', 'brown-bear', 'eagle'] } })
     render(
       <WildShapePanel
         druidaLevel={4} wsUse={defaultWsUse} usesRemaining={2}
@@ -118,7 +118,7 @@ describe('<WildShapePanel>', () => {
     render(
       <WildShapePanel
         druidaLevel={8} wsUse={defaultWsUse} usesRemaining={2}
-        onSpend={() => {}} character={makeChar({ info: { level: 8 } })} onSetWildShape={() => {}}
+        onSpend={() => {}} character={makeChar({ info: { level: 8 }, combat: { knownBeasts: ['wolf', 'brown-bear', 'eagle'] } })} onSetWildShape={() => {}}
       />
     )
     await user.click(screen.getByRole('button', { name: /^Transformar$/ }))
@@ -133,7 +133,7 @@ describe('<WildShapePanel>', () => {
     render(
       <WildShapePanel
         druidaLevel={4} wsUse={defaultWsUse} usesRemaining={2}
-        onSpend={onSpend} character={makeChar()} onSetWildShape={onSetWildShape}
+        onSpend={onSpend} character={makeChar({ combat: { knownBeasts: ['wolf'] } })} onSetWildShape={onSetWildShape}
       />
     )
     await user.click(screen.getByRole('button', { name: /^Transformar$/ }))
@@ -252,5 +252,36 @@ describe('<WildShapePanel>', () => {
     expect(onConsumeSlot).toHaveBeenCalledWith(1)
     expect(onSetWildShape).toHaveBeenCalledWith(expect.objectContaining({ currentHp: 6 })) // 2 + 4 (média)
     expect(mockRoll).toHaveBeenCalledWith('1d8', expect.stringContaining('Cura Primal'))
+  })
+
+  it('besta NÃO conhecida aparece bloqueada com botão "já vi essa"', async () => {
+    const user = userEvent.setup()
+    const onToggleKnownBeast = vi.fn()
+    render(
+      <WildShapePanel
+        druidaLevel={4} wsUse={defaultWsUse} usesRemaining={2}
+        onSpend={() => {}} character={makeChar({ combat: { knownBeasts: [] } })}
+        onSetWildShape={() => {}} onToggleKnownBeast={onToggleKnownBeast}
+      />
+    )
+    await user.click(screen.getByRole('button', { name: /^Transformar$/ }))
+    const seenBtn = await screen.findByRole('button', { name: /já vi essa/i })
+    await user.click(seenBtn)
+    expect(onToggleKnownBeast).toHaveBeenCalledWith('wolf')
+  })
+
+  it('só bestas conhecidas são transformáveis', async () => {
+    const user = userEvent.setup()
+    const onSetWildShape = vi.fn()
+    render(
+      <WildShapePanel
+        druidaLevel={4} wsUse={defaultWsUse} usesRemaining={2}
+        onSpend={() => {}} character={makeChar({ combat: { knownBeasts: ['wolf'] } })}
+        onSetWildShape={onSetWildShape} onToggleKnownBeast={() => {}}
+      />
+    )
+    await user.click(screen.getByRole('button', { name: /^Transformar$/ }))
+    await user.click(await screen.findByRole('button', { name: /Lobo/ }))
+    expect(onSetWildShape).toHaveBeenCalledWith(expect.objectContaining({ beastName: 'Lobo' }))
   })
 })
