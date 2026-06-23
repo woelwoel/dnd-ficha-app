@@ -1,4 +1,4 @@
-import { safeParseCharacter, migrateCharacter } from '../systems/dnd5e/domain/characterSchema'
+import { parseCharacterDispatch, migrateCharacterDispatch } from './characterCodec'
 import { clampPosition } from './token-position'
 import { supabase } from '../lib/supabase'
 import { reportError } from '../lib/report'
@@ -9,12 +9,12 @@ const CURRENT_VERSION = '1.0'
 /* ── Helpers ─────────────────────────────────────────────────────── */
 
 function validateForSave(character) {
-  const migrated = migrateCharacter(character)
+  const migrated = migrateCharacterDispatch(character)
   const stamped = {
     ...migrated,
     meta: { ...(migrated?.meta ?? {}), version: CURRENT_VERSION },
   }
-  const result = safeParseCharacter(stamped)
+  const result = parseCharacterDispatch(stamped)
   if (!result.success) return { ok: false, errors: result.error.issues }
   return { ok: true, data: result.data }
 }
@@ -85,7 +85,7 @@ export async function loadCharacters(scope = 'mine') {
   let rejected = 0
   for (const row of data ?? []) {
     const ch = rowToCharacter(row)
-    const parsed = safeParseCharacter(ch)
+    const parsed = parseCharacterDispatch(ch)
     if (parsed.success) valid.push(parsed.data)
     else {
       rejected += 1
@@ -119,7 +119,7 @@ export async function loadCharacterById(id) {
     .maybeSingle()
   if (error || !data) return null
   const ch = rowToCharacter(data)
-  const parsed = safeParseCharacter(ch)
+  const parsed = parseCharacterDispatch(ch)
   return parsed.success ? parsed.data : null
 }
 
@@ -141,7 +141,7 @@ export async function loadCharacterByRouteParam(routeParam) {
     .maybeSingle()
   if (error || !data) return null
   const ch = rowToCharacter(data)
-  const parsed = safeParseCharacter(ch)
+  const parsed = parseCharacterDispatch(ch)
   return parsed.success ? parsed.data : null
 }
 

@@ -286,6 +286,16 @@ describe('storage (Supabase backend)', () => {
     expect(list.map(c => c.id)).toEqual(['a'])
   })
 
+  it('ignora ficha de sistema não registrado sem derrubar a lista', async () => {
+    store.rows = [
+      { id: 'a', owner_id: store.uid, campaign_id: null, data: makeChar('a'), version: 1 },
+      { id: 'b', owner_id: store.uid, campaign_id: null, data: { ...makeChar('b'), system: 'daggerheart' }, version: 1 },
+    ]
+    const result = await loadCharacters('mine')
+    expect(result).toHaveLength(1)
+    expect(result[0].system).toBe('dnd5e')
+  })
+
   it("loadCharacters('personal') filtra por dono E por campaign_id null", async () => {
     store.rows = [
       { id: 'a', owner_id: store.uid, campaign_id: null, data: makeChar('a'), version: 1 },
