@@ -5,7 +5,7 @@
 import {
   enrichWithSubclassSpells,
   mapSrdSpellToCharacter as _mapSrdSpellToCharacter,
-} from '../../../domain/subclassSpells'
+} from '../../../systems/dnd5e/domain/subclassSpells'
 
 /** @deprecated Use enrichWithSubclassSpells. */
 export function enrichWithClericDomainSpells(args) {

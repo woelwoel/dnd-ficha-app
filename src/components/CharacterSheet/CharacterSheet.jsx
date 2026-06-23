@@ -16,7 +16,7 @@ import { useSheetHandlers } from './useSheetHandlers'
 import { isSheetReadOnly } from './sheet-access'
 import { PrintView } from '../PrintView/PrintView'
 import { PrintPreviewModal } from '../PrintView/PrintPreviewModal'
-import { defaultClassFeatureUses, mergeFeatureUses } from '../../domain/rules'
+import { defaultClassFeatureUses, mergeFeatureUses } from '../../systems/dnd5e/domain/rules'
 
 /**
  * Wrapper: carrega a ficha de forma assíncrona e só monta o orquestrador

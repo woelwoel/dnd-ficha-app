@@ -4,7 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { CombatClassActions } from '../../components/CharacterSheet/CombatClassActions'
 import { DiceRollerProvider } from '../../context/DiceRollerContext'
-import { defaultClassFeatureUses } from '../../domain/rules'
+import { defaultClassFeatureUses } from '../../systems/dnd5e/domain/rules'
 
 // Catálogo de bestas mockado pro WildShapePanel
 const BEASTS_FIXTURE = {

@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import { ABILITY_SCORES, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus, getProficiencyBonus } from '../../utils/calculations'
-import { abbrOfKey } from '../../domain/attributes'
+import { abbrOfKey } from '../../systems/dnd5e/domain/attributes'
 import { getSpellcastingRules, getWarlockPactSlots, getClassSpellMath, getSpellSlots } from '../../utils/spellcasting'
 import { useClassSpells } from '../../hooks/useClassSpells'
 import { SpellDetailModal } from '../SpellDetailModal'

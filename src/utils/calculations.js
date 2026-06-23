@@ -8,7 +8,7 @@ import {
   ABILITIES as _ABILITIES,
   abbrOfKey,
   nameOfKey,
-} from '../domain/attributes'
+} from '../systems/dnd5e/domain/attributes'
 
 /* ── Re-export de mapeamentos (compat) ───────────────────────────── */
 

@@ -1,4 +1,4 @@
-import { fixedRacialBonuses } from '../../../domain/racialBonuses'
+import { fixedRacialBonuses } from '../../../systems/dnd5e/domain/racialBonuses'
 
 export const MAGO_CANTRIPS = [
   'Amizade', 'Ataque Certeiro', 'Consertar', 'Espirro Ácido',

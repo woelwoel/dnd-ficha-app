@@ -5,7 +5,7 @@ import {
   applyDamage, applyHealing, gainTempHp,
   stabilizeCharacter, rollDeathSave,
   setConcentration,
-} from '../domain/rules'
+} from '../systems/dnd5e/domain/rules'
 
 function makeChar(overrides = {}) {
   const { combat: combatOverrides, ...rest } = overrides

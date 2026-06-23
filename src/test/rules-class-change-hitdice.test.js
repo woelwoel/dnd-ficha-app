@@ -6,7 +6,7 @@
 // como { d6:5, d10:5 } = 10 HD num personagem de nível 5 (descanso curto com
 // o dobro de dados).
 import { describe, it, expect } from 'vitest'
-import { applyClassChange } from '../domain/rules'
+import { applyClassChange } from '../systems/dnd5e/domain/rules'
 
 const CLASS_DATA = {
   mago:      { index: 'mago',      hit_die: 6,  saving_throws: ['Inteligência', 'Sabedoria'] },

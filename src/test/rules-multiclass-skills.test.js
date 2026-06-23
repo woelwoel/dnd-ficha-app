@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { addMulticlass } from '../domain/rules'
+import { addMulticlass } from '../systems/dnd5e/domain/rules'
 
 function makeCharacter(overrides = {}) {
   return {

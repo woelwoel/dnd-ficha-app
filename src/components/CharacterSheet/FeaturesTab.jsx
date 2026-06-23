@@ -1,14 +1,14 @@
 import { useState, useMemo } from 'react'
 import { useSrd, useLazySrdDataset } from '../../providers/SrdProvider'
 import { enrichDraconicTopics } from '../../utils/draconicAncestors'
-import { getFeatureTypeMeta } from '../../domain/featureMeta'
+import { getFeatureTypeMeta } from '../../systems/dnd5e/domain/featureMeta'
 import { ChosenFeaturePicker } from '../CharacterWizardV2/blocks/class/ChosenFeaturePicker'
 import { resolveMultiSelect, isChoiceDone } from '../CharacterWizardV2/blocks/class-helpers'
 import { Icon } from '../ui/Icon'
 import {
   detectActionType, combatTier, featureCategory, actionTypeOf, isAttributeIncrease,
   featureUseId, collapseScalingFeatures,
-} from '../../domain/featureCategories'
+} from '../../systems/dnd5e/domain/featureCategories'
 
 /* ══════════════════════════════════════════════════════════════════
    META

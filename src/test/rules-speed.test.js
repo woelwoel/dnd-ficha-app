@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { classSpeedBonusMeters, baseSpeedMeters } from '../domain/rules'
+import { classSpeedBonusMeters, baseSpeedMeters } from '../systems/dnd5e/domain/rules'
 import { calculateMaxHpFromHitDice, racialHpPerLevel } from '../utils/calculations'
 
 const char = info => ({ info })

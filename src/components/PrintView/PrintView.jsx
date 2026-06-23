@@ -18,7 +18,7 @@ import {
   calculateSkillModifier, calculateSavingThrow,
   ATTR_NAME_TO_KEY,
 } from '../../utils/calculations'
-import { getEffectiveSaveProficiencies } from '../../domain/rules'
+import { getEffectiveSaveProficiencies } from '../../systems/dnd5e/domain/rules'
 
 /* ══════════════════════════════════════════════════════════════════
    Paleta de impressão (pergaminho arcano)

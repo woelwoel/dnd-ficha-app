@@ -4,7 +4,7 @@ import {
   detectActionType, combatTier, featureCategory, actionTypeOf,
   isAttributeIncrease, featureUseId, collapseScalingFeatures,
   COMBAT_TIERS, FEATURE_CATEGORIES,
-} from '../domain/featureCategories'
+} from '../systems/dnd5e/domain/featureCategories'
 
 describe('featureCategories', () => {
   it('detectActionType reconhece os três tipos pela descrição', () => {

@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { useCharacterContext } from './CharacterContext'
-import { CONDITIONS_BY_ID } from '../../domain/conditions'
-import { baseSpeedMeters } from '../../domain/rules'
+import { CONDITIONS_BY_ID } from '../../systems/dnd5e/domain/conditions'
+import { baseSpeedMeters } from '../../systems/dnd5e/domain/rules'
 import { Icon } from '../ui/Icon'
 
 /* Pequeno controle inline de dano/cura ──────────────────────── */

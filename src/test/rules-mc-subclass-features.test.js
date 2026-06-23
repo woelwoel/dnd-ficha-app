@@ -9,7 +9,7 @@
 // "Ataque Bélico Bônus", e equivalentes pra Druida (Recuperação Natural)
 // e Guerreiro (Dado de Superioridade).
 import { describe, it, expect } from 'vitest'
-import { defaultClassFeatureUses } from '../domain/rules'
+import { defaultClassFeatureUses } from '../systems/dnd5e/domain/rules'
 
 function makeCharacter({ primary, multiclasses, attributes = {} }) {
   return {

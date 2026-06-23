@@ -1,10 +1,10 @@
 // Testes para os 3 bugs críticos identificados na auditoria de regras
 // (docs/audits/2026-05-17-rules-engine-gap-analysis.md).
 import { describe, it, expect } from 'vitest'
-import { findArmorByName } from '../domain/equipment'
+import { findArmorByName } from '../systems/dnd5e/domain/equipment'
 import {
   evaluateMulticlassPrerequisites, applyLevelUp,
-} from '../domain/rules'
+} from '../systems/dnd5e/domain/rules'
 
 /* ─────────────────────────────────────────────────────────────────────
  * Bug 1: findArmorByName — substring-collision

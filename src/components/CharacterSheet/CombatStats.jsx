@@ -4,7 +4,7 @@ import { formatHitDicePool } from '../../utils/hitDice'
 import { FormFieldError } from '../FormFieldError'
 import { RollButton } from '../DiceRoller/RollButton'
 import { DamageModal } from './DamageModal'
-import { CONDITIONS, EXHAUSTION_EFFECTS } from '../../domain/conditions'
+import { CONDITIONS, EXHAUSTION_EFFECTS } from '../../systems/dnd5e/domain/conditions'
 import { Icon } from '../ui/Icon'
 
 /* ── Death Saves ───────────────────────────────────────────── */

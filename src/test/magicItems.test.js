@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isItemActive, getActiveMagicEffects, getEffectiveAttributes } from '../domain/magicItems'
+import { isItemActive, getActiveMagicEffects, getEffectiveAttributes } from '../systems/dnd5e/domain/magicItems'
 
 describe('isItemActive', () => {
   it('item que requer atunamento é ativo apenas se atunado', () => {

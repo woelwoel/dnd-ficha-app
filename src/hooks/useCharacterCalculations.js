@@ -8,9 +8,9 @@ import {
   calculatePassivePerception,
   calculateInitiative,
 } from '../utils/calculations'
-import { calculateMaxHpMulticlass, listSpellcastingClasses } from '../domain/rules'
-import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
-import { resolveAbilityKey } from '../domain/attributes'
+import { calculateMaxHpMulticlass, listSpellcastingClasses } from '../systems/dnd5e/domain/rules'
+import { calculateArmorClass, getEquippedArmor } from '../systems/dnd5e/domain/equipment'
+import { resolveAbilityKey } from '../systems/dnd5e/domain/attributes'
 import {
   getSpellSlots,
   clampUsedSlots,
@@ -18,7 +18,7 @@ import {
   getClassSpellMath,
   getWarlockPactSlots,
 } from '../utils/spellcasting'
-import { getActiveMagicEffects, getEffectiveAttributes } from '../domain/magicItems'
+import { getActiveMagicEffects, getEffectiveAttributes } from '../systems/dnd5e/domain/magicItems'
 
 /**
  * Hook de cálculos reativos da ficha.

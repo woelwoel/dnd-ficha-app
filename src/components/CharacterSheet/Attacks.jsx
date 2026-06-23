@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { calculateWeaponAttackBonus, calculateWeaponDamage, resolveAttackAbility } from '../../utils/attacks'
 import { formatModifier } from '../../utils/calculations'
-import { abbrOfKey } from '../../domain/attributes'
+import { abbrOfKey } from '../../systems/dnd5e/domain/attributes'
 import { RollButton } from '../DiceRoller/RollButton'
 import { AttackRollButton } from './AttackRollButton'
 import {

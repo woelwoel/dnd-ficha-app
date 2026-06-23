@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from 'react'
-import { SCHEMA_VERSION } from '../domain/characterSchema'
-import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
+import { SCHEMA_VERSION } from '../systems/dnd5e/domain/characterSchema'
+import { calculateArmorClass, getEquippedArmor } from '../systems/dnd5e/domain/equipment'
 import { getModifier } from '../utils/calculations'
 import {
   defaultClassFeatureUses, mergeFeatureUses,
@@ -9,7 +9,7 @@ import {
   gainTempHp as gainTempHpPure,
   stabilizeCharacter as stabilizeCharacterPure,
   rollDeathSave as rollDeathSavePure,
-} from '../domain/rules'
+} from '../systems/dnd5e/domain/rules'
 
 const DEFAULT_CHARACTER = {
   id: null,

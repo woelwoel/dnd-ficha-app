@@ -1,8 +1,8 @@
 // src/components/CharacterWizardV2/blocks/build-character.js
 import { generateId } from '../../../hooks/useCharacter'
 import { calculateMaxHpFromHitDice, racialHpPerLevel, getModifier } from '../../../utils/calculations'
-import { injectSubclassSpellsAtBuild } from '../../../domain/subclassSpells'
-import { classSpeedBonusMeters } from '../../../domain/rules'
+import { injectSubclassSpellsAtBuild } from '../../../systems/dnd5e/domain/subclassSpells'
+import { classSpeedBonusMeters } from '../../../systems/dnd5e/domain/rules'
 
 export function resolveClassEquipmentItems(draft, classEquipment) {
   if (draft.classEquipmentChoice !== 'equipment') return []

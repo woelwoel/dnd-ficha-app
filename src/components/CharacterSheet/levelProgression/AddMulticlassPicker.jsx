@@ -2,7 +2,7 @@
 // Picker de nova multiclasse: seletor de classe + warnings de pré-requisito
 // (PHB p.163) + lista de proficiências ganhas + botão confirmar.
 import { useState, useMemo, useEffect } from 'react'
-import { abbrOfKey } from '../../../domain/attributes'
+import { abbrOfKey } from '../../../systems/dnd5e/domain/attributes'
 import { SKILLS } from '../../../utils/calculations'
 
 export function AddMulticlassPicker({

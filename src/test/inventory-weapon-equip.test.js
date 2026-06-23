@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildItemLookup } from '../domain/itemLookup'
+import { buildItemLookup } from '../systems/dnd5e/domain/itemLookup'
 
 /**
  * Testes unitários do que sustenta o fluxo "equipar arma → cria Attack".

@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest'
 import progression from '../../public/srd-data/phb-class-progression-pt.json'
 import choices from '../../public/srd-data/phb-class-choices-pt.json'
-import { COMBAT_TIERS, FEATURE_CATEGORIES } from '../domain/featureCategories'
+import { COMBAT_TIERS, FEATURE_CATEGORIES } from '../systems/dnd5e/domain/featureCategories'
 
 const VALID_ACTION_TYPES = ['ação', 'ação bônus', 'reação', 'passiva']
 

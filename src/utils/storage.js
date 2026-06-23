@@ -1,4 +1,4 @@
-import { safeParseCharacter, migrateCharacter } from '../domain/characterSchema'
+import { safeParseCharacter, migrateCharacter } from '../systems/dnd5e/domain/characterSchema'
 import { clampPosition } from './token-position'
 import { supabase } from '../lib/supabase'
 import { reportError } from '../lib/report'

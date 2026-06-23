@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getEffectiveSaveProficiencies, classLevel } from '../domain/rules'
+import { getEffectiveSaveProficiencies, classLevel } from '../systems/dnd5e/domain/rules'
 
 function char(info, savingThrows = ['dex']) {
   return { info, proficiencies: { savingThrows } }

@@ -9,7 +9,7 @@ import {
   removeMulticlass,
   applyLevelUp,
   syncGrantedSpells,
-} from '../../domain/rules'
+} from '../../systems/dnd5e/domain/rules'
 
 /**
  * Encapsula todos os handlers da ficha que envolvem regras de domínio.

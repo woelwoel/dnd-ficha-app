@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { enrichWithClericDomainSpells } from '../components/CharacterSheet/levelProgression/domainSpells'
 
-vi.mock('../domain/rules', () => ({
+vi.mock('../systems/dnd5e/domain/rules', () => ({
   getClericDomainSpellIndices: () => ['bless', 'cure-wounds'],
 }))
 

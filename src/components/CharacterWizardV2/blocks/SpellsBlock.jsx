@@ -5,7 +5,7 @@ import {
   getProficiencyBonus, formatModifier,
   calculateSpellSaveDC, calculateSpellAttackBonus,
 } from '../../../utils/calculations'
-import { abbrOfKey, nameOfKey } from '../../../domain/attributes'
+import { abbrOfKey, nameOfKey } from '../../../systems/dnd5e/domain/attributes'
 import { useClassSpells } from '../../../hooks/useClassSpells'
 import { getSpellcastingRules } from '../../../utils/spellcasting'
 import { generateId } from '../../../hooks/useCharacter'

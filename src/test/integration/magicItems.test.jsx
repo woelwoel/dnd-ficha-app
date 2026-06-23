@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Inventory } from '../../components/CharacterSheet/Inventory'
-import { getActiveMagicEffects, getEffectiveAttributes } from '../../domain/magicItems'
+import { getActiveMagicEffects, getEffectiveAttributes } from '../../systems/dnd5e/domain/magicItems'
 import { mockSrdFetch } from './helpers'
 
 /* ─────────────────────────────────────────────────────────────────────

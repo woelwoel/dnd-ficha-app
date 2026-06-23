@@ -14,7 +14,7 @@ import { ManeuversPanel } from './ManeuversPanel'
 import { PreparedSpellsList } from './PreparedSpellsList'
 import { CombatClassActions } from './CombatClassActions'
 import { useCharacterContext } from './CharacterContext'
-import { baseSpeedMeters } from '../../domain/rules'
+import { baseSpeedMeters } from '../../systems/dnd5e/domain/rules'
 
 /* ── Wrapper de painel de aba ─────────────────────────────── */
 function TabPanel({ id, readOnly, children }) {

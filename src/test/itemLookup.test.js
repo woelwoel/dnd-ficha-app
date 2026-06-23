@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildItemLookup, enrichItemDisplay } from '../domain/itemLookup'
+import { buildItemLookup, enrichItemDisplay } from '../systems/dnd5e/domain/itemLookup'
 
 const SRD = [
   { index: 'greatsword', name: 'Greatsword', weight: 6, cost: { quantity: 50, unit: 'gp' }, damage: { damage_dice: '2d6' } },

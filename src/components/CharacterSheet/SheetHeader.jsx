@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { safeParseCharacter } from '../../domain/characterSchema'
+import { safeParseCharacter } from '../../systems/dnd5e/domain/characterSchema'
 import { SheetCombatBar } from './SheetCombatBar'
 import { MoveToCampaignModal } from './MoveToCampaignModal'
 import { Icon } from '../ui/Icon'

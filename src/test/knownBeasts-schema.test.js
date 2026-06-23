@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { characterSchema } from '../domain/characterSchema'
+import { characterSchema } from '../systems/dnd5e/domain/characterSchema'
 
 describe('combat.knownBeasts', () => {
   it('default é array vazio quando ausente', () => {

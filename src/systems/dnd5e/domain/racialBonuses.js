@@ -1,4 +1,4 @@
-import { ABBR_TO_KEY, ATTR_NAME_TO_KEY } from '../utils/calculations'
+import { ABBR_TO_KEY, ATTR_NAME_TO_KEY } from '../../../utils/calculations'
 
 /**
  * Bônus raciais de atributo.

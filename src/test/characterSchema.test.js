@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { migrateCharacter, safeParseCharacter, SCHEMA_VERSION } from '../domain/characterSchema'
+import { migrateCharacter, safeParseCharacter, SCHEMA_VERSION } from '../systems/dnd5e/domain/characterSchema'
 
 function v1Character(overrides = {}) {
   return {

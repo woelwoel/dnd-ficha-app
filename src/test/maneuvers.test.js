@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { defaultClassFeatureUses } from '../domain/rules'
+import { defaultClassFeatureUses } from '../systems/dnd5e/domain/rules'
 import { resolveMultiSelect, isChoiceDone } from '../components/CharacterWizardV2/blocks/class-helpers'
 
 function fighterChar(level, chosenArchetype = null) {

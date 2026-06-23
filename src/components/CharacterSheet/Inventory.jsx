@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import { SrdSearchModal } from '../SrdSearchModal'
-import { findArmorByName, ARMOR_TABLE } from '../../domain/equipment'
-import { getRarityInfo, getActiveMagicEffects } from '../../domain/magicItems'
-import { buildItemLookup, enrichItemDisplay } from '../../domain/itemLookup'
+import { findArmorByName, ARMOR_TABLE } from '../../systems/dnd5e/domain/equipment'
+import { getRarityInfo, getActiveMagicEffects } from '../../systems/dnd5e/domain/magicItems'
+import { buildItemLookup, enrichItemDisplay } from '../../systems/dnd5e/domain/itemLookup'
 
 const CURRENCY_CONFIG = [
   { key: 'pp', label: 'PPl', title: 'Platina',  color: 'text-purple-300' },

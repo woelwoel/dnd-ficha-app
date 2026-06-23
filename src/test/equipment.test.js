@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { calculateArmorClass, findArmorByName, getEquippedArmor, ARMOR_TABLE } from '../domain/equipment'
+import { calculateArmorClass, findArmorByName, getEquippedArmor, ARMOR_TABLE } from '../systems/dnd5e/domain/equipment'
 
 describe('calculateArmorClass', () => {
   const mods = (d = 0, c = 0, w = 0) => ({ dex: d, con: c, wis: w })

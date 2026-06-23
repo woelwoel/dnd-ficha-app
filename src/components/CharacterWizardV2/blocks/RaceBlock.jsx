@@ -6,7 +6,7 @@ import { RacialSkillPicker } from './race/RacialSkillPicker'
 import { RaceBonusPreview } from './race/RaceBonusPreview'
 import { FeatPicker } from './FeatPicker'
 import { computeBonuses, getRaceRequirements } from './race-helpers'
-import { VARIANT_HUMAN_SUBRACE } from '../../../domain/racialBonuses'
+import { VARIANT_HUMAN_SUBRACE } from '../../../systems/dnd5e/domain/racialBonuses'
 
 export function RaceBlock({ draft, updateDraft, races, feats = [] }) {
   const selectedRace    = races.find(r => r.index === draft.race) ?? null
