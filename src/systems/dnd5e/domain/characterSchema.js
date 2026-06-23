@@ -337,6 +337,7 @@ const traitsSchema = z.object({
 
 export const characterSchema = z.object({
   id: z.string().min(1),
+  system: z.string().default('dnd5e'),
   // Vínculo com mesa (Postgres `characters.campaign_id`). Null/undefined = pessoal.
   // Exposto via `rowToCharacter` em `storage.js`; persistido fora de `data` no
   // Postgres mas espelhado no objeto pra leitura cliente.
