@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { DamageModal } from '../components/CharacterSheet/DamageModal'
+import { DamageModal } from '../systems/dnd5e/components/CharacterSheet/DamageModal'
 
 describe('DamageModal', () => {
   it('não renderiza quando open=false', () => {

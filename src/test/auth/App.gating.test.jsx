@@ -14,7 +14,7 @@ vi.mock('../../auth/AuthProvider', () => ({
 vi.mock('../../systems/dnd5e/data/SrdProvider', () => ({ SrdProvider: ({ children }) => children }))
 vi.mock('../../context/DiceRollerContext', () => ({ DiceRollerProvider: ({ children }) => children }))
 vi.mock('../../components/DiceRoller/DiceHistoryPanel', () => ({ DiceHistoryPanel: () => null }))
-vi.mock('../../components/Bestiary/BestiaryButton', () => ({ BestiaryButton: () => null }))
+vi.mock('../../systems/dnd5e/components/Bestiary/BestiaryButton', () => ({ BestiaryButton: () => null }))
 vi.mock('../../components/PWAUpdatePrompt', () => ({ PWAUpdatePrompt: () => null }))
 vi.mock('../../components/CharacterList', () => ({ CharacterList: () => <div>CHAR_LIST</div> }))
 vi.mock('../../auth/LoginScreen', () => ({ LoginScreen: () => <div>LOGIN_SCREEN</div> }))

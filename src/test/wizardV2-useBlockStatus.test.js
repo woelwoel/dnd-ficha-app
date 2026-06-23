@@ -1,7 +1,7 @@
 // src/test/wizardV2-useBlockStatus.test.js
 import { describe, it, expect } from 'vitest'
-import { getBlockStatus } from '../components/CharacterWizardV2/hooks/useBlockStatus'
-import { INITIAL_DRAFT_V2 } from '../components/CharacterWizardV2/hooks/useDraft'
+import { getBlockStatus } from '../systems/dnd5e/components/CharacterWizardV2/hooks/useBlockStatus'
+import { INITIAL_DRAFT_V2 } from '../systems/dnd5e/components/CharacterWizardV2/hooks/useDraft'
 
 const empty = INITIAL_DRAFT_V2
 

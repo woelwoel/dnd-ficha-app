@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { BlockEditorModal } from '../components/CharacterWizardV2/BlockEditorModal'
+import { BlockEditorModal } from '../systems/dnd5e/components/CharacterWizardV2/BlockEditorModal'
 
 describe('BlockEditorModal', () => {
   it('não renderiza quando open=false', () => {

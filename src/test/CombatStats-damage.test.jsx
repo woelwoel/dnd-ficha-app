@@ -3,7 +3,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { CombatStats } from '../components/CharacterSheet/CombatStats'
+import { CombatStats } from '../systems/dnd5e/components/CharacterSheet/CombatStats'
 import { DiceRollerProvider } from '../context/DiceRollerContext'
 
 function wrap(ui) {

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { RangerPanel } from '../components/CharacterSheet/RangerPanel'
+import { RangerPanel } from '../systems/dnd5e/components/CharacterSheet/RangerPanel'
 
 vi.mock('../hooks/useDiceRoller', () => ({
   useDiceRoller: () => ({ roll: vi.fn(), openPanel: vi.fn() }),

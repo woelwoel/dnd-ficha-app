@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import {
   isASIEntry, calcHpAverage, calcHpMax, rollDie,
-} from '../components/CharacterSheet/levelProgression/helpers'
+} from '../systems/dnd5e/components/CharacterSheet/levelProgression/helpers'
 
 describe('levelProgression/helpers', () => {
   describe('isASIEntry', () => {

@@ -2,7 +2,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { LevelProgressionList } from '../components/CharacterWizardV2/blocks/class/LevelProgressionList'
+import { LevelProgressionList } from '../systems/dnd5e/components/CharacterWizardV2/blocks/class/LevelProgressionList'
 
 const draft = {
   chosenFeatures: {},

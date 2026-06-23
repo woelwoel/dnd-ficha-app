@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { LandCirclePanel } from '../components/CharacterSheet/LandCirclePanel'
+import { LandCirclePanel } from '../systems/dnd5e/components/CharacterSheet/LandCirclePanel'
 
 function makeChar(overrides = {}) {
   return {

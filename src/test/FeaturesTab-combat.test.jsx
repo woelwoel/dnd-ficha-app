@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { FeaturesTab } from '../components/CharacterSheet/FeaturesTab'
+import { FeaturesTab } from '../systems/dnd5e/components/CharacterSheet/FeaturesTab'
 
 // Fixture mínima de progressão (Ladino nv 5): âncora Ataque Furtivo + ruído ASI.
 const PROGRESSION = {

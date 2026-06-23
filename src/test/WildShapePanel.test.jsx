@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { WildShapePanel } from '../components/CharacterSheet/WildShapePanel'
+import { WildShapePanel } from '../systems/dnd5e/components/CharacterSheet/WildShapePanel'
 
 // Mock do useDiceRoller
 const mockRoll = vi.fn()

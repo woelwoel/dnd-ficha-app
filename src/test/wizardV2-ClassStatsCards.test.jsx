@@ -1,7 +1,7 @@
 // src/test/wizardV2-ClassStatsCards.test.jsx
 import { describe, it, expect } from 'vitest'
 import { render, screen, cleanup } from '@testing-library/react'
-import { ClassStatsCards } from '../components/CharacterWizardV2/blocks/class/ClassStatsCards'
+import { ClassStatsCards } from '../systems/dnd5e/components/CharacterWizardV2/blocks/class/ClassStatsCards'
 
 const guerreiro = {
   hit_die: 10,

@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { SrdSearchModal } from '../components/SrdSearchModal'
-import { SpellDetailModal } from '../components/SpellDetailModal'
+import { SrdSearchModal } from '../systems/dnd5e/components/SrdSearchModal'
+import { SpellDetailModal } from '../systems/dnd5e/components/SpellDetailModal'
 
 /* ─────────────────────────────────────────────────────────────────────────
    Acessibilidade — SrdSearchModal

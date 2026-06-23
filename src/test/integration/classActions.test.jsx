@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { useState } from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { CombatClassActions } from '../../components/CharacterSheet/CombatClassActions'
+import { CombatClassActions } from '../../systems/dnd5e/components/CharacterSheet/CombatClassActions'
 import { DiceRollerProvider } from '../../context/DiceRollerContext'
 import { defaultClassFeatureUses } from '../../systems/dnd5e/domain/rules'
 

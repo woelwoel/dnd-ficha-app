@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { WarlockPactPanel } from '../components/CharacterSheet/WarlockPactPanel'
+import { WarlockPactPanel } from '../systems/dnd5e/components/CharacterSheet/WarlockPactPanel'
 
 vi.mock('../hooks/useDiceRoller', () => ({
   useDiceRoller: () => ({ roll: vi.fn(), openPanel: vi.fn() }),

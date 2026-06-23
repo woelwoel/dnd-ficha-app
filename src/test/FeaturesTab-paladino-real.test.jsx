@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { FeaturesTab } from '../components/CharacterSheet/FeaturesTab'
+import { FeaturesTab } from '../systems/dnd5e/components/CharacterSheet/FeaturesTab'
 import progression from '../../public/srd-data/phb-class-progression-pt.json'
 import classChoices from '../../public/srd-data/phb-class-choices-pt.json'
 

@@ -1,12 +1,12 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { RacePicker } from '../components/CharacterWizardV2/blocks/race/RacePicker'
-import { DraconicAncestryPicker } from '../components/CharacterWizardV2/blocks/race/DraconicAncestryPicker'
-import { HighElfCantripPicker } from '../components/CharacterWizardV2/blocks/race/HighElfCantripPicker'
-import { FreeAbilityPicker } from '../components/CharacterWizardV2/blocks/race/FreeAbilityPicker'
-import { RacialSkillPicker } from '../components/CharacterWizardV2/blocks/race/RacialSkillPicker'
-import { RaceBonusPreview } from '../components/CharacterWizardV2/blocks/race/RaceBonusPreview'
+import { RacePicker } from '../systems/dnd5e/components/CharacterWizardV2/blocks/race/RacePicker'
+import { DraconicAncestryPicker } from '../systems/dnd5e/components/CharacterWizardV2/blocks/race/DraconicAncestryPicker'
+import { HighElfCantripPicker } from '../systems/dnd5e/components/CharacterWizardV2/blocks/race/HighElfCantripPicker'
+import { FreeAbilityPicker } from '../systems/dnd5e/components/CharacterWizardV2/blocks/race/FreeAbilityPicker'
+import { RacialSkillPicker } from '../systems/dnd5e/components/CharacterWizardV2/blocks/race/RacialSkillPicker'
+import { RaceBonusPreview } from '../systems/dnd5e/components/CharacterWizardV2/blocks/race/RaceBonusPreview'
 
 const races = [
   { index: 'anao', name: 'Anão', subraces: [

@@ -1,0 +1,69 @@
+import { useMemo, useState } from 'react'
+import { useSrd } from '../data/SrdProvider'
+
+export function CantripsGrantPicker({ needed, chosen, onChosenChange }) {
+  const { spells } = useSrd()
+  const [search, setSearch] = useState('')
+
+  // Memoizado: deriva truques a partir do cache compartilhado do provider.
+  const cantrips = useMemo(
+    () => (spells ?? []).filter(s => s.level === 0),
+    [spells]
+  )
+
+  const q = search.toLowerCase()
+  const filtered = useMemo(
+    () => cantrips.filter(s => s.name?.toLowerCase().includes(q)),
+    [cantrips, q]
+  )
+
+  return (
+    <div className="bg-parchment-100 border border-parchment-600 rounded-lg p-3 space-y-2">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-blue-300">
+          Escolha {needed} truque{needed > 1 ? 's' : ''} de qualquer lista
+        </p>
+        <span className="text-xs text-gray-500">{chosen.length}/{needed}</span>
+      </div>
+      <input
+        type="text"
+        placeholder="Pesquisar truques..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        className="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-blue-500"
+      />
+      <div className="max-h-44 overflow-y-auto space-y-1 pr-1">
+        {filtered.map(spell => {
+          const isChosen = !!chosen.find(c => c.index === spell.index)
+          const disabled = !isChosen && chosen.length >= needed
+          return (
+            <button
+              key={spell.index}
+              type="button"
+              disabled={disabled}
+              onClick={() => {
+                if (isChosen) onChosenChange(chosen.filter(c => c.index !== spell.index))
+                else onChosenChange([...chosen, {
+                  index: spell.index, name: spell.name, level: 0,
+                  school: spell.school ?? '', desc: spell.desc ?? '',
+                }])
+              }}
+              className={`w-full text-left flex items-center gap-2 px-2.5 py-1.5 rounded text-xs transition-colors ${
+                isChosen   ? 'bg-blue-900/40 border border-blue-600/50 text-blue-200'
+                : disabled ? 'opacity-30 cursor-not-allowed text-gray-500 bg-gray-800'
+                :             'bg-gray-800 hover:bg-gray-700 text-gray-300'
+              }`}
+            >
+              <span className={`w-3 h-3 rounded-full border-2 shrink-0 ${isChosen ? 'border-blue-400 bg-blue-500' : 'border-gray-600'}`} />
+              <span className="flex-1">{spell.name}</span>
+              {spell.school && <span className="text-gray-500 text-xs">{spell.school}</span>}
+            </button>
+          )
+        })}
+        {filtered.length === 0 && (
+          <p className="text-xs text-gray-600 italic text-center py-2">Nenhum truque encontrado.</p>
+        )}
+      </div>
+    </div>
+  )
+}

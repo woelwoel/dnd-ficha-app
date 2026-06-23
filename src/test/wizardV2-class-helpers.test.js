@@ -3,7 +3,7 @@ import {
   isASIChoiceComplete, isChoiceDone, getLeveledChoices,
   computeBonusCantripsNeeded, getASILevels, getProgressionLevels,
   currentAttributesForASI,
-} from '../components/CharacterWizardV2/blocks/class-helpers'
+} from '../systems/dnd5e/components/CharacterWizardV2/blocks/class-helpers'
 
 describe('currentAttributesForASI', () => {
   it('soma base + bônus racial', () => {

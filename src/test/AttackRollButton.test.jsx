@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { DiceRollerProvider } from '../context/DiceRollerContext'
 import { DiceHistoryPanel } from '../components/DiceRoller/DiceHistoryPanel'
-import { AttackRollButton } from '../components/CharacterSheet/AttackRollButton'
+import { AttackRollButton } from '../systems/dnd5e/components/CharacterSheet/AttackRollButton'
 
 /* Math.random controlado: cada teste fixa a sequência específica do d20 + dano. */
 function mockSequence(values) {

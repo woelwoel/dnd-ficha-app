@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { ClericDomainPanel } from '../components/CharacterSheet/ClericDomainPanel'
+import { ClericDomainPanel } from '../systems/dnd5e/components/CharacterSheet/ClericDomainPanel'
 
 const mockRoll = vi.fn()
 const mockOpenPanel = vi.fn()

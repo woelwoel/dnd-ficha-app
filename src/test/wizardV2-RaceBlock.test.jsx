@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { RaceBlock } from '../components/CharacterWizardV2/blocks/RaceBlock'
-import { INITIAL_DRAFT_V2 } from '../components/CharacterWizardV2/hooks/useDraft'
+import { RaceBlock } from '../systems/dnd5e/components/CharacterWizardV2/blocks/RaceBlock'
+import { INITIAL_DRAFT_V2 } from '../systems/dnd5e/components/CharacterWizardV2/hooks/useDraft'
 
 const races = [
   { index: 'anao', name: 'Anão',

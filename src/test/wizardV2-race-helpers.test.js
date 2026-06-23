@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   MAGO_CANTRIPS, computeBonuses, getRaceRequirements,
-} from '../components/CharacterWizardV2/blocks/race-helpers'
+} from '../systems/dnd5e/components/CharacterWizardV2/blocks/race-helpers'
 import racesData from '../../public/srd-data/phb-races-pt.json'
 import { ATTR_NAME_TO_KEY, ABBR_TO_KEY } from '../utils/calculations'
 

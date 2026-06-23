@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { BlockCard } from '../components/CharacterWizardV2/BlockCard'
+import { BlockCard } from '../systems/dnd5e/components/CharacterWizardV2/BlockCard'
 
 describe('BlockCard', () => {
   it('renderiza label e resumo', () => {

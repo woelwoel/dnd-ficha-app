@@ -5,7 +5,7 @@ import { ErrorBoundary } from './ErrorBoundary'
 import { SrdProvider } from './systems/dnd5e/data/SrdProvider'
 import { DiceRollerProvider } from './context/DiceRollerContext'
 import { DiceHistoryPanel } from './components/DiceRoller/DiceHistoryPanel'
-import { BestiaryButton } from './components/Bestiary/BestiaryButton'
+import { BestiaryButton } from './systems/dnd5e/components/Bestiary/BestiaryButton'
 import { CharacterList } from './components/CharacterList'
 import { PWAUpdatePrompt } from './components/PWAUpdatePrompt'
 import { AppFooter } from './components/ui/AppFooter'
@@ -40,10 +40,10 @@ function lazyWithReload(factory) {
 }
 
 const CharacterSheet = lazyWithReload(() =>
-  import('./components/CharacterSheet/CharacterSheet').then(m => ({ default: m.CharacterSheet }))
+  import('./systems/dnd5e/components/CharacterSheet/CharacterSheet').then(m => ({ default: m.CharacterSheet }))
 )
 const CharacterWizard = lazyWithReload(() =>
-  import('./components/CharacterWizardV2').then(m => ({ default: m.CharacterWizardV2 }))
+  import('./systems/dnd5e/components/CharacterWizardV2').then(m => ({ default: m.CharacterWizardV2 }))
 )
 const CampaignsScreen = lazyWithReload(() =>
   import('./components/Campaigns').then(m => ({ default: m.CampaignsScreen }))

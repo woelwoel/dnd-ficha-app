@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import {
   totalAttributes, meetsPrereqs, formatPrereqs, totalLevels, takenClassIndices,
-} from '../components/CharacterWizardV2/blocks/class/multiclass-helpers'
-import { INITIAL_DRAFT_V2 } from '../components/CharacterWizardV2/hooks/useDraft'
+} from '../systems/dnd5e/components/CharacterWizardV2/blocks/class/multiclass-helpers'
+import { INITIAL_DRAFT_V2 } from '../systems/dnd5e/components/CharacterWizardV2/hooks/useDraft'
 
 describe('totalAttributes', () => {
   it('soma base + racial', () => {

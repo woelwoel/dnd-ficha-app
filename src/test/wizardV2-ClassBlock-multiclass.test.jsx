@@ -12,8 +12,8 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { ClassBlock } from '../components/CharacterWizardV2/blocks/ClassBlock'
-import { INITIAL_DRAFT_V2 } from '../components/CharacterWizardV2/hooks/useDraft'
+import { ClassBlock } from '../systems/dnd5e/components/CharacterWizardV2/blocks/ClassBlock'
+import { INITIAL_DRAFT_V2 } from '../systems/dnd5e/components/CharacterWizardV2/hooks/useDraft'
 
 function loadJson(rel) {
   return JSON.parse(readFileSync(resolve(process.cwd(), rel), 'utf8'))

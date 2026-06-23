@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { BLOCKS } from '../components/CharacterWizardV2/blocks-config'
+import { BLOCKS } from '../systems/dnd5e/components/CharacterWizardV2/blocks-config'
 
 describe('BLOCKS config', () => {
   it('lista 8 blocos na ordem recomendada (Atributos antes de Classe)', () => {

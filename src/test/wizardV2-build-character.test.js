@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest'
 import {
   buildCharacter, resolveClassEquipmentItems, computeFinalAttributes,
   computeDraftMaxHp, totalCharacterLevel,
-} from '../components/CharacterWizardV2/blocks/build-character'
-import { INITIAL_DRAFT_V2 } from '../components/CharacterWizardV2/hooks/useDraft'
+} from '../systems/dnd5e/components/CharacterWizardV2/blocks/build-character'
+import { INITIAL_DRAFT_V2 } from '../systems/dnd5e/components/CharacterWizardV2/hooks/useDraft'
 
 describe('computeFinalAttributes', () => {
   it('soma base + racial + ASI (teto 20 no ASI, 30 no racial)', () => {

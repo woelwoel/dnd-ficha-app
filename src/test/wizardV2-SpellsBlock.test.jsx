@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { INITIAL_DRAFT_V2 } from '../components/CharacterWizardV2/hooks/useDraft'
+import { INITIAL_DRAFT_V2 } from '../systems/dnd5e/components/CharacterWizardV2/hooks/useDraft'
 
 vi.mock('../hooks/useClassSpells', () => ({
   useClassSpells: () => ({ classSpells: [], levelData: null, slotLevels: [], availableTabs: [] }),
@@ -8,11 +8,11 @@ vi.mock('../hooks/useClassSpells', () => ({
 vi.mock('../utils/spellcasting', () => ({
   getSpellcastingRules: () => ({ type: 'prepared', spellsLimit: null, cantripsLimit: null, spellsLabel: 'Magias' }),
 }))
-vi.mock('../components/SpellDetailModal', () => ({
+vi.mock('../systems/dnd5e/components/SpellDetailModal', () => ({
   SpellDetailModal: () => null,
 }))
 
-import { SpellsBlock } from '../components/CharacterWizardV2/blocks/SpellsBlock'
+import { SpellsBlock } from '../systems/dnd5e/components/CharacterWizardV2/blocks/SpellsBlock'
 
 describe('SpellsBlock', () => {
   it('renderiza stats quando classe tem spellcasting_ability', () => {

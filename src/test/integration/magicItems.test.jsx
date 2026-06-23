@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { useState } from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Inventory } from '../../components/CharacterSheet/Inventory'
+import { Inventory } from '../../systems/dnd5e/components/CharacterSheet/Inventory'
 import { getActiveMagicEffects, getEffectiveAttributes } from '../../systems/dnd5e/domain/magicItems'
 import { mockSrdFetch } from './helpers'
 

@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { SkillsBlock } from '../components/CharacterWizardV2/blocks/SkillsBlock'
-import { INITIAL_DRAFT_V2 } from '../components/CharacterWizardV2/hooks/useDraft'
+import { SkillsBlock } from '../systems/dnd5e/components/CharacterWizardV2/blocks/SkillsBlock'
+import { INITIAL_DRAFT_V2 } from '../systems/dnd5e/components/CharacterWizardV2/hooks/useDraft'
 
 const classData = {
   skill_choices: { count: 2, from: ['Atletismo', 'História', 'Percepção', 'Intimidação'] },

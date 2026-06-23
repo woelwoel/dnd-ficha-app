@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { AddMulticlassPicker } from '../components/CharacterSheet/levelProgression/AddMulticlassPicker'
+import { AddMulticlassPicker } from '../systems/dnd5e/components/CharacterSheet/levelProgression/AddMulticlassPicker'
 
 const classes = [
   {

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   rollGoldFormula, allPicksDone, computePreviewItems,
-} from '../components/CharacterWizardV2/blocks/class/equipment-helpers'
+} from '../systems/dnd5e/components/CharacterWizardV2/blocks/class/equipment-helpers'
 
 describe('rollGoldFormula', () => {
   it('5d4 × 10 retorna entre 50 e 200', () => {

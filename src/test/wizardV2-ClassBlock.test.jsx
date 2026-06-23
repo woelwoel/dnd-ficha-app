@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ClassBlock } from '../components/CharacterWizardV2/blocks/ClassBlock'
-import { INITIAL_DRAFT_V2 } from '../components/CharacterWizardV2/hooks/useDraft'
+import { ClassBlock } from '../systems/dnd5e/components/CharacterWizardV2/blocks/ClassBlock'
+import { INITIAL_DRAFT_V2 } from '../systems/dnd5e/components/CharacterWizardV2/hooks/useDraft'
 
 const classes = [
   { index: 'guerreiro', name: 'Guerreiro', hit_die: 10, spellcasting_ability: '',

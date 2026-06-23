@@ -4,9 +4,9 @@ import userEvent from '@testing-library/user-event'
 import {
   rollFourD6Drop, rollFourD6DropSix, finalScore,
   availableStandardArray, availableRolled,
-} from '../components/CharacterWizardV2/blocks/attributes/attribute-helpers'
-import { AttributesBlock } from '../components/CharacterWizardV2/blocks/AttributesBlock'
-import { INITIAL_DRAFT_V2 } from '../components/CharacterWizardV2/hooks/useDraft'
+} from '../systems/dnd5e/components/CharacterWizardV2/blocks/attributes/attribute-helpers'
+import { AttributesBlock } from '../systems/dnd5e/components/CharacterWizardV2/blocks/AttributesBlock'
+import { INITIAL_DRAFT_V2 } from '../systems/dnd5e/components/CharacterWizardV2/hooks/useDraft'
 
 const empty = INITIAL_DRAFT_V2
 

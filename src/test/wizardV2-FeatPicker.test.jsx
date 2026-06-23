@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { FeatPicker } from '../components/CharacterWizardV2/blocks/FeatPicker'
+import { FeatPicker } from '../systems/dnd5e/components/CharacterWizardV2/blocks/FeatPicker'
 
 const FEATS = [
   { index: 'atleta', name: 'Atleta', prereq: null, attrBonus: { choices: ['str', 'dex'], amount: 1 },

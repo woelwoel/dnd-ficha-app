@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ClassPicker } from '../components/CharacterWizardV2/blocks/class/ClassPicker'
+import { ClassPicker } from '../systems/dnd5e/components/CharacterWizardV2/blocks/class/ClassPicker'
 
 const classes = [
   { index: 'guerreiro', name: 'Guerreiro' },

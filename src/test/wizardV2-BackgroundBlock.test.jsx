@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { BackgroundBlock } from '../components/CharacterWizardV2/blocks/BackgroundBlock'
-import { INITIAL_DRAFT_V2 } from '../components/CharacterWizardV2/hooks/useDraft'
+import { BackgroundBlock } from '../systems/dnd5e/components/CharacterWizardV2/blocks/BackgroundBlock'
+import { INITIAL_DRAFT_V2 } from '../systems/dnd5e/components/CharacterWizardV2/hooks/useDraft'
 
 const backgrounds = [
   { index: 'soldado', name: 'Soldado',

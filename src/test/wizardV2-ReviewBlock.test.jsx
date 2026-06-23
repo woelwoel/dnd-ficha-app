@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { ReviewBlock } from '../components/CharacterWizardV2/blocks/ReviewBlock'
-import { INITIAL_DRAFT_V2 } from '../components/CharacterWizardV2/hooks/useDraft'
+import { ReviewBlock } from '../systems/dnd5e/components/CharacterWizardV2/blocks/ReviewBlock'
+import { INITIAL_DRAFT_V2 } from '../systems/dnd5e/components/CharacterWizardV2/hooks/useDraft'
 
 const races = [{ index: 'humano', name: 'Humano', subraces: [] }]
 const backgrounds = [{ index: 'soldado', name: 'Soldado' }]

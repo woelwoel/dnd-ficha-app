@@ -2,7 +2,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { EquipmentChoiceGroup } from '../components/CharacterWizardV2/blocks/class/EquipmentChoiceGroup'
+import { EquipmentChoiceGroup } from '../systems/dnd5e/components/CharacterWizardV2/blocks/class/EquipmentChoiceGroup'
 
 const weaponsArmor = { weapons: [
   { index: 'longsword', name: 'Espada longa', category: 'martial-melee', damage: '1d8' },

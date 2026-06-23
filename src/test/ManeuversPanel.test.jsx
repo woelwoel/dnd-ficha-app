@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { ManeuversPanel } from '../components/CharacterSheet/ManeuversPanel'
+import { ManeuversPanel } from '../systems/dnd5e/components/CharacterSheet/ManeuversPanel'
 
 // Mock do hook do roller — captura chamadas pra verificar
 const mockRoll = vi.fn()

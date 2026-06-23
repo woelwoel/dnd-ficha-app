@@ -2,7 +2,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { WeaponPicker } from '../components/CharacterWizardV2/blocks/class/WeaponPicker'
+import { WeaponPicker } from '../systems/dnd5e/components/CharacterWizardV2/blocks/class/WeaponPicker'
 
 const weaponsArmor = {
   weapons: [

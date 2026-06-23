@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { AttributeBox } from '../components/CharacterSheet/AttributeBox'
+import { AttributeBox } from '../systems/dnd5e/components/CharacterSheet/AttributeBox'
 import { DiceRollerProvider } from '../context/DiceRollerContext'
 
 function renderBox(props) {

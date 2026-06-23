@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isSheetReadOnly, canOpenSheet } from '../components/CharacterSheet/sheet-access'
+import { isSheetReadOnly, canOpenSheet } from '../systems/dnd5e/components/CharacterSheet/sheet-access'
 
 describe('isSheetReadOnly', () => {
   it('dono edita a própria ficha', () => {

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { BestiaryModal } from '../../components/Bestiary/BestiaryModal'
+import { BestiaryModal } from '../../systems/dnd5e/components/Bestiary/BestiaryModal'
 import { mockSrdFetch, clearStorage } from './helpers'
 
 /* ─────────────────────────────────────────────────────────────────────

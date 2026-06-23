@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ConceptBlock } from '../components/CharacterWizardV2/blocks/ConceptBlock'
+import { ConceptBlock } from '../systems/dnd5e/components/CharacterWizardV2/blocks/ConceptBlock'
 
 const emptyDraft = {
   name: '', playerName: '', alignment: '', appearance: '',

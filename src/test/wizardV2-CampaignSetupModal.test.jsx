@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { CampaignSetupModal } from '../components/CharacterWizardV2/CampaignSetupModal'
+import { CampaignSetupModal } from '../systems/dnd5e/components/CharacterWizardV2/CampaignSetupModal'
 
 describe('CampaignSetupModal', () => {
   it('renderiza com defaults', () => {

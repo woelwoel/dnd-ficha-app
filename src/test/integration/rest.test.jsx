@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { useState } from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { RestActions } from '../../components/CharacterSheet/RestActions'
+import { RestActions } from '../../systems/dnd5e/components/CharacterSheet/RestActions'
 
 /* ─────────────────────────────────────────────────────────────────────
    E2E — Descansos (PHB p.186)

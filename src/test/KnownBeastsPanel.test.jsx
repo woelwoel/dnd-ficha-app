@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { KnownBeastsPanel } from '../components/CharacterSheet/KnownBeastsPanel'
+import { KnownBeastsPanel } from '../systems/dnd5e/components/CharacterSheet/KnownBeastsPanel'
 
 const BEASTS_FIXTURE = {
   beasts: [

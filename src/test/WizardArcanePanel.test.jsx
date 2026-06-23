@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { WizardArcanePanel } from '../components/CharacterSheet/WizardArcanePanel'
+import { WizardArcanePanel } from '../systems/dnd5e/components/CharacterSheet/WizardArcanePanel'
 
 const mockRoll = vi.fn(() => ({ total: 15 }))
 const mockOpenPanel = vi.fn()

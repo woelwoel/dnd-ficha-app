@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import { useDraft, INITIAL_DRAFT_V2 } from '../components/CharacterWizardV2/hooks/useDraft'
+import { useDraft, INITIAL_DRAFT_V2 } from '../systems/dnd5e/components/CharacterWizardV2/hooks/useDraft'
 
 describe('useDraft', () => {
   beforeEach(() => {

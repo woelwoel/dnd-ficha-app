@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ResumeDraftPrompt } from '../components/CharacterWizardV2/ResumeDraftPrompt'
-import { ConfirmExitPrompt } from '../components/CharacterWizardV2/ConfirmExitPrompt'
+import { ResumeDraftPrompt } from '../systems/dnd5e/components/CharacterWizardV2/ResumeDraftPrompt'
+import { ConfirmExitPrompt } from '../systems/dnd5e/components/CharacterWizardV2/ConfirmExitPrompt'
 
 describe('ResumeDraftPrompt', () => {
   it('chama onResume ao clicar Continuar', async () => {

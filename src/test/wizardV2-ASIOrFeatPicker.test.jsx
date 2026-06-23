@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ASIOrFeatPicker } from '../components/CharacterWizardV2/blocks/class/ASIOrFeatPicker'
+import { ASIOrFeatPicker } from '../systems/dnd5e/components/CharacterWizardV2/blocks/class/ASIOrFeatPicker'
 
 const feats = [
   { index: 'tough', name: 'Tough' },
