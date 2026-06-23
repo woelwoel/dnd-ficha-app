@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { getModifier } from '../../utils/calculations'
 import { getSpellSlots } from '../../utils/spellcasting'
-import { useSrd } from '../../providers/SrdProvider'
+import { useSrd } from '../../systems/dnd5e/data/SrdProvider'
 import { useClassProgressionData } from './levelProgression/useClassProgressionData'
 import { enrichWithSubclassSpells } from '../../systems/dnd5e/domain/subclassSpells'
 import { TotalLevelHeader } from './levelProgression/TotalLevelHeader'

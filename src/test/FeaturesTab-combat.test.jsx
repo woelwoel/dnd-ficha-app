@@ -47,7 +47,7 @@ const RACES = [
   ] },
 ]
 
-vi.mock('../providers/SrdProvider', () => ({
+vi.mock('../systems/dnd5e/data/SrdProvider', () => ({
   useSrd: () => ({ progression: PROGRESSION, races: RACES, classChoices: {} }),
   useLazySrdDataset: () => [],
 }))

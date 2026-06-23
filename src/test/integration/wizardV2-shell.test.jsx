@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { CharacterWizardV2 } from '../../components/CharacterWizardV2/CharacterWizardV2'
-import { SrdProvider } from '../../providers/SrdProvider'
+import { SrdProvider } from '../../systems/dnd5e/data/SrdProvider'
 
 function renderWithSrd(ui) {
   return render(<SrdProvider>{ui}</SrdProvider>)

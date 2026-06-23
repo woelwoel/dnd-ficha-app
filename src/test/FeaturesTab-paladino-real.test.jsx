@@ -4,7 +4,7 @@ import { FeaturesTab } from '../components/CharacterSheet/FeaturesTab'
 import progression from '../../public/srd-data/phb-class-progression-pt.json'
 import classChoices from '../../public/srd-data/phb-class-choices-pt.json'
 
-vi.mock('../providers/SrdProvider', () => ({
+vi.mock('../systems/dnd5e/data/SrdProvider', () => ({
   useSrd: () => ({ progression, races: [], classChoices }),
   useLazySrdDataset: () => [],
 }))

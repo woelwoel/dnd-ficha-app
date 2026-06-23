@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { ABILITY_SCORES, SKILLS, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, getModifier, getProficiencyBonus, RACE_LANGUAGES, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../utils/calculations'
 import { formatHitDicePool } from '../../utils/hitDice'
 import { getEffectiveSaveProficiencies } from '../../systems/dnd5e/domain/rules'
-import { useSrd } from '../../providers/SrdProvider'
+import { useSrd } from '../../systems/dnd5e/data/SrdProvider'
 import { LevelProgression } from './LevelProgression'
 
 const KEY_ABBR = Object.fromEntries(ABILITY_SCORES.map(a => [a.key, a.abbr]))

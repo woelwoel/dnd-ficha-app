@@ -3,7 +3,7 @@ import { renderHook } from '@testing-library/react'
 import { useClassSpells } from '../hooks/useClassSpells'
 
 // Mock SrdProvider — devolvemos dados sintéticos suficientes pro hook.
-vi.mock('../providers/SrdProvider', () => {
+vi.mock('../systems/dnd5e/data/SrdProvider', () => {
   // Slots full-caster típico do mago.
   const wizardLevels = [
     { class: { index: 'wizard' }, level: 1, spellcasting: { spell_slots_level_1: 2 } },

@@ -11,7 +11,7 @@
  */
 import { useMemo } from 'react'
 import { createPortal } from 'react-dom'
-import { useSrd } from '../../providers/SrdProvider'
+import { useSrd } from '../../systems/dnd5e/data/SrdProvider'
 import {
   getModifier, formatModifier,
   SKILLS, ABILITY_SCORES,

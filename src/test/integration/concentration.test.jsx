@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Spells } from '../../components/CharacterSheet/Spells'
-import { SrdProvider } from '../../providers/SrdProvider'
+import { SrdProvider } from '../../systems/dnd5e/data/SrdProvider'
 import { DiceRollerProvider } from '../../context/DiceRollerContext'
 import { mockSrdFetch } from './helpers'
 

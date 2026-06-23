@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { useSrd } from '../providers/SrdProvider'
+import { useSrd } from '../systems/dnd5e/data/SrdProvider'
 
 export function CantripsGrantPicker({ needed, chosen, onChosenChange }) {
   const { spells } = useSrd()

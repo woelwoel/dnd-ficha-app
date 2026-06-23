@@ -11,7 +11,7 @@ vi.mock('../../auth/AuthProvider', () => ({
 }))
 
 // Stubs leves dos componentes pesados que não interessam aqui.
-vi.mock('../../providers/SrdProvider', () => ({ SrdProvider: ({ children }) => children }))
+vi.mock('../../systems/dnd5e/data/SrdProvider', () => ({ SrdProvider: ({ children }) => children }))
 vi.mock('../../context/DiceRollerContext', () => ({ DiceRollerProvider: ({ children }) => children }))
 vi.mock('../../components/DiceRoller/DiceHistoryPanel', () => ({ DiceHistoryPanel: () => null }))
 vi.mock('../../components/Bestiary/BestiaryButton', () => ({ BestiaryButton: () => null }))

@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { useSrd, useLazySrdDataset } from '../../providers/SrdProvider'
+import { useSrd, useLazySrdDataset } from '../../systems/dnd5e/data/SrdProvider'
 import { enrichDraconicTopics } from '../../utils/draconicAncestors'
 import { getFeatureTypeMeta } from '../../systems/dnd5e/domain/featureMeta'
 import { ChosenFeaturePicker } from '../CharacterWizardV2/blocks/class/ChosenFeaturePicker'

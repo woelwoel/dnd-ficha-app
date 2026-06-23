@@ -3,7 +3,7 @@
 // cantrips bônus e confirma o patch de level-up para o pai.
 import { useState } from 'react'
 import { DetailsModal } from '../../DetailsModal'
-import { useLazySrdDataset } from '../../../providers/SrdProvider'
+import { useLazySrdDataset } from '../../../systems/dnd5e/data/SrdProvider'
 import { isASIEntry } from './helpers'
 import { HPSection } from './HPSection'
 import { ASIPicker } from './ASIPicker'

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { PT_CLASS_TO_EN } from '../utils/calculations'
-import { useSrd } from '../providers/SrdProvider'
+import { useSrd } from '../systems/dnd5e/data/SrdProvider'
 import { getWarlockPactSlots } from '../utils/spellcasting'
 
 /**
