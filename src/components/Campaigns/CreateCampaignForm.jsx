@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { createCampaign } from '../../lib/campaigns'
+import { listSystems } from '../../systems'
 import { Button } from '../ui/Button'
 
 /**
@@ -15,7 +16,7 @@ export function CreateCampaignForm({ onCreated }) {
     e.preventDefault()
     if (!name.trim()) return
     setBusy(true); setErr(null)
-    const r = await createCampaign(name.trim())
+    const r = await createCampaign(name.trim(), listSystems()[0].id)
     setBusy(false)
     if (!r.ok) {
       const msg = r.reason === 'too-many-campaigns'

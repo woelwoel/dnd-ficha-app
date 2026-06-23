@@ -1,4 +1,5 @@
 import { supabase } from './supabase'
+import { DEFAULT_SYSTEM } from '../systems/envelope'
 
 const T_CAMPAIGNS = 'campaigns'
 const T_MEMBERS   = 'campaign_members'
@@ -33,6 +34,9 @@ export async function moveCharacterToCampaign(characterId, campaignId) {
     .update({ campaign_id: campaignId })
     .eq('id', characterId)
   if (error) {
+    if (/system_mismatch/.test(error.message)) {
+      return { ok: false, reason: 'system-mismatch' }
+    }
     logDev('moveCharacterToCampaign', error)
     return { ok: false, reason: 'unknown', message: error.message }
   }
@@ -64,8 +68,8 @@ export async function listMyCampaigns() {
     .map(c => ({ ...c, role: roleById[c.id] }))
 }
 
-export async function createCampaign(name) {
-  const { data, error } = await supabase.rpc('create_campaign', { p_name: name })
+export async function createCampaign(name, system = DEFAULT_SYSTEM) {
+  const { data, error } = await supabase.rpc('create_campaign', { p_name: name, p_system: system })
   if (error) {
     if (/too_many_campaigns/.test(error.message)) return { ok: false, reason: 'too-many-campaigns' }
     if (/invalid_name/.test(error.message)) return { ok: false, reason: 'invalid-name' }
@@ -73,6 +77,14 @@ export async function createCampaign(name) {
     return { ok: false, reason: 'unknown' }
   }
   return { ok: true, id: data }
+}
+
+/** Sistema de uma mesa (pra forçar o sistema na criação de ficha dentro dela). */
+export async function getCampaignSystem(campaignId) {
+  const { data, error } = await supabase
+    .from(T_CAMPAIGNS).select('system').eq('id', campaignId).maybeSingle()
+  if (error || !data?.system) return DEFAULT_SYSTEM
+  return data.system
 }
 
 export async function joinCampaign(code) {
