@@ -133,6 +133,7 @@ import {
   touchCharacterLastOpened,
   exportAllCharacters,
   importAllCharacters,
+  getCharacterSystem,
 } from '../utils/storage'
 
 function makeChar(id, name = 'Frodo', level = 1) {
@@ -377,5 +378,37 @@ describe('saveCharacterVersioned — lock otimista (#3 super review)', () => {
     const r2 = await saveCharacterVersioned({ ...ch2 })
     expect(r2.ok).toBe(true)
     expect(r2.version).toBe(r1.version) // sem mudança real → trigger não bumpa
+  })
+})
+
+describe('getCharacterSystem — B6 (coluna gerada + fallback no blob)', () => {
+  beforeEach(() => {
+    store.rows = []
+  })
+
+  it('devolve o system da coluna gerada quando presente', async () => {
+    store.rows = [
+      { id: 'id-a', owner_id: store.uid, campaign_id: null, data: makeChar('id-a'), version: 1, system: 'dnd5e' },
+    ]
+    const sys = await getCharacterSystem('id-a')
+    expect(sys).toBe('dnd5e')
+  })
+
+  it('fallback: sem coluna `system` no row, lê data.system', async () => {
+    // Simula migration 0012 ainda não aplicada: row não tem `system` no
+    // nível raiz, só dentro de `data` (o blob da ficha).
+    store.rows = [
+      { id: 'id-b', owner_id: store.uid, campaign_id: null, data: { ...makeChar('id-b'), system: 'dnd5e' }, version: 1 },
+    ]
+    const sys = await getCharacterSystem('id-b')
+    expect(sys).toBe('dnd5e')
+  })
+
+  it('fallback: row sem system em lugar nenhum → DEFAULT_SYSTEM', async () => {
+    store.rows = [
+      { id: 'id-c', owner_id: store.uid, campaign_id: null, data: makeChar('id-c'), version: 1 },
+    ]
+    const sys = await getCharacterSystem('id-c')
+    expect(sys).toBe('dnd5e') // DEFAULT_SYSTEM
   })
 })

@@ -2,6 +2,7 @@ import { parseCharacterDispatch, migrateCharacterDispatch } from './characterCod
 import { clampPosition } from './token-position'
 import { supabase } from '../lib/supabase'
 import { reportError } from '../lib/report'
+import { DEFAULT_SYSTEM } from '../systems/envelope'
 
 const TABLE = 'characters'
 const CURRENT_VERSION = '1.0'
@@ -121,6 +122,23 @@ export async function loadCharacterById(id) {
   const ch = rowToCharacter(data)
   const parsed = parseCharacterDispatch(ch)
   return parsed.success ? parsed.data : null
+}
+
+/**
+ * Resolve só o sistema de uma ficha pra o roteamento escolher a UI certa, sem
+ * baixar/parsear o blob inteiro. Usa a coluna gerada `system` (migration 0012);
+ * se a coluna ainda não existe (42703), cai no fallback de ler data.system.
+ */
+export async function getCharacterSystem(id) {
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select('system')
+    .eq('id', id)
+    .maybeSingle()
+  if (!error && data?.system) return data.system
+  // Fallback: coluna ausente (migration não aplicada) ou linha sem system.
+  const { data: row } = await supabase.from(TABLE).select('data').eq('id', id).maybeSingle()
+  return row?.data?.system ?? DEFAULT_SYSTEM
 }
 
 /**
