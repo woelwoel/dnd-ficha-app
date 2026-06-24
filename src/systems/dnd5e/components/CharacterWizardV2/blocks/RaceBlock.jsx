@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { RacePicker } from './race/RacePicker'
 import { DraconicAncestryPicker } from './race/DraconicAncestryPicker'
 import { HighElfCantripPicker } from './race/HighElfCantripPicker'
@@ -7,12 +8,71 @@ import { RaceBonusPreview } from './race/RaceBonusPreview'
 import { FeatPicker } from './FeatPicker'
 import { computeBonuses, getRaceRequirements } from './race-helpers'
 import { VARIANT_HUMAN_SUBRACE } from '../../../domain/racialBonuses'
-import { RACE_LANGUAGES, DND_LANGUAGES, RACE_EXTRA_LANGUAGES } from '../../../../../utils/calculations'
+import { RACE_LANGUAGES, DND_LANGUAGES, RACE_EXTRA_LANGUAGES, ABILITY_SCORES } from '../../../../../utils/calculations'
+
+// Tasha's "Customizando sua Origem": distribuições válidas pro override de
+// atributo racial — +2/+1 (dois atributos distintos) ou +1/+1/+1 (três).
+const ASI_MODES = {
+  '2-1': { slots: [{ label: 'Atributo +2', amount: 2 }, { label: 'Atributo +1', amount: 1 }] },
+  '1-1-1': {
+    slots: [
+      { label: 'Atributo +1 (1)', amount: 1 },
+      { label: 'Atributo +1 (2)', amount: 1 },
+      { label: 'Atributo +1 (3)', amount: 1 },
+    ],
+  },
+}
+
+// Reconstrói a seleção local (por slot) a partir de um override já salvo no
+// draft, pra re-renders/voltar-pro-passo manterem a escolha visível.
+function initialSelectionFromOverride(override, mode) {
+  const entries = Object.entries(override ?? {})
+  const slots = ASI_MODES[mode].slots
+  if (!entries.length || entries.length !== slots.length) return slots.map(() => '')
+  // +2/+1: a primeira entrada com bonus 2 vai pro slot 0, o resto na ordem.
+  if (mode === '2-1') {
+    const two = entries.find(([, v]) => v === 2)
+    const one = entries.find(([, v]) => v === 1)
+    return [two?.[0] ?? '', one?.[0] ?? '']
+  }
+  return entries.map(([k]) => k)
+}
+
+function detectModeFromOverride(override) {
+  const values = Object.values(override ?? {}).sort((a, b) => b - a)
+  if (values.length === 2 && values[0] === 2 && values[1] === 1) return '2-1'
+  if (values.length === 3 && values.every(v => v === 1)) return '1-1-1'
+  return '2-1'
+}
 
 export function RaceBlock({ draft, updateDraft, races, feats = [] }) {
   const selectedRace    = races.find(r => r.index === draft.race) ?? null
   const selectedSubrace = selectedRace?.subraces?.find(s => s.index === draft.subrace) ?? null
   const reqs = getRaceRequirements(draft, selectedRace, selectedSubrace)
+
+  const flexibleAsi = draft.settings?.flexibleRacialAsi === true
+  const [asiMode, setAsiMode] = useState(() => detectModeFromOverride(draft.racialAsiOverride))
+  const [asiSelection, setAsiSelection] = useState(() => initialSelectionFromOverride(draft.racialAsiOverride, asiMode))
+
+  function handleAsiModeChange(mode) {
+    setAsiMode(mode)
+    setAsiSelection(ASI_MODES[mode].slots.map(() => ''))
+  }
+
+  function handleAsiSlotChange(slotIndex, value) {
+    const next = [...asiSelection]
+    next[slotIndex] = value
+    setAsiSelection(next)
+
+    const slots = ASI_MODES[asiMode].slots
+    const complete = next.every(Boolean)
+    const distinct = new Set(next).size === next.length
+    if (complete && distinct) {
+      const override = {}
+      next.forEach((key, i) => { override[key] = slots[i].amount })
+      updateDraft({ racialAsiOverride: override, racialBonuses: override })
+    }
+  }
 
   function handleRaceChange(raceIndex) {
     const race = races.find(r => r.index === raceIndex)
@@ -107,7 +167,7 @@ export function RaceBlock({ draft, updateDraft, races, feats = [] }) {
         />
       )}
 
-      {reqs.freeAbility > 0 && (
+      {!flexibleAsi && reqs.freeAbility > 0 && (
         <FreeAbilityPicker
           label={reqs.freeAbilityExclude
             ? `Escolha ${reqs.freeAbility} atributos (exceto Carisma) para +1 cada`
@@ -117,6 +177,63 @@ export function RaceBlock({ draft, updateDraft, races, feats = [] }) {
           exclude={reqs.freeAbilityExclude}
           onToggle={k => handleAbilityChoiceToggle(k, reqs.freeAbility)}
         />
+      )}
+
+      {flexibleAsi && draft.race && (
+        <fieldset className="border-2 border-parchment-600 bg-parchment-100 rounded-sm p-3 flex flex-col gap-2">
+          <legend className="px-2 text-xs font-display tracking-widest uppercase text-ink-500">
+            Customizando sua Origem
+          </legend>
+          <div className="flex gap-3">
+            <label className="flex items-center gap-1.5 text-xs text-ink-500">
+              <input
+                type="radio"
+                name="racial-asi-mode"
+                aria-label="+2/+1"
+                checked={asiMode === '2-1'}
+                onChange={() => handleAsiModeChange('2-1')}
+              />
+              +2/+1
+            </label>
+            <label className="flex items-center gap-1.5 text-xs text-ink-500">
+              <input
+                type="radio"
+                name="racial-asi-mode"
+                aria-label="+1/+1/+1"
+                checked={asiMode === '1-1-1'}
+                onChange={() => handleAsiModeChange('1-1-1')}
+              />
+              +1/+1/+1
+            </label>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            {ASI_MODES[asiMode].slots.map((slot, slotIndex) => {
+              const otherChosen = asiSelection.filter((_, i) => i !== slotIndex)
+              return (
+                <div key={slotIndex}>
+                  <label
+                    htmlFor={`racial-asi-slot-${slotIndex}`}
+                    className="block text-xs font-display tracking-widest uppercase text-ink-500 mb-1"
+                  >
+                    {slot.label}
+                  </label>
+                  <select
+                    id={`racial-asi-slot-${slotIndex}`}
+                    aria-label={slot.label}
+                    className="w-full px-3 py-2 rounded-sm border-2 border-parchment-600 bg-parchment-50 text-ink-500 focus:outline-none focus:border-ink-300"
+                    value={asiSelection[slotIndex] ?? ''}
+                    onChange={e => handleAsiSlotChange(slotIndex, e.target.value)}
+                  >
+                    <option value="">—</option>
+                    {ABILITY_SCORES.filter(a => !otherChosen.includes(a.key)).map(a => (
+                      <option key={a.key} value={a.key}>{a.abbr} — {a.name}</option>
+                    ))}
+                  </select>
+                </div>
+              )
+            })}
+          </div>
+        </fieldset>
       )}
 
       {reqs.racialSkills > 0 && (
@@ -196,7 +313,7 @@ export function RaceBlock({ draft, updateDraft, races, feats = [] }) {
         </div>
       )}
 
-      {selectedRace && (
+      {!flexibleAsi && selectedRace && (
         <RaceBonusPreview
           bonuses={fixedBonuses}
           hasFreeChoice={reqs.freeAbility > 0}

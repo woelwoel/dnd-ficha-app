@@ -197,6 +197,12 @@ export function buildCharacter(draft, classData, classEquipment, srdSpells = nul
       appearance: draft.appearance ?? '', xp: 0,
       scoreMethod: draft.settings.abilityScoreMethod,
       draconicAncestry: draft.draconicAncestry ?? '',
+      // Tasha's "Customizando sua Origem": override flexível dos bônus de
+      // atributo raciais, só persistido quando a fonte está habilitada e há
+      // escolha completa (ver RaceBlock). Permite ao applyRacialChange da
+      // ficha re-aplicar o override em vez dos bônus fixos da raça.
+      ...(draft.settings?.flexibleRacialAsi && draft.racialAsiOverride && Object.keys(draft.racialAsiOverride).length
+        ? { racialAsiOverride: draft.racialAsiOverride } : {}),
     },
     attributes: attrs,
     appliedRacialBonuses: draft.racialBonuses ?? {},
