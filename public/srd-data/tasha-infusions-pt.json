@@ -1,0 +1,146 @@
+[
+  {
+    "index": "afiador-mental",
+    "name": "Afiador Mental",
+    "prereq": 2,
+    "itemType": "Uma armadura ou manto.",
+    "requiresAttunement": false,
+    "desc": "O item infundido pode enviar um pulso para o usuário para reorientar sua mente. O item tem 4 cargas. Quando o usuário falha em uma salvaguarda de Constituição para manter a concentração em uma magia, o usuário pode usar sua reação para gastar 1 das cargas do item para ser bem sucedido ao invés disso. O item recupera 1d4 cargas diariamente ao amanhecer.",
+    "source": "tasha"
+  },
+  {
+    "index": "anel-de-reabastecimento-de-magia",
+    "name": "Anel de Reabastecimento de Magia",
+    "prereq": 6,
+    "itemType": "Um anel (requer sintonização).",
+    "requiresAttunement": true,
+    "desc": "Enquanto usa este anel, a criatura pode recuperar um espaço de magia gasto com uma ação. O espaço recuperado pode ser de terceiro círculo ou inferior. Uma vez usado, o anel não pode ser utilizado novamente até o próximo amanhecer.",
+    "source": "tasha"
+  },
+  {
+    "index": "arma-aprimorada",
+    "name": "Arma Aprimorada",
+    "prereq": 2,
+    "itemType": "Uma arma simples ou marcial.",
+    "requiresAttunement": false,
+    "desc": "Esta arma mágica concede um bônus de +1 para jogadas de ataque e de dano feitas com ela. O bônus aumenta para +2 quando você atinge o 10º nível nesta classe.",
+    "source": "tasha"
+  },
+  {
+    "index": "arma-bumerangue",
+    "name": "Arma Bumerangue",
+    "prereq": 2,
+    "itemType": "Uma arma simples ou marcial com a propriedade arremesso.",
+    "requiresAttunement": false,
+    "desc": "Esta arma mágica concede um bônus de +l nas jogadas de ataque e de danos feitas com ela, e ela retorna para a mão do usuário imediatamente após ser usada para fazer um ataque à distância.",
+    "source": "tasha"
+  },
+  {
+    "index": "arma-radiante",
+    "name": "Arma Radiante",
+    "prereq": 6,
+    "itemType": "Uma arma simples ou marcial (requer sintonização).",
+    "requiresAttunement": true,
+    "desc": "Esta arma mágica concede um bônus de +1 para jogadas de ataque e de dano feitas com ela. Enquanto a segura, o portador pode usar uma ação bônus para gerar luz plena em um raio de 9m e meia-luz por 9m adicionais. O portador pode extinguir a luz como uma ação bônus. A arma possui 4 cargas. Como uma reação imediata depois de ser atingido por um ataque, o portador pode gastar 1 carga para fazer com que o atacante fique cego até o final do próximo turno do atacante, a menos que ele seja bem-sucedido em uma salvaguarda de Constituição contra sua CD de magia. A arma recupera 1d4 cargas gastas todos diariamente ao amanhecer.",
+    "source": "tasha"
+  },
+  {
+    "index": "armadura-da-forca-magica",
+    "name": "Armadura da Força Mágica",
+    "prereq": 2,
+    "itemType": "Uma armadura (requer sintonização)",
+    "requiresAttunement": true,
+    "desc": "Esta armadura possui 6 cargas. O usuário pode gastar as cargas da armadura das seguintes maneiras: Quando o usuário faz um teste de habilidade ou uma salvaguarda de Força, ele pode gastar 1 carga para adicionar um bônus ao teste igual ao seu modificador de Inteligência. Se a criatura seria derrubada, ela pode usar sua reação para gastar 1 carga e evitar isso. A armadura recupera 1d6 das cargas gastas diariamente ao amanhecer.",
+    "source": "tasha"
+  },
+  {
+    "index": "armadura-da-resistencia",
+    "name": "Armadura da Resistência",
+    "prereq": 6,
+    "itemType": "Uma armadura (requer sintonização)",
+    "requiresAttunement": true,
+    "desc": "Enquanto usa esta armadura, uma criatura tem resistência a um dos seguintes tipos de danos, que você escolhe quando infundir o item: gélido, ígneo, energia, elétrico, necrótico, venenoso, psíquico, ácido, radiante, ou trovejante.",
+    "source": "tasha"
+  },
+  {
+    "index": "armadura-de-propulsao-arcana",
+    "name": "Armadura de Propulsão Arcana",
+    "prereq": 14,
+    "itemType": "Uma armadura (requer sintonização)",
+    "requiresAttunement": true,
+    "desc": "O portador desta armadura ganha estes benefícios: O deslocamento do usuário aumenta em 1,5m. A armadura inclui manoplas, e cada uma delas é uma arma mágica que só pode ser empunhada se estiver com a mão livre. O portador é proficiente com as manoplas, e cada uma provoca 1d8 de dano de energia em um acerto e tem a propriedade arremessável, com um alcance normal de 6 metros e um alcance longo de 18 metros. Quando arremessada, a manopla se desprende e voa em direção ao alvo do ataque, e então imediatamente retorna ao usuário e se reconecta. A armadura não pode ser removida contra a vontade do usuário. Se o usuário não tiver algum dos membros, a armadura pode substituir esses membros – mãos, braços, pés, pernas ou apêndices semelhantes. A função dessas peças é idêntica à dos membros substituídos.",
+    "source": "tasha"
+  },
+  {
+    "index": "botas-do-caminho-sinuoso",
+    "name": "Botas do Caminho Sinuoso",
+    "prereq": 6,
+    "itemType": "Um par de botas (requer sintonização)",
+    "requiresAttunement": true,
+    "desc": "Enquanto usa essas botas, uma criatura pode se teletransportar a até 4,5m com uma ação bônus para um espaço desocupado que ela possa ver. A criatura deve ter ocupado esse espaço em algum momento do turno atual.",
+    "source": "tasha"
+  },
+  {
+    "index": "defesa-aprimorada",
+    "name": "Defesa Aprimorada",
+    "prereq": 2,
+    "itemType": "Uma armadura ou escudo",
+    "requiresAttunement": false,
+    "desc": "Uma criatura ganha +1 de bônus na Classe de Armadura enquanto vestindo (armadura) ou empunhando (escudo) o item com a infusão. O bônus aumenta para +2 quando você atinge o 10º nível nesta classe.",
+    "source": "tasha"
+  },
+  {
+    "index": "disparo-recorrente",
+    "name": "Disparo Recorrente",
+    "prereq": 2,
+    "itemType": "Uma arma simples ou marcial com a propriedade de munição (requer sintonização)",
+    "requiresAttunement": true,
+    "desc": "Esta arma mágica concede um bônus de +1 para jogadas de ataque e de danos feitas com ela quando é utilizada para fazer um ataque à distância, e ela ignora a propriedade de munição se tiver. Se você não carregar munição na arma, ela produz a sua própria, criando automaticamente uma peça de munição mágica quando você faz um ataque à distância com ela. A munição criada pela arma desaparece no instante após o ataque, atingindo ou errando o alvo.",
+    "source": "tasha"
+  },
+  {
+    "index": "elmo-da-prontidao",
+    "name": "Elmo da Prontidão",
+    "prereq": 10,
+    "itemType": "Um elmo (requer sintonização)",
+    "requiresAttunement": true,
+    "desc": "Enquanto usa este elmo, uma criatura tem vantagem nos testes de iniciativa. Além disso, o usuário não pode ser surpreendido, desde que não esteja incapacitado.",
+    "source": "tasha"
+  },
+  {
+    "index": "escudo-de-repulsao",
+    "name": "Escudo de Repulsão",
+    "prereq": 6,
+    "itemType": "Um escudo (requer sintonização)",
+    "requiresAttunement": true,
+    "desc": "Uma criatura ganha um bônus de +1 na Classe de Armadura enquanto empunha este escudo. O escudo possui 4 cargas. Enquanto o segura, o portador pode usar sua reação imediatamente após ser atingido por um ataque corpo a corpo para gastar 1 das cargas do escudo e empurrar o atacante para até 4,5 metros de distância. O escudo recupera 1d4 cargas gastas diariamente ao amanhecer.",
+    "source": "tasha"
+  },
+  {
+    "index": "foco-arcano-aprimorado",
+    "name": "Foco Arcano Aprimorado",
+    "prereq": 2,
+    "itemType": "Um cajado, bastão ou varinha (requer sintonização)",
+    "requiresAttunement": true,
+    "desc": "Enquanto segura este item, uma criatura ganha um bônus de +1 para jogadas de ataque com magia. Além disso, a criatura ignora meia cobertura ao fazer um ataque com magia. O bônus aumenta para +2 quando você atinge o 10º nível nesta classe.",
+    "source": "tasha"
+  },
+  {
+    "index": "replicar-item-magico",
+    "name": "Replicar Item Mágico",
+    "prereq": 2,
+    "itemType": "Variável — você replica um item mágico específico escolhido entre as tabelas Itens Replicáveis (ou um item mágico comum, exceto poções ou pergaminhos); sintonização depende do item replicado",
+    "requiresAttunement": false,
+    "desc": "Usando esta infusão, você replica um item mágico específico. Você pode aprender esta infusão várias vezes; cada vez que você fizer isso, escolha um item mágico que você pode fazer com ela, escolhendo entre os itens das tabelas Itens Replicáveis. Os títulos das tabelas informam o nível que você deve ter na classe para escolher um item delas. Alternativamente, você pode escolher um item mágico entre os itens mágicos comuns no jogo, não incluindo poções ou pergaminhos. Nas tabelas, a entrada de um item informa se o item requer sintonização. Veja a descrição do item no Guia do Mestre para mais informações sobre ele, incluindo o tipo de objeto necessário para sua fabricação. Itens Replicáveis (2º nível de artífice): Capa de Respirar na Água; Corda de Escalada; Jarra de Alquimia; Mochila de Carga; Óculos Noturnas; Pedras de Mensagens; Varinha de Detectar Magia; Varinha de Segredos. Itens Replicáveis (6º nível de artífice): Anel de Andar na Água; Botas Élficas; Flauta Assombrada; Lanterna de Revelação; Luvas do Ladrão; Manto da Arraia; Manto Élfico (requer sintonização); Olhos de Encantamento (requer sintonização). Itens Replicáveis (10º nível de artífice): Aljava de Ehlonna; Anel de Escudo Mental (requer sintonização); Anel de Saltar (requer sintonização); Botas Aladas (requer sintonização); Botas de Caminhar e Saltar (requer sintonização); Botas de Inverno (requer sintonização); Braceletes de Arquearia (requer sintonização); Broche do Escudo (requer sintonização); Chapéu de Disfarce (requer sintonização); Elmo de Telepatia (requer sintonização); Flauta dos Esgotos (requer sintonização); Luvas de Apanhar Projéteis (requer sintonização); Luvas de Nadas e Escalar (requer sintonização); Manoplas de Força do Ogro (requer sintonização); Manto de Proteção (requer sintonização); Medalhão de Pensamentos (requer sintonização); Olhos de Águia (requer sintonização); Periapto de Adaptação (requer sintonização); Periapto da Cricatrização (requer sintonização); Sandálias de Pata de Aranha (requer sintonização); Tiara do Intelecto (requer sintonização). Itens Replicáveis (14º nível de artífice): Algemas Dimensionais; Amuleto da Saúde (requer sintonização); Anel de Ação Livre (requer sintonização); Anel de Proteção (requer sintonização); Anel do Ariete (requer sintonização); Braceletes de Defesa (requer sintonização); Botas de Levitação (requer sintonização); Botas de Velocidade (requer sintonização); Cinturão de Força do Gigante da Colina (requer sintonização); Gema de Visão (requer sintonização); Manto do Morcego (requer sintonização); Trombeta da Destruição (requer sintonização).",
+    "source": "tasha"
+  },
+  {
+    "index": "servo-homunculo",
+    "name": "Servo Homúnculo",
+    "prereq": 2,
+    "itemType": "Uma gema ou cristal com valor mínimo de 100po",
+    "requiresAttunement": false,
+    "desc": "Você aprende métodos complexos para criar magicamente um homúnculo especial que lhe serve. O item que você infundir serve como o coração da criatura, em torno do qual o corpo da criatura se forma instantaneamente. Você determina a aparência do homúnculo. Alguns artífices preferem pássaros de aparência mecânica, enquanto outros preferem algo como frascos alados ou caldeirões animados em miniatura. O homúnculo é amigável com você e seus companheiros, e obedece aos seus comandos. Veja as estatísticas de jogo da criatura no bloco de estatísticas do Servo Homúnculo, que usa seu bônus de proficiência (BP) em vários locais. Em combate, o homúnculo compartilha sua iniciativa, mas o turno dele acontece imediatamente após o seu. Ele pode se mover e usar sua reação por conta própria, mas a única ação que realiza em seu turno é a ação de Esquiva, a menos que você utilize uma ação bônus no seu turno para comandá-lo a realizar outra ação. Essa ação pode ser uma do seu bloco de estatísticas ou alguma outra ação. Se você está incapacitado, o homúnculo pode realizar qualquer ação que ele quiser, não apenas a Esquiva. O homúnculo recupera 2d6 pontos de vida se a magia Reparar for conjurada sobre ele. Se você ou o homúnculo morrer, ele desaparece, deixando o coração em seu lugar.",
+    "source": "tasha"
+  }
+]
