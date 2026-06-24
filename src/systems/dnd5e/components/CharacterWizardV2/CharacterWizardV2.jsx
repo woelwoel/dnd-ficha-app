@@ -90,6 +90,17 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
     () => filterCatalogBySources(rawFeats ?? [], activeSources),
     [rawFeats, activeSources],
   )
+  // Classes OFERECIDAS nos pickers (primária + multiclasse) são filtradas
+  // pelas fontes ativas da ficha — mesma lógica dos talentos acima (PHB
+  // sempre incluso). Isso é só pra OFERTA: o lookup da classe já escolhida
+  // (selectedClassData abaixo, e os lookups dentro de ClassBlock/
+  // AttributesBlock) continua usando `classes` (lista completa) sem filtro,
+  // senão uma ficha de Artífice com Tasha desativada depois não resolveria
+  // a própria classe.
+  const offeredClasses = useMemo(
+    () => filterCatalogBySources(classes ?? [], activeSources),
+    [classes, activeSources],
+  )
   const blockStatus = useBlockStatus(draft, { classChoices, classProgression, classEquipment, classes })
   const [openBlockId, setOpenBlockId] = useState(null)
   const [exitConfirmOpen, setExitConfirmOpen] = useState(false)
@@ -286,7 +297,8 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
         {openBlockId === 'class' && (
           <ClassBlock
             draft={draft} updateDraft={updateDraft}
-            classes={classes ?? []} classChoices={classChoices ?? {}}
+            classes={classes ?? []} offeredClasses={offeredClasses}
+            classChoices={classChoices ?? {}}
             classProgression={classProgression ?? {}} feats={feats ?? []}
             classEquipment={classEquipment ?? {}} weaponsArmor={weaponsArmor ?? {}}
             multiclassData={multiclassData ?? {}}

@@ -16,9 +16,18 @@ const ATTR_NAME_TO_KEY = {
 }
 
 export function ClassBlock({
-  draft, updateDraft, classes, classChoices = {}, classProgression = {}, feats = [],
+  draft, updateDraft, classes, offeredClasses, classChoices = {}, classProgression = {}, feats = [],
   classEquipment = {}, weaponsArmor = {}, multiclassData = {},
 }) {
+  // `classes` = catálogo COMPLETO, usado só pra LOOKUP de classe já escolhida
+  // (primária ou multiclasse) — precisa resolver mesmo que a fonte dela
+  // tenha sido desativada depois (ex: Artífice/Tasha). `offeredClasses` =
+  // lista filtrada pelas fontes ativas da ficha, usada só nos pickers que
+  // OFERECEM classe nova (ClassPicker e MulticlassModal). Sem essa
+  // separação, desligar Tasha quebraria a resolução de uma ficha já com
+  // Artífice. Ausência de offeredClasses (ex: testes antigos) cai no
+  // catálogo completo — sem filtro, igual ao comportamento de antes.
+  const classesForOffer = offeredClasses ?? classes
   const [mcModalOpen, setMcModalOpen] = useState(false)
   const selectedClass = classes.find(c => c.index === draft.class) ?? null
   const multiclasses = draft.multiclasses ?? []
@@ -105,7 +114,7 @@ export function ClassBlock({
   return (
     <div className="flex flex-col gap-4">
       <ClassPicker
-        classes={classes}
+        classes={classesForOffer}
         classIndex={draft.class}
         level={draft.level}
         onClassChange={handleClassChange}
@@ -259,7 +268,7 @@ export function ClassBlock({
       <MulticlassModal
         open={mcModalOpen}
         draft={draft}
-        classes={classes}
+        classes={classesForOffer}
         multiclassData={multiclassData}
         onAdd={handleAddMulticlass}
         onCancel={() => setMcModalOpen(false)}
