@@ -13,6 +13,7 @@ import { Attacks } from './Attacks'
 import { ManeuversPanel } from './ManeuversPanel'
 import { PreparedSpellsList } from './PreparedSpellsList'
 import { CombatClassActions } from './CombatClassActions'
+import { SourcePicker } from '../SourcePicker'
 import { useCharacterContext } from './CharacterContext'
 import { baseSpeedMeters } from '../../domain/rules'
 
@@ -237,6 +238,23 @@ export function SheetContent({ activeTab }) {
               onBreakConcentration={() => setConcentration(null)}
               onConsumeInspiration={consumeInspiration}
             />
+
+            {/* Fontes de conteúdo: quais livros esta ficha usa (gateia o que é
+                oferecido nos pickers). Persiste em meta.settings.sources. */}
+            <CollapsibleSection title="Fontes de conteúdo" defaultOpen={false}>
+              <div className="p-4">
+                <SourcePicker
+                  value={character.meta?.settings?.sources ?? ['phb']}
+                  onChange={readOnly ? () => {} : (next) => setCharacter({
+                    ...character,
+                    meta: {
+                      ...character.meta,
+                      settings: { ...character.meta?.settings, sources: next },
+                    },
+                  })}
+                />
+              </div>
+            </CollapsibleSection>
           </div>
         </div>
       </TabPanel>
