@@ -66,10 +66,12 @@ export default defineConfig({
             //    phb-class-choices-pt.json.
             //  v7 → v8 (2026-06-24): talentos do Caldeirão de Tasha em
             //    tasha-feats-pt.json (1o conteúdo suplementar).
+            //  v8 → v9 (2026-06-24): classe Artífice (tasha-classes,
+            //    tasha-class-progression, tasha-class-choices).
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v8',
+              cacheName: 'srd-data-v9',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
