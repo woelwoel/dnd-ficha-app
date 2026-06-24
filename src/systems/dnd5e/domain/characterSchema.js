@@ -54,6 +54,11 @@ const settingsSchema = z.object({
    * aceita um override em `info.racialAsiOverride: { str: 2, con: 1 }`.
    */
   flexibleRacialAsi: z.boolean().default(false),
+  /**
+   * Fontes de conteúdo ativas na ficha. PHB é implícito; manter sempre
+   * presente. Ausência (fichas legadas) = só básico. Ver domain/sources.js.
+   */
+  sources: z.array(z.string()).default(['phb']),
 }).partial().default({})
 
 const metaSchema = z.object({
@@ -65,7 +70,7 @@ const metaSchema = z.object({
    * Usada por `migrateCharacter` para aplicar migrações incrementais.
    */
   schemaVersion: z.number().int().min(1).default(SCHEMA_VERSION),
-  settings: settingsSchema.optional(),
+  settings: settingsSchema.default({ sources: ['phb'] }),
   creationMethod: z.string().optional(),
 }).passthrough()
 
