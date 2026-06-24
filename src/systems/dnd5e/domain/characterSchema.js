@@ -234,6 +234,19 @@ const combatSchema = z.object({
     reactionUsed:  z.boolean().default(false),
     movementUsed:  z.number().int().min(0).default(0),
   }).default({ actionUsed: false, bonusUsed: false, reactionUsed: false, movementUsed: 0 }),
+  /**
+   * Artífice: Infusões (Tasha's, cap. Artífice). `known` guarda os índices das
+   * infusões que o personagem conhece; `active` guarda as infundidas
+   * atualmente em itens específicos (limitado por nível — ver domain/rules).
+   * Vazio por padrão — fichas legadas (sem Artífice) não têm infusões.
+   */
+  artificerInfusions: z.object({
+    known: z.array(z.string()).default([]),
+    active: z.array(z.object({
+      infusion: z.string(),
+      itemId: z.string(),
+    })).default([]),
+  }).default({ known: [], active: [] }),
 }).passthrough()
 
 const proficienciesSchema = z.object({
