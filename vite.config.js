@@ -68,10 +68,12 @@ export default defineConfig({
             //    tasha-feats-pt.json (1o conteúdo suplementar).
             //  v8 → v9 (2026-06-24): classe Artífice (tasha-classes,
             //    tasha-class-progression, tasha-class-choices).
+            //  v9 → v10 (2026-06-24): catálogo de infusões do Artífice
+            //    (tasha-infusions-pt.json) + lista de magias do Artífice.
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v9',
+              cacheName: 'srd-data-v10',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
