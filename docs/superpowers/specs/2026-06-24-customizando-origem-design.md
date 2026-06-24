@@ -25,25 +25,20 @@ segunda):
 
 ## Parte A — Fundação de idiomas
 
-### A.1 Dados — idiomas por raça
+### A.1 Dados — idiomas por raça (JÁ EXISTEM no código)
 
-Adicionar campo `languages` ao `public/srd-data/phb-races-pt.json`. Forma:
+DESCOBERTA: `src/utils/calculations.js` já tem `RACE_LANGUAGES` (mapa
+raça→idiomas fixos, 9 raças) e `DND_LANGUAGES` (lista padrão, 16 idiomas). Os
+dados estão prontos — só não são usados. **Não criar arquivo novo nem mexer em
+`public/srd-data`.** Reusar essas constantes.
 
-```json
-"languages": { "fixed": ["Comum", "Anão"], "choices": 0 }
-```
+Falta apenas a contagem de idioma EXTRA por raça (Humano/Meio-Elfo ganham +1).
+Adicionar um mapa pequeno `RACE_EXTRA_LANGUAGES` (ex.: `{ humano: 1, 'meio-elfo': 1 }`,
+default 0) ao lado dos existentes.
 
-- `fixed`: idiomas sempre concedidos pela raça (factual, do PHB).
-- `choices`: quantos idiomas adicionais à escolha a raça concede (ex.: Humano = 1).
+### A.2 Lista padrão de idiomas (JÁ EXISTE)
 
-Cobrir as raças do `phb-races-pt.json`. Sub-raças que mudem idioma herdam/adicionam.
-
-### A.2 Lista padrão de idiomas
-
-Constante `STANDARD_LANGUAGES` em `domain` (ex.: `domain/languages.js`):
-Comum, Anão, Élfico, Gigante, Gnômico, Goblin, Halfling, Orc (padrão) +
-Abissal, Celestial, Dracônico, Infernal, Primordial, Silvestre, Subcomum (exóticos).
-Nomes factuais; lista única e reutilizável.
+`DND_LANGUAGES` em `calculations.js` é a lista padrão reutilizável. Usar ela.
 
 ### A.3 Build + UI
 
@@ -109,7 +104,8 @@ nenhuma escolha extra de Tasha. Nenhuma regra do Tasha aplicada.
 
 ## Service worker
 
-Parte A muda `phb-races-pt.json` (em `public/srd-data`) → **bump `cacheName`**.
+**Sem bump.** Os dados de idioma já estão em `calculations.js` (código), não em
+`public/srd-data` — nada de srd-data muda, então o cache do SW não precisa subir.
 
 ## Fora de escopo (YAGNI)
 
