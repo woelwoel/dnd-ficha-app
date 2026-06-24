@@ -73,6 +73,14 @@ export async function createCampaign(name, system = DEFAULT_SYSTEM) {
   if (error) {
     if (/too_many_campaigns/.test(error.message)) return { ok: false, reason: 'too-many-campaigns' }
     if (/invalid_name/.test(error.message)) return { ok: false, reason: 'invalid-name' }
+    // Migration 0013 (p_system) ainda não aplicada: PostgREST não acha a função
+    // com o arg extra (PGRST202) ou o Postgres reporta função inexistente (42883).
+    // Degrada pro signature antigo — a mesa nasce sem system até a migration landar.
+    if (error.code === 'PGRST202' || error.code === '42883') {
+      const retry = await supabase.rpc('create_campaign', { p_name: name })
+      if (retry.error) { logDev('createCampaign retry', retry.error); return { ok: false, reason: 'unknown' } }
+      return { ok: true, id: retry.data }
+    }
     logDev('createCampaign', error)
     return { ok: false, reason: 'unknown' }
   }

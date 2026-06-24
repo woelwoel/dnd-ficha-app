@@ -18,4 +18,14 @@ describe('mesa ↔ sistema', () => {
     supabase.from.mockReturnValue({ select: () => ({ eq: () => ({ maybeSingle }) }) })
     expect(await getCampaignSystem('cid')).toBe('dnd5e')
   })
+
+  it('createCampaign degrada pro signature antigo quando p_system não existe (PGRST202)', async () => {
+    supabase.rpc
+      .mockResolvedValueOnce({ data: null, error: { code: 'PGRST202', message: 'function not found' } })
+      .mockResolvedValueOnce({ data: 'cid', error: null })
+    const r = await createCampaign('Mesa X', 'dnd5e')
+    expect(r).toEqual({ ok: true, id: 'cid' })
+    expect(supabase.rpc).toHaveBeenNthCalledWith(1, 'create_campaign', { p_name: 'Mesa X', p_system: 'dnd5e' })
+    expect(supabase.rpc).toHaveBeenNthCalledWith(2, 'create_campaign', { p_name: 'Mesa X' })
+  })
 })
