@@ -60,6 +60,9 @@ async function main() {
   let otherCampaignId = null // mesa que o player NUNCA entra (teste #1)
   let inviteCode = null
   let charId = null          // ficha do player (testes #1/#2)
+  let sysCampaignId = null   // mesa dnd5e do teste #4
+  let ddChar = null          // ficha dnd5e do teste #4
+  let dhChar = null          // ficha daggerheart do teste #4
 
   try {
     console.log('\n▶ DM cria mesa')
@@ -208,6 +211,39 @@ async function main() {
       assert(!!dmErr, `DM bloqueado em save de ficha alheia (err=${dmErr?.message})`)
     }
 
+    console.log('\n▶ [#4] system: coluna gerada (0012) + trigger mismatch (0013)')
+    {
+      // Mesa dnd5e via create_campaign com p_system.
+      const { data: sysCid, error: ccErr } = await dm.rpc('create_campaign', { p_name: 'Mesa System Test', p_system: 'dnd5e' })
+      assert(!ccErr && !!sysCid, `create_campaign aceita p_system (err=${ccErr?.message})`)
+      sysCampaignId = sysCid
+
+      // Mesa reflete system='dnd5e'.
+      const { data: campRow } = await dm.from('campaigns').select('system').eq('id', sysCid).maybeSingle()
+      assert(campRow?.system === 'dnd5e', `campaigns.system = dnd5e (got ${campRow?.system})`)
+
+      // Ficha legada (data SEM system) → coluna gerada deriva 'dnd5e' (backfill).
+      ddChar = crypto.randomUUID()
+      await dm.from('characters').insert({ id: ddChar, data: { info: { name: 'Legada' } } })
+      const { data: ddRow } = await dm.from('characters').select('system').eq('id', ddChar).maybeSingle()
+      assert(ddRow?.system === 'dnd5e', `ficha legada deriva system=dnd5e (got ${ddRow?.system})`)
+
+      // Ficha com data.system='daggerheart' → coluna gerada reflete o blob.
+      dhChar = crypto.randomUUID()
+      await dm.from('characters').insert({ id: dhChar, data: { system: 'daggerheart', info: { name: 'DH' } } })
+      const { data: dhRow } = await dm.from('characters').select('system').eq('id', dhChar).maybeSingle()
+      assert(dhRow?.system === 'daggerheart', `coluna reflete data.system (got ${dhRow?.system})`)
+
+      // Ligar ficha dnd5e à mesa dnd5e → OK (regressão: vínculo normal não regrediu).
+      const { error: okLink } = await dm.from('characters').update({ campaign_id: sysCid }).eq('id', ddChar)
+      assert(!okLink, `ficha dnd5e liga a mesa dnd5e (err=${okLink?.message})`)
+
+      // Ligar ficha daggerheart à mesa dnd5e → trigger bloqueia com system_mismatch.
+      const { error: mismatchErr } = await dm.from('characters').update({ campaign_id: sysCid }).eq('id', dhChar)
+      assert(!!mismatchErr && /system_mismatch/.test(mismatchErr.message),
+        `trigger bloqueia ficha de outro sistema (got "${mismatchErr?.message}")`)
+    }
+
     console.log('\n▶ Rate limit: 11 tentativas em sequência → última falha com rate_limited')
     {
       let last = null
@@ -221,9 +257,15 @@ async function main() {
     console.log('\n▶ Cleanup: DM apaga as mesas + player apaga a ficha de teste')
     await cleanup(dm, campaignId)
     await cleanup(dm, otherCampaignId)
+    await cleanup(dm, sysCampaignId)
     if (charId) {
       const { error } = await player.from('characters').delete().eq('id', charId)
       if (error) console.warn(`cleanup char: ${error.message}`)
+    }
+    for (const id of [ddChar, dhChar]) {
+      if (!id) continue
+      const { error } = await dm.from('characters').delete().eq('id', id)
+      if (error) console.warn(`cleanup char #4: ${error.message}`)
     }
   }
 
