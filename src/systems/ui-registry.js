@@ -1,5 +1,5 @@
 // src/systems/ui-registry.js
-import { lazy } from 'react'
+import { lazyWithReload } from '../utils/lazyWithReload'
 
 // Loaders dinâmicos do módulo `ui` de cada sistema (Wizard/Sheet/DataProvider
 // são pesados → lazy). Adicionar sistema = uma entrada aqui.
@@ -16,7 +16,7 @@ function getLazy(systemId, key) {
   if (!loader) return null
   const cacheKey = `${systemId}:${key}`
   if (cache.has(cacheKey)) return cache.get(cacheKey)
-  const Comp = lazy(() => loader().then(m => ({ default: m[key] })))
+  const Comp = lazyWithReload(() => loader().then(m => ({ default: m[key] })))
   cache.set(cacheKey, Comp)
   return Comp
 }

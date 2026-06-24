@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useParams, useSearchParams, useLocation } from 'react-router-dom'
 import { PrivacyPage } from './components/PrivacyPage'
 import { ErrorBoundary } from './ErrorBoundary'
@@ -13,38 +13,18 @@ import { OfflineBanner } from './components/ui/OfflineBanner'
 import { AuthProvider, useAuth } from './auth/AuthProvider'
 import { LoginScreen } from './auth/LoginScreen'
 import { ResetPasswordScreen } from './auth/ResetPasswordScreen'
+import { lazyWithReload } from './utils/lazyWithReload'
+import { getLazyWizard, getLazySheet } from './systems/ui-registry'
+import { listSystems, getSystemCore } from './systems'
+import { DEFAULT_SYSTEM } from './systems/envelope'
+import { getCharacterSystem } from './utils/storage'
+import { getCampaignSystem } from './lib/campaigns'
+import { SystemPicker } from './components/SystemPicker'
 import './index.css'
 
-// Após um deploy, uma aba antiga ainda em memória pode pedir um chunk lazy
-// cujo hash sumiu do servidor (e do precache do SW) → ChunkLoadError. Sem
-// tratamento, o ErrorBoundary derruba o app inteiro. lazyWithReload recarrega
-// a página UMA vez (flag em sessionStorage evita loop) pra puxar o bundle novo.
-function lazyWithReload(factory) {
-  return lazy(() =>
-    factory()
-      .then(mod => {
-        sessionStorage.removeItem('chunkReloaded')
-        return mod
-      })
-      .catch(err => {
-        const msg = err?.message ?? ''
-        const isChunkError = /Loading chunk|dynamically imported module|Failed to fetch|importing a module script failed/i.test(msg)
-        if (isChunkError && !sessionStorage.getItem('chunkReloaded')) {
-          sessionStorage.setItem('chunkReloaded', '1')
-          window.location.reload()
-          return new Promise(() => {}) // nunca resolve — aguarda o reload
-        }
-        throw err
-      })
-  )
-}
-
-const CharacterSheet = lazyWithReload(() =>
-  import('./systems/dnd5e/components/CharacterSheet/CharacterSheet').then(m => ({ default: m.CharacterSheet }))
-)
-const CharacterWizard = lazyWithReload(() =>
-  import('./systems/dnd5e/components/CharacterWizardV2').then(m => ({ default: m.CharacterWizardV2 }))
-)
+// Telas da casca (não específicas de sistema) seguem como lazy resilientes a
+// ChunkLoadError pós-deploy. As superfícies de sistema (Wizard/Sheet) vêm do
+// ui-registry, que usa o mesmo lazyWithReload por baixo.
 const CampaignsScreen = lazyWithReload(() =>
   import('./components/Campaigns').then(m => ({ default: m.CampaignsScreen }))
 )
@@ -101,13 +81,51 @@ function NewRoute() {
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const raw = params.get('campaignId')
-  // Mesma validação no consumo: se a URL trouxe lixo, ignora e mostra
-  // DestinationModal em vez de propagar lixo pro upsert.
+  // Mesma validação no consumo: se a URL trouxe lixo, ignora.
   const campaignId = raw && UUID_RE.test(raw) ? raw : null
   const initialCampaignId = params.has('campaignId') && campaignId ? campaignId : undefined
+
+  const systems = listSystems()
+  const paramSystem = params.get('system')
+  // null = ainda decidindo; '' = precisa mostrar o seletor; id = resolvido.
+  const [resolved, setResolved] = useState(null)
+
+  useEffect(() => {
+    let alive = true
+    async function decide() {
+      // 1) dentro de mesa → sistema forçado pela mesa.
+      if (campaignId) {
+        const s = await getCampaignSystem(campaignId)
+        if (alive) setResolved(getSystemCore(s) ? s : DEFAULT_SYSTEM)
+        return
+      }
+      // 2) system explícito na URL e válido.
+      if (paramSystem && getSystemCore(paramSystem)) { if (alive) setResolved(paramSystem); return }
+      // 3) único sistema → pula o seletor.
+      if (systems.length === 1) { if (alive) setResolved(systems[0].id); return }
+      // 4) precisa escolher.
+      if (alive) setResolved('')
+    }
+    decide()
+    return () => { alive = false }
+    // systems é estável entre renders (registry estático).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [campaignId, paramSystem])
+
+  if (resolved === null) return <Loader />
+  if (resolved === '') {
+    return (
+      <SystemPicker
+        onPick={(id) => navigate(`/new?system=${id}${campaignId ? `&campaignId=${campaignId}` : ''}`)}
+        onBack={() => navigate('/')}
+      />
+    )
+  }
+  const Wizard = getLazyWizard(resolved)
+  if (!Wizard) return <Navigate to="/" replace />
   return (
     <RouteShell>
-      <CharacterWizard
+      <Wizard
         initialCampaignId={initialCampaignId}
         onBack={() => navigate('/')}
         onComplete={(id) => navigate(`/c/${id}`, { replace: true })}
@@ -124,9 +142,22 @@ function SheetRoute() {
   // É o que destrava o god-mode (ler/editar qualquer ficha); fora dele o
   // admin é tratado como jogador comum. Ver sheet-access.js.
   const adminContext = params.get('adm') === '1'
+
+  // Resolve o sistema da ficha (coluna gerada, com fallback no blob) pra montar
+  // a Sheet do sistema certo. Loader enquanto resolve.
+  const [system, setSystem] = useState(null)
+  useEffect(() => {
+    let alive = true
+    getCharacterSystem(id).then(s => { if (alive) setSystem(s) })
+    return () => { alive = false }
+  }, [id])
+
+  if (system === null) return <Loader />
+  const Sheet = getLazySheet(system)
+  if (!Sheet) return <Navigate to="/" replace />
   return (
     <RouteShell>
-      <CharacterSheet
+      <Sheet
         characterId={id}
         adminContext={adminContext}
         onBack={() => navigate('/')}
@@ -173,7 +204,9 @@ function AuthedRoutes() {
       </div>
       <AppFooter />
       <DiceHistoryPanel />
-      <BestiaryButton />
+      {/* Bestiário é conteúdo de D&D → traz seu próprio SrdProvider (o cache do
+          provider é de módulo, então não há refetch duplicado). */}
+      <SrdProvider><BestiaryButton /></SrdProvider>
       <PWAUpdatePrompt />
     </div>
   )
@@ -191,17 +224,18 @@ function Gate() {
 }
 
 function App() {
+  // SrdProvider NÃO embrulha mais o app inteiro: dados de D&D só carregam dentro
+  // das superfícies do sistema dnd5e (Wizard/Sheet via ui-registry) e do
+  // BestiaryButton. A casca fica livre de dados de sistema.
   return (
     <ErrorBoundary>
-      <SrdProvider>
-        <DiceRollerProvider>
-          <BrowserRouter>
-            <AuthProvider>
-              <Gate />
-            </AuthProvider>
-          </BrowserRouter>
-        </DiceRollerProvider>
-      </SrdProvider>
+      <DiceRollerProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <Gate />
+          </AuthProvider>
+        </BrowserRouter>
+      </DiceRollerProvider>
     </ErrorBoundary>
   )
 }
