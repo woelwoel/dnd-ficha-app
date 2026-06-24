@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest'
 import { getSpellSlots, getSpellcastingRules } from '../../utils/spellcasting'
+import { SPELLCASTER_CLASSES } from '../../systems/dnd5e/domain/rules'
+
+describe('Artífice é classe conjuradora (rules.js)', () => {
+  it('está em SPELLCASTER_CLASSES', () => {
+    expect(SPELLCASTER_CLASSES.has('artifice')).toBe(true)
+  })
+})
 
 describe('Artífice — slots de meio-conjurador (começa nv1, ceil)', () => {
   it('nível 1: 2 slots de 1º círculo', () => {

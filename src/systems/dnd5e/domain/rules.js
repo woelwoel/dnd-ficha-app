@@ -13,6 +13,7 @@ import { CASTER_TYPE } from '../../../utils/spellcasting'
 export const SPELLCASTER_CLASSES = new Set([
   'bardo', 'clerigo', 'druida', 'paladino',
   'patrulheiro', 'feiticeiro', 'bruxo', 'mago',
+  'artifice', // Tasha's — meio-conjurador de INT
 ])
 
 export const MAX_ATTRIBUTE_VALUE = 20
@@ -65,6 +66,7 @@ const CLASS_SPELL_ABILITY = {
   bardo:       'cha',
   feiticeiro:  'cha',
   bruxo:       'cha',
+  artifice:    'int', // Tasha's
 }
 
 const SKILL_BY_NAME = Object.fromEntries(SKILLS.map(s => [s.name, s.key]))
