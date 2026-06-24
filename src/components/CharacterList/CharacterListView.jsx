@@ -1,6 +1,17 @@
 import { useMemo, useState } from 'react'
 import { ClassIcon } from '../../utils/class-icons'
 import { Icon } from '../ui/Icon'
+import { getSystemCore } from '../../systems'
+import { DEFAULT_SYSTEM } from '../../systems/envelope'
+
+// Resumo agnóstico do card: cada sistema decide title/subtitle/badges/icon via
+// summarize(). A lista não conhece "nível"/"classe" — só pinta o que vier.
+function summaryOf(character) {
+  const core = getSystemCore(character?.system ?? DEFAULT_SYSTEM)
+  if (core) return core.summarize(character)
+  const info = character?.info ?? {}
+  return { title: info.name || 'Sem nome', subtitle: '—', badges: [], icon: null }
+}
 
 function relativeTime(epoch) {
   if (!epoch) return null
@@ -127,7 +138,7 @@ export function CharacterListView({ characters = [], onSelect }) {
       ) : (
         <div className="grid gap-3 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
           {visible.map(c => {
-            const info = c.info || {}
+            const summary = summaryOf(c)
             const combat = c.combat || {}
             const last = relativeTime(c.lastOpenedAt)
             const status = statusBadge(combat)
@@ -154,21 +165,21 @@ export function CharacterListView({ characters = [], onSelect }) {
                 {/* Linha topo: avatar + nome + meta */}
                 <div className="flex items-start gap-3">
                   <span className="companion-avatar grid place-items-center rounded-full flex-shrink-0 w-11 h-11 border-2 border-ink-500 text-ink-500">
-                    <ClassIcon classKey={info.class} size={24} color="currentColor" />
+                    <ClassIcon classKey={summary.icon} size={24} color="currentColor" />
                   </span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline justify-between gap-2">
                       <span className="block text-base font-display font-semibold text-ink-500 truncate tracking-wide">
-                        {info.name || 'Sem nome'}
+                        {summary.title}
                       </span>
-                      {info.level != null && (
-                        <span className="text-xs ink-italic text-ink-300 shrink-0">
-                          Nv {info.level}
+                      {summary.badges.map(b => (
+                        <span key={b} className="text-xs ink-italic text-ink-300 shrink-0">
+                          {b}
                         </span>
-                      )}
+                      ))}
                     </div>
                     <span className="block text-xs ink-italic text-ink-300 truncate">
-                      {[info.race, info.class].filter(Boolean).join(' · ') || '—'}
+                      {summary.subtitle}
                     </span>
                   </div>
                 </div>
