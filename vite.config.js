@@ -64,10 +64,12 @@ export default defineConfig({
             //  v6 → v7 (2026-06-18): metamágica do Feiticeiro (nv10/17) e
             //    inimigo favorito do Patrulheiro (nv6/14) em
             //    phb-class-choices-pt.json.
+            //  v7 → v8 (2026-06-24): talentos do Caldeirão de Tasha em
+            //    tasha-feats-pt.json (1o conteúdo suplementar).
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v7',
+              cacheName: 'srd-data-v8',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
