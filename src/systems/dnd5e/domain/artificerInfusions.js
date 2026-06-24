@@ -19,6 +19,16 @@ export function artificerLevelOf(character) {
   return mc?.level ?? 0
 }
 
+/** Teto de itens mágicos sintonizados. Base 3 (PHB); Artífice cresce 4/5/6
+ *  (Perito nv10, Versado nv14, Maestria nv18). */
+export function getMaxAttunement(character) {
+  const L = artificerLevelOf(character)
+  if (L >= 18) return 6
+  if (L >= 14) return 5
+  if (L >= 10) return 4
+  return 3
+}
+
 /** Infusões oferecíveis: pré-requisito de nível ≤ nível, gateadas pela fonte. */
 export function availableInfusions(catalog, artificerLevel, activeSources) {
   const L = Number(artificerLevel) || 0
