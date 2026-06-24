@@ -20,15 +20,17 @@ vi.mock('../systems/dnd5e/data/SrdProvider', () => {
   const spells = [
     { index: 'eldritch-blast', name: 'Patada Mística', level: 0, classes: ['bruxo'] },
     { index: 'hex',            name: 'Azarar',          level: 1, classes: ['bruxo'] },
-    { index: 'invisibility',   name: 'Invisibilidade',  level: 2, classes: ['bruxo', 'mago'] },
+    { index: 'invisibility',   name: 'Invisibilidade',  level: 2, classes: ['bruxo', 'mago', 'artifice'] },
     { index: 'fireball',       name: 'Bola de Fogo',    level: 3, classes: ['mago', 'bruxo'] },
     { index: 'banishment',     name: 'Banimento',       level: 4, classes: ['bruxo', 'mago'] },
     { index: 'hold-monster',   name: 'Imobilizar Monstro', level: 5, classes: ['bruxo', 'mago'] },
-    { index: 'fire-bolt',      name: 'Raio de Fogo',    level: 0, classes: ['mago'] },
-    { index: 'magic-missile',  name: 'Mísseis Mágicos', level: 1, classes: ['mago'] },
+    { index: 'fire-bolt',      name: 'Raio de Fogo',    level: 0, classes: ['mago', 'artifice'] },
+    { index: 'magic-missile',  name: 'Mísseis Mágicos', level: 1, classes: ['mago', 'artifice'] },
   ]
+  // Progressão do Artífice (só o que o hook lê: cantrips_known por nível).
+  const progression = { artifice: { cantrips_known: Array(20).fill(2) } }
   return {
-    useSrd: () => ({ spells, levels: [...wizardLevels, ...warlockLevels] }),
+    useSrd: () => ({ spells, levels: [...wizardLevels, ...warlockLevels], progression }),
   }
 })
 
@@ -49,6 +51,27 @@ describe('useClassSpells — Bruxo (Pact Magic)', () => {
     const { result } = renderHook(() => useClassSpells('bruxo', 9))
     expect(result.current.slotLevels).toEqual([1, 2, 3, 4, 5])
     expect(result.current.availableTabs).toEqual([0, 1, 2, 3, 4, 5])
+  })
+})
+
+describe('useClassSpells — Artífice (meio-conjurador via motor)', () => {
+  it('nível 1 expõe tabs [0, 1] (slots do motor, não da tabela SRD)', () => {
+    const { result } = renderHook(() => useClassSpells('artifice', 1))
+    expect(result.current.slotLevels).toEqual([1])
+    expect(result.current.availableTabs).toEqual([0, 1])
+    // só magias marcadas 'artifice' entram no catálogo da classe
+    expect(result.current.classSpells.every(s => s.classes.includes('artifice'))).toBe(true)
+  })
+
+  it('nível 5 expõe tabs [0, 1, 2]', () => {
+    const { result } = renderHook(() => useClassSpells('artifice', 5))
+    expect(result.current.slotLevels).toEqual([1, 2])
+    expect(result.current.availableTabs).toEqual([0, 1, 2])
+  })
+
+  it('truques conhecidos vêm da progressão', () => {
+    const { result } = renderHook(() => useClassSpells('artifice', 1))
+    expect(result.current.levelData.cantrips_known).toBe(2)
   })
 })
 

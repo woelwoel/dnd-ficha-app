@@ -75,7 +75,8 @@
     "source": "PHB-PT",
     "classes": [
       "patrulheiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -153,7 +154,8 @@
     "source": "PHB-PT",
     "classes": [
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -280,7 +282,8 @@
     "classes": [
       "bardo",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -361,7 +364,8 @@
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -381,7 +385,8 @@
     "source": "PHB-PT",
     "classes": [
       "paladino",
-      "patrulheiro"
+      "patrulheiro",
+      "artifice"
     ]
   },
   {
@@ -421,7 +426,8 @@
     "classes": [
       "paladino",
       "patrulheiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -583,7 +589,8 @@
     "source": "PHB-PT",
     "classes": [
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -779,7 +786,8 @@
     "source": "PHB-PT",
     "classes": [
       "bardo",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -1057,7 +1065,8 @@
     "source": "PHB-PT",
     "classes": [
       "clerigo",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -1095,7 +1104,8 @@
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
-      "druida"
+      "druida",
+      "artifice"
     ]
   },
   {
@@ -1916,7 +1926,8 @@
     "source": "PHB-PT",
     "classes": [
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -1978,7 +1989,8 @@
       "clerigo",
       "druida",
       "paladino",
-      "patrulheiro"
+      "patrulheiro",
+      "artifice"
     ]
   },
   {
@@ -2018,7 +2030,8 @@
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -2403,7 +2416,8 @@
       "paladino",
       "patrulheiro",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -2527,7 +2541,8 @@
     "classes": [
       "bardo",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -2552,7 +2567,8 @@
       "paladino",
       "feiticeiro",
       "bruxo",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -2979,7 +2995,8 @@
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -3057,7 +3074,8 @@
     "source": "PHB-PT",
     "classes": [
       "bardo",
-      "druida"
+      "druida",
+      "artifice"
     ]
   },
   {
@@ -3116,7 +3134,8 @@
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -3235,7 +3254,8 @@
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
-      "druida"
+      "druida",
+      "artifice"
     ]
   },
   {
@@ -3734,7 +3754,8 @@
       "bardo",
       "feiticeiro",
       "bruxo",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -3872,7 +3893,8 @@
     "source": "PHB-PT",
     "classes": [
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -4043,7 +4065,8 @@
       "bardo",
       "clerigo",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -4248,7 +4271,8 @@
     "classes": [
       "bardo",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -4376,7 +4400,8 @@
     "classes": [
       "clerigo",
       "druida",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -4438,7 +4463,8 @@
       "bardo",
       "clerigo",
       "druida",
-      "patrulheiro"
+      "patrulheiro",
+      "artifice"
     ]
   },
   {
@@ -4537,7 +4563,8 @@
     "classes": [
       "druida",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -4595,7 +4622,8 @@
     "higher_level": "Se você conjurar essa magia usando um espaço de magia de 6° nível ou superior, o dano da opção punho cerrado aumenta em 2d8 e o dano da mão esmagadora aumenta em 2d6 para cada nível do espaço acima do 5°.",
     "source": "PHB-PT",
     "classes": [
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -4637,7 +4665,8 @@
       "bardo",
       "feiticeiro",
       "bruxo",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -4823,7 +4852,8 @@
     "source": "PHB-PT",
     "classes": [
       "clerigo",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -4923,7 +4953,8 @@
     "source": "PHB-PT",
     "classes": [
       "clerigo",
-      "druida"
+      "druida",
+      "artifice"
     ]
   },
   {
@@ -5293,7 +5324,8 @@
     "source": "PHB-PT",
     "classes": [
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -5420,7 +5452,8 @@
       "bardo",
       "feiticeiro",
       "bruxo",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -5564,7 +5597,8 @@
       "druida",
       "patrulheiro",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -5630,7 +5664,8 @@
       "clerigo",
       "druida",
       "paladino",
-      "patrulheiro"
+      "patrulheiro",
+      "artifice"
     ]
   },
   {
@@ -5672,7 +5707,8 @@
     "classes": [
       "bardo",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -5753,7 +5789,8 @@
     "source": "PHB-PT",
     "classes": [
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -5773,7 +5810,8 @@
     "source": "PHB-PT",
     "classes": [
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -6115,7 +6153,8 @@
     "source": "PHB-PT",
     "classes": [
       "clerigo",
-      "druida"
+      "druida",
+      "artifice"
     ]
   },
   {
@@ -6137,7 +6176,8 @@
       "druida",
       "patrulheiro",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -6198,7 +6238,8 @@
     "classes": [
       "bardo",
       "clerigo",
-      "druida"
+      "druida",
+      "artifice"
     ]
   },
   {
@@ -6221,7 +6262,8 @@
       "clerigo",
       "druida",
       "paladino",
-      "patrulheiro"
+      "patrulheiro",
+      "artifice"
     ]
   },
   {
@@ -6262,7 +6304,8 @@
     "source": "PHB-PT",
     "classes": [
       "clerigo",
-      "paladino"
+      "paladino",
+      "artifice"
     ]
   },
   {
@@ -6325,7 +6368,8 @@
       "druida",
       "patrulheiro",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -6344,7 +6388,8 @@
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
-      "clerigo"
+      "clerigo",
+      "artifice"
     ]
   },
   {
@@ -6363,7 +6408,8 @@
     "higher_level": "Quando você conjurar essa magia usando um espaço de magia de 5° nível ou superior, você pode aumentar o tamanho do cubo em 30 metros de cada lado para cada nível do espaço acima do 4°. Então, você poderia proteger um cubo de até 60 metros de lado usando um espaço de magia de 5° nível.",
     "source": "PHB-PT",
     "classes": [
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -6710,7 +6756,8 @@
     "source": "PHB-PT",
     "classes": [
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -6953,7 +7000,8 @@
     "source": "PHB-PT",
     "classes": [
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -6992,7 +7040,8 @@
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -7071,7 +7120,8 @@
     "classes": [
       "bardo",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -7182,7 +7232,8 @@
       "druida",
       "patrulheiro",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -7223,7 +7274,8 @@
     "classes": [
       "feiticeiro",
       "bruxo",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -7344,7 +7396,8 @@
     "classes": [
       "bardo",
       "clerigo",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {

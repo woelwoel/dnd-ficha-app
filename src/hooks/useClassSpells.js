@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { PT_CLASS_TO_EN } from '../utils/calculations'
 import { useSrd } from '../systems/dnd5e/data/SrdProvider'
-import { getWarlockPactSlots } from '../utils/spellcasting'
+import { getWarlockPactSlots, getSpellSlots } from '../utils/spellcasting'
 
 /**
  * Lê magias e dados de nível a partir do SrdProvider (cache compartilhado).
@@ -9,15 +9,21 @@ import { getWarlockPactSlots } from '../utils/spellcasting'
  * resolvidas no provider.
  */
 export function useClassSpells(classIndex, level) {
-  const { spells: allSpells, levels } = useSrd()
+  const { spells: allSpells, levels, progression } = useSrd()
 
   const classIndexEn = PT_CLASS_TO_EN[classIndex] ?? classIndex
 
   const levelData = useMemo(() => {
+    // Artífice (Tasha) não está na tabela SRD `levels`. Os truques conhecidos
+    // vêm da progressão (cantrips_known por nível); os slots saem do motor.
+    if (classIndex === 'artifice') {
+      const ck = progression?.artifice?.cantrips_known
+      return { cantrips_known: Array.isArray(ck) ? (ck[level - 1] ?? 2) : 2 }
+    }
     if (!classIndexEn || !Array.isArray(levels) || levels.length === 0) return null
     const entry = levels.find(l => l.class?.index === classIndexEn && l.level === level)
     return entry?.spellcasting ?? null
-  }, [levels, classIndexEn, level])
+  }, [levels, classIndexEn, level, classIndex, progression])
 
   // Bruxo (Pact Magic) tem só um slot ativo no SRD a cada nível (ex.: nv 5 só
   // spell_slots_level_3 > 0). Mas pela PHB p.107 ele PODE aprender magias de
@@ -25,6 +31,12 @@ export function useClassSpells(classIndex, level) {
   // a tab do nível máximo, escondendo magias de níveis inferiores.
   // Outras classes seguem a regra normal: nível com slot > 0 = aprendível.
   const slotLevels = useMemo(() => {
+    // Artífice: slots derivam do motor de meio-conjurador (a tabela SRD não o
+    // tem). Ex.: nv1 → [1]; nv5 → [1,2]; nv9 → [1,2,3].
+    if (classIndex === 'artifice') {
+      const slots = getSpellSlots('artifice', level, [])
+      return slots ? Object.keys(slots).map(Number).sort((a, b) => a - b) : []
+    }
     if (!levelData) return []
     if (classIndex === 'bruxo') {
       const pact = getWarlockPactSlots(level)

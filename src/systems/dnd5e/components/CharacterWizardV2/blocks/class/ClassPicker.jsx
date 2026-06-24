@@ -1,6 +1,14 @@
+import { SOURCES } from '../../../../domain/sources'
+
 const fieldCls =
   'w-full px-3 py-2 rounded-sm border-2 border-parchment-600 bg-parchment-50 text-ink-500 ' +
   'focus:outline-none focus:border-ink-300'
+
+/** Sufixo de procedência pra labels de <option> (não aceitam JSX). Vazio pra PHB. */
+function sourceSuffix(source) {
+  const meta = SOURCES[source]
+  return meta && source !== 'phb' ? ` — ${meta.abbr}` : ''
+}
 
 export function ClassPicker({ classes, classIndex, level, onClassChange, onLevelChange }) {
   return (
@@ -17,7 +25,7 @@ export function ClassPicker({ classes, classIndex, level, onClassChange, onLevel
         >
           <option value="">Escolher classe...</option>
           {classes.map(c => (
-            <option key={c.index} value={c.index}>{c.name}</option>
+            <option key={c.index} value={c.index}>{c.name}{sourceSuffix(c.source)}</option>
           ))}
         </select>
       </div>
