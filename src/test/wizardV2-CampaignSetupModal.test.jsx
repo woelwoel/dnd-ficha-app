@@ -29,6 +29,7 @@ describe('CampaignSetupModal', () => {
       abilityScoreMethod: 'point-buy',
       allowFeats: true,
       allowMulticlass: true,
+      sources: ['phb'],
       startLevel: 5,
     })
   })

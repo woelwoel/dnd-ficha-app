@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { listMyCampaigns } from '../../../../lib/campaigns'
+import { SourcePicker } from '../SourcePicker'
 
 const METHODS = [
   {
@@ -133,6 +134,7 @@ export function CampaignSetupModal({
   const [method, setMethod] = useState('standard-array')
   const [allowFeats, setAllowFeats] = useState(false)
   const [allowMulticlass, setAllowMulticlass] = useState(false)
+  const [sources, setSources] = useState(['phb'])
   const [startLevel, setStartLevel] = useState(1)
   // null = pessoal; uuid = mesa. Default null (pessoal).
   const [campaignId, setCampaignId] = useState(null)
@@ -158,6 +160,7 @@ export function CampaignSetupModal({
       abilityScoreMethod: method,
       allowFeats,
       allowMulticlass,
+      sources,
       startLevel: clampLevel(startLevel),
     }
     if (showDestination) onConfirm({ settings, campaignId })
@@ -329,6 +332,8 @@ export function CampaignSetupModal({
             </span>
           </SelectableCard>
         </fieldset>
+
+        <SourcePicker value={sources} onChange={setSources} />
 
         <fieldset className="bg-parchment-100/60 border-2 border-parchment-600/50 rounded-sm p-3">
           <legend className="text-xs font-display tracking-widest uppercase text-ink-500 px-2">

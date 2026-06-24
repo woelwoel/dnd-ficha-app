@@ -16,6 +16,7 @@ export const INITIAL_DRAFT_V2 = {
     abilityScoreMethod: 'standard-array',
     allowFeats: false,
     allowMulticlass: false,
+    sources: ['phb'],
     startLevel: 1,
   },
   name: '', playerName: '', alignment: '', appearance: '',
