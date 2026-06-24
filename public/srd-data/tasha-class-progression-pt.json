@@ -1,0 +1,266 @@
+{
+  "artifice": {
+    "index": "artifice",
+    "name": "Artífice",
+    "hit_die": 8,
+    "primary_ability": "Inteligência",
+    "saving_throws": [
+      "Constituição",
+      "Inteligência"
+    ],
+    "armor_proficiencies": [
+      "Leve",
+      "Média",
+      "Escudos"
+    ],
+    "weapon_proficiencies": [
+      "Simples"
+    ],
+    "tool_proficiencies": [
+      "Ferramentas de ladrão",
+      "Ferramentas de funileiro",
+      "Um tipo de ferramenta de artesão à sua escolha"
+    ],
+    "skill_choices": {
+      "count": 2,
+      "from": [
+        "Arcanismo",
+        "História",
+        "Investigação",
+        "Medicina",
+        "Natureza",
+        "Percepção",
+        "Prestidigitação"
+      ]
+    },
+    "cantrips_known": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      3,
+      3,
+      3,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ],
+    "levels": [
+      {
+        "level": 1,
+        "prof": 2,
+        "features": [
+          {
+            "name": "Engenharia Mágica",
+            "desc": "Você aprendeu como aplicar uma centelha de magia em objetos mundanos. Para usar esta característica, você deve ter ferramentas de ladrão ou ferramentas de artesão em mãos. Você então toca um objeto não mágico Minúsculo como uma ação e dá a ele uma das seguintes propriedades mágicas a sua escolha: O objeto emite luz plena em um raio de 1,5 metros e meia- luz por mais 1,5 metros. Sempre que tocado por uma criatura, o objeto emite uma mensagem gravada que pode ser ouvida a até 3 metros de distância. Você pronuncia a mensagem quando concede esta propriedade ao objeto, e a gravação não pode ter mais do que 6 segundos de duração. O objeto emite continuamente a sua escolha de um odor ou um som não verbal (vento, ondas, farfalhar ou semelhantes). O fenômeno escolhido é perceptível a até 3 metros de distância. A propriedade escolhida dura indefinidamente. Com uma ação, você pode tocar o objeto e encerrar a propriedade. Você pode aplicar magia a vários objetos, tocando um objeto cada vez que você utiliza esta característica, embora cada objeto possa conter apenas uma propriedade por vez. O número máximo de objetos que você pode afetar dessa maneira ao mesmo tempo é igual a seu modificador de Inteligência (mínimo de um objeto). Se você tentar exceder o seu máximo,a propriedade mais antiga é imediatamente encerrada,e então a nova propriedade se aplica."
+          },
+          {
+            "name": "Conjuração",
+            "desc": "Você estudou o funcionamento da magia e de como conjurá-la, canalizando a magia através de objetos. Para os observadores, você não parece conjurar magias de forma convencional; você parece produzir maravilhas a partir de itens mundanos e estranhas invenções. Ferramentas Exigidas Você produz seus efeitos mágicos de artífice através de suas ferramentas. Você deve ter um foco de conjuração – especificamente ferramentas de ladrão ou algum tipo de ferramenta de artesão – em mãos quando você conjurar qualquer magia com esta característica de Conjuração (o que significa que a magia tem um componente “M” quando você A magia do Artífice Como um artífice, você utiliza ferramentas quando você conjura magias. Quando descrever sua conjuração, pense sobre como você está utilizando uma ferramenta. Por exemplo, se você conjura Curar Ferimentos utilizando suplementos de alquimista, você poderia produzir rapidamente uma pomada. Se você conjura essa magia com ferramentas de funileiro, você pode ter a miniatura de uma aranha mecânica que enfaixa os ferimentos. O efeito da magia será o mesmo de qualquer forma. Tais detalhes não o limitam de forma alguma nem fornecem nenhum benefício além dos efeitos do feitiço. Você não precisa justificar como está usando as ferramentas para lançar um feitiço. Mas descrever seu lançamento de feitiços de forma criativa é uma maneira divertida de se diferenciar de outros conjuradores. a conjura). Você deve ser proficiente com a ferramenta para usá-la desta forma. Veja o capítulo de equipamentos no Livro do Jogador para as descrições dessas ferramentas. Depois de ganhar a característica Infundir Item no 2º nível, você também pode usar qualquer item que contenha uma de suas infusões como um foco de conjuração. Truques (Magias de Círculo 0) Você conhece dois truques à sua escolha da lista de magias do artífice. Em níveis mais altos, você aprende truques de artífice adicionais, conforme mostrado na coluna Truques Conhecidos da tabela O Artífice. Quando você ganha um nível nesta classe, você pode substituir um dos truques de artífice que você conhece por outro da mesma lista. Preparando e Conjurando Magias A tabela O Artífice mostra quantos espaços de magia você tem para conjurar suas magias de artífice. Para conjurar uma de suas magias de artífice de 1º círculo ou superior, você deve gastar um espaço do círculo da magia ou superior. Você recupera todos os espaços de magia gastos quando termina um descanso longo. Você prepara a lista de magias de artífice que estão disponíveis para você conjurar escolhendo a partir da lista de magias do artífice. Ao fazer isso, escolha um número de magias de artífice igual ao seu modificador de Inteligência + metade do seu nível de artífice, arredondado para baixo (mínimo de uma magia). As magias devem ser de um círculo para o qual você tenha espaços de magia. Por exemplo, se você é um artífice de 5ª nível, você tem quatro espaços de magia de primeiro círculo e dois de segundo círculo. Com Inteligência 14, sua lista de magias preparadas pode incluir quatro magias de primeiro ou segundo círculo, em qualquer combinação. Se você preparar a magia de primeiro círculo Curar Ferimentos, você pode conjurá-la usando um espaço de magia de 1º ou 2º círculo. Conjurar a magia não a remove de sua lista de magias preparadas. Você pode alterar sua lista de magias preparadas quando terminar um descanso longo. Preparar uma nova lista de magias de artífice requer tempo gasto ajustando seu foco de conjuração: pelo menos 1 minuto por círculo de magia para cada magia em sua lista Preparando e Conjurando Magias Inteligência é a seu atributo de conjuração para magias de artífice; sua compreensão da teoria por trás da magia permite que você a domine com uma habilidade avançada. Você usa sua inteligência sempre que uma magia de artífice se referir a seu atributo de conjuração. Adicionalmente, você usa seu modificador de Inteligência para definir a CD das salvaguardas para as magias de artífice que você conjurar e ao fazer uma jogada de ataque com magia. CD para suas magias = 8 + bônus de proficiência + seu modificador de Inteligência. Modificador de ataque de magia = seu bônus de proficiência + seu modificador de Inteligência. Conjuração de Ritual Você pode conjurar qualquer magia de artífice como um ritual se ela possuir o descritor ritual e você tiver a magia preparada. Lista de Magia do Artífice Aqui está a lista de magias para você consultar quando você aprender uma magia de artífice. A lista está organizada pelo círculo das magias, não por nível de personagem. Se uma magia puder ser conjurada como ritual, ela terá esse descritor após o seu nome. Toda magia está no Livro do Jogador, a menos que esteja em itálico (uma magia no capítulo 3) ou em negrito (uma magia no Guia de Xanathar para todas as coisas).",
+            "category": "magia"
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "prof": 2,
+        "features": [
+          {
+            "name": "Infundir Item",
+            "desc": "Você ganha a habilidade de imbuir itens mundanos com certas infusões mágicas, transformando esses objetos em itens mágicos. Infusões conhecidas Quando você adquire essa característica, escolha quatro infusões de artífice para aprender, selecionando entre aquelas na seção \"Infusões do Artífice\" ao final da descrição da classe. Você aprende infusões adicionais a sua escolha quando você alcança certos níveis nesta classe, conforme mostrado na coluna Infusões Conhecidas da tabela O Artífice. Sempre que você ganha um nível nesta classe você pode substituir uma das infusões de artífice que você conhece por uma nova. Infundindo um item Sempre que terminar um descanso longo, você pode tocar um objeto não mágico e infundi-lo com uma de suas infusões de artífice, transformando-o em um item mágico. Uma infusão funciona apenas em certos tipos de objetos, como especificado na descrição da infusão. Se o item requer sintonização, você pode sintonizar-se com ele no instante em que você infunde esse item. Se você decidir se sintonizar com o item mais tarde, você deve fazer isso através do processo normal para a sintonização (veja as regras de sintonização no Guia do Mestre). Sua infusão permanece em um item indefinidamente, mas quando você morre, a infusão desaparece após um número de dias igual ao seu modificador de Inteligência (mínimo de 1 dia). A infusão também desaparece se você substituir o seu conhecimento daquela infusão. Você pode infundir mais de um objeto não mágico no final de um descanso longo; o número máximo de objetos encontra-se na coluna Itens infundidos da tabela O Artífice. Você deve tocar cada um dos objetos, e cada uma de suas infusões pode estar em apenas um objeto de uma vez. Além disso, nenhum objeto pode suportar mais do que uma de suas infusões de cada vez. Se você tentar exceder seu número máximo de infusões, a infusão mais antiga se encerra, e então a nova infusão é aplicada. Se uma infusão tem seu efeito encerrado em um item que contém outras coisas, como uma mochila de carga, seu conteúdo aparece inofensivamente dentro e ao redor de seu espaço.",
+            "category": "magia"
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "prof": 2,
+        "features": [
+          {
+            "name": "Especialização de Artífice",
+            "desc": "Escolha o tipo de especialista que você é: Alquimista, Armeiro, Atirador, ou Ferreiro de Batalha, cada uma delas sendo detalhada depois da descrição da classe. Sua escolha concede a você características no 5º nível e novamente no 9º nível e no 15º nível.",
+            "choice_id": "artificer_specialization",
+            "subclass": true
+          },
+          {
+            "name": "A ferramenta certa para o trabalho",
+            "desc": "Você aprendeu como produzir exatamente a ferramenta que você precisa: com ferramentas de ladrão ou de artesão em mãos, você pode criar magicamente um conjunto de ferramentas de artesão em um espaço desocupado a até de 1,5 metros de você. Esta criação requer 1 hora de trabalho ininterrupto, que pode coincidir com um descanso curto ou longo. Embora sejam produzidas a partir de magia, as ferramentas não são mágicas e desaparecem quando você utiliza essa característica novamente."
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "prof": 2,
+        "features": [
+          {
+            "name": "Aumento no Valor de Atributo",
+            "desc": "Quando você alcança o 4º nível e novamente no 8º, 12º, 16º e 19º nível, você pode aumentar um valor de atributo a sua escolha em 2, ou você pode aumentar dois valores de atributo a sua escolha em 1. Como padrão, você não pode elevar um valor de atributo acima de 20 com essa característica."
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "prof": 3,
+        "features": [
+          {
+            "name": "Característica de Especialização de Artífice",
+            "desc": "Você recebe a característica de 5º nível da sua Especialização de Artífice (Alquimista: Sábio Alquímico — bônus de Inteligência em rolagens de cura ou dano ácido/ígneo/necrótico/venenoso ao usar suprimentos de alquimista; Armeiro: Ataque Extra — atacar duas vezes com a ação Atacar; Atirador: Arma de Fogo Arcana — transformar varinha/cajado/vara em foco que soma 1d8 ao dano de magias de artífice; Ferreiro de Batalha: Ataque Extra — atacar duas vezes com a ação Atacar).",
+            "subclass": true
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "prof": 3,
+        "features": [
+          {
+            "name": "Maestria em Ferramenta",
+            "desc": "O seu bônus de proficiência agora é dobrado para qualquer teste de habilidade que você faça que utilize sua proficiência com uma ferramenta."
+          }
+        ]
+      },
+      {
+        "level": 7,
+        "prof": 3,
+        "features": [
+          {
+            "name": "Lampejo de Genialidade",
+            "desc": "No 7º nível você ganha a habilidade de encontrar soluções sob pressão. Quando você ou outra criatura em seu campo de visão a até 9 metros de você faz um teste de habilidade ou uma salvaguarda, você pode usar sua reação para adicionar seu modificador de Inteligência ao resultado. Você pode usar esta característica um número de vezes igual ao seu modificador de Inteligência (mínimo de uma vez). Você recupera todos os usos dessa habilidade ao terminar um descanso longo."
+          }
+        ]
+      },
+      {
+        "level": 8,
+        "prof": 3,
+        "features": [
+          {
+            "name": "Aumento no Valor de Atributo",
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+          }
+        ]
+      },
+      {
+        "level": 9,
+        "prof": 4,
+        "features": [
+          {
+            "name": "Característica de Especialização de Artífice",
+            "desc": "Você recebe a característica de 9º nível da sua Especialização de Artífice (Alquimista: Reagentes Restauradores — elixires concedem PV temporários, Restauração Menor sem gastar espaço de magia; Armeiro: Modificações da Armadura — Armadura Arcana ganha itens extras infundíveis; Atirador: Canhão Explosivo — dano do Canhão Místico aumenta e ele pode detonar; Ferreiro de Batalha: Pulso Arcano — canalizar dano ou cura extra ao acertar com arma mágica ou pelo Defensor de Aço).",
+            "subclass": true
+          }
+        ]
+      },
+      {
+        "level": 10,
+        "prof": 4,
+        "features": [
+          {
+            "name": "Perito em Itens Mágicos",
+            "desc": "Você alcançou uma compreensão profunda de como utilizar e criar itens mágicos: Você pode se sintonizar com até quatro itens mágicos de uma vez. Se você criar um item mágico com uma classificação de raridade de comum ou incomum, isso demora um quarto do tempo normal, e custa a metade do valor em ouro do que seria habitual."
+          }
+        ]
+      },
+      {
+        "level": 11,
+        "prof": 4,
+        "features": [
+          {
+            "name": "Item de Armazenar Magia",
+            "desc": "Agora você pode armazenar uma magia em um objeto. Sempre que terminar um descanso longo, você pode tocar uma arma simples ou marcial ou um item que você pode usar como um foco de conjuração, e você armazena uma magia nele, escolhendo uma magia de primeiro ou segundo círculo da lista de magias do artífice que tenha tempo de conjuração de 1 ação (você não precisa ter essa magia preparada). Enquanto segura o objeto, uma criatura pode gastar uma ação para produzir o efeito da magia a partir dele, usando o modificador de atributo de conjuração do artífice. Se a magia exigir concentração, a criatura deve se concentrar. A magia permanece no objeto até que seja usada um número de vezes igual ao dobro do seu modificador de inteligência (mínimo de duas vezes) ou até que você use esta característica novamente para armazenar uma magia em um objeto."
+          }
+        ]
+      },
+      {
+        "level": 12,
+        "prof": 4,
+        "features": [
+          {
+            "name": "Aumento no Valor de Atributo",
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+          }
+        ]
+      },
+      {
+        "level": 13,
+        "prof": 5,
+        "features": []
+      },
+      {
+        "level": 14,
+        "prof": 5,
+        "features": [
+          {
+            "name": "Versado em Itens Mágicos",
+            "desc": "Sua habilidade com itens mágicos se aprofunda: Você pode se sintonizar com até cinco itens mágicos de uma vez. Você ignora todos os requisitos de classe, raça, magia e nível para sintonizar ou para utilizar um item mágico."
+          }
+        ]
+      },
+      {
+        "level": 15,
+        "prof": 5,
+        "features": [
+          {
+            "name": "Característica de Especialização de Artífice",
+            "desc": "Você recebe a característica de 15º nível da sua Especialização de Artífice (Alquimista: Maestria Química — resistência a dano ácido/venenoso, imunidade a envenenado, Restauração Maior e Cura Completa sem espaço de magia; Armeiro: Armadura Perfeita — benefício extra conforme o modelo de armadura; Atirador: Posição Fortificada — meia cobertura perto do canhão e até dois canhões simultâneos; Ferreiro de Batalha: Defensor Aprimorado — Pulso Arcano sobe para 4d6 e Defensor de Aço ganha +2 CA e contra-ataque no Defletir Ataque).",
+            "subclass": true
+          }
+        ]
+      },
+      {
+        "level": 16,
+        "prof": 5,
+        "features": [
+          {
+            "name": "Aumento no Valor de Atributo",
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+          }
+        ]
+      },
+      {
+        "level": 17,
+        "prof": 6,
+        "features": []
+      },
+      {
+        "level": 18,
+        "prof": 6,
+        "features": [
+          {
+            "name": "Maestria em Itens Mágicos",
+            "desc": "A partir desse nível você pode se sintonizar com até seis itens mágicos de uma vez"
+          }
+        ]
+      },
+      {
+        "level": 19,
+        "prof": 6,
+        "features": [
+          {
+            "name": "Aumento no Valor de Atributo",
+            "desc": "Aumente um valor de habilidade à sua escolha em 2, ou dois valores diferentes em 1 cada (máximo 20). Com aprovação do Mestre, pode escolher um talento no lugar."
+          }
+        ]
+      },
+      {
+        "level": 20,
+        "prof": 6,
+        "features": [
+          {
+            "name": "Alma do Artífice",
+            "desc": "Você desenvolveu uma conexão mística com os seus itens mágicos, da qual você pode se valer para sua proteção: Você ganha um bônus de + l em todas as salvaguardas para cada item mágico com o qual você esteja sintonizado. Se você for reduzido a 0 pontos de vida, mas não morrer imediatamente, você pode utilizar sua reação para encerrar o efeito de uma de suas infusões de artífice, fazendo com que você seja reduzido a 1 ponto de vida em vez disso."
+          }
+        ]
+      }
+    ]
+  }
+}
