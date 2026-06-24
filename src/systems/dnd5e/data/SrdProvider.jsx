@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { tagSource } from '../domain/sources'
 
 /**
  * Cache de módulo para datasets SRD. Persiste entre remounts e tabs do
@@ -21,6 +22,22 @@ const DATASETS = {
   weaponsArmor:    { pt: 'phb-weapons-pt.json',          fallback: null,                      lazy: true },
   multiclass:      { pt: 'phb-multiclass-pt.json',       fallback: null,                      lazy: true },
   feats:           { pt: 'phb-feats-pt.json',            fallback: null,                      lazy: true },
+  featsTasha:      { pt: 'tasha-feats-pt.json',          fallback: null,                      lazy: true },
+}
+
+// Datasets lógicos compostos por partes carimbadas por fonte.
+// chave lógica → [ [parteKey, sourceCode], ... ]
+const COMPOSED = {
+  feats: [['feats', 'phb'], ['featsTasha', 'tasha']],
+}
+
+async function loadComposed(name) {
+  const parts = COMPOSED[name]
+  if (!parts) return null
+  const loaded = await Promise.all(
+    parts.map(async ([key, code]) => tagSource(await loadDataset(key, DATASETS[key]), code))
+  )
+  return loaded.flat()
 }
 
 function loadDataset(name, { pt, fallback }) {
@@ -76,6 +93,16 @@ export function SrdProvider({ children }) {
 
   // Permite que telas específicas (Wizard, level-up) puxem datasets sob demanda.
   const requestDataset = useCallback((name) => {
+    if (COMPOSED[name]) {
+      return loadComposed(name).then(value => {
+        setData(prev => {
+          const current = prev[name]
+          if (current === value) return prev
+          return { ...prev, [name]: value }
+        })
+        return value
+      })
+    }
     const def = DATASETS[name]
     if (!def) return Promise.resolve(null)
     // Se já está em memória local (não é o default vazio), retorna.
