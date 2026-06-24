@@ -267,6 +267,9 @@ export const RACE_LANGUAGES = {
   'tiefling':  ['Comum', 'Infernal'],
 }
 
+/** Idiomas EXTRA à escolha concedidos por raça (PHB). Default 0. */
+export const RACE_EXTRA_LANGUAGES = { humano: 1, 'meio-elfo': 1 }
+
 export const ALIGNMENTS = [
   'Leal e Bom', 'Neutro e Bom', 'Caótico e Bom',
   'Leal e Neutro', 'Neutro', 'Caótico e Neutro',

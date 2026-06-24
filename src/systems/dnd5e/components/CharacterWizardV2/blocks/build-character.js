@@ -1,6 +1,6 @@
 // src/components/CharacterWizardV2/blocks/build-character.js
 import { generateId } from '../../../../../hooks/useCharacter'
-import { calculateMaxHpFromHitDice, racialHpPerLevel, getModifier } from '../../../../../utils/calculations'
+import { calculateMaxHpFromHitDice, racialHpPerLevel, getModifier, RACE_LANGUAGES } from '../../../../../utils/calculations'
 import { injectSubclassSpellsAtBuild } from '../../../domain/subclassSpells'
 import { classSpeedBonusMeters } from '../../../domain/rules'
 
@@ -226,7 +226,11 @@ export function buildCharacter(draft, classData, classEquipment, srdSpells = nul
       expertiseSkills: Array.isArray(draft.chosenFeatures?.expertise_skills)
         ? draft.chosenFeatures.expertise_skills : [],
       backgroundSkills: draft.backgroundSkills ?? [],
-      armor: mcProfs.armor, weapons: mcProfs.weapons, tools: mcProfs.tools, languages: [],
+      armor: mcProfs.armor, weapons: mcProfs.weapons, tools: mcProfs.tools,
+      languages: [...new Set([
+        ...(RACE_LANGUAGES[draft.race] ?? []),
+        ...(draft.racialLanguages ?? []),
+      ])],
     },
     spellcasting: {
       ability: draft.spellcastingAbility, usedSlots: {},
