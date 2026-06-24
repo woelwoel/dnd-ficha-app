@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { SourceBadge } from '../../SourceBadge'
 
 /**
  * Picker de talento reutilizável (Humano Variante e ASI de classe).
@@ -106,6 +107,7 @@ export function FeatPicker({ feats = [], value = null, onChange }) {
                 ].join(' ')} aria-hidden />
                 <span className="flex-1 min-w-0 font-display text-ink-500">
                   {feat.name}
+                  <SourceBadge source={feat.source} />
                   {feat.attrBonus && (
                     <span className="ml-1.5 text-[13px] text-ink-300 italic">
                       +{feat.attrBonus.amount} {feat.attrBonus.choices.map(c => ATTR_ABR[c]).join('/')}
