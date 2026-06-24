@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getSpellSlots } from '../../utils/spellcasting'
+import { getSpellSlots, getSpellcastingRules } from '../../utils/spellcasting'
 
 describe('Artífice — slots de meio-conjurador (começa nv1, ceil)', () => {
   it('nível 1: 2 slots de 1º círculo', () => {
@@ -19,5 +19,24 @@ describe('Paladino/Patrulheiro NÃO mudam (não conjuram no nv1)', () => {
   })
   it('paladino nv5: 4/2', () => {
     expect(getSpellSlots('paladino', 5, [])).toEqual({ 1: 4, 2: 2 })
+  })
+})
+
+describe('Artífice — magias preparadas (INT mod + metade do nível, mín 1, desde nv1)', () => {
+  it('nível 1, INT 16: prepara 3 magias (max(1, mod 3 + floor(1/2)=0)); tem truques', () => {
+    const r = getSpellcastingRules('artifice', 1, { int: 16 }, { cantrips_known: 2 })
+    expect(r.type).toBe('prepared')
+    expect(r.ability).toBe('int')
+    expect(r.spellsLimit).toBe(3)
+    expect(r.cantripsLimit).toBe(2)
+  })
+  it('nível 1, INT 10: mínimo de 1 magia', () => {
+    expect(getSpellcastingRules('artifice', 1, { int: 10 }, {}).spellsLimit).toBe(1)
+  })
+  it('nível 5, INT 16: 3 + floor(5/2)=2 = 5 magias', () => {
+    expect(getSpellcastingRules('artifice', 5, { int: 16 }, {}).spellsLimit).toBe(5)
+  })
+  it('paladino nv1 continua 0 (regressão)', () => {
+    expect(getSpellcastingRules('paladino', 1, { cha: 16 }, {}).spellsLimit).toBe(0)
   })
 })

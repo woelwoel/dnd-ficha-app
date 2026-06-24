@@ -308,8 +308,10 @@ export function getSpellcastingRules(classIndex, level, attributes, levelData) {
     const abilityMod = getModifier(attributes?.[cfg.ability] ?? 10)
     const effLevel   = cfg.halfLevel ? Math.floor(level / 2) : level
     // Half-casters (paladino, patrulheiro) começam a conjurar no nível 2
-    // (PHB p.84/89). Antes disso o limite é 0.
-    const spellsLimit = effLevel > 0 ? Math.max(1, abilityMod + effLevel) : 0
+    // (PHB p.84/89); antes disso o limite é 0. EXCEÇÃO: o Artífice conjura e
+    // prepara desde o nível 1 (Tasha's) — INT mod + metade do nível (mín. 1).
+    const castsFromLevel1 = classIndex === 'artifice'
+    const spellsLimit = (effLevel > 0 || castsFromLevel1) ? Math.max(1, abilityMod + effLevel) : 0
 
     // Mago: grimório de 6 magias no nível 1 + 2 a cada nível seguinte (PHB p.114).
     const spellbookSize = cfg.hasSpellbook
