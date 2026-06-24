@@ -18,7 +18,7 @@ import { SourcePicker } from '../SourcePicker'
 import { useCharacterContext } from './CharacterContext'
 import { useLazySrdDataset } from '../../data/SrdProvider'
 import { baseSpeedMeters } from '../../domain/rules'
-import { artificerLevelOf, pruneOrphanActive } from '../../domain/artificerInfusions'
+import { artificerLevelOf, pruneOrphanActive, getMaxAttunement } from '../../domain/artificerInfusions'
 
 /* ── Wrapper de painel de aba ─────────────────────────────── */
 function TabPanel({ id, readOnly, children }) {
@@ -341,6 +341,7 @@ export function SheetContent({ activeTab }) {
         <Inventory
           inventory={character.inventory}
           attributes={character.attributes}
+          maxAttunement={getMaxAttunement(character)}
           onUpdateCurrency={updateCurrency}
           onAddItem={addItem}
           onRemoveItem={removeItem}

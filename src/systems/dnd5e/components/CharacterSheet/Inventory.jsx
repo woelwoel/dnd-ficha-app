@@ -100,7 +100,7 @@ function QtyEditor({ item, onUpdateItem }) {
 }
 
 export function Inventory({
-  inventory, attributes,
+  inventory, attributes, maxAttunement = 3,
   onUpdateCurrency, onAddItem, onRemoveItem, onUpdateItem,
   onAddAttack, onRemoveAttack,
 }) {
@@ -198,7 +198,7 @@ export function Inventory({
 
   // Atunamento
   const attunedCount   = inventory.items.filter(i => i.attuned).length
-  const MAX_ATTUNED    = 3
+  const MAX_ATTUNED    = maxAttunement
 
   // Efeitos mágicos agregados (mesma engine pura usada pelo hook central).
   const magicEffects = getActiveMagicEffects(inventory.items ?? [])
@@ -288,7 +288,7 @@ export function Inventory({
               />
             ))}
           </div>
-          <p className="text-xs text-gray-600">Máx. 3 itens mágicos (PHB p.136)</p>
+          <p className="text-xs text-gray-600">Máx. {MAX_ATTUNED} itens mágicos sintonizados</p>
         </div>
       </div>
 
