@@ -274,9 +274,22 @@ def clean_lines(raw: str) -> list[str]:
     return out
 
 
+def normalize_glyphs(text: str) -> str:
+    """Corrige artefatos de glifo do PDF fan-translation (reprodutível):
+    - dígito '1' renderizado como 'l' em notação de dado: 'ld8' -> '1d8'
+    - bônus '+ l' -> '+1'
+    - quebras espúrias: 'meia- luz' -> 'meia-luz', 'suasferramentas' -> 'suas ferramentas'
+    """
+    text = re.sub(r"\bl(d\d)", r"1\1", text)   # ld8/ld6/ld4 -> 1d8/...
+    text = re.sub(r"\+ l\b", "+1", text)        # "+ l" -> "+1"
+    text = text.replace("meia- luz", "meia-luz")
+    text = text.replace("suasferramentas", "suas ferramentas")
+    return text
+
+
 def join_body(lines: list[str]) -> str:
     text = " ".join(lines)
-    return re.sub(r"\s+", " ", text).strip()
+    return normalize_glyphs(re.sub(r"\s+", " ", text).strip())
 
 
 def parse_fulldescription(raw: str) -> str:
