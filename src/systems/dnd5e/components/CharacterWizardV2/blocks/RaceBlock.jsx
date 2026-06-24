@@ -131,6 +131,18 @@ export function RaceBlock({ draft, updateDraft, races, feats = [] }) {
     updateDraft({ racialLanguages: next.filter(Boolean) })
   }
 
+  // Tasha's "Customizando sua Origem": troca de um idioma fixo da raça por
+  // outro padrão. value === '' remove a troca (mantém o idioma original).
+  function handleLanguageSwapChange(originalLang, value) {
+    const next = { ...(draft.racialLanguageOverride ?? {}) }
+    if (value) {
+      next[originalLang] = value
+    } else {
+      delete next[originalLang]
+    }
+    updateDraft({ racialLanguageOverride: next })
+  }
+
   // Variante humano substitui o +1-em-tudo do humano base por escolhas livres.
   const isVariantHuman = selectedSubrace?.index === VARIANT_HUMAN_SUBRACE
   const fixedBonuses = [
@@ -142,6 +154,8 @@ export function RaceBlock({ draft, updateDraft, races, feats = [] }) {
   const racialLangs = draft.race ? (RACE_LANGUAGES[draft.race] ?? []) : []
   const extraLanguageCount = draft.race ? (RACE_EXTRA_LANGUAGES[draft.race] ?? 0) : 0
   const chosenExtraLanguages = draft.racialLanguages ?? []
+  // Tasha's "Customizando sua Origem": troca de idioma fixo por outro padrão.
+  const racialLanguageOverride = draft.racialLanguageOverride ?? {}
 
   return (
     <div className="flex flex-col gap-4">
@@ -276,6 +290,42 @@ export function RaceBlock({ draft, updateDraft, races, feats = [] }) {
               </span>
             ))}
           </div>
+
+          {flexibleAsi && racialLangs.length > 0 && (
+            <div className="flex flex-col gap-1.5 mt-1">
+              {racialLangs.map(lang => {
+                const otherChosen = Object.entries(racialLanguageOverride)
+                  .filter(([orig]) => orig !== lang)
+                  .map(([, novo]) => novo)
+                const options = DND_LANGUAGES.filter(
+                  l => l !== lang && !otherChosen.includes(l)
+                )
+                const label = `Trocar ${lang}`
+                return (
+                  <div key={lang}>
+                    <label
+                      htmlFor={`racial-language-swap-${lang}`}
+                      className="block text-xs font-display tracking-widest uppercase text-ink-500 mb-1"
+                    >
+                      {label}
+                    </label>
+                    <select
+                      id={`racial-language-swap-${lang}`}
+                      aria-label={label}
+                      className="w-full px-3 py-2 rounded-sm border-2 border-parchment-600 bg-parchment-50 text-ink-500 focus:outline-none focus:border-ink-300"
+                      value={racialLanguageOverride[lang] ?? ''}
+                      onChange={e => handleLanguageSwapChange(lang, e.target.value)}
+                    >
+                      <option value="">(manter)</option>
+                      {options.map(l => (
+                        <option key={l} value={l}>{l}</option>
+                      ))}
+                    </select>
+                  </div>
+                )
+              })}
+            </div>
+          )}
 
           {extraLanguageCount > 0 && (
             <div className="flex flex-col gap-1.5 mt-1">

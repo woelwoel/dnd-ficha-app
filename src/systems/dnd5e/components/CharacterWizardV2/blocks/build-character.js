@@ -147,6 +147,14 @@ export function buildCharacter(draft, classData, classEquipment, srdSpells = nul
   if (allClasses.has('barbaro')) unarmoredAC += getModifier(attrs.con ?? 10)
   else if (allClasses.has('monge')) unarmoredAC += getModifier(attrs.wis ?? 10)
 
+  // Tasha's "Customizando sua Origem": com a fonte habilitada, o jogador pode
+  // trocar um idioma fixo da raça por outro padrão (draft.racialLanguageOverride
+  // = { idiomaOriginal: idiomaNovo }). Com o toggle off (ou sem override), os
+  // idiomas fixos da raça permanecem inalterados.
+  const baseLangs = RACE_LANGUAGES[draft.race] ?? []
+  const languageSwap = (draft.settings?.flexibleRacialAsi && draft.racialLanguageOverride) || {}
+  const swappedLangs = baseLangs.map(l => languageSwap[l] ?? l)
+
   return {
     id: generateId(),
     meta: {
@@ -234,7 +242,7 @@ export function buildCharacter(draft, classData, classEquipment, srdSpells = nul
       backgroundSkills: draft.backgroundSkills ?? [],
       armor: mcProfs.armor, weapons: mcProfs.weapons, tools: mcProfs.tools,
       languages: [...new Set([
-        ...(RACE_LANGUAGES[draft.race] ?? []),
+        ...swappedLangs,
         ...(draft.racialLanguages ?? []),
       ])],
     },
