@@ -1,0 +1,179 @@
+[
+  {
+    "index": "adepto-metamagico",
+    "name": "Adepto Metamágico",
+    "desc": "Magia de Pacto. Você aprendeu a exercer sua vontade sobre suas magias para mudar a forma como elas funcionam: Você aprende duas opções a sua escolha de Metamagia da lista do feiticeiro. Você pode usar apenas uma opção de Metamagia em uma magia quando a conjura, a menos que a opção diga o contrário. Sempre que alcançar um nível que forneça a característica de Aumento no Valor de Atributo, você pode substituir uma dessas opções de Metamagia por outra da lista de Feiticeiro. Você ganha 2 pontos de feitiçaria para gastar com Metamagia (esses pontos são adicionados a qualquer ponto de Feitiçaria que você possua de outra fonte, mas podem ser usados apenas em Metamagia). Você recupera todos os pontos de feitiçaria gastos ao terminar um descanso longo.",
+    "source": "tasha",
+    "prereq": {
+      "type": "spellcasting"
+    }
+  },
+  {
+    "index": "adepto-mistico",
+    "name": "Adepto Místico",
+    "desc": "Magia de Pacto Estudando os conhecimentos de ocultismo, você desbloqueou o poder místico dentro de si mesmo: você aprende uma Invocação Mística da classe do bruxo a sua escolha. Se a invocação tiver algum tipo de requisito, você poderá escolhê-la apenas se você for um bruxo que cumpra esse requisito. Sempre que você adquire um nível de personagem, você pode trocar essa invocação por outra da classe de bruxo.",
+    "source": "tasha",
+    "prereq": {
+      "type": "spellcasting"
+    }
+  },
+  {
+    "index": "chef",
+    "name": "Chef",
+    "desc": "O tempo gasto se especializando na arte culinária valeu a pena, fornecendo a você os seguintes benefícios: Aumente o seu valor de Constituição ou de Sabedoria em 1, até o máximo de 20. Você adquire proficiência com Utensílios de Cozinheiro, caso não a possua. Como parte de um descanso curto, você pode cozinhar uma comida especial, desde que você possua os ingredientes e utensílios de cozinheiro disponíveis. Você pode preparar uma quantia dessa comida o sucifiente para um número de criaturas igual a 4 + seu bônus de proficiência. No final desse descanso curto, qualquer criatura que coma essa comida e gaste um ou mais Dados de Vida´para recuperar pontos de vida recuperam um valor adicional de 1d8 pontos de vida. Com uma hora de trabalho ou ao finalizar um descanso longo, você pode cozinhar uma quantia de aperitivos igual ao seu bônus de proficiência. Esses aperitivos especiais duram por até 8 horas após terem sido feitos. Uma criatura pode usar uma ação bônus para comer um desses aperitivos para ganhar pontos de vida temporários em uma quantia igual ao seu bônus de proficiência.",
+    "source": "tasha",
+    "attrBonus": {
+      "choices": [
+        "con",
+        "wis"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "envenenador",
+    "name": "Envenenador",
+    "desc": "Você pode preparar e transmitir venenos mortais, fornecendo a você os seguintes benefícios: Quando você faz uma jogada que provoque dano venenoso, ela ignora resistências a dano venenoso. Você pode aplicar veneno em uma arma ou peça de munição com uma ação bônus, em vez de uma ação. Você adquire proficiência com o kit de envenenador se você ainda não a possuir. Com uma hora de trabalho utilizando um kit de envenenador e gastando 50 po em materiais, você pode criar uma quantia de doses de um veneno potente igual ao seu bônus de proficiência. Uma vez aplicado em uma arma ou munição, o veneno retém sua potência por 1 minuto ou até um acerto utilizando o item envenenado. Quando uma criatura recebe dano pela arma ou munição recoberta, ela deve ser bem-sucedida em uma salvaguarda de Constituição CD 14 ou sofre 2d8 de dano venenoso e fica envenenada até o final do seu próximo turno.",
+    "source": "tasha"
+  },
+  {
+    "index": "esmagador",
+    "name": "Esmagador",
+    "desc": "Você praticou a arte de esmagar os seus inimigos, fornecendo a você os seguintes benefícios: Aumente o seu valor de Força ou Constituição em 1, até o máximo de 20. Uma vez por turno, quando você acerta uma criatura com um ataque que provoca dano contundente, você pode se mover até 1,5m para um espaço desocupado, desde que seu alvo não possua mais do que uma categoria de tamanho superior a você. Quando você acerta um golpe crítico que provoque dano contundente a uma criatura, jogadas de ataque feitas contra essa criatura são realizadas com vantagem até o começo do seu próximo turno.",
+    "source": "tasha",
+    "attrBonus": {
+      "choices": [
+        "str",
+        "con"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "especializado-em-pericia",
+    "name": "Especializado em Perícia",
+    "desc": "Você aprimorou sua proficiência com uma perícia em particular, garantindo a você os seguintes benefícios: Aumente o valor de um atributo a sua escolha em 1, até o máximo de 20. Você adquire proficiência em uma perícia a sua escolha. Escolha uma perícia na qual seja proficiente. Você ganha maestria com essa perícia, o que implica que seu bônus de proficiência é dobrado para qualquer teste de habilidade feito com essa perícia. A perícia escolhida deve ser uma que não seja beneficiada por esse talento ou características similares, como Manha, que forneçam o mesmo efeito de dobrar o bônus de proficiência.",
+    "source": "tasha",
+    "attrBonus": {
+      "choices": [
+        "str",
+        "dex",
+        "con",
+        "int",
+        "wis",
+        "cha"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "iniciado-artifice",
+    "name": "Iniciado Artífice",
+    "desc": "Você aprendeu algumas das engenharias dos artífices: Você aprende um truque da lista do artífice, bem como uma magia de 1º círculo dessa mesma lista, ambos a sua escolha. Inteligência é seu atributo de conjuração para essas magias. Você pode conjurar a magia de 1º nível adquirida por esse talento sem um espaço de magia, e você deve terminar um descanso longo antes de poder conjurá-la dessa forma novamente. Você também pode conjurar essa magia utilizando qualquer espaço de magia que você possua. Você adquire proficiência com um tipo de ferramentas de artesão a sua escolha, e você pode usar esse tipo de ferramenta como foco de conjuração para qualquer magia que utilize Inteligência como seu atributo de conjuração.",
+    "source": "tasha"
+  },
+  {
+    "index": "iniciado-em-combate",
+    "name": "Iniciado em Combate",
+    "desc": "Seu treinamento marcial o ajudou a desenvolver um estilo de luta único. Como resultado, você aprende uma opção de Estilo de Luta a sua escolha da lista de Guerreiro. Se você já possuir um Estilo de Luta, o estilo que você escolher deve ser diferente. Sempre que você alcançar um nível que forneça a característica de Aumento no Valor de Atributo, você pode trocar esse Estilo de Luta por outro da lista de Guerreiro que você não possua.",
+    "source": "tasha",
+    "prereq": {
+      "type": "proficiency",
+      "proficiency": "martial-weapons"
+    }
+  },
+  {
+    "index": "lacerador",
+    "name": "Lacerador",
+    "desc": "Você aprendeu onde cortar para obter os melhores resultando, concedendo a você os seguintes benefícios: Aumente seu valor de Força ou Destreza em 1, até o máximo de 20. Uma vez por turno, ao acertar uma criatura com um ataque que provoque dano cortante, você pode reduzir o deslocamento do alvo por 3m até o início do seu próximo turno. Quando você acerta um golpe crítico que provoque dano cortante em uma criatura, você a fere gravemente. Até o início do seu próximo turno, o alvo possui desvantagem em jogadas de ataque.",
+    "source": "tasha",
+    "attrBonus": {
+      "choices": [
+        "str",
+        "dex"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "perfurador",
+    "name": "Perfurador",
+    "desc": "Você alcançou uma precisão de perfuração em combate, dando a você os seguintes benefícios: Aumente seu valor de Força ou Destreza em 1, até o máximo de 20. Uma vez por turno, quando você acertar uma criatura com um ataque que provoque dano perfurante, você pode jogar novamente um dos dados de dano do ataque, e você deve ficar com a nova jogada. Quando você acerta um golpe crítico que provoque dano perfurante a uma criatura, você pode jogar um dado de dano adicional quando determinar o dano perfurante adicional que o alvo recebe.",
+    "source": "tasha",
+    "attrBonus": {
+      "choices": [
+        "str",
+        "dex"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "pistoleiro",
+    "name": "Pistoleiro",
+    "desc": "Você tem uma mão rápida e um olhar afiado quando utilizando armas de fogo, garantindo a você os seguintes benefícios: Aumente o seu valor de Destreza em 1, até um máximo de 20. Você ganha proficiência com armas de fogo (veja \"Armas de Fogo\" no Guia do Mestre). Você ignora a propriedade de recarga de armas de fogo. Estar a 1,5m de distância de uma criatura hostil não impõe desvantagem em suas jogadas de ataque à distância.",
+    "source": "tasha",
+    "attrBonus": {
+      "choices": [
+        "dex"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "telecinetico",
+    "name": "Telecinético",
+    "desc": "Você aprende a mover coisas com sua mente, concedendo a você os seguintes benefícios: Aumente seu valor de Inteligência, Sabedoria ou Carisma em 1, até o máximo de 20. Você aprende o truque Mãos Mágicas. Você pode conjurar ele sem componentes verbais ou somáticos, e você pode tornar a mão espectral invisível. Se você já souber essa magia, seu alcance é ampliado em 9m quando você a conjura. Seu atributo de conjuração é atributo que recebeu o aumento através desse talento. Com uma ação mágica, você pode tentar empurrar uma criatura a sua vista a até 9m de você de forma telecinética. Ao fazer isso, o alvo deve ser bem-sucedido em uma salvaguarda de Força (CD 8 + seu bônus de proficiência + o modificador de atributo do atributo aprimorado por este talento) ou será movido por 1,5m em sua direção ou afastando-se de você. Uma criatura pode falhar propositalmente nessa salvaguarda.",
+    "source": "tasha",
+    "attrBonus": {
+      "choices": [
+        "int",
+        "wis",
+        "cha"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "telepatico",
+    "name": "Telepático",
+    "desc": "Você despertou a habilidade de se conectar mentalmente com os outros, concedendo a você os seguintes benefícios: Aumente seu valor de Inteligência, Sabedoria ou Carisma em 1, até o máximo de 20. Você pode falar telepaticamente com qualquer criatura a sua vista a até 18m de você. Suas emissões telepáticas são em um idioma que você conheça, e a criatura compreende você apenas se souber esse idioma. Sua comunicação não fornece à criatura a habilidade de lhe responder telepaticamente. Você pode conjurar a magia Detectar Pensamentos sem a necessidade de espaço de magia ou componentes, e você deve finalizar um descanso longo antes de poder conjurar essa magia dessa forma novamente. Seu atributo de conjuração para essa magia é o atributo ampliado através desse talento. Se você tiver espaços de magia de 2º círculo ou superior, você pode conjurar essa magia com eles.",
+    "source": "tasha",
+    "attrBonus": {
+      "choices": [
+        "int",
+        "wis",
+        "cha"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "tocado-pelas-fadas",
+    "name": "Tocado pelas Fadas",
+    "desc": "Sua exposição à mágica de Faéria o modificou, lhe fornecendo os seguintes benefícios: Aumente o seu Valor de Inteligência, Sabedoria ou Carisma em 1, até o máximo de 20. Você aprende a magia Passo Nebuloso e mais uma mágia de 1º círculo a sua escolha. Essa magia de 1º círculo deve ser das escolas de Adivinhação ou Encantamento. Você pode conjurar ambas as magias sem o gasto de um espaço de magia. Assim que conjurar uma dessas magias dessa forma, você não poderá conjurar a mesma magia novamente através desse talento até terminar um descanso longo. Você também pode conjurar essas magias usando um espaço de magia de círculo apropriado. O atributo de conjuração para essas magias é o atributo que recebeu o aprimoramento por este talento.",
+    "source": "tasha",
+    "attrBonus": {
+      "choices": [
+        "int",
+        "wis",
+        "cha"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "tocado-pelas-sombras",
+    "name": "Tocado pelas Sombras",
+    "desc": "Sua exposição à magia do Sombral o modificou, fornecendo a você os seguintes benefícios: Aumente o seu valor de Inteligência, Sabedoria ou Carisma em 1, até o máximo de 20. Você aprende a magia Invisibilidade e mais uma mágia de 1º círculo a sua escolha. Essa magia de 1º círculo deve ser das escolas de Ilusão ou Necromancia. Você pode conjurar ambas as magias sem o gasto de um espaço de magia. Assim que conjurar uma dessas magias dessa forma, você não poderá conjurar a mesma magia novamente através desse talento até terminar um descanso longo. Você também pode conjurar essas magias usando um espaço de magia de círculo apropriado. O atributo de conjuração para essas magias é o atributo que recebeu o aprimoramento por este talento.",
+    "source": "tasha",
+    "attrBonus": {
+      "choices": [
+        "int",
+        "wis",
+        "cha"
+      ],
+      "amount": 1
+    }
+  }
+]
