@@ -153,10 +153,13 @@ function SheetRoute() {
   }, [id])
 
   if (system === null) return <Loader />
+  // getLazySheet memoiza o React.lazy por sistema (referência estável entre
+  // renders), então o componente não é "criado durante render".
   const Sheet = getLazySheet(system)
   if (!Sheet) return <Navigate to="/" replace />
   return (
     <RouteShell>
+      {/* eslint-disable-next-line react-hooks/static-components */}
       <Sheet
         characterId={id}
         adminContext={adminContext}
