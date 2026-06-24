@@ -4,7 +4,7 @@
  * Várias classes 5e ganham magias automaticamente da subclasse em níveis
  * específicos. A semântica varia entre dois grupos:
  *
- *  GRUPO A — "Sempre Preparadas" (Cleric/Paladin/Druid Land):
+ *  GRUPO A — "Sempre Preparadas" (Cleric/Paladin/Druid Land/Artificer):
  *    - Marcamos `alwaysPrepared: true` + `prepared: true`.
  *    - PHB: "essas magias contam como preparadas e NÃO contam pro limite".
  *    - UI: contagem de preparadas deve EXCLUIR essas.
@@ -142,11 +142,61 @@ const WARLOCK_PATRON_SPELLS = {
   ],
 }
 
+/* ── Artificer Specialization Spells (Tasha's p.14-18) — tiers 3, 5, 9, 13, 17
+ * GRUPO A (always prepared), igual Cleric/Paladin: "Essas magias contam como
+ * magias de artífice para você, mas elas não são consideradas entre o número
+ * de magia de artífice que você prepara."
+ *
+ * Algumas magias das tabelas do livro NÃO existem ainda no catálogo do app
+ * (faltam de tasha-spells-pt.json, que ainda não existe) e foram OMITIDAS
+ * das tabelas abaixo para não referenciar slugs inexistentes:
+ *   - Alquimista nv3: Raio Nauseante (Sickening Radiance) — ausente do catálogo
+ *   - Atirador nv3: Escudo (Shield) — ausente do catálogo
+ *   - Ferreiro de Batalha nv3: Escudo (Shield) — ausente do catálogo
+ * Quando o catálogo Tasha for criado, completar esses tiers.
+ */
+const ARTIFICER_SPELL_LEVELS = [3, 5, 9, 13, 17]
+const ARTIFICER_SUBCLASS_SPELLS = {
+  // Alquimista (Tasha's p.14)
+  alquimista: [
+    ['palavra-curativa'],                                    // 3 (Raio Nauseante ausente do catálogo)
+    ['esfera-flamejante',        'flecha-acida-de-melf'],    // 5
+    ['forma-gasosa',             'palavra-curativa-em-massa'],// 9
+    ['malogro',                  'protecao-contra-a-morte'], // 13
+    ['nevoa-mortal',             'reviver-os-mortos'],        // 17
+  ],
+  // Armeiro (Tasha's p.14-15)
+  armeiro: [
+    ['misseis-magicos',   'onda-trovejante'],        // 3
+    ['reflexos',          'despedacar'],              // 5
+    ['padrao-hipnotico',  'relampago'],               // 9
+    ['escudo-de-fogo',    'invisibilidade-maior'],    // 13 (Escudo Ardente = Fire Shield)
+    ['criar-passagem',    'muralha-de-energia'],      // 17
+  ],
+  // Atirador (Tasha's p.16)
+  atirador: [
+    ['onda-trovejante'],                              // 3 (Escudo/Shield ausente do catálogo)
+    ['raio-ardente',        'despedacar'],            // 5
+    ['bola-de-fogo',        'muralha-de-vento'],      // 9
+    ['tempestade-de-gelo',  'muralha-de-fogo'],       // 13 (Tempestade Glacial = Ice Storm)
+    ['cone-de-frio',        'muralha-de-energia'],    // 17
+  ],
+  // Ferreiro de Batalha (Tasha's p.17-18)
+  'ferreiro-de-batalha': [
+    ['heroismo'],                                            // 3 (Escudo/Shield ausente do catálogo)
+    ['marca-da-punicao',      'vinculo-protetor'],           // 5 (Vínculo de Proteção = Warding Bond)
+    ['aura-de-vitalidade',    'conjurar-rajada'],            // 9 (Invocar Barragem = Conjure Barrage)
+    ['aura-de-pureza',        'escudo-de-fogo'],             // 13
+    ['destruicao-banidora',   'curar-ferimentos-em-massa'],  // 17 (Banimento Destruidor = Banishing Smite)
+  ],
+}
+
 function labelFor(classIndex, subclassKey) {
   if (classIndex === 'clerigo')  return `Domínio: ${subclassKey}`
   if (classIndex === 'paladino') return `Juramento: ${subclassKey}`
   if (classIndex === 'druida')   return `Círculo da Terra (${subclassKey})`
   if (classIndex === 'bruxo')    return `Patrono: ${subclassKey}`
+  if (classIndex === 'artifice') return `Especialização: ${subclassKey}`
   return null
 }
 
@@ -206,6 +256,18 @@ export function getSubclassSpellsForLevel({ classIndex, chosenFeatures, classLev
       alwaysPrepared: true,
       source: 'patron',
       label: labelFor(classIndex, patron),
+    }
+  }
+
+  if (classIndex === 'artifice') {
+    const specialization = chosenFeatures.artificer_specialization
+    if (!specialization || !ARTIFICER_SPELL_LEVELS.includes(classLevel)) return { indices: [] }
+    const tier = ARTIFICER_SPELL_LEVELS.indexOf(classLevel)
+    return {
+      indices: ARTIFICER_SUBCLASS_SPELLS[specialization]?.[tier] ?? [],
+      alwaysPrepared: true,
+      source: 'specialization',
+      label: labelFor(classIndex, specialization),
     }
   }
 
