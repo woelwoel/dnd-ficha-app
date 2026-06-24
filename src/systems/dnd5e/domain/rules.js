@@ -721,6 +721,7 @@ export function baseSpeedMeters(character, raceSpeed) {
 export function defaultClassFeatureUses(character) {
   const out = []
   const cha = getModifier(character.attributes?.cha ?? 10)
+  const int = getModifier(character.attributes?.int ?? 10)
 
   // Cada entrada carrega seu PRÓPRIO chosenFeatures. Antes lia-se
   // `character.info?.chosenFeatures` direto, o que só refletia escolhas
@@ -769,6 +770,14 @@ export function defaultClassFeatureUses(character) {
     }
     if (cls === 'monge' && level >= 2) {
       out.push({ id: 'monge-ki', name: 'Ki', max: level, used: 0, recharge: 'short', source: 'monge' })
+    }
+    // Artífice (Tasha): Lampejo de Genialidade (nv7, INT mod usos) e Item de
+    // Armazenar Magia (nv11, 2×INT mod), ambos recarregam no descanso longo.
+    if (cls === 'artifice' && level >= 7) {
+      out.push({ id: 'artifice-flash-of-genius', name: 'Lampejo de Genialidade', max: Math.max(1, int), used: 0, recharge: 'long', source: 'artifice' })
+    }
+    if (cls === 'artifice' && level >= 11) {
+      out.push({ id: 'artifice-spell-storing-item', name: 'Item de Armazenar Magia', max: 2 * Math.max(1, int), used: 0, recharge: 'long', source: 'artifice' })
     }
     if (cls === 'barbaro' && level >= 1 && level < 20) {
       const rages = level >= 17 ? 6 : level >= 12 ? 5 : level >= 6 ? 4 : level >= 3 ? 3 : 2
