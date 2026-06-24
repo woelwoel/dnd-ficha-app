@@ -22,7 +22,7 @@
 
 **Criar:**
 - `public/srd-data/tasha-classes-pt.json` — entrada do Artífice (array, mesma forma de `phb-classes-pt.json`), `source: "tasha"`.
-- `public/srd-data/tasha-class-progression-full-pt.json` — `{ artifice: { ...levels[20] } }` (features por nível, cantrips_known; sem spell_slots_table próprio — engine calcula).
+- `public/srd-data/tasha-class-progression-pt.json` — `{ artifice: { ...levels[20] } }` (features por nível, cantrips_known; sem spell_slots_table próprio — engine calcula).
 - `public/srd-data/tasha-class-choices-pt.json` — `{ artifice: { choices: [ subclasse no nv3 com 4 options ] } }`.
 - `scripts/tasha/build_artificer.py` — estrutura classe + progressão + subclasses a partir do texto extraído.
 - Testes: `src/test/dnd5e/tasha-artificer-schema.test.js`, `src/test/dnd5e/artificer-spellcasting.test.js`, `src/test/dnd5e/SrdProvider-composed.test.jsx`, `src/test/dnd5e/artificer-class-gating.test.jsx`.
@@ -96,7 +96,7 @@ describe('SrdProvider — datasets compostos no boot', () => {
 ```js
   classesTasha:      { pt: 'tasha-classes-pt.json',               fallback: null, lazy: false },
   classChoicesTasha: { pt: 'tasha-class-choices-pt.json',         fallback: null, lazy: false },
-  progressionTasha:  { pt: 'tasha-class-progression-full-pt.json',fallback: null, lazy: false },
+  progressionTasha:  { pt: 'tasha-class-progression-pt.json',fallback: null, lazy: false },
 ```
 (b) Redefinir `COMPOSED` com estratégia explícita:
 ```js
@@ -244,13 +244,13 @@ git push
 **Files:**
 - Create: `scripts/tasha/build_artificer.py`
 - Create: `public/srd-data/tasha-classes-pt.json`
-- Create: `public/srd-data/tasha-class-progression-full-pt.json`
+- Create: `public/srd-data/tasha-class-progression-pt.json`
 
 > Ferramenta descartável (gitignore já ignora `*.txt`). Extração UTF-8 limpa, sem reparo. O texto-fonte (pgs 8–11) tem a tabela "O Artífice" e a seção "Características do Artífice".
 
 - [ ] **Step 1: Escrever `scripts/tasha/build_artificer.py`** que produz DOIS JSON:
   - `tasha-classes-pt.json` = `[{ index:'artifice', name:'Artífice', hit_die:8, saving_throws:['Constituição','Inteligência'], armor_proficiencies:[...], weapon_proficiencies:['Armas simples'], tool_proficiencies:[...], skill_choices:{count:2, from:['Arcanismo','História','Investigação','Medicina','Natureza','Percepção','Prestidigitação']}, spellcasting_ability:'Inteligência', summary, fullDescription, topics, level1_features, gold_formula, source:'tasha' }]` — MESMA forma de `phb-classes-pt.json` (inspecionar uma entrada PHB pra casar os campos exatos).
-  - `tasha-class-progression-full-pt.json` = `{ artifice: { index:'artifice', name:'Artífice', hit_die:8, primary_ability:'Inteligência', saving_throws:[...], armor_proficiencies:[...], weapon_proficiencies:[...], tool_proficiencies:[...], skill_choices:{...}, cantrips_known:[2,2,2,2,...], levels:[ { level, prof, features:[ {name, desc, ...} ] } × 20 ] } }`. NÃO incluir `spell_slots_table` (o motor calcula meio-conjurador). `cantrips_known` por nível: 2 (nv1–9), 3 (nv10–13), 4 (nv14+) — conforme a coluna "Truques Conhecidos" da tabela.
+  - `tasha-class-progression-pt.json` = `{ artifice: { index:'artifice', name:'Artífice', hit_die:8, primary_ability:'Inteligência', saving_throws:[...], armor_proficiencies:[...], weapon_proficiencies:[...], tool_proficiencies:[...], skill_choices:{...}, cantrips_known:[2,2,2,2,...], levels:[ { level, prof, features:[ {name, desc, ...} ] } × 20 ] } }`. NÃO incluir `spell_slots_table` (o motor calcula meio-conjurador). `cantrips_known` por nível: 2 (nv1–9), 3 (nv10–13), 4 (nv14+) — conforme a coluna "Truques Conhecidos" da tabela.
   - As features por nível (coluna "Características de Classe" da tabela) com descrição parseada da seção "Características do Artífice": Engenharia Mágica (Magical Tinkering) nv1, Conjuração nv1, Infundir Item nv2 (TEXTO descritivo — a mecânica interativa é Fase B), Especialização de Artífice nv3 (marca a escolha de subclasse — ver Task A5), A ferramenta certa para o trabalho nv3, Maestria em Ferramenta nv6, Lampejo de Genialidade nv7, Perito em Itens Mágicos nv10, Item de Armazenar Magia nv11, Versado em Itens Mágicos nv14, Maestria em Itens Mágicos nv18, Alma do Artífice nv20. "Aumento no Valor de Atributo" nos níveis 4/8/12/16/19 segue o padrão das outras classes (verificar como PHB marca ASI no progression e replicar).
 
   O parser segue o padrão de `build_feats.py`: extrair via `extract_text.py`, limpar ruído de rodapé, ancorar por nomes de feature em sequência, juntar linhas. REVISAR a saída à mão (descrições completas, níveis certos).
@@ -264,7 +264,7 @@ Revisar: tabela de features por nível bate com a tabela "O Artífice"; cantrips
 
 - [ ] **Step 3: Commit**
 ```bash
-git add scripts/tasha/build_artificer.py public/srd-data/tasha-classes-pt.json public/srd-data/tasha-class-progression-full-pt.json
+git add scripts/tasha/build_artificer.py public/srd-data/tasha-classes-pt.json public/srd-data/tasha-class-progression-pt.json
 git commit -m "feat(tasha): classe Artífice (base + progressão de features por nível)"
 git push
 ```
@@ -331,7 +331,7 @@ const read = (f) => JSON.parse(readFileSync(resolve(process.cwd(), 'public/srd-d
 
 describe('tasha — classe Artífice', () => {
   const classes = read('tasha-classes-pt.json')
-  const prog = read('tasha-class-progression-full-pt.json')
+  const prog = read('tasha-class-progression-pt.json')
   const choices = read('tasha-class-choices-pt.json')
 
   it('classe artifice presente, d8, saves CON+INT, source tasha', () => {
