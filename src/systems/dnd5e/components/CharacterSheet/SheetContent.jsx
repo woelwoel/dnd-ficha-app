@@ -13,9 +13,12 @@ import { Attacks } from './Attacks'
 import { ManeuversPanel } from './ManeuversPanel'
 import { PreparedSpellsList } from './PreparedSpellsList'
 import { CombatClassActions } from './CombatClassActions'
+import { ArtificerInfusionsPanel } from './ArtificerInfusionsPanel'
 import { SourcePicker } from '../SourcePicker'
 import { useCharacterContext } from './CharacterContext'
+import { useLazySrdDataset } from '../../data/SrdProvider'
 import { baseSpeedMeters } from '../../domain/rules'
+import { artificerLevelOf, pruneOrphanActive } from '../../domain/artificerInfusions'
 
 /* ── Wrapper de painel de aba ─────────────────────────────── */
 function TabPanel({ id, readOnly, children }) {
@@ -108,8 +111,20 @@ export function SheetContent({ activeTab }) {
     handleRemoveMulticlass, handleChosenFeaturesChange,
   } = handlers
 
+  // Hook precisa rodar sempre (Rules of Hooks) — SheetContent retorna antecipado
+  // por aba, então o carregamento lazy do catálogo de infusões fica aqui no topo,
+  // antes de qualquer early return. Custo é baixo: é só leitura de cache lazy.
+  const infusionsCatalog = useLazySrdDataset('infusions')
+
   /* ── Aba: Ficha ─────────────────────────────────────────── */
   if (activeTab === 'ficha') {
+    const artLevel = artificerLevelOf(character)
+    const infusionItems = (character.inventory?.items ?? []).map(i => ({ id: i.id, name: i.name }))
+    const storedInfusions = character.combat?.artificerInfusions ?? { known: [], active: [] }
+    const infusionsValue = {
+      known: storedInfusions.known ?? [],
+      active: pruneOrphanActive(storedInfusions.active ?? [], infusionItems.map(i => i.id)),
+    }
     // Resumo enriquecido pro header recolhido — substitui a necessidade de
     // expandir só pra ler os dados básicos do personagem.
     const identitySummary = [
@@ -255,6 +270,24 @@ export function SheetContent({ activeTab }) {
                 />
               </div>
             </CollapsibleSection>
+
+            {/* Infusões do Artífice: só aparece a partir do nível 2 na classe
+                (primária ou multiclasse). Persiste em combat.artificerInfusions. */}
+            {artLevel >= 2 && (
+              <CollapsibleSection title="Infusões de Artífice" defaultOpen={false}>
+                <div className="p-4">
+                  <ArtificerInfusionsPanel
+                    value={infusionsValue}
+                    catalog={infusionsCatalog ?? []}
+                    artificerLevel={artLevel}
+                    activeSources={character.meta?.settings?.sources ?? ['phb']}
+                    inventoryItems={infusionItems}
+                    readOnly={readOnly}
+                    onChange={(next) => updateCombat('artificerInfusions', next)}
+                  />
+                </div>
+              </CollapsibleSection>
+            )}
           </div>
         </div>
       </TabPanel>
