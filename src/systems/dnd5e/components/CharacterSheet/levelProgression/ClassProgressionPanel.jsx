@@ -188,7 +188,7 @@ function CurrentLevelRow({ entry, prevEntry, onFeatureClick }) {
 export function ClassProgressionPanel({
   progression, currentLevel, hitDie, conMod, attributes, isMulticlass,
   onLevelChange, onApplyLevelUp, multiclassIndex,
-  levelChoices, chosenFeatures, allowFeats = false,
+  levelChoices, chosenFeatures, allowFeats = false, activeSources,
 }) {
   const [wizardOpen, setWizardOpen]       = useState(false)
   const [selectedFeat, setSelectedFeat]   = useState(null)
@@ -264,6 +264,7 @@ export function ClassProgressionPanel({
           onConfirm={handleConfirmLevelUp}
           onCancel={() => setWizardOpen(false)}
           allowFeats={allowFeats}
+          activeSources={activeSources}
         />
       )}
 

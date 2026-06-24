@@ -30,6 +30,11 @@ export function LevelProgression({
   const chosenFeatures = character.info.chosenFeatures ?? {}
   const conMod         = getModifier(character.attributes.con)
   const hitDie         = classData?.hit_die ?? 8
+  // Fontes ativas da ficha: usadas pra filtrar o que o FeatPicker do level-up
+  // pode OFERECER (PHB sempre incluso). Ficha já tem o default aplicado pelo
+  // schema (ver characterSchema.js), mas o fallback aqui cobre objetos crus
+  // (ex.: em testes) que não passaram por safeParseCharacter.
+  const activeSources  = character.meta?.settings?.sources ?? ['phb']
   const totalLevel     = currentLevel + multiclasses.reduce((s, m) => s + (m.level ?? 0), 0)
 
   if (!classIndex) {
@@ -131,6 +136,7 @@ export function LevelProgression({
           levelChoices={classChoices[classIndex]?.choices ?? []}
           chosenFeatures={chosenFeatures}
           allowFeats={allowFeats}
+          activeSources={activeSources}
         />
       )}
 
@@ -153,6 +159,7 @@ export function LevelProgression({
             levelChoices={classChoices[mc.class]?.choices ?? []}
             chosenFeatures={chosenFeatures}
             allowFeats={allowFeats}
+            activeSources={activeSources}
           />
         )
       })()}

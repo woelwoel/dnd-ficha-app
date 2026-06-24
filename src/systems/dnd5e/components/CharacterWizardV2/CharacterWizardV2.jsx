@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { CampaignSetupModal } from './CampaignSetupModal'
 import { BlockCard } from './BlockCard'
 import { BlockEditorModal } from './BlockEditorModal'
@@ -8,6 +8,7 @@ import { BLOCKS, GROUPS } from './blocks-config'
 import { useDraft } from './hooks/useDraft'
 import { useBlockStatus } from './hooks/useBlockStatus'
 import { useSrd, useLazySrdDataset } from '../../data/SrdProvider'
+import { filterCatalogBySources } from '../../domain/sources'
 import { ConceptBlock } from './blocks/ConceptBlock'
 import { RaceBlock } from './blocks/RaceBlock'
 import { ClassBlock } from './blocks/ClassBlock'
@@ -72,10 +73,23 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
   const { draft, updateDraft, hasChanges, resetDraft, saveStatus } = useDraft({ initialSettings, resume })
   const { races, classes, classChoices, progression: classProgression, backgrounds, spells: srdSpells } = useSrd()
   // Datasets só usados no wizard — carregados sob demanda.
-  const feats          = useLazySrdDataset('feats')
+  const rawFeats       = useLazySrdDataset('feats')
   const classEquipment = useLazySrdDataset('classEquipment')
   const weaponsArmor   = useLazySrdDataset('weaponsArmor')
   const multiclassData = useLazySrdDataset('multiclass')
+  // Talentos OFERECIDOS no picker são filtrados pelas fontes ativas da ficha
+  // (PHB sempre incluso). Não confundir com talentos já escolhidos — esses
+  // vêm do próprio draft e não passam por aqui.
+  // Nota: no draft (em criação) as settings vivem em draft.settings, não em
+  // draft.meta.settings — o wrapper meta só existe na ficha já persistida
+  // (ver build-character.js). Hoje não há picker de sources no wizard, então
+  // isso sempre cai no fallback ['phb']; o caminho já fica correto para
+  // quando esse picker existir.
+  const activeSources = draft?.settings?.sources ?? ['phb']
+  const feats = useMemo(
+    () => filterCatalogBySources(rawFeats ?? [], activeSources),
+    [rawFeats, activeSources],
+  )
   const blockStatus = useBlockStatus(draft, { classChoices, classProgression, classEquipment, classes })
   const [openBlockId, setOpenBlockId] = useState(null)
   const [exitConfirmOpen, setExitConfirmOpen] = useState(false)

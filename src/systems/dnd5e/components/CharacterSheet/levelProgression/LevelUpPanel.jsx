@@ -1,9 +1,10 @@
 // src/components/CharacterSheet/levelProgression/LevelUpPanel.jsx
 // Wizard de subida de nível. Orquestra HP, escolhas de feature, ASI/Talento,
 // cantrips bônus e confirma o patch de level-up para o pai.
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { DetailsModal } from '../../DetailsModal'
 import { useLazySrdDataset } from '../../../data/SrdProvider'
+import { filterCatalogBySources } from '../../../domain/sources'
 import { isASIEntry } from './helpers'
 import { HPSection } from './HPSection'
 import { ASIPicker } from './ASIPicker'
@@ -13,6 +14,7 @@ import { FeatPicker } from './FeatPicker'
 export function LevelUpPanel({
   nextLevel, nextEntry, hitDie, conMod, attributes,
   onConfirm, onCancel, levelChoices, currentChosenFeatures, allowFeats = false,
+  activeSources,
 }) {
   const [hpGain,              setHpGain]              = useState(null)
   const [boosts,              setBoosts]              = useState({})
@@ -26,7 +28,13 @@ export function LevelUpPanel({
   const [featChosenAttr,      setFeatChosenAttr]      = useState(null)
   const [featSearch,          setFeatSearch]          = useState('')
   // Feats vêm sob demanda — só usados aqui no fluxo de level-up.
-  const feats = useLazySrdDataset('feats')
+  // Filtrados pelas fontes ativas da ficha: o FeatPicker só pode OFERECER
+  // talentos de fontes que a ficha tem habilitadas (PHB sempre incluso).
+  const rawFeats = useLazySrdDataset('feats')
+  const feats = useMemo(
+    () => filterCatalogBySources(rawFeats ?? [], activeSources ?? ['phb']),
+    [rawFeats, activeSources],
+  )
 
   const newFeatures = nextEntry?.features?.filter(f => !f.name?.includes('Aumento') && !f.name?.includes('Melhoria')) ?? []
   const hasASI      = isASIEntry(nextEntry)
