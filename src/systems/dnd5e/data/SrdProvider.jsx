@@ -9,13 +9,16 @@ import { tagSource } from '../domain/sources'
 const moduleCache = new Map()
 
 const DATASETS = {
-  races:           { pt: 'phb-races-pt.json',            fallback: '5e-SRD-Races.json',       lazy: false },
-  classes:         { pt: 'phb-classes-pt.json',          fallback: '5e-SRD-Classes.json',     lazy: false },
-  backgrounds:     { pt: 'phb-backgrounds-pt.json',      fallback: '5e-SRD-Backgrounds.json', lazy: false },
-  spells:          { pt: 'phb-spells-pt.json',           fallback: null,                      lazy: false },
-  levels:          { pt: '5e-SRD-Levels.json',           fallback: null,                      lazy: false },
-  progression:     { pt: 'phb-class-progression-pt.json', fallback: null,                     lazy: false },
-  classChoices:    { pt: 'phb-class-choices-pt.json',    fallback: null,                      lazy: false },
+  races:             { pt: 'phb-races-pt.json',            fallback: '5e-SRD-Races.json',       lazy: false },
+  classes:           { pt: 'phb-classes-pt.json',          fallback: '5e-SRD-Classes.json',     lazy: false },
+  classesTasha:      { pt: 'tasha-classes-pt.json',        fallback: null,                      lazy: false },
+  backgrounds:       { pt: 'phb-backgrounds-pt.json',      fallback: '5e-SRD-Backgrounds.json', lazy: false },
+  spells:            { pt: 'phb-spells-pt.json',           fallback: null,                      lazy: false },
+  levels:            { pt: '5e-SRD-Levels.json',           fallback: null,                      lazy: false },
+  progression:       { pt: 'phb-class-progression-pt.json', fallback: null,                     lazy: false },
+  progressionTasha:  { pt: 'tasha-class-progression-pt.json', fallback: null,                    lazy: false },
+  classChoices:      { pt: 'phb-class-choices-pt.json',    fallback: null,                      lazy: false },
+  classChoicesTasha: { pt: 'tasha-class-choices-pt.json',  fallback: null,                      lazy: false },
   // Lazy: só são acessados em telas específicas (Wizard, level-up flow).
   // Carregados sob demanda via `requestDataset(name)` ou `useLazySrdDataset(name)`.
   classEquipment:  { pt: 'phb-class-equipment-pt.json',  fallback: null,                      lazy: true },
@@ -26,18 +29,29 @@ const DATASETS = {
 }
 
 // Datasets lógicos compostos por partes carimbadas por fonte.
-// chave lógica → [ [parteKey, sourceCode], ... ]
+// chave lógica → { strategy: 'array' (concat + tagSource) | 'object' (merge raso por chave), parts: [[parteKey, sourceCode], ...] }
 const COMPOSED = {
-  feats: [['feats', 'phb'], ['featsTasha', 'tasha']],
+  feats:        { strategy: 'array',  parts: [['feats', 'phb'], ['featsTasha', 'tasha']] },
+  classes:      { strategy: 'array',  parts: [['classes', 'phb'], ['classesTasha', 'tasha']] },
+  classChoices: { strategy: 'object', parts: [['classChoices', 'phb'], ['classChoicesTasha', 'tasha']] },
+  progression:  { strategy: 'object', parts: [['progression', 'phb'], ['progressionTasha', 'tasha']] },
 }
 
+// Chaves lógicas não-lazy carregadas no boot. Partes de composição (ex.:
+// classesTasha, progressionTasha) não entram aqui — são puxadas internamente
+// por `loadComposed` e nunca expostas como chave de state própria.
+const CORE_LOGICAL = ['races', 'classes', 'backgrounds', 'spells', 'levels', 'progression', 'classChoices']
+
 async function loadComposed(name) {
-  const parts = COMPOSED[name]
-  if (!parts) return null
+  const def = COMPOSED[name]
+  if (!def) return null
   const loaded = await Promise.all(
-    parts.map(async ([key, code]) => tagSource(await loadDataset(key, DATASETS[key]), code))
+    def.parts.map(async ([key, code]) => [code, await loadDataset(key, DATASETS[key])])
   )
-  return loaded.flat()
+  if (def.strategy === 'array') {
+    return loaded.flatMap(([code, data]) => tagSource(Array.isArray(data) ? data : [], code))
+  }
+  return Object.assign({}, ...loaded.map(([, data]) => (data && typeof data === 'object' && !Array.isArray(data) ? data : {})))
 }
 
 function loadDataset(name, { pt, fallback }) {
@@ -77,12 +91,16 @@ export function SrdProvider({ children }) {
   const [data, setData] = useState(() => ({ ...EMPTY_DEFAULTS, ready: false }))
 
   // Carrega o core (não-lazy) e libera `ready` assim que todos terminam.
+  // Chaves LÓGICAS: partes de composição (ex.: classesTasha) não entram aqui
+  // como chave de state própria — só o resultado composto (ex.: classes).
   useEffect(() => {
     let cancelled = false
 
-    const coreEntries = Object.entries(DATASETS).filter(([, def]) => !def.lazy)
     Promise.all(
-      coreEntries.map(async ([name, def]) => [name, await loadDataset(name, def)])
+      CORE_LOGICAL.map(async (name) => {
+        const value = COMPOSED[name] ? await loadComposed(name) : await loadDataset(name, DATASETS[name])
+        return [name, value]
+      })
     ).then(entries => {
       if (cancelled) return
       setData(prev => ({ ...prev, ...Object.fromEntries(entries), ready: true }))
