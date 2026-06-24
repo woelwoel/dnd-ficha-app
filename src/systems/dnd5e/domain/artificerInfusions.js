@@ -1,3 +1,5 @@
+import { filterCatalogBySources } from './sources'
+
 /** Caps de infusões (conhecidas/ativas) por nível de Artífice — tabela O Artífice. */
 export function getInfusionCaps(artificerLevel) {
   const L = Number(artificerLevel) || 0
@@ -15,4 +17,17 @@ export function artificerLevelOf(character) {
   if (info.class === 'artifice') return info.level ?? 0
   const mc = (info.multiclasses ?? []).find(m => m.class === 'artifice')
   return mc?.level ?? 0
+}
+
+/** Infusões oferecíveis: pré-requisito de nível ≤ nível, gateadas pela fonte. */
+export function availableInfusions(catalog, artificerLevel, activeSources) {
+  const L = Number(artificerLevel) || 0
+  const bySource = filterCatalogBySources(catalog ?? [], activeSources)
+  return bySource.filter(i => (i.prereq ?? 2) <= L)
+}
+
+/** Remove infusões ativas cujo item não está mais no inventário. */
+export function pruneOrphanActive(active, inventoryItemIds) {
+  const ids = new Set(inventoryItemIds ?? [])
+  return (active ?? []).filter(a => ids.has(a.itemId))
 }
