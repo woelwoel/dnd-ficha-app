@@ -135,6 +135,9 @@ export function CampaignSetupModal({
   const [allowFeats, setAllowFeats] = useState(false)
   const [allowMulticlass, setAllowMulticlass] = useState(false)
   const [sources, setSources] = useState(['phb'])
+  const [flexibleRacialAsi, setFlexibleRacialAsi] = useState(false)
+  // Tasha's só existe como regra opcional quando a fonte está ativa no picker.
+  const tashaActive = sources.includes('tasha')
   const [startLevel, setStartLevel] = useState(1)
   // null = pessoal; uuid = mesa. Default null (pessoal).
   const [campaignId, setCampaignId] = useState(null)
@@ -162,6 +165,9 @@ export function CampaignSetupModal({
       allowMulticlass,
       sources,
       startLevel: clampLevel(startLevel),
+      // Guard: sem Tasha ativo, nunca emite true — evita vazar um toggle
+      // marcado antes de desligar a fonte (estado local não é resetado).
+      flexibleRacialAsi: tashaActive && flexibleRacialAsi,
     }
     if (showDestination) onConfirm({ settings, campaignId })
     else onConfirm(settings)
@@ -331,6 +337,26 @@ export function CampaignSetupModal({
               Ao subir de nível, você pode pegar um nível de outra classe (com pré-requisitos de atributo).
             </span>
           </SelectableCard>
+
+          {tashaActive && (
+            <SelectableCard
+              selected={flexibleRacialAsi}
+              kind="check"
+              inputProps={{
+                type: 'checkbox',
+                checked: flexibleRacialAsi,
+                onChange: e => setFlexibleRacialAsi(e.target.checked),
+                'aria-label': 'Customizando sua Origem (realocar atributos/idioma)',
+              }}
+            >
+              <span className="block text-sm font-semibold text-ink-500 font-display tracking-wide">
+                Customizando sua Origem (realocar atributos/idioma)
+              </span>
+              <span className="block text-xs ink-italic mt-0.5">
+                Regra do Caldeirão de Tasha: em vez do ASI fixo da origem, distribua +2/+1 (ou +1/+1/+1) entre os atributos que quiser.
+              </span>
+            </SelectableCard>
+          )}
         </fieldset>
 
         <SourcePicker value={sources} onChange={setSources} />

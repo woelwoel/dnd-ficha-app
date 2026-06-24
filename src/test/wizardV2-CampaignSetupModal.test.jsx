@@ -31,6 +31,7 @@ describe('CampaignSetupModal', () => {
       allowMulticlass: true,
       sources: ['phb'],
       startLevel: 5,
+      flexibleRacialAsi: false,
     })
   })
 
@@ -52,5 +53,28 @@ describe('CampaignSetupModal', () => {
     await userEvent.click(screen.getByRole('button', { name: /começar/i }))
 
     expect(onConfirm).toHaveBeenCalledWith(expect.objectContaining({ startLevel: 20 }))
+  })
+
+  it('sem Tasha ativo (default), checkbox "Customizando sua Origem" não aparece', () => {
+    render(<CampaignSetupModal open={true} onCancel={() => {}} onConfirm={() => {}} />)
+    expect(screen.queryByLabelText(/customizando sua origem/i)).not.toBeInTheDocument()
+  })
+
+  it('com Tasha ativo, marcar "Customizando sua Origem" emite flexibleRacialAsi true', async () => {
+    const onConfirm = vi.fn()
+    render(<CampaignSetupModal open={true} onCancel={() => {}} onConfirm={onConfirm} />)
+
+    // Liga a fonte Tasha no SourcePicker.
+    await userEvent.click(screen.getByLabelText(/Tasha/i))
+
+    const flexCheckbox = screen.getByLabelText(/customizando sua origem/i)
+    expect(flexCheckbox).toBeInTheDocument()
+    await userEvent.click(flexCheckbox)
+
+    await userEvent.click(screen.getByRole('button', { name: /começar/i }))
+
+    expect(onConfirm).toHaveBeenCalledWith(
+      expect.objectContaining({ flexibleRacialAsi: true, sources: ['phb', 'tasha'] })
+    )
   })
 })

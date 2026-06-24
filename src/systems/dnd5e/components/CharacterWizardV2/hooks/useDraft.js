@@ -18,6 +18,7 @@ export const INITIAL_DRAFT_V2 = {
     allowMulticlass: false,
     sources: ['phb'],
     startLevel: 1,
+    flexibleRacialAsi: false,
   },
   name: '', playerName: '', alignment: '', appearance: '',
   race: '', subrace: '', racialBonuses: {},
