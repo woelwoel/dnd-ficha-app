@@ -15,7 +15,21 @@ export const CASTER_TYPE = {
   mago:       'full',
   paladino:   'half',
   patrulheiro:'half',
+  artifice:   'half',
 }
+
+/**
+ * Classes 'half' cujo nível MÍNIMO de conjuração é 1 (em vez do padrão 2).
+ * Artífice é a única (Tasha's, errata): conjura desde o nível 1.
+ */
+const HALF_CASTER_MIN_LEVEL_1 = new Set(['artifice'])
+
+/**
+ * Classes 'half' que arredondam PARA CIMA (ceil) o nível efetivo em
+ * MULTICLASSE, em vez do floor() padrão da PHB. Artífice é a única
+ * (Tasha's, errata).
+ */
+const HALF_CASTER_MULTICLASS_CEIL = new Set(['artifice'])
 
 /**
  * Resolve o tipo de conjurador de UMA classe considerando a SUBCLASSE.
@@ -150,10 +164,18 @@ export function getWarlockPactSlots(warlockLevel) {
 export function computeEffectiveCasterLevel(primaryClass, primaryLevel, multiclasses = [], primaryChosen = {}) {
   const casters = collectCasterEntries(primaryClass, primaryLevel, multiclasses, primaryChosen)
   let eff = 0
-  for (const { level, type } of casters) {
-    if (type === 'full')       eff += level
-    else if (type === 'half')  eff += Math.floor(level / 2)
-    else if (type === 'third') eff += Math.floor(level / 3)
+  for (const { class: classIndex, level, type } of casters) {
+    if (type === 'full') {
+      eff += level
+    } else if (type === 'half') {
+      // Artífice (Tasha's, errata) arredonda PARA CIMA em multiclasse;
+      // os demais half-casters usam floor() (PHB p.164).
+      eff += HALF_CASTER_MULTICLASS_CEIL.has(classIndex)
+        ? Math.ceil(level / 2)
+        : Math.floor(level / 2)
+    } else if (type === 'third') {
+      eff += Math.floor(level / 3)
+    }
   }
   return { effectiveLevel: eff, hasUnifiedCaster: casters.length > 0 }
 }
@@ -190,7 +212,10 @@ export function getSpellSlots(primaryClass, primaryLevel, multiclasses = [], pri
     if (c.type === 'full') {
       effectiveLevel = c.level
     } else if (c.type === 'half') {
-      if (c.level < 2) return null
+      // Artífice (Tasha's, errata) conjura desde o nível 1; os demais
+      // half-casters (Paladino/Patrulheiro) só a partir do nível 2.
+      const minLevel = HALF_CASTER_MIN_LEVEL_1.has(c.class) ? 1 : 2
+      if (c.level < minLevel) return null
       effectiveLevel = Math.ceil(c.level / 2)
     } else { // third
       if (c.level < 3) return null
@@ -256,12 +281,14 @@ export function clampPactSlotsUsed(used, warlockLevel) {
  *  - clerigo  : SAB, level inteiro, tem cantrips.
  *  - druida   : SAB, level inteiro, tem cantrips.
  *  - paladino : CAR, level/2 (half-caster), SEM cantrips.
+ *  - artifice : INT, level/2 (half-caster), TEM cantrips (Tasha's, errata).
  */
 const PREPARE_CONFIG = {
   mago:      { ability: 'int', halfLevel: false, hasCantrips: true,  hasSpellbook: true  },
   clerigo:   { ability: 'wis', halfLevel: false, hasCantrips: true,  hasSpellbook: false },
   druida:    { ability: 'wis', halfLevel: false, hasCantrips: true,  hasSpellbook: false },
   paladino:  { ability: 'cha', halfLevel: true,  hasCantrips: false, hasSpellbook: false },
+  artifice:  { ability: 'int', halfLevel: true,  hasCantrips: true,  hasSpellbook: false },
 }
 
 const KNOWN_CLASSES = new Set(['bardo', 'feiticeiro', 'bruxo', 'patrulheiro'])
