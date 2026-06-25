@@ -302,6 +302,7 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
             classProgression={classProgression ?? {}} feats={feats ?? []}
             classEquipment={classEquipment ?? {}} weaponsArmor={weaponsArmor ?? {}}
             multiclassData={multiclassData ?? {}}
+            activeSources={activeSources}
           />
         )}
         {openBlockId === 'background' && (

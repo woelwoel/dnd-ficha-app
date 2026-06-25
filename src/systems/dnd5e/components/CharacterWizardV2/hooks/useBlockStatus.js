@@ -29,7 +29,7 @@ function statusOf(blockId, draft, srdData = {}) {
       // Sem dados SRD, considera completo (PR 1 fallback).
       if (!classChoices && !classProgression && !classEquipment) return 'completo'
 
-      const leveledChoices = getLeveledChoices(classChoices?.[draft.class], draft.level ?? 1, draft.chosenFeatures)
+      const leveledChoices = getLeveledChoices(classChoices?.[draft.class], draft.level ?? 1, draft.chosenFeatures, draft.settings?.sources ?? ['phb'])
       const allChoicesDone = leveledChoices.every(c =>
         isChoiceDone(c, draft.chosenFeatures?.[c.id])
       )

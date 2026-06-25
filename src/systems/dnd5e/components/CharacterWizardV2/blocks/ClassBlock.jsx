@@ -17,7 +17,7 @@ const ATTR_NAME_TO_KEY = {
 
 export function ClassBlock({
   draft, updateDraft, classes, offeredClasses, classChoices = {}, classProgression = {}, feats = [],
-  classEquipment = {}, weaponsArmor = {}, multiclassData = {},
+  classEquipment = {}, weaponsArmor = {}, multiclassData = {}, activeSources = ['phb'],
 }) {
   // `classes` = catálogo COMPLETO, usado só pra LOOKUP de classe já escolhida
   // (primária ou multiclasse) — precisa resolver mesmo que a fonte dela
@@ -72,7 +72,7 @@ export function ClassBlock({
     })
   }
 
-  const leveledChoices = getLeveledChoices(classChoices[draft.class], draft.level, draft.chosenFeatures)
+  const leveledChoices = getLeveledChoices(classChoices[draft.class], draft.level, draft.chosenFeatures, activeSources)
   const progressionLevels = getProgressionLevels(classProgression[draft.class], draft.level)
   const bonusCantripsNeeded = computeBonusCantripsNeeded(leveledChoices, draft.chosenFeatures ?? {})
 
@@ -206,6 +206,7 @@ export function ClassBlock({
                   classChoices[mc.class],
                   mc.level,
                   mc.chosenFeatures ?? {},
+                  activeSources,
                 )
                 const mcProgressionLevels = getProgressionLevels(
                   classProgression[mc.class],
