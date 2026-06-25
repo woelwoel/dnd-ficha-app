@@ -28,3 +28,28 @@ export function filterCatalogBySources(items, activeSources) {
   const active = new Set(['phb', ...(Array.isArray(activeSources) ? activeSources : [])])
   return (items ?? []).filter(it => active.has(sourceOf(it)))
 }
+
+/**
+ * Filtra as `options` de UMA choice pelas fontes ativas, SEMPRE preservando
+ * a(s) opção(ões) já escolhida(s) em `chosenFeatures[choice.id]` — conteúdo já
+ * escolhido nunca some, mesmo que a fonte tenha sido desligada depois.
+ *
+ * Aceita o valor escolhido como: string única, string "a,b" (multiSelect da
+ * ficha) ou array (multiSelect do wizard). Pura: não muta `choice`.
+ */
+export function filterChoiceBySources(choice, chosenFeatures, activeSources) {
+  if (!choice || !Array.isArray(choice.options)) return choice
+  const offered = filterCatalogBySources(choice.options, activeSources)
+  const raw = chosenFeatures?.[choice.id]
+  const chosenVals = Array.isArray(raw)
+    ? raw
+    : typeof raw === 'string' && raw.length
+      ? raw.split(',').filter(Boolean)
+      : raw != null && raw !== ''
+        ? [raw]
+        : []
+  if (chosenVals.length === 0) return { ...choice, options: offered }
+  const offeredSet = new Set(offered.map(o => o.value))
+  const preserved = choice.options.filter(o => chosenVals.includes(o.value) && !offeredSet.has(o.value))
+  return { ...choice, options: [...offered, ...preserved] }
+}
