@@ -37,6 +37,11 @@ export function MapTooltip({ character }) {
       <div className="font-bold font-display tracking-[0.05em] text-gold-400">
         {info.name || '—'}
       </div>
+      {c.playerName && (
+        <div className="text-[11px] mt-0.5 text-gold-500 font-body">
+          👤 {c.playerName}
+        </div>
+      )}
       {(info.race || info.class) && (
         <div className="italic mt-0.5 text-gold-500 font-body">
           {[info.race, info.class].filter(Boolean).join(' · ')}
