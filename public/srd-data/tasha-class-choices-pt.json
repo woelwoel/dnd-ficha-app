@@ -30,5 +30,53 @@
         ]
       }
     ]
+  },
+  "barbaro": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "primal_path",
+        "featureName": "Caminho Primitivo",
+        "prompt": "Escolha seu Caminho Primitivo",
+        "options": [
+          {
+            "value": "besta",
+            "name": "Caminho da Besta",
+            "combat": "essencial",
+            "desc": "Caminho da Besta canaliza uma fera interior que se manifesta em armas naturais durante a Fúria.\n\nFeatures por nível:\n• Nv 3 — Forma da Besta: ao entrar em Fúria, você manifesta uma arma natural (escolha a cada Fúria; o padrão é escolhido aqui). Mordida (1d8 perfurante; ao acertar, recupera PV = metade do seu nível de bárbaro, 1×/turno), Garras (1d6 cortante; ao usar a ação de Ataque com elas, faz 1 ataque adicional de garra) ou Cauda (1d8 cortante, alcance 3m; como reação ao ser atingido, +1d8 na CA contra aquele ataque). As armas naturais contam como mágicas.\n• Nv 6 — Alma Bestial: suas armas naturais contam como mágicas para superar resistência. Ao terminar um descanso curto ou longo, ganha um benefício à escolha: nadar e respirar na água, escalar superfícies difíceis sem teste, ou saltar distâncias maiores.\n• Nv 10 — Fúria Infecciosa: ao acertar uma criatura com sua arma natural, pode forçá-la a um TR de Sabedoria (CD = 8 + mod. CON + proficiência). Falha: ela usa a reação para atacar outra criatura à sua escolha, ou sofre 2d12 de dano psíquico. Usos = mod. de Constituição por descanso longo.\n• Nv 14 — Convocar a Caçada: ao entrar em Fúria, até CHA criaturas à sua escolha a 9m ganham PV temporários e, 1×/turno, +1d6 de dano ao acertar um ataque enquanto você estiver enfurecido."
+          },
+          {
+            "value": "magia-selvagem",
+            "name": "Caminho da Magia Selvagem",
+            "combat": "essencial",
+            "desc": "Caminho da Magia Selvagem extrai magia caótica da própria Fúria, produzindo surtos imprevisíveis.\n\nFeatures por nível:\n• Nv 3 — Consciência Mágica: como ação, percebe magia, aberrações, celestiais, corruptores e elementais a 18m por 1 minuto (não através de cobertura total). Usos = bônus de proficiência por descanso longo. Surto Mágico: ao entrar em Fúria, role 1d8 na tabela de Surto Mágico — o efeito mágico aleatório dura enquanto a Fúria durar.\n• Nv 6 — Magia Reforçadora: como ação bônus, toca uma criatura (ou você) por 1 minuto. Ela ganha, à sua escolha: um dado extra ao recuperar um espaço de magia, OU +1d3 nas rolagens de ataque e testes de habilidade. Usos = bônus de proficiência por descanso longo.\n• Nv 10 — Reação Instável: enquanto enfurecido, ao sofrer dano, pode usar a reação para rolar na tabela de Surto Mágico e aplicar o efeito imediatamente.\n• Nv 14 — Surto Controlado: ao rolar Surto Mágico, role 2d8 e escolha qual dos dois resultados usar."
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "id": "barbaro_beast_form",
+        "featureName": "Forma da Besta (nv 3)",
+        "prompt": "Escolha a arma natural que se manifesta ao entrar em Fúria",
+        "requires": { "primal_path": "besta" },
+        "options": [
+          {
+            "value": "mordida",
+            "name": "Mordida",
+            "desc": "1d8 de dano perfurante. Ao acertar no seu turno, recupera PV igual à metade do seu nível de bárbaro (arredondado pra baixo), 1×/turno. Útil para sustentar a linha de frente."
+          },
+          {
+            "value": "garras",
+            "name": "Garras",
+            "desc": "1d6 de dano cortante. Quando usa a ação de Ataque com as garras, faz um ataque adicional de garra como parte da mesma ação. Melhor saída de dano por turno."
+          },
+          {
+            "value": "cauda",
+            "name": "Cauda",
+            "desc": "1d8 de dano cortante com alcance de 3m. Como reação ao ser atingido por um ataque, adiciona 1d8 à sua CA contra aquele ataque (podendo transformar acerto em erro). Opção defensiva/alcance."
+          }
+        ]
+      }
+    ]
   }
 }
