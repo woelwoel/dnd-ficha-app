@@ -70,10 +70,12 @@ export default defineConfig({
             //    tasha-class-progression, tasha-class-choices).
             //  v9 → v10 (2026-06-24): catálogo de infusões do Artífice
             //    (tasha-infusions-pt.json) + lista de magias do Artífice.
+            //  v10 → v11 (2026-06-25): subclasses de Tasha do bárbaro
+            //    (tasha-class-choices-pt.json ganhou a chave barbaro).
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v10',
+              cacheName: 'srd-data-v11',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
