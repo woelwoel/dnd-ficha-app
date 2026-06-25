@@ -470,6 +470,28 @@ const CLERIC_DOMAIN_SPELLS = {
     ['liberdade-de-movimento','pele-de-pedra'],
     ['chama-radiante',        'segurar-monstro'],
   ],
+  // ── Domínios do Caldeirão de Tasha (source: tasha) ──────────────────
+  ordem: [
+    ['comando',                 'heroismo'],                    // 1
+    ['imobilizar-pessoa',       'zona-da-verdade'],             // 3
+    ['palavra-curativa-em-massa','lentidao'],                   // 5
+    ['compulsao',               'localizar-criatura'],          // 7
+    ['comunhao',                'dominar-pessoa'],              // 9
+  ],
+  paz: [
+    ['heroismo',          'santuario'],                         // 1
+    ['auxilio-divino',    'vinculo-protetor'],                  // 3 (Aid, Warding Bond)
+    ['enviar-mensagem',   'sinal-de-esperanca'],                // 5 (Sending, Beacon of Hope)
+    ['aura-de-pureza',    'esfera-resiliente-de-otiluke'],      // 7
+    ['restauracao-maior', 'ligacao-telepatica-de-rary'],        // 9
+  ],
+  crepusculo: [
+    ['fogo-das-fadas',       'sono'],                           // 1
+    ['raio-lunar',           'ver-o-invisivel'],                // 3
+    ['aura-de-vitalidade',   'pequena-cabana-de-leomund'],      // 5
+    ['aura-de-vida',         'invisibilidade-maior'],           // 7 (Aura of Life)
+    ['circulo-de-poder',     'despistar'],                      // 9 (Circle of Power, Mislead)
+  ],
 }
 
 const CLERIC_DOMAIN_LEVELS = [1, 3, 5, 7, 9]

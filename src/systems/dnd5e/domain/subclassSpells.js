@@ -50,6 +50,22 @@ const PALADIN_OATH_SPELLS = {
     ['banimento',         'porta-dimensional'],         // 13
     ['imobilizar-monstro','escrutinio'],                // 17 (Hold Monster, Scrying)
   ],
+  // Juramento da Glória (Tasha's p.50) — source: tasha
+  gloria: [
+    ['raio-guiador',         'heroismo'],                  // 3 (Guiding Bolt)
+    ['aprimorar-habilidade', 'arma-magica'],               // 5 (Enhance Ability)
+    ['velocidade',           'protecao-contra-energia'],   // 9 (Haste)
+    ['compulsao',            'liberdade-de-movimento'],    // 13 (Compulsion, Freedom of Movement)
+    ['comunhao',             'coluna-de-chamas'],          // 17 (Commune, Flame Strike)
+  ],
+  // Juramento da Vigilância — Watchers (Tasha's p.51) — source: tasha
+  vigilancia: [
+    ['alarme',             'detectar-magia'],              // 3
+    ['raio-lunar',         'ver-o-invisivel'],             // 5
+    ['contramagica',       'nao-detectar'],                // 9 (Counterspell, Nondetection)
+    ['aura-de-pureza',     'banimento'],                   // 13
+    ['imobilizar-monstro', 'videncia'],                    // 17 (Hold Monster, Scrying)
+  ],
 }
 
 /* ── Druid Circle of the Land (PHB p.69) — tiers 3, 5, 7, 9 ──────── */
@@ -102,6 +118,35 @@ const DRUID_LAND_SPELLS = {
     ['forma-gasosa',           'nevoa-fetida'],            // 5 (Gaseous Form, Stinking Cloud)
     ['invisibilidade-maior',   'moldar-rochas'],           // 7 (Greater Invis., Stone Shape)
     ['nevoa-mortal',           'praga-de-insetos'],        // 9 (Cloudkill, Insect Plague)
+  ],
+}
+
+/* ── Círculos do Caldeirão de Tasha (source: tasha) ────────────────
+ * Diferente do Círculo da Terra (que depende de druid_land_type e usa
+ * níveis 3/5/7/9), estes círculos concedem "Magias de Círculo" fixas pelo
+ * próprio círculo, começando no NÍVEL 2 — tiers em 2, 3, 5, 7, 9. Sempre
+ * preparadas, não contam pro limite. Estrelas não tem lista de círculo: o
+ * Mapa Estelar concede só Raio Guia (sempre preparada) no nv2; o truque
+ * Orientação fica na prosa da subclasse (sistema de truques bônus). */
+const DRUID_CIRCLE_LEVELS = [2, 3, 5, 7, 9]
+const DRUID_CIRCLE_SPELLS = {
+  esporos: [
+    ['toque-arrepiante'],                                  // 2 (Chill Touch)
+    ['cegueirasurdez',        'repouso-tranquilo'],        // 3 (Blindness/Deafness, Gentle Repose)
+    ['animar-mortos',         'forma-gasosa'],             // 5
+    ['malogro',               'confusao'],                 // 7 (Blight, Confusion)
+    ['nevoa-mortal',          'praga'],                    // 9 (Cloudkill, Contagion)
+  ],
+  'fogo-selvagem': [
+    ['maos-flamejantes',      'curar-ferimentos'],         // 2
+    ['esfera-flamejante',     'raio-ardente'],             // 3
+    ['crescimento-de-planta', 'revivificar'],              // 5
+    ['aura-de-vida',          'escudo-de-fogo'],           // 7 (Aura of Life, Fire Shield)
+    ['coluna-de-chamas',      'curar-ferimentos-em-massa'],// 9 (Flame Strike, Mass Cure Wounds)
+  ],
+  estrelas: [
+    ['raio-guiador'],   // 2 (Mapa Estelar: Raio Guia sempre preparada)
+    [], [], [], [],     // 3/5/7/9 — sem lista de círculo
   ],
 }
 
@@ -231,7 +276,20 @@ export function getSubclassSpellsForLevel({ classIndex, chosenFeatures, classLev
   }
 
   if (classIndex === 'druida') {
-    if (chosenFeatures.druid_circle !== 'terra') return { indices: [] }
+    const circle = chosenFeatures.druid_circle
+    // Círculos de Tasha: lista fixa por nível [2,3,5,7,9]
+    if (DRUID_CIRCLE_SPELLS[circle]) {
+      const tier = DRUID_CIRCLE_LEVELS.indexOf(classLevel)
+      if (tier < 0) return { indices: [] }
+      return {
+        indices: DRUID_CIRCLE_SPELLS[circle][tier] ?? [],
+        alwaysPrepared: true,
+        source: 'circle',
+        label: `Círculo: ${circle}`,
+      }
+    }
+    // PHB: Círculo da Terra (depende do tipo de terreno)
+    if (circle !== 'terra') return { indices: [] }
     const land = chosenFeatures.druid_land_type
     if (!land || !DRUID_LAND_LEVELS.includes(classLevel)) return { indices: [] }
     const tier = DRUID_LAND_LEVELS.indexOf(classLevel)
