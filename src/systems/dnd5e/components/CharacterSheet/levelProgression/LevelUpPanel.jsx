@@ -4,7 +4,7 @@
 import { useMemo, useState } from 'react'
 import { DetailsModal } from '../../DetailsModal'
 import { useLazySrdDataset } from '../../../data/SrdProvider'
-import { filterCatalogBySources } from '../../../domain/sources'
+import { filterCatalogBySources, filterChoiceBySources } from '../../../domain/sources'
 import { isASIEntry } from './helpers'
 import { HPSection } from './HPSection'
 import { ASIPicker } from './ASIPicker'
@@ -48,7 +48,10 @@ export function LevelUpPanel({
   // ASI pronto: se modo ASI precisam boosts; se modo talento precisa talento + atributo (se aplicável)
   const asiReady    = !hasASI || (asiMode === 'asi' ? Object.keys(boosts).length > 0 : chosenFeat !== null && featAttrReady)
 
-  const choicesForLevel = (levelChoices ?? []).filter(c => c.level === nextLevel)
+  const choicesForLevel = (levelChoices ?? [])
+    .filter(c => c.level === nextLevel)
+    .map(c => filterChoiceBySources(c, currentChosenFeatures, activeSources))
+    .filter(c => (c.options?.length ?? 0) > 0)
   const choicesReady = choicesForLevel.every(c => {
     if ((c.multiSelect ?? 0) > 1) {
       const val = newChoices[c.id] ?? currentChosenFeatures?.[c.id] ?? ''
