@@ -40,6 +40,9 @@ export function CharacterSidebar({ characters = [], onSelect, onDelete, onFilter
 
   const visible = filtered.slice(0, MAX_VISIBLE_TOKENS)
   const hidden = filtered.length - visible.length
+  // Filtros por classe só fazem sentido quando o viewer enxerga as classes de
+  // todos (DM). Pra jogador comum (fichas alheias redigidas), some a fileira.
+  const allRevealed = characters.every(c => c.revealed !== false)
 
   function applyFilter(key) {
     setClassFilter(key)
@@ -52,25 +55,27 @@ export function CharacterSidebar({ characters = [], onSelect, onDelete, onFilter
         Companhia
       </h6>
 
-      <div className="flex flex-wrap gap-1 mb-2" role="group" aria-label="Filtros de classe">
-        <Chip
-          active={classFilter === null}
-          onClick={() => applyFilter(null)}
-        >
-          Todos
-        </Chip>
-        {FILTER_CLASSES.map(f => (
+      {allRevealed && (
+        <div className="flex flex-wrap gap-1 mb-2" role="group" aria-label="Filtros de classe">
           <Chip
-            key={f.key}
-            active={classFilter === f.key}
-            onClick={() => applyFilter(f.key)}
-            ariaLabel={`Filtrar por ${f.label.toLowerCase()}`}
-            title={f.label}
+            active={classFilter === null}
+            onClick={() => applyFilter(null)}
           >
-            <ClassIcon classKey={f.key} size={18} color="currentColor" />
+            Todos
           </Chip>
-        ))}
-      </div>
+          {FILTER_CLASSES.map(f => (
+            <Chip
+              key={f.key}
+              active={classFilter === f.key}
+              onClick={() => applyFilter(f.key)}
+              ariaLabel={`Filtrar por ${f.label.toLowerCase()}`}
+              title={f.label}
+            >
+              <ClassIcon classKey={f.key} size={18} color="currentColor" />
+            </Chip>
+          ))}
+        </div>
+      )}
 
       <div className="flex-1 overflow-y-auto">
         {filtered.length === 0 && (
@@ -100,13 +105,16 @@ export function CharacterSidebar({ characters = [], onSelect, onDelete, onFilter
                   <span className="block text-[12px] font-semibold leading-tight truncate font-body text-ink-inverse">
                     {c.info?.name || 'Sem nome'}
                   </span>
-                  <span className="block text-xs italic mt-0.5 text-gold-500">
-                    {c.info?.class || '—'}
+                  <span className="block text-xs italic mt-0.5 text-gold-500 truncate">
+                    {c.playerName || (c.revealed !== false ? (c.info?.class || '—') : '—')}
+                    {c.revealed !== false && c.info?.class && c.playerName ? ` · ${c.info.class}` : ''}
                   </span>
                 </span>
-                <span className="text-[13px] font-bold flex-shrink-0 mr-1 font-display text-gold-400">
-                  {toRoman(c.info?.level ?? 1)}
-                </span>
+                {c.revealed !== false && (
+                  <span className="text-[13px] font-bold flex-shrink-0 mr-1 font-display text-gold-400">
+                    {toRoman(c.info?.level ?? 1)}
+                  </span>
+                )}
               </button>
 
               {/* Delete inline com confirmação — só na ficha do próprio dono
