@@ -357,5 +357,108 @@
         ]
       }
     ]
+  },
+  "feiticeiro": {
+    "choices": [
+      {
+        "level": 1,
+        "id": "sorcerous_origin",
+        "featureName": "Origem de Feiticeiro",
+        "prompt": "Escolha sua Origem de Feiticeiro",
+        "options": [
+          {
+            "value": "mente_aberrante",
+            "name": "Mente Aberrante",
+            "combat": "essencial",
+            "desc": "Uma influência aberrante despertou poderes psiônicos em você — telepatia, distorções da mente e magia psíquica.\n\nFeatures por nível:\n• Nv 1 — Magias Psiônicas: você sempre conhece as magias da tabela (níveis 1/3/5/7/9, incluindo o truque Farpa Mental); elas contam como magias de feiticeiro e não ocupam o limite de conhecidas (pode trocá-las por outras de adivinhação/encantamento ao subir). Discurso Telepático: ação bônus pra criar telepatia com uma criatura a 9m por nível em minutos.\n• Nv 6 — Feitiçaria Psiônica: pode conjurar magias da sua característica Psiônica gastando pontos de feitiçaria (em vez de espaço) e sem componente verbal/somático.\n• Nv 14 — Revelação na Carne: gasta pontos de feitiçaria pra ganhar, por 10 min, voo, natação/respiração aquática, visão no escuro ampliada ou corpo aberrante (passa por espaços apertados).\n• Nv 18 — Implosão Deformante: teleporta 9m e cada criatura a 3m do destino faz TR de Força ou é puxada e sofre 3d10 de dano de força. 1×/descanso longo (ou gastando 5 pontos)."
+          },
+          {
+            "value": "alma_cronometrica",
+            "name": "Alma Cronométrica",
+            "combat": "essencial",
+            "desc": "Você se ligou ao Plano Mecânico de Mechanus, canalizando a ordem perfeita do cosmos contra o caos.\n\nFeatures por nível:\n• Nv 1 — Magias Cronométricas: você sempre conhece as magias da tabela (níveis 1/3/5/7/9); contam como de feiticeiro e não ocupam o limite (trocáveis por abjuração/transmutação). Restaurar o Equilíbrio: reação pra cancelar vantagem ou desvantagem numa rolagem de criatura a 18m. Usos = bônus de proficiência.\n• Nv 6 — Bastião da Lei: gasta de 1 a 5 pontos de feitiçaria pra dar a uma criatura a 9m um número igual de dados de proteção (d8); ela gasta um dado pra reduzir dano sofrido.\n• Nv 14 — Transe da Ordem: ataques contra você não têm vantagem; e você trata 9 ou menos como 10 em jogadas de ataque, testes e TR. Pode gastar 5 pontos pra estender a 1 aliado por 1 min.\n• Nv 18 — Cavalgada Mecânica: cria um campo de energia que cura aliados (cada um se recupera), conserta objetos/constructos e encerra um efeito mágico, em área de 9m. 1×/descanso longo (ou 7 pontos)."
+          }
+        ]
+      }
+    ]
+  },
+  "bruxo": {
+    "choices": [
+      {
+        "level": 1,
+        "id": "patron",
+        "featureName": "Patrono Sobrenatural",
+        "prompt": "Escolha seu Patrono Sobrenatural",
+        "options": [
+          {
+            "value": "insondavel",
+            "name": "O Insondável",
+            "combat": "essencial",
+            "desc": "Algo nas profundezas — um leviatã, um deus afogado, um horror abissal — fez um pacto com você, concedendo poder aquático e tentacular.\n\nFeatures por nível:\n• Nv 1 — Lista Expandida de Magias (círculos 1–5). Tentáculo das Profundezas: ação bônus pra criar um tentáculo espectral a 18m; ao criá-lo (ou movê-lo), ataque mágico corpo a corpo por 1d8 de dano gélido e reduz o deslocamento do alvo em 3m (2d8 no nv10). Usos = bônus de proficiência. Dom do Mar: nada e respira na água, e fala com criaturas que tenham deslocamento de natação.\n• Nv 6 — Alma Oceânica (imersão indefinida na água, resistência a frio) + Espiral Guardiã: reação pra reduzir dano de uma criatura próxima ao tentáculo.\n• Nv 10 — Tentáculos Agarradores: aprende Tentáculos Negros de Evard (1×/descanso longo grátis); você é imune ao próprio efeito.\n• Nv 14 — Mergulho Insondável: como ação, você e até 5 criaturas voluntárias a 9m desaparecem na água e reaparecem a até 90m, ilesas."
+          },
+          {
+            "value": "genio",
+            "name": "O Gênio",
+            "combat": "essencial",
+            "desc": "Um nobre gênio — Dao, Djinni, Ifrit ou Marid — fez um pacto com você, emprestando poder elemental e um receptáculo mágico.\n\nFeatures por nível:\n• Nv 1 — Lista Expandida (base + magias do tipo de gênio; veja a subescolha). Receptáculo do Gênio: um frasco que serve de foco e oferece Descanso Engarrafado (refúgio extradimensional num descanso curto). Ira do Gênio: 1×/turno, ao acertar com ataque, +bônus de proficiência de dano do tipo do seu gênio.\n• Nv 6 — Dádiva Elemental: resistência ao dano do seu tipo de gênio; e ação bônus pra ganhar voo (com flutuação) = bônus de proficiência por descanso longo.\n• Nv 10 — Receptáculo Santuário: ao usar Descanso Engarrafado, pode levar até prof. criaturas com você; todos ganham cura.\n• Nv 14 — Desejo Limitado: como ação, conjura qualquer magia de 6º círculo ou inferior, sem componentes. 1×, recupera após 1d4 descansos longos."
+          }
+        ]
+      },
+      {
+        "level": 1,
+        "id": "bruxo_genie_kind",
+        "featureName": "Tipo de Gênio (nv 1)",
+        "prompt": "Escolha o tipo do seu gênio patrono",
+        "requires": {
+          "patron": "genio"
+        },
+        "options": [
+          {
+            "value": "dao",
+            "name": "Dao (terra)",
+            "desc": "Gênio da terra. Ira do Gênio causa dano contundente; magias adicionais ligadas a pedra/terra. Resistência a contundente no nv6."
+          },
+          {
+            "value": "djinni",
+            "name": "Djinni (ar)",
+            "desc": "Gênio do ar. Ira do Gênio causa dano trovejante; magias adicionais ligadas a vento/ilusão. Resistência a trovejante no nv6."
+          },
+          {
+            "value": "ifriti",
+            "name": "Ifrit (fogo)",
+            "desc": "Gênio do fogo. Ira do Gênio causa dano ígneo; magias adicionais de fogo. Resistência a ígneo no nv6."
+          },
+          {
+            "value": "marid",
+            "name": "Marid (água)",
+            "desc": "Gênio da água. Ira do Gênio causa dano ácido; magias adicionais de frio/água. Resistência a ácido no nv6."
+          }
+        ]
+      }
+    ]
+  },
+  "patrulheiro": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "ranger_archetype",
+        "featureName": "Arquétipo de Patrulheiro",
+        "prompt": "Escolha seu Arquétipo de Patrulheiro",
+        "options": [
+          {
+            "value": "andarilho_feerico",
+            "name": "Andarilho Feérico",
+            "combat": "essencial",
+            "desc": "Você foi tocado pela magia de Faéria — encanto sobrenatural, passos enganosos e golpes assombrados.\n\nFeatures por nível:\n• Nv 3 — Magias do Andarilho sempre preparadas (níveis 3/5/9/13/17). Golpes Temíveis: 1×/turno, +1d4 de dano psíquico nos seus ataques com arma. Dádiva de Faéria: ganha proficiência (e depois expertise) em Enganação, Persuasão ou Intimidação, somando o mod. de Sabedoria a esses testes.\n• Nv 7 — Distorção Sedutora: vantagem em TR contra ser enfeitiçado/amedrontado; e quando passa nesse TR, pode redirecionar o efeito ao conjurador (reação).\n• Nv 11 — Reforços Feéricos: conjura Invocar Fada 1×/descanso longo sem gastar espaço nem concentração.\n• Nv 15 — Andarilho Nebuloso: conjura Passo Nebuloso 1×/descanso curto sem gastar espaço, podendo levar uma criatura voluntária junto."
+          },
+          {
+            "value": "portador_do_enxame",
+            "name": "Portador do Enxame",
+            "combat": "essencial",
+            "desc": "Espíritos da natureza em forma de enxame se vincularam a você, ajudando em combate e movimento.\n\nFeatures por nível:\n• Nv 3 — Magias do Portador sempre preparadas (níveis 3/5/9/13/17). Enxame Reunido: 1×/turno, ao acertar com um ataque, o enxame causa +1d6 de dano de força e, à sua escolha, move o alvo 4,5m ou move você 1,5m sem provocar ataques de oportunidade.\n• Nv 7 — Maré Serpenteante: ação bônus pra o enxame te carregar 3m horizontalmente (sem provocar ataques de oportunidade). Usos = bônus de proficiência.\n• Nv 11 — Enxame Poderoso: o Enxame Reunido vira 1d8, pode derrubar o alvo, e move criaturas maiores.\n• Nv 15 — Dispersão do Enxame: resistência a dano; quando sofre dano, reação pra ficar invisível e teleportar 9m, dissolvendo-se no enxame."
+          }
+        ]
+      }
+    ]
   }
 }

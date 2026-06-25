@@ -1,0 +1,53 @@
+[
+  {
+    "index": "farpa-mental",
+    "name": "Farpa Mental",
+    "level": 0,
+    "school": "encantamento",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "18 metros",
+    "components": "V",
+    "material": "",
+    "duration": "1 rodada",
+    "concentration": false,
+    "desc": "Você direciona um espinho desorientador de energia psíquica para a mente de uma criatura que possa ver dentro do alcance. O alvo deve ser bem-sucedido em uma salvaguarda de Inteligência ou sofre 1d6 de dano psíquico e subtrai 1d4 da próxima salvaguarda que realizar antes do final do seu próximo turno.",
+    "higher_level": "O dano aumenta em 1d6 ao alcançar o 5º nível (2d6), o 11º nível (3d6) e o 17º nível (4d6).",
+    "source": "tasha",
+    "classes": ["feiticeiro", "bruxo", "mago"]
+  },
+  {
+    "index": "invocar-aberracao",
+    "name": "Invocar Aberração",
+    "level": 4,
+    "school": "conjuração",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "27 metros",
+    "components": "V, S, M",
+    "material": "um tentáculo em conserva e um globo ocular em um frasco banhado em platina no valor mínimo de 400 po",
+    "duration": "Concentração, até 1 hora",
+    "concentration": true,
+    "desc": "Você convoca um espírito aberrante, que se manifesta num espaço desocupado a sua vista dentro do alcance, usando o bloco de estatísticas do Espírito Aberrante. Ao conjurar, escolha Observador, Slaad ou Prole Estelar, o que determina algumas características da criatura. Ela é aliada a você e seus companheiros, age logo após seu turno na sua iniciativa e obedece a seus comandos verbais. Espírito Aberrante (Aberração Média): CA 11 + círculo da magia; PV 40 + 10 por círculo acima do 4º; deslocamento 9m (voo 9m só Observador); imune a dano psíquico. Ataques Múltiplos = metade do círculo. Slaad (Garras, 1d10+3+círculo cortante, impede cura); Observador (Raio Ocular à distância, 1d8+3+círculo psíquico); Prole Estelar (Pancada Psíquica 1d8+3+círculo psíquico, e Aura Sussurrante).",
+    "higher_level": "Ao usar um espaço de 5º círculo ou superior, use o círculo mais alto sempre que o bloco de estatísticas referenciar o círculo da magia.",
+    "source": "tasha",
+    "classes": ["bruxo", "feiticeiro", "mago"]
+  },
+  {
+    "index": "invocar-construto",
+    "name": "Invocar Construto",
+    "level": 4,
+    "school": "conjuração",
+    "ritual": false,
+    "casting_time": "1 ação",
+    "range": "27 metros",
+    "components": "V, S, M",
+    "material": "uma pedra ornamentada e um cofre no valor de 400 po",
+    "duration": "Concentração, até 1 hora",
+    "concentration": true,
+    "desc": "Você convoca um espírito mecânico, que se manifesta num espaço desocupado a sua vista dentro do alcance, usando o bloco de estatísticas do Espírito Mecânico. Ao conjurar, escolha Argila, Metal ou Pedra. A criatura é aliada a você e seus companheiros, age logo após seu turno na sua iniciativa e obedece a seus comandos verbais. Espírito Mecânico (Construto Médio): CA 13 + círculo da magia; PV 40 + 15 por círculo acima do 3º; resistência a dano venenoso; imune a várias condições. Ataques Múltiplos = metade do círculo. Pancada (1d8+4+círculo contundente). Metal (Corpo Aquecido, 1d10 de fogo a quem o toca); Pedra (Letargia Pétrea, reduz deslocamento/reações); Argila (Surto Furioso, ataca ao sofrer dano).",
+    "higher_level": "Ao usar um espaço de 4º círculo ou superior, use o círculo mais alto sempre que o bloco de estatísticas referenciar o círculo da magia.",
+    "source": "tasha",
+    "classes": ["artífice", "mago", "feiticeiro"]
+  }
+]

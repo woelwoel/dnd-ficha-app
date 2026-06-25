@@ -15,6 +15,7 @@ const DATASETS = {
   classesTasha:      { pt: 'tasha-classes-pt.json',        fallback: null,                      lazy: false },
   backgrounds:       { pt: 'phb-backgrounds-pt.json',      fallback: '5e-SRD-Backgrounds.json', lazy: false },
   spells:            { pt: 'phb-spells-pt.json',           fallback: null,                      lazy: false },
+  spellsTasha:       { pt: 'tasha-spells-pt.json',         fallback: null,                      lazy: false },
   levels:            { pt: '5e-SRD-Levels.json',           fallback: null,                      lazy: false },
   progression:       { pt: 'phb-class-progression-pt.json', fallback: null,                     lazy: false },
   progressionTasha:  { pt: 'tasha-class-progression-pt.json', fallback: null,                    lazy: false },
@@ -35,6 +36,7 @@ const DATASETS = {
 const COMPOSED = {
   feats:        { strategy: 'array',  parts: [['feats', 'phb'], ['featsTasha', 'tasha']] },
   classes:      { strategy: 'array',  parts: [['classes', 'phb'], ['classesTasha', 'tasha']] },
+  spells:       { strategy: 'array',  parts: [['spells', 'phb'], ['spellsTasha', 'tasha']] },
   classChoices: { strategy: 'classChoices', parts: [['classChoices', 'phb'], ['classChoicesTasha', 'tasha']] },
   progression:  { strategy: 'object', parts: [['progression', 'phb'], ['progressionTasha', 'tasha']] },
   infusions:    { strategy: 'array',  parts: [['infusionsTasha', 'tasha']] },

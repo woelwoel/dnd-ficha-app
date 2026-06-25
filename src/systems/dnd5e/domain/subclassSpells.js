@@ -185,6 +185,77 @@ const WARLOCK_PATRON_SPELLS = {
     ['dominar-besta',             'tentaculos-negros-de-evard'],// 7
     ['dominar-pessoa',            'telecinesia'],               // 9
   ],
+  // O Insondável — Fathomless (Tasha's p.30) — source: tasha
+  insondavel: [
+    ['criar-ou-destruir-agua', 'onda-trovejante'],   // 1
+    ['lufada-de-vento',        'silencio'],           // 3
+    ['nevasca',                'relampago'],          // 5 (Sleet Storm, Lightning Bolt)
+    ['controlar-agua',         'conjurar-elemental'], // 7 (Invocar Elemental → Conjure Elemental, água)
+    ['cone-de-frio',           'mao-de-bigby'],       // 9 (Cone of Cold, Bigby's Hand)
+  ],
+}
+
+/* ── O Gênio — The Genie (Tasha's p.31) — source: tasha ─────────────
+ * Lista expandida = base (sempre) + magias do tipo de gênio escolhido
+ * (bruxo_genie_kind: dao/djinni/ifriti/marid). Combinadas por tier
+ * [níveis de bruxo 1/3/5/7/9 = círculos 1–5] no branch do bruxo.
+ * OMITIDA: Mesclar-se às Rochas (Meld into Stone, Dao 3º círculo) — magia
+ * PHB ausente do catálogo; restaurar quando o catálogo base for completado. */
+const GENIE_BASE = [
+  ['detectar-o-bem-e-mal'],     // 1 (Detect Evil and Good)
+  ['forca-fantasmagorica'],     // 3 (Phantasmal Force)
+  ['criar-alimentos'],          // 5 (Create Food and Water)
+  ['assassino-fantasmagorico'], // 7 (Phantasmal Killer)
+  ['criacao'],                  // 9 (Creation)
+]
+const GENIE_KIND = {
+  dao:    [['santuario'], ['crescer-espinhos'], [], ['moldar-rochas'], ['muralha-de-pedra']],
+  djinni: [['onda-trovejante'], ['lufada-de-vento'], ['muralha-de-vento'], ['invisibilidade-maior'], ['similaridade']],
+  ifriti: [['maos-flamejantes'], ['raio-ardente'], ['bola-de-fogo'], ['escudo-de-fogo'], ['coluna-de-chamas']],
+  marid:  [['nublar'], ['nublar'], ['nevasca'], ['controlar-agua'], ['cone-de-frio']],
+}
+
+/* ── Origens de Feiticeiro de Tasha (p.46) — tiers 1/3/5/7/9 ────────
+ * Magias Psiônicas (Mente Aberrante) e Cronométricas (Alma Cronométrica):
+ * "sempre contam como magias de feiticeiro e estão sempre conhecidas, sem
+ * contar pro limite" → tratadas como GRUPO A (alwaysPrepared). */
+const SORCERER_ORIGIN_LEVELS = [1, 3, 5, 7, 9]
+const SORCERER_ORIGIN_SPELLS = {
+  mente_aberrante: [
+    ['bracos-de-hadar', 'farpa-mental', 'sussurros-dissonantes'], // 1 (inclui truque Farpa Mental)
+    ['acalmar-emocoes', 'detectar-pensamentos'],                  // 3
+    ['fome-de-hadar',   'enviar-mensagem'],                       // 5 (Hunger of Hadar, Sending)
+    ['invocar-aberracao','tentaculos-negros-de-evard'],           // 7
+    ['ligacao-telepatica-de-rary', 'telecinesia'],                // 9
+  ],
+  alma_cronometrica: [
+    ['alarme',          'protecao-contra-o-bem-e-mal'],           // 1
+    ['auxilio-divino',  'restauracao-menor'],                     // 3 (Aid, Lesser Restoration)
+    ['dissipar-magia',  'protecao-contra-energia'],               // 5
+    ['invocar-construto','movimentacao-livre'],                   // 7 (Summon Construct, Freedom of Movement)
+    ['muralha-de-energia','restauracao-maior'],                   // 9
+  ],
+}
+
+/* ── Arquétipos de Patrulheiro de Tasha (p.51) — tiers 3/5/9/13/17 ──
+ * Magias do arquétipo: sempre preparadas, não contam pro limite. Só
+ * magias PHB (todas já no catálogo). */
+const RANGER_ARCHETYPE_LEVELS = [3, 5, 9, 13, 17]
+const RANGER_ARCHETYPE_SPELLS = {
+  andarilho_feerico: [
+    ['enfeiticar-pessoa'],  // 3 (Charm Person)
+    ['passo-nebuloso'],     // 5 (Misty Step)
+    ['dissipar-magia'],     // 9
+    ['porta-dimensional'],  // 13 (Dimension Door)
+    ['despistar'],          // 17 (Mislead)
+  ],
+  portador_do_enxame: [
+    ['fogo-das-fadas', 'maos-magicas'], // 3 (Faerie Fire, Mage Hand truque)
+    ['teia'],                            // 5 (Web)
+    ['forma-gasosa'],                    // 9
+    ['olho-arcano'],                     // 13 (Arcane Eye)
+    ['praga-de-insetos'],                // 17 (Insect Plague)
+  ],
 }
 
 /* ── Artificer Specialization Spells (Tasha's p.14-18) — tiers 3, 5, 9, 13, 17
@@ -309,11 +380,39 @@ export function getSubclassSpellsForLevel({ classIndex, chosenFeatures, classLev
     // de conhecidas. UX-wise isso é equivalente a "always available / doesn't
     // count" — usamos alwaysPrepared=true (que a UI já trata excluindo do
     // contador). O label indica fonte ("Patrono: feerico").
+    // O Gênio combina lista base + magias do tipo de gênio escolhido.
+    const indices = patron === 'genio'
+      ? [...(GENIE_BASE[tier] ?? []), ...(GENIE_KIND[chosenFeatures.bruxo_genie_kind]?.[tier] ?? [])]
+      : (WARLOCK_PATRON_SPELLS[patron]?.[tier] ?? [])
     return {
-      indices: WARLOCK_PATRON_SPELLS[patron]?.[tier] ?? [],
+      indices,
       alwaysPrepared: true,
       source: 'patron',
       label: labelFor(classIndex, patron),
+    }
+  }
+
+  if (classIndex === 'feiticeiro') {
+    const origin = chosenFeatures.sorcerous_origin
+    if (!origin || !SORCERER_ORIGIN_LEVELS.includes(classLevel)) return { indices: [] }
+    const tier = SORCERER_ORIGIN_LEVELS.indexOf(classLevel)
+    return {
+      indices: SORCERER_ORIGIN_SPELLS[origin]?.[tier] ?? [],
+      alwaysPrepared: true,
+      source: 'origin',
+      label: `Origem: ${origin}`,
+    }
+  }
+
+  if (classIndex === 'patrulheiro') {
+    const archetype = chosenFeatures.ranger_archetype
+    if (!archetype || !RANGER_ARCHETYPE_LEVELS.includes(classLevel)) return { indices: [] }
+    const tier = RANGER_ARCHETYPE_LEVELS.indexOf(classLevel)
+    return {
+      indices: RANGER_ARCHETYPE_SPELLS[archetype]?.[tier] ?? [],
+      alwaysPrepared: true,
+      source: 'archetype',
+      label: `Arquétipo: ${archetype}`,
     }
   }
 
