@@ -8,6 +8,9 @@ function Probe() {
     <div>
       <div data-testid="classes">{(classes ?? []).map(c => `${c.index}:${c.source}`).join(',')}</div>
       <div data-testid="choices">{Object.keys(classChoices ?? {}).sort().join(',')}</div>
+      <div data-testid="druid-circle">
+        {(classChoices?.druida?.choices?.[0]?.options ?? []).map(o => `${o.value}:${o.source ?? 'phb'}`).join(',')}
+      </div>
     </div>
   )
 }
@@ -18,8 +21,8 @@ beforeEach(() => {
     const body =
       u.includes('phb-classes')             ? [{ index: 'druida', name: 'Druida' }] :
       u.includes('tasha-classes')           ? [{ index: 'artifice', name: 'Artífice', source: 'tasha' }] :
-      u.includes('phb-class-choices')       ? { druida: { choices: [] } } :
-      u.includes('tasha-class-choices')     ? { artifice: { choices: [] } } :
+      u.includes('phb-class-choices')       ? { druida: { choices: [{ level: 2, id: 'circle', options: [{ value: 'terra', name: 'Terra' }] }] } } :
+      u.includes('tasha-class-choices')     ? { druida: { choices: [{ level: 2, id: 'circle', options: [{ value: 'estrelas', name: 'Estrelas' }] }] }, artifice: { choices: [] } } :
       u.includes('phb-class-progression')   ? { druida: { levels: [] } } :
       u.includes('tasha-class-progression') ? { artifice: { levels: [] } } :
       // demais datasets do boot retornam vazio compatível
@@ -35,6 +38,7 @@ describe('SrdProvider — datasets compostos no boot', () => {
       expect(screen.getByTestId('classes').textContent).toContain('druida:phb')
       expect(screen.getByTestId('classes').textContent).toContain('artifice:tasha')
       expect(screen.getByTestId('choices').textContent).toBe('artifice,druida')
+      expect(screen.getByTestId('druid-circle').textContent).toBe('terra:phb,estrelas:tasha')
     })
   })
 })

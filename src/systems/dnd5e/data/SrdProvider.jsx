@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { tagSource } from '../domain/sources'
+import { mergeClassChoices } from '../domain/mergeClassChoices'
 
 /**
  * Cache de módulo para datasets SRD. Persiste entre remounts e tabs do
@@ -34,7 +35,7 @@ const DATASETS = {
 const COMPOSED = {
   feats:        { strategy: 'array',  parts: [['feats', 'phb'], ['featsTasha', 'tasha']] },
   classes:      { strategy: 'array',  parts: [['classes', 'phb'], ['classesTasha', 'tasha']] },
-  classChoices: { strategy: 'object', parts: [['classChoices', 'phb'], ['classChoicesTasha', 'tasha']] },
+  classChoices: { strategy: 'classChoices', parts: [['classChoices', 'phb'], ['classChoicesTasha', 'tasha']] },
   progression:  { strategy: 'object', parts: [['progression', 'phb'], ['progressionTasha', 'tasha']] },
   infusions:    { strategy: 'array',  parts: [['infusionsTasha', 'tasha']] },
 }
@@ -52,6 +53,10 @@ async function loadComposed(name) {
   )
   if (def.strategy === 'array') {
     return loaded.flatMap(([code, data]) => tagSource(Array.isArray(data) ? data : [], code))
+  }
+  if (def.strategy === 'classChoices') {
+    const map = Object.fromEntries(loaded) // { phb: <obj>, tasha: <obj> }
+    return mergeClassChoices(map.phb, map.tasha, 'tasha')
   }
   return Object.assign({}, ...loaded.map(([, data]) => (data && typeof data === 'object' && !Array.isArray(data) ? data : {})))
 }
