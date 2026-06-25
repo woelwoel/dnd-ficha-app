@@ -58,7 +58,9 @@
         "id": "barbaro_beast_form",
         "featureName": "Forma da Besta (nv 3)",
         "prompt": "Escolha a arma natural que se manifesta ao entrar em Fúria",
-        "requires": { "primal_path": "besta" },
+        "requires": {
+          "primal_path": "besta"
+        },
         "options": [
           {
             "value": "mordida",
@@ -74,6 +76,173 @@
             "value": "cauda",
             "name": "Cauda",
             "desc": "1d8 de dano cortante com alcance de 3m. Como reação ao ser atingido por um ataque, adiciona 1d8 à sua CA contra aquele ataque (podendo transformar acerto em erro). Opção defensiva/alcance."
+          }
+        ]
+      }
+    ]
+  },
+  "bardo": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "bard_college",
+        "featureName": "Colégio de Bardos",
+        "prompt": "Escolha seu Colégio de Bardos",
+        "options": [
+          {
+            "value": "criacao",
+            "name": "Colégio da Criação",
+            "combat": "essencial",
+            "desc": "O Colégio da Criação recorre à Canção da Criação, a melodia primordial que deu forma ao cosmos, canalizando-a em dança, música e poesia.\n\nFeatures por nível:\n• Nv 3 — Partícula de Potencial: ao conceder Inspiração de Bardo, gera uma partícula que orbita o alvo. Quando o dado é usado, dá um efeito extra conforme a rolagem: teste de habilidade → rola o dado de novo e escolhe; jogada de ataque → alvo e criaturas a 1,5m fazem TR de Constituição ou sofrem dano trovejante igual ao dado; salvaguarda → ganha PV temporários (dado + mod. CAR).\n• Nv 3 — Execução da Criação: como ação, cria um item não-mágico (valor até 20×nível de bardo; Médio ou menor) que dura horas = bônus de proficiência. 1×/descanso longo grátis, ou gastando espaço de 2º+ círculo. Tamanho sobe pra Grande (nv6) e Enorme (nv14).\n• Nv 6 — Espetáculo Animado: como ação, anima um item não-mágico Grande ou menor (bloco do Item Dançante, aliado) por 1 hora. 1×/descanso longo grátis, ou gastando espaço de 3º+ círculo.\n• Nv 14 — Crescendo Criativo: a Execução da Criação cria vários itens (até mod. CAR, mínimo 2; só um no tamanho máximo) e sem limite de valor em ouro."
+          },
+          {
+            "value": "eloquencia",
+            "name": "Colégio da Eloquência",
+            "combat": "essencial",
+            "desc": "O Colégio da Eloquência domina a oratória, misturando lógica e jogos de palavras teatrais para conquistar qualquer plateia.\n\nFeatures por nível:\n• Nv 3 — Língua Prateada: em testes de Carisma (Persuasão) ou Carisma (Enganação), trate uma rolagem de 9 ou menos no d20 como 10.\n• Nv 3 — Palavras Desconcertantes: como ação bônus, gasta um uso de Inspiração de Bardo e escolhe uma criatura a 18m; ela subtrai o dado de Inspiração da próxima salvaguarda que fizer antes do seu próximo turno.\n• Nv 6 — Inspiração Infalível: quando uma criatura usa seu dado de Inspiração e a rolagem falha, ela mantém o dado.\n• Nv 6 — Língua Universal: como ação, até mod. CAR criaturas a 18m passam a compreendê-lo magicamente por 1 hora. 1×/descanso longo grátis, ou gastando espaço de magia.\n• Nv 14 — Inspiração Contagiante: quando uma criatura a 18m usa um dado de Inspiração e tem sucesso, você usa a reação pra conceder um dado de Inspiração a outra criatura, sem gastar usos."
+          }
+        ]
+      }
+    ]
+  },
+  "guerreiro": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "martial_archetype",
+        "featureName": "Arquétipo Marcial",
+        "prompt": "Escolha seu Arquétipo Marcial",
+        "options": [
+          {
+            "value": "guerreiro-psionico",
+            "name": "Guerreiro Psiônico",
+            "combat": "essencial",
+            "desc": "O Guerreiro Psiônico reforça a proeza física com energia psíquica: golpes infundidos, chicotadas telecinéticas e barreiras de força mental.\n\nFeatures por nível:\n• Nv 3 — Poder Psíquico: você tem dados de Energia Psíquica (d6; quantidade = 2× bônus de proficiência; sobe pra d8/d10/d12 nos níveis 5/11/17). Recupera todos no descanso longo e 1 por descanso curto (ação bônus). Poderes: Campo Protetor (reação, reduz dano a você/aliado a 9m em dado + mod. INT); Golpe Psiônico (1×/turno, dano de força extra = dado + mod. INT); Movimento Telecinético (ação, move objeto/criatura a 9m).\n• Nv 7 — Adepto Telecinético: Salto Telecinético (ação bônus, voo = 2× deslocamento) e Empurrão Telecinético (Golpe Psiônico pode derrubar ou empurrar 3m, TR de Força).\n• Nv 10 — Mente Protegida: resistência a dano psíquico; gasta um dado pra encerrar amedrontado/enfeitiçado no início do turno.\n• Nv 15 — Baluarte Telecinético: ação bônus, até mod. INT criaturas a 9m (incl. você) ganham meia-cobertura por 1 minuto.\n• Nv 18 — Mestre Telecinético: conjura Telecinésia (INT, sem componentes) e ataca como ação bônus enquanto concentra."
+          },
+          {
+            "value": "cavaleiro-runico",
+            "name": "Cavaleiro Rúnico",
+            "combat": "essencial",
+            "desc": "O Cavaleiro Rúnico aprimora a maestria marcial com runas mágicas dos gigantes, gravadas em equipamento e invocadas em combate.\n\nFeatures por nível:\n• Nv 3 — Proficiências Bônus: proficiência com ferramentas de artesão; fala, lê e escreve em Gigante.\n• Nv 3 — Entalhador de Runas: aprende runas (escolha na subescolha; 2 no nv3, +1 nos níveis 7/10/15). Grava uma runa em cada objeto que vista/carregue no descanso longo; cada runa dá um benefício passivo e um efeito invocado (1×/descanso curto). CD = 8 + prof. + mod. CON.\n• Nv 3 — Poderio Gigante: ação bônus, por 1 minuto fica Grande, com vantagem em testes/TR de Força e +1d6 de dano 1×/turno. Usos = bônus de proficiência por descanso longo.\n• Nv 7 — Escudo Rúnico: reação, força um atacante a re-rolar o d20 contra um aliado a 18m. Usos = prof.\n• Nv 10 — Grande Estatura: cresce 3d4×2,5cm; o dano do Poderio Gigante vira 1d8.\n• Nv 15 — Mestre das Runas: pode invocar cada runa 2×.\n• Nv 18 — Colosso Rúnico: dano do Poderio Gigante vira 1d10 e o tamanho pode subir pra Enorme (+1,5m de alcance)."
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "id": "guerreiro_rune_knight_runes",
+        "featureName": "Runas (Cavaleiro Rúnico)",
+        "prompt": "Escolha suas runas mágicas",
+        "requires": {
+          "martial_archetype": "cavaleiro-runico"
+        },
+        "multiSelectByLevel": {
+          "3": 2,
+          "7": 3,
+          "10": 4,
+          "15": 5
+        },
+        "options": [
+          {
+            "value": "nuvem",
+            "name": "Runa da Nuvem",
+            "desc": "Passiva: vantagem em Destreza (Prestidigitação) e Carisma (Enganação). Invocada (reação, quando você ou alguém a 9m é acertado): transfere o ataque pra outra criatura a 9m que não o atacante, usando a mesma jogada."
+          },
+          {
+            "value": "fogo",
+            "name": "Runa do Fogo",
+            "desc": "Passiva: dobra o bônus de proficiência em testes com ferramentas. Invocada (ao acertar com arma): alvo sofre 2d6 de fogo e, falhando em TR de Força, fica impedido por 1 min (2d6 de fogo no início de cada turno dele; repete o TR ao fim de cada turno)."
+          },
+          {
+            "value": "gelo",
+            "name": "Runa do Gelo",
+            "desc": "Passiva: vantagem em Sabedoria (Lidar com Animais) e Carisma (Intimidação). Invocada (ação bônus): por 10 min, +2 em todos os testes e TR de Força ou Constituição."
+          },
+          {
+            "value": "pedra",
+            "name": "Runa da Pedra",
+            "desc": "Passiva: vantagem em Sabedoria (Intuição) e visão no escuro 36m. Invocada (reação, quando criatura termina o turno a 9m): TR de Sabedoria ou fica enfeitiçada por 1 min (deslocamento 0, incapacitada; repete o TR ao fim de cada turno)."
+          },
+          {
+            "value": "colina",
+            "name": "Runa da Colina (nv 7+)",
+            "desc": "Passiva: vantagem em TR contra veneno e resistência a dano venenoso. Invocada (ação bônus): resistência a dano cortante, perfurante e contundente por 1 min."
+          },
+          {
+            "value": "tempestade",
+            "name": "Runa da Tempestade (nv 7+)",
+            "desc": "Passiva: vantagem em Inteligência (Arcanismo) e não pode ser surpreendido. Invocada (ação bônus): estado profético por 1 min — reação pra dar vantagem/desvantagem em jogadas de ataque, TR ou testes de criaturas a 18m."
+          }
+        ]
+      }
+    ]
+  },
+  "monge": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "monastic_tradition",
+        "featureName": "Tradição Monástica",
+        "prompt": "Escolha sua Tradição Monástica",
+        "options": [
+          {
+            "value": "misericordia",
+            "name": "Caminho da Misericórdia",
+            "combat": "essencial",
+            "desc": "Monges do Caminho da Misericórdia manipulam a força vital para curar os necessitados — ou trazer um fim rápido àqueles além de ajuda.\n\nFeatures por nível:\n• Nv 3 — Implementos da Misericórdia: proficiência em Intuição, Medicina e kit de herbalismo (+ máscara da subclasse).\n• Nv 3 — Mãos Curativas: como ação, gasta 1 ki pra tocar uma criatura e curar (dado de Artes Marciais + mod. SAB). Durante a Torrente de Golpes, pode substituir um ataque por um uso sem gastar ki.\n• Nv 3 — Mãos da Injúria: ao acertar com ataque desarmado, gasta 1 ki pra causar dano necrótico extra (dado de Artes Marciais + mod. SAB), 1×/turno.\n• Nv 6 — Toque do Curandeiro: Mãos Curativas também remove uma doença/condição (atordoado, cego, ensurdecido, envenenado ou paralisado); Mãos da Injúria também deixa o alvo envenenado até seu próximo turno.\n• Nv 11 — Torrente de Cura e Dor: durante a Torrente de Golpes, substitui cada ataque por Mãos Curativas sem gastar ki, e usa Mãos da Injúria sem gastar ki (ainda 1×/turno).\n• Nv 17 — Mão da Misericórdia Final: como ação, toca uma criatura morta há até 24h e gasta 5 ki pra revivê-la com 4d10 + mod. SAB PV. 1×/descanso longo."
+          },
+          {
+            "value": "forma-astral",
+            "name": "Caminho da Forma Astral",
+            "combat": "essencial",
+            "desc": "Monges do Caminho da Forma Astral veem o corpo como ilusão e o ki como sua forma verdadeira — manifestada em braços, semblante e corpo espectrais.\n\nFeatures por nível:\n• Nv 3 — Braços da Forma Astral: ação bônus, gasta 1 ki; criaturas a 3m fazem TR de Destreza ou sofrem 2 dados de Artes Marciais de energia. Por 10 min, ganha braços espectrais: usa SAB no lugar de FOR; ataca com eles com +1,5m de alcance, usando SAB nas rolagens (dano de energia).\n• Nv 6 — Semblante da Forma Astral: ação bônus (ou junto dos Braços), gasta 1 ki por 10 min: visão no escuro 36m, vantagem em Intuição e Intimidação, e voz direcionada (1 criatura a 18m) ou amplificada (180m).\n• Nv 11 — Corpo Astral: com braços e semblante ativos, manifesta o corpo (sem ação): Defletir Energia (reação, reduz dano ácido/gélido/ígneo/elétrico/trovejante/de energia em 1d10 + mod. SAB) e dano extra (dado de Artes Marciais 1×/turno ao acertar com os braços).\n• Nv 17 — Forma Astral Desperta: ação bônus, gasta 5 ki pra invocar tudo por 10 min: +2 de CA e, ao usar Ataque Extra, um terceiro ataque se todos forem com os braços astrais."
+          }
+        ]
+      }
+    ]
+  },
+  "ladino": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "roguish_archetype",
+        "featureName": "Arquétipo Ladino",
+        "prompt": "Escolha seu Arquétipo Ladino",
+        "options": [
+          {
+            "value": "fantasma",
+            "name": "Fantasma",
+            "combat": "essencial",
+            "desc": "O Fantasma descobre uma conexão mística com a morte, imergindo em energia negativa e coletando ecos das almas dos que tombam.\n\nFeatures por nível:\n• Nv 3 — Sussurros da Morte: ao terminar um descanso, ganha uma proficiência com ferramenta ou perícia que não possua (perde ao escolher outra).\n• Nv 3 — Lamentos da Sepultura: após causar dano com Ataque Furtivo, atinge uma 2ª criatura a 9m da primeira com metade dos dados de Furtivo (arredondado pra cima) de dano necrótico. Usos = bônus de proficiência por descanso longo.\n• Nv 9 — Símbolos dos Mortos: como reação, quando uma criatura morre a 9m, ganha um berloque da alma (até prof.). Com um berloque: vantagem em TR de Constituição e testes de morte; consome pra usar Lamentos sem gastar uso; ou destrói (ação) pra interrogar o espírito.\n• Nv 13 — Passo Fantasma: ação bônus, forma espectral por 10 min — voo 3m, atravessa criaturas/objetos (1d10 de energia se terminar dentro), ataques contra você com desvantagem. Reusa gastando descanso longo ou destruindo um berloque.\n• Nv 17 — Amigo da Morte: Lamentos da Sepultura causa dano nas duas criaturas; e ganha um berloque da alma no fim do descanso longo se estiver sem nenhum."
+          },
+          {
+            "value": "alma-laminada",
+            "name": "Alma Laminada",
+            "combat": "essencial",
+            "desc": "A Alma Laminada golpeia e se infiltra com a mente, manifestando o poder psiônico como lâminas de energia.\n\nFeatures por nível:\n• Nv 3 — Poder Psíquico: dados de Energia Psíquica (d6; = 2× bônus de proficiência; sobem pra d8/d10/d12 nos níveis 5/11/17). Auxílio Psíônico (soma um dado a um teste com perícia/ferramenta proficiente; gasta só se passar) e Sussurros Psíquicos (telepatia com várias criaturas; 1ª vez/descanso longo é grátis).\n• Nv 3 — Lâminas Psíquicas: ao usar a ação de Ataque, manifesta uma lâmina (arma simples corpo a corpo, Acuidade e Arremesso, dano psíquico); pode atacar com a 2ª lâmina como ação bônus (d4 em vez de d6).\n• Nv 9 — Lâminas da Alma: Golpe Teleguiado (gasta dado pra somar ao ataque e transformar erro em acerto) e Teletransporte Psíquico (ação bônus, teleporta até 3× o dado em metros).\n• Nv 13 — Véu Psíquico: como ação, fica invisível por 1 hora (acaba ao causar dano/forçar TR). 1×/descanso longo, ou gastando um dado.\n• Nv 17 — Mente Pura: ao causar dano de Ataque Furtivo com as Lâminas, TR de Sabedoria (CD 8 + prof. + mod. DES) ou o alvo fica atordoado por 1 min (repete ao fim de cada turno). 1×/descanso longo, ou gastando um dado."
+          }
+        ]
+      }
+    ]
+  },
+  "mago": {
+    "choices": [
+      {
+        "level": 2,
+        "id": "arcane_tradition",
+        "featureName": "Tradição Arcana",
+        "prompt": "Escolha sua Tradição Arcana",
+        "options": [
+          {
+            "value": "lamina-cantante",
+            "name": "Lâmina Cantante",
+            "combat": "essencial",
+            "desc": "A Lâmina Cantante incorpora o manejo das espadas e a dança à magia, repelindo danos e canalizando feitiços em ataques elegantes.\n\nFeatures por nível:\n• Nv 2 — Treinamento na Guerra e na Música: proficiência com armaduras leves, uma arma corpo a corpo de uma mão à escolha e a perícia Atuação.\n• Nv 2 — Canção da Lâmina: ação bônus (sem armadura média/pesada nem escudo), por 1 minuto: +CA = mod. INT (mín. +1); +3m de deslocamento; vantagem em Acrobacia; +mod. INT nos TR de Constituição pra manter concentração. Usos = bônus de proficiência por descanso curto/longo.\n• Nv 6 — Ataque Extra: ataca 2× na ação de Ataque; pode trocar um ataque por um truque.\n• Nv 10 — Canção da Defesa: durante a Canção da Lâmina, reação ao sofrer dano pra gastar um espaço de magia e reduzir o dano em 5× o círculo do espaço.\n• Nv 14 — Canção da Vitória: durante a Canção da Lâmina, soma o mod. INT (mín. +1) ao dano dos ataques corpo a corpo."
+          },
+          {
+            "value": "ordem-dos-escribas",
+            "name": "Ordem dos Escribas",
+            "combat": "essencial",
+            "desc": "A Ordem dos Escribas é a mais estudiosa das tradições: desperta magicamente o próprio livro de magias, transformando-o num companheiro consciente.\n\nFeatures por nível:\n• Nv 2 — Pena Mágica: ação bônus pra criar uma pena que não precisa de tinta, copia magias em 2 min/círculo e apaga o que você escreveu.\n• Nv 2 — Livro de Magia Desperto: foco de conjuração; ao conjurar com espaço, pode trocar o tipo de dano da magia pelo de outra do mesmo círculo no grimório; conjura rituais sem o +10 min (1×/descanso longo). Pode migrar a consciência pra um novo livro num descanso curto.\n• Nv 6 — Manifestar Mente: ação bônus pra invocar a mente do livro como objeto espectral Minúsculo a 18m (vê/ouve, visão no escuro, telepatia). Pode conjurar magias a partir da posição dela. Usos = bônus de proficiência por descanso longo.\n• Nv 10 — Mestre Escriba: ao descansar (longo), cria um pergaminho de magia (1º/2º círculo, ação) tocando a Pena no papel; a magia conta um círculo acima. Cria pergaminhos de magia pela metade do custo/tempo.\n• Nv 14 — Um com a Palavra: vantagem em Inteligência (Arcanismo) com o livro; e, com a Mente Manifesta ativa, reação pra prevenir todo o dano sofrido fazendo a mente sumir (perde magias temporariamente; role 3d6 pra o custo em círculos)."
           }
         ]
       }
