@@ -29,15 +29,13 @@ export function CharacterToken({ character, onSelect, onDragStart }) {
   const [hovered, setHovered] = useState(false)
   const buttonRef = useRef(null)
 
-  const { id, info = {}, position = { x: 0.5, y: 0.5 } } = character
+  const { id, info = {}, position = { x: 0.5, y: 0.5 }, revealed = true } = character
   const lv = info.level ?? 1
   const romanLv = toRoman(lv)
 
-  const ariaLabel = [
-    info.name || 'Personagem',
-    info.class,
-    `nível ${lv}`,
-  ].filter(Boolean).join(', ')
+  const ariaLabel = revealed
+    ? [info.name || 'Personagem', info.class, `nível ${lv}`].filter(Boolean).join(', ')
+    : (info.name || 'Personagem')
 
   function handlePointerDown(e) {
     if (onDragStart) onDragStart(e, id)
@@ -73,12 +71,14 @@ export function CharacterToken({ character, onSelect, onDragStart }) {
         <span className="absolute inset-0 grid place-items-center">
           <ClassIcon classKey={info.class} size={32} />
         </span>
-        <span
-          aria-hidden="true"
-          className="token-level absolute -bottom-1 -right-1 rounded-full grid place-items-center font-bold w-[22px] h-[22px] text-xs border-2 border-shell-800 text-ink-inverse font-display"
-        >
-          {romanLv}
-        </span>
+        {revealed && (
+          <span
+            aria-hidden="true"
+            className="token-level absolute -bottom-1 -right-1 rounded-full grid place-items-center font-bold w-[22px] h-[22px] text-xs border-2 border-shell-800 text-ink-inverse font-display"
+          >
+            {romanLv}
+          </span>
+        )}
       </button>
       <div className="token-label mt-1 inline-block px-1.5 py-0.5 rounded text-[13px] font-semibold leading-tight max-w-full truncate text-ink-on-map font-display tracking-[0.04em] border border-shell-border">
         {info.name || 'Sem nome'}
