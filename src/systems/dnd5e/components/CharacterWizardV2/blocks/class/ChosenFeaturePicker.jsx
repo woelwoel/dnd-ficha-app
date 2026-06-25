@@ -1,3 +1,5 @@
+import { SourceBadge } from '../../../SourceBadge'
+
 export function ChosenFeaturePicker({ choice, value, onChange, effectiveMultiSelect }) {
   // Suporta `multiSelect` direto OU `multiSelectByLevel` resolvido pelo pai
   // (effectiveMultiSelect). 0 ou ausência = single-select clássico.
@@ -76,7 +78,9 @@ export function ChosenFeaturePicker({ choice, value, onChange, effectiveMultiSel
                 ].join(' ')} />
               )}
               <span className="flex-1 min-w-0">
-                <span className="font-display block">{opt.name}</span>
+                <span className="font-display block">
+                  {opt.name} <SourceBadge source={opt.source} />
+                </span>
                 {isMulti && opt.desc && (
                   <span className="text-xs text-ink-200 italic block mt-0.5 leading-snug whitespace-pre-line">
                     {opt.desc}

@@ -3,6 +3,7 @@
 // Suporta single-select (radio) e multi-select (checkbox). Mostra picker de
 // cantrips bônus quando a opção single-select escolhida concede bonusCantrips.
 import { CantripsGrantPicker } from '../../CantripsGrantPicker'
+import { SourceBadge } from '../../SourceBadge'
 
 export function LevelUpChoicePicker({
   choice,
@@ -58,7 +59,7 @@ export function LevelUpChoicePicker({
                   }`}
                 >
                   <span className={`w-3.5 h-3.5 rounded border-2 shrink-0 ${isSel ? 'border-amber-400 bg-amber-500' : 'border-gray-600'}`} />
-                  <span className="font-semibold text-sm">{opt.name}</span>
+                  <span className="font-semibold text-sm">{opt.name} <SourceBadge source={opt.source} /></span>
                 </button>
                 <button
                   type="button"
@@ -83,7 +84,7 @@ export function LevelUpChoicePicker({
                 }`}
               >
                 <span className={`w-3.5 h-3.5 rounded-full border-2 shrink-0 ${currentVal === opt.value ? 'border-amber-400 bg-amber-500' : 'border-gray-600'}`} />
-                <span className="font-semibold text-sm">{opt.name}</span>
+                <span className="font-semibold text-sm">{opt.name} <SourceBadge source={opt.source} /></span>
                 {opt.grants?.bonusCantrips > 0 && (
                   <span className="text-xs bg-blue-900/40 border border-blue-700/50 text-blue-300 px-1.5 py-0.5 rounded-full ml-auto shrink-0">
                     +{opt.grants.bonusCantrips} truques
