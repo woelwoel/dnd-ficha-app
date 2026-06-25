@@ -181,6 +181,11 @@ export function CharacterListView({ characters = [], onSelect }) {
                     <span className="block text-xs ink-italic text-ink-300 truncate">
                       {summary.subtitle}
                     </span>
+                    {c.playerName && (
+                      <span className="block text-[11px] ink-italic text-ink-300 truncate">
+                        👤 {c.playerName}
+                      </span>
+                    )}
                   </div>
                 </div>
 

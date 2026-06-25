@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { MapTooltip } from '../../components/CharacterList/MapTooltip'
 import { CharacterToken } from '../../components/CharacterList/CharacterToken'
 import { CharacterSidebar } from '../../components/CharacterList/CharacterSidebar'
+import { CharacterListView } from '../../components/CharacterList/CharacterListView'
 
 describe('MapTooltip — privacidade', () => {
   it('linha redigida mostra nome do personagem e do jogador, sem raça/classe/HP', () => {
@@ -47,5 +48,16 @@ describe('CharacterSidebar — privacidade', () => {
   it('mostra os filtros quando tudo é revelado (visão do DM)', () => {
     render(<CharacterSidebar characters={[{ id: 's2', info: { name: 'A', class: 'mago', level: 3 }, playerName: 'Gm', revealed: true }]} />)
     expect(screen.getByRole('group', { name: 'Filtros de classe' })).toBeInTheDocument()
+  })
+})
+
+describe('CharacterListView — privacidade', () => {
+  it('card mostra o nome do jogador', () => {
+    render(<CharacterListView characters={[{
+      id: 'l1', system: 'dnd5e', info: { name: 'Ozzy', class: '', race: '', level: null },
+      combat: {}, playerName: 'Gabriel', revealed: false,
+    }]} />)
+    expect(screen.getByText('Ozzy')).toBeInTheDocument()
+    expect(screen.getByText(/Gabriel/)).toBeInTheDocument()
   })
 })
