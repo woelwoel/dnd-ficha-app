@@ -158,6 +158,8 @@ export async function loadCampaignRoster(campaignId) {
     shortId: r.short_id ?? null,
     ownerId: r.owner_id ?? null,
     campaignId: r.campaign_id ?? null,
+    playerName: r.player_name ?? null,
+    revealed: r.revealed ?? true,
     isSummary: true,
     info: {
       name: r.name ?? '',

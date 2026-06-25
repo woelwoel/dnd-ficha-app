@@ -61,6 +61,35 @@ describe('loadCampaignRoster', () => {
     expect(r).not.toHaveProperty('inventory')
   })
 
+  it('mapeia playerName e revealed quando o RPC os devolve', async () => {
+    state.rpcResult = {
+      data: [{
+        id: 'c2', owner_id: 'u1', short_id: null, campaign_id: 'camp1',
+        name: 'Ozzy', player_name: 'Gabriel', revealed: false,
+        class: null, race: null, level: null,
+        max_hp: null, current_hp: null, armor_class: null,
+        position: { x: 0.5, y: 0.5 }, last_opened_at: null,
+      }],
+      error: null,
+    }
+    const res = await loadCampaignRoster('camp1')
+    const r = res.rows[0]
+    expect(r.playerName).toBe('Gabriel')
+    expect(r.revealed).toBe(false)
+    expect(r.info).toEqual({ name: 'Ozzy', class: '', race: '', level: 1 })
+  })
+
+  it('back-compat: RPC antigo sem revealed → revealed=true (sem redação)', async () => {
+    state.rpcResult = {
+      data: [{ id: 'c3', owner_id: 'u1', campaign_id: 'camp1', name: 'X', class: 'mago', race: 'humano', level: 2 }],
+      error: null,
+    }
+    const res = await loadCampaignRoster('camp1')
+    const r = res.rows[0]
+    expect(r.revealed).toBe(true)
+    expect(r.playerName).toBeNull()
+  })
+
   it('RPC ausente/erro (migration 0011 não aplicada) → ok:false pra fallback', async () => {
     state.rpcResult = { data: null, error: { message: 'function public.campaign_roster does not exist' } }
     const res = await loadCampaignRoster('camp1')
