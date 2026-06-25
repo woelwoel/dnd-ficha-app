@@ -1,3 +1,5 @@
+import { filterChoiceBySources } from '../../../domain/sources'
+
 /**
  * Resolve `multiSelect` efetivo de uma choice considerando level scaling.
  *
@@ -86,13 +88,15 @@ export function isChoiceDone(choice, value, characterLevel = 1) {
  * baterem. Usado pra escolhas condicionais (ex: druid_land_type só faz sentido
  * se druid_circle === 'terra').
  */
-export function getLeveledChoices(classChoicesData, level, chosenFeatures = {}) {
+export function getLeveledChoices(classChoicesData, level, chosenFeatures = {}, activeSources) {
   return (classChoicesData?.choices ?? [])
     .filter(c => c.level <= level)
     .filter(c => {
       if (!c.requires) return true
       return Object.entries(c.requires).every(([k, v]) => chosenFeatures?.[k] === v)
     })
+    .map(c => filterChoiceBySources(c, chosenFeatures, activeSources))
+    .filter(c => !Array.isArray(c.options) || c.options.length > 0)
     .sort((a, b) => a.level - b.level)
 }
 

@@ -95,6 +95,39 @@ describe('getLeveledChoices', () => {
   it('retorna [] se data null', () => {
     expect(getLeveledChoices(null, 10)).toEqual([])
   })
+
+  it('filtra opções de subclasse pela fonte ativa', () => {
+    const data = { choices: [
+      { level: 3, id: 'primal_path', options: [
+        { value: 'berserker', name: 'Berserker' },
+        { value: 'besta', name: 'Besta', source: 'tasha' },
+      ] },
+    ] }
+    const semTasha = getLeveledChoices(data, 5, {}, undefined)
+    expect(semTasha[0].options.map(o => o.value)).toEqual(['berserker'])
+    const comTasha = getLeveledChoices(data, 5, {}, ['tasha'])
+    expect(comTasha[0].options.map(o => o.value)).toEqual(['berserker', 'besta'])
+  })
+
+  it('omite choice que fica sem opções e sem nada escolhido', () => {
+    const data = { choices: [
+      { level: 3, id: 'so_tasha', options: [{ value: 'x', name: 'X', source: 'tasha' }] },
+    ] }
+    expect(getLeveledChoices(data, 5, {}, undefined)).toHaveLength(0)
+    expect(getLeveledChoices(data, 5, { so_tasha: 'x' }, undefined)).toHaveLength(1)
+  })
+
+  it('continua respeitando requires', () => {
+    const data = { choices: [
+      { level: 3, id: 'primal_path', options: [{ value: 'besta', name: 'Besta', source: 'tasha' }] },
+      { level: 3, id: 'beast_form', requires: { primal_path: 'besta' },
+        options: [{ value: 'mordida', name: 'Mordida', source: 'tasha' }] },
+    ] }
+    const semEscolha = getLeveledChoices(data, 5, {}, ['tasha'])
+    expect(semEscolha.map(c => c.id)).toEqual(['primal_path'])
+    const comEscolha = getLeveledChoices(data, 5, { primal_path: 'besta' }, ['tasha'])
+    expect(comEscolha.map(c => c.id)).toEqual(['primal_path', 'beast_form'])
+  })
 })
 
 describe('computeBonusCantripsNeeded', () => {
