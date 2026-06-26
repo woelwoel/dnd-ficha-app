@@ -64,3 +64,21 @@ describe('tasha-spells — magias não-invocação (Task 1)', () => {
     it(`${idx} presente e válida`, () => expectValidSpell(idx))
   }
 })
+
+describe('tasha-spells — invocações (Task 2)', () => {
+  const ESPERADAS = [
+    'invocar-fera', 'invocar-feerico', 'invocar-morto-vivo',
+    'invocar-prole-sombria', 'invocar-elemental', 'invocar-celestial',
+    'invocar-corruptor',
+  ]
+  for (const idx of ESPERADAS) {
+    it(`${idx} presente e válida`, () => expectValidSpell(idx))
+  }
+  it('toda invocação é escola conjuração ou necromancia e concentração=true', () => {
+    for (const idx of ESPERADAS) {
+      const s = byIndex[idx]
+      expect(['conjuração', 'necromancia']).toContain(s.school)
+      expect(s.concentration, `${idx} deveria ser concentração`).toBe(true)
+    }
+  })
+})
