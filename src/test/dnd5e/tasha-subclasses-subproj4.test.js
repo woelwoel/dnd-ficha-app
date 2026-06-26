@@ -63,8 +63,11 @@ describe('sub-projeto 4 — magias concedidas (Feiticeiro/Bruxo/Patrulheiro)', (
 })
 
 describe('sub-projeto 4 — catálogo de magias de Tasha', () => {
-  it('tasha-spells tem as 3 magias novas, carimbadas source tasha', () => {
-    expect(tasha.map(s => s.index).sort()).toEqual(['farpa-mental', 'invocar-aberracao', 'invocar-construto'])
+  it('tasha-spells contém as 3 magias do sub-proj 4, carimbadas source tasha', () => {
+    // O catálogo cresceu além das 3 originais (balde de magias do TCE), mas as
+    // 3 deste sub-projeto continuam presentes e todas seguem carimbadas.
+    const idx = tasha.map(s => s.index)
+    for (const i of ['farpa-mental', 'invocar-aberracao', 'invocar-construto']) expect(idx).toContain(i)
     for (const s of tasha) expect(s.source).toBe('tasha')
     expect(tasha.find(s => s.index === 'farpa-mental').level).toBe(0)
   })

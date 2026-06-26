@@ -75,10 +75,12 @@ export default defineConfig({
             //  v11 → v12 (2026-06-26): features opcionais de Tasha
             //    (tasha-class-choices-pt.json: invocações do bruxo, metamagia
             //    do feiticeiro, estilos de luta, manobras).
+            //  v12 → v13 (2026-06-26): magias do Caldeirão de Tasha
+            //    (tasha-spells-pt.json: 21 magias compostas sobre o PHB).
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v12',
+              cacheName: 'srd-data-v13',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
