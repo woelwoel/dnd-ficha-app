@@ -64,3 +64,24 @@ describe('Tasha opções opcionais — metamagia (feiticeiro)', () => {
     expect(tashaOnes).toEqual([...ESPERADAS].sort())
   })
 })
+
+describe('Tasha opções opcionais — estilos de combate', () => {
+  const CASOS = [
+    { cls: 'guerreiro',   id: 'fighting_style',         vals: ['luta_as_cegas', 'interceptador', 'tecnica_superior', 'arremesso_de_armas', 'ataque_desarmado'] },
+    { cls: 'paladino',    id: 'fighting_style_paladin',  vals: ['guerreiro_abencoado', 'luta_as_cegas', 'interceptador'] },
+    { cls: 'patrulheiro', id: 'fighting_style_ranger',   vals: ['luta_as_cegas', 'guerreiro_druidico', 'arremesso_de_armas'] },
+  ]
+
+  for (const { cls, id, vals } of CASOS) {
+    it(`${cls}: ${id} ganha os estilos de Tasha`, () => {
+      const valores = tashaOptions(cls, id).map(o => o.value)
+      for (const v of vals) expect(valores, `${cls}/${v}`).toContain(v)
+    })
+    it(`${cls}: estilos de Tasha entram no merge carimbados`, () => {
+      const merged = mergeClassChoices(phb, tasha, 'tasha')
+      const choice = merged[cls].choices.find(c => c.id === id)
+      const tashaOnes = choice.options.filter(o => o.source === 'tasha').map(o => o.value)
+      for (const v of vals) expect(tashaOnes, `${cls}/${v} sem carimbo`).toContain(v)
+    })
+  }
+})

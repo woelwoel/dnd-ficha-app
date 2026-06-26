@@ -173,6 +173,18 @@
             "desc": "Passiva: vantagem em Inteligência (Arcanismo) e não pode ser surpreendido. Invocada (ação bônus): estado profético por 1 min — reação pra dar vantagem/desvantagem em jogadas de ataque, TR ou testes de criaturas a 18m."
           }
         ]
+      },
+      {
+        "level": 1,
+        "id": "fighting_style",
+        "featureName": "Estilo de Luta",
+        "options": [
+          { "value": "luta_as_cegas", "name": "Luta às Cegas", "combat": "essencial", "desc": "Você tem percepção às cegas com alcance de 3m: dentro dela, enxerga o que não estiver sob cobertura total mesmo cego ou no escuro, e vê criaturas invisíveis (a menos que se escondam de você com sucesso)." },
+          { "value": "interceptador", "name": "Interceptador", "combat": "situacional", "desc": "Quando uma criatura que você veja acerta um alvo (que não seja você) a até 1,5m de você, use sua reação para reduzir o dano em 1d10 + seu bônus de proficiência (mínimo 0). Você precisa empunhar um escudo ou uma arma simples ou marcial." },
+          { "value": "tecnica_superior", "name": "Técnica Superior", "combat": "essencial", "desc": "Você aprende uma manobra à sua escolha dentre as do Mestre de Batalha e ganha um dado de superioridade (d6, somado a outros que você tenha). A CD da manobra = 8 + seu bônus de proficiência + Força ou Destreza (à sua escolha). O dado é recuperado num descanso curto ou longo." },
+          { "value": "arremesso_de_armas", "name": "Arremesso de Armas", "combat": "essencial", "desc": "Você pode sacar uma arma com a propriedade arremesso como parte da ação de ataque com ela. Além disso, ao acertar um ataque à distância com arma de arremesso, ganha +2 na jogada de dano." },
+          { "value": "ataque_desarmado", "name": "Ataque Desarmado", "combat": "essencial", "desc": "Seus ataques desarmados causam 1d6 + seu modificador de Força de dano contundente (o d6 vira d8 se você não empunhar arma nem escudo). No início de cada turno, pode causar 1d4 contundente a uma criatura agarrada por você." }
+        ]
       }
     ]
   },
@@ -355,6 +367,16 @@
             "desc": "O Juramento da Vigilância (os Vigilantes) jura proteger os mortais das ameaças de outros planos — aberrações, corruptores e seus aliados.\n\nFeatures por nível:\n• Nv 3 — Magias de Juramento sempre preparadas (níveis 3/5/9/13/17). Canalizar Divindade: Vontade do Vigilante (você e aliados a 9m ganham vantagem em TR de INT/SAB/CAR por 1 min) e Expulsar Extraplanares (aberração/celestial/elemental/fada/corruptor a 9m faz TR de Sabedoria ou é expulso).\n• Nv 7 — Aura do Sentinela: você e aliados a 3m somam o bônus de proficiência à iniciativa (alcance 9m no nv18).\n• Nv 15 — Repreensão do Vigilante: quando você ou um aliado a 9m passa num TR de INT/SAB/CAR, reação pra causar 2d8 + mod. CAR de energia à criatura que forçou o TR.\n• Nv 20 — Baluarte Mortal: ação bônus, 1 min de visão verdadeira (36m), vantagem contra extraplanares e, ao acertar, pode banir o alvo (TR de Carisma) ao plano natal dele."
           }
         ]
+      },
+      {
+        "level": 2,
+        "id": "fighting_style_paladin",
+        "featureName": "Estilo de Luta",
+        "options": [
+          { "value": "guerreiro_abencoado", "name": "Guerreiro Abençoado", "combat": "essencial", "desc": "Você aprende dois truques à sua escolha da lista de magias do Clérigo; contam como magias de paladino e usam Carisma como atributo de conjuração. Ao subir de nível nesta classe, pode trocar um deles por outro truque da lista de clérigo." },
+          { "value": "luta_as_cegas", "name": "Luta às Cegas", "combat": "essencial", "desc": "Você tem percepção às cegas com alcance de 3m: dentro dela, enxerga o que não estiver sob cobertura total mesmo cego ou no escuro, e vê criaturas invisíveis (a menos que se escondam de você com sucesso)." },
+          { "value": "interceptador", "name": "Interceptador", "combat": "situacional", "desc": "Quando uma criatura que você veja acerta um alvo (que não seja você) a até 1,5m de você, use sua reação para reduzir o dano em 1d10 + seu bônus de proficiência (mínimo 0). Você precisa empunhar um escudo ou uma arma simples ou marcial." }
+        ]
       }
     ]
   },
@@ -499,6 +521,16 @@
             "combat": "essencial",
             "desc": "Espíritos da natureza em forma de enxame se vincularam a você, ajudando em combate e movimento.\n\nFeatures por nível:\n• Nv 3 — Magias do Portador sempre preparadas (níveis 3/5/9/13/17). Enxame Reunido: 1×/turno, ao acertar com um ataque, o enxame causa +1d6 de dano de força e, à sua escolha, move o alvo 4,5m ou move você 1,5m sem provocar ataques de oportunidade.\n• Nv 7 — Maré Serpenteante: ação bônus pra o enxame te carregar 3m horizontalmente (sem provocar ataques de oportunidade). Usos = bônus de proficiência.\n• Nv 11 — Enxame Poderoso: o Enxame Reunido vira 1d8, pode derrubar o alvo, e move criaturas maiores.\n• Nv 15 — Dispersão do Enxame: resistência a dano; quando sofre dano, reação pra ficar invisível e teleportar 9m, dissolvendo-se no enxame."
           }
+        ]
+      },
+      {
+        "level": 2,
+        "id": "fighting_style_ranger",
+        "featureName": "Estilo de Luta",
+        "options": [
+          { "value": "luta_as_cegas", "name": "Luta às Cegas", "combat": "essencial", "desc": "Você tem percepção às cegas com alcance de 3m: dentro dela, enxerga o que não estiver sob cobertura total mesmo cego ou no escuro, e vê criaturas invisíveis (a menos que se escondam de você com sucesso)." },
+          { "value": "guerreiro_druidico", "name": "Guerreiro Druídico", "combat": "essencial", "desc": "Você aprende dois truques à sua escolha da lista de magias do Druida; contam como magias de patrulheiro e usam Sabedoria como atributo de conjuração. Ao subir de nível nesta classe, pode trocar um deles por outro truque da lista de druida." },
+          { "value": "arremesso_de_armas", "name": "Arremesso de Armas", "combat": "essencial", "desc": "Você pode sacar uma arma com a propriedade arremesso como parte da ação de ataque com ela. Além disso, ao acertar um ataque à distância com arma de arremesso, ganha +2 na jogada de dano." }
         ]
       }
     ]
