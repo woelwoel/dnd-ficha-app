@@ -72,10 +72,13 @@ export default defineConfig({
             //    (tasha-infusions-pt.json) + lista de magias do Artífice.
             //  v10 → v11 (2026-06-25): subclasses de Tasha do bárbaro
             //    (tasha-class-choices-pt.json ganhou a chave barbaro).
+            //  v11 → v12 (2026-06-26): features opcionais de Tasha
+            //    (tasha-class-choices-pt.json: invocações do bruxo, metamagia
+            //    do feiticeiro, estilos de luta, manobras).
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v11',
+              cacheName: 'srd-data-v12',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
