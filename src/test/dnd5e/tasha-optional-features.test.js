@@ -85,3 +85,23 @@ describe('Tasha opções opcionais — estilos de combate', () => {
     })
   }
 })
+
+describe('Tasha opções opcionais — manobras (guerreiro)', () => {
+  const ESPERADAS = [
+    'emboscada', 'engodo', 'enganchar', 'presenca-dominante',
+    'golpe-imobilizador', 'lancamento-rapido', 'avaliacao-tatica',
+  ]
+
+  it('o choice martial_archetype_maneuvers ganha as 7 manobras de Tasha', () => {
+    const valores = tashaOptions('guerreiro', 'martial_archetype_maneuvers').map(o => o.value)
+    for (const v of ESPERADAS) expect(valores, `${v} ausente`).toContain(v)
+  })
+
+  it('as manobras de Tasha entram no merge carimbadas e somadas às do PHB', () => {
+    const merged = mergeClassChoices(phb, tasha, 'tasha')
+    const choice = merged.guerreiro.choices.find(c => c.id === 'martial_archetype_maneuvers')
+    const tashaOnes = choice.options.filter(o => o.source === 'tasha').map(o => o.value).sort()
+    expect(tashaOnes).toEqual([...ESPERADAS].sort())
+    expect(choice.options.some(o => o.value === 'ataque-ardiloso' && !o.source)).toBe(true)
+  })
+})
