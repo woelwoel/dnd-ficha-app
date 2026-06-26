@@ -379,6 +379,33 @@
             "desc": "Você se ligou ao Plano Mecânico de Mechanus, canalizando a ordem perfeita do cosmos contra o caos.\n\nFeatures por nível:\n• Nv 1 — Magias Cronométricas: você sempre conhece as magias da tabela (níveis 1/3/5/7/9); contam como de feiticeiro e não ocupam o limite (trocáveis por abjuração/transmutação). Restaurar o Equilíbrio: reação pra cancelar vantagem ou desvantagem numa rolagem de criatura a 18m. Usos = bônus de proficiência.\n• Nv 6 — Bastião da Lei: gasta de 1 a 5 pontos de feitiçaria pra dar a uma criatura a 9m um número igual de dados de proteção (d8); ela gasta um dado pra reduzir dano sofrido.\n• Nv 14 — Transe da Ordem: ataques contra você não têm vantagem; e você trata 9 ou menos como 10 em jogadas de ataque, testes e TR. Pode gastar 5 pontos pra estender a 1 aliado por 1 min.\n• Nv 18 — Cavalgada Mecânica: cria um campo de energia que cura aliados (cada um se recupera), conserta objetos/constructos e encerra um efeito mágico, em área de 9m. 1×/descanso longo (ou 7 pontos)."
           }
         ]
+      },
+      {
+        "level": 3,
+        "id": "metamagic",
+        "featureName": "Metamagia",
+        "options": [
+          { "value": "perseguidora", "name": "Magia Perseguidora", "combat": "essencial", "desc": "Se você errar uma jogada de ataque de uma magia, pode gastar 2 pontos de feitiçaria para rolar o d20 de novo, ficando com o novo resultado. Pode ser usada mesmo que você já esteja usando outra Metamagia na conjuração." },
+          { "value": "transmutada", "name": "Magia Transmutada", "combat": "situacional", "desc": "Ao conjurar uma magia que cause dano de ácido, gélido, ígneo, elétrico, venenoso ou trovejante, gaste 1 ponto de feitiçaria para mudar o tipo de dano para outro dentre esses listados." }
+        ]
+      },
+      {
+        "level": 10,
+        "id": "metamagic_10",
+        "featureName": "Metamagia",
+        "options": [
+          { "value": "perseguidora", "name": "Magia Perseguidora", "combat": "essencial", "desc": "Se você errar uma jogada de ataque de uma magia, pode gastar 2 pontos de feitiçaria para rolar o d20 de novo, ficando com o novo resultado. Pode ser usada mesmo que você já esteja usando outra Metamagia na conjuração." },
+          { "value": "transmutada", "name": "Magia Transmutada", "combat": "situacional", "desc": "Ao conjurar uma magia que cause dano de ácido, gélido, ígneo, elétrico, venenoso ou trovejante, gaste 1 ponto de feitiçaria para mudar o tipo de dano para outro dentre esses listados." }
+        ]
+      },
+      {
+        "level": 17,
+        "id": "metamagic_17",
+        "featureName": "Metamagia",
+        "options": [
+          { "value": "perseguidora", "name": "Magia Perseguidora", "combat": "essencial", "desc": "Se você errar uma jogada de ataque de uma magia, pode gastar 2 pontos de feitiçaria para rolar o d20 de novo, ficando com o novo resultado. Pode ser usada mesmo que você já esteja usando outra Metamagia na conjuração." },
+          { "value": "transmutada", "name": "Magia Transmutada", "combat": "situacional", "desc": "Ao conjurar uma magia que cause dano de ácido, gélido, ígneo, elétrico, venenoso ou trovejante, gaste 1 ponto de feitiçaria para mudar o tipo de dano para outro dentre esses listados." }
+        ]
       }
     ]
   },

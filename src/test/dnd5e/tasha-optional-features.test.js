@@ -44,3 +44,23 @@ describe('Tasha opções opcionais — invocações místicas (bruxo)', () => {
     expect(choice.options.some(o => o.value === 'forca_agonizante' && !o.source)).toBe(true)
   })
 })
+
+describe('Tasha opções opcionais — metamagia (feiticeiro)', () => {
+  const ESPERADAS = ['perseguidora', 'transmutada']
+  const IDS = ['metamagic', 'metamagic_10', 'metamagic_17']
+
+  it('cada choice de metamagia ganha as 2 opções de Tasha', () => {
+    for (const id of IDS) {
+      const opts = tashaOptions('feiticeiro', id)
+      const valores = opts.map(o => o.value)
+      for (const v of ESPERADAS) expect(valores, `${id}/${v}`).toContain(v)
+    }
+  })
+
+  it('merge concatena a metamagia de Tasha com a do PHB em metamagic', () => {
+    const merged = mergeClassChoices(phb, tasha, 'tasha')
+    const choice = merged.feiticeiro.choices.find(c => c.id === 'metamagic')
+    const tashaOnes = choice.options.filter(o => o.source === 'tasha').map(o => o.value).sort()
+    expect(tashaOnes).toEqual([...ESPERADAS].sort())
+  })
+})
