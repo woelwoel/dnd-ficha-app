@@ -9,6 +9,11 @@
 -- precisa aparecer no mapa). O `data` completo segue protegido pela RLS de
 -- characters (só dono/DM abrem a ficha).
 
+-- A 0011 já criou esta função com OUTRA assinatura de retorno (sem player_name/
+-- revealed). Postgres não deixa o `create or replace` mudar o tipo de retorno
+-- (erro 42P13) → precisa dropar antes de recriar.
+drop function if exists public.campaign_roster(uuid);
+
 create or replace function public.campaign_roster(p_campaign_id uuid)
 returns table (
   id             uuid,
