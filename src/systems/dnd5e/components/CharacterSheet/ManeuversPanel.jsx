@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDiceRoller } from '../../../../hooks/useDiceRoller'
 import { Icon } from '../../../../components/ui/Icon'
+import { InfoPopover } from '../../../../components/ui/InfoPopover'
 
 /**
  * Painel rápido de Manobras (Mestre de Combate) — aparece na aba Ficha
@@ -115,14 +116,16 @@ export function ManeuversPanel({ character, featureUses, onSpend }) {
             return (
               <div
                 key={m.index}
-                title={m.desc}
                 className="flex items-center gap-2 px-2 py-1.5 rounded border border-parchment-600 bg-parchment-50"
               >
                 <span className={`text-[13px] uppercase tracking-wider px-1.5 py-0.5 rounded border shrink-0 font-bold ${typeColor}`}>
                   {typeAbbr}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-display text-ink-500 truncate">{m.name}</p>
+                  <p className="text-sm font-display text-ink-500 flex items-center gap-1">
+                    <span className="truncate">{m.name}</span>
+                    <InfoPopover content={m.desc} title={m.name} iconSize={13} className="p-0.5" />
+                  </p>
                   {m.trigger && (
                     <p className="text-xs italic text-ink-300 truncate">{m.trigger}</p>
                   )}
@@ -149,7 +152,7 @@ export function ManeuversPanel({ character, featureUses, onSpend }) {
       )}
 
       <p className="mt-2 text-xs text-ink-300 italic leading-relaxed">
-        Click no dado para gastar 1 Dado de Superioridade e rolar. Passe o mouse no nome pra ver a regra completa.
+        Click no dado para gastar 1 Dado de Superioridade e rolar. Toque no ℹ ao lado do nome pra ver a regra completa.
         Recarrega em descanso curto ou longo.
       </p>
     </div>

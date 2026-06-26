@@ -1,4 +1,5 @@
 import { SourceBadge } from '../../../SourceBadge'
+import { InfoPopover } from '../../../../../../components/ui/InfoPopover'
 
 export function ChosenFeaturePicker({ choice, value, onChange, effectiveMultiSelect }) {
   // Suporta `multiSelect` direto OU `multiSelectByLevel` resolvido pelo pai
@@ -50,43 +51,47 @@ export function ChosenFeaturePicker({ choice, value, onChange, effectiveMultiSel
           const sel = isSelected(opt.value)
           const disabled = isMulti && !sel && atLimit
           return (
-            <button
+            <div
               key={opt.value}
-              type="button"
-              onClick={() => !disabled && handleClick(opt.value)}
-              title={opt.desc || undefined}
               className={[
-                'flex items-start gap-2 text-left px-2.5 py-1.5 rounded-sm border-2 text-xs transition-colors',
+                'flex items-start gap-2 px-2.5 py-1.5 rounded-sm border-2 text-xs transition-colors',
                 sel
                   ? 'border-ink-500 bg-parchment-200 text-ink-500'
                   : disabled
-                  ? 'border-parchment-600 bg-parchment-50 text-ink-200 opacity-40 cursor-not-allowed'
+                  ? 'border-parchment-600 bg-parchment-50 text-ink-200 opacity-40'
                   : 'border-parchment-600 bg-parchment-50 text-ink-300 hover:border-ink-300',
               ].join(' ')}
             >
-              {isMulti ? (
-                <span className={[
-                  'w-3 h-3 rounded-sm border-2 shrink-0 flex items-center justify-center mt-0.5',
-                  sel ? 'border-ink-500 bg-ink-500' : 'border-parchment-600',
-                ].join(' ')}>
-                  {sel && <span className="text-parchment-50 text-[8px]">✓</span>}
-                </span>
-              ) : (
-                <span className={[
-                  'w-3 h-3 rounded-full border-2 shrink-0 mt-0.5',
-                  sel ? 'border-ink-500 bg-ink-500' : 'border-parchment-600',
-                ].join(' ')} />
-              )}
-              <span className="flex-1 min-w-0">
-                <span className="font-display block">
-                  {opt.name} <SourceBadge source={opt.source} />
-                </span>
-                {isMulti && opt.desc && (
-                  <span className="text-xs text-ink-200 italic block mt-0.5 leading-snug whitespace-pre-line">
-                    {opt.desc}
+              <button
+                type="button"
+                onClick={() => !disabled && handleClick(opt.value)}
+                disabled={disabled}
+                className="flex items-start gap-2 text-left flex-1 min-w-0 disabled:cursor-not-allowed"
+              >
+                {isMulti ? (
+                  <span className={[
+                    'w-3 h-3 rounded-sm border-2 shrink-0 flex items-center justify-center mt-0.5',
+                    sel ? 'border-ink-500 bg-ink-500' : 'border-parchment-600',
+                  ].join(' ')}>
+                    {sel && <span className="text-parchment-50 text-[8px]">✓</span>}
                   </span>
+                ) : (
+                  <span className={[
+                    'w-3 h-3 rounded-full border-2 shrink-0 mt-0.5',
+                    sel ? 'border-ink-500 bg-ink-500' : 'border-parchment-600',
+                  ].join(' ')} />
                 )}
-              </span>
+                <span className="flex-1 min-w-0">
+                  <span className="font-display block">
+                    {opt.name} <SourceBadge source={opt.source} />
+                  </span>
+                  {isMulti && opt.desc && (
+                    <span className="text-xs text-ink-200 italic block mt-0.5 leading-snug whitespace-pre-line">
+                      {opt.desc}
+                    </span>
+                  )}
+                </span>
+              </button>
               {opt.grants?.bonusCantrips > 0 && (
                 <span className="text-xs bg-parchment-100 border-2 border-parchment-600 px-1.5 py-0.5 rounded-sm text-ink-300 shrink-0">
                   +{opt.grants.bonusCantrips} truques
@@ -97,7 +102,10 @@ export function ChosenFeaturePicker({ choice, value, onChange, effectiveMultiSel
                   +magia
                 </span>
               )}
-            </button>
+              {!isMulti && opt.desc && (
+                <InfoPopover content={opt.desc} title={opt.name} className="p-0.5 mt-0.5" />
+              )}
+            </div>
           )
         })}
       </div>

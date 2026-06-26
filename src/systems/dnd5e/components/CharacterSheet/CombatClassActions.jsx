@@ -3,6 +3,7 @@ import { RollButton } from '../../../../components/DiceRoller/RollButton'
 import { getModifier, formatModifier } from '../../../../utils/calculations'
 import { getSpellSlots } from '../../../../utils/spellcasting'
 import { useDiceRoller } from '../../../../hooks/useDiceRoller'
+import { InfoPopover } from '../../../../components/ui/InfoPopover'
 import { WildShapePanel } from './WildShapePanel'
 import { KnownBeastsPanel } from './KnownBeastsPanel'
 import { LandCirclePanel } from './LandCirclePanel'
@@ -319,20 +320,24 @@ function SorceryPanel({ feiticeiroLevel, sorceryUse, onSpendPoints, onRegainPoin
               const cost = opt.cost ?? 1
               const disabled = feiticeiroLevel < 3 || remaining < cost
               return (
-                <button
-                  key={opt.id}
-                  onClick={() => applyMetamagic(opt)}
-                  disabled={disabled}
-                  title={opt.desc}
-                  className={`text-left text-xs px-2 py-1 rounded border transition-colors ${
-                    disabled
-                      ? 'border-parchment-600 bg-parchment-100 text-ink-200 cursor-not-allowed'
-                      : 'border-ink-300 bg-parchment-50 text-ink-500 hover:bg-parchment-200'
-                  }`}
-                >
-                  <span className="font-bold">{opt.name}</span>
-                  <span className="ml-1 font-mono text-[13px]">({opt.cost == null ? '=nv' : `${opt.cost}pt`})</span>
-                </button>
+                <div key={opt.id} className="relative">
+                  <button
+                    onClick={() => applyMetamagic(opt)}
+                    disabled={disabled}
+                    className={`w-full text-left text-xs px-2 py-1 pr-7 rounded border transition-colors ${
+                      disabled
+                        ? 'border-parchment-600 bg-parchment-100 text-ink-200 cursor-not-allowed'
+                        : 'border-ink-300 bg-parchment-50 text-ink-500 hover:bg-parchment-200'
+                    }`}
+                  >
+                    <span className="font-bold">{opt.name}</span>
+                    <span className="ml-1 font-mono text-[13px]">({opt.cost == null ? '=nv' : `${opt.cost}pt`})</span>
+                  </button>
+                  <InfoPopover
+                    content={opt.desc} title={opt.name} iconSize={13}
+                    className="absolute top-1/2 right-1.5 -translate-y-1/2 p-0.5"
+                  />
+                </div>
               )
             })}
           </div>
@@ -440,20 +445,24 @@ function KiPanel({ monkLevel, kiUse, onSpend }) {
         {KI_FEATURES.map(opt => {
           const disabled = remaining < opt.cost
           return (
-            <button
-              key={opt.name}
-              onClick={() => spend(opt.cost)}
-              disabled={disabled}
-              title={opt.desc}
-              className={`text-left text-xs px-2 py-1 rounded border transition-colors ${
-                disabled
-                  ? 'border-parchment-600 bg-parchment-100 text-ink-200 cursor-not-allowed'
-                  : 'border-ink-300 bg-parchment-50 text-ink-500 hover:bg-parchment-200'
-              }`}
-            >
-              <span className="font-bold">{opt.name}</span>
-              <span className="ml-1 font-mono text-[13px]">({opt.cost} ki)</span>
-            </button>
+            <div key={opt.name} className="relative">
+              <button
+                onClick={() => spend(opt.cost)}
+                disabled={disabled}
+                className={`w-full text-left text-xs px-2 py-1 pr-7 rounded border transition-colors ${
+                  disabled
+                    ? 'border-parchment-600 bg-parchment-100 text-ink-200 cursor-not-allowed'
+                    : 'border-ink-300 bg-parchment-50 text-ink-500 hover:bg-parchment-200'
+                }`}
+              >
+                <span className="font-bold">{opt.name}</span>
+                <span className="ml-1 font-mono text-[13px]">({opt.cost} ki)</span>
+              </button>
+              <InfoPopover
+                content={opt.desc} title={opt.name} iconSize={13}
+                className="absolute top-1/2 right-1.5 -translate-y-1/2 p-0.5"
+              />
+            </div>
           )
         })}
       </div>
