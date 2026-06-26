@@ -1,0 +1,46 @@
+import { describe, it, expect } from 'vitest'
+import fs from 'node:fs'
+import path from 'node:path'
+import { mergeClassChoices } from '../../systems/dnd5e/domain/mergeClassChoices'
+
+const tasha = JSON.parse(
+  fs.readFileSync(path.resolve('public/srd-data/tasha-class-choices-pt.json'), 'utf-8'),
+)
+const phb = JSON.parse(
+  fs.readFileSync(path.resolve('public/srd-data/phb-class-choices-pt.json'), 'utf-8'),
+)
+
+function tashaOptions(cls, choiceId) {
+  const choice = tasha[cls]?.choices.find(c => c.id === choiceId)
+  return choice?.options ?? []
+}
+
+describe('Tasha opções opcionais — invocações místicas (bruxo)', () => {
+  const ESPERADAS = [
+    'ligado_ao_talisma', 'mente_mistica', 'escrita_longinqua',
+    'dadiva_dos_protetores', 'implemento_mestre_corrente',
+    'protecao_do_talisma', 'repreensao_do_talisma', 'servidao_eterna',
+  ]
+
+  it('o arquivo Tasha tem o choice eldritch_invocations com as 8 invocações', () => {
+    const opts = tashaOptions('bruxo', 'eldritch_invocations')
+    const valores = opts.map(o => o.value)
+    for (const v of ESPERADAS) expect(valores, `${v} ausente`).toContain(v)
+    for (const o of opts) expect(o.desc.length, o.value).toBeGreaterThan(40)
+  })
+
+  it('nenhuma invocação grava source no arquivo cru', () => {
+    for (const o of tashaOptions('bruxo', 'eldritch_invocations')) {
+      expect(o.source, o.value).toBeUndefined()
+    }
+  })
+
+  it('merge concatena as invocações de Tasha (carimbadas) com as do PHB', () => {
+    const merged = mergeClassChoices(phb, tasha, 'tasha')
+    const choice = merged.bruxo.choices.find(c => c.id === 'eldritch_invocations')
+    const tashaOnes = choice.options.filter(o => o.source === 'tasha')
+    expect(tashaOnes.map(o => o.value).sort()).toEqual([...ESPERADAS].sort())
+    // PHB segue presente e sem source
+    expect(choice.options.some(o => o.value === 'forca_agonizante' && !o.source)).toBe(true)
+  })
+})

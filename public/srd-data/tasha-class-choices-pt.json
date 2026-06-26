@@ -434,6 +434,21 @@
             "desc": "Gênio da água. Ira do Gênio causa dano ácido; magias adicionais de frio/água. Resistência a ácido no nv6."
           }
         ]
+      },
+      {
+        "level": 2,
+        "id": "eldritch_invocations",
+        "featureName": "Invocações Místicas",
+        "options": [
+          { "value": "ligado_ao_talisma", "name": "Ligado ao Talismã", "combat": "situacional", "desc": "Pré-requisito: 12º nível de bruxo, característica de Pacto do Talismã.\n\nEnquanto outra criatura estiver vestindo seu talismã, você pode usar sua ação para se teletransportar a um espaço desocupado próximo a ela (ambos no mesmo plano); o portador pode fazer o mesmo, usando a ação dele para vir até você. Usos = seu bônus de proficiência, recuperados num descanso longo." },
+          { "value": "mente_mistica", "name": "Mente Mística", "combat": "essencial", "desc": "Você tem vantagem nas salvaguardas de Constituição feitas para manter a concentração em uma magia." },
+          { "value": "escrita_longinqua", "name": "Escrita Longínqua", "combat": "situacional", "desc": "Pré-requisito: 5º nível de bruxo, característica de Pacto do Tomo.\n\nUma nova página aparece no seu Livro das Sombras. Criaturas que assinarem o nome nela (até seu bônus de proficiência) podem ser alvo da magia Remeter sem gastar espaço de magia nem componentes materiais." },
+          { "value": "dadiva_dos_protetores", "name": "Dádiva dos Protetores", "combat": "situacional", "desc": "Pré-requisito: 9º nível de bruxo, característica de Pacto do Tomo.\n\nUma nova página aparece no seu Livro das Sombras. Quando uma criatura cujo nome esteja na página (até seu bônus de proficiência) for reduzida a 0 PV sem morrer na hora, ela cai para 1 PV em vez disso. Recarrega após um descanso longo." },
+          { "value": "implemento_mestre_corrente", "name": "Implemento do Mestre da Corrente", "combat": "situacional", "desc": "Pré-requisito: característica de Pacto da Corrente.\n\nAo conjurar Encontrar Familiar, você imbui o familiar: ganha voo ou natação 12m; pode comandá-lo a Atacar com uma ação bônus; os ataques dele são mágicos e usam a sua CD de magia; e você pode usar sua reação para dar resistência a ele contra um dano que sofra." },
+          { "value": "protecao_do_talisma", "name": "Proteção do Talismã", "combat": "situacional", "desc": "Pré-requisito: 7º nível de bruxo, característica de Pacto do Talismã.\n\nQuando o portador do seu talismã falhar em uma salvaguarda, ele pode somar 1d4 à jogada, podendo transformá-la em sucesso. Usos = seu bônus de proficiência, recuperados num descanso longo." },
+          { "value": "repreensao_do_talisma", "name": "Repreensão do Talismã", "combat": "situacional", "desc": "Pré-requisito: característica de Pacto do Talismã.\n\nQuando o portador do talismã for acertado por um atacante a até 9m de você e em seu campo de visão, você pode usar sua reação para causar dano psíquico igual ao seu bônus de proficiência e empurrá-lo até 3m para longe do portador." },
+          { "value": "servidao_eterna", "name": "Servidão Eterna", "combat": "situacional", "desc": "Pré-requisito: 5º nível de bruxo.\n\nVocê pode conjurar Animar Mortos sem gastar um espaço de magia. Feito isso, não pode conjurá-la dessa forma de novo até terminar um descanso longo." }
+        ]
       }
     ]
   },
