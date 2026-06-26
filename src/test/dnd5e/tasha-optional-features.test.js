@@ -26,6 +26,7 @@ describe('Tasha opções opcionais — invocações místicas (bruxo)', () => {
     const opts = tashaOptions('bruxo', 'eldritch_invocations')
     const valores = opts.map(o => o.value)
     for (const v of ESPERADAS) expect(valores, `${v} ausente`).toContain(v)
+    expect(opts, 'opção a mais/a menos').toHaveLength(ESPERADAS.length)
     for (const o of opts) expect(o.desc.length, o.value).toBeGreaterThan(40)
   })
 
@@ -54,6 +55,7 @@ describe('Tasha opções opcionais — metamagia (feiticeiro)', () => {
       const opts = tashaOptions('feiticeiro', id)
       const valores = opts.map(o => o.value)
       for (const v of ESPERADAS) expect(valores, `${id}/${v}`).toContain(v)
+      expect(opts, `${id} opção a mais/a menos`).toHaveLength(ESPERADAS.length)
     }
   })
 
@@ -74,8 +76,10 @@ describe('Tasha opções opcionais — estilos de combate', () => {
 
   for (const { cls, id, vals } of CASOS) {
     it(`${cls}: ${id} ganha os estilos de Tasha`, () => {
-      const valores = tashaOptions(cls, id).map(o => o.value)
+      const opts = tashaOptions(cls, id)
+      const valores = opts.map(o => o.value)
       for (const v of vals) expect(valores, `${cls}/${v}`).toContain(v)
+      expect(opts, `${cls} opção a mais/a menos`).toHaveLength(vals.length)
     })
     it(`${cls}: estilos de Tasha entram no merge carimbados`, () => {
       const merged = mergeClassChoices(phb, tasha, 'tasha')
@@ -93,8 +97,10 @@ describe('Tasha opções opcionais — manobras (guerreiro)', () => {
   ]
 
   it('o choice martial_archetype_maneuvers ganha as 7 manobras de Tasha', () => {
-    const valores = tashaOptions('guerreiro', 'martial_archetype_maneuvers').map(o => o.value)
+    const opts = tashaOptions('guerreiro', 'martial_archetype_maneuvers')
+    const valores = opts.map(o => o.value)
     for (const v of ESPERADAS) expect(valores, `${v} ausente`).toContain(v)
+    expect(opts, 'manobra a mais/a menos').toHaveLength(ESPERADAS.length)
   })
 
   it('as manobras de Tasha entram no merge carimbadas e somadas às do PHB', () => {

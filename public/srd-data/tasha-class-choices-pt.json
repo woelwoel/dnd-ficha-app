@@ -177,7 +177,7 @@
       {
         "level": 1,
         "id": "fighting_style",
-        "featureName": "Estilo de Luta",
+        "featureName": "Estilo de Combate",
         "options": [
           { "value": "luta_as_cegas", "name": "Luta às Cegas", "combat": "essencial", "desc": "Você tem percepção às cegas com alcance de 3m: dentro dela, enxerga o que não estiver sob cobertura total mesmo cego ou no escuro, e vê criaturas invisíveis (a menos que se escondam de você com sucesso)." },
           { "value": "interceptador", "name": "Interceptador", "combat": "situacional", "desc": "Quando uma criatura que você veja acerta um alvo (que não seja você) a até 1,5m de você, use sua reação para reduzir o dano em 1d10 + seu bônus de proficiência (mínimo 0). Você precisa empunhar um escudo ou uma arma simples ou marcial." },
@@ -385,7 +385,7 @@
       {
         "level": 2,
         "id": "fighting_style_paladin",
-        "featureName": "Estilo de Luta",
+        "featureName": "Estilo de Combate",
         "options": [
           { "value": "guerreiro_abencoado", "name": "Guerreiro Abençoado", "combat": "essencial", "desc": "Você aprende dois truques à sua escolha da lista de magias do Clérigo; contam como magias de paladino e usam Carisma como atributo de conjuração. Ao subir de nível nesta classe, pode trocar um deles por outro truque da lista de clérigo." },
           { "value": "luta_as_cegas", "name": "Luta às Cegas", "combat": "essencial", "desc": "Você tem percepção às cegas com alcance de 3m: dentro dela, enxerga o que não estiver sob cobertura total mesmo cego ou no escuro, e vê criaturas invisíveis (a menos que se escondam de você com sucesso)." },
@@ -540,7 +540,7 @@
       {
         "level": 2,
         "id": "fighting_style_ranger",
-        "featureName": "Estilo de Luta",
+        "featureName": "Estilo de Combate",
         "options": [
           { "value": "luta_as_cegas", "name": "Luta às Cegas", "combat": "essencial", "desc": "Você tem percepção às cegas com alcance de 3m: dentro dela, enxerga o que não estiver sob cobertura total mesmo cego ou no escuro, e vê criaturas invisíveis (a menos que se escondam de você com sucesso)." },
           { "value": "guerreiro_druidico", "name": "Guerreiro Druídico", "combat": "essencial", "desc": "Você aprende dois truques à sua escolha da lista de magias do Druida; contam como magias de patrulheiro e usam Sabedoria como atributo de conjuração. Ao subir de nível nesta classe, pode trocar um deles por outro truque da lista de druida." },
