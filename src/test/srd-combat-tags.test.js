@@ -2,6 +2,7 @@
 import { describe, it, expect } from 'vitest'
 import progression from '../../public/srd-data/phb-class-progression-pt.json'
 import choices from '../../public/srd-data/phb-class-choices-pt.json'
+import tashaChoices from '../../public/srd-data/tasha-class-choices-pt.json'
 import { COMBAT_TIERS, FEATURE_CATEGORIES } from '../systems/dnd5e/domain/featureCategories'
 
 const VALID_ACTION_TYPES = ['ação', 'ação bônus', 'reação', 'passiva']
@@ -18,9 +19,11 @@ function allBaseFeatures() {
 
 function allChoiceOptions() {
   const out = []
-  for (const [cls, data] of Object.entries(choices)) {
-    for (const ch of data.choices ?? []) {
-      for (const o of ch.options ?? []) out.push({ cls, choice: ch.id, ...o })
+  for (const src of [choices, tashaChoices]) {
+    for (const [cls, data] of Object.entries(src)) {
+      for (const ch of data.choices ?? []) {
+        for (const o of ch.options ?? []) out.push({ cls, choice: ch.id, ...o })
+      }
     }
   }
   return out

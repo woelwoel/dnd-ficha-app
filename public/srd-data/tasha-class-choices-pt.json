@@ -85,7 +85,7 @@
         "optional": true,
         "level": 3,
         "options": [
-          { "value": "conhecimento_primitivo", "name": "Conhecimento Primitivo", "category": "outras", "desc": "Ao alcançar o 3º nível, e novamente no 10º nível, você ganha proficiência em uma perícia à sua escolha da lista de perícias do bárbaro de 1º nível." }
+          { "value": "conhecimento_primitivo", "name": "Conhecimento Primitivo", "desc": "Ao alcançar o 3º nível, e novamente no 10º nível, você ganha proficiência em uma perícia à sua escolha da lista de perícias do bárbaro de 1º nível." }
         ]
       },
       {
