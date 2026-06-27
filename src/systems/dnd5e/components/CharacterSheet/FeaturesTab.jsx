@@ -404,7 +404,7 @@ function OptionalVariantsSection({ classIndex, level, activeSources, chosenFeatu
           return (
             <div key={choice.id} className="border border-gray-700 rounded-lg overflow-hidden">
               <div className="flex items-center justify-between gap-2 px-3 py-2.5 bg-gray-800/60">
-                <button onClick={() => setOpenId(isOpen ? null : choice.id)} className="flex items-center gap-2 min-w-0 text-left">
+                <button onClick={() => setOpenId(isOpen ? null : choice.id)} aria-expanded={isOpen} className="flex items-center gap-2 min-w-0 text-left">
                   <span className="text-indigo-400 shrink-0">{isOpen ? '▾' : '▸'}</span>
                   <span className="text-sm font-semibold text-gray-100 truncate">{opt.name}</span>
                   <span className="text-xs text-gray-500 ml-1">Nv {choice.level}{choice.featureName ? ` · substitui ${choice.featureName}` : ' · adiciona'}</span>
@@ -573,7 +573,11 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
         })
       }
     }
-    /* ── Adições opcionais de Tasha LIGADAS (sem feature-base; viram card) ── */
+    /* ── Adições opcionais de Tasha LIGADAS (sem feature-base; viram card) ──
+     * Entram DEPOIS do collapseScalingFeatures (que já rodou em classFeatures),
+     * então dependem de nome globalmente único: uma adição não deve repetir o
+     * nome-base de uma feature de classe, senão renderiza como card separado em
+     * vez de fundir. As adições de Tasha satisfazem isso por construção. */
     const additionFeatures = getChosenAdditions(classChoices?.[classIndex], level, chosenFeatures)
       .map(f => ({ ...f, source: classData?.name ?? classIndex, placeholder: false }))
 
