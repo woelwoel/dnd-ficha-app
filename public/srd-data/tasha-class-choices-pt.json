@@ -85,7 +85,11 @@
         "optional": true,
         "level": 3,
         "options": [
-          { "value": "conhecimento_primitivo", "name": "Conhecimento Primitivo", "desc": "Ao alcançar o 3º nível, e novamente no 10º nível, você ganha proficiência em uma perícia à sua escolha da lista de perícias do bárbaro de 1º nível." }
+          {
+            "value": "conhecimento_primitivo",
+            "name": "Conhecimento Primitivo",
+            "desc": "Ao alcançar o 3º nível, e novamente no 10º nível, você ganha proficiência em uma perícia à sua escolha da lista de perícias do bárbaro de 1º nível."
+          }
         ]
       },
       {
@@ -94,7 +98,13 @@
         "optional": true,
         "level": 7,
         "options": [
-          { "value": "instinto_agressivo", "name": "Instinto Agressivo", "combat": "situacional", "actionType": "ação bônus", "desc": "Como parte da ação bônus que você usa para entrar em fúria, você pode se mover até metade do seu deslocamento." }
+          {
+            "value": "instinto_agressivo",
+            "name": "Instinto Agressivo",
+            "combat": "situacional",
+            "actionType": "ação bônus",
+            "desc": "Como parte da ação bônus que você usa para entrar em fúria, você pode se mover até metade do seu deslocamento."
+          }
         ]
       }
     ]
@@ -118,6 +128,33 @@
             "name": "Colégio da Eloquência",
             "combat": "essencial",
             "desc": "O Colégio da Eloquência domina a oratória, misturando lógica e jogos de palavras teatrais para conquistar qualquer plateia.\n\nFeatures por nível:\n• Nv 3 — Língua Prateada: em testes de Carisma (Persuasão) ou Carisma (Enganação), trate uma rolagem de 9 ou menos no d20 como 10.\n• Nv 3 — Palavras Desconcertantes: como ação bônus, gasta um uso de Inspiração de Bardo e escolhe uma criatura a 18m; ela subtrai o dado de Inspiração da próxima salvaguarda que fizer antes do seu próximo turno.\n• Nv 6 — Inspiração Infalível: quando uma criatura usa seu dado de Inspiração e a rolagem falha, ela mantém o dado.\n• Nv 6 — Língua Universal: como ação, até mod. CAR criaturas a 18m passam a compreendê-lo magicamente por 1 hora. 1×/descanso longo grátis, ou gastando espaço de magia.\n• Nv 14 — Inspiração Contagiante: quando uma criatura a 18m usa um dado de Inspiração e tem sucesso, você usa a reação pra conceder um dado de Inspiração a outra criatura, sem gastar usos."
+          }
+        ]
+      },
+      {
+        "id": "bardo_magical_inspiration",
+        "addsFeature": true,
+        "optional": true,
+        "level": 2,
+        "options": [
+          {
+            "value": "inspiracao_magica",
+            "name": "Inspiração Mágica",
+            "category": "magia",
+            "desc": "Se uma criatura tem um dado de Inspiração de Bardo concedido por você e conjura uma magia que restaura pontos de vida ou causa dano, ela pode rolar esse dado e escolher um alvo afetado pela magia, somando o número rolado aos pontos de vida recuperados ou ao dano causado. O dado de Inspiração é gasto."
+          }
+        ]
+      },
+      {
+        "id": "bardo_bardic_versatility",
+        "addsFeature": true,
+        "optional": true,
+        "level": 4,
+        "options": [
+          {
+            "value": "versatilidade_bardica",
+            "name": "Versatilidade Bárdica",
+            "desc": "Sempre que você alcança um nível que concede Aumento no Valor de Atributo, você pode: transferir o bônus da característica Especialista de uma perícia para outra na qual você seja proficiente (e que ainda não tenha o bônus); ou substituir um truque aprendido pela conjuração de bardo por outro truque da lista de bardo."
           }
         ]
       }
@@ -197,11 +234,36 @@
         "id": "fighting_style",
         "featureName": "Estilo de Combate",
         "options": [
-          { "value": "luta_as_cegas", "name": "Luta às Cegas", "combat": "essencial", "desc": "Você tem percepção às cegas com alcance de 3m: dentro dela, enxerga o que não estiver sob cobertura total mesmo cego ou no escuro, e vê criaturas invisíveis (a menos que se escondam de você com sucesso)." },
-          { "value": "interceptador", "name": "Interceptador", "combat": "situacional", "desc": "Quando uma criatura que você veja acerta um alvo (que não seja você) a até 1,5m de você, use sua reação para reduzir o dano em 1d10 + seu bônus de proficiência (mínimo 0). Você precisa empunhar um escudo ou uma arma simples ou marcial." },
-          { "value": "tecnica_superior", "name": "Técnica Superior", "combat": "essencial", "desc": "Você aprende uma manobra à sua escolha dentre as do Mestre de Batalha e ganha um dado de superioridade (d6, somado a outros que você tenha). A CD da manobra = 8 + seu bônus de proficiência + Força ou Destreza (à sua escolha). O dado é recuperado num descanso curto ou longo." },
-          { "value": "arremesso_de_armas", "name": "Arremesso de Armas", "combat": "essencial", "desc": "Você pode sacar uma arma com a propriedade arremesso como parte da ação de ataque com ela. Além disso, ao acertar um ataque à distância com arma de arremesso, ganha +2 na jogada de dano." },
-          { "value": "ataque_desarmado", "name": "Ataque Desarmado", "combat": "essencial", "desc": "Seus ataques desarmados causam 1d6 + seu modificador de Força de dano contundente (o d6 vira d8 se você não empunhar arma nem escudo). No início de cada turno, pode causar 1d4 contundente a uma criatura agarrada por você." }
+          {
+            "value": "luta_as_cegas",
+            "name": "Luta às Cegas",
+            "combat": "essencial",
+            "desc": "Você tem percepção às cegas com alcance de 3m: dentro dela, enxerga o que não estiver sob cobertura total mesmo cego ou no escuro, e vê criaturas invisíveis (a menos que se escondam de você com sucesso)."
+          },
+          {
+            "value": "interceptador",
+            "name": "Interceptador",
+            "combat": "situacional",
+            "desc": "Quando uma criatura que você veja acerta um alvo (que não seja você) a até 1,5m de você, use sua reação para reduzir o dano em 1d10 + seu bônus de proficiência (mínimo 0). Você precisa empunhar um escudo ou uma arma simples ou marcial."
+          },
+          {
+            "value": "tecnica_superior",
+            "name": "Técnica Superior",
+            "combat": "essencial",
+            "desc": "Você aprende uma manobra à sua escolha dentre as do Mestre de Batalha e ganha um dado de superioridade (d6, somado a outros que você tenha). A CD da manobra = 8 + seu bônus de proficiência + Força ou Destreza (à sua escolha). O dado é recuperado num descanso curto ou longo."
+          },
+          {
+            "value": "arremesso_de_armas",
+            "name": "Arremesso de Armas",
+            "combat": "essencial",
+            "desc": "Você pode sacar uma arma com a propriedade arremesso como parte da ação de ataque com ela. Além disso, ao acertar um ataque à distância com arma de arremesso, ganha +2 na jogada de dano."
+          },
+          {
+            "value": "ataque_desarmado",
+            "name": "Ataque Desarmado",
+            "combat": "essencial",
+            "desc": "Seus ataques desarmados causam 1d6 + seu modificador de Força de dano contundente (o d6 vira d8 se você não empunhar arma nem escudo). No início de cada turno, pode causar 1d4 contundente a uma criatura agarrada por você."
+          }
         ]
       },
       {
@@ -209,13 +271,48 @@
         "id": "martial_archetype_maneuvers",
         "featureName": "Manobras",
         "options": [
-          { "value": "emboscada", "name": "Emboscada", "combat": "situacional", "desc": "Ao fazer um teste de Destreza (Furtividade) ou uma jogada de iniciativa, você pode gastar um dado de superioridade e somar o resultado à rolagem, desde que não esteja incapacitado." },
-          { "value": "engodo", "name": "Engodo", "combat": "situacional", "desc": "Estando a até 1,5m de uma criatura no seu turno, gaste um dado de superioridade e troque de lugar com ela (criatura voluntária e não incapacitada; gaste ao menos 1,5m de movimento). O movimento não provoca ataques de oportunidade. Role o dado: até o início do seu próximo turno, você ou a criatura (à sua escolha) ganha um bônus de CA igual ao valor rolado." },
-          { "value": "enganchar", "name": "Enganchar", "combat": "situacional", "desc": "Quando uma criatura que você veja se mover para dentro do alcance da sua arma corpo a corpo empunhada, use sua reação e gaste um dado de superioridade para atacá-la com essa arma. Se acertar, some o dado de superioridade ao dano." },
-          { "value": "presenca-dominante", "name": "Presença Dominante", "combat": "situacional", "desc": "Ao fazer um teste de Carisma (Intimidação, Atuação ou Persuasão), você pode gastar um dado de superioridade e somar o resultado ao teste." },
-          { "value": "golpe-imobilizador", "name": "Golpe Imobilizador", "combat": "situacional", "desc": "Logo após acertar uma criatura com um ataque corpo a corpo no seu turno, você pode gastar um dado de superioridade e tentar agarrar o alvo como ação bônus; some o dado ao seu teste de Força (Atletismo)." },
-          { "value": "lancamento-rapido", "name": "Lançamento Rápido", "combat": "essencial", "desc": "Como ação bônus, gaste um dado de superioridade e ataque com uma arma de arremesso (pode sacá-la como parte dessa ação). Se acertar, some o dado de superioridade ao dano." },
-          { "value": "avaliacao-tatica", "name": "Avaliação Tática", "combat": "situacional", "desc": "Ao fazer um teste de Inteligência (Investigação), Inteligência (História) ou Sabedoria (Intuição), você pode gastar um dado de superioridade e somar o resultado ao teste." }
+          {
+            "value": "emboscada",
+            "name": "Emboscada",
+            "combat": "situacional",
+            "desc": "Ao fazer um teste de Destreza (Furtividade) ou uma jogada de iniciativa, você pode gastar um dado de superioridade e somar o resultado à rolagem, desde que não esteja incapacitado."
+          },
+          {
+            "value": "engodo",
+            "name": "Engodo",
+            "combat": "situacional",
+            "desc": "Estando a até 1,5m de uma criatura no seu turno, gaste um dado de superioridade e troque de lugar com ela (criatura voluntária e não incapacitada; gaste ao menos 1,5m de movimento). O movimento não provoca ataques de oportunidade. Role o dado: até o início do seu próximo turno, você ou a criatura (à sua escolha) ganha um bônus de CA igual ao valor rolado."
+          },
+          {
+            "value": "enganchar",
+            "name": "Enganchar",
+            "combat": "situacional",
+            "desc": "Quando uma criatura que você veja se mover para dentro do alcance da sua arma corpo a corpo empunhada, use sua reação e gaste um dado de superioridade para atacá-la com essa arma. Se acertar, some o dado de superioridade ao dano."
+          },
+          {
+            "value": "presenca-dominante",
+            "name": "Presença Dominante",
+            "combat": "situacional",
+            "desc": "Ao fazer um teste de Carisma (Intimidação, Atuação ou Persuasão), você pode gastar um dado de superioridade e somar o resultado ao teste."
+          },
+          {
+            "value": "golpe-imobilizador",
+            "name": "Golpe Imobilizador",
+            "combat": "situacional",
+            "desc": "Logo após acertar uma criatura com um ataque corpo a corpo no seu turno, você pode gastar um dado de superioridade e tentar agarrar o alvo como ação bônus; some o dado ao seu teste de Força (Atletismo)."
+          },
+          {
+            "value": "lancamento-rapido",
+            "name": "Lançamento Rápido",
+            "combat": "essencial",
+            "desc": "Como ação bônus, gaste um dado de superioridade e ataque com uma arma de arremesso (pode sacá-la como parte dessa ação). Se acertar, some o dado de superioridade ao dano."
+          },
+          {
+            "value": "avaliacao-tatica",
+            "name": "Avaliação Tática",
+            "combat": "situacional",
+            "desc": "Ao fazer um teste de Inteligência (Investigação), Inteligência (História) ou Sabedoria (Intuição), você pode gastar um dado de superioridade e somar o resultado ao teste."
+          }
         ]
       }
     ]
@@ -248,7 +345,12 @@
         "optional": true,
         "level": 2,
         "options": [
-          { "value": "arma_dedicada", "name": "Arma Dedicada", "combat": "situacional", "desc": "Sempre que terminar um descanso curto ou longo, você pode tocar uma arma e concentrar seu ki nela, tratando-a como arma de monge até usar essa característica de novo. A arma deve ser simples ou marcial, você precisa ter proficiência com ela, e ela não pode ter as propriedades pesada ou especial." }
+          {
+            "value": "arma_dedicada",
+            "name": "Arma Dedicada",
+            "combat": "situacional",
+            "desc": "Sempre que terminar um descanso curto ou longo, você pode tocar uma arma e concentrar seu ki nela, tratando-a como arma de monge até usar essa característica de novo. A arma deve ser simples ou marcial, você precisa ter proficiência com ela, e ela não pode ter as propriedades pesada ou especial."
+          }
         ]
       },
       {
@@ -257,7 +359,13 @@
         "optional": true,
         "level": 3,
         "options": [
-          { "value": "ataque_com_ki", "name": "Ataque com Ki", "combat": "situacional", "actionType": "ação bônus", "desc": "Se você gastar 1 ponto de ki ou mais como parte da sua ação no seu turno, você pode fazer um ataque desarmado ou com arma de monge como uma ação bônus antes do fim do turno." }
+          {
+            "value": "ataque_com_ki",
+            "name": "Ataque com Ki",
+            "combat": "situacional",
+            "actionType": "ação bônus",
+            "desc": "Se você gastar 1 ponto de ki ou mais como parte da sua ação no seu turno, você pode fazer um ataque desarmado ou com arma de monge como uma ação bônus antes do fim do turno."
+          }
         ]
       },
       {
@@ -266,7 +374,13 @@
         "optional": true,
         "level": 4,
         "options": [
-          { "value": "cura_acelerada", "name": "Cura Acelerada", "combat": "situacional", "actionType": "ação", "desc": "Como uma ação, você pode gastar 2 pontos de ki e rolar um dado de Artes Marciais, recuperando pontos de vida iguais ao resultado mais o seu bônus de proficiência." }
+          {
+            "value": "cura_acelerada",
+            "name": "Cura Acelerada",
+            "combat": "situacional",
+            "actionType": "ação",
+            "desc": "Como uma ação, você pode gastar 2 pontos de ki e rolar um dado de Artes Marciais, recuperando pontos de vida iguais ao resultado mais o seu bônus de proficiência."
+          }
         ]
       },
       {
@@ -275,7 +389,12 @@
         "optional": true,
         "level": 5,
         "options": [
-          { "value": "mira_focalizada", "name": "Mira Focalizada", "combat": "situacional", "desc": "Quando você erra uma jogada de ataque, você pode gastar de 1 a 3 pontos de ki para aumentar a rolagem de ataque em 2 para cada ponto gasto, potencialmente transformando o erro em acerto." }
+          {
+            "value": "mira_focalizada",
+            "name": "Mira Focalizada",
+            "combat": "situacional",
+            "desc": "Quando você erra uma jogada de ataque, você pode gastar de 1 a 3 pontos de ki para aumentar a rolagem de ataque em 2 para cada ponto gasto, potencialmente transformando o erro em acerto."
+          }
         ]
       }
     ]
@@ -308,7 +427,13 @@
         "optional": true,
         "level": 3,
         "options": [
-          { "value": "mira_firme", "name": "Mira Firme", "combat": "situacional", "actionType": "ação bônus", "desc": "Como uma ação bônus, você pode conceder a si mesmo vantagem na sua próxima jogada de ataque neste turno. Você só pode usar essa ação bônus se não tiver se movido neste turno; depois de usá-la, seu deslocamento passa a ser 0 até o fim do turno." }
+          {
+            "value": "mira_firme",
+            "name": "Mira Firme",
+            "combat": "situacional",
+            "actionType": "ação bônus",
+            "desc": "Como uma ação bônus, você pode conceder a si mesmo vantagem na sua próxima jogada de ataque neste turno. Você só pode usar essa ação bônus se não tiver se movido neste turno; depois de usá-la, seu deslocamento passa a ser 0 até o fim do turno."
+          }
         ]
       }
     ]
@@ -332,6 +457,20 @@
             "name": "Ordem dos Escribas",
             "combat": "essencial",
             "desc": "A Ordem dos Escribas é a mais estudiosa das tradições: desperta magicamente o próprio livro de magias, transformando-o num companheiro consciente.\n\nFeatures por nível:\n• Nv 2 — Pena Mágica: ação bônus pra criar uma pena que não precisa de tinta, copia magias em 2 min/círculo e apaga o que você escreveu.\n• Nv 2 — Livro de Magia Desperto: foco de conjuração; ao conjurar com espaço, pode trocar o tipo de dano da magia pelo de outra do mesmo círculo no grimório; conjura rituais sem o +10 min (1×/descanso longo). Pode migrar a consciência pra um novo livro num descanso curto.\n• Nv 6 — Manifestar Mente: ação bônus pra invocar a mente do livro como objeto espectral Minúsculo a 18m (vê/ouve, visão no escuro, telepatia). Pode conjurar magias a partir da posição dela. Usos = bônus de proficiência por descanso longo.\n• Nv 10 — Mestre Escriba: ao descansar (longo), cria um pergaminho de magia (1º/2º círculo, ação) tocando a Pena no papel; a magia conta um círculo acima. Cria pergaminhos de magia pela metade do custo/tempo.\n• Nv 14 — Um com a Palavra: vantagem em Inteligência (Arcanismo) com o livro; e, com a Mente Manifesta ativa, reação pra prevenir todo o dano sofrido fazendo a mente sumir (perde magias temporariamente; role 3d6 pra o custo em círculos)."
+          }
+        ]
+      },
+      {
+        "id": "mago_cantrip_formulas",
+        "addsFeature": true,
+        "optional": true,
+        "level": 3,
+        "options": [
+          {
+            "value": "formulacao_de_truques",
+            "name": "Formulação de Truques",
+            "category": "magia",
+            "desc": "Você escreveu um conjunto de fórmulas arcanas no seu livro de magias. Sempre que termina um descanso longo e consulta essas fórmulas, você pode substituir um truque que conhece por outro truque da lista de magias do mago."
           }
         ]
       }
@@ -362,6 +501,34 @@
             "name": "Domínio do Crepúsculo",
             "combat": "essencial",
             "desc": "O Domínio do Crepúsculo traz conforto na escuridão — protege os que viajam à noite e enfrenta horrores das trevas.\n\nFeatures por nível:\n• Nv 1 — Magias de Domínio sempre preparadas (1/3/5/7/9). Proficiência com armas marciais e armadura pesada. Olhos da Noite: visão no escuro 90m (compartilhável). Benção da Vigilância: como ação, dá vantagem na próxima iniciativa de uma criatura tocada.\n• Nv 2 — Canalizar Divindade: Santuário Crepuscular — esfera de penumbra de 9m por 1 min; quem termina o turno nela ganha 1d6 + nível de PV temporários ou tem medo/encanto removido.\n• Nv 6 — Passos da Noite: na penumbra/escuridão, ação bônus pra ganhar voo = deslocamento por 1 min. Usos = bônus de proficiência.\n• Nv 8 — Golpe Divino: 1×/turno, +1d8 de dano radiante ao acertar com arma (+2d8 no nv14).\n• Nv 17 — Manto Crepuscular: criaturas dentro do seu Santuário Crepuscular ganham meia-cobertura."
+          }
+        ]
+      },
+      {
+        "id": "clerigo_harness_divine_power",
+        "addsFeature": true,
+        "optional": true,
+        "level": 2,
+        "options": [
+          {
+            "value": "explorar_poder_divino",
+            "name": "Explorar o Poder Divino",
+            "category": "magia",
+            "desc": "Você pode gastar um uso de Canalizar Divindade para alimentar suas magias. Como uma ação bônus, você toca seu símbolo sagrado, faz uma prece e recupera um espaço de magia gasto cujo círculo não pode ser maior que metade do seu bônus de proficiência (arredondado para cima). Você pode usar isso uma vez no 2º nível, duas no 6º e três no 18º, recuperando os usos em um descanso longo."
+          }
+        ]
+      },
+      {
+        "id": "clerigo_cantrip_versatility",
+        "addsFeature": true,
+        "optional": true,
+        "level": 4,
+        "options": [
+          {
+            "value": "versatilidade_em_truques",
+            "name": "Versatilidade em Truques",
+            "category": "magia",
+            "desc": "Sempre que você alcança um nível que concede Aumento no Valor de Atributo, você pode substituir um truque aprendido pela conjuração de clérigo por outro truque da lista de magias do clérigo."
           }
         ]
       }
@@ -434,6 +601,20 @@
             "desc": "Você adquire a habilidade de invocar um espírito em forma animal. Como uma ação, você pode gastar um uso de sua Forma Selvagem para conjurar a magia Convocar Familiar, sem componentes materiais. Conjurado assim, o familiar é uma fada (em vez de fera) e desaparece após um número de horas igual a metade do seu nível de druida."
           }
         ]
+      },
+      {
+        "id": "druida_cantrip_versatility",
+        "addsFeature": true,
+        "optional": true,
+        "level": 4,
+        "options": [
+          {
+            "value": "versatilidade_em_truques",
+            "name": "Versatilidade em Truques",
+            "category": "magia",
+            "desc": "Sempre que você alcança um nível que concede Aumento no Valor de Atributo, você pode substituir um truque aprendido pela conjuração de druida por outro truque da lista de magias do druida."
+          }
+        ]
       }
     ]
   },
@@ -464,9 +645,51 @@
         "id": "fighting_style_paladin",
         "featureName": "Estilo de Combate",
         "options": [
-          { "value": "guerreiro_abencoado", "name": "Guerreiro Abençoado", "combat": "essencial", "desc": "Você aprende dois truques à sua escolha da lista de magias do Clérigo; contam como magias de paladino e usam Carisma como atributo de conjuração. Ao subir de nível nesta classe, pode trocar um deles por outro truque da lista de clérigo." },
-          { "value": "luta_as_cegas", "name": "Luta às Cegas", "combat": "essencial", "desc": "Você tem percepção às cegas com alcance de 3m: dentro dela, enxerga o que não estiver sob cobertura total mesmo cego ou no escuro, e vê criaturas invisíveis (a menos que se escondam de você com sucesso)." },
-          { "value": "interceptador", "name": "Interceptador", "combat": "situacional", "desc": "Quando uma criatura que você veja acerta um alvo (que não seja você) a até 1,5m de você, use sua reação para reduzir o dano em 1d10 + seu bônus de proficiência (mínimo 0). Você precisa empunhar um escudo ou uma arma simples ou marcial." }
+          {
+            "value": "guerreiro_abencoado",
+            "name": "Guerreiro Abençoado",
+            "combat": "essencial",
+            "desc": "Você aprende dois truques à sua escolha da lista de magias do Clérigo; contam como magias de paladino e usam Carisma como atributo de conjuração. Ao subir de nível nesta classe, pode trocar um deles por outro truque da lista de clérigo."
+          },
+          {
+            "value": "luta_as_cegas",
+            "name": "Luta às Cegas",
+            "combat": "essencial",
+            "desc": "Você tem percepção às cegas com alcance de 3m: dentro dela, enxerga o que não estiver sob cobertura total mesmo cego ou no escuro, e vê criaturas invisíveis (a menos que se escondam de você com sucesso)."
+          },
+          {
+            "value": "interceptador",
+            "name": "Interceptador",
+            "combat": "situacional",
+            "desc": "Quando uma criatura que você veja acerta um alvo (que não seja você) a até 1,5m de você, use sua reação para reduzir o dano em 1d10 + seu bônus de proficiência (mínimo 0). Você precisa empunhar um escudo ou uma arma simples ou marcial."
+          }
+        ]
+      },
+      {
+        "id": "paladino_harness_divine_power",
+        "addsFeature": true,
+        "optional": true,
+        "level": 3,
+        "options": [
+          {
+            "value": "explorar_poder_divino",
+            "name": "Explorar o Poder Divino",
+            "category": "magia",
+            "desc": "Você pode gastar um uso de Canalizar Divindade para alimentar suas magias. Como uma ação bônus, você toca seu símbolo sagrado, faz uma prece e recupera um espaço de magia gasto cujo círculo não pode ser maior que metade do seu bônus de proficiência (arredondado para cima). Você pode usar isso uma vez no 3º nível, duas no 7º e três no 15º, recuperando os usos em um descanso longo."
+          }
+        ]
+      },
+      {
+        "id": "paladino_martial_versatility",
+        "addsFeature": true,
+        "optional": true,
+        "level": 4,
+        "options": [
+          {
+            "value": "versatilidade_marcial",
+            "name": "Versatilidade Marcial",
+            "desc": "Sempre que você alcança um nível que concede Aumento no Valor de Atributo, você pode substituir um estilo de combate que conhece por outro da lista disponível para paladinos."
+          }
         ]
       }
     ]
@@ -498,8 +721,18 @@
         "id": "metamagic",
         "featureName": "Metamagia",
         "options": [
-          { "value": "perseguidora", "name": "Magia Perseguidora", "combat": "essencial", "desc": "Se você errar uma jogada de ataque de uma magia, pode gastar 2 pontos de feitiçaria para rolar o d20 de novo, ficando com o novo resultado. Pode ser usada mesmo que você já esteja usando outra Metamagia na conjuração." },
-          { "value": "transmutada", "name": "Magia Transmutada", "combat": "situacional", "desc": "Ao conjurar uma magia que cause dano de ácido, gélido, ígneo, elétrico, venenoso ou trovejante, gaste 1 ponto de feitiçaria para mudar o tipo de dano para outro dentre esses listados." }
+          {
+            "value": "perseguidora",
+            "name": "Magia Perseguidora",
+            "combat": "essencial",
+            "desc": "Se você errar uma jogada de ataque de uma magia, pode gastar 2 pontos de feitiçaria para rolar o d20 de novo, ficando com o novo resultado. Pode ser usada mesmo que você já esteja usando outra Metamagia na conjuração."
+          },
+          {
+            "value": "transmutada",
+            "name": "Magia Transmutada",
+            "combat": "situacional",
+            "desc": "Ao conjurar uma magia que cause dano de ácido, gélido, ígneo, elétrico, venenoso ou trovejante, gaste 1 ponto de feitiçaria para mudar o tipo de dano para outro dentre esses listados."
+          }
         ]
       },
       {
@@ -507,8 +740,18 @@
         "id": "metamagic_10",
         "featureName": "Metamagia",
         "options": [
-          { "value": "perseguidora", "name": "Magia Perseguidora", "combat": "essencial", "desc": "Se você errar uma jogada de ataque de uma magia, pode gastar 2 pontos de feitiçaria para rolar o d20 de novo, ficando com o novo resultado. Pode ser usada mesmo que você já esteja usando outra Metamagia na conjuração." },
-          { "value": "transmutada", "name": "Magia Transmutada", "combat": "situacional", "desc": "Ao conjurar uma magia que cause dano de ácido, gélido, ígneo, elétrico, venenoso ou trovejante, gaste 1 ponto de feitiçaria para mudar o tipo de dano para outro dentre esses listados." }
+          {
+            "value": "perseguidora",
+            "name": "Magia Perseguidora",
+            "combat": "essencial",
+            "desc": "Se você errar uma jogada de ataque de uma magia, pode gastar 2 pontos de feitiçaria para rolar o d20 de novo, ficando com o novo resultado. Pode ser usada mesmo que você já esteja usando outra Metamagia na conjuração."
+          },
+          {
+            "value": "transmutada",
+            "name": "Magia Transmutada",
+            "combat": "situacional",
+            "desc": "Ao conjurar uma magia que cause dano de ácido, gélido, ígneo, elétrico, venenoso ou trovejante, gaste 1 ponto de feitiçaria para mudar o tipo de dano para outro dentre esses listados."
+          }
         ]
       },
       {
@@ -516,8 +759,46 @@
         "id": "metamagic_17",
         "featureName": "Metamagia",
         "options": [
-          { "value": "perseguidora", "name": "Magia Perseguidora", "combat": "essencial", "desc": "Se você errar uma jogada de ataque de uma magia, pode gastar 2 pontos de feitiçaria para rolar o d20 de novo, ficando com o novo resultado. Pode ser usada mesmo que você já esteja usando outra Metamagia na conjuração." },
-          { "value": "transmutada", "name": "Magia Transmutada", "combat": "situacional", "desc": "Ao conjurar uma magia que cause dano de ácido, gélido, ígneo, elétrico, venenoso ou trovejante, gaste 1 ponto de feitiçaria para mudar o tipo de dano para outro dentre esses listados." }
+          {
+            "value": "perseguidora",
+            "name": "Magia Perseguidora",
+            "combat": "essencial",
+            "desc": "Se você errar uma jogada de ataque de uma magia, pode gastar 2 pontos de feitiçaria para rolar o d20 de novo, ficando com o novo resultado. Pode ser usada mesmo que você já esteja usando outra Metamagia na conjuração."
+          },
+          {
+            "value": "transmutada",
+            "name": "Magia Transmutada",
+            "combat": "situacional",
+            "desc": "Ao conjurar uma magia que cause dano de ácido, gélido, ígneo, elétrico, venenoso ou trovejante, gaste 1 ponto de feitiçaria para mudar o tipo de dano para outro dentre esses listados."
+          }
+        ]
+      },
+      {
+        "id": "feiticeiro_sorcerous_versatility",
+        "addsFeature": true,
+        "optional": true,
+        "level": 4,
+        "options": [
+          {
+            "value": "versatilidade_feiticeira",
+            "name": "Versatilidade Feiticeira",
+            "category": "magia",
+            "desc": "Sempre que você alcança um nível que concede Aumento no Valor de Atributo, você pode: substituir uma das suas opções de Metamagia por outra disponível; ou substituir um truque aprendido pela conjuração de feiticeiro por outro truque da lista do feiticeiro."
+          }
+        ]
+      },
+      {
+        "id": "feiticeiro_magical_guidance",
+        "addsFeature": true,
+        "optional": true,
+        "level": 5,
+        "options": [
+          {
+            "value": "orientacao_magica",
+            "name": "Orientação Mágica",
+            "category": "magia",
+            "desc": "Você pode acessar sua fonte interna de magia para evocar o sucesso a partir do fracasso. Quando você falha em um teste de habilidade, pode gastar 1 ponto de feitiçaria para rolar novamente o d20 e usar o novo resultado, potencialmente transformando a falha em sucesso."
+          }
         ]
       }
     ]
@@ -580,14 +861,79 @@
         "id": "eldritch_invocations",
         "featureName": "Invocações Místicas",
         "options": [
-          { "value": "ligado_ao_talisma", "name": "Ligado ao Talismã", "combat": "situacional", "desc": "Pré-requisito: 12º nível de bruxo, característica de Pacto do Talismã.\n\nEnquanto outra criatura estiver vestindo seu talismã, você pode usar sua ação para se teletransportar a um espaço desocupado próximo a ela (ambos no mesmo plano); o portador pode fazer o mesmo, usando a ação dele para vir até você. Usos = seu bônus de proficiência, recuperados num descanso longo." },
-          { "value": "mente_mistica", "name": "Mente Mística", "combat": "essencial", "desc": "Você tem vantagem nas salvaguardas de Constituição feitas para manter a concentração em uma magia." },
-          { "value": "escrita_longinqua", "name": "Escrita Longínqua", "combat": "situacional", "desc": "Pré-requisito: 5º nível de bruxo, característica de Pacto do Tomo.\n\nUma nova página aparece no seu Livro das Sombras. Criaturas que assinarem o nome nela (até seu bônus de proficiência) podem ser alvo da magia Remeter sem gastar espaço de magia nem componentes materiais." },
-          { "value": "dadiva_dos_protetores", "name": "Dádiva dos Protetores", "combat": "situacional", "desc": "Pré-requisito: 9º nível de bruxo, característica de Pacto do Tomo.\n\nUma nova página aparece no seu Livro das Sombras. Quando uma criatura cujo nome esteja na página (até seu bônus de proficiência) for reduzida a 0 PV sem morrer na hora, ela cai para 1 PV em vez disso. Recarrega após um descanso longo." },
-          { "value": "implemento_mestre_corrente", "name": "Implemento do Mestre da Corrente", "combat": "situacional", "desc": "Pré-requisito: característica de Pacto da Corrente.\n\nAo conjurar Encontrar Familiar, você imbui o familiar: ganha voo ou natação 12m; pode comandá-lo a Atacar com uma ação bônus; os ataques dele são mágicos e usam a sua CD de magia; e você pode usar sua reação para dar resistência a ele contra um dano que sofra." },
-          { "value": "protecao_do_talisma", "name": "Proteção do Talismã", "combat": "situacional", "desc": "Pré-requisito: 7º nível de bruxo, característica de Pacto do Talismã.\n\nQuando o portador do seu talismã falhar em uma salvaguarda, ele pode somar 1d4 à jogada, podendo transformá-la em sucesso. Usos = seu bônus de proficiência, recuperados num descanso longo." },
-          { "value": "repreensao_do_talisma", "name": "Repreensão do Talismã", "combat": "situacional", "desc": "Pré-requisito: característica de Pacto do Talismã.\n\nQuando o portador do talismã for acertado por um atacante a até 9m de você e em seu campo de visão, você pode usar sua reação para causar dano psíquico igual ao seu bônus de proficiência e empurrá-lo até 3m para longe do portador." },
-          { "value": "servidao_eterna", "name": "Servidão Eterna", "combat": "situacional", "desc": "Pré-requisito: 5º nível de bruxo.\n\nVocê pode conjurar Animar Mortos sem gastar um espaço de magia. Feito isso, não pode conjurá-la dessa forma de novo até terminar um descanso longo." }
+          {
+            "value": "ligado_ao_talisma",
+            "name": "Ligado ao Talismã",
+            "combat": "situacional",
+            "desc": "Pré-requisito: 12º nível de bruxo, característica de Pacto do Talismã.\n\nEnquanto outra criatura estiver vestindo seu talismã, você pode usar sua ação para se teletransportar a um espaço desocupado próximo a ela (ambos no mesmo plano); o portador pode fazer o mesmo, usando a ação dele para vir até você. Usos = seu bônus de proficiência, recuperados num descanso longo."
+          },
+          {
+            "value": "mente_mistica",
+            "name": "Mente Mística",
+            "combat": "essencial",
+            "desc": "Você tem vantagem nas salvaguardas de Constituição feitas para manter a concentração em uma magia."
+          },
+          {
+            "value": "escrita_longinqua",
+            "name": "Escrita Longínqua",
+            "combat": "situacional",
+            "desc": "Pré-requisito: 5º nível de bruxo, característica de Pacto do Tomo.\n\nUma nova página aparece no seu Livro das Sombras. Criaturas que assinarem o nome nela (até seu bônus de proficiência) podem ser alvo da magia Remeter sem gastar espaço de magia nem componentes materiais."
+          },
+          {
+            "value": "dadiva_dos_protetores",
+            "name": "Dádiva dos Protetores",
+            "combat": "situacional",
+            "desc": "Pré-requisito: 9º nível de bruxo, característica de Pacto do Tomo.\n\nUma nova página aparece no seu Livro das Sombras. Quando uma criatura cujo nome esteja na página (até seu bônus de proficiência) for reduzida a 0 PV sem morrer na hora, ela cai para 1 PV em vez disso. Recarrega após um descanso longo."
+          },
+          {
+            "value": "implemento_mestre_corrente",
+            "name": "Implemento do Mestre da Corrente",
+            "combat": "situacional",
+            "desc": "Pré-requisito: característica de Pacto da Corrente.\n\nAo conjurar Encontrar Familiar, você imbui o familiar: ganha voo ou natação 12m; pode comandá-lo a Atacar com uma ação bônus; os ataques dele são mágicos e usam a sua CD de magia; e você pode usar sua reação para dar resistência a ele contra um dano que sofra."
+          },
+          {
+            "value": "protecao_do_talisma",
+            "name": "Proteção do Talismã",
+            "combat": "situacional",
+            "desc": "Pré-requisito: 7º nível de bruxo, característica de Pacto do Talismã.\n\nQuando o portador do seu talismã falhar em uma salvaguarda, ele pode somar 1d4 à jogada, podendo transformá-la em sucesso. Usos = seu bônus de proficiência, recuperados num descanso longo."
+          },
+          {
+            "value": "repreensao_do_talisma",
+            "name": "Repreensão do Talismã",
+            "combat": "situacional",
+            "desc": "Pré-requisito: característica de Pacto do Talismã.\n\nQuando o portador do talismã for acertado por um atacante a até 9m de você e em seu campo de visão, você pode usar sua reação para causar dano psíquico igual ao seu bônus de proficiência e empurrá-lo até 3m para longe do portador."
+          },
+          {
+            "value": "servidao_eterna",
+            "name": "Servidão Eterna",
+            "combat": "situacional",
+            "desc": "Pré-requisito: 5º nível de bruxo.\n\nVocê pode conjurar Animar Mortos sem gastar um espaço de magia. Feito isso, não pode conjurá-la dessa forma de novo até terminar um descanso longo."
+          }
+        ]
+      },
+      {
+        "id": "bruxo_mystic_versatility",
+        "addsFeature": true,
+        "optional": true,
+        "level": 4,
+        "options": [
+          {
+            "value": "versatilidade_mistica",
+            "name": "Versatilidade Mística",
+            "category": "magia",
+            "desc": "Sempre que você alcança um nível que concede Aumento no Valor de Atributo, você pode: substituir um truque aprendido pela Magia do Pacto por outro truque da lista de bruxo; substituir a opção escolhida de Dádiva do Pacto por outra disponível; e, no 12º nível ou acima, substituir uma magia da Arcana Mística por outra magia de bruxo do mesmo círculo. Se a troca tornar você inelegível para uma Invocação Mística, troque também essa invocação por outra para a qual você se qualifique."
+          }
+        ]
+      },
+      {
+        "id": "pact_boon",
+        "level": 3,
+        "options": [
+          {
+            "value": "talisma",
+            "name": "Pacto do Talismã",
+            "desc": "Seu patrono lhe dá um amuleto — um talismã que pode auxiliar seu portador quando a necessidade exigir. Quando o portador falha em um teste de habilidade, ele pode adicionar 1d4 ao resultado, potencialmente transformando a falha em sucesso. Pode usar isso um número de vezes igual ao seu bônus de proficiência, recuperando todos os usos em um descanso longo. Se você perder o talismã, pode realizar uma cerimônia de 1 hora durante um descanso curto ou longo para receber de seu patrono um substituto, destruindo o amuleto anterior. O talismã vira cinzas quando você morre."
+          }
         ]
       }
     ]
@@ -619,9 +965,24 @@
         "id": "fighting_style_ranger",
         "featureName": "Estilo de Combate",
         "options": [
-          { "value": "luta_as_cegas", "name": "Luta às Cegas", "combat": "essencial", "desc": "Você tem percepção às cegas com alcance de 3m: dentro dela, enxerga o que não estiver sob cobertura total mesmo cego ou no escuro, e vê criaturas invisíveis (a menos que se escondam de você com sucesso)." },
-          { "value": "guerreiro_druidico", "name": "Guerreiro Druídico", "combat": "essencial", "desc": "Você aprende dois truques à sua escolha da lista de magias do Druida; contam como magias de patrulheiro e usam Sabedoria como atributo de conjuração. Ao subir de nível nesta classe, pode trocar um deles por outro truque da lista de druida." },
-          { "value": "arremesso_de_armas", "name": "Arremesso de Armas", "combat": "essencial", "desc": "Você pode sacar uma arma com a propriedade arremesso como parte da ação de ataque com ela. Além disso, ao acertar um ataque à distância com arma de arremesso, ganha +2 na jogada de dano." }
+          {
+            "value": "luta_as_cegas",
+            "name": "Luta às Cegas",
+            "combat": "essencial",
+            "desc": "Você tem percepção às cegas com alcance de 3m: dentro dela, enxerga o que não estiver sob cobertura total mesmo cego ou no escuro, e vê criaturas invisíveis (a menos que se escondam de você com sucesso)."
+          },
+          {
+            "value": "guerreiro_druidico",
+            "name": "Guerreiro Druídico",
+            "combat": "essencial",
+            "desc": "Você aprende dois truques à sua escolha da lista de magias do Druida; contam como magias de patrulheiro e usam Sabedoria como atributo de conjuração. Ao subir de nível nesta classe, pode trocar um deles por outro truque da lista de druida."
+          },
+          {
+            "value": "arremesso_de_armas",
+            "name": "Arremesso de Armas",
+            "combat": "essencial",
+            "desc": "Você pode sacar uma arma com a propriedade arremesso como parte da ação de ataque com ela. Além disso, ao acertar um ataque à distância com arma de arremesso, ganha +2 na jogada de dano."
+          }
         ]
       },
       {
@@ -647,6 +1008,20 @@
             "value": "inimigo_eleito",
             "name": "Inimigo Eleito",
             "desc": "Substitui Inimigo Favorito (e interage com Matador de Inimigos). Quando você acerta uma criatura com uma jogada de ataque, pode invocar seu vínculo místico para marcá-la como seu inimigo favorito por 1 minuto ou até perder a concentração (como uma magia de concentração). Na primeira vez em cada um de seus turnos em que você acerta e causa dano ao alvo marcado — inclusive ao marcá-lo — o dano aumenta em 1d4 (1d6 no 6º nível, 1d8 no 14º). Você pode marcar um inimigo um número de vezes igual ao seu bônus de proficiência, recuperando todos os usos em um descanso longo."
+          }
+        ]
+      },
+      {
+        "id": "patrulheiro_spellcasting_focus",
+        "addsFeature": true,
+        "optional": true,
+        "level": 2,
+        "options": [
+          {
+            "value": "foco_de_conjuracao",
+            "name": "Foco de Conjuração",
+            "category": "magia",
+            "desc": "Você pode usar um foco druídico como foco de conjuração para suas magias de patrulheiro."
           }
         ]
       }
