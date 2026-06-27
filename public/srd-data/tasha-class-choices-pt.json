@@ -357,6 +357,20 @@
             "desc": "Constelação do Dragão: trate 9 ou menos no d20 como 10 em testes de Inteligência/Sabedoria e em TR de Constituição pra manter concentração. Estabilidade."
           }
         ]
+      },
+      {
+        "id": "druid_wild_companion",
+        "addsFeature": true,
+        "optional": true,
+        "level": 2,
+        "options": [
+          {
+            "value": "companheiro_animal",
+            "name": "Companheiro Animal",
+            "category": "magia",
+            "desc": "Você adquire a habilidade de invocar um espírito em forma animal. Como uma ação, você pode gastar um uso de sua Forma Selvagem para conjurar a magia Convocar Familiar, sem componentes materiais. Conjurado assim, o familiar é uma fada (em vez de fera) e desaparece após um número de horas igual a metade do seu nível de druida."
+          }
+        ]
       }
     ]
   },
@@ -545,6 +559,32 @@
           { "value": "luta_as_cegas", "name": "Luta às Cegas", "combat": "essencial", "desc": "Você tem percepção às cegas com alcance de 3m: dentro dela, enxerga o que não estiver sob cobertura total mesmo cego ou no escuro, e vê criaturas invisíveis (a menos que se escondam de você com sucesso)." },
           { "value": "guerreiro_druidico", "name": "Guerreiro Druídico", "combat": "essencial", "desc": "Você aprende dois truques à sua escolha da lista de magias do Druida; contam como magias de patrulheiro e usam Sabedoria como atributo de conjuração. Ao subir de nível nesta classe, pode trocar um deles por outro truque da lista de druida." },
           { "value": "arremesso_de_armas", "name": "Arremesso de Armas", "combat": "essencial", "desc": "Você pode sacar uma arma com a propriedade arremesso como parte da ação de ataque com ela. Além disso, ao acertar um ataque à distância com arma de arremesso, ganha +2 na jogada de dano." }
+        ]
+      },
+      {
+        "id": "ranger_deft_explorer",
+        "featureName": "Explorador Natural",
+        "optional": true,
+        "level": 1,
+        "options": [
+          {
+            "value": "habil",
+            "name": "Hábil",
+            "desc": "Substitui Explorador Natural. Você é um explorador e sobrevivente inigualável, na natureza e ao lidar com pessoas. Você adquire o benefício Astuto e ganha benefícios adicionais no 6º e no 10º nível.\n\n• Astuto (nv 1): escolha uma de suas perícias proficientes; seu bônus de proficiência é dobrado em qualquer teste de habilidade que use essa perícia. Você também aprende dois idiomas adicionais à sua escolha.\n• Peregrino (nv 6): seu deslocamento de caminhada aumenta em 1,5 m, e você ganha deslocamento de escalada e natação iguais a esse deslocamento.\n• Incansável (nv 10): como uma ação, você ganha pontos de vida temporários iguais a 1d8 + seu modificador de Sabedoria (mínimo de 1). Pode usar um número de vezes igual ao seu bônus de proficiência, recuperando todos os usos em um descanso longo. Ao terminar um descanso curto, reduz seu nível de exaustão em 1."
+          }
+        ]
+      },
+      {
+        "id": "ranger_favored_enemy_opt",
+        "featureName": "Inimigo Favorito",
+        "optional": true,
+        "level": 1,
+        "options": [
+          {
+            "value": "inimigo_eleito",
+            "name": "Inimigo Eleito",
+            "desc": "Substitui Inimigo Favorito (e interage com Matador de Inimigos). Quando você acerta uma criatura com uma jogada de ataque, pode invocar seu vínculo místico para marcá-la como seu inimigo favorito por 1 minuto ou até perder a concentração (como uma magia de concentração). Na primeira vez em cada um de seus turnos em que você acerta e causa dano ao alvo marcado — inclusive ao marcá-lo — o dano aumenta em 1d4 (1d6 no 6º nível, 1d8 no 14º). Você pode marcar um inimigo um número de vezes igual ao seu bônus de proficiência, recuperando todos os usos em um descanso longo."
+          }
         ]
       }
     ]

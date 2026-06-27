@@ -77,10 +77,13 @@ export default defineConfig({
             //    do feiticeiro, estilos de luta, manobras).
             //  v12 → v13 (2026-06-26): magias do Caldeirão de Tasha
             //    (tasha-spells-pt.json: 21 magias compostas sobre o PHB).
+            //  v13 → v14 (2026-06-26): features opcionais do Patrulheiro
+            //    (Hábil, Inimigo Eleito) + Druida (Companheiro Animal)
+            //    (tasha-class-choices-pt.json).
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v13',
+              cacheName: 'srd-data-v14',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
