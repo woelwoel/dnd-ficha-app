@@ -9,6 +9,7 @@ import {
   detectActionType, combatTier, featureCategory, actionTypeOf, isAttributeIncrease,
   featureUseId, collapseScalingFeatures,
 } from '../../domain/featureCategories'
+import { isOptionalChoice, getChosenAdditions, getOptionalVariants } from '../../domain/optionalFeatures'
 
 /* ══════════════════════════════════════════════════════════════════
    META
@@ -320,11 +321,13 @@ function PendingChoicesSection({
   const allEntries = []
   if (classIndex) {
     for (const ch of classChoices?.[classIndex]?.choices ?? []) {
+      if (isOptionalChoice(ch)) continue // opcionais de Tasha não são pendência
       allEntries.push({ choice: ch, scopeLevel: characterLevel, scopeLabel: null })
     }
   }
   for (const mc of multiclasses ?? []) {
     for (const ch of classChoices?.[mc.class]?.choices ?? []) {
+      if (isOptionalChoice(ch)) continue
       allEntries.push({ choice: ch, scopeLevel: mc.level, scopeLabel: mc.class })
     }
   }
@@ -368,6 +371,62 @@ function PendingChoicesSection({
             />
           </div>
         ))}
+      </div>
+    </section>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   VARIANTES OPCIONAIS DE TASHA (opt-in: liga substituição ou adição)
+   ══════════════════════════════════════════════════════════════════ */
+function OptionalVariantsSection({ classIndex, level, activeSources, chosenFeatures, classChoices, onSetChosenFeature }) {
+  const [openId, setOpenId] = useState(null)
+  const variants = getOptionalVariants(classChoices?.[classIndex], level, activeSources)
+  if (variants.length === 0) return null
+
+  return (
+    <section className="border border-indigo-700/50 bg-indigo-950/20 rounded-lg p-3 space-y-3">
+      <div className="flex items-center gap-2">
+        <span aria-hidden>✦</span>
+        <h3 className="text-xs font-bold text-indigo-300 uppercase tracking-widest">
+          Variantes de Tasha <span className="text-indigo-500 font-normal normal-case">({variants.length})</span>
+        </h3>
+      </div>
+      <p className="text-[13px] text-indigo-200/70 leading-relaxed">
+        Características opcionais do Caldeirão de Tasha. Cada uma é liga/desliga — substituem ou
+        adicionam uma característica. Combine com seu mestre antes de usar.
+      </p>
+      <div className="space-y-1.5">
+        {variants.map(choice => {
+          const opt = choice.options[0]
+          const on = chosenFeatures?.[choice.id] === opt.value
+          const isOpen = openId === choice.id
+          return (
+            <div key={choice.id} className="border border-gray-700 rounded-lg overflow-hidden">
+              <div className="flex items-center justify-between gap-2 px-3 py-2.5 bg-gray-800/60">
+                <button onClick={() => setOpenId(isOpen ? null : choice.id)} className="flex items-center gap-2 min-w-0 text-left">
+                  <span className="text-indigo-400 shrink-0">{isOpen ? '▾' : '▸'}</span>
+                  <span className="text-sm font-semibold text-gray-100 truncate">{opt.name}</span>
+                  <span className="text-xs text-gray-500 ml-1">Nv {choice.level}{choice.featureName ? ` · substitui ${choice.featureName}` : ' · adiciona'}</span>
+                </button>
+                <button
+                  role="switch"
+                  aria-checked={on}
+                  aria-label={`${on ? 'Desligar' : 'Ligar'} ${opt.name}`}
+                  onClick={() => onSetChosenFeature(choice.id, on ? '' : opt.value)}
+                  className={`shrink-0 w-11 h-6 rounded-full transition-colors relative ${on ? 'bg-indigo-600' : 'bg-gray-600'}`}
+                >
+                  <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${on ? 'left-[22px]' : 'left-0.5'}`} />
+                </button>
+              </div>
+              {isOpen && (
+                <div className="px-3 pb-3 pt-2 bg-gray-900/40">
+                  <p className="text-sm text-gray-400 leading-relaxed whitespace-pre-line">{opt.desc}</p>
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
     </section>
   )
@@ -514,7 +573,11 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
         })
       }
     }
-    const classFeaturesAll = [...classFeatures, ...subChoiceFeatures]
+    /* ── Adições opcionais de Tasha LIGADAS (sem feature-base; viram card) ── */
+    const additionFeatures = getChosenAdditions(classChoices?.[classIndex], level, chosenFeatures)
+      .map(f => ({ ...f, source: classData?.name ?? classIndex, placeholder: false }))
+
+    const classFeaturesAll = [...classFeatures, ...subChoiceFeatures, ...additionFeatures]
 
     /* ── Dois baldes derivados de uma única lista enriquecida ──
      * Placeholders genéricos de subclasse não-resolvidos (ex.: "Característica
@@ -682,6 +745,16 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
               classChoices={classChoices}
               multiclasses={info?.multiclasses}
               chosenFeatures={info?.chosenFeatures ?? {}}
+              onSetChosenFeature={onSetChosenFeature}
+            />
+          )}
+          {onSetChosenFeature && (
+            <OptionalVariantsSection
+              classIndex={classIndex}
+              level={level}
+              activeSources={character.meta?.settings?.sources ?? ['phb']}
+              chosenFeatures={info?.chosenFeatures ?? {}}
+              classChoices={classChoices}
               onSetChosenFeature={onSetChosenFeature}
             />
           )}
