@@ -80,10 +80,12 @@ export default defineConfig({
             //  v13 → v14 (2026-06-26): features opcionais do Patrulheiro
             //    (Hábil, Inimigo Eleito) + Druida (Companheiro Animal)
             //    (tasha-class-choices-pt.json).
+            //  v14 → v15 (2026-06-27): fan-out das features opcionais C2
+            //    (19 adições nas demais classes + Pacto do Talismã no Bruxo).
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v14',
+              cacheName: 'srd-data-v15',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
