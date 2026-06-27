@@ -3182,9 +3182,9 @@
   {
     "index": "falar-com-plantas",
     "name": "Falar Com Plantas",
-    "level": 1,
-    "school": "adivinhação",
-    "ritual": true,
+    "level": 3,
+    "school": "transmutação",
+    "ritual": false,
     "casting_time": "1 ação",
     "range": "Pessoal (9 metros de raio)",
     "components": "V, S",
