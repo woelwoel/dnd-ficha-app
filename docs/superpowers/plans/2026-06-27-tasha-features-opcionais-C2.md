@@ -258,7 +258,7 @@ Em `bardo.choices`:
   "optional": true,
   "level": 4,
   "options": [
-    { "value": "versatilidade_bardica", "name": "Versatilidade Bárdica", "category": "outras", "desc": "Sempre que você alcança um nível que concede Aumento no Valor de Atributo, você pode: transferir o bônus da característica Especialista de uma perícia para outra na qual você seja proficiente (e que ainda não tenha o bônus); ou substituir um truque aprendido pela conjuração de bardo por outro truque da lista de bardo." }
+    { "value": "versatilidade_bardica", "name": "Versatilidade Bárdica", "desc": "Sempre que você alcança um nível que concede Aumento no Valor de Atributo, você pode: transferir o bônus da característica Especialista de uma perícia para outra na qual você seja proficiente (e que ainda não tenha o bônus); ou substituir um truque aprendido pela conjuração de bardo por outro truque da lista de bardo." }
   ]
 }
 ```
@@ -371,7 +371,7 @@ Em `paladino.choices`:
   "optional": true,
   "level": 4,
   "options": [
-    { "value": "versatilidade_marcial", "name": "Versatilidade Marcial", "category": "outras", "desc": "Sempre que você alcança um nível que concede Aumento no Valor de Atributo, você pode substituir um estilo de combate que conhece por outro da lista disponível para paladinos." }
+    { "value": "versatilidade_marcial", "name": "Versatilidade Marcial", "desc": "Sempre que você alcança um nível que concede Aumento no Valor de Atributo, você pode substituir um estilo de combate que conhece por outro da lista disponível para paladinos." }
   ]
 }
 ```
@@ -441,7 +441,7 @@ Atualize `C:\Users\gvfar\.claude\projects\C--Users-gvfar-git-dnd-ficha-app\memor
 
 - **19 adições** (card-only, modelo C1 `optional`+`addsFeature`) → Task 1 (7: Bárbaro 2, Ladino 1, Monge 4) + Task 2 (12: Bardo 2, Bruxo 1, Clérigo 2, Druida 1, Feiticeiro 2, Mago 1, Paladino 2, Patrulheiro 1).
 - **Pacto do Talismã** (novo tipo de Dádiva de Pacto) → Task 2, como option de lista no `pact_boon` do Bruxo (id colidindo com PHB → merge concatena+carimba), NÃO opt-in toggle. Corrige a conclusão do balde A de que "TCE não cria novos tipos de pacto".
-- **Tags de roteamento**: combativas (`combat: 'situacional'` + `actionType`) p/ Instinto Agressivo, Mira Firme, Arma Dedicada, Ataque com Ki, Cura Acelerada, Mira Focalizada; `category: 'magia'` p/ as versatilidades de truque/conjuração, Inspiração Mágica, Explorar o Poder Divino, Formulação de Truques, Foco de Conjuração; `category: 'outras'` p/ Conhecimento Primitivo, Versatilidade Bárdica, Versatilidade Marcial.
+- **Tags de roteamento**: combativas (`combat: 'situacional'` + `actionType`) p/ Instinto Agressivo, Mira Firme, Arma Dedicada, Ataque com Ki, Cura Acelerada, Mira Focalizada; `category: 'magia'` p/ as versatilidades de truque/conjuração, Inspiração Mágica, Explorar o Poder Divino, Formulação de Truques, Foco de Conjuração; SEM tag (cai em 'outras' pelo fallback) p/ Conhecimento Primitivo, Versatilidade Bárdica, Versatilidade Marcial. NOTA: `'outras'` NÃO é valor canônico de `category` (FEATURE_CATEGORIES = defesa/exploracao/social/magia); é o fallback computado — nunca grave `category: 'outras'` no JSON.
 - **Cache SW** → Task 3 (v14→v15).
 - **Sem código novo** — reusa 100% da infra do C1. Nenhuma option grava `source` no cru (carimbo runtime).
 - **FORA (declarado, vai pro C3):** Consciência Primordial (concede magias), Golpes Abençoados (substitui feature de subclasse). Listas de magias expandidas seguem como balde separado. Guerreiro não tem feature opcional nova nesta tradução.
