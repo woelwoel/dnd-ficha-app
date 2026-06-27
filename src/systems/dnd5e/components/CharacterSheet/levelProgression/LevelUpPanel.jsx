@@ -50,6 +50,7 @@ export function LevelUpPanel({
 
   const choicesForLevel = (levelChoices ?? [])
     .filter(c => c.level === nextLevel)
+    .filter(c => !c.optional) // opcionais de Tasha nunca são obrigatórias no level-up (contrato "nunca pendência")
     .map(c => filterChoiceBySources(c, currentChosenFeatures, activeSources))
     .filter(c => (c.options?.length ?? 0) > 0)
   const choicesReady = choicesForLevel.every(c => {

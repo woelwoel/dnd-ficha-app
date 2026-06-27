@@ -272,7 +272,7 @@ export function CharacterView({
                 const opt = c.options.find(o => o.value === chosen[c.id])
                 return (
                   <span key={c.id} className="text-[#5c3d11]">
-                    <span className="font-bold">{c.featureName}:</span> {opt?.name ?? chosen[c.id]}
+                    {c.featureName && <span className="font-bold">{c.featureName}: </span>}{opt?.name ?? chosen[c.id]}
                   </span>
                 )
               })}
