@@ -91,6 +91,7 @@ export function isChoiceDone(choice, value, characterLevel = 1) {
 export function getLeveledChoices(classChoicesData, level, chosenFeatures = {}, activeSources) {
   return (classChoicesData?.choices ?? [])
     .filter(c => c.level <= level)
+    .filter(c => !c.optional) // opcionais de Tasha vivem só na ficha, nunca no fluxo obrigatório do wizard
     .filter(c => {
       if (!c.requires) return true
       return Object.entries(c.requires).every(([k, v]) => chosenFeatures?.[k] === v)
