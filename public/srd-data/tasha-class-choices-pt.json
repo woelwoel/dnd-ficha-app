@@ -78,6 +78,24 @@
             "desc": "1d8 de dano cortante com alcance de 3m. Como reação ao ser atingido por um ataque, adiciona 1d8 à sua CA contra aquele ataque (podendo transformar acerto em erro). Opção defensiva/alcance."
           }
         ]
+      },
+      {
+        "id": "barbaro_primal_knowledge",
+        "addsFeature": true,
+        "optional": true,
+        "level": 3,
+        "options": [
+          { "value": "conhecimento_primitivo", "name": "Conhecimento Primitivo", "category": "outras", "desc": "Ao alcançar o 3º nível, e novamente no 10º nível, você ganha proficiência em uma perícia à sua escolha da lista de perícias do bárbaro de 1º nível." }
+        ]
+      },
+      {
+        "id": "barbaro_instinctive_pounce",
+        "addsFeature": true,
+        "optional": true,
+        "level": 7,
+        "options": [
+          { "value": "instinto_agressivo", "name": "Instinto Agressivo", "combat": "situacional", "actionType": "ação bônus", "desc": "Como parte da ação bônus que você usa para entrar em fúria, você pode se mover até metade do seu deslocamento." }
+        ]
       }
     ]
   },
@@ -223,6 +241,42 @@
             "desc": "Monges do Caminho da Forma Astral veem o corpo como ilusão e o ki como sua forma verdadeira — manifestada em braços, semblante e corpo espectrais.\n\nFeatures por nível:\n• Nv 3 — Braços da Forma Astral: ação bônus, gasta 1 ki; criaturas a 3m fazem TR de Destreza ou sofrem 2 dados de Artes Marciais de energia. Por 10 min, ganha braços espectrais: usa SAB no lugar de FOR; ataca com eles com +1,5m de alcance, usando SAB nas rolagens (dano de energia).\n• Nv 6 — Semblante da Forma Astral: ação bônus (ou junto dos Braços), gasta 1 ki por 10 min: visão no escuro 36m, vantagem em Intuição e Intimidação, e voz direcionada (1 criatura a 18m) ou amplificada (180m).\n• Nv 11 — Corpo Astral: com braços e semblante ativos, manifesta o corpo (sem ação): Defletir Energia (reação, reduz dano ácido/gélido/ígneo/elétrico/trovejante/de energia em 1d10 + mod. SAB) e dano extra (dado de Artes Marciais 1×/turno ao acertar com os braços).\n• Nv 17 — Forma Astral Desperta: ação bônus, gasta 5 ki pra invocar tudo por 10 min: +2 de CA e, ao usar Ataque Extra, um terceiro ataque se todos forem com os braços astrais."
           }
         ]
+      },
+      {
+        "id": "monge_dedicated_weapon",
+        "addsFeature": true,
+        "optional": true,
+        "level": 2,
+        "options": [
+          { "value": "arma_dedicada", "name": "Arma Dedicada", "combat": "situacional", "desc": "Sempre que terminar um descanso curto ou longo, você pode tocar uma arma e concentrar seu ki nela, tratando-a como arma de monge até usar essa característica de novo. A arma deve ser simples ou marcial, você precisa ter proficiência com ela, e ela não pode ter as propriedades pesada ou especial." }
+        ]
+      },
+      {
+        "id": "monge_ki_fueled_attack",
+        "addsFeature": true,
+        "optional": true,
+        "level": 3,
+        "options": [
+          { "value": "ataque_com_ki", "name": "Ataque com Ki", "combat": "situacional", "actionType": "ação bônus", "desc": "Se você gastar 1 ponto de ki ou mais como parte da sua ação no seu turno, você pode fazer um ataque desarmado ou com arma de monge como uma ação bônus antes do fim do turno." }
+        ]
+      },
+      {
+        "id": "monge_quickened_healing",
+        "addsFeature": true,
+        "optional": true,
+        "level": 4,
+        "options": [
+          { "value": "cura_acelerada", "name": "Cura Acelerada", "combat": "situacional", "actionType": "ação", "desc": "Como uma ação, você pode gastar 2 pontos de ki e rolar um dado de Artes Marciais, recuperando pontos de vida iguais ao resultado mais o seu bônus de proficiência." }
+        ]
+      },
+      {
+        "id": "monge_focused_aim",
+        "addsFeature": true,
+        "optional": true,
+        "level": 5,
+        "options": [
+          { "value": "mira_focalizada", "name": "Mira Focalizada", "combat": "situacional", "desc": "Quando você erra uma jogada de ataque, você pode gastar de 1 a 3 pontos de ki para aumentar a rolagem de ataque em 2 para cada ponto gasto, potencialmente transformando o erro em acerto." }
+        ]
       }
     ]
   },
@@ -246,6 +300,15 @@
             "combat": "essencial",
             "desc": "A Alma Laminada golpeia e se infiltra com a mente, manifestando o poder psiônico como lâminas de energia.\n\nFeatures por nível:\n• Nv 3 — Poder Psíquico: dados de Energia Psíquica (d6; = 2× bônus de proficiência; sobem pra d8/d10/d12 nos níveis 5/11/17). Auxílio Psíônico (soma um dado a um teste com perícia/ferramenta proficiente; gasta só se passar) e Sussurros Psíquicos (telepatia com várias criaturas; 1ª vez/descanso longo é grátis).\n• Nv 3 — Lâminas Psíquicas: ao usar a ação de Ataque, manifesta uma lâmina (arma simples corpo a corpo, Acuidade e Arremesso, dano psíquico); pode atacar com a 2ª lâmina como ação bônus (d4 em vez de d6).\n• Nv 9 — Lâminas da Alma: Golpe Teleguiado (gasta dado pra somar ao ataque e transformar erro em acerto) e Teletransporte Psíquico (ação bônus, teleporta até 3× o dado em metros).\n• Nv 13 — Véu Psíquico: como ação, fica invisível por 1 hora (acaba ao causar dano/forçar TR). 1×/descanso longo, ou gastando um dado.\n• Nv 17 — Mente Pura: ao causar dano de Ataque Furtivo com as Lâminas, TR de Sabedoria (CD 8 + prof. + mod. DES) ou o alvo fica atordoado por 1 min (repete ao fim de cada turno). 1×/descanso longo, ou gastando um dado."
           }
+        ]
+      },
+      {
+        "id": "ladino_steady_aim",
+        "addsFeature": true,
+        "optional": true,
+        "level": 3,
+        "options": [
+          { "value": "mira_firme", "name": "Mira Firme", "combat": "situacional", "actionType": "ação bônus", "desc": "Como uma ação bônus, você pode conceder a si mesmo vantagem na sua próxima jogada de ataque neste turno. Você só pode usar essa ação bônus se não tiver se movido neste turno; depois de usá-la, seu deslocamento passa a ser 0 até o fim do turno." }
         ]
       }
     ]
