@@ -89,10 +89,12 @@ export default defineConfig({
             //    piloto (tasha-magic-items-pt.json, catálogo gated por fonte).
             //  v17 → v18 (2026-06-27): itens mágicos de Tasha — fan-out D2
             //    (40 itens no total: 29 maravilhosos + 11 tatuagens).
+            //  v18 → v19 (2026-06-30): limpeza de texto nos talentos Adepto
+            //    Metamágico/Místico (prefixo "Magia de Pacto" vazado removido).
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v18',
+              cacheName: 'srd-data-v19',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias

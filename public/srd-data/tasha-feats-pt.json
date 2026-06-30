@@ -2,7 +2,7 @@
   {
     "index": "adepto-metamagico",
     "name": "Adepto Metamágico",
-    "desc": "Magia de Pacto. Você aprendeu a exercer sua vontade sobre suas magias para mudar a forma como elas funcionam: Você aprende duas opções a sua escolha de Metamagia da lista do feiticeiro. Você pode usar apenas uma opção de Metamagia em uma magia quando a conjura, a menos que a opção diga o contrário. Sempre que alcançar um nível que forneça a característica de Aumento no Valor de Atributo, você pode substituir uma dessas opções de Metamagia por outra da lista de Feiticeiro. Você ganha 2 pontos de feitiçaria para gastar com Metamagia (esses pontos são adicionados a qualquer ponto de Feitiçaria que você possua de outra fonte, mas podem ser usados apenas em Metamagia). Você recupera todos os pontos de feitiçaria gastos ao terminar um descanso longo.",
+    "desc": "Você aprendeu a exercer sua vontade sobre suas magias para mudar a forma como elas funcionam: Você aprende duas opções a sua escolha de Metamagia da lista do feiticeiro. Você pode usar apenas uma opção de Metamagia em uma magia quando a conjura, a menos que a opção diga o contrário. Sempre que alcançar um nível que forneça a característica de Aumento no Valor de Atributo, você pode substituir uma dessas opções de Metamagia por outra da lista de Feiticeiro. Você ganha 2 pontos de feitiçaria para gastar com Metamagia (esses pontos são adicionados a qualquer ponto de Feitiçaria que você possua de outra fonte, mas podem ser usados apenas em Metamagia). Você recupera todos os pontos de feitiçaria gastos ao terminar um descanso longo.",
     "source": "tasha",
     "prereq": {
       "type": "spellcasting"
@@ -11,7 +11,7 @@
   {
     "index": "adepto-mistico",
     "name": "Adepto Místico",
-    "desc": "Magia de Pacto Estudando os conhecimentos de ocultismo, você desbloqueou o poder místico dentro de si mesmo: você aprende uma Invocação Mística da classe do bruxo a sua escolha. Se a invocação tiver algum tipo de requisito, você poderá escolhê-la apenas se você for um bruxo que cumpra esse requisito. Sempre que você adquire um nível de personagem, você pode trocar essa invocação por outra da classe de bruxo.",
+    "desc": "Estudando os conhecimentos de ocultismo, você desbloqueou o poder místico dentro de si mesmo: você aprende uma Invocação Mística da classe do bruxo a sua escolha. Se a invocação tiver algum tipo de requisito, você poderá escolhê-la apenas se você for um bruxo que cumpra esse requisito. Sempre que você adquire um nível de personagem, você pode trocar essa invocação por outra da classe de bruxo.",
     "source": "tasha",
     "prereq": {
       "type": "spellcasting"
