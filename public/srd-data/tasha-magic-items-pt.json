@@ -22,5 +22,301 @@
     "rarity": "incomum",
     "requiresAttunement": true,
     "description": "Requer sintonização. Enquanto usa estas braçadeiras e empunha um arco longo ou curto, você ganha proficiência com ele (se já não tiver) e +2 de bônus no dano dos ataques à distância feitos com ele."
+  },
+  {
+    "index": "atlas-de-infinitos-horizontes",
+    "name": "Atlas de Infinitos Horizontes",
+    "category": "item-maravilhoso",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um mago. Este livro grosso encadernado em couro escuro contém os feitiços portal arcano, portal dimensional, portal, passo nebuloso, viagem planar, círculo de teletransporte e palavra de recordação, e funciona como livro de feitiços e foco de conjuração. Tem 3 cargas, recupera 1d3 ao amanhecer: gaste 1 carga (após 1 minuto de estudo) para trocar um feitiço de mago preparado por outro de conjuração no livro; ou, quando atingido por um ataque, use sua reação para gastar 1 carga e se teletransportar até 3 metros para um espaço desocupado visível."
+  },
+  {
+    "index": "caldeirao-do-renascimento",
+    "name": "Caldeirão do Renascimento",
+    "category": "item-maravilhoso",
+    "rarity": "muito-raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um druida ou feiticeiro. Este pote de ferro fundido funciona como foco de conjuração de druida e componente para magias de adivinhação. Ao terminar um descanso longo, pode criar uma poção de cura maior que dura 24 horas. Como ação, pode fazê-lo crescer o suficiente para uma criatura Média se agachar dentro, ou reverter. Colocando o cadáver de um humanoide no caldeirão coberto por 90 kg de sal (10 PO) por pelo menos 8 horas, a criatura retorna à vida como por ressurreição no amanhecer seguinte; essa propriedade só volta após 7 dias."
+  },
+  {
+    "index": "cartilha-da-afeicao-do-tecelao",
+    "name": "Cartilha da Afeição do Tecelão",
+    "category": "item-maravilhoso",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um mago. Este livro perfumado contém os feitiços antipatia/simpatia, encantar pessoa, dominar pessoa, encantar, padrão hipnótico, modificar memória e sugestão, e funciona como livro de feitiços e foco de conjuração. Tem 3 cargas, recupera 1d3 ao amanhecer: gaste 1 carga (após 1 minuto de estudo) para trocar um feitiço de mago preparado por outro de encantamento no livro; ou, ao lançar um feitiço de encantamento, gaste 1 carga para impor desvantagem ao primeiro teste de resistência do alvo."
+  },
+  {
+    "index": "codex-do-invocador-de-planos",
+    "name": "Códex do Invocador de Planos",
+    "category": "item-maravilhoso",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um mago. Este livro encadernado em pele de demônio contém os feitiços banimento, convocar familiar, portal, círculo mágico, âncora planar e invocar elemental, e funciona como livro de feitiços e foco de conjuração. Tem 3 cargas, recupera 1d3 ao amanhecer: gaste 1 carga (após 1 minuto de estudo) para trocar um feitiço de mago preparado por outro de conjuração no livro; ou, ao lançar um feitiço de conjuração que invoca ou cria uma criatura, gaste 1 carga para conceder vantagem a ela nas jogadas de ataque por 1 minuto."
+  },
+  {
+    "index": "compendio-alquimico",
+    "name": "Compêndio Alquímico",
+    "category": "item-maravilhoso",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um mago. Este volume pesado contém os feitiços aumentar/reduzir, queda da pena, carne para pedra, forma gasosa, arma mágica e polimorfia, e funciona como livro de feitiços e foco de conjuração. Tem 3 cargas, recupera 1d3 ao amanhecer: gaste 1 carga (após 1 minuto de estudo) para trocar um feitiço de mago preparado por outro de transmutação no livro; ou, como ação, toque um objeto não mágico desocupado e gaste cargas para transformá-lo em outro de valor igual ou inferior (1 carga permite até 30 cm de lado, cada carga extra aumenta o máximo em 60 cm)."
+  },
+  {
+    "index": "cronica-cristalina",
+    "name": "Crônica Cristalina",
+    "category": "item-maravilhoso",
+    "rarity": "muito-raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um mago. Esta esfera de cristal gravada permite recuperar e armazenar informações e feitiços ao seu toque. Contém detectar pensamentos, fortaleza intelectual, ligação telepática de Rary, enviar mensagem, telecinésia, chicote mental de Tasha e disco flutuante de Tenser, funcionando como livro de feitiços; como foco de conjuração você também conhece mão do mago, lasca da mente e mensagem. Tem 3 cargas, recupera 1d3 ao amanhecer: gaste 1 carga (após 1 minuto de estudo) para trocar um feitiço de mago preparado por outro no cristal; ou, ao lançar um feitiço de mago, gaste 1 carga para lançá-lo sem componentes verbais, somáticos ou materiais de valor até 100 PO."
+  },
+  {
+    "index": "emblema-do-guardiao",
+    "name": "Emblema do Guardião",
+    "category": "item-maravilhoso",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um clérigo ou paladino. Símbolo sagrado anexável a uma armadura ou escudo. Tem 3 cargas (recupera todas ao amanhecer): quando você ou uma criatura a até 9 metros sofre um acerto crítico enquanto você veste a armadura ou empunha o escudo com o emblema, use a reação para gastar 1 carga e transformar o acerto crítico em acerto normal."
+  },
+  {
+    "index": "ferramenta-para-todos-os-fins",
+    "name": "Ferramenta para Todos os Fins",
+    "category": "item-maravilhoso",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um artífice. Raridade variável: incomum (+1), raro (+2), muito raro (+3). Esta chave de fenda pode virar qualquer ferramenta de artesão (você é proficiente com ela enquanto tiver essa forma). Enquanto a segura, concede o bônus correspondente nas jogadas de ataque de feitiço e nas CDs de resistência de feitiços de artífice. Como ação, pode se concentrar nela para aprender e lançar temporariamente (por 8 horas) um truque de qualquer lista de classe como truque de artífice; só volta no próximo amanhecer."
+  },
+  {
+    "index": "fragmento-astral",
+    "name": "Fragmento Astral",
+    "category": "item-maravilhoso",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um feiticeiro. Cristal do Plano Astral anexável a um objeto Minúsculo (cai se a sintonização terminar) que serve como foco de conjuração de feiticeiro. Ao usar uma Metamagia em um feitiço enquanto segura ou usa o fragmento, imediatamente após lançar você pode se teletransportar para um espaço desocupado visível a até 9 metros."
+  },
+  {
+    "index": "fragmento-de-essencia-elemental",
+    "name": "Fragmento de Essência Elemental",
+    "category": "item-maravilhoso",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um feiticeiro. Cristal com essência de um plano elemental, anexável a um objeto Minúsculo e usável como foco de conjuração. Ao sintonizar, role 1d4: (1) Ar — voa até 18m sem provocar ataques de oportunidade; (2) Terra — resistência a um tipo de dano à escolha até o próximo turno; (3) Fogo — um alvo do feitiço pega fogo, sofrendo 2d10 de fogo no próximo turno; (4) Água — onda causa 2d6 de frio num raio de 3m (resistência de Força ou é empurrado 3m e cai). A propriedade dispara ao aplicar uma Metamagia em um feitiço."
+  },
+  {
+    "index": "fragmento-de-essencia-externa",
+    "name": "Fragmento de Essência Externa",
+    "category": "item-maravilhoso",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um feiticeiro. Cristal com essência de um Plano Externo, anexável a um objeto Minúsculo e usável como foco de conjuração. Ao sintonizar, role 1d4: (1) Leal — encerra uma condição (encantado, cego, surdo, amedrontado, envenenado ou atordoado) em você ou criatura a até 9m; (2) Caótico — criatura atingida pelo dano do feitiço tem desvantagem em ataques e testes de habilidade até o próprio próximo turno; (3) Bom — você ou aliado a até 9m ganha 3d6 PV temporários; (4) Mal — criatura atingida sofre 3d6 de dano necrótico extra. A propriedade dispara ao aplicar uma Metamagia em um feitiço."
+  },
+  {
+    "index": "fragmento-de-feywild",
+    "name": "Fragmento de Feywild",
+    "category": "item-maravilhoso",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um feiticeiro. Cristal ligado à Agrestia das Fadas, anexável a um objeto Minúsculo e usável como foco de conjuração. Ao usar uma Metamagia em um feitiço, você pode rolar na tabela de Surto de Magia Selvagem do Livro do Jogador; se o resultado for um feitiço, ele não é afetado pela sua Metamagia e, se exigir concentração, dura toda a duração sem precisar de concentração. Sem a Origem Magia Selvagem, essa propriedade só volta no próximo amanhecer."
+  },
+  {
+    "index": "fragmento-de-shadowfell",
+    "name": "Fragmento de Shadowfell",
+    "category": "item-maravilhoso",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um feiticeiro. Cristal saturado pelo desespero do Shadowfell, anexável a um objeto Minúsculo e usável como foco de conjuração. Ao usar uma Metamagia em um feitiço, você pode amaldiçoar momentaneamente uma criatura alvo: escolha um valor de habilidade e, até o final do próximo turno dela, ela tem desvantagem em testes de habilidade e de resistência que usem essa habilidade."
+  },
+  {
+    "index": "fragmento-do-plano-distante",
+    "name": "Fragmento do Plano Distante",
+    "category": "item-maravilhoso",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um feiticeiro. Cristal imerso na essência distorcida do Plano Distante, anexável a um objeto Minúsculo e usável como foco de conjuração. Ao usar uma Metamagia em um feitiço, você pode fazer um tentáculo acertar uma criatura visível a até 9m: ela deve passar em resistência de Carisma contra a CD do feitiço ou sofrer 3d6 de dano psíquico e ficar amedrontada de você até o próprio próximo turno."
+  },
+  {
+    "index": "frasco-de-sangue",
+    "name": "Frasco de Sangue",
+    "category": "item-maravilhoso",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um feiticeiro, feita ao colocar gotas de sangue no frasco (que não abre durante a sintonização; se ela terminar, o sangue vira cinzas). Funciona como foco de conjuração de feiticeiro e concede bônus nas jogadas de ataque de feitiço e CDs de resistência de feitiços de feiticeiro: +1 (incomum), +2 (raro), +3 (muito raro). Ao rolar qualquer Dado de Vida para recuperar PV enquanto carrega o frasco, pode recuperar 5 pontos de feitiçaria (uma vez por amanhecer)."
+  },
+  {
+    "index": "grimorio-arcano",
+    "name": "Grimório Arcano",
+    "category": "item-maravilhoso",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um mago. Enquanto segura este livro, ele serve como foco de conjuração de mago e concede bônus nas jogadas de ataque de feitiço e CDs de resistência de feitiços de mago: +1 (incomum), +2 (raro), +3 (muito raro). Pode ser usado como livro de feitiços. Ao usar a Recuperação Arcana, aumenta em 1 o número de níveis de espaços de magia recuperados."
+  },
+  {
+    "index": "lira-da-construcao",
+    "name": "Lira da Construção",
+    "category": "item-maravilhoso",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização de um bardo. Enquanto segura a lira, pode lançar consertar como ação. Como reação, ao um objeto ou estrutura visível a até 90m sofrer dano, torna-o imune a esse dano e a danos posteriores do mesmo tipo até o próximo turno. Como ação, pode lançar fabricar, mover terra, criar passagem ou invocar construto a partir da lira; esse feitiço só pode ser lançado de novo após o próximo amanhecer."
+  },
+  {
+    "index": "livro-da-alma-e-carne",
+    "name": "Livro da Alma e Carne",
+    "category": "item-maravilhoso",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização de um mago. Livro de pele e osso que contém animar mortos, círculo da morte, vida falsa, dedo da morte, falar com os mortos, invocar mortos-vivos e toque vampírico (magias de mago enquanto sintonizado), e funciona como livro de feitiços e foco de conjuração. Tem 3 cargas (recupera 1d3 ao amanhecer): gaste 1 carga (após 1 minuto de estudo) para trocar um feitiço de mago preparado por outro de necromancia do livro; ou, como ação, gaste 1 carga para assumir aparência de morto-vivo por 10 minutos, ficando indiferente para mortos-vivos e enganando inspeção e magias de detecção (termina se causar dano ou forçar um teste de resistência)."
+  },
+  {
+    "index": "manto-da-natureza",
+    "name": "Manto da Natureza",
+    "category": "item-maravilhoso",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um druida ou patrulheiro. Muda de cor e textura para se misturar ao terreno; enquanto vestido, serve como foco de conjuração de druida e patrulheiro. Em área levemente obscurecida, permite Esconder-se como ação bônus mesmo estando observado diretamente."
+  },
+  {
+    "index": "manuscrito-duplicado",
+    "name": "Manuscrito Duplicado",
+    "category": "item-maravilhoso",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização de um mago. Para o sintonizado é um livro de feitiços; para os demais, parece um romance (cuja aparência e enredo você pode mudar como ação). Contém terreno alucinógeno, imagem maior, reflexos, despistar, aura mágica de Nystul, força fantasmagórica e imagem silenciosa, e funciona como foco de conjuração. Tem 3 cargas (recupera 1d3 ao amanhecer): gaste 1 carga (após 1 minuto de estudo) para trocar um feitiço de mago preparado por outro de ilusão do livro; ou, quando uma criatura faz um teste de Inteligência (Investigação) para discernir uma ilusão sua ou um teste de resistência contra ela, use a reação e gaste 1 carga para impor desvantagem."
+  },
+  {
+    "index": "membro-protetico",
+    "name": "Membro Protético",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Substitui um membro perdido (mão, braço, pé, perna ou parte semelhante) e funciona de forma idêntica à peça que substitui enquanto fixado. Pode ser destacado ou reconectado como ação, não pode ser removido contra a vontade do usuário, e se desprende se ele morrer."
+  },
+  {
+    "index": "ramo-de-sinos",
+    "name": "Ramo de Sinos",
+    "category": "item-maravilhoso",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização de um druida ou feiticeiro. Este galho de prata com sinos dourados serve como foco de conjuração. Tem 3 cargas (recupera 1d3 ao amanhecer): como ação bônus, gaste 1 carga para detectar a presença de aberrações, celestiais, construtos, elementais, fadas, demônios ou mortos-vivos a até 18m (os sinos indicam o tipo); como ação, gaste 1 carga para lançar proteção contra o bem e o mal."
+  },
+  {
+    "index": "sanfona-de-foliao",
+    "name": "Sanfona de Folião",
+    "category": "item-maravilhoso",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização de um bardo. Enquanto segura a sanfona, você ganha +2 nas CDs de resistência dos seus feitiços de bardo. Como ação, pode lançar Dança Irresistível de Otto a partir do item; essa propriedade só volta no próximo amanhecer."
+  },
+  {
+    "index": "tambor-fabricante-de-ritmo",
+    "name": "Tambor Fabricante de Ritmo",
+    "category": "item-maravilhoso",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Requer sintonização de um bardo. Raridade variável: incomum (+1), raro (+2), muito raro (+3). Enquanto segura o tambor, você ganha esse bônus nas jogadas de ataque de feitiço e CDs de resistência de feitiços de bardo. Como ação, pode tocá-lo para recuperar um uso de Inspiração de Bardo; essa propriedade só volta no próximo amanhecer."
+  },
+  {
+    "index": "tratado-fulminante",
+    "name": "Tratado Fulminante",
+    "category": "item-maravilhoso",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização de um mago. Livro chamuscado que contém contingência, bola de fogo, lufada de vento, pequena cabana de Leomund, mísseis mágicos, onda trovejante e muralha de energia, e funciona como livro de feitiços e foco de conjuração. Tem 3 cargas (recupera 1d3 ao amanhecer): gaste 1 carga (após 1 minuto de estudo) para trocar um feitiço de mago preparado por outro de evocação do livro; ou, como reação quando uma criatura visível sofre dano de um feitiço de evocação seu, gaste 1 carga para causar 2d6 de dano de força extra e derrubá-la se for Grande ou menor."
+  },
+  {
+    "index": "versos-protetores",
+    "name": "Versos Protetores",
+    "category": "item-maravilhoso",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização de um mago. Livro com fechadura (CD 20 para abrir) que você pode travar como Tranca Arcana ao tocar a capa (ação). Contém tranca arcana, dissipar magia, globo de invulnerabilidade, glifo de vigilância, santuário particular de Mordenkainen, proteção contra o bem e o mal e símbolo, e funciona como livro de feitiços e foco de conjuração. Tem 3 cargas (recupera 1d3 ao amanhecer): gaste 1 carga (após 1 minuto de estudo) para trocar um feitiço de mago preparado por outro de abjuração do livro; ou, ao lançar um feitiço de abjuração, gaste 1 carga para conceder 2d10 PV temporários a uma criatura visível a até 9m."
+  },
+  {
+    "index": "tatuagem-de-absorcao",
+    "name": "Tatuagem de Absorção",
+    "category": "tatuagem",
+    "rarity": "muito-raro",
+    "requiresAttunement": true,
+    "description": "Enquanto a tatuagem está na sua pele, você tem resistência a um tipo de dano determinado pela cor (à escolha do Mestre ou aleatório entre ácido, frio, fogo, energia, elétrico, necrótico, veneno, psíquico, radiante e trovejante). Quando sofre dano desse tipo, pode usar a reação para ganhar imunidade àquela instância e recuperar PV iguais à metade do dano que receberia; só pode ser usada uma vez por dia."
+  },
+  {
+    "index": "tatuagem-da-barreira",
+    "name": "Tatuagem da Barreira",
+    "category": "tatuagem",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Enquanto não estiver usando armadura (mas podendo usar escudo), a tatuagem concede uma CA que varia com a raridade: incomum = 12 + mod. de Destreza; rara = 15 + mod. de Destreza (máx. +2); muito rara = CA fixa de 18."
+  },
+  {
+    "index": "tatuagem-da-boa-vida",
+    "name": "Tatuagem da Boa Vida",
+    "category": "tatuagem",
+    "rarity": "muito-raro",
+    "requiresAttunement": true,
+    "description": "Concede resistência a dano necrótico. Quando você seria reduzido a 0 pontos de vida, cai para 1 ponto de vida em vez disso; essa proteção só pode ser usada uma vez por dia."
+  },
+  {
+    "index": "tatuagem-da-etapa-fantasma",
+    "name": "Tatuagem da Etapa Fantasma",
+    "category": "tatuagem",
+    "rarity": "muito-raro",
+    "requiresAttunement": true,
+    "description": "Tem 3 cargas (recupera ao amanhecer). Como ação bônus, gaste 1 carga para ficar incorpóreo até o fim do próximo turno: ganha resistência a dano não mágico de golpe, perfuração e corte e pode atravessar criaturas e objetos sólidos como terreno difícil (sofre 1d10 de força se terminar dentro de um objeto sólido ou ao ser deslocado no fim do efeito)."
+  },
+  {
+    "index": "tatuagem-da-furia-de-sangue",
+    "name": "Tatuagem da Fúria de Sangue",
+    "category": "tatuagem",
+    "rarity": "lendario",
+    "requiresAttunement": true,
+    "description": "Tem 10 cargas (recupera ao amanhecer). Ao acertar uma criatura com ataque de arma, pode gastar 1 carga para causar 4d6 de dano necrótico extra e recuperar PV iguais a esse dano; quando uma criatura visível causa dano a você, pode gastar 1 carga e usar a reação para fazer um ataque corpo a corpo contra ela com vantagem."
+  },
+  {
+    "index": "tatuagem-da-garra-mistica",
+    "name": "Tatuagem da Garra Mística",
+    "category": "tatuagem",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Seus golpes desarmados contam como mágicos para superar resistência/imunidade a ataques não mágicos e recebem +1 nas jogadas de ataque e dano. Como ação bônus, pode ativar a tatuagem por 1 minuto: seus ataques corpo a corpo (arma ou desarmado) alcançam alvos a até 4,5m via tentáculos de tinta e causam 1d6 de dano de força extra; uso limitado a uma vez por dia."
+  },
+  {
+    "index": "tatuagem-da-marca-de-shadowfell",
+    "name": "Tatuagem da Marca de Shadowfell",
+    "category": "tatuagem",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Concede visão no escuro de 18m e vantagem em testes de Destreza (Furtividade). Quando recebe dano, pode usar a reação para se tornar insubstancial por um momento e reduzir o dano pela metade; uso limitado a uma vez por dia."
+  },
+  {
+    "index": "tatuagem-de-aperto-em-espiral",
+    "name": "Tatuagem de Aperto em Espiral",
+    "category": "tatuagem",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Como ação, a tatuagem se expande em gavinhas de tinta que alcançam uma criatura visível a até 5m: ela deve passar em resistência de Força CD 14 ou sofrer 3d6 de dano de força e ficar agarrada. A criatura escapa com sucesso em Força (Atletismo) ou Destreza (Acrobacia) CD 14; o agarrão também termina se você o soltar, se ela ficar a mais de 4,5m, ou se você usar a tatuagem em outra criatura."
+  },
+  {
+    "index": "tatuagem-do-feitico-forjado",
+    "name": "Tatuagem do Feitiço Forjado",
+    "category": "tatuagem",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Contém uma única magia de até 5º nível, gravada na pele por uma agulha mágica; segurando a agulha contra a pele e falando a palavra de comando, você lança a magia sem componentes materiais, e a tatuagem desaparece quando a magia termina. O nível da magia define a raridade (truque/1º: comum; 2º-3º: incomum; 4º-5º: raro) e os valores de conjuração (modificador, CD e bônus de ataque), em escala crescente."
+  },
+  {
+    "index": "tatuagem-do-iluminador",
+    "name": "Tatuagem do Iluminador",
+    "category": "tatuagem",
+    "rarity": "comum",
+    "requiresAttunement": true,
+    "description": "Permite escrever com a ponta do dedo como uma caneta que nunca acaba. Como ação, pode tocar um texto de até uma página e dizer o nome de uma criatura para tornar a escrita invisível para todos exceto você e ela por 24 horas (qualquer um pode descartar a invisibilidade tocando o texto); uso limitado a uma vez por dia."
+  },
+  {
+    "index": "tatuagem-mascarada",
+    "name": "Tatuagem Mascarada",
+    "category": "tatuagem",
+    "rarity": "comum",
+    "requiresAttunement": true,
+    "description": "Como ação bônus, pode moldar a tatuagem em qualquer cor ou padrão e movê-la para qualquer área da pele (variando de tamanho, mas sempre visivelmente uma tatuagem). Como ação, pode usá-la para lançar disfarçar-se (CD 13 para perceber o disfarce); uso limitado a uma vez por dia."
   }
 ]
