@@ -85,10 +85,12 @@ export default defineConfig({
             //  v15 → v16 (2026-06-27): features opcionais C3 (Consciência
             //    Primordial/Véu Natural/Versatilidade Marcial do Patrulheiro +
             //    Golpes Abençoados do Clérigo) + fix metadados Falar com Plantas.
+            //  v16 → v17 (2026-06-27): itens mágicos de Tasha — infra D1 +
+            //    piloto (tasha-magic-items-pt.json, catálogo gated por fonte).
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v16',
+              cacheName: 'srd-data-v17',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
