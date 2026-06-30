@@ -1088,10 +1088,10 @@
       5,
       6,
       6,
+      6,
       7,
       7,
       7,
-      8,
       8,
       8,
       8
@@ -1298,7 +1298,7 @@
         "class_specific": {
           "pact_slots": 3,
           "pact_slot_level": 5,
-          "invocations": 7
+          "invocations": 6
         }
       },
       {
@@ -1343,7 +1343,7 @@
         "class_specific": {
           "pact_slots": 4,
           "pact_slot_level": 5,
-          "invocations": 8
+          "invocations": 7
         }
       },
       {

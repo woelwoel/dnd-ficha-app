@@ -766,7 +766,7 @@ const BRUXO = {
   pact_magic_table: PACT_MAGIC.slice(1),
   cantrips_known:    [2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4],
   spells_known:      [2,3,4,5,6,7,8,9,10,10,11,11,12,12,13,13,13,13,14,15],
-  invocations_known: [0,2,2,2,3,3,4,4,5,5,5,6,6,7,7,7,8,8,8,8],
+  invocations_known: [0,2,2,2,3,3,4,4,5,5,5,6,6,6,7,7,7,8,8,8],
   levels:[
     { level:1,  prof:2, features:[
       { name:'Patrono Sobrenatural', desc:'Você fechou um pacto com um ser sobrenatural de seu patrono à sua escolha: O Arquifada (Feérico), O Diabo (Infernal) ou O Grande Antigo. Cada patrono concede características nos níveis 1, 6, 10 e 14.', choice_id:'patron' },
@@ -798,14 +798,14 @@ const BRUXO = {
     ], class_specific:{ pact_slots:3, pact_slot_level:5, invocations:6 } },
     { level:14, prof:5, features:[
       { name:'Característica do Patrono Sobrenatural', desc:'Você recebe a característica de nível 14 do seu Patrono (Feérico: Encantamento das Fadas; Infernal: Arremesse pelo Inferno; Grande Antigo: Telepatia Criada).', subclass:true },
-    ], class_specific:{ pact_slots:3, pact_slot_level:5, invocations:7 } },
+    ], class_specific:{ pact_slots:3, pact_slot_level:5, invocations:6 } },
     { level:15, prof:5, features:[
       { name:'Misticismo Arcano (8° nível)', desc:'Você aprende uma magia de 8° nível da lista de bruxo. Lança uma vez por descanso longo sem usar espaço de magia.' },
     ], class_specific:{ pact_slots:3, pact_slot_level:5, invocations:7 } },
     { level:16, prof:5, features:[ ASI ], class_specific:{ pact_slots:3, pact_slot_level:5, invocations:7 } },
     { level:17, prof:6, features:[
       { name:'Misticismo Arcano (9° nível)', desc:'Você aprende uma magia de 9° nível da lista de bruxo. Lança uma vez por descanso longo sem usar espaço de magia.' },
-    ], class_specific:{ pact_slots:4, pact_slot_level:5, invocations:8 } },
+    ], class_specific:{ pact_slots:4, pact_slot_level:5, invocations:7 } },
     { level:18, prof:6, features:[], class_specific:{ pact_slots:4, pact_slot_level:5, invocations:8 } },
     { level:19, prof:6, features:[ ASI ], class_specific:{ pact_slots:4, pact_slot_level:5, invocations:8 } },
     { level:20, prof:6, features:[
