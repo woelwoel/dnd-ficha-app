@@ -342,6 +342,7 @@ export function SheetContent({ activeTab }) {
           inventory={character.inventory}
           attributes={character.attributes}
           maxAttunement={getMaxAttunement(character)}
+          activeSources={character.meta?.settings?.sources ?? ['phb']}
           onUpdateCurrency={updateCurrency}
           onAddItem={addItem}
           onRemoveItem={removeItem}

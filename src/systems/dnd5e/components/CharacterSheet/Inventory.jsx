@@ -3,6 +3,8 @@ import { SrdSearchModal } from '../SrdSearchModal'
 import { findArmorByName, ARMOR_TABLE } from '../../domain/equipment'
 import { getRarityInfo, getActiveMagicEffects } from '../../domain/magicItems'
 import { buildItemLookup, enrichItemDisplay } from '../../domain/itemLookup'
+import { useLazySrdDataset } from '../../data/SrdProvider'
+import { filterCatalogBySources } from '../../domain/sources'
 
 const CURRENCY_CONFIG = [
   { key: 'pp', label: 'PPl', title: 'Platina',  color: 'text-purple-300' },
@@ -100,7 +102,7 @@ function QtyEditor({ item, onUpdateItem }) {
 }
 
 export function Inventory({
-  inventory, attributes, maxAttunement = 3,
+  inventory, attributes, maxAttunement = 3, activeSources = ['phb'],
   onUpdateCurrency, onAddItem, onRemoveItem, onUpdateItem,
   onAddAttack, onRemoveAttack,
 }) {
@@ -108,9 +110,14 @@ export function Inventory({
   const [showForm, setShowForm] = useState(false)
   const [srdEquipment, setSrdEquipment] = useState([])
   const [searchOpen, setSearchOpen] = useState(false)
-  const [magicCatalog, setMagicCatalog] = useState([])
   const [magicSearchOpen, setMagicSearchOpen] = useState(false)
   const [ptWeapons, setPtWeapons] = useState([])
+
+  const magicCatalogRaw = useLazySrdDataset('magicItems') ?? []
+  const magicCatalog = useMemo(
+    () => filterCatalogBySources(magicCatalogRaw, activeSources),
+    [magicCatalogRaw, activeSources],
+  )
 
   // Lookup PT-BR ↔ SRD reconstruído quando os datasets carregam.
   const itemLookup = useMemo(
@@ -136,17 +143,6 @@ export function Inventory({
       .then(json => setPtWeapons(json?.weapons ?? json ?? []))
       .catch(err => {
         if (err.name !== 'AbortError') console.error('Falha ao carregar armas PT:', err)
-      })
-    return () => ctrl.abort()
-  }, [])
-
-  useEffect(() => {
-    const ctrl = new AbortController()
-    fetch('/srd-data/phb-magic-items-pt.json', { signal: ctrl.signal })
-      .then(r => r.json())
-      .then(setMagicCatalog)
-      .catch(err => {
-        if (err.name !== 'AbortError') console.error('Falha ao carregar itens mágicos:', err)
       })
     return () => ctrl.abort()
   }, [])
