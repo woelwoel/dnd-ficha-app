@@ -42,6 +42,14 @@ describe('sub-projeto 4 — magias concedidas (Feiticeiro/Bruxo/Patrulheiro)', (
       .toEqual(['forca-fantasmagorica', 'raio-ardente'])
     // sem tipo escolhido → só a base
     expect(granted('bruxo', { patron: 'genio' }, 1)).toEqual(['detectar-o-bem-e-mal'])
+    // Dao 4º círculo (nv7) = Stoneskin (pele-de-pedra), NÃO Moldar Rochas
+    expect(granted('bruxo', { patron: 'genio', bruxo_genie_kind: 'dao' }, 7))
+      .toEqual(['assassino-fantasmagorico', 'pele-de-pedra'])
+    // Marid: 1º círculo tem nublar; 2º círculo é Blur (omitida) → sem nublar duplicado
+    expect(granted('bruxo', { patron: 'genio', bruxo_genie_kind: 'marid' }, 1))
+      .toEqual(['detectar-o-bem-e-mal', 'nublar'])
+    expect(granted('bruxo', { patron: 'genio', bruxo_genie_kind: 'marid' }, 3))
+      .toEqual(['forca-fantasmagorica'])
   })
 
   it('regressão: patronos do PHB seguem funcionando', () => {
