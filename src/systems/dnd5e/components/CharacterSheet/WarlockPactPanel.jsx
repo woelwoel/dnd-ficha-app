@@ -1,5 +1,5 @@
 import { RollButton } from '../../../../components/DiceRoller/RollButton'
-import { getModifier, formatModifier } from '../../../../utils/calculations'
+import { getModifier, formatModifier, getProficiencyBonus } from '../../../../utils/calculations'
 
 /**
  * Painel do Bruxo (PHB p.106-110).
@@ -55,17 +55,20 @@ const ARCANUM_TIERS = [
 ]
 
 /* ── Pacto da Lâmina ─────────────────────────────────────────── */
-function BladePactPanel({ bruxoLevel, attributes }) {
-  const cha = getModifier(attributes?.cha ?? 10)
-  const profBonus = Math.ceil(bruxoLevel / 4) + 1
-  const atk = `1d20${formatModifier(profBonus + cha)}`
+function BladePactPanel({ totalLevel, attributes }) {
+  // PHB/Tasha: a arma de pacto é uma arma comum — ataque/dano usam Força ou
+  // Destreza (a melhor; Destreza vale quando a forma escolhida tem acuidade).
+  // Usar Carisma viria do Hexblade (Xanathar), ainda não implementado.
+  const best = Math.max(getModifier(attributes?.str ?? 10), getModifier(attributes?.dex ?? 10))
+  const profBonus = getProficiencyBonus(totalLevel)
+  const atk = `1d20${formatModifier(profBonus + best)}`
 
   return (
     <div className="flex items-center gap-2 bg-violet-100 rounded px-2 py-1.5 border border-violet-700/30">
       <div className="flex-1 min-w-0">
         <p className="text-xs font-bold text-violet-900">🗡 Pacto da Lâmina</p>
         <p className="text-xs ink-italic">
-          Arma de pacto invocada usa CHA pra ataque/dano. Rolar ataque rápido: {atk}.
+          Arma de pacto usa Força ou Destreza (a melhor) pra ataque/dano. Rolar ataque rápido: {atk}.
         </p>
       </div>
       <span className="text-base font-bold text-violet-900 font-mono">{atk}</span>
@@ -84,6 +87,9 @@ export function WarlockPactPanel({ bruxoLevel, character }) {
   const invocations = chosen.eldritch_invocations
   const invList = Array.isArray(invocations) ? invocations : (invocations ? [invocations] : [])
   const attributes = character.attributes ?? {}
+  // Bônus de proficiência vem do nível TOTAL do personagem (não só de bruxo),
+  // pra não subestimar o ataque em multiclasse.
+  const totalLevel = character.info?.level ?? bruxoLevel
 
   const arcanumTiers = ARCANUM_TIERS.filter(t => bruxoLevel >= t.level)
 
@@ -109,7 +115,7 @@ export function WarlockPactPanel({ bruxoLevel, character }) {
       {/* Pacto da Lâmina — botão de ataque rápido */}
       {boon === 'lamina' && bruxoLevel >= 3 && (
         <div className="pt-2 border-t border-violet-700/30">
-          <BladePactPanel bruxoLevel={bruxoLevel} attributes={attributes} />
+          <BladePactPanel totalLevel={totalLevel} attributes={attributes} />
         </div>
       )}
 

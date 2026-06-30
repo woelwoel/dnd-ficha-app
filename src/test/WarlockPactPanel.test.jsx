@@ -26,12 +26,23 @@ describe('<WarlockPactPanel>', () => {
     expect(screen.getByText('O Infernal')).toBeInTheDocument()
   })
 
-  it('Pacto da Lâmina nv 3+ mostra botão de ataque com CHA', () => {
-    const char = makeChar({ info: { chosenFeatures: { pact_boon: 'lamina' } } })
+  it('Pacto da Lâmina nv 3+ usa Força/Destreza (a melhor), não CHA', () => {
+    // PHB/Tasha: arma de pacto usa FOR/DES; CHA só viria do Hexblade (Xanathar).
+    const char = makeChar({ info: { level: 3, chosenFeatures: { pact_boon: 'lamina' } },
+      attributes: { cha: 16, str: 8, dex: 18 } })
     render(<WarlockPactPanel bruxoLevel={3} character={char} />)
     expect(screen.getAllByText(/Pacto da Lâmina/).length).toBeGreaterThanOrEqual(1)
-    // CHA +3 + prof bônus = 1d20+5 (nv 3, prof 2) — aparece em ≥1 lugar
-    expect(screen.getAllByText(/1d20\+5/).length).toBeGreaterThanOrEqual(1)
+    // DES +4 (a melhor) + prof 2 = 1d20+6; CHA (16, +3) é ignorado.
+    expect(screen.getAllByText(/1d20\+6/).length).toBeGreaterThanOrEqual(1)
+    expect(screen.queryByText(/1d20\+5/)).not.toBeInTheDocument()
+  })
+
+  it('Pacto da Lâmina: prof vem do nível total em multiclasse', () => {
+    // Bruxo 3 / Guerreiro 8 = nível 11, prof +4. FOR 16 (+3) → 1d20+7.
+    const char = makeChar({ info: { level: 11, chosenFeatures: { pact_boon: 'lamina' } },
+      attributes: { cha: 10, str: 16, dex: 10 } })
+    render(<WarlockPactPanel bruxoLevel={3} character={char} />)
+    expect(screen.getAllByText(/1d20\+7/).length).toBeGreaterThanOrEqual(1)
   })
 
   it('Pacto do Tomo nv 3+: info passiva', () => {
