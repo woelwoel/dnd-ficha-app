@@ -29,6 +29,8 @@ const DATASETS = {
   feats:           { pt: 'phb-feats-pt.json',            fallback: null,                      lazy: true },
   featsTasha:      { pt: 'tasha-feats-pt.json',          fallback: null,                      lazy: true },
   infusionsTasha:  { pt: 'tasha-infusions-pt.json',      fallback: null,                      lazy: true },
+  magicItems:      { pt: 'phb-magic-items-pt.json',      fallback: null,                      lazy: true },
+  magicItemsTasha: { pt: 'tasha-magic-items-pt.json',    fallback: null,                      lazy: true },
 }
 
 // Datasets lógicos compostos por partes carimbadas por fonte.
@@ -40,6 +42,7 @@ const COMPOSED = {
   classChoices: { strategy: 'classChoices', parts: [['classChoices', 'phb'], ['classChoicesTasha', 'tasha']] },
   progression:  { strategy: 'object', parts: [['progression', 'phb'], ['progressionTasha', 'tasha']] },
   infusions:    { strategy: 'array',  parts: [['infusionsTasha', 'tasha']] },
+  magicItems:   { strategy: 'array',  parts: [['magicItems', 'phb'], ['magicItemsTasha', 'tasha']] },
 }
 
 // Chaves lógicas não-lazy carregadas no boot. Partes de composição (ex.:
@@ -92,7 +95,7 @@ function loadDataset(name, { pt, fallback }) {
 const EMPTY_DEFAULTS = {
   races: [], classes: [], backgrounds: [], spells: [], levels: [],
   progression: {}, classChoices: {}, classEquipment: {}, weaponsArmor: {}, multiclass: {}, feats: [],
-  infusions: [],
+  infusions: [], magicItems: [],
 }
 
 const SrdContext = createContext(null)

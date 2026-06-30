@@ -1,0 +1,26 @@
+[
+  {
+    "index": "amuleto-do-devoto",
+    "name": "Amuleto do Devoto",
+    "category": "item-maravilhoso",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um clérigo ou paladino. Enquanto usa este símbolo sagrado, você ganha um bônus nas jogadas de ataque mágico e nas CDs de resistência das suas magias, determinado pela raridade (+1 incomum, +2 raro, +3 muito raro). Além disso, você pode usar seu Canalizar Divindade sem gastar um uso; depois de usar essa propriedade, ela só volta no próximo amanhecer."
+  },
+  {
+    "index": "arquivo-de-astromancia",
+    "name": "Arquivo de Astromancia",
+    "category": "item-maravilhoso",
+    "rarity": "raro",
+    "requiresAttunement": true,
+    "description": "Requer sintonização por um mago. Esta esfera armilar dobrável contém augúrio, adivinhação, encontrar o caminho, previsão, localizar criatura e localizar objeto (magias de mago para você) e funciona como grimório e foco de conjuração. Tem 3 cargas, recupera 1d3 ao amanhecer: gaste 1 carga (após 1 minuto de estudo) para trocar uma magia de mago preparada por outra de adivinhação no arquivo; ou, como reação, gaste 1 carga para forçar uma criatura a até 9m a rolar 1d4 e somar/subtrair do d20 dela."
+  },
+  {
+    "index": "bracadeiras-de-arquearia",
+    "name": "Braçadeiras de Arquearia",
+    "category": "item-maravilhoso",
+    "rarity": "incomum",
+    "requiresAttunement": true,
+    "description": "Requer sintonização. Enquanto usa estas braçadeiras e empunha um arco longo ou curto, você ganha proficiência com ele (se já não tiver) e +2 de bônus no dano dos ataques à distância feitos com ele."
+  }
+]
