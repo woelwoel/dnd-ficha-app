@@ -3,6 +3,13 @@ import { DetailsModal } from '../DetailsModal'
 import { FormFieldError } from '../../../../components/FormFieldError'
 import { TopicList, FullDescriptionToggle } from '../../../../components/TopicList'
 import { ABBR_TO_KEY, ALIGNMENTS, DND_LANGUAGES, RACE_LANGUAGES, parseBackgroundLanguageCount } from '../../../../utils/calculations'
+import { getRaceRequirements } from '../CharacterWizardV2/blocks/race-helpers'
+
+// Rótulo PT-BR de uma chave de atributo (para o aviso de bônus racial à escolha).
+const ATTR_KEY_LABEL = {
+  str: 'Força', dex: 'Destreza', con: 'Constituição',
+  int: 'Inteligência', wis: 'Sabedoria', cha: 'Carisma',
+}
 
 /* ── Modal: Raça ── */
 function RaceModalContent({ race }) {
@@ -33,6 +40,20 @@ function RaceModalContent({ race }) {
             <span className="text-amber-300">+{b.bonus}</span> {b.ability}
           </span>
         ))}
+        {(() => {
+          // Bônus racial à escolha (ex.: Meio-Elfo: +1 em dois atributos, exceto
+          // Carisma). Não vive em `ability_bonuses` porque é escolhido na criação;
+          // aqui só sinalizamos a regra para a tela de detalhe não parecer incompleta.
+          const reqs = getRaceRequirements({ race: race.index, subrace: '' })
+          if (!reqs.freeAbility) return null
+          const exclude = reqs.freeAbilityExclude ? ATTR_KEY_LABEL[reqs.freeAbilityExclude] : null
+          return (
+            <span className="bg-gray-800 border border-dashed border-amber-500/60 px-3 py-1 rounded-full">
+              <span className="text-amber-300">+1</span> em {reqs.freeAbility} atributos à escolha
+              {exclude ? ` (exceto ${exclude})` : ''}
+            </span>
+          )
+        })()}
       </div>
       {topics.length > 0 && (
         <div>
