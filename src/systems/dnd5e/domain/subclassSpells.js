@@ -209,10 +209,14 @@ const GENIE_BASE = [
   ['criacao'],                  // 9 (Creation)
 ]
 const GENIE_KIND = {
-  dao:    [['santuario'], ['crescer-espinhos'], [], ['moldar-rochas'], ['muralha-de-pedra']],
+  // Dao: 1º santuário, 2º crescer espinhos, 3º Mesclar-se às Rochas (OMITIDA,
+  // ausente do catálogo), 4º Pele de Pedra (Stoneskin), 5º muralha de pedra.
+  dao:    [['santuario'], ['crescer-espinhos'], [], ['pele-de-pedra'], ['muralha-de-pedra']],
   djinni: [['onda-trovejante'], ['lufada-de-vento'], ['muralha-de-vento'], ['invisibilidade-maior'], ['similaridade']],
   ifriti: [['maos-flamejantes'], ['raio-ardente'], ['bola-de-fogo'], ['escudo-de-fogo'], ['coluna-de-chamas']],
-  marid:  [['nublar'], ['nublar'], ['nevasca'], ['controlar-agua'], ['cone-de-frio']],
+  // Marid: 1º nublar (Fog Cloud), 2º Embaçar (Blur — OMITIDA, ausente do
+  // catálogo PT), 3º nevasca, 4º controlar água, 5º cone de frio.
+  marid:  [['nublar'], [], ['nevasca'], ['controlar-agua'], ['cone-de-frio']],
 }
 
 /* ── Origens de Feiticeiro de Tasha (p.46) — tiers 1/3/5/7/9 ────────

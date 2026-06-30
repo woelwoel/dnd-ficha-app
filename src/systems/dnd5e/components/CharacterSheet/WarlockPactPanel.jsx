@@ -20,10 +20,13 @@ const PATRON_LABEL = {
   feerico:        'O Feérico',
   infernal:       'O Infernal',
   grande_antigo:  'O Grande Antigo',
+  insondavel:     'O Insondável',   // Tasha
+  genio:          'O Gênio',        // Tasha
 }
 
 const PATRON_ICON = {
   feerico: '🍄', infernal: '🔥', grande_antigo: '🐙',
+  insondavel: '🌊', genio: '🧞',
 }
 
 const BOON_LABEL = {
@@ -81,9 +84,6 @@ export function WarlockPactPanel({ bruxoLevel, character }) {
   const invocations = chosen.eldritch_invocations
   const invList = Array.isArray(invocations) ? invocations : (invocations ? [invocations] : [])
   const attributes = character.attributes ?? {}
-
-  // Slots de pacto (1d20+CHA contra CD não são gerados aqui — só info)
-  const pactSlots = character.spellcasting?.pactSlotsUsed ?? 0
 
   const arcanumTiers = ARCANUM_TIERS.filter(t => bruxoLevel >= t.level)
 
