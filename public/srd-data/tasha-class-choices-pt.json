@@ -531,6 +531,20 @@
             "desc": "Sempre que você alcança um nível que concede Aumento no Valor de Atributo, você pode substituir um truque aprendido pela conjuração de clérigo por outro truque da lista de magias do clérigo."
           }
         ]
+      },
+      {
+        "id": "clerigo_blessed_strikes",
+        "addsFeature": true,
+        "optional": true,
+        "level": 8,
+        "options": [
+          {
+            "value": "golpes_abencoados",
+            "name": "Golpes Abençoados",
+            "combat": "situacional",
+            "desc": "Substitui Golpe Divino ou Conjuração Poderosa (a característica de 8º nível do seu domínio). Quando uma criatura sofre dano de um dos seus truques ou ataques com arma, você pode causar 1d8 de dano radiante adicional a ela. Depois de causar esse dano, você não pode usar esta característica de novo até o início do seu próximo turno."
+          }
+        ]
       }
     ]
   },
@@ -1022,6 +1036,47 @@
             "name": "Foco de Conjuração",
             "category": "magia",
             "desc": "Você pode usar um foco druídico como foco de conjuração para suas magias de patrulheiro."
+          }
+        ]
+      },
+      {
+        "id": "ranger_primal_awareness",
+        "featureName": "Consciência Primeva",
+        "optional": true,
+        "level": 3,
+        "options": [
+          {
+            "value": "consciencia_primordial",
+            "name": "Consciência Primordial",
+            "desc": "Substitui Consciência Primeva. Você foca sua consciência pelas conexões da natureza e aprende magias adicionais conforme sobe de nível, que não contam contra suas magias de patrulheiro conhecidas: Falar com Animais (nv 3), Sentido Bestial (nv 5), Falar com Plantas (nv 9), Localizar Criatura (nv 13) e Comunhão com a Natureza (nv 17). Você pode conjurar cada uma delas uma vez sem gastar espaço de magia; depois disso, só pode fazê-lo de novo após um descanso longo. (Ao ligar esta variante, as magias já aparecem na sua lista como sempre preparadas.)"
+          }
+        ]
+      },
+      {
+        "id": "ranger_natures_veil",
+        "featureName": "Ocultar-se às Claras",
+        "optional": true,
+        "level": 10,
+        "options": [
+          {
+            "value": "veu_natural",
+            "name": "Véu Natural",
+            "combat": "situacional",
+            "actionType": "ação bônus",
+            "desc": "Substitui Ocultar-se às Claras. Você invoca os poderes da natureza para se esconder brevemente. Como uma ação bônus, você fica magicamente invisível — junto de todo equipamento que estiver usando ou carregando — até o início do seu próximo turno. Você pode usar isso um número de vezes igual ao seu bônus de proficiência, recuperando todos os usos em um descanso longo."
+          }
+        ]
+      },
+      {
+        "id": "patrulheiro_martial_versatility",
+        "addsFeature": true,
+        "optional": true,
+        "level": 4,
+        "options": [
+          {
+            "value": "versatilidade_marcial",
+            "name": "Versatilidade Marcial",
+            "desc": "Sempre que você alcança um nível que concede Aumento no Valor de Atributo, você pode substituir um estilo de combate que conhece por outro da lista disponível para patrulheiros."
           }
         ]
       }
