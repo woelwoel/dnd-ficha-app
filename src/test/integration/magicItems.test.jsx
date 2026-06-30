@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Inventory } from '../../systems/dnd5e/components/CharacterSheet/Inventory'
+import { SrdProvider } from '../../systems/dnd5e/data/SrdProvider'
 import { getActiveMagicEffects, getEffectiveAttributes } from '../../systems/dnd5e/domain/magicItems'
 import { mockSrdFetch } from './helpers'
 
@@ -26,18 +27,22 @@ function makeInventory(items = []) {
 
 function Controlled({ initialInventory, attributes = { str: 14, dex: 12, con: 13, int: 10, wis: 10, cha: 8 } }) {
   const [inventory, setInventory] = useState(initialInventory)
+  // Inventory agora lê o catálogo de itens via useLazySrdDataset → precisa do
+  // SrdProvider em volta (o fetch é servido por mockSrdFetch no beforeEach).
   return (
-    <Inventory
-      inventory={inventory}
-      attributes={attributes}
-      onUpdateCurrency={(k, v) => setInventory(prev => ({ ...prev, currency: { ...prev.currency, [k]: v } }))}
-      onAddItem={(item) => setInventory(prev => ({ ...prev, items: [...prev.items, { id: `new-${prev.items.length}`, ...item }] }))}
-      onRemoveItem={(id) => setInventory(prev => ({ ...prev, items: prev.items.filter(i => i.id !== id) }))}
-      onUpdateItem={(id, patch) => setInventory(prev => ({
-        ...prev,
-        items: prev.items.map(i => i.id === id ? { ...i, ...patch } : i),
-      }))}
-    />
+    <SrdProvider>
+      <Inventory
+        inventory={inventory}
+        attributes={attributes}
+        onUpdateCurrency={(k, v) => setInventory(prev => ({ ...prev, currency: { ...prev.currency, [k]: v } }))}
+        onAddItem={(item) => setInventory(prev => ({ ...prev, items: [...prev.items, { id: `new-${prev.items.length}`, ...item }] }))}
+        onRemoveItem={(id) => setInventory(prev => ({ ...prev, items: prev.items.filter(i => i.id !== id) }))}
+        onUpdateItem={(id, patch) => setInventory(prev => ({
+          ...prev,
+          items: prev.items.map(i => i.id === id ? { ...i, ...patch } : i),
+        }))}
+      />
+    </SrdProvider>
   )
 }
 
