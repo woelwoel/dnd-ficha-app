@@ -4,6 +4,7 @@ import { calculateArmorClass, getEquippedArmor } from '../systems/dnd5e/domain/e
 import { getModifier } from '../utils/calculations'
 import {
   defaultClassFeatureUses, mergeFeatureUses,
+  syncGrantedSpells,
   applyDamage as applyDamagePure,
   applyHealing as applyHealingPure,
   gainTempHp as gainTempHpPure,
@@ -296,7 +297,7 @@ export function useCharacter(initialCharacter = null) {
    * Aceita string (single-select) ou array (multi-select).
    */
   const setChosenFeature = useCallback((choiceId, value) => {
-    setCharacter(prev => ({
+    setCharacter(prev => syncGrantedSpells({
       ...prev,
       info: {
         ...prev.info,
