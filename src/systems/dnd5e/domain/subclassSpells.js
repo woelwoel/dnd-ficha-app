@@ -267,19 +267,16 @@ const RANGER_ARCHETYPE_SPELLS = {
  * magias de artífice para você, mas elas não são consideradas entre o número
  * de magia de artífice que você prepara."
  *
- * Algumas magias das tabelas do livro NÃO existem ainda no catálogo do app
- * (faltam de tasha-spells-pt.json, que ainda não existe) e foram OMITIDAS
- * das tabelas abaixo para não referenciar slugs inexistentes:
- *   - Alquimista nv3: Raio Nauseante (Sickening Radiance) — ausente do catálogo
- *   - Atirador nv3: Escudo (Shield) — ausente do catálogo
- *   - Ferreiro de Batalha nv3: Escudo (Shield) — ausente do catálogo
- * Quando o catálogo Tasha for criado, completar esses tiers.
+ * As magias antes omitidas (achava-se ausentes do catálogo) na verdade existem
+ * sob outras slugs e foram restauradas: Ray of Sickness = `raio-adoecente`
+ * (Alquimista nv3) e Shield = `escudo-arcano` (Atirador e Ferreiro de Batalha
+ * nv3). Todas as magias das tabelas do livro estão representadas.
  */
 const ARTIFICER_SPELL_LEVELS = [3, 5, 9, 13, 17]
 const ARTIFICER_SUBCLASS_SPELLS = {
   // Alquimista (Tasha's p.14)
   alquimista: [
-    ['palavra-curativa'],                                    // 3 (Raio Nauseante ausente do catálogo)
+    ['palavra-curativa',         'raio-adoecente'],          // 3 (Healing Word, Ray of Sickness)
     ['esfera-flamejante',        'flecha-acida-de-melf'],    // 5
     ['forma-gasosa',             'palavra-curativa-em-massa'],// 9
     ['malogro',                  'protecao-contra-a-morte'], // 13
@@ -295,7 +292,7 @@ const ARTIFICER_SUBCLASS_SPELLS = {
   ],
   // Atirador (Tasha's p.16)
   atirador: [
-    ['onda-trovejante'],                              // 3 (Escudo/Shield ausente do catálogo)
+    ['escudo-arcano',       'onda-trovejante'],       // 3 (Shield, Thunderwave)
     ['raio-ardente',        'despedacar'],            // 5
     ['bola-de-fogo',        'muralha-de-vento'],      // 9
     ['tempestade-de-gelo',  'muralha-de-fogo'],       // 13 (Tempestade Glacial = Ice Storm)
@@ -303,11 +300,11 @@ const ARTIFICER_SUBCLASS_SPELLS = {
   ],
   // Ferreiro de Batalha (Tasha's p.17-18)
   'ferreiro-de-batalha': [
-    ['heroismo'],                                            // 3 (Escudo/Shield ausente do catálogo)
+    ['heroismo',              'escudo-arcano'],              // 3 (Heroísmo, Shield)
     ['marca-da-punicao',      'vinculo-protetor'],           // 5 (Vínculo de Proteção = Warding Bond)
     ['aura-de-vitalidade',    'conjurar-rajada'],            // 9 (Invocar Barragem = Conjure Barrage)
     ['aura-de-pureza',        'escudo-de-fogo'],             // 13
-    ['destruicao-banidora',   'curar-ferimentos-em-massa'],  // 17 (Banimento Destruidor = Banishing Smite)
+    ['destruicao-banidora',   'aura-de-vida'],               // 17 (Banishing Smite + Aura of Life)
   ],
 }
 
