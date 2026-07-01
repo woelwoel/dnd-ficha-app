@@ -182,7 +182,7 @@ export function SheetContent({ activeTab }) {
             <ManeuversPanel
               character={character}
               featureUses={featureUses}
-              onSpend={spendFeatureUse}
+              onSpend={(id) => spendFeatureUse(id, featureUses)}
             />
 
             <PreparedSpellsList />

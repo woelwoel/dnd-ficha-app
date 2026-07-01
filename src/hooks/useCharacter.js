@@ -12,6 +12,22 @@ import {
   rollDeathSave as rollDeathSavePure,
 } from '../systems/dnd5e/domain/rules'
 
+/**
+ * Resolve a lista de feature-uses para spend/regain. Se o caller passou `list`
+ * (ex.: SheetContent, que tem `classChoices` no memo), usa ela. Senão re-deriva
+ * dos defaults — mas PRESERVA entradas persistidas ausentes dos defaults deste
+ * hook (os trackers de subclasse dependem de `classChoices`, indisponível aqui).
+ * Sem essa preservação, um gasto por caller sem lista (ex.: ManeuversPanel)
+ * zeraria os `used` dos trackers de subclasse ao reescrever classFeatureUses.
+ */
+function resolveFeatureUseList(prev, list) {
+  if (list) return list
+  const persisted = prev.combat?.classFeatureUses ?? []
+  const derived = mergeFeatureUses(persisted, defaultClassFeatureUses(prev))
+  const known = new Set(derived.map(u => u.id))
+  return [...derived, ...persisted.filter(u => !known.has(u.id))]
+}
+
 const DEFAULT_CHARACTER = {
   id: null,
   meta: {
@@ -444,7 +460,7 @@ export function useCharacter(initialCharacter = null) {
 
   const spendFeatureUse = useCallback((id, list = null) => {
     setCharacter(prev => {
-      const base = list ?? mergeFeatureUses(prev.combat?.classFeatureUses ?? [], defaultClassFeatureUses(prev))
+      const base = resolveFeatureUseList(prev, list)
       const next = base.map(u => u.id === id
         ? { ...u, used: Math.min(u.max, (u.used ?? 0) + 1) }
         : u)
@@ -454,7 +470,7 @@ export function useCharacter(initialCharacter = null) {
 
   const regainFeatureUse = useCallback((id, list = null) => {
     setCharacter(prev => {
-      const base = list ?? mergeFeatureUses(prev.combat?.classFeatureUses ?? [], defaultClassFeatureUses(prev))
+      const base = resolveFeatureUseList(prev, list)
       const next = base.map(u => u.id === id
         ? { ...u, used: Math.max(0, (u.used ?? 0) - 1) }
         : u)
