@@ -2,6 +2,7 @@
   {
     "index": "barbaro",
     "name": "Bárbaro",
+    "roles": ["DANO CORPO A CORPO", "TANQUE"],
     "hit_die": 12,
     "saving_throws": [
       "Força",
@@ -140,6 +141,7 @@
   {
     "index": "bardo",
     "name": "Bardo",
+    "roles": ["SUPORTE", "CONTROLE", "UTILIDADE"],
     "hit_die": 8,
     "saving_throws": [
       "Destreza",
@@ -218,6 +220,7 @@
   {
     "index": "bruxo",
     "name": "Bruxo",
+    "roles": ["DANO MÁGICO", "CONTROLE", "UTILIDADE"],
     "hit_die": 8,
     "saving_throws": [
       "Sabedoria",
@@ -317,6 +320,7 @@
   {
     "index": "clerigo",
     "name": "Clérigo",
+    "roles": ["CURA", "SUPORTE", "DANO MÁGICO"],
     "hit_die": 8,
     "saving_throws": [
       "Sabedoria",
@@ -534,6 +538,7 @@
   {
     "index": "druida",
     "name": "Druida",
+    "roles": ["CURA", "CONTROLE", "INVOCAÇÃO"],
     "hit_die": 8,
     "saving_throws": [
       "Inteligência",
@@ -642,6 +647,7 @@
   {
     "index": "feiticeiro",
     "name": "Feiticeiro",
+    "roles": ["DANO MÁGICO", "CONTROLE"],
     "hit_die": 6,
     "saving_throws": [
       "Constituição",
@@ -708,6 +714,7 @@
   {
     "index": "guerreiro",
     "name": "Guerreiro",
+    "roles": ["DANO CORPO A CORPO", "DANO À DISTÂNCIA", "TANQUE"],
     "hit_die": 10,
     "saving_throws": [
       "Força",
@@ -960,6 +967,7 @@
   {
     "index": "ladino",
     "name": "Ladino",
+    "roles": ["FURTIVIDADE", "DANO À DISTÂNCIA", "UTILIDADE"],
     "hit_die": 8,
     "saving_throws": [
       "Destreza",
@@ -1077,6 +1085,7 @@
   {
     "index": "mago",
     "name": "Mago",
+    "roles": ["DANO MÁGICO", "CONTROLE", "INVOCAÇÃO"],
     "hit_die": 6,
     "saving_throws": [
       "Inteligência",
@@ -1207,6 +1216,7 @@
   {
     "index": "monge",
     "name": "Monge",
+    "roles": ["DANO CORPO A CORPO", "UTILIDADE"],
     "hit_die": 8,
     "saving_throws": [
       "Força",
@@ -1465,6 +1475,7 @@
   {
     "index": "paladino",
     "name": "Paladino",
+    "roles": ["DANO CORPO A CORPO", "CURA", "TANQUE"],
     "hit_die": 10,
     "saving_throws": [
       "Sabedoria",
@@ -1699,6 +1710,7 @@
   {
     "index": "patrulheiro",
     "name": "Patrulheiro",
+    "roles": ["DANO À DISTÂNCIA", "UTILIDADE"],
     "hit_die": 10,
     "saving_throws": [
       "Força",

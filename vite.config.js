@@ -91,10 +91,12 @@ export default defineConfig({
             //    (40 itens no total: 29 maravilhosos + 11 tatuagens).
             //  v18 → v19 (2026-06-30): limpeza de texto nos talentos Adepto
             //    Metamágico/Místico (prefixo "Magia de Pacto" vazado removido).
+            //  v19 → v20 (2026-07-01): campo roles nos dados de classe
+            //    (PHB + Artífice de Tasha).
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v19',
+              cacheName: 'srd-data-v20',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias

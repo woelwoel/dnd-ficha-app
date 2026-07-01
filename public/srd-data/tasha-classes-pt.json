@@ -2,6 +2,7 @@
   {
     "index": "artifice",
     "name": "Artífice",
+    "roles": ["SUPORTE", "UTILIDADE", "INVOCAÇÃO"],
     "hit_die": 8,
     "saving_throws": [
       "Constituição",
