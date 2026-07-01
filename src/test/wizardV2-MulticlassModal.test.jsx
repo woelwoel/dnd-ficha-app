@@ -131,4 +131,12 @@ describe('MulticlassModal', () => {
     const values = Array.from(levelSelect.querySelectorAll('option')).map(o => o.value)
     expect(values).toEqual(['1', '2', '3', '4'])
   })
+
+  it('mostra botão "Sobre a classe" ao selecionar uma classe', async () => {
+    render(<MulticlassModal open={true} draft={baseDraft} classes={classes}
+      multiclassData={multiclassData} onAdd={() => {}} onCancel={() => {}} />)
+    expect(screen.queryByRole('button', { name: /sobre a classe/i })).not.toBeInTheDocument()
+    await userEvent.selectOptions(screen.getByLabelText(/^classe/i), 'mago')
+    expect(screen.getByRole('button', { name: /sobre a classe/i })).toBeInTheDocument()
+  })
 })

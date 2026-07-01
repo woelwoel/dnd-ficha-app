@@ -4,6 +4,7 @@ import {
 } from './blocks/class/multiclass-helpers'
 import { computeFinalAttributes } from './blocks/build-character'
 import { Modal } from '../../../../components/ui/Modal'
+import { ClassInfoButton } from './blocks/class/ClassInfoButton'
 
 const fieldCls =
   'w-full px-3 py-2 rounded-sm border-2 border-parchment-600 bg-parchment-50 text-ink-500 ' +
@@ -99,17 +100,22 @@ export function MulticlassModal({ open, draft, classes, multiclassData, onAdd, o
           <label htmlFor="mc-class-select" className="block text-xs font-display tracking-widest uppercase text-ink-500 mb-1">
             Classe <span className="text-red-700">*</span>
           </label>
-          <select
-            id="mc-class-select"
-            value={classIndex}
-            onChange={e => setClassIndex(e.target.value)}
-            className={fieldCls}
-          >
-            <option value="">Escolher classe...</option>
-            {available.map(c => (
-              <option key={c.index} value={c.index}>{c.name}</option>
-            ))}
-          </select>
+          <div className="flex items-center gap-2">
+            <div className="flex-1 min-w-0">
+              <select
+                id="mc-class-select"
+                value={classIndex}
+                onChange={e => setClassIndex(e.target.value)}
+                className={fieldCls}
+              >
+                <option value="">Escolher classe...</option>
+                {available.map(c => (
+                  <option key={c.index} value={c.index}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+            <ClassInfoButton classData={selectedClass} />
+          </div>
         </div>
 
         <div>
