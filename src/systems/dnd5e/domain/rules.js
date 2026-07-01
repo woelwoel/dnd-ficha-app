@@ -4,9 +4,10 @@
  * Sem React, sem fetches, sem side effects — testável em isolamento.
  */
 
-import { getModifier, SKILLS, calculateMaxHpFromHitDice, racialHpPerLevel } from '../../../utils/calculations'
+import { getModifier, getProficiencyBonus, SKILLS, calculateMaxHpFromHitDice, racialHpPerLevel } from '../../../utils/calculations'
 import { keyFromName } from './attributes'
 import { CASTER_TYPE } from '../../../utils/spellcasting'
+import { getSubclassFeatureCards, detectFeatureUses } from './subclassFeatures'
 
 /* ── Constantes ──────────────────────────────────────────────────── */
 
@@ -778,7 +779,7 @@ export function baseSpeedMeters(character, raceSpeed) {
  * Retorna array NORMALIZADO (id estável). Use `mergeFeatureUses` para
  * preservar `used` ao subir de nível.
  */
-export function defaultClassFeatureUses(character) {
+export function defaultClassFeatureUses(character, classChoices = null) {
   const out = []
   const cha = getModifier(character.attributes?.cha ?? 10)
   const int = getModifier(character.attributes?.int ?? 10)
@@ -898,6 +899,21 @@ export function defaultClassFeatureUses(character) {
           id: 'clerigo-wrath-of-storm', name: 'Investida Furiosa',
           max: Math.max(1, cha), used: 0, recharge: 'long', source: 'clerigo',
         })
+      }
+    }
+
+    // Subclasses (genérico, via SRD): só entra quando `classChoices` é
+    // fornecido (CharacterSheet, que tem useSrd). Sem isso, comportamento
+    // retrocompatível — nenhum tracker de subclasse é emitido.
+    if (classChoices) {
+      const profBonus = getProficiencyBonus(character.info?.level ?? level)
+      const cards = getSubclassFeatureCards({
+        classIndex: cls, chosenFeatures: chosen, classChoices, level,
+        classLabel: cls,
+      })
+      for (const card of cards) {
+        const u = detectFeatureUses(card.desc, { attributes: character.attributes ?? {}, profBonus })
+        if (u) out.push({ id: card.id, name: card.name, max: u.max, used: 0, recharge: u.recharge, source: cls })
       }
     }
   }
