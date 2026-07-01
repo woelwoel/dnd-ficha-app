@@ -137,7 +137,13 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
       )
       const result = await upsertCharacter(character, { campaignId: campaignId ?? null })
       if (!result.ok) {
-        console.error('[wizard] falha ao salvar:', result.errors ?? result.reason)
+        // Loga os campos inválidos de forma LEGÍVEL (path: mensagem) em vez de
+        // um `Array(1)` colapsado no console — facilita diagnosticar qual campo
+        // da ficha o schema rejeitou.
+        const detail = Array.isArray(result.errors)
+          ? result.errors.map(e => `${(e.path ?? []).join('.') || '(raiz)'}: ${e.message}`).join(' | ')
+          : (result.reason ?? 'desconhecido')
+        console.error('[wizard] falha ao salvar:', detail)
         setFinalizeError(finalizeErrorMessage(result.reason))
         return
       }
