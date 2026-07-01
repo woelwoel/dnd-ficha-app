@@ -42,6 +42,22 @@ function clearWizardStorage() {
   sessionStorage.removeItem(CAMPAIGN_KEY)
 }
 
+// Razões de falha ao salvar (upsertCharacter) → mensagem amigável exibida no
+// wizard. Espelha SAVE_ERROR_MESSAGES do SheetHeader. Sem isso, "Inscrever
+// Herói" falhava em silêncio (só console.error) e o usuário achava que o botão
+// estava travado.
+const FINALIZE_ERROR_MESSAGES = {
+  limit: 'Você atingiu o limite de 100 fichas por conta.',
+  'too-large': 'Ficha grande demais para salvar (limite ~200 KB).',
+  invalid: 'A ficha tem dados inválidos e não pôde ser salva.',
+  conflict: 'A ficha foi alterada em outro dispositivo. Recarregue e tente de novo.',
+  unknown: 'Não foi possível salvar. Verifique sua conexão e tente novamente.',
+}
+
+export function finalizeErrorMessage(reason) {
+  return FINALIZE_ERROR_MESSAGES[reason] ?? FINALIZE_ERROR_MESSAGES.unknown
+}
+
 function summaryFor(blockId, draft) {
   switch (blockId) {
     case 'race':       return draft.race || 'preencher...'
@@ -104,6 +120,7 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
   const blockStatus = useBlockStatus(draft, { classChoices, classProgression, classEquipment, classes })
   const [openBlockId, setOpenBlockId] = useState(null)
   const [exitConfirmOpen, setExitConfirmOpen] = useState(false)
+  const [finalizeError, setFinalizeError] = useState(null)
 
   const selectedClassData = (classes ?? []).find(c => c.index === draft.class) ?? null
 
@@ -113,18 +130,28 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
   }
 
   async function handleFinalize() {
-    const character = buildCharacterWithSubclassSpells(
-      draft, selectedClassData, classEquipment ?? {}, srdSpells ?? []
-    )
-    const result = await upsertCharacter(character, { campaignId: campaignId ?? null })
-    if (!result.ok) {
-      console.error('[wizard] falha ao salvar:', result.errors ?? result.reason)
-      return
+    setFinalizeError(null)
+    try {
+      const character = buildCharacterWithSubclassSpells(
+        draft, selectedClassData, classEquipment ?? {}, srdSpells ?? []
+      )
+      const result = await upsertCharacter(character, { campaignId: campaignId ?? null })
+      if (!result.ok) {
+        console.error('[wizard] falha ao salvar:', result.errors ?? result.reason)
+        setFinalizeError(finalizeErrorMessage(result.reason))
+        return
+      }
+      clearWizardStorage()
+      // Prefere short_id (URL curta); fallback pro UUID em caso de fichas
+      // pre-migration 0003 ou se o servidor não devolver short_id.
+      onComplete(result.shortId ?? character.id)
+    } catch (err) {
+      // build ou a chamada ao Supabase podem LANÇAR (rede, exceção inesperada).
+      // Sem este catch a promise rejeitava sem tratamento e o clique "não fazia
+      // nada".
+      console.error('[wizard] erro ao inscrever herói:', err)
+      setFinalizeError('Algo deu errado ao inscrever o herói. Tente novamente.')
     }
-    clearWizardStorage()
-    // Prefere short_id (URL curta); fallback pro UUID em caso de fichas
-    // pre-migration 0003 ou se o servidor não devolver short_id.
-    onComplete(result.shortId ?? character.id)
   }
 
   // Conta blocos completos para o indicador de progresso (Revisão é meta, não conta)
@@ -193,6 +220,16 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
             ].join(' ')}
           >✦ Inscrever Herói ✦</button>
         </div>
+        {/* Erro ao inscrever herói — antes o clique falhava em silêncio */}
+        {finalizeError && (
+          <div
+            role="alert"
+            className="px-6 pb-2.5 -mt-1 flex items-start gap-2 text-sm text-red-700"
+          >
+            <span aria-hidden>⚠</span>
+            <span>{finalizeError}</span>
+          </div>
+        )}
         {/* Barra de progresso */}
         <div className="h-1 bg-parchment-200">
           <div
