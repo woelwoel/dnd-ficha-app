@@ -34,6 +34,11 @@ import { Icon } from './Icon'
  *  - hideCloseButton  boolean — esconde o ✕ no header (raro)
  *  - closeLabel       string — aria-label do botão ✕ (default "Fechar modal")
  */
+// Pilha de modais abertos: só o modal do topo responde ao Esc, pra que
+// modais aninhados (ex.: info de classe sobre a MulticlassModal) não fechem
+// os dois de uma vez. Nível de módulo = compartilhado por todas as instâncias.
+const modalStack = []
+
 const SIZE_CLS = {
   sm: 'max-w-sm',
   md: 'max-w-md',
@@ -63,10 +68,16 @@ export function Modal({
   const onCloseRef = useRef(onClose)
   useEffect(() => { onCloseRef.current = onClose }, [onClose])
 
-  // Esc fecha + foco inicial — roda só na transição de open (não a cada render).
+  // Esc fecha (só se este for o modal do topo) + foco inicial — roda só na
+  // transição de open.
   useEffect(() => {
     if (!open) return
-    function onKey(e) { if (e.key === 'Escape') onCloseRef.current?.() }
+    modalStack.push(titleId)
+    function onKey(e) {
+      if (e.key === 'Escape' && modalStack[modalStack.length - 1] === titleId) {
+        onCloseRef.current?.()
+      }
+    }
     document.addEventListener('keydown', onKey)
     const t = setTimeout(() => {
       (initialFocusRef?.current ?? closeRef.current)?.focus()
@@ -74,8 +85,10 @@ export function Modal({
     return () => {
       document.removeEventListener('keydown', onKey)
       clearTimeout(t)
+      const i = modalStack.indexOf(titleId)
+      if (i !== -1) modalStack.splice(i, 1)
     }
-  }, [open, initialFocusRef])
+  }, [open, initialFocusRef, titleId])
 
   // Trava scroll do body
   useEffect(() => {
