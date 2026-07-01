@@ -158,7 +158,10 @@ const combatSchema = z.object({
   currentHp: z.number().int().min(0),
   tempHp: z.number().int().min(0).default(0),
   armorClass: z.number().int().min(0),
-  speed: z.number().int().min(0).default(30),
+  // Deslocamento em METROS: pode ser fracionário (25 pés = 7,5 m; 35 pés =
+  // 10,5 m). NÃO usar .int() — quebraria toda raça de 7,5 m (anão/gnomo/
+  // halfling) e 10,5 m ao salvar. Default 9 m = 30 pés (raça média padrão).
+  speed: z.number().min(0).default(9),
   /**
    * v1 → string (e.g. '1d8').
    * v2+ → { pool: { d8: { total, used }, ... } } — pool por tipo de dado,
