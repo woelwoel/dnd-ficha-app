@@ -134,6 +134,32 @@ botão ℹ + o estado de aberto/fechado + o `Modal`. Assim os pais não precisam
 gerenciar estado, e o mesmo componente serve nos dois pontos. Fica em
 `src/systems/dnd5e/components/CharacterWizardV2/blocks/class/`.
 
+### 7. Esc em modais aninhados (correção no primitivo `Modal`)
+Na multiclasse, o `ClassInfoButton` abre um `Modal` **dentro** de outro `Modal`.
+Hoje cada `Modal` registra o listener de Esc no `document`, então Esc fecharia os
+dois de uma vez. Correção na raiz, em [Modal.jsx](../../../src/components/ui/Modal.jsx):
+uma **pilha de modais** em nível de módulo (`const modalStack = []`). Cada modal
+empilha seu `id` ao abrir e sai da pilha ao fechar/desmontar; o handler de Esc só
+chama `onClose` **se aquele modal for o topo da pilha**:
+
+```js
+const modalStack = []            // nível de módulo
+// no efeito de open:
+modalStack.push(id)
+function onKey(e) {
+  if (e.key === 'Escape' && modalStack[modalStack.length - 1] === id) {
+    onCloseRef.current?.()
+  }
+}
+// cleanup: modalStack.splice(modalStack.indexOf(id), 1)
+```
+
+Resultado: Esc fecha só o modal do topo (o de info); apertar de novo fecha o de
+baixo (a multiclasse). Beneficia **todos** os ~8 modais unificados nesse
+primitivo, não só este caso. O backdrop já está correto (o modal de cima cobre a
+tela, então clicar fora fecha só ele) — só o Esc precisava da pilha. `id` = o
+mesmo identificador estável já criado no componente (`titleId`/ref).
+
 ## Componentes e fronteiras
 
 - **`roleStyle(role)`** (helper puro): role → classes Tailwind da pílula. Fácil
@@ -149,6 +175,8 @@ gerenciar estado, e o mesmo componente serve nos dois pontos. Fica em
   Retorna `null` se não houver `classData`.
 - **`ClassPicker` / `MulticlassModal`**: montam `<ClassInfoButton
   classData={selectedClass} />` ao lado do select.
+- **`Modal.jsx`**: ganha a pilha de modais (seção 7) — mudança isolada no efeito
+  de Esc; não altera a API pública.
 - **Dados**: `roles` no JSON de classes (PHB + Tasha).
 
 ## Testes
@@ -162,14 +190,13 @@ Em `src/test/`:
 3. `ClassInfoButton`: sem `classData` não renderiza nada; com classe, o botão ℹ
    aparece e, ao clicar, o modal abre mostrando nome + papéis + resumo + lore.
 4. `ClassPicker`: com classe selecionada o botão ℹ aparece; sem classe, não.
+5. `Modal` (pilha, seção 7): com dois modais abertos, Esc fecha só o de cima; um
+   segundo Esc fecha o de baixo. Não deve quebrar o caso de modal único.
 
 ## Riscos / notas
 - Esquecer o bump do `cacheName` (memória `sw-cache-bump-srd`) → deploy invisível.
-- **Modal aninhado na multiclasse:** o `ClassInfoButton` na `MulticlassModal`
-  abre um `Modal` dentro de outro `Modal`. Ambos escutam Esc no `document`, então
-  Esc fecha os dois de uma vez (fecha o info *e* a seleção de multiclasse). É um
-  incômodo menor e não catastrófico (volta pra ficha). Aceitável por ora; refinar
-  depois se irritar (ex.: parar propagação do keydown no modal de info).
+- A pilha de modais (seção 7) mexe num primitivo compartilhado por ~8 telas — o
+  teste 5 cobre o caso aninhado e o único; rodar a suíte inteira antes de mergear.
 - Atribuição de papéis é editorial; o dono (jogador de D&D) deve revisar a tabela
   antes ou logo após implementar — trivial de ajustar (só editar o JSON).
 - Artífice/Tasha entra nos dados por consistência, mesmo com a branch Tasha não
