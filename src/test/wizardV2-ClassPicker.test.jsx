@@ -4,8 +4,8 @@ import userEvent from '@testing-library/user-event'
 import { ClassPicker } from '../systems/dnd5e/components/CharacterWizardV2/blocks/class/ClassPicker'
 
 const classes = [
-  { index: 'guerreiro', name: 'Guerreiro' },
-  { index: 'mago', name: 'Mago' },
+  { index: 'guerreiro', name: 'Guerreiro', roles: ['DANO CORPO A CORPO', 'TANQUE'], summary: 'Mestres do combate.', fullDescription: 'Lore do guerreiro.' },
+  { index: 'mago', name: 'Mago', roles: ['DANO MÁGICO', 'CONTROLE'], summary: 'Conjuradores arcanos.', fullDescription: 'Lore do mago.' },
 ]
 
 describe('ClassPicker', () => {
@@ -29,5 +29,15 @@ describe('ClassPicker', () => {
     render(<ClassPicker classes={classes} classIndex="mago" level={3} onClassChange={() => {}} onLevelChange={() => {}} />)
     expect(screen.getByLabelText(/^classe/i)).toHaveValue('mago')
     expect(screen.getByLabelText(/nível inicial/i)).toHaveValue('3')
+  })
+
+  it('mostra o botão ℹ quando há classe selecionada', () => {
+    render(<ClassPicker classes={classes} classIndex="mago" level={1} onClassChange={() => {}} onLevelChange={() => {}} />)
+    expect(screen.getByRole('button', { name: /sobre a classe mago/i })).toBeInTheDocument()
+  })
+
+  it('não mostra o botão ℹ sem classe selecionada', () => {
+    render(<ClassPicker classes={classes} classIndex="" level={1} onClassChange={() => {}} onLevelChange={() => {}} />)
+    expect(screen.queryByRole('button', { name: /sobre a classe/i })).toBeNull()
   })
 })
