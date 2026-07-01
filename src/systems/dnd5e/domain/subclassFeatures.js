@@ -6,8 +6,13 @@
  * Ver docs/superpowers/specs/2026-06-30-features-subclasse-por-nivel-design.md.
  */
 
-/** Texto antes desta marca = flavor da subclasse; depois = bullets por nível. */
-const SECTION_MARKER = /Features?\s+por\s+n[íi]vel\s*:?/i
+/**
+ * Texto antes desta marca = flavor da subclasse; depois = bullets por nível.
+ * Aceita variantes com qualificador entre "Features" e "por nível", ex.:
+ * "Features de Domínio por nível:", "Features de Juramento por nível:",
+ * "Features de Patrono por nível:".
+ */
+const SECTION_MARKER = /Features?(?:\s+de\s+\S+)?\s+por\s+n[íi]vel\s*:?/i
 
 // "Nv 6 — resto" / "Nível 6 - resto" (aceita travessão —, – ou -).
 const BULLET_HEAD = /^N(?:v|ível)\s*(\d+)\s*[—–-]\s*([\s\S]*)$/i
