@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
+import { ROLE_ORDER, ROLE_DEFINITIONS } from '../systems/dnd5e/components/CharacterWizardV2/blocks/class/class-roles'
 
 function loadJson(rel) {
   const url = new URL(rel, import.meta.url)
@@ -37,5 +38,18 @@ describe('roles nos dados de classe', () => {
   it('Artífice (Tasha) tem roles', () => {
     const art = tasha.find(c => c.index === 'artifice')
     expect(art.roles).toEqual(['SUPORTE', 'UTILIDADE', 'INVOCAÇÃO'])
+  })
+
+  // Guarda contra typo em conteúdo futuro: um papel escrito errado no JSON
+  // (ex.: "DANO CORPO-A-CORPO") cairia no estilo/definição de fallback sem
+  // erro. ROLE_ORDER é o vocabulário canônico — todo papel no JSON deve estar
+  // nele e ter definição.
+  it('todo papel usado no JSON existe no vocabulário canônico (sem typos)', () => {
+    const allRoles = [...phb, ...tasha].flatMap(c => c.roles ?? [])
+    expect(allRoles.length).toBeGreaterThan(0)
+    for (const role of allRoles) {
+      expect(ROLE_ORDER, `papel desconhecido no JSON: "${role}"`).toContain(role)
+      expect(ROLE_DEFINITIONS[role], `sem definição para "${role}"`).toBeTruthy()
+    }
   })
 })
