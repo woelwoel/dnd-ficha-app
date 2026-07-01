@@ -10,6 +10,7 @@ import {
   featureUseId, collapseScalingFeatures,
 } from '../../domain/featureCategories'
 import { isOptionalChoice, getChosenAdditions, getOptionalVariants } from '../../domain/optionalFeatures'
+import { getSubclassFeatureCards, SUBCLASS_CHOICE_IDS } from '../../domain/subclassFeatures'
 
 /* ══════════════════════════════════════════════════════════════════
    META
@@ -454,53 +455,68 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
     const classData  = progression?.[classIndex]
     const levelsUpTo = classData?.levels?.filter(l => l.level <= level) ?? []
 
+    /* ── Nomes de feature que representam a SELEÇÃO de subclasse (ex.:
+     * "Tradição Arcana") — pulados no caminho antigo pra evitar duplo-render,
+     * já que agora entram como cards por nível via getSubclassFeatureCards. */
+    const subclassFeatureNames = (ci) => new Set(
+      (classChoices?.[ci]?.choices ?? [])
+        .filter(ch => SUBCLASS_CHOICE_IDS.has(ch.id) && ch.featureName)
+        .map(ch => ch.featureName)
+    )
+    const primarySubNames = subclassFeatureNames(classIndex)
+
     /* ── Features da classe primária ──
      * collapseScalingFeatures funde variantes de nível do mesmo nome-base
      * (ex.: "Ataque Furtivo (1d6)…(10d6)") em um único card com o valor atual. */
     const classFeatures = collapseScalingFeatures(levelsUpTo.flatMap(lvl =>
-      (lvl.features ?? []).map(f => {
-        const chosen = resolveChosenFeature(classIndex, f.name, chosenFeatures, classChoices)
-        return {
-          id:     `${classIndex}-${f.name}`.toLowerCase().replace(/\s+/g, '-'),
-          name:   chosen ? `${f.name}: ${chosen.name}` : f.name,
-          desc:   chosen ? chosen.desc : f.desc,
-          source: classData?.name ?? classIndex,
-          level:  lvl.level,
-          combat:     f.combat,
-          category:   f.category,
-          actionType: f.actionType,
-          useId:      featureUseId(classIndex, f.name),
-          // Só escondemos placeholders GENÉRICOS de subclasse (sem tag de
-          // combate/categoria). Features ancoradas em escolha mas marcadas
-          // (ex.: "Estilo de Combate" = essencial) continuam aparecendo.
-          placeholder: Boolean((f.subclass || f.choice_id) && !chosen && !f.combat && !f.category),
-        }
-      })
+      (lvl.features ?? [])
+        .filter(f => !primarySubNames.has(f.name))   // ← anti-duplo-render
+        .map(f => {
+          const chosen = resolveChosenFeature(classIndex, f.name, chosenFeatures, classChoices)
+          return {
+            id:     `${classIndex}-${f.name}`.toLowerCase().replace(/\s+/g, '-'),
+            name:   chosen ? `${f.name}: ${chosen.name}` : f.name,
+            desc:   chosen ? chosen.desc : f.desc,
+            source: classData?.name ?? classIndex,
+            level:  lvl.level,
+            combat:     f.combat,
+            category:   f.category,
+            actionType: f.actionType,
+            useId:      featureUseId(classIndex, f.name),
+            // Só escondemos placeholders GENÉRICOS de subclasse (sem tag de
+            // combate/categoria). Features ancoradas em escolha mas marcadas
+            // (ex.: "Estilo de Combate" = essencial) continuam aparecendo.
+            placeholder: Boolean((f.subclass || f.choice_id) && !chosen && !f.combat && !f.category),
+          }
+        })
     ))
 
     /* ── Features de multiclasses ── */
     const multiFeatures = (info?.multiclasses ?? []).flatMap(mc => {
       const mcData   = progression?.[mc.class]
       const mcLevels = mcData?.levels?.filter(l => l.level <= mc.level) ?? []
+      const mcSubNames = subclassFeatureNames(mc.class)
       return collapseScalingFeatures(mcLevels.flatMap(lvl =>
-        (lvl.features ?? []).map(f => {
-          const chosen = resolveChosenFeature(mc.class, f.name, chosenFeatures, classChoices)
-          return {
-            id:     `${mc.class}-${f.name}`.toLowerCase().replace(/\s+/g, '-'),
-            name:   chosen ? `${f.name}: ${chosen.name}` : f.name,
-            desc:   chosen ? chosen.desc : f.desc,
-            source: mcData?.name ?? mc.class,
-            level:  lvl.level,
-            combat:     f.combat,
-            category:   f.category,
-            actionType: f.actionType,
-            useId:      featureUseId(mc.class, f.name),
-            // Só escondemos placeholders GENÉRICOS de subclasse (sem tag de
-          // combate/categoria). Features ancoradas em escolha mas marcadas
-          // (ex.: "Estilo de Combate" = essencial) continuam aparecendo.
-          placeholder: Boolean((f.subclass || f.choice_id) && !chosen && !f.combat && !f.category),
-          }
-        })
+        (lvl.features ?? [])
+          .filter(f => !mcSubNames.has(f.name))   // ← anti-duplo-render
+          .map(f => {
+            const chosen = resolveChosenFeature(mc.class, f.name, chosenFeatures, classChoices)
+            return {
+              id:     `${mc.class}-${f.name}`.toLowerCase().replace(/\s+/g, '-'),
+              name:   chosen ? `${f.name}: ${chosen.name}` : f.name,
+              desc:   chosen ? chosen.desc : f.desc,
+              source: mcData?.name ?? mc.class,
+              level:  lvl.level,
+              combat:     f.combat,
+              category:   f.category,
+              actionType: f.actionType,
+              useId:      featureUseId(mc.class, f.name),
+              // Só escondemos placeholders GENÉRICOS de subclasse (sem tag de
+              // combate/categoria). Features ancoradas em escolha mas marcadas
+              // (ex.: "Estilo de Combate" = essencial) continuam aparecendo.
+              placeholder: Boolean((f.subclass || f.choice_id) && !chosen && !f.combat && !f.category),
+            }
+          })
       ))
     })
 
@@ -581,12 +597,31 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
     const additionFeatures = getChosenAdditions(classChoices?.[classIndex], level, chosenFeatures)
       .map(f => ({ ...f, source: classData?.name ?? classIndex, placeholder: false }))
 
-    const classFeaturesAll = [...classFeatures, ...subChoiceFeatures, ...additionFeatures]
+    /* ── Cards de subclasse por nível ──
+     * Substituem o card único bundled de antes (agora pulado acima via
+     * primarySubNames/mcSubNames). Ações detectadas na desc entram como
+     * 'essencial' na aba Combate, espelhando a heurística dos traços raciais. */
+    const toSubclassCard = (c) => ({
+      ...c,
+      combat: detectActionType(c.desc) !== null ? 'essencial' : undefined,
+      placeholder: false,
+    })
+    const subclassCards = getSubclassFeatureCards({
+      classIndex, chosenFeatures, classChoices, level, classLabel: classData?.name ?? classIndex,
+    }).map(toSubclassCard)
+    const multiSubclassCards = (info?.multiclasses ?? []).flatMap(mc =>
+      getSubclassFeatureCards({
+        classIndex: mc.class, chosenFeatures: mc.chosenFeatures ?? chosenFeatures,
+        classChoices, level: mc.level, classLabel: progression?.[mc.class]?.name ?? mc.class,
+      }).map(toSubclassCard)
+    )
+
+    const classFeaturesAll = [...classFeatures, ...subChoiceFeatures, ...additionFeatures, ...subclassCards]
 
     /* ── Dois baldes derivados de uma única lista enriquecida ──
      * Placeholders genéricos de subclasse não-resolvidos (ex.: "Característica
      * do Arquétipo Marcial") são removidos pra não poluir nenhuma das listas. */
-    const enriched = [...classFeaturesAll, ...multiFeatures].filter(f => !f.placeholder)
+    const enriched = [...classFeaturesAll, ...multiFeatures, ...multiSubclassCards].filter(f => !f.placeholder)
     // Talentos entram na aba Combate sempre como Situacional (e seguem
     // listados em Habilidades → Talentos). O tipo de ação é inferido da
     // descrição (ex.: "como reação" → reação), caindo em "passiva".
