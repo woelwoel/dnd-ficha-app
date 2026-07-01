@@ -39,6 +39,10 @@ nesta feature.
 - **Resumo:** o campo `summary` em destaque (frase de "o que é a classe", ex.:
   *"Guerreiros furiosos que entram em fúria primal para causar dano massivo e
   resistir a qualquer coisa"*).
+- **Legenda dos papéis (sempre visível):** logo abaixo das pílulas, uma linha
+  curta por papel *daquela* classe, explicando o que o papel significa — ver
+  seção 3.1. Público-alvo inclui quem nunca jogou; a explicação fica à mostra, não
+  escondida atrás de clique/hover.
 - **Lore completa:** o campo `fullDescription`, renderizado com boa tipografia de
   leitura (parágrafos no tema pergaminho, como a página de livro do PHB).
 
@@ -64,6 +68,26 @@ Atribuição inicial por classe (ponto de partida — o dono revisa):
 | Bruxo (`bruxo`) | DANO MÁGICO · CONTROLE · UTILIDADE |
 | Mago (`mago`) | DANO MÁGICO · CONTROLE · INVOCAÇÃO |
 | Artífice (`artifice`, Tasha) | SUPORTE · UTILIDADE · INVOCAÇÃO |
+
+### 3.1 Definições dos papéis (linguagem de novato)
+
+Mapa único `role → frase curta` (`ROLE_DEFINITIONS`), autorado uma vez e
+reaproveitado na legenda. Explica **todos** os papéis, sem pressupor conhecimento:
+
+| Papel | Definição |
+|---|---|
+| DANO CORPO A CORPO | Fica na linha de frente e causa dano de perto (espadas, machados, punhos). |
+| DANO À DISTÂNCIA | Causa dano de longe, com arcos, bestas ou armas de arremesso. |
+| DANO MÁGICO | Causa dano com magias — fogo, raios, energia arcana. |
+| CURA | Restaura pontos de vida e mantém o grupo de pé. |
+| SUPORTE | Fortalece aliados e atrapalha inimigos com bênçãos, buffs e ajuda. |
+| TANQUE | Aguenta muito dano e protege os aliados segurando os inimigos. |
+| CONTROLE | Domina o campo — prende, atordoa ou reposiciona vários inimigos de uma vez. |
+| UTILIDADE | Resolve problemas fora do combate: exploração, social, truques variados. |
+| FURTIVIDADE | Age nas sombras — esgueira-se, desarma armadilhas, ataca pelas costas. |
+| INVOCAÇÃO | Conjura criaturas, espíritos ou constructos que lutam ao seu lado. |
+
+Texto é editorial — o dono revisa junto com a tabela de atribuição.
 
 ### 4. Onde os dados vivem
 Adicionar um campo `roles: [...]` (array de strings) por classe em
@@ -114,9 +138,12 @@ gerenciar estado, e o mesmo componente serve nos dois pontos. Fica em
 
 - **`roleStyle(role)`** (helper puro): role → classes Tailwind da pílula. Fácil
   de testar isoladamente.
+- **`ROLE_DEFINITIONS`** (mapa `role → frase`, seção 3.1): fonte única das
+  explicações da legenda.
 - **`ClassInfoContent({ classData })`**: corpo do modal — pílulas (via
-  `roleStyle`) + `summary` + `fullDescription`. Sem estado. Recebe o objeto de
-  classe. Separado para testar sem abrir modal.
+  `roleStyle`) + legenda (pílula + `ROLE_DEFINITIONS[role]` por papel) + `summary`
+  + `fullDescription`. Sem estado. Recebe o objeto de classe. Separado para testar
+  sem abrir modal.
 - **`ClassInfoButton({ classData })`**: botão ℹ + estado `open` + `<Modal
   open={open} title={classData.name} size="lg"><ClassInfoContent .../></Modal>`.
   Retorna `null` se não houver `classData`.
@@ -128,9 +155,10 @@ gerenciar estado, e o mesmo componente serve nos dois pontos. Fica em
 
 Em `src/test/`:
 1. `roleStyle` retorna classe de cor conhecida para cada papel e um fallback
-   neutro para papel desconhecido.
-2. `ClassInfoContent` renderiza uma pílula por papel + o texto `summary` + o
-   `fullDescription`.
+   neutro para papel desconhecido; `ROLE_DEFINITIONS` tem entrada para os 10
+   papéis.
+2. `ClassInfoContent` renderiza uma pílula + a definição (`ROLE_DEFINITIONS`) por
+   papel, mais o `summary` e o `fullDescription`.
 3. `ClassInfoButton`: sem `classData` não renderiza nada; com classe, o botão ℹ
    aparece e, ao clicar, o modal abre mostrando nome + papéis + resumo + lore.
 4. `ClassPicker`: com classe selecionada o botão ℹ aparece; sem classe, não.
