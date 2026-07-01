@@ -442,20 +442,20 @@ export function useCharacter(initialCharacter = null) {
     }))
   }, [setCharacter])
 
-  const spendFeatureUse = useCallback(id => {
+  const spendFeatureUse = useCallback((id, list = null) => {
     setCharacter(prev => {
-      const list = mergeFeatureUses(prev.combat?.classFeatureUses ?? [], defaultClassFeatureUses(prev))
-      const next = list.map(u => u.id === id
+      const base = list ?? mergeFeatureUses(prev.combat?.classFeatureUses ?? [], defaultClassFeatureUses(prev))
+      const next = base.map(u => u.id === id
         ? { ...u, used: Math.min(u.max, (u.used ?? 0) + 1) }
         : u)
       return { ...prev, combat: { ...prev.combat, classFeatureUses: next } }
     })
   }, [setCharacter])
 
-  const regainFeatureUse = useCallback(id => {
+  const regainFeatureUse = useCallback((id, list = null) => {
     setCharacter(prev => {
-      const list = mergeFeatureUses(prev.combat?.classFeatureUses ?? [], defaultClassFeatureUses(prev))
-      const next = list.map(u => u.id === id
+      const base = list ?? mergeFeatureUses(prev.combat?.classFeatureUses ?? [], defaultClassFeatureUses(prev))
+      const next = base.map(u => u.id === id
         ? { ...u, used: Math.max(0, (u.used ?? 0) - 1) }
         : u)
       return { ...prev, combat: { ...prev.combat, classFeatureUses: next } }

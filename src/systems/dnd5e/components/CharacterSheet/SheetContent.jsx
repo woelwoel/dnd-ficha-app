@@ -212,8 +212,8 @@ export function SheetContent({ activeTab }) {
               character={character}
               featureUses={featureUses}
               onToggleRage={setRageActive}
-              onSpendFeatureUse={spendFeatureUse}
-              onRegainFeatureUse={regainFeatureUse}
+              onSpendFeatureUse={(id) => spendFeatureUse(id, featureUses)}
+              onRegainFeatureUse={(id) => regainFeatureUse(id, featureUses)}
               onToggleSlot={toggleSlot}
               onSetWildShape={setWildShape}
               onApplyDamage={applyDamage}
@@ -326,8 +326,8 @@ export function SheetContent({ activeTab }) {
         <FeaturesTab
           character={character}
           featureUses={featureUses}
-          onSpend={spendFeatureUse}
-          onRegain={regainFeatureUse}
+          onSpend={(id) => spendFeatureUse(id, featureUses)}
+          onRegain={(id) => regainFeatureUse(id, featureUses)}
           onSetChosenFeature={setChosenFeature}
         />
       </TabPanel>

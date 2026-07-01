@@ -122,7 +122,7 @@ export function CharacterSheet({ characterId, adminContext = false, onBack }) {
  * Layout: header fixo + sidebar de navegação (desktop) + área de conteúdo scrollável.
  */
 function SheetBody({ initialCharacter, adminContext = false, onBack }) {
-  const { races, classes, backgrounds } = useSrd()
+  const { races, classes, backgrounds, classChoices } = useSrd()
   const classDataMap = useClassDataMap()
 
   const [activeTab, setActiveTab] = useState('ficha')
@@ -223,8 +223,8 @@ function SheetBody({ initialCharacter, adminContext = false, onBack }) {
 
   // featureUses é derivado de character — memo para evitar recalcular nos filhos.
   const featureUses = useMemo(
-    () => mergeFeatureUses(character.combat?.classFeatureUses ?? [], defaultClassFeatureUses(character)),
-    [character],
+    () => mergeFeatureUses(character.combat?.classFeatureUses ?? [], defaultClassFeatureUses(character, classChoices)),
+    [character, classChoices],
   )
 
   const contextValue = useMemo(() => ({
