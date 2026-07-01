@@ -5,6 +5,7 @@
  * opção escolhida (formato `• Nv N — Nome: desc`, 100% consistente em PHB+Tasha).
  * Ver docs/superpowers/specs/2026-06-30-features-subclasse-por-nivel-design.md.
  */
+import { getModifier, ATTR_NAME_TO_KEY } from '../../../utils/calculations'
 
 /**
  * Texto antes desta marca = flavor da subclasse; depois = bullets por nível.
@@ -40,4 +41,35 @@ export function parseSubclassFeatures(optionDesc = '') {
     }
   }
   return { summary, features }
+}
+
+const ATTR_PT = 'Força|Destreza|Constituição|Inteligência|Sabedoria|Carisma'
+
+/**
+ * Detecta usos limitados a partir do texto da feature. Conservador de propósito:
+ * só padrões de alta confiança; sem match → null (feature só-texto, sem tracker).
+ */
+export function detectFeatureUses(text = '', { attributes = {}, profBonus = 2 } = {}) {
+  const t = String(text)
+  // Recarga: "descanso curto" (inclui "curto ou longo") → short; senão long.
+  const recharge = /descanso\s+curto/i.test(t) ? 'short' : 'long'
+  // Indício de que o número é de USOS (e não dano/alcance/etc.).
+  const isUses = /(usos?\s*=|usos?\s+iguais?|igual ao|vezes igual|uma vez)/i.test(t)
+
+  // 1) bônus de proficiência usos
+  if (isUses && /b[oô]nus\s+de\s+profici[êe]ncia/i.test(t)) {
+    return { max: Math.max(1, profBonus), recharge }
+  }
+  // 2) "1×/descanso..." ou "uma vez ... descanso..."
+  if (/1\s*[×x]\s*\/?\s*desc/i.test(t) || /uma vez[\s\S]*?descanso/i.test(t)) {
+    return { max: 1, recharge }
+  }
+  // 3) modificador de atributo (com indício de usos)
+  const mod = t.match(new RegExp(`m[oó]d(?:ificador)?\\.?\\s+(?:de\\s+)?(${ATTR_PT})`, 'i'))
+  if (isUses && mod) {
+    const name = mod[1].charAt(0).toUpperCase() + mod[1].slice(1).toLowerCase()
+    const key = ATTR_NAME_TO_KEY[name]
+    return { max: Math.max(1, getModifier(attributes?.[key] ?? 10)), recharge }
+  }
+  return null
 }
