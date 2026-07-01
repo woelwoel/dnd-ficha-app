@@ -11,8 +11,12 @@ function sourceSuffix(source) {
   return meta && source !== 'phb' ? ` — ${meta.abbr}` : ''
 }
 
-export function ClassPicker({ classes, classIndex, level, onClassChange, onLevelChange }) {
-  const selectedClass = classes.find(c => c.index === classIndex) ?? null
+export function ClassPicker({ classes, classIndex, level, onClassChange, onLevelChange, selectedClass: selectedClassProp = null }) {
+  // `classes` é a lista de OFERTA (filtrada por fonte). Pra resolver a classe
+  // já escolhida — que pode ter fonte desativada depois (ex.: Artífice/Tasha) —
+  // o pai (ClassBlock) passa `selectedClass` do catálogo completo. Fallback pra
+  // computação local mantém o componente testável isolado.
+  const selectedClass = selectedClassProp ?? (classes.find(c => c.index === classIndex) ?? null)
 
   return (
     <div className="flex flex-col gap-3">

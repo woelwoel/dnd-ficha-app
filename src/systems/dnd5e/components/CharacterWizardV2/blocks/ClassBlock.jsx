@@ -116,6 +116,7 @@ export function ClassBlock({
       <ClassPicker
         classes={classesForOffer}
         classIndex={draft.class}
+        selectedClass={selectedClass}
         level={draft.level}
         onClassChange={handleClassChange}
         onLevelChange={handleLevelChange}

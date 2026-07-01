@@ -40,4 +40,20 @@ describe('ClassPicker', () => {
     render(<ClassPicker classes={classes} classIndex="" level={1} onClassChange={() => {}} onLevelChange={() => {}} />)
     expect(screen.queryByRole('button', { name: /sobre a classe/i })).toBeNull()
   })
+
+  it('usa o selectedClass passado por prop quando a classe não está na lista oferecida', () => {
+    const offered = [{ index: 'mago', name: 'Mago' }]
+    const grandfathered = { index: 'artifice', name: 'Artífice', roles: ['SUPORTE'], summary: 'Inventor.', fullDescription: 'Lore.' }
+    render(
+      <ClassPicker
+        classes={offered}
+        classIndex="artifice"
+        selectedClass={grandfathered}
+        level={1}
+        onClassChange={() => {}}
+        onLevelChange={() => {}}
+      />
+    )
+    expect(screen.getByRole('button', { name: /sobre a classe artífice/i })).toBeInTheDocument()
+  })
 })
