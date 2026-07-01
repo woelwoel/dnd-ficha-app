@@ -14,6 +14,8 @@ export function ClassInfoButton({ classData }) {
 
   return (
     <>
+      {/* Botão quadrado com borda (não o círculo do InfoPopover): fica na
+          mesma linha do <select> de classe e casa com a altura do campo. */}
       <button
         type="button"
         onClick={() => setOpen(true)}
