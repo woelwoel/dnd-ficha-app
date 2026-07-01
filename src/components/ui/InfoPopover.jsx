@@ -59,7 +59,13 @@ export function InfoPopover({ content, label = 'Ver descrição', title, classNa
       setOpen(false)
     }
     function onKey(e) { if (e.key === 'Escape') setOpen(false) }
-    function onScroll() { setOpen(false) }
+    // Fecha em scroll de página/ancestral (o popover é position:fixed e
+    // descolaria do botão), mas NÃO quando o scroll acontece dentro do próprio
+    // popover — ele tem overflow-y-auto e precisa rolar pra ler texto longo.
+    function onScroll(e) {
+      if (popRef.current?.contains(e.target)) return
+      setOpen(false)
+    }
     document.addEventListener('mousedown', onDocClick)
     document.addEventListener('keydown', onKey)
     window.addEventListener('scroll', onScroll, true)

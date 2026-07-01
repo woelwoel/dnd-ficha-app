@@ -1,5 +1,5 @@
 import { SourceBadge } from '../../../SourceBadge'
-import { InfoPopover } from '../../../../../../components/ui/InfoPopover'
+import { InfoModalButton } from '../../../../../../components/ui/InfoModalButton'
 
 export function ChosenFeaturePicker({ choice, value, onChange, effectiveMultiSelect }) {
   // Suporta `multiSelect` direto OU `multiSelectByLevel` resolvido pelo pai
@@ -103,7 +103,7 @@ export function ChosenFeaturePicker({ choice, value, onChange, effectiveMultiSel
                 </span>
               )}
               {!isMulti && opt.desc && (
-                <InfoPopover content={opt.desc} title={opt.name} className="p-0.5 mt-0.5" />
+                <InfoModalButton content={opt.desc} title={opt.name} className="p-0.5 mt-0.5" />
               )}
             </div>
           )
