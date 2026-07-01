@@ -73,3 +73,42 @@ export function detectFeatureUses(text = '', { attributes = {}, profBonus = 2 } 
   }
   return null
 }
+
+/** Ids de choices que representam SELEÇÃO de subclasse (PHB + Tasha + Artífice). */
+export const SUBCLASS_CHOICE_IDS = new Set([
+  'primal_path', 'bard_college', 'divine_domain', 'druid_circle',
+  'martial_archetype', 'monastic_tradition', 'sacred_oath', 'ranger_archetype',
+  'roguish_archetype', 'sorcerous_origin', 'arcane_tradition', 'patron',
+  'artificer_specialization',
+])
+
+const slug = s => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+  .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+
+/**
+ * Cards de feature de subclasse da classe, até `level`. Lê a opção escolhida no
+ * catálogo, parseia, filtra por nível e devolve cards com id estável e único.
+ * @returns {Array<{id,name,desc,level,source}>}
+ */
+export function getSubclassFeatureCards({ classIndex, chosenFeatures, classChoices, level, classLabel }) {
+  const choices = classChoices?.[classIndex]?.choices ?? []
+  const out = []
+  for (const ch of choices) {
+    if (!SUBCLASS_CHOICE_IDS.has(ch.id)) continue
+    const chosen = chosenFeatures?.[ch.id]
+    if (!chosen) continue
+    const opt = (ch.options ?? []).find(o => o.value === chosen)
+    if (!opt) continue
+    const { features } = parseSubclassFeatures(opt.desc)
+    const seen = {}
+    for (const f of features) {
+      if (f.level > level) continue
+      const name = f.name ?? `${opt.name} (Nv ${f.level})`
+      let id = `${classIndex}-sub-${slug(chosen)}-${f.level}-${slug(name)}`
+      if (seen[id]) id = `${id}-${(seen[id] += 1)}`   // desempate em colisão
+      else seen[id] = 1
+      out.push({ id, name, desc: f.desc, level: f.level, source: `${classLabel ?? classIndex} · ${opt.name}` })
+    }
+  }
+  return out
+}
