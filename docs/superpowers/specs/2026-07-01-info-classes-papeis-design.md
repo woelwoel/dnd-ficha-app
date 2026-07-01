@@ -16,27 +16,31 @@ domínio (`summary`, `fullDescription`), mas não é exposta na hora da decisão
 ## Objetivo
 
 Adicionar um botão de informação (ℹ) ao lado do seletor de classe (na criação e
-na multiclasse) que abre um popover explicando, de forma curta e visual, o que a
-classe é e quais são seus papéis de foco em jogo.
+na multiclasse) que abre um modal em pergaminho: bússola rápida no topo (papéis
+de foco + resumo) e, abaixo, a lore completa da classe (`fullDescription`) com
+boa tipografia de leitura.
 
-Não-objetivos (YAGNI): não trocar o `<select>` por cards; não expor a lore longa
-(`fullDescription`); não criar página/tela de "comparar classes".
+Não-objetivos (YAGNI): não trocar o `<select>` por cards; não criar página/tela
+de "comparar classes".
 
 ## Decisões de design
 
 ### 1. Interação
-Reaproveitar o componente existente
-[InfoPopover.jsx](../../../src/components/ui/InfoPopover.jsx) (botão ℹ que abre
-popover no clique, via portal — já resolve toque e overflow). O botão fica
-**inline à direita do `<select>`** de classe. Só aparece quando há classe
-selecionada (o `InfoPopover` retorna `null` sem conteúdo).
+Um botão ℹ fica **inline à direita do `<select>`** de classe e só aparece quando
+há classe selecionada. Ao clicar, abre um **modal em pergaminho** (o componente
+existente [Modal.jsx](../../../src/components/ui/Modal.jsx), `size="lg"`), que dá
+espaço confortável para a lore completa — ao contrário do `InfoPopover` (balão
+estreito e escuro), inadequado para texto longo. O `InfoPopover` **não** é usado
+nesta feature.
 
-### 2. Conteúdo do popover
-- **Título:** nome da classe.
+### 2. Conteúdo do modal
+- **Título (header do Modal):** nome da classe.
 - **Etiquetas de papel** (pílulas coloridas) no topo — ver seção 3.
-- **Texto descritivo:** o campo `summary` que já existe no JSON de classes
-  (frase de "o que é a classe", ex.: *"Guerreiros furiosos que entram em fúria
-  primal para causar dano massivo e resistir a qualquer coisa"*).
+- **Resumo:** o campo `summary` em destaque (frase de "o que é a classe", ex.:
+  *"Guerreiros furiosos que entram em fúria primal para causar dano massivo e
+  resistir a qualquer coisa"*).
+- **Lore completa:** o campo `fullDescription`, renderizado com boa tipografia de
+  leitura (parágrafos no tema pergaminho, como a página de livro do PHB).
 
 ### 3. Papéis de foco (vocabulário detalhado — 10 etiquetas)
 
@@ -101,19 +105,23 @@ Dois pontos, mesmo padrão:
 1. `ClassPicker.jsx` — ℹ inline à direita do `<select>` principal.
 2. `MulticlassModal.jsx` — ℹ inline à direita do `<select>` de classe secundária.
 
-Para evitar duplicação, o conteúdo do popover (pílulas + summary) vira um
-componente pequeno reutilizável, ex.: `ClassInfoContent({ classData })`, passado
-como `content` do `InfoPopover`. Fica em
+Um único componente auto-contido `ClassInfoButton({ classData })` encapsula o
+botão ℹ + o estado de aberto/fechado + o `Modal`. Assim os pais não precisam
+gerenciar estado, e o mesmo componente serve nos dois pontos. Fica em
 `src/systems/dnd5e/components/CharacterWizardV2/blocks/class/`.
 
 ## Componentes e fronteiras
 
 - **`roleStyle(role)`** (helper puro): role → classes Tailwind da pílula. Fácil
   de testar isoladamente.
-- **`ClassInfoContent({ classData })`**: renderiza pílulas (via `roleStyle`) +
-  `summary`. Sem estado. Recebe o objeto de classe.
-- **`ClassPicker` / `MulticlassModal`**: montam `<InfoPopover title={nome}
-  content={<ClassInfoContent classData={selectedClass} />} />` ao lado do select.
+- **`ClassInfoContent({ classData })`**: corpo do modal — pílulas (via
+  `roleStyle`) + `summary` + `fullDescription`. Sem estado. Recebe o objeto de
+  classe. Separado para testar sem abrir modal.
+- **`ClassInfoButton({ classData })`**: botão ℹ + estado `open` + `<Modal
+  open={open} title={classData.name} size="lg"><ClassInfoContent .../></Modal>`.
+  Retorna `null` se não houver `classData`.
+- **`ClassPicker` / `MulticlassModal`**: montam `<ClassInfoButton
+  classData={selectedClass} />` ao lado do select.
 - **Dados**: `roles` no JSON de classes (PHB + Tasha).
 
 ## Testes
@@ -121,12 +129,19 @@ como `content` do `InfoPopover`. Fica em
 Em `src/test/`:
 1. `roleStyle` retorna classe de cor conhecida para cada papel e um fallback
    neutro para papel desconhecido.
-2. `ClassInfoContent` renderiza uma pílula por papel + o texto `summary`.
-3. `ClassPicker`: com classe selecionada, o botão ℹ aparece; sem classe, não
-   aparece. (Abrir o popover e ver o nome/summary, se viável no jsdom via portal.)
+2. `ClassInfoContent` renderiza uma pílula por papel + o texto `summary` + o
+   `fullDescription`.
+3. `ClassInfoButton`: sem `classData` não renderiza nada; com classe, o botão ℹ
+   aparece e, ao clicar, o modal abre mostrando nome + papéis + resumo + lore.
+4. `ClassPicker`: com classe selecionada o botão ℹ aparece; sem classe, não.
 
 ## Riscos / notas
 - Esquecer o bump do `cacheName` (memória `sw-cache-bump-srd`) → deploy invisível.
+- **Modal aninhado na multiclasse:** o `ClassInfoButton` na `MulticlassModal`
+  abre um `Modal` dentro de outro `Modal`. Ambos escutam Esc no `document`, então
+  Esc fecha os dois de uma vez (fecha o info *e* a seleção de multiclasse). É um
+  incômodo menor e não catastrófico (volta pra ficha). Aceitável por ora; refinar
+  depois se irritar (ex.: parar propagação do keydown no modal de info).
 - Atribuição de papéis é editorial; o dono (jogador de D&D) deve revisar a tabela
   antes ou logo após implementar — trivial de ajustar (só editar o JSON).
 - Artífice/Tasha entra nos dados por consistência, mesmo com a branch Tasha não
