@@ -5,6 +5,7 @@ import { FormFieldError } from '../../../../components/FormFieldError'
 import { RollButton } from '../../../../components/DiceRoller/RollButton'
 import { DamageModal } from './DamageModal'
 import { CONDITIONS, EXHAUSTION_EFFECTS } from '../../domain/conditions'
+import { effectiveSpeed, SPEED_ZERO_CONDITIONS } from '../../domain/rules'
 import { Icon } from '../../../../components/ui/Icon'
 
 /* ── Death Saves ───────────────────────────────────────────── */
@@ -438,7 +439,18 @@ function CombatStatsBase({
 }) {
   const conMod = getModifier(attributes?.con ?? 10)
   const exh = getExhaustionEffects(combat?.exhaustion ?? 0)
-  const effectiveSpeed = Math.floor((combat?.speed ?? 0) * exh.speedMultiplier)
+  // Deslocamento efetivo considera condições que impedem movimento
+  // (agarrado, impedido…) E exaustão — motor puro em domain/rules.
+  const effSpeed = effectiveSpeed({ combat })
+  const baseSpeed = combat?.speed ?? 0
+  const speedReduced = effSpeed !== baseSpeed
+  const activeZeroCondition = CONDITIONS.find(c =>
+    SPEED_ZERO_CONDITIONS.has(c.id) && (combat?.conditions ?? []).includes(c.id))
+  const speedWarning = activeZeroCondition
+    ? `⚠ Imóvel (${activeZeroCondition.label})`
+    : (combat?.exhaustion ?? 0) >= 5 ? '⚠ Imóvel (Exaustão 5)'
+    : (combat?.exhaustion ?? 0) >= 2 ? '⚠ Metade (Exaustão 2+)'
+    : null
   const initiative = calculateInitiative(attributes.dex)
   const initNotation = `1d20${formatModifier(initiative)}`
 
@@ -480,15 +492,11 @@ function CombatStatsBase({
           action={<RollButton notation={initNotation} label="Iniciativa" size="xs" className="mt-0.5" />}
         />
         <StatBox label="Velocidade"
-          value={(exh.speedMultiplier < 1 ? `${effectiveSpeed}` : `${combat.speed}`).replace('.', ',') + 'm'}
-          editable={exh.speedMultiplier >= 1}
+          value={(speedReduced ? `${effSpeed}` : `${baseSpeed}`).replace('.', ',') + 'm'}
+          editable={!speedReduced}
           onChange={v => onUpdateCombat('speed', Math.max(0, parseFloat(String(v).replace(',', '.')) || 0))}
-          warning={
-            exh.speedMultiplier === 0 ? '⚠ Imóvel (Exaustão 5)'
-            : exh.speedMultiplier < 1 ? '⚠ Metade (Exaustão 2+)'
-            : null
-          }
-          hint={exh.speedMultiplier >= 1 && suggestedSpeed != null && combat.speed !== suggestedSpeed
+          warning={speedWarning}
+          hint={!speedReduced && suggestedSpeed != null && combat.speed !== suggestedSpeed
             ? { label: `Sugerido: ${String(suggestedSpeed).replace('.', ',')}m`, onApply: () => onUpdateCombat('speed', suggestedSpeed) }
             : null}
         />

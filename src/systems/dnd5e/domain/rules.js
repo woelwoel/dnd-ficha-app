@@ -916,6 +916,29 @@ export function syncClassFeatureUses(character) {
   }
 }
 
+/* ── Deslocamento efetivo ────────────────────────────────────────── */
+
+/** Condições que zeram o deslocamento — a criatura não pode se mover
+ *  (PHB p.290-291: agarrado, impedido, paralisado, petrificado, atordoado,
+ *  inconsciente). */
+export const SPEED_ZERO_CONDITIONS = new Set([
+  'grappled', 'restrained', 'paralyzed', 'petrified', 'stunned', 'unconscious',
+])
+
+/**
+ * Deslocamento efetivo em metros, derivado das condições ativas e da
+ * exaustão. Exaustão nível 2+ reduz à metade; nível 5+ zera (PHB p.291).
+ * Não altera `combat.speed` — é derivação de leitura, como a CA.
+ */
+export function effectiveSpeed(character) {
+  const base = character.combat?.speed ?? 9
+  const exhaustion = character.combat?.exhaustion ?? 0
+  const conditions = character.combat?.conditions ?? []
+  if (exhaustion >= 5) return 0
+  if (conditions.some(c => SPEED_ZERO_CONDITIONS.has(c))) return 0
+  return exhaustion >= 2 ? base / 2 : base
+}
+
 /* ── Concentração ────────────────────────────────────────────────── */
 
 /**
