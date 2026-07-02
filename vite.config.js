@@ -115,14 +115,15 @@ export default defineConfig({
             },
           },
           {
-            // Fontes do Google: cacheia stylesheet + arquivos .woff2 estaticamente.
-            urlPattern: ({ url }) =>
-              url.origin === 'https://fonts.googleapis.com' ||
-              url.origin === 'https://fonts.gstatic.com',
-            handler: 'StaleWhileRevalidate',
+            // Fontes self-hosted (@fontsource): woff2 ficam FORA do precache
+            // (o CSS lista todos os subsets; o browser só baixa os usados —
+            // latin). CacheFirst garante offline após o primeiro uso.
+            urlPattern: ({ url, sameOrigin }) =>
+              sameOrigin && url.pathname.endsWith('.woff2'),
+            handler: 'CacheFirst',
             options: {
-              cacheName: 'google-fonts-v1',
-              expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheName: 'local-fonts-v1',
+              expiration: { maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 365 },
               cacheableResponse: { statuses: [0, 200] },
             },
           },

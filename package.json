@@ -17,6 +17,9 @@
     "test:rls": "node scripts/test-rls-isolation.mjs"
   },
   "dependencies": {
+    "@fontsource/eb-garamond": "^5.2.7",
+    "@fontsource/im-fell-english-sc": "^5.2.6",
+    "@fontsource/inter": "^5.2.8",
     "@headlessui/react": "^2.2.10",
     "@supabase/supabase-js": "^2.106.0",
     "lucide-react": "^1.17.0",

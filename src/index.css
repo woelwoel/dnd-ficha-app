@@ -1,6 +1,19 @@
 @import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IM+Fell+English+SC&family=Inter:wght@400;500;600;700&display=swap');
+/* Fontes self-hosted (@fontsource): funcionam offline (PWA), sem
+   render-block de CDN e sem vazar visitas pro Google. Mesmos pesos
+   que a antiga URL do Google Fonts pedia. */
+@import "@fontsource/eb-garamond/400.css";
+@import "@fontsource/eb-garamond/500.css";
+@import "@fontsource/eb-garamond/600.css";
+@import "@fontsource/eb-garamond/700.css";
+@import "@fontsource/eb-garamond/400-italic.css";
+@import "@fontsource/eb-garamond/500-italic.css";
+@import "@fontsource/im-fell-english-sc/400.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
 
 /* ── Paleta Ficha Clássica (tinta única sépia, papel envelhecido moderado) ── */
 @theme {
@@ -30,6 +43,18 @@
   --color-gilt-400: #a88a4a;
   --color-gilt-500: #8b6f3a;
   --color-gilt-600: #6e572b;
+
+  /* ── Tokens semânticos (usar em componentes NOVOS; classes gray-*
+        legadas seguem funcionando via remap abaixo, mas são deprecated).
+        Referenciam a paleta → seguem o tema claro/escuro automaticamente. ── */
+  --color-surface:        var(--color-parchment-200); /* papel base */
+  --color-surface-raised: var(--color-parchment-100); /* cards */
+  --color-surface-sunken: var(--color-parchment-300); /* wells, inputs */
+  --color-text:           var(--color-ink-500);
+  --color-text-muted:     var(--color-ink-200);
+  --color-text-faint:     var(--color-ink-50);
+  --color-edge:           var(--color-parchment-600); /* bordas */
+  --color-edge-soft:      var(--color-parchment-400);
 
   /* Tipografia */
   --font-display: 'IM Fell English SC', 'EB Garamond', serif;
@@ -232,6 +257,88 @@
   --shadow-elevated: 0 4px 12px rgba(31, 26, 20, 0.10), 0 2px 4px rgba(31, 26, 20, 0.06);
   --shadow-token:    0 4px 8px rgba(0, 0, 0, 0.5), 0 0 0 2px var(--color-gold-400);
   --shadow-banner:   0 3px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Tema escuro: "pergaminho à luz de vela" ─────────────────────────
+   Override centralizado das variáveis de paleta. NENHUM componente muda:
+   todas as classes de cor (inclusive o remap gray-* acima) resolvem via
+   var(--color-*), então a cascata re-tematiza o app inteiro.
+   `@media not print`: impressão (PrintView) sai SEMPRE no tema claro. */
+@media not print {
+  :root[data-theme='dark'] {
+    /* Papel → couro escuro */
+    --color-parchment-50:  #2b2114;
+    --color-parchment-100: #262015;  /* card */
+    --color-parchment-200: #201812;  /* base */
+    --color-parchment-300: #191510;
+    --color-parchment-400: #3a2f1e;  /* borda suave */
+    --color-parchment-500: #4a3c26;
+    --color-parchment-600: #5d4c30;  /* edge */
+    --color-parchment-700: #7d6a4a;
+    --color-parchment-800: #c9b896;
+    --color-parchment-900: #e8dcc0;
+
+    /* Tinta → creme */
+    --color-ink-50:  #8a7a5e;  /* faded */
+    --color-ink-100: #a5936e;
+    --color-ink-200: #bfae8a;  /* secondary */
+    --color-ink-300: #d3c3a0;
+    --color-ink-400: #dfd2b2;
+    --color-ink-500: #e8dcc0;  /* primary */
+    --color-ink-600: #f0e7d0;
+    --color-ink-700: #f7f0e0;
+
+    /* Ornamento dourado clareia pra manter presença no escuro */
+    --color-gilt-400: #c9a455;
+    --color-gilt-500: #b8954a;
+    --color-gilt-600: #a5823e;
+
+    /* Remap gray-* recalculado (mesma convenção invertida do tema claro:
+       50-500 = texto, 600-950 = fundos/bordas) */
+    --color-gray-50:  #e8dcc0;
+    --color-gray-100: #dfd2b2;
+    --color-gray-200: #d3c3a0;
+    --color-gray-300: #bfae8a;
+    --color-gray-400: #a5936e;
+    --color-gray-500: #8a7a5e;
+    --color-gray-600: #5d4c30;
+    --color-gray-700: #4a3c26;
+    --color-gray-800: #262015;
+    --color-gray-900: #201812;
+    --color-gray-950: #191510;
+
+    /* Sombras mais fundas */
+    --shadow-parchment-sm: 0 1px 2px rgba(0,0,0,0.4);
+    --shadow-parchment:    0 2px 6px rgba(0,0,0,0.5);
+    --shadow-parchment-lg: 0 8px 24px rgba(0,0,0,0.6);
+
+    /* Paletas semânticas: steps de FUNDO (50-100) escurecem; steps de
+       TEXTO/ícone (400-500) clareiam. Ajuste fino de contraste na Fase 6. */
+    --color-amber-50: #3a2f18; --color-amber-100: #4a3c20;
+    --color-amber-400: #d4b36a; --color-amber-500: #c9a455;
+    --color-red-50: #3a1a10; --color-red-100: #4a2015;
+    --color-red-400: #e08a60; --color-red-500: #d27a55;
+    --color-blue-50: #1a2430; --color-blue-100: #223040;
+    --color-blue-400: #8aa8c0; --color-blue-500: #7a9ab5;
+    --color-sky-50: #182430; --color-sky-100: #203040;
+    --color-sky-400: #94b5c8; --color-sky-500: #7aa3b8;
+    --color-purple-50: #2a1a24; --color-purple-100: #3a2432;
+    --color-purple-400: #c094ad; --color-purple-500: #ba94ad;
+    --color-green-50: #1c2a12; --color-green-100: #263a18;
+    --color-green-400: #a3c078; --color-green-500: #8aa863;
+    --color-yellow-50: #3a3113; --color-yellow-100: #4a3f1a;
+    --color-yellow-400: #e6cf86; --color-yellow-500: #d4b35a;
+    --color-orange-50: #3a2410; --color-orange-100: #4a2e15;
+    --color-orange-400: #d8a06d; --color-orange-500: #c47745;
+  }
+
+  /* Gradientes do body no escuro (vinheta de vela) */
+  :root[data-theme='dark'] body {
+    background-image:
+      radial-gradient(ellipse at 20% 15%, rgba(201, 164, 85, 0.06) 0%, transparent 45%),
+      radial-gradient(ellipse at 75% 80%, rgba(201, 164, 85, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.35) 0%, transparent 70%);
+  }
 }
 
 /* ── Base global ── */
