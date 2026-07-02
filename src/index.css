@@ -30,7 +30,7 @@
   --color-parchment-900: #2a1f14;
 
   /* Tinta (texto) */
-  --color-ink-50:  #8a7456;  /* faded */
+  --color-ink-50:  #705e3e;  /* faded — escurecido de #8a7456 p/ WCAG AA (4.59:1 sobre parchment-200; era 3.27) */
   --color-ink-100: #6b5640;
   --color-ink-200: #5a4530;  /* secondary */
   --color-ink-300: #4a3826;
@@ -83,7 +83,7 @@
   --color-gray-200: #4a3826;  /* ink-300 */
   --color-gray-300: #5a4530;  /* ink-200 — texto secundário */
   --color-gray-400: #6b5640;  /* ink-100 */
-  --color-gray-500: #8a7456;  /* ink-50 — médio */
+  --color-gray-500: #705e3e;  /* ink-50 — faded (WCAG AA, ver ink-50 acima) */
   --color-gray-600: #a8956f;  /* parchment-600 — borda forte */
   --color-gray-700: #b8a47e;  /* parchment-500 — borda média */
   --color-gray-800: #ede0c2;  /* parchment-100 — fundo card */
@@ -316,6 +316,9 @@
        TEXTO/ícone (400-500) clareiam. Ajuste fino de contraste na Fase 6. */
     --color-amber-50: #3a2f18; --color-amber-100: #4a3c20;
     --color-amber-400: #d4b36a; --color-amber-500: #c9a455;
+    /* amber-600 é dourado-texto acessível: bronze escuro no claro,
+       dourado claro no escuro (usado como cor de heading/link). */
+    --color-amber-600: #c9a455;
     --color-red-50: #3a1a10; --color-red-100: #4a2015;
     --color-red-400: #e08a60; --color-red-500: #d27a55;
     --color-blue-50: #1a2430; --color-blue-100: #223040;
