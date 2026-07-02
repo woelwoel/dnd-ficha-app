@@ -33,4 +33,31 @@ export default defineConfig([
       globals: { ...globals.node, ...globals.browser },
     },
   },
+  // ── Fronteira multi-sistema ─────────────────────────────────────
+  // Fora de src/systems/** e src/test/**, ninguém importa das entranhas
+  // de um sistema — só via contrato System (registry). A whitelist abaixo
+  // é o débito conhecido; a Fase 4 do plano 2026-07-02 esvazia essa lista.
+  // NÃO adicionar arquivos novos aqui.
+  {
+    files: ['src/**/*.{js,jsx}'],
+    ignores: [
+      'src/systems/**',
+      'src/test/**',
+      // Débito (Fase 4):
+      'src/App.jsx',
+      'src/hooks/useCharacter.js',
+      'src/hooks/useCharacterCalculations.js',
+      'src/hooks/useClassSpells.js',
+      'src/hooks/useTabValidation.js',
+      'src/utils/calculations.js',
+    ],
+    rules: {
+      'no-restricted-imports': ['error', {
+        patterns: [{
+          group: ['**/systems/dnd5e/**'],
+          message: 'Importe via contrato System (src/systems), não das entranhas do dnd5e. Ver docs/superpowers/plans/2026-07-02-resolucao-analise-critica.md (Fase 4).',
+        }],
+      }],
+    },
+  },
 ])
