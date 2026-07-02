@@ -19,7 +19,7 @@
 | `DEFAULT_CHARACTER.combat.speed = 30` (era pés) vs schema default `9` (metros) | `src/hooks/useCharacter.js:67` vs `characterSchema.js:164` |
 | Casca importa entranhas do sistema | `App.jsx`, `useCharacter.js`, `useCharacterCalculations.js`, `useClassSpells.js`, `useTabValidation.js`, `utils/calculations.js` importam `systems/dnd5e/**` |
 | Ciclo de camadas | `utils/calculations.js` → `systems/dnd5e/domain/attributes` e `domain/rules.js` → `utils/calculations` |
-| Sintonização: UI **já** limita a 3 (`MAX_ATTUNED` em `Inventory.jsx`), domínio **não** valida | `Inventory.jsx:196,540,567` |
+| Sintonização: UI **já** limita (`MAX_ATTUNED` + prop `maxAttunement` do Artífice, teto 3/4/5/6), domínio **não** valida | `Inventory.jsx:196,540,567`; `getMaxAttunement` em `artificerInfusions.js` |
 | Efeito `speed` de item mágico documentado em **pés**; app usa **metros** | `domain/magicItems.js:17` |
 | Fontes via Google Fonts CDN (`@import url`) | `src/index.css:3` |
 | E2E: só 3 specs (smoke, persistence, bestiary); wizard sem cobertura | `e2e-pw/` |
@@ -576,12 +576,12 @@ git push
 
 ### Task 3.2: Enforcement de sintonização no domínio
 
-A UI já bloqueia a 4ª sintonização (`Inventory.jsx`). Falta o domínio garantir a invariante para dados importados/legados, e a constante `MAX_ATTUNED` deve morar no domínio (fonte única).
+A UI já bloqueia sintonização acima do teto (`Inventory.jsx`, que inclusive recebe `maxAttunement` do Artífice — teto 3/4/5/6 por nível via `getMaxAttunement` em `artificerInfusions.js`). Falta o domínio garantir a invariante para dados importados/legados, e a constante base deve morar no domínio (fonte única). **O limite NÃO é fixo em 3: Artífice nv10/14/18 eleva para 4/5/6** — o enforcement precisa aceitar o teto do personagem.
 
 **Files:**
 - Modify: `src/systems/dnd5e/domain/magicItems.js` (exportar `MAX_ATTUNED` + `enforceAttunementLimit`)
-- Modify: `src/systems/dnd5e/domain/characterSchema.js` (chamar na migração/normalização)
-- Modify: `src/systems/dnd5e/components/CharacterSheet/Inventory.jsx` (importar `MAX_ATTUNED` do domínio, apagar const local)
+- Modify: `src/systems/dnd5e/domain/characterSchema.js` (chamar na migração/normalização, passando o teto real)
+- Modify: `src/systems/dnd5e/components/CharacterSheet/Inventory.jsx` (importar `MAX_ATTUNED` do domínio como default, apagar const local)
 - Test: `src/test/dnd5e/attunement.test.js` (novo)
 
 - [ ] **Step 1: Teste que falha**
@@ -594,12 +594,16 @@ import { MAX_ATTUNED, enforceAttunementLimit } from '../../systems/dnd5e/domain/
 const item = (n, attuned = true) => ({ id: n, name: n, requiresAttunement: true, attuned })
 
 describe('enforceAttunementLimit', () => {
-  it('limite é 3 (PHB p.138)', () => {
+  it('limite base é 3 (PHB p.138)', () => {
     expect(MAX_ATTUNED).toBe(3)
   })
   it('desativa sintonizações além da 3ª, preservando as 3 primeiras', () => {
     const out = enforceAttunementLimit([item('a'), item('b'), item('c'), item('d')])
     expect(out.map(i => i.attuned)).toEqual([true, true, true, false])
+  })
+  it('respeita teto maior (Artífice nv10+ = 4)', () => {
+    const items = [item('a'), item('b'), item('c'), item('d')]
+    expect(enforceAttunementLimit(items, 4)).toBe(items) // nada muda
   })
   it('não mexe em lista dentro do limite (mesma referência)', () => {
     const items = [item('a'), item('b')]
@@ -618,22 +622,24 @@ Run: `npx vitest run src/test/dnd5e/attunement.test.js` → FAIL (funções não
 Em `src/systems/dnd5e/domain/magicItems.js`:
 
 ```js
-/** Máximo de itens sintonizados por criatura (PHB p.138). */
+/** Máximo BASE de itens sintonizados por criatura (PHB p.138).
+ *  Artífice eleva o teto por nível — ver getMaxAttunement em
+ *  artificerInfusions.js; callers devem passar o teto real. */
 export const MAX_ATTUNED = 3
 
 /**
- * Normaliza a invariante de sintonização: no máximo MAX_ATTUNED itens com
- * `attuned: true` (as 3 primeiras ocorrências vencem — ordem do inventário).
- * A UI já impede a 4ª; isto protege import/dados legados. Retorna a MESMA
- * referência se nada precisar mudar (não suja o autosave).
+ * Normaliza a invariante de sintonização: no máximo `max` itens com
+ * `attuned: true` (as primeiras ocorrências vencem — ordem do inventário).
+ * A UI já impede o excesso; isto protege import/dados legados. Retorna a
+ * MESMA referência se nada precisar mudar (não suja o autosave).
  */
-export function enforceAttunementLimit(items = []) {
+export function enforceAttunementLimit(items = [], max = MAX_ATTUNED) {
   let count = 0
   let changed = false
   const out = items.map(item => {
     if (!item?.attuned) return item
     count += 1
-    if (count <= MAX_ATTUNED) return item
+    if (count <= max) return item
     changed = true
     return { ...item, attuned: false }
   })
@@ -643,30 +649,34 @@ export function enforceAttunementLimit(items = []) {
 
 - [ ] **Step 3: Ligar na normalização de carga**
 
-Em `characterSchema.js`, localizar `migrateCharacter` e, no final da migração (independente de versão — é normalização idempotente), aplicar:
+Em `characterSchema.js`, localizar `migrateCharacter` e, no final da migração (independente de versão — é normalização idempotente), aplicar **com o teto real do personagem**:
 
 ```js
 import { enforceAttunementLimit } from './magicItems'
+import { getMaxAttunement } from './artificerInfusions'
 // ...dentro de migrateCharacter, antes do return:
 if (character.inventory?.items) {
-  const normalized = enforceAttunementLimit(character.inventory.items)
+  const normalized = enforceAttunementLimit(
+    character.inventory.items,
+    getMaxAttunement(character), // 3 base; Artífice nv10/14/18 → 4/5/6
+  )
   if (normalized !== character.inventory.items) {
     character = { ...character, inventory: { ...character.inventory, items: normalized } }
   }
 }
 ```
 
-(Conferir o nome real do caminho `inventory.items` no schema — é o mesmo que `Inventory.jsx:196` usa.)
+(Conferir a assinatura real de `getMaxAttunement` em `artificerInfusions.js` — ela já existe e é a mesma fonte que o Inventory usa via prop `maxAttunement`. Conferir também o caminho `inventory.items` no schema — é o que `Inventory.jsx:196` usa.)
 
 - [ ] **Step 4: Unificar a constante na UI**
 
-Em `Inventory.jsx`: apagar a declaração local de `MAX_ATTUNED` e importar do domínio:
+Em `Inventory.jsx`: a const local que serve de default quando não há prop `maxAttunement` passa a ser importada do domínio:
 
 ```js
 import { MAX_ATTUNED } from '../../domain/magicItems'
 ```
 
-(Ajustar o caminho relativo real do arquivo.)
+(Ajustar o caminho relativo real do arquivo; manter a prop `maxAttunement` do Artífice funcionando como está.)
 
 - [ ] **Step 5: Rodar testes + suíte**
 
