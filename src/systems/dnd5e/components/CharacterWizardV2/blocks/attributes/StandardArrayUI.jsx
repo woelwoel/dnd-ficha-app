@@ -1,5 +1,5 @@
 // src/components/CharacterWizardV2/blocks/attributes/StandardArrayUI.jsx
-import { ABILITY_SCORES, STANDARD_ARRAY, getModifier, formatModifier } from '../../../../../../utils/calculations'
+import { ABILITY_SCORES, STANDARD_ARRAY, getModifier, formatModifier } from '../../../../utils/calculations'
 import { finalScore, availableStandardArray } from './attribute-helpers'
 
 export function StandardArrayUI({ draft, updateDraft }) {

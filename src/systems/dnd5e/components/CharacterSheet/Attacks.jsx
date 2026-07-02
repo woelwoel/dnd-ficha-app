@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { calculateWeaponAttackBonus, calculateWeaponDamage, resolveAttackAbility } from '../../../../utils/attacks'
-import { formatModifier } from '../../../../utils/calculations'
+import { calculateWeaponAttackBonus, calculateWeaponDamage, resolveAttackAbility } from '../../utils/attacks'
+import { formatModifier } from '../../utils/calculations'
 import { abbrOfKey } from '../../domain/attributes'
 import { RollButton } from '../../../../components/DiceRoller/RollButton'
 import { AttackRollButton } from './AttackRollButton'
 import {
   translateProperty, translateDamageType, formatRange, findAmmoForAttack,
-} from '../../../../utils/weaponI18n'
+} from '../../utils/weaponI18n'
 
 const EMPTY_ATTACK = {
   name: '',

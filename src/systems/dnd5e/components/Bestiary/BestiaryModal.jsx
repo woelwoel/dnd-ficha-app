@@ -9,9 +9,9 @@ import {
   MONSTER_TYPES,
   MONSTER_SIZES,
   ALIGNMENTS,
-} from '../../../../utils/monsters'
+} from '../../utils/monsters'
 import { useLanguage } from '../../../../utils/useLanguage'
-import { mergeMonster, indexOverrides } from '../../../../utils/monsters-i18n'
+import { mergeMonster, indexOverrides } from '../../utils/monsters-i18n'
 import { MonsterStatBlock } from './MonsterStatBlock'
 
 export function BestiaryModal({ isOpen, onClose }) {

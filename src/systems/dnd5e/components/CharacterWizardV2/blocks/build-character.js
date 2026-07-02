@@ -1,6 +1,6 @@
 // src/components/CharacterWizardV2/blocks/build-character.js
-import { generateId } from '../../../../../hooks/useCharacter'
-import { calculateMaxHpFromHitDice, racialHpPerLevel, getModifier, RACE_LANGUAGES } from '../../../../../utils/calculations'
+import { generateId } from '../../../hooks/useCharacter'
+import { calculateMaxHpFromHitDice, racialHpPerLevel, getModifier, RACE_LANGUAGES } from '../../../utils/calculations'
 import { injectSubclassSpellsAtBuild } from '../../../domain/subclassSpells'
 import { classSpeedBonusMeters } from '../../../domain/rules'
 

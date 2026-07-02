@@ -1,4 +1,4 @@
-import { SKILLS } from '../../../../../../utils/calculations'
+import { SKILLS } from '../../../../utils/calculations'
 
 export function RacialSkillPicker({ label, count, chosen, onToggle }) {
   const atLimit = chosen.length >= count

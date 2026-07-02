@@ -8,7 +8,7 @@ import {
   calculatePassivePerception,
   calculateMaxHp,
   calculateMaxHpFromHitDice,
-} from '../utils/calculations'
+} from '../systems/dnd5e/utils/calculations'
 
 describe('calculateMaxHpFromHitDice', () => {
   it('single-class nv1 = dado máximo + CON', () => {

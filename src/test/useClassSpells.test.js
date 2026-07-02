@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { renderHook } from '@testing-library/react'
-import { useClassSpells } from '../hooks/useClassSpells'
+import { useClassSpells } from '../systems/dnd5e/hooks/useClassSpells'
 
 // Mock SrdProvider — devolvemos dados sintéticos suficientes pro hook.
 vi.mock('../systems/dnd5e/data/SrdProvider', () => {

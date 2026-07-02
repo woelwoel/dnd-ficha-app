@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getSpellSlots, getSpellcastingRules } from '../../utils/spellcasting'
+import { getSpellSlots, getSpellcastingRules } from '../../systems/dnd5e/utils/spellcasting'
 import { SPELLCASTER_CLASSES } from '../../systems/dnd5e/domain/rules'
 
 describe('Artífice é classe conjuradora (rules.js)', () => {

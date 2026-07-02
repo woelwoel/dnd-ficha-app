@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from 'react'
 import { ABILITY_SCORES } from '../utils/calculations'
-import { SPELLCASTER_CLASSES } from '../systems/dnd5e/domain/rules'
+import { SPELLCASTER_CLASSES } from '../domain/rules'
 
 /**
  * IDs dos campos com erro, em ordem de prioridade.

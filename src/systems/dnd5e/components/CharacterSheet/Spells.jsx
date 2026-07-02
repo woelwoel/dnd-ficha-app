@@ -1,8 +1,8 @@
 import { useState, useMemo, useEffect } from 'react'
-import { ABILITY_SCORES, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus, getProficiencyBonus } from '../../../../utils/calculations'
+import { ABILITY_SCORES, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus, getProficiencyBonus } from '../../utils/calculations'
 import { abbrOfKey } from '../../domain/attributes'
-import { getSpellcastingRules, getWarlockPactSlots, getClassSpellMath, getSpellSlots } from '../../../../utils/spellcasting'
-import { useClassSpells } from '../../../../hooks/useClassSpells'
+import { getSpellcastingRules, getWarlockPactSlots, getClassSpellMath, getSpellSlots } from '../../utils/spellcasting'
+import { useClassSpells } from '../../hooks/useClassSpells'
 import { SpellDetailModal } from '../SpellDetailModal'
 import { ConfirmDialog } from '../../../../components/ui/ConfirmDialog'
 import { Icon } from '../../../../components/ui/Icon'
@@ -12,7 +12,7 @@ import {
   countActiveFilters,
   SCHOOL_LABELS,
   CASTING_TIME_LABELS,
-} from '../../../../utils/spellFilters'
+} from '../../utils/spellFilters'
 
 export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onTogglePrepared, onToggleSlot, onSetConcentration, onSpendPactSlot, onRegainPactSlot, focusSpellId, onClearFocusSpell }) {
   const [activeTab, setActiveTab] = useState(0)

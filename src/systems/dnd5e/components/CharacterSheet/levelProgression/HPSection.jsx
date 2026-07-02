@@ -1,6 +1,6 @@
 // src/components/CharacterSheet/levelProgression/HPSection.jsx
 import { useState } from 'react'
-import { formatModifier } from '../../../../../utils/calculations'
+import { formatModifier } from '../../../utils/calculations'
 import { calcHpAverage, calcHpMax, rollDie } from './helpers'
 
 export function HPSection({ hitDie, conMod, hpGain, onHpChange }) {

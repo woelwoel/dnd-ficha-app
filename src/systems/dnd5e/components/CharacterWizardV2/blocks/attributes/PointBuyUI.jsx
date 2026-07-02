@@ -2,7 +2,7 @@
 import {
   ABILITY_SCORES, POINT_BUY_COST, POINT_BUY_BUDGET,
   getModifier, formatModifier,
-} from '../../../../../../utils/calculations'
+} from '../../../../utils/calculations'
 import { finalScore } from './attribute-helpers'
 
 const PB_MIN = 8

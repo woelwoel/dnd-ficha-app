@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { calculateMulticlassSpellSlots, getSpellSlots, getWarlockPactSlots, getSpellcastingRules } from '../utils/spellcasting'
+import { calculateMulticlassSpellSlots, getSpellSlots, getWarlockPactSlots, getSpellcastingRules } from '../systems/dnd5e/utils/spellcasting'
 
 describe('calculateMulticlassSpellSlots', () => {
   it('monoclasse sem multiclasse retorna null', () => {

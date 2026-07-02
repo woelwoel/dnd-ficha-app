@@ -5,7 +5,7 @@
  * opção escolhida (formato `• Nv N — Nome: desc`, 100% consistente em PHB+Tasha).
  * Ver docs/superpowers/specs/2026-06-30-features-subclasse-por-nivel-design.md.
  */
-import { getModifier, ATTR_NAME_TO_KEY } from '../../../utils/calculations'
+import { getModifier, ATTR_NAME_TO_KEY } from '../utils/calculations'
 
 /**
  * Texto antes desta marca = flavor da subclasse; depois = bullets por nível.

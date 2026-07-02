@@ -1,6 +1,6 @@
 import { memo, useState, useRef } from 'react'
-import { formatModifier, calculateInitiative, getModifier, getExhaustionEffects } from '../../../../utils/calculations'
-import { formatHitDicePool } from '../../../../utils/hitDice'
+import { formatModifier, calculateInitiative, getModifier, getExhaustionEffects } from '../../utils/calculations'
+import { formatHitDicePool } from '../../utils/hitDice'
 import { FormFieldError } from '../../../../components/FormFieldError'
 import { RollButton } from '../../../../components/DiceRoller/RollButton'
 import { DamageModal } from './DamageModal'

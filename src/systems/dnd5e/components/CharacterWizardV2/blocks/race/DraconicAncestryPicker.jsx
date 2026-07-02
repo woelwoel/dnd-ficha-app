@@ -1,4 +1,4 @@
-import { DRACONIC_ANCESTORS } from '../../../../../../utils/draconicAncestors'
+import { DRACONIC_ANCESTORS } from '../../../../utils/draconicAncestors'
 
 export function DraconicAncestryPicker({ value, onChange }) {
   return (

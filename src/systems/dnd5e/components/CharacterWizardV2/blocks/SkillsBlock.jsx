@@ -1,7 +1,7 @@
 import {
   SKILLS, ABILITY_SCORES, getProficiencyBonus,
   calculateSkillModifier, formatModifier,
-} from '../../../../../utils/calculations'
+} from '../../../utils/calculations'
 
 export function SkillsBlock({ draft, updateDraft, classData }) {
   const limit = classData?.skill_choices?.count ?? null

@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { toHitDicePool, totalHitDiceAvailable } from '../../../../utils/hitDice'
-import { performShortRest, performLongRest } from '../../../../utils/rest'
-import { getModifier, formatModifier } from '../../../../utils/calculations'
+import { toHitDicePool, totalHitDiceAvailable } from '../../utils/hitDice'
+import { performShortRest, performLongRest } from '../../utils/rest'
+import { getModifier, formatModifier } from '../../utils/calculations'
 import { ConfirmDialog } from '../../../../components/ui/ConfirmDialog'
 
 /**

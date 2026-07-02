@@ -2,7 +2,7 @@ import {
   ABILITY_SCORES, SKILLS, getProficiencyBonus, getModifier, formatModifier,
   SPELL_ABILITY_PT_TO_KEY,
   calculateSpellSaveDC, calculateSpellAttackBonus,
-} from '../../../../../utils/calculations'
+} from '../../../utils/calculations'
 import { computeFinalAttributes, computeDraftMaxHp, totalCharacterLevel } from './build-character'
 
 const METHOD_LABEL = {

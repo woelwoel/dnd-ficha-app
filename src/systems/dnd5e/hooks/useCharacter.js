@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from 'react'
-import { SCHEMA_VERSION } from '../systems/dnd5e/domain/characterSchema'
-import { calculateArmorClass, getEquippedArmor } from '../systems/dnd5e/domain/equipment'
+import { SCHEMA_VERSION } from '../domain/characterSchema'
+import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
 import { getModifier } from '../utils/calculations'
 import {
   defaultClassFeatureUses, mergeFeatureUses,
@@ -10,7 +10,7 @@ import {
   gainTempHp as gainTempHpPure,
   stabilizeCharacter as stabilizeCharacterPure,
   rollDeathSave as rollDeathSavePure,
-} from '../systems/dnd5e/domain/rules'
+} from '../domain/rules'
 
 /**
  * Resolve a lista de feature-uses para spend/regain. Se o caller passou `list`

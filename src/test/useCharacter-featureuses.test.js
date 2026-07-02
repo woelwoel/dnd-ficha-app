@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import { useCharacter } from '../hooks/useCharacter'
+import { useCharacter } from '../systems/dnd5e/hooks/useCharacter'
 
 describe('useCharacter — spend/regain aceitam lista explícita', () => {
   it('spendFeatureUse(id, list) usa a lista passada e persiste o uso', () => {

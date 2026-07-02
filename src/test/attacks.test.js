@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { calculateWeaponAttackBonus, calculateWeaponDamage, resolveAttackAbility } from '../utils/attacks'
+import { calculateWeaponAttackBonus, calculateWeaponDamage, resolveAttackAbility } from '../systems/dnd5e/utils/attacks'
 
 const atts = (str = 10, dex = 10) => ({ str, dex, con: 10, int: 10, wis: 10, cha: 10 })
 

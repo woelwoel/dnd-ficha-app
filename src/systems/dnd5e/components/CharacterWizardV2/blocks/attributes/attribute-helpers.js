@@ -1,5 +1,5 @@
 // src/components/CharacterWizardV2/blocks/attributes/attribute-helpers.js
-import { STANDARD_ARRAY } from '../../../../../../utils/calculations'
+import { STANDARD_ARRAY } from '../../../../utils/calculations'
 
 // Valor mínimo aceito num dado de atributo: re-rolamos qualquer resultado
 // abaixo disso para não nascerem atributos fracos (faixa efetiva 8–18).

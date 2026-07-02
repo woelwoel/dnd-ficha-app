@@ -3,7 +3,7 @@
 // (PHB p.163) + lista de proficiências ganhas + botão confirmar.
 import { useState, useMemo, useEffect } from 'react'
 import { abbrOfKey } from '../../../domain/attributes'
-import { SKILLS } from '../../../../../utils/calculations'
+import { SKILLS } from '../../../utils/calculations'
 
 export function AddMulticlassPicker({
   availableClasses, classes, mcRules, characterAttributes,

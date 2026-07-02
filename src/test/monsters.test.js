@@ -4,7 +4,7 @@ import {
   formatCR,
   countActiveMonsterFilters,
   EMPTY_MONSTER_FILTERS,
-} from '../utils/monsters'
+} from '../systems/dnd5e/utils/monsters'
 
 const goblin = {
   index: 'goblin', name: 'Goblin',

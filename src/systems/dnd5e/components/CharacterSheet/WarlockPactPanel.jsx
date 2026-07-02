@@ -1,5 +1,5 @@
 import { RollButton } from '../../../../components/DiceRoller/RollButton'
-import { getModifier, formatModifier, getProficiencyBonus } from '../../../../utils/calculations'
+import { getModifier, formatModifier, getProficiencyBonus } from '../../utils/calculations'
 
 /**
  * Painel do Bruxo (PHB p.106-110).

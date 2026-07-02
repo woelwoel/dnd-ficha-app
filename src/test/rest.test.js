@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { performShortRest, performLongRest } from '../utils/rest'
+import { performShortRest, performLongRest } from '../systems/dnd5e/utils/rest'
 
 function base() {
   return {

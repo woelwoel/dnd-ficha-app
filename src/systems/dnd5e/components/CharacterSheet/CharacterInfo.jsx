@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { DetailsModal } from '../DetailsModal'
 import { FormFieldError } from '../../../../components/FormFieldError'
 import { TopicList, FullDescriptionToggle } from '../../../../components/TopicList'
-import { ABBR_TO_KEY, ALIGNMENTS, DND_LANGUAGES, RACE_LANGUAGES, parseBackgroundLanguageCount } from '../../../../utils/calculations'
+import { ABBR_TO_KEY, ALIGNMENTS, DND_LANGUAGES, RACE_LANGUAGES, parseBackgroundLanguageCount } from '../../utils/calculations'
 import { getRaceRequirements } from '../CharacterWizardV2/blocks/race-helpers'
 
 // Rótulo PT-BR de uma chave de atributo (para o aviso de bônus racial à escolha).

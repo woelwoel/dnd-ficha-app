@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { SKILLS, ABILITY_SCORES, formatModifier, calculateSkillModifier, getModifier } from '../../../../utils/calculations'
+import { SKILLS, ABILITY_SCORES, formatModifier, calculateSkillModifier, getModifier } from '../../utils/calculations'
 import { Tooltip } from '../../../../components/Tooltip'
 import { RollButton } from '../../../../components/DiceRoller/RollButton'
 

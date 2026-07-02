@@ -1,4 +1,4 @@
-import { ALIGNMENTS } from '../../../../../utils/calculations'
+import { ALIGNMENTS } from '../../../utils/calculations'
 
 const fieldCls =
   'w-full px-3 py-2 rounded-sm border-2 border-parchment-600 bg-parchment-50 text-ink-500 ' +

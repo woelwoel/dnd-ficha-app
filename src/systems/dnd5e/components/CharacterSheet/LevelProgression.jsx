@@ -2,8 +2,8 @@
 // Componente de progressão de nível — orquestrador.
 // Sub-componentes vivem em ./levelProgression/.
 import { useState } from 'react'
-import { getModifier } from '../../../../utils/calculations'
-import { getSpellSlots } from '../../../../utils/spellcasting'
+import { getModifier } from '../../utils/calculations'
+import { getSpellSlots } from '../../utils/spellcasting'
 import { useSrd } from '../../data/SrdProvider'
 import { useClassProgressionData } from './levelProgression/useClassProgressionData'
 import { enrichWithSubclassSpells } from '../../domain/subclassSpells'

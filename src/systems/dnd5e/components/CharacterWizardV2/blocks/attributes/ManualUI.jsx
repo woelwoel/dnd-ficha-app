@@ -1,5 +1,5 @@
 // src/components/CharacterWizardV2/blocks/attributes/ManualUI.jsx
-import { ABILITY_SCORES, getModifier, formatModifier } from '../../../../../../utils/calculations'
+import { ABILITY_SCORES, getModifier, formatModifier } from '../../../../utils/calculations'
 import { finalScore } from './attribute-helpers'
 
 function clamp(v) {

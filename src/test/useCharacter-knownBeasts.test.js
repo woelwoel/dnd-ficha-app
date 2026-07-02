@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import { useCharacter } from '../hooks/useCharacter'
+import { useCharacter } from '../systems/dnd5e/hooks/useCharacter'
 
 describe('useCharacter.toggleKnownBeast', () => {
   it('adiciona índice ausente e remove índice presente', () => {

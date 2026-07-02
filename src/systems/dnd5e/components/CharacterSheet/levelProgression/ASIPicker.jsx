@@ -1,6 +1,6 @@
 // src/components/CharacterSheet/levelProgression/ASIPicker.jsx
 import { useState, useCallback } from 'react'
-import { ABILITY_SCORES } from '../../../../../utils/calculations'
+import { ABILITY_SCORES } from '../../../utils/calculations'
 
 export function ASIPicker({ attributes, onBoostsChange }) {
   const [mode, setMode]   = useState('single')

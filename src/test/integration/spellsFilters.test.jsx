@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { useState } from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { matchesFilters, EMPTY_FILTERS, countActiveFilters } from '../../utils/spellFilters'
+import { matchesFilters, EMPTY_FILTERS, countActiveFilters } from '../../systems/dnd5e/utils/spellFilters'
 
 /* ─────────────────────────────────────────────────────────────────────
    E2E — Filtros de Magia

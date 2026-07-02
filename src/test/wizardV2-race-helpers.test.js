@@ -3,7 +3,7 @@ import {
   MAGO_CANTRIPS, computeBonuses, getRaceRequirements,
 } from '../systems/dnd5e/components/CharacterWizardV2/blocks/race-helpers'
 import racesData from '../../public/srd-data/phb-races-pt.json'
-import { ATTR_NAME_TO_KEY, ABBR_TO_KEY } from '../utils/calculations'
+import { ATTR_NAME_TO_KEY, ABBR_TO_KEY } from '../systems/dnd5e/utils/calculations'
 
 describe('MAGO_CANTRIPS', () => {
   it('lista 16 truques em português', () => {

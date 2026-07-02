@@ -4,11 +4,11 @@ import {
   SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY,
   getProficiencyBonus, formatModifier,
   calculateSpellSaveDC, calculateSpellAttackBonus,
-} from '../../../../../utils/calculations'
+} from '../../../utils/calculations'
 import { abbrOfKey, nameOfKey } from '../../../domain/attributes'
-import { useClassSpells } from '../../../../../hooks/useClassSpells'
-import { getSpellcastingRules } from '../../../../../utils/spellcasting'
-import { generateId } from '../../../../../hooks/useCharacter'
+import { useClassSpells } from '../../../hooks/useClassSpells'
+import { getSpellcastingRules } from '../../../utils/spellcasting'
+import { generateId } from '../../../hooks/useCharacter'
 import { SpellDetailModal } from '../../SpellDetailModal'
 
 export function SpellsBlock({ draft, updateDraft, classData }) {

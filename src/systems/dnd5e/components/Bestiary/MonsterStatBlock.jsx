@@ -1,9 +1,9 @@
-import { formatCR } from '../../../../utils/monsters'
+import { formatCR } from '../../utils/monsters'
 import {
   translateLabel,
   translateSpeedKey,
   translateSenseKey,
-} from '../../../../utils/monsters-i18n'
+} from '../../utils/monsters-i18n'
 
 const ABILITY_LABELS = [
   { key: 'strength',     label: 'FOR' },

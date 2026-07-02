@@ -8,7 +8,7 @@ import {
   translateSpeedKey,
   translateSenseKey,
   indexOverrides,
-} from '../utils/monsters-i18n'
+} from '../systems/dnd5e/utils/monsters-i18n'
 
 describe('mergeMonster', () => {
   const goblinEn = {

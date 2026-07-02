@@ -4,9 +4,9 @@
  * Sem React, sem fetches, sem side effects — testável em isolamento.
  */
 
-import { getModifier, getProficiencyBonus, SKILLS, calculateMaxHpFromHitDice, racialHpPerLevel } from '../../../utils/calculations'
+import { getModifier, getProficiencyBonus, SKILLS, calculateMaxHpFromHitDice, racialHpPerLevel } from '../utils/calculations'
 import { keyFromName } from './attributes'
-import { CASTER_TYPE } from '../../../utils/spellcasting'
+import { CASTER_TYPE } from '../utils/spellcasting'
 import { getSubclassFeatureCards, detectFeatureUses } from './subclassFeatures'
 
 /* ── Constantes ──────────────────────────────────────────────────── */

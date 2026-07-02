@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useSrd, useLazySrdDataset } from '../../data/SrdProvider'
-import { enrichDraconicTopics } from '../../../../utils/draconicAncestors'
+import { enrichDraconicTopics } from '../../utils/draconicAncestors'
 import { getFeatureTypeMeta } from '../../domain/featureMeta'
 import { ChosenFeaturePicker } from '../CharacterWizardV2/blocks/class/ChosenFeaturePicker'
 import { resolveMultiSelect, isChoiceDone } from '../CharacterWizardV2/blocks/class-helpers'

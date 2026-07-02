@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { matchesFilters, EMPTY_FILTERS, countActiveFilters } from '../utils/spellFilters'
+import { matchesFilters, EMPTY_FILTERS, countActiveFilters } from '../systems/dnd5e/utils/spellFilters'
 
 const acao    = { name: 'Bola de Fogo', school: 'evocação',    ritual: false, concentration: false, components: 'V, S, M', casting_time: '1 ação' }
 const bonus   = { name: 'Hexar',        school: 'encantamento',ritual: false, concentration: true,  components: 'V, S, M', casting_time: '1 ação bônus' }

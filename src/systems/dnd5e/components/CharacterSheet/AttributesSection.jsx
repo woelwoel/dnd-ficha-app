@@ -8,7 +8,7 @@ import {
   ATTR_NAME_TO_KEY,
   formatModifier,
   calculateSavingThrow,
-} from '../../../../utils/calculations'
+} from '../../utils/calculations'
 
 /**
  * Seção de atributos: método (manual/array/point-buy), bônus raciais

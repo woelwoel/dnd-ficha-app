@@ -1,7 +1,7 @@
 // src/components/CharacterSheet/levelProgression/FeatPicker.jsx
 // Picker de talento (modo ASI=feat) com busca, filtragem por pré-requisito
 // e picker de atributo quando o talento concede attrBonus.
-import { ABILITY_SCORES } from '../../../../../utils/calculations'
+import { ABILITY_SCORES } from '../../../utils/calculations'
 
 export function FeatPicker({
   feats, attributes,

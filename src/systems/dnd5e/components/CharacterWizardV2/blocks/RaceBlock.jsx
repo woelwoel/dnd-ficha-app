@@ -8,7 +8,7 @@ import { RaceBonusPreview } from './race/RaceBonusPreview'
 import { FeatPicker } from './FeatPicker'
 import { computeBonuses, getRaceRequirements } from './race-helpers'
 import { VARIANT_HUMAN_SUBRACE } from '../../../domain/racialBonuses'
-import { RACE_LANGUAGES, DND_LANGUAGES, RACE_EXTRA_LANGUAGES, ABILITY_SCORES } from '../../../../../utils/calculations'
+import { RACE_LANGUAGES, DND_LANGUAGES, RACE_EXTRA_LANGUAGES, ABILITY_SCORES } from '../../../utils/calculations'
 
 // Tasha's "Customizando sua Origem": distribuições válidas pro override de
 // atributo racial — +2/+1 (dois atributos distintos) ou +1/+1/+1 (três).

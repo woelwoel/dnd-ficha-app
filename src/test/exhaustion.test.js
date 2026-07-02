@@ -1,6 +1,6 @@
 // Testes da tabela de exaustão PHB p.291.
 import { describe, it, expect } from 'vitest'
-import { getExhaustionEffects } from '../utils/calculations'
+import { getExhaustionEffects } from '../systems/dnd5e/utils/calculations'
 
 describe('getExhaustionEffects', () => {
   it('nível 0: sem penalidade', () => {

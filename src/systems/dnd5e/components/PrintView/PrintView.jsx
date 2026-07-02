@@ -17,7 +17,7 @@ import {
   SKILLS, ABILITY_SCORES,
   calculateSkillModifier, calculateSavingThrow,
   ATTR_NAME_TO_KEY,
-} from '../../../../utils/calculations'
+} from '../../utils/calculations'
 import { getEffectiveSaveProficiencies } from '../../domain/rules'
 
 /* ══════════════════════════════════════════════════════════════════

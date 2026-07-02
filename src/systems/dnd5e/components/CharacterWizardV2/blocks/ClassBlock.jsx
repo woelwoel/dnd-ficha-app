@@ -8,7 +8,7 @@ import { MulticlassModal } from '../MulticlassModal'
 import {
   getLeveledChoices, computeBonusCantripsNeeded, getProgressionLevels,
 } from './class-helpers'
-import { SPELL_ABILITY_PT_TO_KEY, SKILLS } from '../../../../../utils/calculations'
+import { SPELL_ABILITY_PT_TO_KEY, SKILLS } from '../../../utils/calculations'
 
 const ATTR_NAME_TO_KEY = {
   'Força': 'str', 'Destreza': 'dex', 'Constituição': 'con',

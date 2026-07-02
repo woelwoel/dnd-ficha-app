@@ -2,10 +2,10 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { INITIAL_DRAFT_V2 } from '../systems/dnd5e/components/CharacterWizardV2/hooks/useDraft'
 
-vi.mock('../hooks/useClassSpells', () => ({
+vi.mock('../systems/dnd5e/hooks/useClassSpells', () => ({
   useClassSpells: () => ({ classSpells: [], levelData: null, slotLevels: [], availableTabs: [] }),
 }))
-vi.mock('../utils/spellcasting', () => ({
+vi.mock('../systems/dnd5e/utils/spellcasting', () => ({
   getSpellcastingRules: () => ({ type: 'prepared', spellsLimit: null, cantripsLimit: null, spellsLabel: 'Magias' }),
 }))
 vi.mock('../systems/dnd5e/components/SpellDetailModal', () => ({

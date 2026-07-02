@@ -1,4 +1,4 @@
-import { calculateMaxHp } from '../../../../../../utils/calculations'
+import { calculateMaxHp } from '../../../../utils/calculations'
 
 function StatCard({ label, value, sub }) {
   return (

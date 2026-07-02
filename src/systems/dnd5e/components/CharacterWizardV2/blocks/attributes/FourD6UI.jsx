@@ -1,5 +1,5 @@
 // src/components/CharacterWizardV2/blocks/attributes/FourD6UI.jsx
-import { ABILITY_SCORES, getModifier, formatModifier } from '../../../../../../utils/calculations'
+import { ABILITY_SCORES, getModifier, formatModifier } from '../../../../utils/calculations'
 import { finalScore, rollFourD6DropSix, availableRolled } from './attribute-helpers'
 
 export function FourD6UI({ draft, updateDraft }) {

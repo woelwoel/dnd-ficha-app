@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { describe, it, expect } from 'vitest'
-import { parseBackgroundEquipment } from '../utils/calculations'
+import { parseBackgroundEquipment } from '../systems/dnd5e/utils/calculations'
 
 describe('parseBackgroundEquipment — ouro do antecedente', () => {
   it('detecta ouro em bolsa de 15 po', () => {

@@ -4,6 +4,7 @@
 import { SrdProvider } from './data/SrdProvider'
 import { CharacterWizardV2 } from './components/CharacterWizardV2'
 import { CharacterSheet as RawSheet } from './components/CharacterSheet/CharacterSheet'
+import { BestiaryButton } from './components/Bestiary/BestiaryButton'
 
 export function Wizard(props) {
   return (
@@ -17,6 +18,17 @@ export function Sheet(props) {
   return (
     <SrdProvider>
       <RawSheet {...props} />
+    </SrdProvider>
+  )
+}
+
+/** Widgets globais do sistema, montados pela casca fora de Wizard/Sheet
+ *  (via getLazyGlobalWidgets do ui-registry). O cache do SrdProvider é de
+ *  módulo, então não há refetch duplicado com as outras superfícies. */
+export function GlobalWidgets() {
+  return (
+    <SrdProvider>
+      <BestiaryButton />
     </SrdProvider>
   )
 }

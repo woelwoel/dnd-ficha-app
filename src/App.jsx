@@ -2,10 +2,8 @@ import { Suspense, useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useParams, useSearchParams, useLocation } from 'react-router-dom'
 import { PrivacyPage } from './components/PrivacyPage'
 import { ErrorBoundary } from './ErrorBoundary'
-import { SrdProvider } from './systems/dnd5e/data/SrdProvider'
 import { DiceRollerProvider } from './context/DiceRollerContext'
 import { DiceHistoryPanel } from './components/DiceRoller/DiceHistoryPanel'
-import { BestiaryButton } from './systems/dnd5e/components/Bestiary/BestiaryButton'
 import { CharacterList } from './components/CharacterList'
 import { PWAUpdatePrompt } from './components/PWAUpdatePrompt'
 import { AppFooter } from './components/ui/AppFooter'
@@ -14,7 +12,7 @@ import { AuthProvider, useAuth } from './auth/AuthProvider'
 import { LoginScreen } from './auth/LoginScreen'
 import { ResetPasswordScreen } from './auth/ResetPasswordScreen'
 import { lazyWithReload } from './utils/lazyWithReload'
-import { getLazyWizard, getLazySheet } from './systems/ui-registry'
+import { getLazyWizard, getLazySheet, getLazyGlobalWidgets } from './systems/ui-registry'
 import { listSystems, getSystemCore } from './systems'
 import { DEFAULT_SYSTEM } from './systems/envelope'
 import { getCharacterSystem } from './utils/storage'
@@ -41,6 +39,19 @@ function Loader() {
       Carregando…
     </div>
   )
+}
+
+// Widgets globais de cada sistema registrado (ex.: bestiário do D&D), lazy
+// via ui-registry — a casca não importa nada das entranhas de um sistema.
+function SystemGlobalWidgets() {
+  return listSystems().map(({ id }) => {
+    const Widgets = getLazyGlobalWidgets(id)
+    return Widgets ? (
+      <Suspense key={id} fallback={null}>
+        <Widgets />
+      </Suspense>
+    ) : null
+  })
 }
 
 // ErrorBoundary POR ROTA: um erro numa tela (ex: chunk órfão, crash de
@@ -207,9 +218,7 @@ function AuthedRoutes() {
       </div>
       <AppFooter />
       <DiceHistoryPanel />
-      {/* Bestiário é conteúdo de D&D → traz seu próprio SrdProvider (o cache do
-          provider é de módulo, então não há refetch duplicado). */}
-      <SrdProvider><BestiaryButton /></SrdProvider>
+      <SystemGlobalWidgets />
       <PWAUpdatePrompt />
     </div>
   )

@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { buildCharacter } from '../../systems/dnd5e/components/CharacterWizardV2/blocks/build-character'
 import { INITIAL_DRAFT_V2 } from '../../systems/dnd5e/components/CharacterWizardV2/hooks/useDraft'
-import { getSpellSlots } from '../../utils/spellcasting'
+import { getSpellSlots } from '../../systems/dnd5e/utils/spellcasting'
 
 // Classe Artífice real (gerada do PDF do Tasha).
 const artifice = JSON.parse(

@@ -152,7 +152,7 @@ describe('SpellDetailModal — acessibilidade', () => {
    CharacterView — profBonus com nível total (multiclasse)
    Testa a lógica de cálculo extraída (sem render do componente inteiro)
    ──────────────────────────────────────────────────────────────────────── */
-import { getProficiencyBonus } from '../utils/calculations'
+import { getProficiencyBonus } from '../systems/dnd5e/utils/calculations'
 
 describe('CharacterView — profBonus usa nível total', () => {
   function calcProfView(infoLevel, multiclasses = []) {

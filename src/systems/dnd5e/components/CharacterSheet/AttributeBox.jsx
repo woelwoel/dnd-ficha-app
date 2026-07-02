@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { getModifier, formatModifier, POINT_BUY_COST } from '../../../../utils/calculations'
+import { getModifier, formatModifier, POINT_BUY_COST } from '../../utils/calculations'
 import { FormFieldError } from '../../../../components/FormFieldError'
 import { Tooltip } from '../../../../components/Tooltip'
 import { RollButton } from '../../../../components/DiceRoller/RollButton'

@@ -1,4 +1,4 @@
-import { ABILITY_SCORES } from '../../../../../../utils/calculations'
+import { ABILITY_SCORES } from '../../../../utils/calculations'
 
 export function FreeAbilityPicker({ label, count, chosen, exclude, onToggle }) {
   const atLimit = chosen.length >= count

@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
-import { parseBackgroundEquipment } from '../../../../utils/calculations'
-import { generateId } from '../../../../hooks/useCharacter'
+import { parseBackgroundEquipment } from '../../utils/calculations'
+import { generateId } from '../../hooks/useCharacter'
 import {
   applyClassChange,
   applyRacialChange,

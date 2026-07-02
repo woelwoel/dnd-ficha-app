@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   translateProperty, translateDamageType,
   feetToMeters, formatRange, findAmmoForAttack,
-} from '../utils/weaponI18n'
+} from '../systems/dnd5e/utils/weaponI18n'
 
 describe('translateProperty', () => {
   it('traduz propriedades conhecidas', () => {

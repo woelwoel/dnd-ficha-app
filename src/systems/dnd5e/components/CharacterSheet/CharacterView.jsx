@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { ABILITY_SCORES, SKILLS, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, getModifier, getProficiencyBonus, RACE_LANGUAGES, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../../../utils/calculations'
-import { formatHitDicePool } from '../../../../utils/hitDice'
+import { ABILITY_SCORES, SKILLS, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, getModifier, getProficiencyBonus, RACE_LANGUAGES, calculateSpellSaveDC, calculateSpellAttackBonus } from '../../utils/calculations'
+import { formatHitDicePool } from '../../utils/hitDice'
 import { getEffectiveSaveProficiencies } from '../../domain/rules'
 import { useSrd } from '../../data/SrdProvider'
 import { LevelProgression } from './LevelProgression'

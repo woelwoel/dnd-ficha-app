@@ -16,10 +16,13 @@ function getLazy(systemId, key) {
   if (!loader) return null
   const cacheKey = `${systemId}:${key}`
   if (cache.has(cacheKey)) return cache.get(cacheKey)
-  const Comp = lazyWithReload(() => loader().then(m => ({ default: m[key] })))
+  // Export ausente resolve pra componente nulo — exports opcionais (ex.:
+  // GlobalWidgets) não quebram sistemas que não os implementam.
+  const Comp = lazyWithReload(() => loader().then(m => ({ default: m[key] ?? (() => null) })))
   cache.set(cacheKey, Comp)
   return Comp
 }
 
 export const getLazyWizard = (systemId) => getLazy(systemId, 'Wizard')
 export const getLazySheet = (systemId) => getLazy(systemId, 'Sheet')
+export const getLazyGlobalWidgets = (systemId) => getLazy(systemId, 'GlobalWidgets')
