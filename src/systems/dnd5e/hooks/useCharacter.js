@@ -28,7 +28,7 @@ function resolveFeatureUseList(prev, list) {
   return [...derived, ...persisted.filter(u => !known.has(u.id))]
 }
 
-const DEFAULT_CHARACTER = {
+export const DEFAULT_CHARACTER = {
   id: null,
   meta: {
     createdAt: null,
@@ -64,7 +64,7 @@ const DEFAULT_CHARACTER = {
     currentHp: 0,
     tempHp: 0,
     armorClass: 10,
-    speed: 30,
+    speed: 9, // metros — ver characterSchema.js (schema default 9)
     // Schema v2+: pool por tipo de dado ({ d8: { total, used } }).
     hitDice: { pool: {} },
     attacks: [],
