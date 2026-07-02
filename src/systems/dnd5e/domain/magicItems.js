@@ -14,7 +14,8 @@
  *  - attrBonus    : soma ao score respeitando `max` (Amuleto da Saúde, Manuais)
  *  - resistance   : adiciona tipo de dano a `resistances[]`
  *  - advSaves     : ativa flag global de vantagem em saves (Pedra da Boa Sorte)
- *  - speed        : soma em pés à velocidade (Botas Aladas)
+ *  - speed        : soma em METROS à velocidade (Botas Aladas = +3m). O app
+ *                   inteiro usa metros; itens novos devem trazer valor métrico.
  *  - darkvision   : maior valor ganha (Óculos da Visão Noturna)
  */
 
