@@ -25,10 +25,10 @@ jobs:
 
       - run: npm ci
 
-      - name: Lint (gate: não piorar — baseline em scripts/lint-baseline.json)
+      - name: "Lint (gate: não piorar — baseline em scripts/lint-baseline.json)"
         run: npm run lint:gate
 
-      - name: Typecheck (gradual — só arquivos com // @ts-check)
+      - name: "Typecheck (gradual — só arquivos com // @ts-check)"
         run: npm run typecheck
 
       - name: Test
