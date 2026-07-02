@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Magias concedidas por features (DADOS, não regra). O motor (rules.js)
  * consome estes objetos via syncGrantedSpells. Adicionar uma feature nova

@@ -1,0 +1,21 @@
+{
+  "// nota": "Typecheck gradual: checkJs=false, então SÓ arquivos com a diretiva '// @ts-check' no topo são verificados. Rodar via `npm run typecheck`. Aumentar cobertura = adicionar '// @ts-check' a um arquivo por vez.",
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "esnext",
+    "jsx": "react-jsx",
+    "strict": true,
+    "types": []
+  },
+  "// cobertura": "Arquivos opt-in por '// @ts-check'. Lista cresce um por vez conforme cada módulo é anotado/limpo (política Fase 9/10). Módulos legados grandes (rules.js, magicItems.js) só entram quando tipados de propósito.",
+  "include": [
+    "src/systems/dnd5e/domain/types.js",
+    "src/systems/dnd5e/domain/grantedSpells.js"
+  ],
+  "exclude": ["node_modules", "dist", "e2e-pw"]
+}

@@ -28,6 +28,9 @@ jobs:
       - name: Lint (gate: não piorar — baseline em scripts/lint-baseline.json)
         run: npm run lint:gate
 
+      - name: Typecheck (gradual — só arquivos com // @ts-check)
+        run: npm run typecheck
+
       - name: Test
         run: npm test
 
