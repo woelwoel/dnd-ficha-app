@@ -37,5 +37,12 @@ export default defineConfig({
     url: 'http://localhost:4173',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
+    // Build E2E com Supabase DUMMY: ref determinístico ("dummy") → storageKey
+    // sb-dummy-auth-token e endpoints previsíveis. O helper supabase-stub
+    // intercepta toda a rede, então nenhum backend real é contatado.
+    env: {
+      VITE_SUPABASE_URL: 'https://dummy.supabase.co',
+      VITE_SUPABASE_ANON_KEY: 'dummy-anon-key-for-e2e',
+    },
   },
 })

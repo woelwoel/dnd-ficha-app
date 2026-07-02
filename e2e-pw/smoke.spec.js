@@ -1,35 +1,31 @@
 import { test, expect } from '@playwright/test'
+import { installAuthedApp } from './support/supabase-stub'
 
 /**
- * Smoke test — app carrega, lista renderiza, navegação básica funciona.
+ * Smoke test — app carrega autenticado (sessão + backend stub), lista
+ * renderiza, navegação básica do wizard funciona.
  *
- * Cobrir o fluxo "feliz" de:
- *   1. Página inicial mostra Tomo dos Heróis
- *   2. Botão "Inscrever Novo Herói" abre o wizard
- *   3. Botão "Anterior" / fechar volta para a lista
- *   4. Painel de dados (🎲 flutuante) está acessível
+ * O app é auth-only Supabase; installAuthedApp semeia a sessão e intercepta
+ * a rede (ver support/supabase-stub.js) — nenhum backend real é contatado.
  */
 
 test.describe('Smoke', () => {
   test.beforeEach(async ({ context }) => {
-    // Limpa localStorage para começar do zero
     await context.clearCookies()
-    await context.addInitScript(() => window.localStorage.clear())
+    await installAuthedApp(context) // lista vazia
   })
 
-  test('página inicial mostra Tomo dos Heróis e botão de criar', async ({ page }) => {
+  test('lista vazia mostra estado inicial e botão de recrutar', async ({ page }) => {
     await page.goto('/')
-    await expect(page.getByRole('heading', { name: /Tomo dos Heróis/i })).toBeVisible()
-    await expect(page.getByRole('button', { name: /Inscrever Novo Herói/ })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /Sua história começa aqui/i })).toBeVisible()
+    await expect(page.getByRole('button', { name: /Recrutar Aventureiro/i })).toBeVisible()
   })
 
-  test('clicar em Inscrever Novo Herói abre o Wizard', async ({ page }) => {
+  test('Recrutar Aventureiro abre o setup do wizard', async ({ page }) => {
     await page.goto('/')
-    await page.getByRole('button', { name: /Inscrever Novo Herói/ }).click()
-    // Header do wizard
-    await expect(page.getByRole('heading', { name: /Criar Personagem/i })).toBeVisible()
-    // Passo 1 = Campanha (settings)
-    await expect(page.getByText(/Passo 1 de/)).toBeVisible()
+    await page.getByRole('button', { name: /Recrutar Aventureiro/i }).click()
+    await expect(page.getByRole('heading', { name: /Como vai ser.*campanha/i })).toBeVisible()
+    await expect(page.getByRole('button', { name: /^Começar$/ })).toBeVisible()
   })
 
   test('botão flutuante de dados 🎲 abre o painel', async ({ page }) => {
@@ -37,17 +33,17 @@ test.describe('Smoke', () => {
     const diceBtn = page.getByLabel(/Abrir histórico de rolagens/i)
     await expect(diceBtn).toBeVisible()
     await diceBtn.click()
-    // Painel aberto: mostra título "Rolagens"
     await expect(page.getByRole('heading', { name: /Rolagens/i })).toBeVisible()
-    // Toggle de modo aparece
     await expect(page.getByRole('button', { name: /↑ Vant\./ })).toBeVisible()
   })
 
-  test('voltar do wizard retorna ao Tomo dos Heróis', async ({ page }) => {
+  test('voltar do wizard retorna à lista', async ({ page }) => {
     await page.goto('/')
-    await page.getByRole('button', { name: /Inscrever Novo Herói/ }).click()
-    await expect(page.getByRole('heading', { name: /Criar Personagem/i })).toBeVisible()
+    await page.getByRole('button', { name: /Recrutar Aventureiro/i }).click()
+    await page.getByRole('button', { name: /^Começar$/ }).click()
+    // Grid do wizard ("Forjar Herói")
+    await expect(page.getByRole('button', { name: /✦ Inscrever Herói ✦/ })).toBeVisible()
     await page.getByRole('button', { name: /← Personagens/i }).click()
-    await expect(page.getByRole('heading', { name: /Tomo dos Heróis/i })).toBeVisible()
+    await expect(page.getByRole('button', { name: /Recrutar Aventureiro/i })).toBeVisible()
   })
 })

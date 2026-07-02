@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { installAuthedApp } from './support/supabase-stub'
 
 /**
  * Bestiário — fluxos que dependem de browser real.
@@ -6,7 +7,7 @@ import { test, expect } from '@playwright/test'
  * Movidos de src/test/integration/bestiary.test.jsx por flakiness em jsdom:
  * a lista do bestiário tem centenas de monstros e o `userEvent.type/click`
  * + re-render estouravam timeout sob contenção de CPU. No browser real é
- * instantâneo.
+ * instantâneo. O bestiário (GlobalWidgets) só monta autenticado → harness.
  */
 
 async function openBestiary(page) {
@@ -18,7 +19,7 @@ async function openBestiary(page) {
 test.describe('Bestiário', () => {
   test.beforeEach(async ({ context }) => {
     await context.clearCookies()
-    await context.addInitScript(() => window.localStorage.clear())
+    await installAuthedApp(context)
   })
 
   test('busca textual filtra a lista', async ({ page }) => {

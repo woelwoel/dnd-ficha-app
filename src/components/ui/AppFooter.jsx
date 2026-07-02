@@ -9,9 +9,9 @@ import { useTheme } from '../../hooks/useTheme'
 export function AppFooter() {
   const { theme, toggle } = useTheme()
   return (
-    <footer className="text-center text-xs py-3 px-4 opacity-60 text-ink-200">
+    <footer className="text-center text-xs py-3 px-4 text-ink-100">
       Seus dados ficam armazenados no Supabase em conta vinculada ao seu email.{' '}
-      <Link to="/privacidade" className="underline hover:opacity-100">
+      <Link to="/privacidade" className="underline hover:text-ink-500">
         Privacidade
       </Link>
       {' · '}
