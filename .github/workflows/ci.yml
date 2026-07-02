@@ -71,3 +71,21 @@ jobs:
             exit 0
           fi
           npm run test:rls
+
+  # E2E (Playwright): fluxos no browser real. Usa o harness de auth
+  # (e2e-pw/support/supabase-stub.js) — build com Supabase dummy, sessão
+  # semeada e rede stubada, sem backend real nem secrets.
+  e2e:
+    name: E2E (Playwright)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Instala browsers do Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Testes E2E
+        run: npm run test:e2e
