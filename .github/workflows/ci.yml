@@ -25,8 +25,8 @@ jobs:
 
       - run: npm ci
 
-      - name: Lint
-        run: npm run lint
+      - name: Lint (gate: não piorar — baseline em scripts/lint-baseline.json)
+        run: npm run lint:gate
 
       - name: Test
         run: npm test
