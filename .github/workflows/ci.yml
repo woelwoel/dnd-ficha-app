@@ -33,6 +33,12 @@ jobs:
 
       - name: Test
         run: npm test
+        env:
+          # supabase.js lança se as env estiverem ausentes (import-time).
+          # Os testes são mockados — não tocam a rede — então valores dummy
+          # bastam pra destravar a suíte no CI (sem depender de secrets).
+          VITE_SUPABASE_URL: https://dummy.supabase.co
+          VITE_SUPABASE_ANON_KEY: dummy-anon-key-for-tests
 
       - name: Build
         run: npm run build
