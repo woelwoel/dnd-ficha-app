@@ -21,6 +21,30 @@
 
 const ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha']
 
+/** Máximo BASE de itens sintonizados por criatura (PHB p.138). O Artífice
+ *  eleva o teto por nível — ver getMaxAttunement em artificerInfusions.js;
+ *  callers com um personagem devem passar o teto real. */
+export const MAX_ATTUNED = 3
+
+/**
+ * Normaliza a invariante de sintonização: no máximo `max` itens com
+ * `attuned: true` (as primeiras ocorrências na ordem do inventário vencem).
+ * A UI já impede o excesso ao ligar; isto protege import/dados legados.
+ * Retorna a MESMA referência quando nada precisa mudar (não suja o autosave).
+ */
+export function enforceAttunementLimit(items = [], max = MAX_ATTUNED) {
+  let count = 0
+  let changed = false
+  const out = items.map(item => {
+    if (!item?.attuned) return item
+    count += 1
+    if (count <= max) return item
+    changed = true
+    return { ...item, attuned: false }
+  })
+  return changed ? out : items
+}
+
 /**
  * Determina se um item mágico está "ativo" — contribuindo com seus
  * `effects` para os cálculos da ficha.

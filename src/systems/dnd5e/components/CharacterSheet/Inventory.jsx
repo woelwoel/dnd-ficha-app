@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { SrdSearchModal } from '../SrdSearchModal'
 import { findArmorByName, ARMOR_TABLE } from '../../domain/equipment'
-import { getRarityInfo, getActiveMagicEffects } from '../../domain/magicItems'
+import { getRarityInfo, getActiveMagicEffects, MAX_ATTUNED as MAX_ATTUNED_BASE } from '../../domain/magicItems'
 import { buildItemLookup, enrichItemDisplay } from '../../domain/itemLookup'
 import { useLazySrdDataset } from '../../data/SrdProvider'
 import { filterCatalogBySources } from '../../domain/sources'
@@ -102,7 +102,7 @@ function QtyEditor({ item, onUpdateItem }) {
 }
 
 export function Inventory({
-  inventory, attributes, maxAttunement = 3, activeSources = ['phb'],
+  inventory, attributes, maxAttunement = MAX_ATTUNED_BASE, activeSources = ['phb'],
   onUpdateCurrency, onAddItem, onRemoveItem, onUpdateItem,
   onAddAttack, onRemoveAttack,
 }) {

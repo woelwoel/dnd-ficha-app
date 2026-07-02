@@ -9,6 +9,8 @@
  */
 
 import { z } from 'zod'
+import { enforceAttunementLimit } from './magicItems'
+import { getMaxAttunement } from './artificerInfusions'
 
 /**
  * Versão atual do formato de ficha. Incrementar a cada breaking change.
@@ -462,21 +464,38 @@ export function safeParseCharacter(raw) {
 export function migrateCharacter(raw) {
   if (!raw || typeof raw !== 'object') return raw
   const current = raw.meta?.schemaVersion ?? 1
-  if (current >= SCHEMA_VERSION) return raw
 
   let doc = raw
-  for (let v = current; v < SCHEMA_VERSION; v++) {
-    if (typeof console !== 'undefined' && console.info) {
-      console.info(`[characterSchema] migrando v${v} → v${v + 1}`)
+  if (current < SCHEMA_VERSION) {
+    for (let v = current; v < SCHEMA_VERSION; v++) {
+      if (typeof console !== 'undefined' && console.info) {
+        console.info(`[characterSchema] migrando v${v} → v${v + 1}`)
+      }
+      if (v === 1) doc = migrateV1ToV2(doc)
+      if (v === 2) doc = migrateV2ToV3(doc)
+      if (v === 3) doc = migrateV3ToV4(doc)
     }
-    if (v === 1) doc = migrateV1ToV2(doc)
-    if (v === 2) doc = migrateV2ToV3(doc)
-    if (v === 3) doc = migrateV3ToV4(doc)
+    doc = { ...doc, meta: { ...(doc.meta ?? {}), schemaVersion: SCHEMA_VERSION } }
   }
-  return {
-    ...doc,
-    meta: { ...(doc.meta ?? {}), schemaVersion: SCHEMA_VERSION },
+  // Normalização idempotente (roda em TODA carga, não só em bump de versão):
+  // garante a invariante de sintonização mesmo para fichas já na versão atual
+  // que foram persistidas/importadas com excesso.
+  return normalizeInvariants(doc)
+}
+
+/**
+ * Reforça invariantes que não são de versão — aplicadas em toda carga.
+ * Preserva a referência quando nada muda (não dispara autosave à toa).
+ */
+function normalizeInvariants(doc) {
+  const items = doc.inventory?.items
+  if (Array.isArray(items) && items.length) {
+    const normalized = enforceAttunementLimit(items, getMaxAttunement(doc))
+    if (normalized !== items) {
+      return { ...doc, inventory: { ...doc.inventory, items: normalized } }
+    }
   }
+  return doc
 }
 
 /**
