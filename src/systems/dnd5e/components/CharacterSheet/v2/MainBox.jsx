@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useEffect, useState } from 'react'
 import { useCharacterContext } from '../CharacterContext'
 import { useLazySrdDataset } from '../../../data/SrdProvider'
@@ -26,7 +27,11 @@ export function MainBox() {
   } = useCharacterContext()
   const [tab, setTab] = useState('acoes')
 
+  // Sinal one-shot vindo do contexto (ex.: clicar num chip de magia preparada):
+  // ao chegar um focusSpellId, salta pra aba Magias. Precisa de efeito porque é
+  // reação a um sinal externo — não dá pra derivar `tab` (o usuário navega depois).
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (focusSpellId != null) setTab('magias')
   }, [focusSpellId])
 
