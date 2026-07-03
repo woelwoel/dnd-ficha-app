@@ -4,6 +4,7 @@ import { FormFieldError } from '../../../../components/FormFieldError'
 import { TopicList, FullDescriptionToggle } from '../../../../components/TopicList'
 import { ABBR_TO_KEY, ALIGNMENTS, DND_LANGUAGES, RACE_LANGUAGES, parseBackgroundLanguageCount } from '../../utils/calculations'
 import { getRaceRequirements } from '../CharacterWizardV2/blocks/race-helpers'
+import { resizeImageToDataUrl } from '../../../../utils/imageResize'
 
 // Rótulo PT-BR de uma chave de atributo (para o aviso de bônus racial à escolha).
 const ATTR_KEY_LABEL = {
@@ -335,13 +336,21 @@ const XP_THRESHOLDS = [
 
 /* ── Retrato do personagem ── */
 function PortraitUpload({ portrait, onUpload }) {
-  function handleFile(e) {
+  async function handleFile(e) {
     const file = e.target.files?.[0]
     if (!file) return
     if (!file.type.startsWith('image/')) return
-    const reader = new FileReader()
-    reader.onload = ev => onUpload(ev.target.result)
-    reader.readAsDataURL(file)
+    try {
+      // Redimensiona/comprime antes de guardar — evita base64 de vários MB no
+      // JSON da ficha (reenviado a cada autosave/realtime). Ver utils/imageResize.
+      const dataUrl = await resizeImageToDataUrl(file)
+      onUpload(dataUrl)
+    } catch {
+      // Fallback: se o resize falhar (formato exótico), guarda o original.
+      const reader = new FileReader()
+      reader.onload = ev => onUpload(ev.target.result)
+      reader.readAsDataURL(file)
+    }
   }
 
   return (
