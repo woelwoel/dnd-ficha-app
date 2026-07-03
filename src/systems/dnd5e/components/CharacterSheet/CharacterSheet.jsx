@@ -17,6 +17,8 @@ import { isSheetReadOnly } from './sheet-access'
 import { PrintView } from '../PrintView/PrintView'
 import { PrintPreviewModal } from '../PrintView/PrintPreviewModal'
 import { defaultClassFeatureUses, mergeFeatureUses } from '../../domain/rules'
+import { SheetV2 } from './v2/SheetV2'
+import { isSheetV2Enabled } from './v2/flag'
 
 /**
  * Wrapper: carrega a ficha de forma assíncrona e só monta o orquestrador
@@ -132,6 +134,10 @@ function SheetBody({ initialCharacter, adminContext = false, onBack }) {
   // Setada por PreparedSpellsList ao clicar num chip; consumida e zerada pelo
   // próprio Spells (que dispara setDetailSpell e depois chama clearFocusSpell).
   const [focusSpellId, setFocusSpellId] = useState(null)
+
+  // Toggle temporário do redesign (spec 2026-07-03). Lido uma vez no mount —
+  // trocar exige reload, o que evita layouts trocando com a ficha suja.
+  const [sheetV2] = useState(() => isSheetV2Enabled())
 
   const { character, setCharacter, ...updaters } = useCharacter(initialCharacter)
 
@@ -264,93 +270,104 @@ function SheetBody({ initialCharacter, adminContext = false, onBack }) {
 
   return (
     <CharacterProvider value={contextValue}>
-      <div className="min-h-screen flex flex-col">
-
-        {/* ── Header único (navegação + barra de combate integrada) ── */}
-        <div className="sticky top-0 z-30">
-          <SheetHeader
-            characterName={character.info.name}
-            characterId={character?.id ?? null}
-            saving={saving}
-            saved={saved}
-            saveError={saveError}
-            onBack={onBack}
-            onExport={handleExport}
-            onImport={handleImport}
-            onImportError={setImportError}
-            onPrint={() => setPrintOpen(true)}
-            showPrint={true}
-            quickStats={quickStats}
-            readOnly={readOnly}
-            campaignId={character?.campaignId ?? null}
-            onMoved={(newCampaignId) => {
-              setCharacter(prev => ({ ...prev, campaignId: newCampaignId }))
-            }}
-          />
-        </div>
-
-        {/* ── Corpo: sidebar + conteúdo ────────────────────────── */}
-        <div className="flex flex-1">
-
-          {/* Sidebar de navegação (embutida em SheetTabs) */}
-          <SheetTabs activeTab={activeTab} onChange={handleTabChange} />
-
-          {/* Área de conteúdo (sem scroll próprio — flui no documento pra permitir print) */}
-          <main className="flex-1 min-w-0">
-            <div className="max-w-7xl mx-auto px-2 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6 space-y-4">
-
-              {importError && (
-                <ImportErrorBanner
-                  message={importError}
-                  onDismiss={() => setImportError(null)}
-                />
-              )}
-
-              {conflictNotice && (
-                <ImportErrorBanner
-                  message="Esta ficha foi alterada em outro dispositivo. Recarregamos a versão mais recente — confira sua última edição."
-                  onDismiss={() => setConflictNotice(false)}
-                />
-              )}
-
-              {navBlocked && (
-                <NavBlockedBanner
-                  onReview={() => focusFirstError(activeTab)}
-                  onDismiss={() => setNavBlocked(false)}
-                />
-              )}
-
-              <SheetContent activeTab={activeTab} />
-            </div>
-          </main>
-        </div>
-
-        {/* Ficha para impressão/PDF — invisível na UI, visível apenas em @media print */}
-        <PrintView
-          character={character}
-          calc={calc}
-          classData={classData}
-          backgrounds={backgrounds}
-          options={printOptions}
+      {sheetV2 ? (
+        <SheetV2
+          onBack={onBack}
+          onExport={handleExport}
+          onPrint={() => setPrintOpen(true)}
+          saving={saving}
+          saved={saved}
+          saveError={saveError}
         />
+      ) : (
+        <div className="min-h-screen flex flex-col">
 
-        {/* Confirmação antes de window.print() */}
-        <PrintPreviewModal
-          open={printOpen}
-          onClose={() => setPrintOpen(false)}
-          onConfirm={() => {
-            setPrintOpen(false)
-            // setTimeout pra dar tempo da React reagir ao close + DOM
-            // settle antes do print. Sem isso, o modal pode "aparecer"
-            // no PDF/print em alguns browsers.
-            setTimeout(() => window.print(), 50)
-          }}
-          characterName={character.info.name}
-          isSpellcaster={isSpellcaster}
-          options={printOptions}
-          onChangeOptions={patch => setPrintOptions(prev => ({ ...prev, ...patch }))}
-        />
-      </div>
+          {/* ── Header único (navegação + barra de combate integrada) ── */}
+          <div className="sticky top-0 z-30">
+            <SheetHeader
+              characterName={character.info.name}
+              characterId={character?.id ?? null}
+              saving={saving}
+              saved={saved}
+              saveError={saveError}
+              onBack={onBack}
+              onExport={handleExport}
+              onImport={handleImport}
+              onImportError={setImportError}
+              onPrint={() => setPrintOpen(true)}
+              showPrint={true}
+              quickStats={quickStats}
+              readOnly={readOnly}
+              campaignId={character?.campaignId ?? null}
+              onMoved={(newCampaignId) => {
+                setCharacter(prev => ({ ...prev, campaignId: newCampaignId }))
+              }}
+            />
+          </div>
+
+          {/* ── Corpo: sidebar + conteúdo ────────────────────────── */}
+          <div className="flex flex-1">
+
+            {/* Sidebar de navegação (embutida em SheetTabs) */}
+            <SheetTabs activeTab={activeTab} onChange={handleTabChange} />
+
+            {/* Área de conteúdo (sem scroll próprio — flui no documento pra permitir print) */}
+            <main className="flex-1 min-w-0">
+              <div className="max-w-7xl mx-auto px-2 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6 space-y-4">
+
+                {importError && (
+                  <ImportErrorBanner
+                    message={importError}
+                    onDismiss={() => setImportError(null)}
+                  />
+                )}
+
+                {conflictNotice && (
+                  <ImportErrorBanner
+                    message="Esta ficha foi alterada em outro dispositivo. Recarregamos a versão mais recente — confira sua última edição."
+                    onDismiss={() => setConflictNotice(false)}
+                  />
+                )}
+
+                {navBlocked && (
+                  <NavBlockedBanner
+                    onReview={() => focusFirstError(activeTab)}
+                    onDismiss={() => setNavBlocked(false)}
+                  />
+                )}
+
+                <SheetContent activeTab={activeTab} />
+              </div>
+            </main>
+          </div>
+        </div>
+      )}
+
+      {/* Ficha para impressão/PDF — invisível na UI, visível apenas em @media print */}
+      <PrintView
+        character={character}
+        calc={calc}
+        classData={classData}
+        backgrounds={backgrounds}
+        options={printOptions}
+      />
+
+      {/* Confirmação antes de window.print() */}
+      <PrintPreviewModal
+        open={printOpen}
+        onClose={() => setPrintOpen(false)}
+        onConfirm={() => {
+          setPrintOpen(false)
+          // setTimeout pra dar tempo da React reagir ao close + DOM
+          // settle antes do print. Sem isso, o modal pode "aparecer"
+          // no PDF/print em alguns browsers.
+          setTimeout(() => window.print(), 50)
+        }}
+        characterName={character.info.name}
+        isSpellcaster={isSpellcaster}
+        options={printOptions}
+        onChangeOptions={patch => setPrintOptions(prev => ({ ...prev, ...patch }))}
+      />
     </CharacterProvider>
   )
 }
