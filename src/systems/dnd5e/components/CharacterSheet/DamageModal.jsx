@@ -32,9 +32,13 @@ export function DamageModal({ open, onClose, onConfirm }) {
   const num = Math.max(0, parseInt(amount, 10) || 0)
   const canSubmit = num > 0
 
-  function handleSubmit() {
-    if (!canSubmit) return
-    onConfirm(num, { critical, type: type || null })
+  // Aceita um valor cru opcional (ex.: Enter lê o valor VIVO do input) — sem
+  // isso, submeter via Enter logo após digitar lia `amount` defasado do closure
+  // (a keystroke do dígito ainda não re-renderizou), não confirmando nada.
+  function handleSubmit(rawAmount = amount) {
+    const n = Math.max(0, parseInt(rawAmount, 10) || 0)
+    if (n <= 0) return
+    onConfirm(n, { critical, type: type || null })
     setAmount('')
     setCritical(false)
     setType('')
@@ -70,7 +74,7 @@ export function DamageModal({ open, onClose, onConfirm }) {
           </button>
           <button
             type="button"
-            onClick={handleSubmit}
+            onClick={() => handleSubmit()}
             disabled={!canSubmit}
             className="px-5 py-1.5 rounded-sm bg-red-700 hover:bg-red-600 border-2 border-red-800 text-parchment-50 text-sm font-display tracking-wide disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
           >
@@ -93,7 +97,7 @@ export function DamageModal({ open, onClose, onConfirm }) {
             value={amount}
             onChange={e => setAmount(e.target.value)}
             onWheel={e => e.currentTarget.blur()}
-            onKeyDown={e => { if (e.key === 'Enter') handleSubmit() }}
+            onKeyDown={e => { if (e.key === 'Enter') handleSubmit(e.currentTarget.value) }}
             placeholder="0"
             autoFocus
             className="w-full text-center text-xl font-bold bg-parchment-100 border-2 border-parchment-600 rounded-sm px-2 py-1.5 text-ink-500 focus:outline-none focus:border-ink-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"

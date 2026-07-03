@@ -27,26 +27,31 @@ describe('DamageModal', () => {
     expect(cta).toBeDisabled()
   })
 
-  it('confirma com valor + critical + tipo', async () => {
+  it('confirma com valor + critical + tipo', () => {
+    // fireEvent (síncrono) em vez de userEvent: a sequência de keystrokes do
+    // userEvent corre com o re-render do React e flakava esta interação
+    // multi-campo. fireEvent seta o estado de forma determinística.
     const onConfirm = vi.fn()
     const onClose = vi.fn()
     render(<DamageModal open={true} onClose={onClose} onConfirm={onConfirm} />)
 
-    await userEvent.type(screen.getByLabelText(/quantidade/i), '12')
-    await userEvent.click(screen.getByLabelText(/crítico/i))
-    await userEvent.selectOptions(screen.getByLabelText(/tipo de dano/i), 'fire')
+    fireEvent.change(screen.getByLabelText(/quantidade/i), { target: { value: '12' } })
+    fireEvent.click(screen.getByLabelText(/crítico/i))
+    fireEvent.change(screen.getByLabelText(/tipo de dano/i), { target: { value: 'fire' } })
     // O CTA fica no footer — pega o último botão com nome "Aplicar Dano"
     const buttons = screen.getAllByRole('button', { name: /Aplicar Dano/i })
-    await userEvent.click(buttons[buttons.length - 1])
+    fireEvent.click(buttons[buttons.length - 1])
 
     expect(onConfirm).toHaveBeenCalledWith(12, { critical: true, type: 'fire' })
     expect(onClose).toHaveBeenCalled()
   })
 
-  it('Enter no input aplica', async () => {
+  it('Enter no input aplica', () => {
     const onConfirm = vi.fn()
     render(<DamageModal open={true} onClose={() => {}} onConfirm={onConfirm} />)
-    await userEvent.type(screen.getByLabelText(/quantidade/i), '5{Enter}')
+    const input = screen.getByLabelText(/quantidade/i)
+    fireEvent.change(input, { target: { value: '5' } })
+    fireEvent.keyDown(input, { key: 'Enter' })
     expect(onConfirm).toHaveBeenCalledWith(5, { critical: false, type: null })
   })
 
