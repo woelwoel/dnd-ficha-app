@@ -262,7 +262,7 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
                 <header className="flex items-center gap-4 mb-3 px-1">
                   <span
                     aria-hidden
-                    className="text-2xl font-display text-parchment-600/80 leading-none w-8 text-center"
+                    className="text-2xl font-display text-parchment-700 leading-none w-8 text-center"
                   >{g.roman}</span>
                   <div className="flex-1 min-w-0">
                     <h2

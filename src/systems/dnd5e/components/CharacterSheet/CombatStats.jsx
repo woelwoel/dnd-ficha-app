@@ -673,6 +673,7 @@ function CombatStatsBase({
             value={combat.tempHp}
             onChange={e => handleTempHpChange(e.target.value)}
             onWheel={e => e.currentTarget.blur()}
+            aria-label="PV temporário"
             title="Nova fonte de PV temporário apenas substitui se for maior (PHB p.198)"
             className="w-full mt-1 text-center bg-parchment-100 border border-parchment-600 rounded px-2 py-1 text-ink-500 focus:outline-none focus:border-ink-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
@@ -705,6 +706,7 @@ function CombatStatsBase({
             value={combat.maxHp}
             onChange={e => onUpdateCombat('maxHp', Math.max(1, parseInt(e.target.value) || 1))}
             onWheel={e => e.currentTarget.blur()}
+            aria-label="PV máximo"
             className="w-full text-center bg-parchment-100 border border-parchment-600 rounded px-2 py-1 text-ink-500 focus:outline-none focus:border-ink-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>

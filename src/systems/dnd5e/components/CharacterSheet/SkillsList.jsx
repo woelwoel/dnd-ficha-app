@@ -27,6 +27,7 @@ function SkillRow({
           checked={isClassSkill}
           disabled={limitReached}
           onChange={() => !limitReached && onToggle(skill.key)}
+          aria-label={`Proficiência em ${skill.name}`}
           className={`shrink-0 ${limitReached ? 'cursor-not-allowed' : 'accent-ink-500 cursor-pointer'}`}
         />
       )}

@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 import { installAuthedApp } from './support/supabase-stub'
+import { makeCharacter } from './support/fixtures'
 
 /**
  * Auditoria de acessibilidade (WCAG 2.1 A/AA) via axe-core.
@@ -36,24 +37,30 @@ test.describe('Acessibilidade (WCAG 2.1 AA)', () => {
     assertClean(await seriousViolations(page))
   })
 
-  // Telas autenticadas: o harness já as torna auditáveis, mas elas ainda têm
-  // débito SISTÊMICO de contraste (dourado/sépia-claro como texto — gold-400
-  // #d4ad6a, #b6a480 sobre pergaminho). Corrigir é uma varredura ampla por
-  // vários componentes (ver docs/audits/2026-07-a11y.md). Marcados fixme até a
-  // varredura: tirar o .fixme quando estiverem limpos.
-  test.fixme('lista de personagens (autenticada) sem violações critical/serious', async ({ page, context }) => {
+  test('lista de personagens (autenticada) sem violações critical/serious', async ({ page, context }) => {
     await installAuthedApp(context)
     await page.goto('/')
     await expect(page.getByRole('button', { name: /Recrutar Aventureiro/i })).toBeVisible()
     assertClean(await seriousViolations(page))
   })
 
-  test.fixme('wizard (grid) sem violações critical/serious', async ({ page, context }) => {
+  test('wizard (grid) sem violações critical/serious', async ({ page, context }) => {
     await installAuthedApp(context)
     await page.goto('/')
     await page.getByRole('button', { name: /Recrutar Aventureiro/i }).click()
     await page.getByRole('button', { name: /^Começar$/ }).click()
     await expect(page.getByRole('button', { name: /✦ Inscrever Herói ✦/ })).toBeVisible()
+    assertClean(await seriousViolations(page))
+  })
+
+  test('ficha de personagem sem violações critical/serious', async ({ page, context }) => {
+    const id = '99999999-9999-4999-8999-999999999999'
+    // shortId sem chars ambíguos (0/1/I/O/l) — SHORT_ID_REGEX os rejeita.
+    await installAuthedApp(context, {
+      characters: [makeCharacter(id, 'Herói Axe', { shortId: 'SHEETAXEBC' })],
+    })
+    await page.goto('/c/SHEETAXEBC')
+    await expect(page.getByText('Herói Axe').first()).toBeVisible()
     assertClean(await seriousViolations(page))
   })
 })

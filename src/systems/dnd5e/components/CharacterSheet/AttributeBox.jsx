@@ -109,6 +109,7 @@ function AttributeBoxBase({
               value={value}
               onChange={e => handleManualChange(e.target.value)}
               onWheel={e => e.currentTarget.blur()}
+              aria-label={name}
               aria-describedby={error ? errId : undefined}
               className={`w-10 text-center text-2xl font-bold bg-transparent focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                 error ? 'text-ink-600' : col.text

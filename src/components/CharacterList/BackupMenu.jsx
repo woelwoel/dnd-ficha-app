@@ -82,7 +82,7 @@ export function BackupMenu({ characterCount, onImported }) {
 
   return (
     <>
-      <Button variant="ghost-dark" size="sm" onClick={() => setOpen(true)} aria-label="Backup de personagens">
+      <Button variant="ghost" size="sm" onClick={() => setOpen(true)} aria-label="Backup de personagens">
         💾 Backup
       </Button>
 
