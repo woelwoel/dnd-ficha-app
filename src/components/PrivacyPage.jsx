@@ -88,6 +88,23 @@ export function PrivacyPage() {
             </a>.
           </p>
         </section>
+
+        <section className="space-y-2">
+          <h2 className="text-lg text-amber-600">Conteúdo e licença</h2>
+          <p className="text-sm text-gray-200">
+            Parte do conteúdo de jogo deriva do System Reference Document 5.1
+            (“SRD 5.1”) da Wizards of the Coast LLC, licenciado sob a{' '}
+            <a
+              href="https://creativecommons.org/licenses/by/4.0/legalcode"
+              className="text-amber-600 underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Creative Commons Attribution 4.0 International License
+            </a>. Descrições próprias e resumos são obra deste projeto. Este é
+            um projeto de fã, sem afiliação ou endosso da Wizards of the Coast.
+          </p>
+        </section>
       </article>
     </div>
   )
