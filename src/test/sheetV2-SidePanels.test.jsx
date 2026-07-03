@@ -19,6 +19,21 @@ describe('skillBonus', () => {
     // stealth: DES +1
     expect(skillBonus(character, calc, 'stealth')).toBe(1)
   })
+  it('conta perícia vinda de antecedente (backgroundSkills)', () => {
+    // survival não está em skills, mas está em backgroundSkills → deve ser proficiente
+    const ch = makeCharacter({
+      proficiencies: { skills: [], expertiseSkills: [], backgroundSkills: ['survival'], languages: [] },
+    })
+    // survival: SAB (wis) mod -1 + prof 5 = 4
+    expect(skillBonus(ch, makeCalc(), 'survival')).toBe(4)
+  })
+  it('ignora expertise sem proficiência', () => {
+    // stealth com expertise mas sem proficiência → só o mod (DES +1), não dobra
+    const ch = makeCharacter({
+      proficiencies: { skills: [], expertiseSkills: ['stealth'], backgroundSkills: [], languages: [] },
+    })
+    expect(skillBonus(ch, makeCalc(), 'stealth')).toBe(1)
+  })
 })
 
 describe('SavesPanel', () => {
