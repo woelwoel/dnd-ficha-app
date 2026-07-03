@@ -1,0 +1,91 @@
+/* Design system da ficha v2 — direção "App moderno" escuro.
+   Escopado em .sheet-v2 pra não vazar pro v1/parchment.
+   NÃO usar utilitários de cor do Tailwind dentro do v2 (index.css remapeia). */
+.sheet-v2 {
+  --v2-surface-0: #0f141a;
+  --v2-surface-1: #1a222c;
+  --v2-surface-2: #24313f;
+  --v2-border: #2b3644;
+  --v2-border-strong: #3a4756;
+  --v2-text-1: #e7edf3;
+  --v2-text-2: #8b99a7;
+  --v2-text-3: #5c6a78;
+  --v2-accent: #4fc7ab; /* fallback; mapa por classe vem na fase 3 */
+  --v2-success: #58c98c;
+  --v2-warning: #e8b04c;
+  --v2-danger: #f0908a;
+
+  background: var(--v2-surface-0);
+  color: var(--v2-text-1);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.sheet-v2 .v2-panel {
+  background: var(--v2-surface-1);
+  border: 1px solid var(--v2-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.sheet-v2 .v2-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--v2-text-2);
+  margin-bottom: 6px;
+}
+.sheet-v2 .v2-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+  font-size: 13px;
+}
+.sheet-v2 .v2-chip {
+  background: var(--v2-surface-2);
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.sheet-v2 .v2-btn {
+  background: var(--v2-surface-2);
+  border: 1px solid var(--v2-border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 13px;
+  color: var(--v2-text-1);
+  cursor: pointer;
+}
+.sheet-v2 .v2-btn:hover { border-color: var(--v2-border-strong); }
+.sheet-v2 .v2-btn:focus-visible { outline: 2px solid var(--v2-accent); outline-offset: 1px; }
+.sheet-v2 .v2-mut { color: var(--v2-text-2); }
+.sheet-v2 .v2-acc { color: var(--v2-accent); }
+.sheet-v2 .v2-ability {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+}
+.sheet-v2 .v2-ability-mod {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+.sheet-v2 .v2-tab {
+  border: 0;
+  background: transparent;
+  color: var(--v2-text-2);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.sheet-v2 .v2-tab[aria-selected='true'] {
+  background: var(--v2-surface-2);
+  color: var(--v2-text-1);
+  font-weight: 600;
+}
