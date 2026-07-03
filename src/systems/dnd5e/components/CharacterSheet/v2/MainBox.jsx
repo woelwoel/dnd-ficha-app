@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useCharacterContext } from '../CharacterContext'
 import { useLazySrdDataset } from '../../../data/SrdProvider'
 import { Attacks } from '../Attacks'
@@ -26,6 +26,31 @@ export function MainBox() {
     updaters, featureUses, readOnly, focusSpellId, clearFocusSpell,
   } = useCharacterContext()
   const [tab, setTab] = useState('acoes')
+
+  const tabRefs = useRef({})
+
+  function focusTabAt(i) {
+    const target = MAIN_TABS[(i + MAIN_TABS.length) % MAIN_TABS.length]
+    setTab(target.id)
+    queueMicrotask(() => tabRefs.current[target.id]?.focus())
+  }
+
+  function onTablistKeyDown(e) {
+    const idx = MAIN_TABS.findIndex(t => t.id === tab)
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+        e.preventDefault(); focusTabAt(idx + 1); break
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        e.preventDefault(); focusTabAt(idx - 1); break
+      case 'Home':
+        e.preventDefault(); focusTabAt(0); break
+      case 'End':
+        e.preventDefault(); focusTabAt(MAIN_TABS.length - 1); break
+      default:
+    }
+  }
 
   // Sinal one-shot vindo do contexto (ex.: clicar num chip de magia preparada):
   // ao chegar um focusSpellId, salta pra aba Magias. Precisa de efeito porque é
@@ -57,16 +82,18 @@ export function MainBox() {
 
   return (
     <section className="v2-panel" style={{ padding: 0 }}>
-      <div role="tablist" aria-label="Conteúdo da ficha" style={{ display: 'flex', gap: 2, flexWrap: 'wrap', padding: 8, borderBottom: '1px solid var(--v2-border)' }}>
+      <div role="tablist" aria-label="Conteúdo da ficha" onKeyDown={onTablistKeyDown} style={{ display: 'flex', gap: 2, flexWrap: 'wrap', padding: 8, borderBottom: '1px solid var(--v2-border)' }}>
         {MAIN_TABS.map(t => (
           <button
             key={t.id}
+            ref={el => { tabRefs.current[t.id] = el }}
             id={`v2-tab-${t.id}`}
             role="tab"
             type="button"
             className="v2-tab"
             aria-selected={tab === t.id}
             aria-controls={`v2-tabpanel-${t.id}`}
+            tabIndex={tab === t.id ? 0 : -1}
             onClick={() => setTab(t.id)}
           >
             {t.label}

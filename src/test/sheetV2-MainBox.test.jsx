@@ -34,4 +34,17 @@ describe('MainBox', () => {
     renderWithSheetContext(<MainBox />, { focusSpellId: 'fireball' })
     expect(screen.getByRole('tab', { name: 'Magias' })).toHaveAttribute('aria-selected', 'true')
   })
+
+  it('navega entre abas com as setas do teclado', async () => {
+    const user = userEvent.setup()
+    renderWithSheetContext(<MainBox />)
+    const acoes = screen.getByRole('tab', { name: 'Ações' })
+    acoes.focus()
+    await user.keyboard('{ArrowRight}')
+    expect(screen.getByRole('tab', { name: 'Magias' })).toHaveAttribute('aria-selected', 'true')
+    await user.keyboard('{ArrowLeft}')
+    expect(screen.getByRole('tab', { name: 'Ações' })).toHaveAttribute('aria-selected', 'true')
+    await user.keyboard('{End}')
+    expect(screen.getByRole('tab', { name: 'Notas' })).toHaveAttribute('aria-selected', 'true')
+  })
 })
