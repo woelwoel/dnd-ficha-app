@@ -51,6 +51,12 @@ export function makeCalc(overrides = {}) {
 const noop = () => {}
 const noopBag = new Proxy({}, { get: () => noop })
 
+// Updaters espiáveis: makeUpdaters({ updateAttribute: vi.fn() }) — chaves não
+// especificadas viram noop, então componentes que destructuram tudo não quebram.
+export function makeUpdaters(overrides = {}) {
+  return new Proxy(overrides, { get: (t, k) => (k in t ? t[k] : noop) })
+}
+
 export function renderWithSheetContext(ui, { character, calc, ...rest } = {}) {
   const value = {
     character: character ?? makeCharacter(),
