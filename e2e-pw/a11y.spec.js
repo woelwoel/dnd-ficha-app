@@ -62,7 +62,8 @@ test.describe('Acessibilidade (WCAG 2.1 AA)', () => {
       await installAuthedApp(context, {
         characters: [makeCharacter(id, 'Herói Axe', { shortId: 'SHEETAXEBC' })],
       })
-      await page.goto(`/c/SHEETAXEBC${v2 ? '?sheetV2=1' : ''}`)
+      // default agora é v2 (soft cut) — v1 precisa do opt-out explícito.
+      await page.goto(`/c/SHEETAXEBC?sheetV2=${v2 ? '1' : '0'}`)
       await expect(page.getByText('Herói Axe').first()).toBeVisible()
       assertClean(await seriousViolations(page))
     })

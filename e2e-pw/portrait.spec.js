@@ -16,7 +16,9 @@ test('upload de retrato é redimensionado para um data URL pequeno', async ({ pa
     characters: [makeCharacter(id, 'Retratado', { shortId: 'RETRATABCD' })],
     onUpsert: row => uploads.push(row),
   })
-  await page.goto('/c/RETRATABCD')
+  // Fluxo de retrato é UI do v1 (seção Identidade colapsável); com o soft cut
+  // o default virou v2, então pedimos o v1 explicitamente. (Reescrito p/ v2 na etapa B.)
+  await page.goto('/c/RETRATABCD?sheetV2=0')
   await expect(page.getByText('Retratado').first()).toBeVisible()
   // A seção "Identidade" (que contém o retrato) é colapsada por padrão.
   await page.getByRole('button', { name: /Identidade/i }).click()
