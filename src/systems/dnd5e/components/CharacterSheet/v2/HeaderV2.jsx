@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useCharacterContext } from '../CharacterContext'
 import { RestActions } from '../RestActions'
-import { CONDITIONS_BY_ID } from '../../../domain/conditions'
+import { CONDITIONS, CONDITIONS_BY_ID } from '../../../domain/conditions'
 import { DamageModal } from '../DamageModal'
 import { EditDialog } from './EditDialog'
 
@@ -11,6 +11,7 @@ export function HeaderV2({ onBack, onExport, onPrint, saving, saved, saveError }
   const [hpEditOpen, setHpEditOpen] = useState(false)
   const [damageOpen, setDamageOpen] = useState(false)
   const [healOpen, setHealOpen] = useState(false)
+  const [condOpen, setCondOpen] = useState(false)
   const summary = [
     info.race || null,
     info.class ? `${info.class} N${info.level ?? 1}` : null,
@@ -39,8 +40,23 @@ export function HeaderV2({ onBack, onExport, onPrint, saving, saved, saveError }
         {conditions.map(id => (
           <span key={id} className="v2-chip" style={{ color: 'var(--v2-danger)' }}>
             {CONDITIONS_BY_ID[id]?.label ?? id}
+            {!readOnly && (
+              <button
+                type="button"
+                aria-label={`Remover ${CONDITIONS_BY_ID[id]?.label ?? id}`}
+                onClick={() => updaters.toggleCondition(id)}
+                style={{ background: 'none', border: 0, cursor: 'pointer', color: 'inherit', marginLeft: 4 }}
+              >
+                ×
+              </button>
+            )}
           </span>
         ))}
+        {!readOnly && (
+          <button type="button" className="v2-chip" style={{ cursor: 'pointer', border: 0 }} onClick={() => setCondOpen(true)}>
+            + Condição
+          </button>
+        )}
       </div>
 
       <details style={{ position: 'relative' }}>
@@ -96,6 +112,7 @@ export function HeaderV2({ onBack, onExport, onPrint, saving, saved, saveError }
 
       <HpEditor open={hpEditOpen} onClose={() => setHpEditOpen(false)} />
       <HealEditor open={healOpen} onClose={() => setHealOpen(false)} />
+      <ConditionsPanel open={condOpen} onClose={() => setCondOpen(false)} />
       <DamageModal
         open={damageOpen}
         onClose={() => setDamageOpen(false)}
@@ -135,6 +152,46 @@ function DeathSaves({ combat, readOnly, updaters }) {
         </div>
       )}
     </div>
+  )
+}
+
+function ConditionsPanel({ open, onClose }) {
+  const { character, updaters } = useCharacterContext()
+  const { combat } = character
+  const activeConditions = combat?.conditions ?? []
+  const exhaustion = combat?.exhaustion ?? 0
+  return (
+    <EditDialog open={open} onClose={onClose} title="Condições" size="md">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 4 }}>
+        {CONDITIONS.map(c => (
+          <label key={c.id} className="v2-row" style={{ justifyContent: 'flex-start', gap: 8 }}>
+            <input
+              type="checkbox"
+              checked={activeConditions.includes(c.id)}
+              onChange={() => updaters.toggleCondition(c.id)}
+            />
+            <span>{c.label}</span>
+          </label>
+        ))}
+      </div>
+      <div className="v2-row" style={{ justifyContent: 'space-between', marginTop: 12 }}>
+        <span>Exaustão</span>
+        <div className="v2-row" style={{ gap: 8 }}>
+          <button type="button" className="v2-btn" aria-label="Diminuir exaustão" onClick={() => updaters.setExhaustion(exhaustion - 1)}>−</button>
+          <span>{exhaustion}</span>
+          <button type="button" className="v2-btn" aria-label="Aumentar exaustão" onClick={() => updaters.setExhaustion(exhaustion + 1)}>+</button>
+        </div>
+      </div>
+      <label className="v2-row" style={{ justifyContent: 'flex-start', gap: 8, marginTop: 12 }}>
+        <input
+          type="checkbox"
+          aria-label="Inspiração"
+          checked={!!combat?.inspiration}
+          onChange={e => updaters.setInspiration(e.target.checked)}
+        />
+        Inspiração
+      </label>
+    </EditDialog>
   )
 }
 
