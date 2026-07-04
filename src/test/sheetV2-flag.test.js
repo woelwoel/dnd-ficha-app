@@ -10,27 +10,22 @@ function makeStorage() {
   }
 }
 
-describe('isSheetV2Enabled', () => {
+describe('isSheetV2Enabled (soft cut: v2 é o padrão)', () => {
   let storage
   beforeEach(() => { storage = makeStorage() })
 
-  it('liga com ?sheetV2=1 e persiste no storage', () => {
-    expect(isSheetV2Enabled('?sheetV2=1', storage)).toBe(true)
-    expect(storage.getItem('sheetV2')).toBe('1')
-  })
-
-  it('desliga com ?sheetV2=0 e limpa o storage', () => {
-    storage.setItem('sheetV2', '1')
-    expect(isSheetV2Enabled('?sheetV2=0', storage)).toBe(false)
-    expect(storage.getItem('sheetV2')).toBe(null)
-  })
-
-  it('sem query param, lê do storage', () => {
-    storage.setItem('sheetV2', '1')
+  it('sem query param e sem storage, LIGADO por padrão (soft cut)', () => {
     expect(isSheetV2Enabled('', storage)).toBe(true)
   })
 
-  it('sem query param e sem storage, desligado', () => {
-    expect(isSheetV2Enabled('', storage)).toBe(false)
+  it('?sheetV2=0 persiste o opt-out', () => {
+    expect(isSheetV2Enabled('?sheetV2=0', storage)).toBe(false)
+    expect(isSheetV2Enabled('', storage)).toBe(false) // opt-out lembrado
+  })
+
+  it('?sheetV2=1 liga e limpa o opt-out', () => {
+    storage.setItem('sheetV2Off', '1')
+    expect(isSheetV2Enabled('?sheetV2=1', storage)).toBe(true)
+    expect(isSheetV2Enabled('', storage)).toBe(true) // opt-out foi limpo
   })
 })

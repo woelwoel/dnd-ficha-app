@@ -53,14 +53,19 @@ test.describe('Acessibilidade (WCAG 2.1 AA)', () => {
     assertClean(await seriousViolations(page))
   })
 
-  test('ficha de personagem sem violações critical/serious', async ({ page, context }) => {
-    const id = '99999999-9999-4999-8999-999999999999'
-    // shortId sem chars ambíguos (0/1/I/O/l) — SHORT_ID_REGEX os rejeita.
-    await installAuthedApp(context, {
-      characters: [makeCharacter(id, 'Herói Axe', { shortId: 'SHEETAXEBC' })],
+  // Ficha rodada nos DOIS layouts: v1 (legado) e v2 (redesign, ?sheetV2=1).
+  // Até o corte final da fase 5 os dois coexistem; depois o loop vira só v2.
+  for (const v2 of [false, true]) {
+    test(`ficha de personagem sem violações critical/serious (${v2 ? 'v2' : 'v1'})`, async ({ page, context }) => {
+      const id = '99999999-9999-4999-8999-999999999999'
+      // shortId sem chars ambíguos (0/1/I/O/l) — SHORT_ID_REGEX os rejeita.
+      await installAuthedApp(context, {
+        characters: [makeCharacter(id, 'Herói Axe', { shortId: 'SHEETAXEBC' })],
+      })
+      // default agora é v2 (soft cut) — v1 precisa do opt-out explícito.
+      await page.goto(`/c/SHEETAXEBC?sheetV2=${v2 ? '1' : '0'}`)
+      await expect(page.getByText('Herói Axe').first()).toBeVisible()
+      assertClean(await seriousViolations(page))
     })
-    await page.goto('/c/SHEETAXEBC')
-    await expect(page.getByText('Herói Axe').first()).toBeVisible()
-    assertClean(await seriousViolations(page))
-  })
+  }
 })

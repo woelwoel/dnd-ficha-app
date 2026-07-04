@@ -497,3 +497,6 @@
 .sheet-v2 .group:hover .group-hover\:text-gray-400 { color: var(--v2-text-2) !important; }
 .sheet-v2 .placeholder-gray-500::placeholder { color: var(--v2-text-3) !important; }
 .sheet-v2 .placeholder-gray-600::placeholder { color: var(--v2-text-2) !important; }
+
+/* Classes bespoke do index.css (color via var(--color-*)) */
+.sheet-v2 .ink-italic { color: var(--v2-text-2) !important; }

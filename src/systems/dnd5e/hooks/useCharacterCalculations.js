@@ -8,7 +8,7 @@ import {
   calculatePassivePerception,
   calculateInitiative,
 } from '../utils/calculations'
-import { calculateMaxHpMulticlass, listSpellcastingClasses } from '../domain/rules'
+import { calculateMaxHpMulticlass, listSpellcastingClasses, getEffectiveSaveProficiencies } from '../domain/rules'
 import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
 import { resolveAbilityKey } from '../domain/attributes'
 import {
@@ -141,15 +141,13 @@ export function useCharacterCalculations(character, classData = null, classDataM
       spellMathByClass[cls] = getClassSpellMath(cls, profBonus, effectiveAttrs)
     }
 
-    // Alma de Diamante (Monge nível 14+, PHB p.79): proficiência em TODOS os
-    // testes de resistência.
-    const monkLevel = (classIndex === 'monge' ? level : 0)
-      + mcs.filter(m => m.class === 'monge').reduce((s, m) => s + (m.level ?? 0), 0)
-    const diamondSoul = monkLevel >= 14
+    // Fonte única da proficiência de salvaguarda (inclui Alma de Diamante do
+    // Monge nv14+, PHB p.79). Antes a lógica de diamondSoul era duplicada aqui.
+    const saveProfs = getEffectiveSaveProficiencies(character)
 
     const savingThrows = {}
     for (const key of ['str', 'dex', 'con', 'int', 'wis', 'cha']) {
-      const isProficient = diamondSoul || (saves?.includes(key) ?? false)
+      const isProficient = saveProfs.includes(key)
       const magicGeneral  = magicEffects.saves ?? 0
       const magicSpecific = magicEffects.saveAbility?.[key] ?? 0
       savingThrows[key] = mods[key] + (isProficient ? profBonus : 0)
