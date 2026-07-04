@@ -44,6 +44,24 @@ describe('ActionsTab', () => {
     expect(screen.getByTestId('ccas')).toBeInTheDocument()
   })
 
+  it('filtro Bônus lista recurso de ação bônus e Usar decrementa', async () => {
+    const user = userEvent.setup()
+    const spendFeatureUse = vi.fn()
+    const featureUses = [{ id: 'barbaro-rage', name: 'Fúria', max: 3, used: 1, recharge: 'long' }]
+    renderWithSheetContext(<ActionsTab />, {
+      character: charWithAttack(),
+      featureUses,
+      updaters: makeUpdaters({ spendFeatureUse }),
+    })
+    // fora do filtro Bônus, a linha nativa não aparece
+    expect(screen.queryByText('Fúria')).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Bônus' }))
+    expect(screen.getByText('Fúria')).toBeInTheDocument()
+    expect(screen.getByText('2/3')).toBeInTheDocument() // remaining/max
+    await user.click(screen.getByRole('button', { name: 'Usar' }))
+    expect(spendFeatureUse).toHaveBeenCalledWith('barbaro-rage', featureUses)
+  })
+
   it('bolinha de espaço de magia chama toggleSlot', async () => {
     const user = userEvent.setup()
     const toggleSlot = vi.fn()

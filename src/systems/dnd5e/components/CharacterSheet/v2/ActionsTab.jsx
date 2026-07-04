@@ -9,6 +9,7 @@ import {
 } from '../../../utils/attacks'
 import { formatModifier } from '../../../utils/calculations'
 import { abbrOfKey } from '../../../domain/attributes'
+import { actionTypeOf } from './actionTypes'
 
 const FILTERS = [
   { id: 'todas', label: 'Todas' },
@@ -87,6 +88,41 @@ function SpellSlotsSection({ maxSlots, safeUsedSlots, toggleSlot }) {
   )
 }
 
+/* Linhas nativas rápidas dos filtros Ação/Bônus/Reação: um tracker enxuto por
+   recurso classificado (actionTypes.js). NÃO coexistem na tela com o
+   CombatClassActions rico — este só aparece sob Todas/Limitadas. */
+function TypedFeatureRows({ type, featureUses, onSpend }) {
+  const rows = (featureUses ?? []).filter(u => actionTypeOf(u.id) === type)
+  const label = { action: 'Ações', bonus: 'Ações bônus', reaction: 'Reações' }[type]
+  return (
+    <div>
+      <SectionTitle>{label}</SectionTitle>
+      {rows.length === 0
+        ? <div className="v2-mut" style={{ fontSize: 13, padding: '4px 0' }}>Nenhum recurso deste tipo.</div>
+        : rows.map(u => {
+          const remaining = (u.max ?? 0) - (u.used ?? 0)
+          return (
+            <div key={u.id} className="v2-row">
+              <span>{u.name}</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span className="v2-chip">{remaining}/{u.max}</span>
+                <button
+                  type="button"
+                  className="v2-btn"
+                  disabled={remaining <= 0}
+                  style={remaining <= 0 ? { opacity: 0.4, cursor: 'not-allowed' } : undefined}
+                  onClick={() => onSpend(u.id)}
+                >
+                  Usar
+                </button>
+              </span>
+            </div>
+          )
+        })}
+    </div>
+  )
+}
+
 export function ActionsTab() {
   const { character, calc, updaters, featureUses } = useCharacterContext()
   const [filter, setFilter] = useState('todas')
@@ -99,6 +135,10 @@ export function ActionsTab() {
   } = updaters
 
   const attacks = character.combat?.attacks ?? []
+  const nativeType = filter === 'acao' ? 'action'
+    : filter === 'bonus' ? 'bonus'
+    : filter === 'reacao' ? 'reaction'
+    : null
   const showAttacks = filter === 'todas' || filter === 'acao'
   const showResources = filter === 'todas' || filter === 'limitadas'
 
@@ -142,6 +182,14 @@ export function ActionsTab() {
               <AttackRowV2 key={atk.id} atk={atk} attributes={character.attributes} profBonus={calc.profBonus} />
             ))}
         </div>
+      )}
+
+      {nativeType && (
+        <TypedFeatureRows
+          type={nativeType}
+          featureUses={featureUses}
+          onSpend={id => spendFeatureUse(id, featureUses)}
+        />
       )}
 
       {showResources && (
