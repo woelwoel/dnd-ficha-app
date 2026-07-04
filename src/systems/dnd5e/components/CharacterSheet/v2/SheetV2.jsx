@@ -5,7 +5,7 @@ import { SavesPanel, SensesPanel, ProficienciesPanel } from './SidePanels'
 import { SkillsPanel } from './SkillsPanel'
 import { MainBox } from './MainBox'
 
-export function SheetV2({ onBack, onExport, onPrint, saving, saved, saveError }) {
+export function SheetV2({ onBack, onExport, onPrint, onImport, onImportError, saving, saved, saveError }) {
   return (
     <div className="sheet-v2 min-h-screen">
       <div className="max-w-7xl mx-auto px-3 py-4 space-y-3">
@@ -13,6 +13,8 @@ export function SheetV2({ onBack, onExport, onPrint, saving, saved, saveError })
           onBack={onBack}
           onExport={onExport}
           onPrint={onPrint}
+          onImport={onImport}
+          onImportError={onImportError}
           saving={saving}
           saved={saved}
           saveError={saveError}
