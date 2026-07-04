@@ -4,6 +4,7 @@ import { SKILLS } from '../../../utils/calculations'
 import { skillBonus, skillProficiencyState } from './skillBonus'
 import { EditDialog } from './EditDialog'
 import { SkillsList } from '../SkillsList'
+import { RollableRow } from './RollableRow'
 
 export function SkillsPanel() {
   const { character, calc, updaters, classData, readOnly } = useCharacterContext()
@@ -18,14 +19,20 @@ export function SkillsPanel() {
       </div>
       {SKILLS.map(s => {
         const { prof, expert } = skillProficiencyState(character.proficiencies, s.key)
+        const bonus = skillBonus(character, calc, s.key)
         return (
-          <div key={s.key} className="v2-row">
+          <RollableRow
+            key={s.key}
+            notation={`1d20${calc.fmt(bonus)}`}
+            label={s.name}
+            ariaLabel={`Rolar ${s.name}, bônus ${calc.fmt(bonus)}`}
+          >
             <span className={prof ? '' : 'v2-mut'} style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               <span aria-hidden className={prof ? 'v2-acc' : 'v2-mut'}>{expert ? '◆' : prof ? '●' : '○'}</span>{' '}
               {s.name} <span className="v2-mut" style={{ fontSize: 11 }}>{s.abbr}</span>
             </span>
-            <span className={prof ? 'v2-acc' : ''}>{calc.fmt(skillBonus(character, calc, s.key))}</span>
-          </div>
+            <span className={prof ? 'v2-acc' : ''}>{calc.fmt(bonus)}</span>
+          </RollableRow>
         )
       })}
       <EditDialog open={editOpen} onClose={() => setEditOpen(false)} title="Perícias" size="md">
