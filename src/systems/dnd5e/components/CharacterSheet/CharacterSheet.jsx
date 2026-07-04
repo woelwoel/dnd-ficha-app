@@ -275,6 +275,8 @@ function SheetBody({ initialCharacter, adminContext = false, onBack }) {
           onBack={onBack}
           onExport={handleExport}
           onPrint={() => setPrintOpen(true)}
+          onImport={handleImport}
+          onImportError={setImportError}
           saving={saving}
           saved={saved}
           saveError={saveError}

@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useCharacterContext } from '../CharacterContext'
 import { RestActions } from '../RestActions'
 import { CONDITIONS, CONDITIONS_BY_ID } from '../../../domain/conditions'
 import { DamageModal } from '../DamageModal'
 import { CharacterInfo } from '../CharacterInfo'
+import { SourcePicker } from '../../SourcePicker'
+import { safeParseCharacter } from '../../../domain/characterSchema'
 import { EditDialog } from './EditDialog'
 
-export function HeaderV2({ onBack, onExport, onPrint, saving, saved, saveError }) {
+export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, saving, saved, saveError }) {
   const { character, setCharacter, calc, readOnly, updaters, handlers, races, classes, backgrounds, fichaErrors } = useCharacterContext()
   const { info, combat } = character
   const [hpEditOpen, setHpEditOpen] = useState(false)
@@ -14,6 +16,28 @@ export function HeaderV2({ onBack, onExport, onPrint, saving, saved, saveError }
   const [healOpen, setHealOpen] = useState(false)
   const [condOpen, setCondOpen] = useState(false)
   const [identityOpen, setIdentityOpen] = useState(false)
+  const [settingsOpen, setSettingsOpen] = useState(false)
+  const importRef = useRef(null)
+
+  function handleFile(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = ev => {
+      try {
+        const raw = JSON.parse(ev.target.result)
+        const parsed = safeParseCharacter(raw)
+        if (!parsed.success) throw new Error('schema')
+        onImport(parsed.data)
+      } catch {
+        onImportError('Arquivo inválido. Importe uma ficha exportada pelo app.')
+      } finally {
+        e.target.value = ''
+      }
+    }
+    reader.readAsText(file)
+  }
+
   const summary = [
     info.race || null,
     info.class ? `${info.class} N${info.level ?? 1}` : null,
@@ -84,6 +108,7 @@ export function HeaderV2({ onBack, onExport, onPrint, saving, saved, saveError }
 
       <button type="button" className="v2-btn" onClick={onExport}>Exportar</button>
       <button type="button" className="v2-btn" onClick={onPrint}>Imprimir</button>
+      <button type="button" className="v2-btn" aria-label="Configurações da ficha" onClick={() => setSettingsOpen(true)}>⚙</button>
 
       <div style={{ textAlign: 'right', minWidth: 130 }}>
         <div className="v2-row" style={{ justifyContent: 'flex-end', gap: 6 }}>
@@ -146,6 +171,46 @@ export function HeaderV2({ onBack, onExport, onPrint, saving, saved, saveError }
           onClassChange={handlers.handleClassChange}
           onToggleLanguage={updaters.toggleLanguage}
         />
+      </EditDialog>
+      <EditDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} title="Configurações da ficha" size="md">
+        <SourcePicker
+          value={character.meta?.settings?.sources ?? ['phb']}
+          onChange={readOnly ? () => {} : (next) => setCharacter({
+            ...character,
+            meta: { ...character.meta, settings: { ...character.meta?.settings, sources: next } },
+          })}
+        />
+        <label className="v2-row" style={{ justifyContent: 'flex-start', gap: 8, marginTop: 12 }}>
+          <input
+            type="checkbox"
+            aria-label="Permitir multiclasse"
+            checked={character.meta?.settings?.allowMulticlass ?? true}
+            disabled={readOnly}
+            onChange={e => setCharacter({
+              ...character,
+              meta: { ...character.meta, settings: { ...character.meta?.settings, allowMulticlass: e.target.checked } },
+            })}
+          />
+          Permitir multiclasse
+        </label>
+        <label className="v2-row" style={{ justifyContent: 'flex-start', gap: 8, marginTop: 8 }}>
+          <input
+            type="checkbox"
+            aria-label="Permitir talentos"
+            checked={character.meta?.settings?.allowFeats ?? false}
+            disabled={readOnly}
+            onChange={e => setCharacter({
+              ...character,
+              meta: { ...character.meta, settings: { ...character.meta?.settings, allowFeats: e.target.checked } },
+            })}
+          />
+          Permitir talentos
+        </label>
+        <div style={{ marginTop: 16 }}>
+          <div className="v2-title" style={{ margin: 0, marginBottom: 6 }}>Importar ficha</div>
+          <input ref={importRef} type="file" accept=".json" onChange={handleFile} className="hidden" />
+          <button type="button" className="v2-btn" disabled={readOnly} onClick={() => importRef.current?.click()}>Importar JSON</button>
+        </div>
       </EditDialog>
     </header>
   )
