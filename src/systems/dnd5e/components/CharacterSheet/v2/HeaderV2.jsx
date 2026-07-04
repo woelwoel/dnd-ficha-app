@@ -111,8 +111,12 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
       {!readOnly && (
         <button type="button" className="v2-btn" onClick={() => setProgressionOpen(true)}>▲ Nível</button>
       )}
-      <button type="button" className="v2-btn" onClick={onExport}>Exportar</button>
-      <button type="button" className="v2-btn" onClick={onPrint}>Imprimir</button>
+      {/* Exportar/Imprimir migram pra seção "Mais" no mobile (< lg) — header compacto.
+         `contents` mantém o posicionamento flex no desktop. */}
+      <span className="hidden lg:contents">
+        <button type="button" className="v2-btn" onClick={onExport}>Exportar</button>
+        <button type="button" className="v2-btn" onClick={onPrint}>Imprimir</button>
+      </span>
       <button type="button" className="v2-btn" aria-label="Configurações da ficha" onClick={() => setSettingsOpen(true)}>⚙</button>
 
       <div style={{ textAlign: 'right', minWidth: 130 }}>

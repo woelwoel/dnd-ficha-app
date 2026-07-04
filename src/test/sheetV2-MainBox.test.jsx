@@ -47,4 +47,20 @@ describe('MainBox', () => {
     await user.keyboard('{End}')
     expect(screen.getByRole('tab', { name: 'Notas' })).toHaveAttribute('aria-selected', 'true')
   })
+
+  it('modo controlado: activeTab manda e onTabChange recebe cliques', async () => {
+    const user = userEvent.setup()
+    const onTabChange = vi.fn()
+    renderWithSheetContext(<MainBox activeTab="magias" onTabChange={onTabChange} />)
+    expect(screen.getByRole('tab', { name: 'Magias' })).toHaveAttribute('aria-selected', 'true')
+    await user.click(screen.getByRole('tab', { name: 'Notas' }))
+    expect(onTabChange).toHaveBeenCalledWith('notas')
+    // não muda sozinho: continua controlado pelo prop
+    expect(screen.getByRole('tab', { name: 'Magias' })).toHaveAttribute('aria-selected', 'true')
+  })
+
+  it('modo controlado: hideTablist esconde a barra de abas', () => {
+    renderWithSheetContext(<MainBox activeTab="magias" onTabChange={() => {}} hideTablist />)
+    expect(screen.queryByRole('tablist')).not.toBeInTheDocument()
+  })
 })
