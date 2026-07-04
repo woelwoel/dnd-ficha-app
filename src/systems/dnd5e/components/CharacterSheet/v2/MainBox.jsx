@@ -18,12 +18,17 @@ export const MAIN_TABS = [
   { id: 'notas', label: 'Notas' },
 ]
 
-export function MainBox() {
+export function MainBox({ activeTab, onTabChange, hideTablist = false }) {
   const {
     character, calc, classData, backgrounds,
     updaters, featureUses, readOnly, focusSpellId, clearFocusSpell,
   } = useCharacterContext()
-  const [tab, setTab] = useState('acoes')
+  // Controlado (activeTab/onTabChange do pai — usado no mobile) vs não-controlado
+  // (estado interno — layout desktop). Padrão clássico.
+  const isControlled = activeTab !== undefined
+  const [internalTab, setInternalTab] = useState('acoes')
+  const tab = isControlled ? activeTab : internalTab
+  const setTab = isControlled ? (id => onTabChange?.(id)) : setInternalTab
 
   const tabRefs = useRef({})
 
@@ -54,8 +59,10 @@ export function MainBox() {
   // ao chegar um focusSpellId, salta pra aba Magias. Precisa de efeito porque é
   // reação a um sinal externo — não dá pra derivar `tab` (o usuário navega depois).
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (focusSpellId != null) setTab('magias')
+    if (focusSpellId == null) return
+    if (isControlled) onTabChange?.('magias'); else setInternalTab('magias')
+    // one-shot: reage só ao sinal; onTabChange/isControlled omitidos de propósito
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focusSpellId])
 
   const infusionsCatalog = useLazySrdDataset('infusions')
@@ -78,29 +85,31 @@ export function MainBox() {
 
   return (
     <section className="v2-panel" style={{ padding: 0 }}>
-      <div role="tablist" aria-label="Conteúdo da ficha" onKeyDown={onTablistKeyDown} style={{ display: 'flex', gap: 2, flexWrap: 'wrap', padding: 8, borderBottom: '1px solid var(--v2-border)' }}>
-        {MAIN_TABS.map(t => (
-          <button
-            key={t.id}
-            ref={el => { tabRefs.current[t.id] = el }}
-            id={`v2-tab-${t.id}`}
-            role="tab"
-            type="button"
-            className="v2-tab"
-            aria-selected={tab === t.id}
-            aria-controls={`v2-tabpanel-${t.id}`}
-            tabIndex={tab === t.id ? 0 : -1}
-            onClick={() => setTab(t.id)}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
+      {!hideTablist && (
+        <div role="tablist" aria-label="Conteúdo da ficha" onKeyDown={onTablistKeyDown} style={{ display: 'flex', gap: 2, flexWrap: 'wrap', padding: 8, borderBottom: '1px solid var(--v2-border)' }}>
+          {MAIN_TABS.map(t => (
+            <button
+              key={t.id}
+              ref={el => { tabRefs.current[t.id] = el }}
+              id={`v2-tab-${t.id}`}
+              role="tab"
+              type="button"
+              className="v2-tab"
+              aria-selected={tab === t.id}
+              aria-controls={`v2-tabpanel-${t.id}`}
+              tabIndex={tab === t.id ? 0 : -1}
+              onClick={() => setTab(t.id)}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       <fieldset
-        role="tabpanel"
-        id={`v2-tabpanel-${tab}`}
-        aria-labelledby={`v2-tab-${tab}`}
+        {...(hideTablist
+          ? { 'aria-label': MAIN_TABS.find(t => t.id === tab)?.label }
+          : { role: 'tabpanel', id: `v2-tabpanel-${tab}`, 'aria-labelledby': `v2-tab-${tab}` })}
         disabled={readOnly}
         style={{ border: 0, margin: 0, minWidth: 0, padding: 12 }}
         className={readOnly ? 'opacity-70' : ''}
