@@ -3,15 +3,17 @@ import { useCharacterContext } from '../CharacterContext'
 import { RestActions } from '../RestActions'
 import { CONDITIONS, CONDITIONS_BY_ID } from '../../../domain/conditions'
 import { DamageModal } from '../DamageModal'
+import { CharacterInfo } from '../CharacterInfo'
 import { EditDialog } from './EditDialog'
 
 export function HeaderV2({ onBack, onExport, onPrint, saving, saved, saveError }) {
-  const { character, setCharacter, calc, readOnly, updaters } = useCharacterContext()
+  const { character, setCharacter, calc, readOnly, updaters, handlers, races, classes, backgrounds, fichaErrors } = useCharacterContext()
   const { info, combat } = character
   const [hpEditOpen, setHpEditOpen] = useState(false)
   const [damageOpen, setDamageOpen] = useState(false)
   const [healOpen, setHealOpen] = useState(false)
   const [condOpen, setCondOpen] = useState(false)
+  const [identityOpen, setIdentityOpen] = useState(false)
   const summary = [
     info.race || null,
     info.class ? `${info.class} N${info.level ?? 1}` : null,
@@ -25,10 +27,22 @@ export function HeaderV2({ onBack, onExport, onPrint, saving, saved, saveError }
     <header className="v2-panel" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
       <button type="button" className="v2-btn" onClick={onBack}>← Personagens</button>
 
-      <div style={{ flex: 1, minWidth: 160 }}>
-        <div style={{ fontSize: 18, fontWeight: 600 }}>{info.name || 'Sem nome'}</div>
-        <div className="v2-mut" style={{ fontSize: 12 }}>{summary}</div>
-      </div>
+      {readOnly ? (
+        <div style={{ flex: 1, minWidth: 160 }}>
+          <div style={{ fontSize: 18, fontWeight: 600 }}>{info.name || 'Sem nome'}</div>
+          <div className="v2-mut" style={{ fontSize: 12 }}>{summary}</div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          aria-label="Editar identidade"
+          onClick={() => setIdentityOpen(true)}
+          style={{ flex: 1, minWidth: 160, background: 'none', border: 0, textAlign: 'left', cursor: 'pointer', color: 'inherit', padding: 0 }}
+        >
+          <div style={{ fontSize: 18, fontWeight: 600 }}>{info.name || 'Sem nome'}</div>
+          <div className="v2-mut" style={{ fontSize: 12 }}>{summary}</div>
+        </button>
+      )}
 
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
         {combat?.inspiration && (
@@ -118,6 +132,21 @@ export function HeaderV2({ onBack, onExport, onPrint, saving, saved, saveError }
         onClose={() => setDamageOpen(false)}
         onConfirm={(amount, opts) => updaters.applyDamage(amount, opts)}
       />
+      <EditDialog open={identityOpen} onClose={() => setIdentityOpen(false)} title="Identidade" size="md">
+        <CharacterInfo
+          info={{ ...character.info, languages: character.proficiencies.languages ?? [] }}
+          onUpdate={updaters.updateInfo}
+          races={races}
+          classes={classes}
+          backgrounds={backgrounds}
+          errors={fichaErrors}
+          onRaceChange={handlers.handleRaceChange}
+          onSubraceChange={handlers.handleSubraceChange}
+          onBackgroundChange={handlers.handleBackgroundChange}
+          onClassChange={handlers.handleClassChange}
+          onToggleLanguage={updaters.toggleLanguage}
+        />
+      </EditDialog>
     </header>
   )
 }
