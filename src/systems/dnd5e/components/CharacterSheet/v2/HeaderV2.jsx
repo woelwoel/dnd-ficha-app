@@ -5,11 +5,12 @@ import { CONDITIONS, CONDITIONS_BY_ID } from '../../../domain/conditions'
 import { DamageModal } from '../DamageModal'
 import { CharacterInfo } from '../CharacterInfo'
 import { SourcePicker } from '../../SourcePicker'
+import { LevelProgression } from '../LevelProgression'
 import { safeParseCharacter } from '../../../domain/characterSchema'
 import { EditDialog } from './EditDialog'
 
 export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, saving, saved, saveError }) {
-  const { character, setCharacter, calc, readOnly, updaters, handlers, races, classes, backgrounds, fichaErrors } = useCharacterContext()
+  const { character, setCharacter, calc, readOnly, updaters, handlers, races, classes, backgrounds, fichaErrors, classData, onNavigateToSpells } = useCharacterContext()
   const { info, combat } = character
   const [hpEditOpen, setHpEditOpen] = useState(false)
   const [damageOpen, setDamageOpen] = useState(false)
@@ -17,6 +18,7 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
   const [condOpen, setCondOpen] = useState(false)
   const [identityOpen, setIdentityOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [progressionOpen, setProgressionOpen] = useState(false)
   const importRef = useRef(null)
 
   function handleFile(e) {
@@ -106,6 +108,9 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
         </div>
       </details>
 
+      {!readOnly && (
+        <button type="button" className="v2-btn" onClick={() => setProgressionOpen(true)}>▲ Nível</button>
+      )}
       <button type="button" className="v2-btn" onClick={onExport}>Exportar</button>
       <button type="button" className="v2-btn" onClick={onPrint}>Imprimir</button>
       <button type="button" className="v2-btn" aria-label="Configurações da ficha" onClick={() => setSettingsOpen(true)}>⚙</button>
@@ -211,6 +216,21 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
           <input ref={importRef} type="file" accept=".json" onChange={handleFile} className="hidden" />
           <button type="button" className="v2-btn" disabled={readOnly} onClick={() => importRef.current?.click()}>Importar JSON</button>
         </div>
+      </EditDialog>
+      <EditDialog open={progressionOpen} onClose={() => setProgressionOpen(false)} title="Progressão" size="full">
+        <LevelProgression
+          character={character}
+          classData={classData}
+          classes={classes}
+          onLevelChange={lvl => updaters.updateInfo('level', lvl)}
+          onApplyLevelUp={handlers.handleApplyLevelUp}
+          onAddMulticlass={handlers.handleAddMulticlass}
+          onRemoveMulticlass={handlers.handleRemoveMulticlass}
+          onChosenFeaturesChange={handlers.handleChosenFeaturesChange}
+          onNavigateToSpells={(spellId) => { setProgressionOpen(false); onNavigateToSpells?.(spellId) }}
+          allowMulticlass={character.meta?.settings?.allowMulticlass ?? true}
+          allowFeats={character.meta?.settings?.allowFeats ?? false}
+        />
       </EditDialog>
     </header>
   )
