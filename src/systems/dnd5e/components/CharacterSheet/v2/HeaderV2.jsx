@@ -144,10 +144,14 @@ function HpEditor({ open, onClose }) {
   const [tempHp, setTempHp] = useState('')
   useEffect(() => {
     if (open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setMaxHp(String(character.combat?.maxHp ?? 0))
       setTempHp(String(character.combat?.tempHp ?? 0))
     }
-  }, [open, character.combat])
+  }, [open, character.combat?.maxHp, character.combat?.tempHp])
+  const nMax = Number(maxHp)
+  const nTemp = Number(tempHp)
+  const maxHpValid = Number.isFinite(nMax) && nMax >= 1
   const inputStyle = { width: 90, background: 'var(--v2-surface-2)', color: 'var(--v2-text-1)', border: '1px solid var(--v2-border)', borderRadius: 8, padding: '6px 10px' }
   return (
     <EditDialog open={open} onClose={onClose} title="Pontos de vida">
@@ -164,9 +168,9 @@ function HpEditor({ open, onClose }) {
         <input type="number" min="0" value={tempHp} onChange={e => setTempHp(e.target.value)} style={inputStyle} />
       </label>
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 12 }}>
-        <button type="button" className="v2-btn" onClick={() => {
-          updaters.updateCombat('maxHp', Number(maxHp))
-          updaters.updateCombat('tempHp', Number(tempHp))
+        <button type="button" className="v2-btn" disabled={!maxHpValid} onClick={() => {
+          if (maxHpValid) updaters.updateCombat('maxHp', nMax)
+          if (Number.isFinite(nTemp) && nTemp >= 0) updaters.updateCombat('tempHp', nTemp)
           onClose()
         }}>Aplicar</button>
       </div>
@@ -178,8 +182,11 @@ function HealEditor({ open, onClose }) {
   const { updaters } = useCharacterContext()
   const [value, setValue] = useState('')
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (open) setValue('')
   }, [open])
+  const n = Number(value)
+  const healValid = Number.isFinite(n) && n > 0
   const inputStyle = { width: 90, background: 'var(--v2-surface-2)', color: 'var(--v2-text-1)', border: '1px solid var(--v2-border)', borderRadius: 8, padding: '6px 10px' }
   return (
     <EditDialog open={open} onClose={onClose} title="Curar">
@@ -188,8 +195,8 @@ function HealEditor({ open, onClose }) {
         <input type="number" min="0" value={value} onChange={e => setValue(e.target.value)} style={inputStyle} />
       </label>
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 12 }}>
-        <button type="button" className="v2-btn" onClick={() => {
-          updaters.applyHealing(Number(value))
+        <button type="button" className="v2-btn" disabled={!healValid} onClick={() => {
+          if (healValid) updaters.applyHealing(n)
           onClose()
         }}>Aplicar cura</button>
       </div>

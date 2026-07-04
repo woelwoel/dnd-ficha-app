@@ -46,6 +46,16 @@ describe('HeaderV2 — PV', () => {
     expect(screen.getByRole('button', { name: /Estabilizar/ })).toBeInTheDocument()
   })
 
+  it('campo de PV máximo vazio não zera o PV (Aplicar desabilitado)', async () => {
+    const user = userEvent.setup()
+    const updateCombat = vi.fn()
+    renderWithSheetContext(<HeaderV2 {...props} />, { updaters: makeUpdaters({ updateCombat }) })
+    await user.click(screen.getByRole('button', { name: /Editar pontos de vida/ }))
+    const input = screen.getByLabelText('PV máximo')
+    await user.clear(input)
+    expect(screen.getByRole('button', { name: 'Aplicar' })).toBeDisabled()
+  })
+
   it('Rolar e Estabilizar chamam os updaters', async () => {
     const user = userEvent.setup()
     const rollDeathSave = vi.fn()
