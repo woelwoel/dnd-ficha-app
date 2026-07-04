@@ -2,9 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useCharacterContext } from '../CharacterContext'
 import { useLazySrdDataset } from '../../../data/SrdProvider'
-import { Attacks } from '../Attacks'
-import { CombatClassActions } from '../CombatClassActions'
-import { ManeuversPanel } from '../ManeuversPanel'
+import { ActionsTab } from './ActionsTab'
 import { Spells } from '../Spells'
 import { Inventory } from '../Inventory'
 import { FeaturesTab } from '../FeaturesTab'
@@ -74,10 +72,8 @@ export function MainBox() {
     updateCurrency, addItem, removeItem, updateItem,
     updateSpellcasting, addSpell, removeSpell, togglePrepared, toggleSlot,
     spendPactSlot, regainPactSlot, setConcentration,
-    addAttack, removeAttack, updateAttack,
+    addAttack, removeAttack,
     setChosenFeature, spendFeatureUse, regainFeatureUse,
-    setRageActive, setWildShape, applyDamage, toggleKnownBeast,
-    setRangerCompanion, updatePortent,
   } = updaters
 
   return (
@@ -109,38 +105,7 @@ export function MainBox() {
         style={{ border: 0, margin: 0, minWidth: 0, padding: 12 }}
         className={readOnly ? 'opacity-70' : ''}
       >
-        {tab === 'acoes' && (
-          <div className="space-y-4">
-            <Attacks
-              attacks={character.combat?.attacks ?? []}
-              attributes={character.attributes}
-              profBonus={calc.profBonus}
-              inventoryItems={character.inventory?.items ?? []}
-              onAdd={addAttack}
-              onRemove={removeAttack}
-              onUpdate={updateAttack}
-              onUpdateItem={updateItem}
-            />
-            <CombatClassActions
-              character={character}
-              featureUses={featureUses}
-              onToggleRage={setRageActive}
-              onSpendFeatureUse={id => spendFeatureUse(id, featureUses)}
-              onRegainFeatureUse={id => regainFeatureUse(id, featureUses)}
-              onToggleSlot={toggleSlot}
-              onSetWildShape={setWildShape}
-              onApplyDamage={applyDamage}
-              onToggleKnownBeast={toggleKnownBeast}
-              onSetRangerCompanion={setRangerCompanion}
-              onUpdatePortent={updatePortent}
-            />
-            <ManeuversPanel
-              character={character}
-              featureUses={featureUses}
-              onSpend={id => spendFeatureUse(id, featureUses)}
-            />
-          </div>
-        )}
+        {tab === 'acoes' && <ActionsTab />}
 
         {tab === 'magias' && (
           <Spells
