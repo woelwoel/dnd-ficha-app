@@ -280,6 +280,16 @@ function SheetBody({ initialCharacter, adminContext = false, onBack }) {
           saving={saving}
           saved={saved}
           saveError={saveError}
+          banner={
+            importError ? (
+              <ImportErrorBanner message={importError} onDismiss={() => setImportError(null)} />
+            ) : conflictNotice ? (
+              <ImportErrorBanner
+                message="Esta ficha foi alterada em outro dispositivo. Recarregamos a versão mais recente — confira sua última edição."
+                onDismiss={() => setConflictNotice(false)}
+              />
+            ) : null
+          }
         />
       ) : (
         <div className="min-h-screen flex flex-col">
