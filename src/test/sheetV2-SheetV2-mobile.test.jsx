@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { renderWithSheetContext } from './helpers/sheetV2TestContext'
 
 vi.mock('../systems/dnd5e/components/CharacterSheet/Attacks', () => ({ Attacks: () => <div /> }))
@@ -11,24 +12,29 @@ vi.mock('../systems/dnd5e/components/CharacterSheet/FeaturesTab', () => ({ Featu
 vi.mock('../systems/dnd5e/components/CharacterSheet/Notes', () => ({ Notes: () => <div /> }))
 vi.mock('../systems/dnd5e/components/CharacterSheet/ArtificerInfusionsPanel', () => ({ ArtificerInfusionsPanel: () => <div /> }))
 vi.mock('../systems/dnd5e/components/CharacterSheet/RestActions', () => ({ RestActions: () => <div /> }))
+vi.mock('../systems/dnd5e/components/CharacterSheet/DamageModal', () => ({ DamageModal: () => null }))
+vi.mock('../systems/dnd5e/components/CharacterSheet/CharacterInfo', () => ({ CharacterInfo: () => <div /> }))
+vi.mock('../systems/dnd5e/components/CharacterSheet/SkillsList', () => ({ SkillsList: () => <div /> }))
+vi.mock('../systems/dnd5e/components/CharacterSheet/LevelProgression', () => ({ LevelProgression: () => <div /> }))
+vi.mock('../systems/dnd5e/components/SourcePicker', () => ({ SourcePicker: () => <div /> }))
 vi.mock('../systems/dnd5e/data/SrdProvider', () => ({ useLazySrdDataset: () => [] }))
 
 import { SheetV2 } from '../systems/dnd5e/components/CharacterSheet/v2/SheetV2'
 
 const noop = () => {}
-const props = { onBack: noop, onExport: noop, onPrint: noop, saving: false, saved: false, saveError: null }
+const props = { onBack: noop, onExport: noop, onPrint: noop, onImport: noop, onImportError: noop, saving: false, saved: false, saveError: null }
 
-describe('SheetV2 (esqueleto)', () => {
-  it('monta header + faixa + colunas + quadro', () => {
+describe('SheetV2 — mobile', () => {
+  it('renderiza a BottomNav e o container mobile', () => {
     renderWithSheetContext(<SheetV2 {...props} />)
-    expect(screen.getByText('THOR')).toBeInTheDocument()            // header (único, compartilhado)
-    // Desktop e mobile coexistem no DOM (CSS esconde um), então faixa/painéis
-    // aparecem 2×; o smoke só confirma presença.
-    expect(screen.getAllByText('FOR')[0]).toBeInTheDocument()       // faixa
-    expect(screen.getAllByText('Salvaguardas')[0]).toBeInTheDocument()  // col 1
-    expect(screen.getAllByText('Perícias')[0]).toBeInTheDocument()      // col 2
-    // 5 abas dentro do quadro desktop (o tablist "Conteúdo da ficha")
-    const quadro = screen.getByRole('tablist', { name: 'Conteúdo da ficha' })
-    expect(within(quadro).getAllByRole('tab')).toHaveLength(5)
+    expect(screen.getByRole('tablist', { name: 'Seções da ficha' })).toBeInTheDocument()
+  })
+
+  it('trocar seção na BottomNav troca o conteúdo mobile', async () => {
+    const user = userEvent.setup()
+    renderWithSheetContext(<SheetV2 {...props} />)
+    const nav = screen.getByRole('tablist', { name: 'Seções da ficha' })
+    await user.click(within(nav).getByRole('tab', { name: 'Magias' }))
+    expect(within(nav).getByRole('tab', { name: 'Magias' })).toHaveAttribute('aria-selected', 'true')
   })
 })
