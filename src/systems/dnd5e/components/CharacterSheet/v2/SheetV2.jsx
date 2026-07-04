@@ -1,4 +1,5 @@
 import './tokens.css'
+import './legacy-bridge.css'
 import { useCharacterContext } from '../CharacterContext'
 import { classAccentOf } from './classAccents'
 import { HeaderV2 } from './HeaderV2'

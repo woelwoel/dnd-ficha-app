@@ -1,0 +1,257 @@
+/* ============================================================================
+   Ponte de re-skin parchment -> v2  (GERADA — não editar à mão sem re-gerar)
+   Re-tematiza os componentes v1 (paleta parchment/tailwind) quando renderizados
+   dentro de .sheet-v2, SEM tocar nos componentes. Cada utilitário de cor tem
+   um override escopado: bg / border / text são seletores independentes, então
+   parchment (fundo claro) e text-parchment-50 (texto claro) não conflitam.
+   !important porque os utilitários do Tailwind têm mesma especificidade e a
+   ordem de import não é garantida. Morre junto com os componentes v1 no corte.
+   Fonte: grep dos utilitários de cor nos componentes embrulhados (fase 3 Task 2).
+   ============================================================================ */
+
+.sheet-v2 .from-amber-400,
+.sheet-v2 .from-emerald-500,
+.sheet-v2 .from-red-500 {
+  --tw-gradient-from: var(--v2-surface-2) !important;
+}
+
+.sheet-v2 .to-amber-500,
+.sheet-v2 .to-emerald-600,
+.sheet-v2 .to-red-600 {
+  --tw-gradient-to: var(--v2-surface-2) !important;
+}
+
+.sheet-v2 .ring-ink-200 {
+  --tw-ring-color: var(--v2-border-strong) !important;
+}
+
+.sheet-v2 .ring-red-400 {
+  --tw-ring-color: var(--v2-danger) !important;
+}
+
+.sheet-v2 .ring-amber-300,
+.sheet-v2 .ring-amber-400,
+.sheet-v2 .ring-amber-600\/50 {
+  --tw-ring-color: var(--v2-warning) !important;
+}
+
+.sheet-v2 .bg-gray-800,
+.sheet-v2 .bg-gray-800\/10,
+.sheet-v2 .bg-gray-800\/50,
+.sheet-v2 .bg-gray-800\/60,
+.sheet-v2 .bg-gray-900,
+.sheet-v2 .bg-gray-900\/40,
+.sheet-v2 .bg-gray-900\/60,
+.sheet-v2 .bg-parchment-100,
+.sheet-v2 .bg-parchment-100\/50,
+.sheet-v2 .bg-parchment-200,
+.sheet-v2 .bg-parchment-200\/50,
+.sheet-v2 .bg-parchment-200\/60,
+.sheet-v2 .bg-parchment-300,
+.sheet-v2 .bg-parchment-50,
+.sheet-v2 .bg-parchment-50\/80,
+.sheet-v2 .bg-parchment-50\/95 {
+  background-color: var(--v2-surface-1) !important;
+}
+
+.sheet-v2 .bg-amber-100,
+.sheet-v2 .bg-amber-200,
+.sheet-v2 .bg-amber-400,
+.sheet-v2 .bg-amber-50,
+.sheet-v2 .bg-amber-500,
+.sheet-v2 .bg-amber-50\/60,
+.sheet-v2 .bg-amber-600,
+.sheet-v2 .bg-amber-600\/50,
+.sheet-v2 .bg-amber-700,
+.sheet-v2 .bg-amber-700\/30,
+.sheet-v2 .bg-amber-700\/40,
+.sheet-v2 .bg-amber-800,
+.sheet-v2 .bg-amber-800\/60,
+.sheet-v2 .bg-amber-800\/80,
+.sheet-v2 .bg-amber-900,
+.sheet-v2 .bg-amber-900\/10,
+.sheet-v2 .bg-amber-900\/20,
+.sheet-v2 .bg-amber-900\/30,
+.sheet-v2 .bg-amber-900\/40,
+.sheet-v2 .bg-amber-950\/20,
+.sheet-v2 .bg-amber-950\/30,
+.sheet-v2 .bg-emerald-100,
+.sheet-v2 .bg-emerald-100\/60,
+.sheet-v2 .bg-emerald-200,
+.sheet-v2 .bg-emerald-300,
+.sheet-v2 .bg-emerald-50,
+.sheet-v2 .bg-emerald-50\/60,
+.sheet-v2 .bg-emerald-700,
+.sheet-v2 .bg-emerald-800,
+.sheet-v2 .bg-gray-100,
+.sheet-v2 .bg-gray-600,
+.sheet-v2 .bg-gray-700,
+.sheet-v2 .bg-gray-700\/50,
+.sheet-v2 .bg-gray-700\/60,
+.sheet-v2 .bg-green-50,
+.sheet-v2 .bg-green-500,
+.sheet-v2 .bg-green-600,
+.sheet-v2 .bg-green-700,
+.sheet-v2 .bg-green-700\/90,
+.sheet-v2 .bg-green-800,
+.sheet-v2 .bg-green-900\/20,
+.sheet-v2 .bg-green-900\/30,
+.sheet-v2 .bg-green-900\/40,
+.sheet-v2 .bg-ink-300,
+.sheet-v2 .bg-ink-500,
+.sheet-v2 .bg-ink-500\/10,
+.sheet-v2 .bg-ink-600,
+.sheet-v2 .bg-ink-700\/10,
+.sheet-v2 .bg-ink-700\/30,
+.sheet-v2 .bg-parchment-400,
+.sheet-v2 .bg-parchment-600,
+.sheet-v2 .bg-red-100,
+.sheet-v2 .bg-red-50,
+.sheet-v2 .bg-red-500,
+.sheet-v2 .bg-red-600,
+.sheet-v2 .bg-red-700,
+.sheet-v2 .bg-red-700\/90,
+.sheet-v2 .bg-red-800,
+.sheet-v2 .bg-red-900\/40,
+.sheet-v2 .bg-rose-100,
+.sheet-v2 .bg-rose-200,
+.sheet-v2 .bg-rose-700,
+.sheet-v2 .bg-rose-800 {
+  background-color: var(--v2-surface-2) !important;
+}
+
+.sheet-v2 .border-gray-400,
+.sheet-v2 .border-gray-500,
+.sheet-v2 .border-gray-700,
+.sheet-v2 .border-gray-700\/50,
+.sheet-v2 .border-gray-700\/60 {
+  border-color: var(--v2-border) !important;
+}
+
+.sheet-v2 .border-gray-600,
+.sheet-v2 .border-gray-600\/40,
+.sheet-v2 .border-ink-200,
+.sheet-v2 .border-ink-300,
+.sheet-v2 .border-ink-300\/50,
+.sheet-v2 .border-ink-500,
+.sheet-v2 .border-ink-600,
+.sheet-v2 .border-ink-600\/40,
+.sheet-v2 .border-ink-700,
+.sheet-v2 .border-parchment-600,
+.sheet-v2 .border-parchment-600\/40,
+.sheet-v2 .border-parchment-600\/50,
+.sheet-v2 .border-parchment-600\/60 {
+  border-color: var(--v2-border-strong) !important;
+}
+
+.sheet-v2 .border-red-300,
+.sheet-v2 .border-red-400,
+.sheet-v2 .border-red-500,
+.sheet-v2 .border-red-600,
+.sheet-v2 .border-red-700,
+.sheet-v2 .border-red-800,
+.sheet-v2 .border-rose-700,
+.sheet-v2 .border-rose-700\/30 {
+  border-color: var(--v2-danger) !important;
+}
+
+.sheet-v2 .border-emerald-500,
+.sheet-v2 .border-emerald-600,
+.sheet-v2 .border-emerald-700,
+.sheet-v2 .border-emerald-700\/30,
+.sheet-v2 .border-emerald-700\/40,
+.sheet-v2 .border-emerald-700\/60,
+.sheet-v2 .border-green-500,
+.sheet-v2 .border-green-600,
+.sheet-v2 .border-green-700,
+.sheet-v2 .border-green-700\/40,
+.sheet-v2 .border-green-700\/50 {
+  border-color: var(--v2-success) !important;
+}
+
+.sheet-v2 .border-amber-400,
+.sheet-v2 .border-amber-500,
+.sheet-v2 .border-amber-500\/60,
+.sheet-v2 .border-amber-600,
+.sheet-v2 .border-amber-600\/40,
+.sheet-v2 .border-amber-700,
+.sheet-v2 .border-amber-700\/20,
+.sheet-v2 .border-amber-700\/30,
+.sheet-v2 .border-amber-700\/40,
+.sheet-v2 .border-amber-700\/50,
+.sheet-v2 .border-amber-700\/60,
+.sheet-v2 .border-amber-800\/40,
+.sheet-v2 .border-amber-900\/40 {
+  border-color: var(--v2-warning) !important;
+}
+
+.sheet-v2 .text-red-300,
+.sheet-v2 .text-red-400,
+.sheet-v2 .text-red-500,
+.sheet-v2 .text-red-600,
+.sheet-v2 .text-red-700,
+.sheet-v2 .text-red-800,
+.sheet-v2 .text-red-900,
+.sheet-v2 .text-rose-700,
+.sheet-v2 .text-rose-800,
+.sheet-v2 .text-rose-900 {
+  color: var(--v2-danger) !important;
+}
+
+.sheet-v2 .text-emerald-400,
+.sheet-v2 .text-emerald-700,
+.sheet-v2 .text-emerald-800,
+.sheet-v2 .text-emerald-900,
+.sheet-v2 .text-emerald-900\/70,
+.sheet-v2 .text-emerald-900\/80,
+.sheet-v2 .text-green-200,
+.sheet-v2 .text-green-300,
+.sheet-v2 .text-green-400,
+.sheet-v2 .text-green-700 {
+  color: var(--v2-success) !important;
+}
+
+.sheet-v2 .text-gray-100,
+.sheet-v2 .text-gray-200,
+.sheet-v2 .text-ink-300,
+.sheet-v2 .text-ink-500,
+.sheet-v2 .text-ink-600,
+.sheet-v2 .text-parchment-50 {
+  color: var(--v2-text-1) !important;
+}
+
+.sheet-v2 .text-gray-300,
+.sheet-v2 .text-gray-400,
+.sheet-v2 .text-gray-600,
+.sheet-v2 .text-gray-700,
+.sheet-v2 .text-gray-800,
+.sheet-v2 .text-ink-200,
+.sheet-v2 .text-parchment-600 {
+  color: var(--v2-text-2) !important;
+}
+
+.sheet-v2 .text-gray-500 {
+  color: var(--v2-text-3) !important;
+}
+
+.sheet-v2 .text-amber-100,
+.sheet-v2 .text-amber-200,
+.sheet-v2 .text-amber-200\/70,
+.sheet-v2 .text-amber-300,
+.sheet-v2 .text-amber-400,
+.sheet-v2 .text-amber-500,
+.sheet-v2 .text-amber-500\/70,
+.sheet-v2 .text-amber-500\/80,
+.sheet-v2 .text-amber-600,
+.sheet-v2 .text-amber-700,
+.sheet-v2 .text-amber-800,
+.sheet-v2 .text-amber-900,
+.sheet-v2 .text-gilt-500 {
+  color: var(--v2-warning) !important;
+}
+
+/* Casos especiais: placeholder / divide (seletor de filhos) */
+.sheet-v2 .divide-gray-700\/50 > :not([hidden]) ~ :not([hidden]) { border-color: var(--v2-border) !important; }
+.sheet-v2 .divide-parchment-600\/40 > :not([hidden]) ~ :not([hidden]) { border-color: var(--v2-border-strong) !important; }
+.sheet-v2 .placeholder-gray-500::placeholder { color: var(--v2-text-3) !important; }
+.sheet-v2 .placeholder-gray-600::placeholder { color: var(--v2-text-2) !important; }
