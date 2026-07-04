@@ -90,6 +90,21 @@
   font-weight: 600;
 }
 
+/* Linhas/cards roláveis (rolagem interativa) */
+.sheet-v2 .v2-rollable {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.sheet-v2 .v2-rollable:hover { background: var(--v2-surface-2); }
+.sheet-v2 .v2-rollable:active { transform: scale(0.99); }
+.sheet-v2 .v2-rollable-armed { outline: 2px solid var(--v2-success); outline-offset: -2px; }
+
 /* Bottom nav do mobile (< lg). Renderizada dentro do .sheet-v2 (vars existem);
    o seletor duplo cobre o teste isolado do componente. */
 .sheet-v2 .v2-bottomnav,
