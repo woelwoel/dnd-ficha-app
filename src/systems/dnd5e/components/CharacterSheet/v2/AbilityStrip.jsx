@@ -83,6 +83,8 @@ function AbilityEditor({ abilityKey, onClose }) {
   }, [abilityKey, character.attributes])
   const abbr = ABILITIES.find(a => a.key === abilityKey)?.abbr ?? ''
   const racial = character.appliedRacialBonuses?.[abilityKey] ?? 0
+  const n = Number(value)
+  const valid = Number.isFinite(n) && n >= 1 && n <= 30
   return (
     <EditDialog open={abilityKey != null} onClose={onClose} title={`Editar ${abbr}`}>
       <label className="v2-row" style={{ gap: 12 }}>
@@ -99,7 +101,7 @@ function AbilityEditor({ abilityKey, onClose }) {
         </p>
       )}
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 12 }}>
-        <button type="button" className="v2-btn" onClick={() => { updaters.updateAttribute(abilityKey, value); onClose() }}>
+        <button type="button" className="v2-btn" disabled={!valid} onClick={() => { updaters.updateAttribute(abilityKey, value); onClose() }}>
           Aplicar
         </button>
       </div>
