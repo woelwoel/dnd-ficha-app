@@ -2,6 +2,7 @@
 // Render helper pros componentes v2 (que consomem useCharacterContext).
 import { render } from '@testing-library/react'
 import { CharacterProvider } from '../../systems/dnd5e/components/CharacterSheet/CharacterContext'
+import { DiceRollerContext } from '../../hooks/useDiceRoller'
 
 export function makeCharacter(overrides = {}) {
   return {
@@ -57,7 +58,16 @@ export function makeUpdaters(overrides = {}) {
   return new Proxy(overrides, { get: (t, k) => (k in t ? t[k] : noop) })
 }
 
-export function renderWithSheetContext(ui, { character, calc, ...rest } = {}) {
+// Contexto de dados espiável (mesmo shape do DiceRollerProvider real).
+export function makeDice(overrides = {}) {
+  return {
+    history: [], open: false, mode: 'normal',
+    roll: noop, clearHistory: noop, togglePanel: noop, openPanel: noop, setMode: noop,
+    ...overrides,
+  }
+}
+
+export function renderWithSheetContext(ui, { character, calc, dice, ...rest } = {}) {
   const value = {
     character: character ?? makeCharacter(),
     setCharacter: noop,
@@ -74,5 +84,9 @@ export function renderWithSheetContext(ui, { character, calc, ...rest } = {}) {
     clearFocusSpell: noop,
     ...rest,
   }
-  return render(<CharacterProvider value={value}>{ui}</CharacterProvider>)
+  return render(
+    <DiceRollerContext.Provider value={makeDice(dice)}>
+      <CharacterProvider value={value}>{ui}</CharacterProvider>
+    </DiceRollerContext.Provider>
+  )
 }

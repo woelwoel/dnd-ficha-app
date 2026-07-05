@@ -1,6 +1,7 @@
 import { useCharacterContext } from '../CharacterContext'
 import { getEffectiveSaveProficiencies } from '../../../domain/rules'
 import { skillBonus } from './skillBonus'
+import { RollableRow } from './RollableRow'
 
 const SAVE_LABELS = [
   ['str', 'FOR'], ['dex', 'DES'], ['con', 'CON'],
@@ -15,13 +16,19 @@ export function SavesPanel() {
       <h3 className="v2-title">Salvaguardas</h3>
       {SAVE_LABELS.map(([key, label]) => {
         const isProf = profs.includes(key)
+        const bonus = calc.savingThrows[key]
         return (
-          <div key={key} className="v2-row">
+          <RollableRow
+            key={key}
+            notation={`1d20${calc.fmt(bonus)}`}
+            label={`Salvaguarda — ${label}`}
+            ariaLabel={`Rolar salvaguarda de ${label}, bônus ${calc.fmt(bonus)}`}
+          >
             <span className={isProf ? '' : 'v2-mut'}>
               <span aria-hidden className={isProf ? 'v2-acc' : 'v2-mut'}>{isProf ? '●' : '○'}</span> {label}
             </span>
-            <span className={isProf ? 'v2-acc' : ''}>{calc.fmt(calc.savingThrows[key])}</span>
-          </div>
+            <span className={isProf ? 'v2-acc' : ''}>{calc.fmt(bonus)}</span>
+          </RollableRow>
         )
       })}
     </section>

@@ -75,4 +75,27 @@ describe('ActionsTab', () => {
     await user.click(bubbles[2]) // não usado -> gasta
     expect(toggleSlot).toHaveBeenCalledWith(1, 2)
   })
+
+  it('linha de ataque tem botão Atacar e dano avulso', () => {
+    renderWithSheetContext(<ActionsTab />, { character: charWithAttack(), dice: { roll: vi.fn(), openPanel: vi.fn() } })
+    expect(screen.getByRole('button', { name: /Atacar com Machado grande/ })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Rolar Dano avulso · Machado grande/ })).toBeInTheDocument()
+  })
+
+  it('atacar com arma de munição consome 1 do inventário', async () => {
+    const user = userEvent.setup()
+    const updateItem = vi.fn()
+    const ch = makeCharacter()
+    ch.combat = { ...ch.combat, attacks: [{ id: 'atk2', name: 'Arco longo', damageDice: '1d8', proficient: true, properties: ['ammunition'] }] }
+    ch.inventory = { items: [{ id: 'i1', name: 'Flechas', qty: 20 }], currency: {} }
+    // roll retorna shape realista (sides:20) pro fluxo de crítico do AttackRollButton
+    const roll = vi.fn(() => ({ sides: 20, rolls: [11], total: 13 }))
+    renderWithSheetContext(<ActionsTab />, {
+      character: ch,
+      updaters: makeUpdaters({ updateItem }),
+      dice: { roll, openPanel: vi.fn() },
+    })
+    await user.click(screen.getByRole('button', { name: /Atacar com Arco longo/ }))
+    expect(updateItem).toHaveBeenCalledWith('i1', { qty: 19 })
+  })
 })
