@@ -4,11 +4,14 @@ import { EditDialog } from './EditDialog'
 import { Attacks } from '../Attacks'
 import { CombatClassActions } from '../CombatClassActions'
 import { ManeuversPanel } from '../ManeuversPanel'
+import { AttackRollButton } from '../AttackRollButton'
+import { RollButton } from '../../../../../components/DiceRoller/RollButton'
 import {
   calculateWeaponAttackBonus, calculateWeaponDamage, resolveAttackAbility,
 } from '../../../utils/attacks'
 import { formatModifier } from '../../../utils/calculations'
 import { abbrOfKey } from '../../../domain/attributes'
+import { findAmmoForAttack } from '../../../utils/weaponI18n'
 import { actionTypeOf } from './actionTypes'
 
 const FILTERS = [
@@ -24,23 +27,47 @@ function SectionTitle({ children }) {
 }
 
 /* Linha de ataque nativa v2 — cálculo importado de utils/attacks (mesma fonte
-   da verdade que o Attacks.jsx v1; ver AttackRow lá). Só leitura; a edição
-   completa fica no Attacks v1 sob "Gerenciar ataques". */
-function AttackRowV2({ atk, attributes, profBonus }) {
+   da verdade que o Attacks.jsx v1; ver AttackRow lá). Rola de verdade via
+   AttackRollButton (fluxo ataque→crítico→dano) + RollButton pra dano avulso;
+   consumo de munição idêntico ao AttackRow v1. A edição completa fica no
+   Attacks v1 sob "Gerenciar ataques". */
+function AttackRowV2({ atk, attributes, profBonus, ammoItem, onUpdateItem }) {
   const bonus = calculateWeaponAttackBonus(atk, attributes, profBonus)
   const dmg = calculateWeaponDamage(atk, attributes, {})
   const abbr = abbrOfKey(resolveAttackAbility(atk, attributes))
+  const noAmmo = !!ammoItem && (ammoItem.qty ?? 0) <= 0
+
+  // Mesma semântica do AttackRow v1: 1 consumo por clique em Atacar.
+  function consumeAmmo() {
+    if (!ammoItem || (ammoItem.qty ?? 0) <= 0) return
+    onUpdateItem?.(ammoItem.id, { qty: Math.max(0, (ammoItem.qty ?? 0) - 1) })
+  }
+
   return (
     <div className="v2-row">
       <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
         {atk.name}
         <span className="v2-mut" style={{ marginLeft: 6, fontSize: 11 }}>{abbr}</span>
+        {ammoItem && (
+          <span className="v2-mut" style={{ marginLeft: 6, fontSize: 11 }}>
+            {noAmmo ? '⚠ sem munição' : `🏹 ${ammoItem.qty ?? 0}`}
+          </span>
+        )}
       </span>
-      <span style={{ whiteSpace: 'nowrap' }}>
+      <span style={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
         <span className="v2-acc" style={{ fontWeight: 600 }}>{formatModifier(bonus)}</span>
-        <span className="v2-mut"> · </span>
+        <span className="v2-mut">·</span>
         {dmg.expression}
-        {atk.damageType ? <span className="v2-mut" style={{ marginLeft: 4 }}>{atk.damageType}</span> : null}
+        {atk.damageType ? <span className="v2-mut">{atk.damageType}</span> : null}
+        <AttackRollButton
+          attackNotation={`1d20${formatModifier(bonus)}`}
+          damageNotation={dmg.expression}
+          weaponName={atk.name}
+          disabled={noAmmo}
+          onAfterRoll={consumeAmmo}
+          size="xs"
+        />
+        <RollButton notation={dmg.expression} label={`Dano avulso · ${atk.name}`} size="xs" />
       </span>
     </div>
   )
@@ -179,7 +206,14 @@ export function ActionsTab() {
           {attacks.length === 0
             ? <div className="v2-mut" style={{ fontSize: 13, padding: '4px 0' }}>Nenhum ataque registrado.</div>
             : attacks.map(atk => (
-              <AttackRowV2 key={atk.id} atk={atk} attributes={character.attributes} profBonus={calc.profBonus} />
+              <AttackRowV2
+                key={atk.id}
+                atk={atk}
+                attributes={character.attributes}
+                profBonus={calc.profBonus}
+                ammoItem={findAmmoForAttack(atk, character.inventory?.items ?? [])}
+                onUpdateItem={updateItem}
+              />
             ))}
         </div>
       )}
