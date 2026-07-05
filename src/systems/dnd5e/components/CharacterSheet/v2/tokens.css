@@ -123,3 +123,18 @@
   border: 0; background: transparent; color: var(--v2-text-2); cursor: pointer;
 }
 .v2-bottomnav-item[aria-selected='true'] { color: var(--v2-accent); }
+
+.sheet-v2 .v2-ability-roll {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  width: 100%; padding: 8px 4px;
+  border: 0; background: transparent; color: inherit; font: inherit;
+  cursor: pointer; border-radius: 10px;
+}
+.sheet-v2 .v2-ability-roll:hover { background: var(--v2-surface-2); }
+.sheet-v2 .v2-ability-edit {
+  position: absolute; top: 2px; right: 2px;
+  min-width: 24px; min-height: 24px;
+  border: 0; background: transparent; color: var(--v2-text-3);
+  cursor: pointer; border-radius: 6px; font-size: 12px; line-height: 1;
+}
+.sheet-v2 .v2-ability-edit:hover { color: var(--v2-text-1); background: var(--v2-surface-2); }

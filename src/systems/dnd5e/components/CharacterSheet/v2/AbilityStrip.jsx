@@ -2,10 +2,15 @@ import { useState, useEffect } from 'react'
 import { useCharacterContext } from '../CharacterContext'
 import { effectiveSpeed, baseSpeedMeters } from '../../../domain/rules'
 import { EditDialog } from './EditDialog'
+import { useRollInteraction } from '../../../../../hooks/useRollInteraction'
 
 const ABILITIES = [
-  { key: 'str', abbr: 'FOR', label: 'FOR' }, { key: 'dex', abbr: 'DES', label: 'DES' }, { key: 'con', abbr: 'CON', label: 'CON' },
-  { key: 'int', abbr: 'INT', label: 'INT' }, { key: 'wis', abbr: 'SAB', label: 'SAB' }, { key: 'cha', abbr: 'CAR', label: 'Carisma' },
+  { key: 'str', abbr: 'FOR', label: 'FOR', name: 'Força' },
+  { key: 'dex', abbr: 'DES', label: 'DES', name: 'Destreza' },
+  { key: 'con', abbr: 'CON', label: 'CON', name: 'Constituição' },
+  { key: 'int', abbr: 'INT', label: 'INT', name: 'Inteligência' },
+  { key: 'wis', abbr: 'SAB', label: 'SAB', name: 'Sabedoria' },
+  { key: 'cha', abbr: 'CAR', label: 'Carisma', name: 'Carisma' },
 ]
 
 export function AbilityStrip() {
@@ -14,34 +19,17 @@ export function AbilityStrip() {
   const [caOpen, setCaOpen] = useState(false)
   return (
     <div className="grid grid-cols-4 lg:grid-cols-8 gap-2">
-      {ABILITIES.map(a => {
-        const inner = (
-          <>
-            <span className="v2-title" style={{ margin: 0 }}>{a.abbr}</span>
-            <span className="v2-ability-mod">{calc.fmt(calc.mods[a.key])}</span>
-            <span className="v2-chip v2-acc">{calc.effectiveAttrs?.[a.key] ?? character.attributes[a.key]}</span>
-          </>
-        )
-        if (readOnly) {
-          return (
-            <div key={a.key} className="v2-panel v2-ability">
-              {inner}
-            </div>
-          )
-        }
-        return (
-          <button
-            key={a.key}
-            type="button"
-            className="v2-panel v2-ability"
-            aria-label={`Editar ${a.label}`}
-            style={{ cursor: 'pointer', border: '1px solid var(--v2-border)', background: 'var(--v2-surface-1)', width: '100%' }}
-            onClick={() => setEditing(a.key)}
-          >
-            {inner}
-          </button>
-        )
-      })}
+      {ABILITIES.map(a => (
+        <AbilityCard
+          key={a.key}
+          a={a}
+          mod={calc.mods[a.key]}
+          score={calc.effectiveAttrs?.[a.key] ?? character.attributes[a.key]}
+          fmt={calc.fmt}
+          readOnly={readOnly}
+          onEdit={() => setEditing(a.key)}
+        />
+      ))}
       {readOnly ? (
         <div className="v2-panel v2-ability" style={{ background: 'var(--v2-surface-2)' }}>
           <span className="v2-title" style={{ margin: 0 }}>CA</span>
@@ -61,14 +49,57 @@ export function AbilityStrip() {
           <span className="v2-mut" style={{ fontSize: 11 }}>armadura</span>
         </button>
       )}
-      <div className="v2-panel v2-ability" style={{ background: 'var(--v2-surface-2)' }}>
-        <span className="v2-title" style={{ margin: 0 }}>INIT</span>
-        <span className="v2-ability-mod">{calc.fmt(calc.initiative)}</span>
-        <span className="v2-mut" style={{ fontSize: 11 }}>VEL {effectiveSpeed(character)}m</span>
-      </div>
+      <InitiativeCard />
       <AbilityEditor abilityKey={editing} onClose={() => setEditing(null)} />
       <CaEditor open={caOpen} onClose={() => setCaOpen(false)} />
     </div>
+  )
+}
+
+function AbilityCard({ a, mod, score, fmt, readOnly, onEdit }) {
+  const { handlers, longPressActive, title } = useRollInteraction({
+    notation: `1d20${fmt(mod)}`,
+    label: `Teste de ${a.name}`,
+  })
+  return (
+    <div className="v2-panel v2-ability" style={{ position: 'relative', padding: 0 }}>
+      <button
+        type="button"
+        {...handlers}
+        title={title}
+        aria-label={`Rolar teste de ${a.name}, modificador ${fmt(mod)}`}
+        className={`v2-ability-roll${longPressActive ? ' v2-rollable-armed' : ''}`}
+      >
+        <span className="v2-title" style={{ margin: 0 }}>{a.abbr}</span>
+        <span className="v2-ability-mod">{fmt(mod)}</span>
+        <span className="v2-chip v2-acc">{score}</span>
+      </button>
+      {!readOnly && (
+        <button type="button" className="v2-ability-edit" aria-label={`Editar ${a.label}`} onClick={onEdit}>✎</button>
+      )}
+    </div>
+  )
+}
+
+function InitiativeCard() {
+  const { character, calc } = useCharacterContext()
+  const { handlers, longPressActive, title } = useRollInteraction({
+    notation: `1d20${calc.fmt(calc.initiative)}`,
+    label: 'Iniciativa',
+  })
+  return (
+    <button
+      type="button"
+      {...handlers}
+      title={title}
+      aria-label={`Rolar iniciativa, bônus ${calc.fmt(calc.initiative)}`}
+      className={`v2-panel v2-ability${longPressActive ? ' v2-rollable-armed' : ''}`}
+      style={{ background: 'var(--v2-surface-2)', border: '1px solid var(--v2-border)', width: '100%', cursor: 'pointer' }}
+    >
+      <span className="v2-title" style={{ margin: 0 }}>INIT</span>
+      <span className="v2-ability-mod">{calc.fmt(calc.initiative)}</span>
+      <span className="v2-mut" style={{ fontSize: 11 }}>VEL {effectiveSpeed(character)}m</span>
+    </button>
   )
 }
 
