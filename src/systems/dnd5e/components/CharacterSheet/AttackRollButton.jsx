@@ -22,7 +22,7 @@ export function AttackRollButton({
   size = 'sm', className = '',
   disabled = false, onAfterRoll,
 }) {
-  const { roll, openPanel } = useDiceRoller()
+  const { roll } = useDiceRoller()
 
   function handleClick(e) {
     e.stopPropagation()
@@ -35,7 +35,6 @@ export function AttackRollButton({
 
     const attackLabel = `Ataque · ${weaponName}`
     const attack = roll(attackNotation, attackLabel, opts)
-    openPanel()
 
     if (!attack) return
 

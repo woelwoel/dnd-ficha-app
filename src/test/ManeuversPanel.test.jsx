@@ -93,7 +93,6 @@ describe('<ManeuversPanel>', () => {
     fireEvent.click(diceButtons[0])
     expect(onSpend).toHaveBeenCalledWith('guerreiro-superiority-dice')
     expect(mockRoll).toHaveBeenCalledWith('1d8', expect.stringContaining('Ataque Ardiloso'))
-    expect(mockOpenPanel).toHaveBeenCalled()
   })
 
   it('botão desabilitado e não rola quando sem dados', async () => {

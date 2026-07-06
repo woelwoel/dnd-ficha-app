@@ -12,7 +12,7 @@ const LONG_PRESS_MS = 500
  * Retorna { handlers, longPressActive, title } — espalhe `handlers` no elemento.
  */
 export function useRollInteraction({ notation, label, crit = false, onAfterRoll }) {
-  const { roll, openPanel } = useDiceRoller()
+  const { roll } = useDiceRoller()
   const timerRef = useRef(null)
   const longPressedRef = useRef(false)
   const [longPressActive, setLongPressActive] = useState(false)
@@ -57,7 +57,6 @@ export function useRollInteraction({ notation, label, crit = false, onAfterRoll 
     else if (e.shiftKey) opts.mode = 'adv'
     else if (e.altKey) opts.mode = 'dis'
     roll(notation, label, opts)
-    openPanel()
     onAfterRoll?.()
     longPressedRef.current = false
   }

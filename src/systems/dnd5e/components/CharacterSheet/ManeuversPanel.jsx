@@ -38,7 +38,7 @@ const TYPE_ABBR = {
 
 export function ManeuversPanel({ character, featureUses, onSpend }) {
   const [maneuversData, setManeuversData] = useState(null)
-  const { roll, openPanel } = useDiceRoller()
+  const { roll } = useDiceRoller()
 
   // Guarda de classe + escolha antes de gastar fetch.
   const chosen = character?.info?.chosenFeatures ?? {}
@@ -83,7 +83,6 @@ export function ManeuversPanel({ character, featureUses, onSpend }) {
     if (noDice) return
     onSpend?.('guerreiro-superiority-dice')
     roll(`1${dieType}`, `Sup. Die — ${maneuver.name}`)
-    openPanel()
   }
 
   return (

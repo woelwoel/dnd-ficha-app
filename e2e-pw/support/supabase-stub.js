@@ -41,7 +41,12 @@ function fakeSession() {
 /** Semeia a sessão antes de qualquer script da página rodar. */
 export async function seedSession(context) {
   await context.addInitScript(
-    ([key, session]) => window.localStorage.setItem(key, JSON.stringify(session)),
+    ([key, session]) => {
+      window.localStorage.setItem(key, JSON.stringify(session))
+      // Dados 3D desligados nos e2e: WebGL headless é flaky e os specs
+      // esperam o fluxo clássico (painel abre com o total na hora).
+      window.localStorage.setItem('dnd-ficha:dice3d', 'off')
+    },
     [STORAGE_KEY, fakeSession()],
   )
 }

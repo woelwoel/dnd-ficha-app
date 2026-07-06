@@ -17,7 +17,6 @@ describe('rolagem nas linhas do v2', () => {
     renderWithSheetContext(<SkillsPanel />, { dice: { roll, openPanel } })
     await user.click(screen.getByRole('button', { name: /Rolar Atletismo/ }))
     expect(roll).toHaveBeenCalledWith('1d20+15', 'Atletismo', { crit: false })
-    expect(openPanel).toHaveBeenCalled()
   })
 
   it('clicar numa salvaguarda rola com o label do v1', async () => {

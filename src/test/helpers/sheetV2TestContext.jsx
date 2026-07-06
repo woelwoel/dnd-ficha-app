@@ -61,8 +61,9 @@ export function makeUpdaters(overrides = {}) {
 // Contexto de dados espiável (mesmo shape do DiceRollerProvider real).
 export function makeDice(overrides = {}) {
   return {
-    history: [], open: false, mode: 'normal',
-    roll: noop, clearHistory: noop, togglePanel: noop, openPanel: noop, setMode: noop,
+    history: [], open: false, mode: 'normal', dice3d: false,
+    roll: noop, clearHistory: noop, togglePanel: noop, openPanel: noop,
+    setMode: noop, setDice3d: noop, setDiceAccent: noop,
     ...overrides,
   }
 }

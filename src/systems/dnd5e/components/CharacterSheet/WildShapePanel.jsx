@@ -294,7 +294,7 @@ function ActiveBeastStatBlock({ ws, druidaLevel }) {
 
 /* ── Cura com slot (Círculo da Lua nv 6+) ────────────────────── */
 function MoonHealPanel({ slotsAvailable, onConsumeSlot, ws, onSetWildShape }) {
-  const { roll, openPanel } = useDiceRoller()
+  const { roll } = useDiceRoller()
   const availableLevels = Object.entries(slotsAvailable)
     .map(([sl, n]) => [Number(sl), n])
     .filter(([, n]) => n > 0)
@@ -308,7 +308,6 @@ function MoonHealPanel({ slotsAvailable, onConsumeSlot, ws, onSetWildShape }) {
     onConsumeSlot(slotLevel)
     onSetWildShape({ ...ws, currentHp: Math.min(ws.maxHp, ws.currentHp + avgHeal) })
     roll(notation, `Cura Primal (slot Nv ${slotLevel})`)
-    openPanel()
   }
 
   if (availableLevels.length === 0) {
