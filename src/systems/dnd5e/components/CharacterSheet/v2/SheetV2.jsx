@@ -1,5 +1,5 @@
-import './tokens.css'
-import './legacy-bridge.css'
+// Tema v2 (tokens + ponte) é importado globalmente em src/main.jsx — precisa
+// estar no bundle inicial, não no chunk lazy da ficha.
 import { useState } from 'react'
 import { useCharacterContext } from '../CharacterContext'
 import { classAccentOf } from './classAccents'
