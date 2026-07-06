@@ -1,5 +1,5 @@
 import '../../../../../theme/tokens.css'
-import './legacy-bridge.css'
+import '../../../../../theme/legacy-bridge.css'
 import { useState } from 'react'
 import { useCharacterContext } from '../CharacterContext'
 import { classAccentOf } from './classAccents'
