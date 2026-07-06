@@ -92,6 +92,13 @@ Semântica dos campos:
   secundário; se surgir, estende-se o schema.)
 - `cantripScaling: true` — quantidade de dados multiplica por 2/3/4 nos
   níveis de personagem 5/11/17 (regra padrão de truques).
+- `beams: { base, perSlot?, cantripScaling? }` — magias de múltiplos
+  projéteis com ataque INDIVIDUAL por raio (um d20 por raio; um raio pode
+  critar e outro errar). Ex.: Raio Ardente `{ base: 3, perSlot: 1 }`;
+  Rajada Mística `{ base: 1, cantripScaling: true }` (nº de raios segue o
+  tier do truque). Exclusividade: `beams.cantripScaling` escala o Nº DE
+  RAIOS (dados fixos por raio); o `cantripScaling` raiz escala os DADOS —
+  uma magia usa um ou outro. Idem `beams.perSlot` vs `upcast.perSlot`.
 - `attack`, `save`, `heal` e `damage` combinam livremente; magia pode ter só
   `damage` (Mísseis Mágicos), `attack`+`damage`, `save`+`damage`,
   `heal` puro etc.
