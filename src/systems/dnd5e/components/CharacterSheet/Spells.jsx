@@ -50,8 +50,12 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
    * Retorna { healTotal } pro SpellRow exibir "Aplicar N PV" (ou null).
    */
   function handleCast(spell, { slotLevel = null, pact = false, event = null } = {}) {
-    if (pact) onSpendPactSlot?.(pactSlots.qty)
-    else if (slotLevel != null) onToggleSlot?.(slotLevel, (usedSlots[slotLevel] || 0) + 1)
+    if (pact) {
+      if (!pactSlots) return null
+      onSpendPactSlot?.(pactSlots.qty)
+    } else if (slotLevel != null) {
+      onToggleSlot?.(slotLevel, (usedSlots[slotLevel] || 0) + 1)
+    }
 
     const mech = spellMechanics?.[spell.index]
     if (!mech) return null
