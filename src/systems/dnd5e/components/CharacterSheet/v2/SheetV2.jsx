@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useCharacterContext } from '../CharacterContext'
 import { classAccentOf } from './classAccents'
 import { DiceAccentSync } from './DiceAccentSync'
+import { ConcentrationPromptV2 } from './ConcentrationPromptV2'
 import { HeaderV2 } from './HeaderV2'
 import { AbilityStrip } from './AbilityStrip'
 import { SavesPanel, SensesPanel, ProficienciesPanel } from './SidePanels'
@@ -39,6 +40,7 @@ export function SheetV2({ onBack, onExport, onPrint, onImport, onImportError, sa
           saveError={saveError}
         />
         {banner}
+        <ConcentrationPromptV2 />
 
         {/* ── Desktop (≥ lg): faixa + 3 colunas — IDÊNTICO à fase 3 ── */}
         <div className="hidden lg:block space-y-3">
