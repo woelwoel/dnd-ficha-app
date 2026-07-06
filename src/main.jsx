@@ -6,7 +6,10 @@ import './index.css'
 // uma ficha. Ver src/theme/.
 import './theme/tokens.css'
 import './theme/legacy-bridge.css'
+import { applyThemeV2 } from './theme/applyTheme'
 import App from './App.jsx'
+
+applyThemeV2()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

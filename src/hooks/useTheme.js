@@ -19,7 +19,11 @@ const resolve = (pref) => pref ?? (systemPrefersDark() ? 'dark' : 'light')
 function apply(theme) {
   document.documentElement.dataset.theme = theme
   const meta = document.querySelector('meta[name="theme-color"]')
-  if (meta) meta.content = META_COLOR[theme] ?? META_COLOR.light
+  if (!meta) return
+  // Sob o tema global v2, o chrome do browser fica no surface-0 escuro.
+  meta.content = document.documentElement.classList.contains('theme-v2')
+    ? '#0f141a'
+    : (META_COLOR[theme] ?? META_COLOR.light)
 }
 
 export function useTheme() {
