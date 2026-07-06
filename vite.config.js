@@ -115,6 +115,18 @@ export default defineConfig({
             },
           },
           {
+            // Texturas/sons dos dados 3D (copiados do pacote
+            // @3d-dice/dice-box-threejs pra public/dice-box/). CacheFirst —
+            // só mudam em upgrade da lib (bumpar cacheName nesse caso).
+            urlPattern: ({ url }) => url.pathname.startsWith('/dice-box/'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'dice3d-assets-v1',
+              expiration: { maxEntries: 80, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
             // Fontes self-hosted (@fontsource): woff2 ficam FORA do precache
             // (o CSS lista todos os subsets; o browser só baixa os usados —
             // latin). CacheFirst garante offline após o primeiro uso.
