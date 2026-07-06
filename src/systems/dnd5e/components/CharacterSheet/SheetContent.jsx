@@ -312,6 +312,7 @@ export function SheetContent({ activeTab }) {
           onSpendPactSlot={spendPactSlot}
           onRegainPactSlot={regainPactSlot}
           onSetConcentration={setConcentration}
+          onApplyHealing={applyHealing}
           focusSpellId={focusSpellId}
           onClearFocusSpell={clearFocusSpell}
         />

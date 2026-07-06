@@ -78,7 +78,7 @@ export function MainBox({ activeTab, onTabChange, hideTablist = false }) {
     updateTraits, updateCombat,
     updateCurrency, addItem, removeItem, updateItem,
     updateSpellcasting, addSpell, removeSpell, togglePrepared, toggleSlot,
-    spendPactSlot, regainPactSlot, setConcentration,
+    spendPactSlot, regainPactSlot, setConcentration, applyHealing,
     addAttack, removeAttack,
     setChosenFeature, spendFeatureUse, regainFeatureUse,
   } = updaters
@@ -131,6 +131,7 @@ export function MainBox({ activeTab, onTabChange, hideTablist = false }) {
             onSpendPactSlot={spendPactSlot}
             onRegainPactSlot={regainPactSlot}
             onSetConcentration={setConcentration}
+            onApplyHealing={applyHealing}
             focusSpellId={focusSpellId}
             onClearFocusSpell={clearFocusSpell}
           />
