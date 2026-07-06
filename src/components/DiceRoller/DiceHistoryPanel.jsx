@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { useDiceRoller } from '../../hooks/useDiceRoller'
 import { useDraggableFab } from '../../hooks/useDraggableFab'
 import { Icon } from '../ui/Icon'
+import { isDice3dSupported } from './dice3d'
 
 function timeAgo(ts) {
   const diff = Math.floor((Date.now() - ts) / 1000)
@@ -77,7 +78,10 @@ function RollEntry({ entry }) {
  * Aberto  → mini-janela arrastável (arraste pelo cabeçalho).
  */
 export function DiceHistoryPanel() {
-  const { history, clearHistory, open, togglePanel, mode = 'normal', setMode } = useDiceRoller()
+  const {
+    history, clearHistory, open, togglePanel,
+    mode = 'normal', setMode, dice3d = true, setDice3d,
+  } = useDiceRoller()
 
   // Botão fechado é arrastável e persiste posição via hook compartilhado.
   const fab = useDraggableFab('dnd-ficha:fab-dice', { bottom: 20, right: 20 })
@@ -216,6 +220,22 @@ export function DiceHistoryPanel() {
           <span className="text-xs ink-italic font-mono pointer-events-none">
             último: <span className="text-ink-500 font-bold">{last.total}</span>
           </span>
+        )}
+        {isDice3dSupported() && (
+          <button
+            onClick={() => setDice3d?.(!dice3d)}
+            onPointerDown={e => e.stopPropagation()}
+            aria-pressed={dice3d}
+            aria-label={dice3d ? 'Desativar dados 3D' : 'Ativar dados 3D'}
+            title={dice3d ? 'Dados 3D ativos — clique para desativar' : 'Dados 3D desativados — clique para ativar'}
+            className={`text-[13px] font-bold px-1.5 py-0.5 rounded border transition-colors ${
+              dice3d
+                ? 'border-emerald-700 bg-emerald-100 text-emerald-800'
+                : 'border-parchment-600 text-ink-200 hover:text-ink-500 hover:border-ink-300'
+            }`}
+          >
+            3D
+          </button>
         )}
         {history.length > 0 && (
           <button
