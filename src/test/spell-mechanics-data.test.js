@@ -60,10 +60,8 @@ describe('spell-mechanics-pt.json — validacao integral (entradas curadas)', ()
     }
   })
 
-  it('lote curado: niveis 0-2 sem _draft', () => {
-    const pending = entries
-      .filter(([k, v]) => v._draft && (byIndex.get(k)?.level ?? 99) <= 2)
-      .map(([k]) => k)
+  it('arquivo 100% curado: nenhuma entrada _draft', () => {
+    const pending = entries.filter(([, v]) => v._draft).map(([k]) => k)
     expect(pending).toEqual([])
   })
 })
