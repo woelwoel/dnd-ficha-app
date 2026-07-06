@@ -1,4 +1,4 @@
-import './tokens.css'
+import '../../../../../theme/tokens.css'
 import './legacy-bridge.css'
 import { useState } from 'react'
 import { useCharacterContext } from '../CharacterContext'
