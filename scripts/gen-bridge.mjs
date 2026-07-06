@@ -10,7 +10,17 @@ const SRC = 'src'
 const OUT = 'src/theme/legacy-bridge.css'
 
 /* ── 1. Coleta de tokens ──────────────────────────────────────────────── */
-const PALETTES = 'parchment|ink|gilt|gold|shell|blood|accent|amber|blue|emerald|gray|green|orange|purple|red|rose|sky|yellow|white|black'
+const PALETTES = 'parchment|ink|gilt|gold|shell|blood|accent|amber|blue|emerald|gray|green|orange|purple|indigo|violet|red|rose|sky|yellow|white|black'
+
+/* Utilitários SEMÂNTICOS (nome, não passo numérico — aliases do @theme do
+   index.css). Não casam o TOKEN_RE (que exige palette-passo), então entram
+   como regras extras explícitas. text-ink-on-map fica FORA de propósito: é
+   tinta escura sobre os tokens/labels parchment do mapa (conteúdo). */
+const SEMANTIC = {
+  'bg-bg-elevated':      { props: ['background-color'], cssVar: '--v2-surface-1' },
+  'text-ink-primary':    { props: ['color'], cssVar: '--v2-text-1' },
+  'border-shell-border': { props: ['border-color'], cssVar: '--v2-border-strong' },
+}
 const TOKEN_RE = new RegExp(
   String.raw`(?<![-\w:])((?:[a-z-]+:)*(?:bg|text|border(?:-[tbrlxy])?|from|to|via|ring|divide|placeholder)-(?:${PALETTES})(?:-\d{2,3})?(?:\/\d{1,3})?)(?![-\w])`,
   'g',
@@ -36,7 +46,7 @@ function hueOf(palette) {
   if (['emerald', 'green'].includes(palette)) return 'success'
   if (['amber', 'yellow', 'orange', 'gilt', 'gold'].includes(palette)) return 'warning'
   if (palette === 'accent') return 'accent'
-  if (['blue', 'sky', 'purple'].includes(palette)) return 'cool'
+  if (['blue', 'sky', 'purple', 'indigo', 'violet'].includes(palette)) return 'cool'
   return 'neutral' // parchment, ink, gray, shell, white, black
 }
 
@@ -162,6 +172,11 @@ function rule({ sels, props, cssVar }) {
 const plain = [...groups.values()].filter(g => !g.media)
 const lg = [...groups.values()].filter(g => g.media)
 
+// Regras dos utilitários semânticos (nome literal, sem escape especial).
+const semanticCss = Object.entries(SEMANTIC)
+  .map(([cls, { props, cssVar }]) => rule({ sels: [`.${cls}`], props, cssVar }))
+  .join('\n\n')
+
 /* ── 5. Bespoke: classes do index.css e dos dados 3D ─────────────────── */
 const BESPOKE = `
 /* ── Bespoke (classes próprias do index.css / dice3d) ─────────────────── */
@@ -204,6 +219,8 @@ const css = [
   HEADER,
   '@media screen {',
   plain.map(rule).join('\n\n'),
+  '',
+  semanticCss,
   BESPOKE,
   '}',
   '',

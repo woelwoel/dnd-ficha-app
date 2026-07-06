@@ -123,6 +123,10 @@
 .sheet-v2 .bg-green-900\/30,
 .theme-v2 .bg-green-900\/40,
 .sheet-v2 .bg-green-900\/40,
+.theme-v2 .bg-indigo-600,
+.sheet-v2 .bg-indigo-600,
+.theme-v2 .bg-indigo-950\/20,
+.sheet-v2 .bg-indigo-950\/20,
 .theme-v2 .bg-ink-300,
 .sheet-v2 .bg-ink-300,
 .theme-v2 .bg-ink-500,
@@ -213,6 +217,12 @@
 .sheet-v2 .bg-sky-700,
 .theme-v2 .bg-sky-900\/40,
 .sheet-v2 .bg-sky-900\/40,
+.theme-v2 .bg-violet-100,
+.sheet-v2 .bg-violet-100,
+.theme-v2 .bg-violet-50,
+.sheet-v2 .bg-violet-50,
+.theme-v2 .bg-violet-50\/60,
+.sheet-v2 .bg-violet-50\/60,
 .theme-v2 .bg-yellow-100,
 .sheet-v2 .bg-yellow-100,
 .theme-v2 .bg-yellow-50,
@@ -476,6 +486,8 @@
 .sheet-v2 .border-gray-700\/60,
 .theme-v2 .border-gray-800,
 .sheet-v2 .border-gray-800,
+.theme-v2 .border-indigo-700\/50,
+.sheet-v2 .border-indigo-700\/50,
 .theme-v2 .border-purple-400,
 .sheet-v2 .border-purple-400,
 .theme-v2 .border-purple-500,
@@ -500,6 +512,14 @@
 .sheet-v2 .border-sky-700\/30,
 .theme-v2 .border-sky-700\/60,
 .sheet-v2 .border-sky-700\/60,
+.theme-v2 .border-violet-700,
+.sheet-v2 .border-violet-700,
+.theme-v2 .border-violet-700\/30,
+.sheet-v2 .border-violet-700\/30,
+.theme-v2 .border-violet-700\/50,
+.sheet-v2 .border-violet-700\/50,
+.theme-v2 .border-violet-700\/60,
+.sheet-v2 .border-violet-700\/60,
 .theme-v2 .divide-gray-700\/50 > :not([hidden]) ~ :not([hidden]),
 .sheet-v2 .divide-gray-700\/50 > :not([hidden]) ~ :not([hidden]),
 .theme-v2 .divide-gray-700\/60 > :not([hidden]) ~ :not([hidden]),
@@ -716,6 +736,14 @@
 .sheet-v2 .text-gray-700,
 .theme-v2 .text-gray-800,
 .sheet-v2 .text-gray-800,
+.theme-v2 .text-indigo-200\/70,
+.sheet-v2 .text-indigo-200\/70,
+.theme-v2 .text-indigo-300,
+.sheet-v2 .text-indigo-300,
+.theme-v2 .text-indigo-400,
+.sheet-v2 .text-indigo-400,
+.theme-v2 .text-indigo-500,
+.sheet-v2 .text-indigo-500,
 .theme-v2 .text-ink-100,
 .sheet-v2 .text-ink-100,
 .theme-v2 .text-ink-200,
@@ -753,7 +781,9 @@
 .theme-v2 .text-sky-900,
 .sheet-v2 .text-sky-900,
 .theme-v2 .text-sky-900\/70,
-.sheet-v2 .text-sky-900\/70 {
+.sheet-v2 .text-sky-900\/70,
+.theme-v2 .text-violet-900,
+.sheet-v2 .text-violet-900 {
   color: var(--v2-text-2) !important;
 }
 
@@ -953,6 +983,21 @@
 .theme-v2 .text-green-800,
 .sheet-v2 .text-green-800 {
   color: var(--v2-success) !important;
+}
+
+.theme-v2 .bg-bg-elevated,
+.sheet-v2 .bg-bg-elevated {
+  background-color: var(--v2-surface-1) !important;
+}
+
+.theme-v2 .text-ink-primary,
+.sheet-v2 .text-ink-primary {
+  color: var(--v2-text-1) !important;
+}
+
+.theme-v2 .border-shell-border,
+.sheet-v2 .border-shell-border {
+  border-color: var(--v2-border-strong) !important;
 }
 
 /* ── Bespoke (classes próprias do index.css / dice3d) ─────────────────── */
