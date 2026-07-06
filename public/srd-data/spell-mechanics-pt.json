@@ -1,18 +1,36 @@
 {
-  "_ignore": [],
-  "alterar-se": {
-    "damage": [
-      {
-        "dice": "1d6",
-        "type": "concussão"
-      }
-    ],
-    "_draft": true
-  },
+  "_ignore": [
+    "alterar-se",
+    "aprimorar-habilidade",
+    "aumentarreduzir",
+    "auxilio-divino",
+    "bordao-mistico",
+    "bruxaria",
+    "bencao",
+    "destruicao-colerica",
+    "destruicao-lancinante",
+    "destruicao-trovejante",
+    "forca-fantasmagorica",
+    "leque-cromatico",
+    "marca-da-punicao",
+    "marca-do-cacador",
+    "mensagem",
+    "orientacao",
+    "perdicao",
+    "reflexos",
+    "resistencia",
+    "saraivada-de-espinhos",
+    "sono",
+    "teia",
+    "vitalidade-falsa",
+    "zona-da-verdade",
+    "imagem-espelhada",
+    "favor-divino",
+    "lamina-da-chama-esverdeada",
+    "lamina-estrondosa",
+    "invocar-fera"
+  ],
   "animar-objetos": {
-    "_draft": true
-  },
-  "aprimorar-habilidade": {
     "_draft": true
   },
   "arma-elemental": {
@@ -25,10 +43,16 @@
     "_draft": true
   },
   "arma-espiritual": {
+    "attack": true,
+    "damage": [
+      {
+        "dice": "1d8",
+        "type": "força"
+      }
+    ],
     "upcast": {
       "perSlot": "1d8"
-    },
-    "_draft": true
+    }
   },
   "assassino-fantasmagorico": {
     "save": {
@@ -46,33 +70,7 @@
     },
     "_draft": true
   },
-  "aumentarreduzir": {
-    "save": {
-      "ability": "con",
-      "halfOnSuccess": false
-    },
-    "damage": [
-      {
-        "dice": "1d4",
-        "type": "extra"
-      },
-      {
-        "dice": "1d4",
-        "type": "a"
-      }
-    ],
-    "_draft": true
-  },
   "aura-de-vitalidade": {
-    "_draft": true
-  },
-  "auxilio-divino": {
-    "damage": [
-      {
-        "dice": "1d4",
-        "type": "radiante"
-      }
-    ],
     "_draft": true
   },
   "banquete-de-herois": {
@@ -118,9 +116,6 @@
     },
     "_draft": true
   },
-  "bordao-mistico": {
-    "_draft": true
-  },
   "bracos-de-hadar": {
     "save": {
       "ability": "str",
@@ -134,20 +129,7 @@
     ],
     "upcast": {
       "perSlot": "1d6"
-    },
-    "_draft": true
-  },
-  "bruxaria": {
-    "damage": [
-      {
-        "dice": "1d6",
-        "type": "necrótico"
-      }
-    ],
-    "_draft": true
-  },
-  "bencao": {
-    "_draft": true
+    }
   },
   "chama-sagrada": {
     "save": {
@@ -160,16 +142,17 @@
         "type": "radiante"
       }
     ],
-    "_draft": true
+    "cantripScaling": true
   },
   "chicote-de-espinhos": {
+    "attack": true,
     "damage": [
       {
         "dice": "1d6",
         "type": "perfurante"
       }
     ],
-    "_draft": true
+    "cantripScaling": true
   },
   "chuva-de-meteoros": {
     "save": {
@@ -316,8 +299,7 @@
         "dice": "1d6",
         "type": "perfurante"
       }
-    ],
-    "_draft": true
+    ]
   },
   "corrente-de-relampagos": {
     "save": {
@@ -338,23 +320,26 @@
         "dice": "2d4",
         "type": "perfurante"
       }
-    ],
-    "_draft": true
+    ]
   },
   "criar-chamas": {
+    "attack": true,
     "damage": [
       {
         "dice": "1d8",
         "type": "fogo"
       }
     ],
-    "_draft": true
+    "cantripScaling": true
   },
   "curar-ferimentos": {
+    "heal": {
+      "dice": "1d8",
+      "addMod": true
+    },
     "upcast": {
       "perSlot": "1d8"
-    },
-    "_draft": true
+    }
   },
   "curar-ferimentos-em-massa": {
     "upcast": {
@@ -438,8 +423,7 @@
     ],
     "upcast": {
       "perSlot": "1d8"
-    },
-    "_draft": true
+    }
   },
   "destruicao-banidora": {
     "damage": [
@@ -463,19 +447,6 @@
     ],
     "_draft": true
   },
-  "destruicao-colerica": {
-    "save": {
-      "ability": "wis",
-      "halfOnSuccess": false
-    },
-    "damage": [
-      {
-        "dice": "1d6",
-        "type": "psíquico"
-      }
-    ],
-    "_draft": true
-  },
   "destruicao-estonteante": {
     "save": {
       "ability": "wis",
@@ -485,39 +456,6 @@
       {
         "dice": "4d6",
         "type": "psíquico"
-      }
-    ],
-    "_draft": true
-  },
-  "destruicao-lancinante": {
-    "save": {
-      "ability": "con",
-      "halfOnSuccess": false
-    },
-    "damage": [
-      {
-        "dice": "1d6",
-        "type": "fogo"
-      },
-      {
-        "dice": "1d6",
-        "type": "fogo"
-      }
-    ],
-    "upcast": {
-      "perSlot": "1d6"
-    },
-    "_draft": true
-  },
-  "destruicao-trovejante": {
-    "save": {
-      "ability": "str",
-      "halfOnSuccess": false
-    },
-    "damage": [
-      {
-        "dice": "2d6",
-        "type": "trovejante"
       }
     ],
     "_draft": true
@@ -603,8 +541,7 @@
     ],
     "upcast": {
       "perSlot": "1d6"
-    },
-    "_draft": true
+    }
   },
   "espada-de-mordenkainen": {
     "damage": [
@@ -626,7 +563,7 @@
         "type": "ácido"
       }
     ],
-    "_draft": true
+    "cantripScaling": true
   },
   "espiritos-guardioes": {
     "save": {
@@ -649,10 +586,6 @@
     "_draft": true
   },
   "esquentar-metal": {
-    "save": {
-      "ability": "con",
-      "halfOnSuccess": false
-    },
     "damage": [
       {
         "dice": "2d8",
@@ -661,8 +594,7 @@
     ],
     "upcast": {
       "perSlot": "1d8"
-    },
-    "_draft": true
+    }
   },
   "explosao-solar": {
     "save": {
@@ -698,6 +630,7 @@
     "_draft": true
   },
   "flecha-acida-de-melf": {
+    "attack": true,
     "damage": [
       {
         "dice": "4d4",
@@ -710,8 +643,7 @@
     ],
     "upcast": {
       "perSlot": "1d4"
-    },
-    "_draft": true
+    }
   },
   "fome-de-hadar": {
     "save": {
@@ -726,19 +658,6 @@
       {
         "dice": "2d6",
         "type": "ácido"
-      }
-    ],
-    "_draft": true
-  },
-  "forca-fantasmagorica": {
-    "save": {
-      "ability": "int",
-      "halfOnSuccess": false
-    },
-    "damage": [
-      {
-        "dice": "1d6",
-        "type": "psíquico"
       }
     ],
     "_draft": true
@@ -760,10 +679,6 @@
     "_draft": true
   },
   "golpe-constritor": {
-    "save": {
-      "ability": "str",
-      "halfOnSuccess": false
-    },
     "damage": [
       {
         "dice": "1d6",
@@ -772,10 +687,10 @@
     ],
     "upcast": {
       "perSlot": "1d6"
-    },
-    "_draft": true
+    }
   },
   "infligir-ferimentos": {
+    "attack": true,
     "damage": [
       {
         "dice": "3d10",
@@ -784,8 +699,7 @@
     ],
     "upcast": {
       "perSlot": "1d10"
-    },
-    "_draft": true
+    }
   },
   "lentidao": {
     "save": {
@@ -794,10 +708,8 @@
     },
     "_draft": true
   },
-  "leque-cromatico": {
-    "_draft": true
-  },
   "lamina-flamejante": {
+    "attack": true,
     "damage": [
       {
         "dice": "3d6",
@@ -806,8 +718,7 @@
     ],
     "upcast": {
       "perSlot": "1d6"
-    },
-    "_draft": true
+    }
   },
   "malogro": {
     "damage": [
@@ -826,36 +737,6 @@
       {
         "dice": "1d4",
         "type": "radiante"
-      }
-    ],
-    "_draft": true
-  },
-  "marca-da-punicao": {
-    "damage": [
-      {
-        "dice": "2d6",
-        "type": "radiante"
-      }
-    ],
-    "upcast": {
-      "perSlot": "1d6"
-    },
-    "_draft": true
-  },
-  "marca-do-cacador": {
-    "damage": [
-      {
-        "dice": "1d6",
-        "type": "extra"
-      }
-    ],
-    "_draft": true
-  },
-  "mensagem": {
-    "damage": [
-      {
-        "dice": "6d6",
-        "type": "concussão"
       }
     ],
     "_draft": true
@@ -1000,17 +881,18 @@
     ],
     "upcast": {
       "perSlot": "1d6"
-    },
-    "_draft": true
+    }
   },
   "misseis-magicos": {
     "damage": [
       {
-        "dice": "1d4+1",
-        "type": "energia"
+        "dice": "3d4+3",
+        "type": "força"
       }
     ],
-    "_draft": true
+    "upcast": {
+      "perSlot": "1d4+1"
+    }
   },
   "nuvem-de-adagas": {
     "damage": [
@@ -1021,8 +903,7 @@
     ],
     "upcast": {
       "perSlot": "2d4"
-    },
-    "_draft": true
+    }
   },
   "nuvem-incendiaria": {
     "save": {
@@ -1083,35 +964,37 @@
     ],
     "upcast": {
       "perSlot": "1d8"
-    },
-    "_draft": true
+    }
   },
   "oracao-curativa": {
+    "heal": {
+      "dice": "2d8",
+      "addMod": true
+    },
     "upcast": {
       "perSlot": "1d8"
-    },
-    "_draft": true
+    }
   },
   "orbe-cromatica": {
+    "attack": true,
     "damage": [
       {
         "dice": "3d8",
-        "type": "do"
+        "type": "ácido"
       }
     ],
     "upcast": {
       "perSlot": "1d8"
-    },
-    "_draft": true
-  },
-  "orientacao": {
-    "_draft": true
+    }
   },
   "palavra-curativa": {
+    "heal": {
+      "dice": "1d4",
+      "addMod": true
+    },
     "upcast": {
       "perSlot": "1d4"
-    },
-    "_draft": true
+    }
   },
   "palavra-curativa-em-massa": {
     "upcast": {
@@ -1120,13 +1003,6 @@
     "_draft": true
   },
   "parar-o-tempo": {
-    "_draft": true
-  },
-  "perdicao": {
-    "save": {
-      "ability": "cha",
-      "halfOnSuccess": false
-    },
     "_draft": true
   },
   "piscar": {
@@ -1167,10 +1043,7 @@
     "_draft": true
   },
   "raio-adoecente": {
-    "save": {
-      "ability": "con",
-      "halfOnSuccess": false
-    },
+    "attack": true,
     "damage": [
       {
         "dice": "2d8",
@@ -1179,24 +1052,24 @@
     ],
     "upcast": {
       "perSlot": "1d8"
-    },
-    "_draft": true
+    }
   },
   "raio-ardente": {
+    "attack": true,
     "damage": [
       {
         "dice": "2d6",
         "type": "fogo"
       }
     ],
-    "_draft": true
+    "beams": {
+      "base": 3,
+      "perSlot": 1
+    }
   },
   "raio-de-bruxa": {
+    "attack": true,
     "damage": [
-      {
-        "dice": "1d12",
-        "type": "elétrico"
-      },
       {
         "dice": "1d12",
         "type": "elétrico"
@@ -1204,28 +1077,30 @@
     ],
     "upcast": {
       "perSlot": "1d12"
-    },
-    "_draft": true
+    }
   },
   "raio-de-fogo": {
+    "attack": true,
     "damage": [
       {
         "dice": "1d10",
         "type": "fogo"
       }
     ],
-    "_draft": true
+    "cantripScaling": true
   },
   "raio-de-gelo": {
+    "attack": true,
     "damage": [
       {
         "dice": "1d8",
         "type": "frio"
       }
     ],
-    "_draft": true
+    "cantripScaling": true
   },
   "raio-guiador": {
+    "attack": true,
     "damage": [
       {
         "dice": "4d6",
@@ -1234,8 +1109,7 @@
     ],
     "upcast": {
       "perSlot": "1d6"
-    },
-    "_draft": true
+    }
   },
   "raio-lunar": {
     "save": {
@@ -1250,8 +1124,7 @@
     ],
     "upcast": {
       "perSlot": "1d10"
-    },
-    "_draft": true
+    }
   },
   "raio-solar": {
     "save": {
@@ -1277,16 +1150,20 @@
         "type": "veneno"
       }
     ],
-    "_draft": true
+    "cantripScaling": true
   },
   "rajada-mistica": {
+    "attack": true,
     "damage": [
       {
         "dice": "1d10",
-        "type": "energia"
+        "type": "força"
       }
     ],
-    "_draft": true
+    "beams": {
+      "base": 1,
+      "cantripScaling": true
+    }
   },
   "rajada-prismatica": {
     "save": {
@@ -1318,9 +1195,6 @@
     "_draft": true
   },
   "reencarnacao": {
-    "_draft": true
-  },
-  "reflexos": {
     "_draft": true
   },
   "regeneracao": {
@@ -1359,11 +1233,7 @@
     ],
     "upcast": {
       "perSlot": "1d10"
-    },
-    "_draft": true
-  },
-  "resistencia": {
-    "_draft": true
+    }
   },
   "rogar-maldicao": {
     "save": {
@@ -1376,22 +1246,6 @@
         "type": "necrótico"
       }
     ],
-    "_draft": true
-  },
-  "saraivada-de-espinhos": {
-    "save": {
-      "ability": "dex",
-      "halfOnSuccess": true
-    },
-    "damage": [
-      {
-        "dice": "1d10",
-        "type": "perfurante"
-      }
-    ],
-    "upcast": {
-      "perSlot": "1d10"
-    },
     "_draft": true
   },
   "sonho": {
@@ -1407,9 +1261,6 @@
     ],
     "_draft": true
   },
-  "sono": {
-    "_draft": true
-  },
   "sussurros-dissonantes": {
     "save": {
       "ability": "wis",
@@ -1423,8 +1274,7 @@
     ],
     "upcast": {
       "perSlot": "1d6"
-    },
-    "_draft": true
+    }
   },
   "simbolo": {
     "save": {
@@ -1435,19 +1285,6 @@
       {
         "dice": "10d10",
         "type": "necrótico"
-      }
-    ],
-    "_draft": true
-  },
-  "teia": {
-    "save": {
-      "ability": "dex",
-      "halfOnSuccess": false
-    },
-    "damage": [
-      {
-        "dice": "2d4",
-        "type": "fogo"
       }
     ],
     "_draft": true
@@ -1554,22 +1391,24 @@
     "_draft": true
   },
   "toque-arrepiante": {
+    "attack": true,
     "damage": [
       {
         "dice": "1d8",
         "type": "necrótico"
       }
     ],
-    "_draft": true
+    "cantripScaling": true
   },
   "toque-chocante": {
+    "attack": true,
     "damage": [
       {
         "dice": "1d8",
         "type": "elétrico"
       }
     ],
-    "_draft": true
+    "cantripScaling": true
   },
   "toque-vampirico": {
     "damage": [
@@ -1600,9 +1439,6 @@
     ],
     "_draft": true
   },
-  "vitalidade-falsa": {
-    "_draft": true
-  },
   "zombaria-viciosa": {
     "save": {
       "ability": "wis",
@@ -1614,14 +1450,7 @@
         "type": "psíquico"
       }
     ],
-    "_draft": true
-  },
-  "zona-da-verdade": {
-    "save": {
-      "ability": "cha",
-      "halfOnSuccess": true
-    },
-    "_draft": true
+    "cantripScaling": true
   },
   "parede-de-fogo": {
     "damage": [
@@ -1638,12 +1467,6 @@
   "onda-devastadora": {
     "_draft": true
   },
-  "imagem-espelhada": {
-    "_draft": true
-  },
-  "favor-divino": {
-    "_draft": true
-  },
   "manto-de-cruzado": {
     "_draft": true
   },
@@ -1657,23 +1480,22 @@
     "damage": [
       {
         "dice": "2d4",
-        "type": "penetrante"
+        "type": "perfurante"
       }
-    ],
-    "_draft": true
+    ]
   },
   "farpa-mental": {
+    "save": {
+      "ability": "int",
+      "halfOnSuccess": false
+    },
     "damage": [
       {
         "dice": "1d6",
         "type": "psíquico"
       }
     ],
-    "upcast": {
-      "perSlot": "1d6"
-    },
-    "cantripScaling": true,
-    "_draft": true
+    "cantripScaling": true
   },
   "invocar-aberracao": {
     "_draft": true
@@ -1682,52 +1504,36 @@
     "_draft": true
   },
   "chicote-eletrico": {
+    "save": {
+      "ability": "str",
+      "halfOnSuccess": false
+    },
     "damage": [
       {
         "dice": "1d8",
         "type": "elétrico"
       }
     ],
-    "upcast": {
-      "perSlot": "1d8"
-    },
-    "cantripScaling": true,
-    "_draft": true
-  },
-  "lamina-da-chama-esverdeada": {
-    "upcast": {
-      "perSlot": "1d8"
-    },
-    "cantripScaling": true,
-    "_draft": true
-  },
-  "lamina-estrondosa": {
-    "damage": [
-      {
-        "dice": "1d8",
-        "type": "trovejante"
-      }
-    ],
-    "upcast": {
-      "perSlot": "1d8"
-    },
-    "cantripScaling": true,
-    "_draft": true
+    "cantripScaling": true
   },
   "rompante-de-espadas": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": false
+    },
     "damage": [
       {
         "dice": "1d6",
-        "type": "energia"
+        "type": "força"
       }
     ],
-    "upcast": {
-      "perSlot": "1d6"
-    },
-    "cantripScaling": true,
-    "_draft": true
+    "cantripScaling": true
   },
   "beberagem-caustica": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": false
+    },
     "damage": [
       {
         "dice": "2d4",
@@ -1736,17 +1542,19 @@
     ],
     "upcast": {
       "perSlot": "2d4"
-    },
-    "_draft": true
+    }
   },
   "chicote-mental": {
+    "save": {
+      "ability": "int",
+      "halfOnSuccess": true
+    },
     "damage": [
       {
         "dice": "3d6",
         "type": "psíquico"
       }
-    ],
-    "_draft": true
+    ]
   },
   "mortalha-espiritual": {
     "damage": [
@@ -1767,9 +1575,6 @@
         "type": "energia"
       }
     ],
-    "_draft": true
-  },
-  "invocar-fera": {
     "_draft": true
   },
   "invocar-feerico": {
