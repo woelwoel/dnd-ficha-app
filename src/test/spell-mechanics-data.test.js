@@ -34,6 +34,7 @@ describe('spell-mechanics-pt.json — validacao integral (entradas curadas)', ()
       for (const pkt of e.damage ?? []) {
         expect(parseDiceNotation(pkt.dice), `${index}: dice ${pkt.dice}`).not.toBeNull()
         expect(DAMAGE_TYPES_PT, `${index}: type ${pkt.type}`).toContain(pkt.type)
+        if ('addMod' in pkt) expect(typeof pkt.addMod, `${index}: addMod`).toBe('boolean')
       }
       if (e.heal) expect(parseDiceNotation(e.heal.dice), `${index}: heal.dice`).not.toBeNull()
       if (e.save) expect(ABILITY_KEYS, `${index}: save.ability`).toContain(e.save.ability)
@@ -43,6 +44,9 @@ describe('spell-mechanics-pt.json — validacao integral (entradas curadas)', ()
         const target = e.damage?.length ? parseDiceNotation(e.damage[0].dice) : parseDiceNotation(e.heal.dice)
         expect(per.sides, `${index}: upcast de lados diferentes`).toBe(target.sides)
         expect(spell.level, `${index}: upcast em truque`).toBeGreaterThan(0)
+        if ('perLevels' in e.upcast) {
+          expect(Number.isInteger(e.upcast.perLevels) && e.upcast.perLevels >= 1, `${index}: perLevels`).toBe(true)
+        }
       }
       if (e.cantripScaling) {
         expect(spell.level, `${index}: cantripScaling em magia com nivel`).toBe(0)

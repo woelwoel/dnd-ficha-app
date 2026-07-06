@@ -102,6 +102,34 @@ describe('spellRollPlan', () => {
     expect(dmg[1].label).not.toContain('CD 14')
   })
 
+  it('upcast.perLevels escala a cada N niveis (Arma Espiritual: a cada 2)', () => {
+    const mech = { attack: true, damage: [{ dice: '1d8', type: 'força', addMod: true }], upcast: { perSlot: '1d8', perLevels: 2 } }
+    // base nv2: 1d8+mod
+    const base = spellRollPlan({ name: 'Arma Espiritual', level: 2 }, mech, { ...CTX, slotLevel: 2 })
+    expect(base.steps.find(s => s.kind === 'damage').notation).toBe('1d8+3')
+    // nv3 (1 acima): ainda 1d8+mod (nao chegou a 2 niveis)
+    const l3 = spellRollPlan({ name: 'Arma Espiritual', level: 2 }, mech, { ...CTX, slotLevel: 3 })
+    expect(l3.steps.find(s => s.kind === 'damage').notation).toBe('1d8+3')
+    // nv4 (2 acima): +1d8 → 2d8+mod
+    const l4 = spellRollPlan({ name: 'Arma Espiritual', level: 2 }, mech, { ...CTX, slotLevel: 4 })
+    expect(l4.steps.find(s => s.kind === 'damage').notation).toBe('2d8+3')
+    // nv6 (4 acima): +2d8 → 3d8+mod
+    const l6 = spellRollPlan({ name: 'Arma Espiritual', level: 2 }, mech, { ...CTX, slotLevel: 6 })
+    expect(l6.steps.find(s => s.kind === 'damage').notation).toBe('3d8+3')
+  })
+
+  it('damage addMod soma o mod de conjuracao ao pacote', () => {
+    const mech = { attack: true, damage: [{ dice: '1d8', type: 'força', addMod: true }] }
+    const plan = spellRollPlan({ name: 'X', level: 2 }, mech, { ...CTX, slotLevel: 2, spellMod: 4 })
+    expect(plan.steps.find(s => s.kind === 'damage').notation).toBe('1d8+4')
+  })
+
+  it('perLevels default 1 nao muda upcast por nivel (Bola de Fogo)', () => {
+    const mech = { save: { ability: 'dex', halfOnSuccess: true }, damage: [{ dice: '8d6', type: 'fogo' }], upcast: { perSlot: '1d6' } }
+    const plan = spellRollPlan({ name: 'Bola de Fogo', level: 3 }, mech, { ...CTX, slotLevel: 5 })
+    expect(plan.steps[0].notation).toBe('10d6')
+  })
+
   it('DAMAGE_TYPES_PT contem os 13 tipos canonicos', () => {
     expect(DAMAGE_TYPES_PT).toHaveLength(13)
     expect(DAMAGE_TYPES_PT).toContain('fogo')

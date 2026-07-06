@@ -64,7 +64,8 @@ export function spellRollPlan(spell, mech, ctx) {
   if (!mech) return null
   const isCantrip = spell.level === 0
   const castLevel = isCantrip ? 0 : (ctx.slotLevel ?? spell.level)
-  const above = isCantrip ? 0 : Math.max(0, castLevel - spell.level)
+  const perLevels = mech.upcast?.perLevels ?? 1
+  const above = isCantrip ? 0 : Math.floor(Math.max(0, castLevel - spell.level) / perLevels)
   const tier = cantripTier(ctx.characterLevel ?? 1)
   const lvlSuffix = isCantrip ? '' : ` (Nv ${castLevel})`
 
@@ -93,6 +94,7 @@ export function spellRollPlan(spell, mech, ctx) {
       let dice = pkt.dice
       if (mech.cantripScaling) dice = scaleDice(dice, tier)
       if (i === 0 && mech.upcast?.perSlot) dice = addDice(dice, mech.upcast.perSlot, above)
+      if (pkt.addMod) dice = withFlatMod(dice, ctx.spellMod ?? 0)
       const typePart = (mech.damage.length > 1) ? ` (${pkt.type})` : ''
       const cd = i === 0 && b === 1 && announce ? ` · ${announce}` : ''
       steps.push({

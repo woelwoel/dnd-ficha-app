@@ -47,11 +47,13 @@
     "damage": [
       {
         "dice": "1d8",
-        "type": "força"
+        "type": "força",
+        "addMod": true
       }
     ],
     "upcast": {
-      "perSlot": "1d8"
+      "perSlot": "1d8",
+      "perLevels": 2
     }
   },
   "assassino-fantasmagorico": {
@@ -717,7 +719,8 @@
       }
     ],
     "upcast": {
-      "perSlot": "1d6"
+      "perSlot": "1d6",
+      "perLevels": 2
     }
   },
   "malogro": {
