@@ -53,6 +53,13 @@ test.describe('Acessibilidade (WCAG 2.1 AA)', () => {
     assertClean(await seriousViolations(page))
   })
 
+  test('lista com escape hatch parchment sem violações critical/serious', async ({ page, context }) => {
+    await installAuthedApp(context)
+    await page.goto('/?theme=parchment')
+    await expect(page.getByRole('button', { name: /Recrutar Aventureiro/i })).toBeVisible()
+    assertClean(await seriousViolations(page))
+  })
+
   // Ficha rodada nos DOIS layouts: v1 (legado) e v2 (redesign, ?sheetV2=1).
   // Até o corte final da fase 5 os dois coexistem; depois o loop vira só v2.
   for (const v2 of [false, true]) {
