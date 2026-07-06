@@ -28,7 +28,7 @@ function portentDice(magoLevel) {
 
 /* ── Portento (Adivinhação) ──────────────────────────────────── */
 function PortentPanel({ magoLevel, character, onUpdatePortent }) {
-  const { roll, openPanel } = useDiceRoller()
+  const { roll } = useDiceRoller()
   const max = portentDice(magoLevel)
   const portent = character.combat?.portent ?? { dice: [] }
   const dice = Array.isArray(portent.dice) ? portent.dice : []
@@ -40,7 +40,6 @@ function PortentPanel({ magoLevel, character, onUpdatePortent }) {
       newDice.push(r?.total ?? Math.floor(Math.random() * 20) + 1)
     }
     onUpdatePortent({ dice: newDice })
-    openPanel()
   }
 
   function useDie(index) {

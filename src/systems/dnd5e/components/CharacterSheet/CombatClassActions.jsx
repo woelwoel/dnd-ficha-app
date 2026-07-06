@@ -78,7 +78,7 @@ function smiteDice(slotLevel) {
 /* ── Painel de Golpe Divino (Paladino) ─────────────────────────── */
 
 function SmitePanel({ paladinoLevel, slotsAvailable, onConsumeSlot }) {
-  const { roll, openPanel } = useDiceRoller()
+  const { roll } = useDiceRoller()
   const [vsUndead, setVsUndead] = useState(false)
   const slotLevels = Object.keys(slotsAvailable).map(Number).sort((a, b) => a - b)
   const availableLevels = slotLevels.filter(sl => slotsAvailable[sl] > 0)
@@ -89,7 +89,6 @@ function SmitePanel({ paladinoLevel, slotsAvailable, onConsumeSlot }) {
     const notation = `${dice}d8`
     roll(notation, `Golpe Divino — espaço de Nv ${slotLevel}${vsUndead ? ' (morto-vivo/fora)' : ''}`)
     onConsumeSlot?.(slotLevel)
-    openPanel()
   }
 
   if (paladinoLevel < 2) return null
@@ -159,7 +158,7 @@ function bardicInspirationDie(bardLevel) {
 /* ── Painel de Inspiração de Bardo ─────────────────────────────── */
 
 function BardicInspirationPanel({ bardLevel, usesRemaining, onSpend }) {
-  const { roll, openPanel } = useDiceRoller()
+  const { roll } = useDiceRoller()
   const [recipient, setRecipient] = useState('')
   const dieSize = bardicInspirationDie(bardLevel)
   const notation = `1d${dieSize}`
@@ -170,7 +169,6 @@ function BardicInspirationPanel({ bardLevel, usesRemaining, onSpend }) {
       : 'Inspiração de Bardo'
     roll(notation, label)
     onSpend?.()
-    openPanel()
     setRecipient('')
   }
 
@@ -538,7 +536,7 @@ function LayOnHandsPanel({ paladinoLevel, lohUse, onSpend }) {
 /* ── Painel de Surto de Ação + Retomar o Fôlego (Guerreiro) ──── */
 
 function FighterPanel({ fighterLevel, surgeUse, secondWindUse, onSpendSurge, onSpendSecondWind }) {
-  const { roll, openPanel } = useDiceRoller()
+  const { roll } = useDiceRoller()
   const surgeRem  = surgeUse ? surgeUse.max - (surgeUse.used ?? 0) : 0
   const swRem     = secondWindUse ? secondWindUse.max - (secondWindUse.used ?? 0) : 0
   const swDie     = `1d10+${fighterLevel}`
@@ -547,7 +545,6 @@ function FighterPanel({ fighterLevel, surgeUse, secondWindUse, onSpendSurge, onS
     if (swRem <= 0 || !secondWindUse) return
     roll(swDie, 'Retomar o Fôlego (cura)')
     onSpendSecondWind(secondWindUse.id)
-    openPanel()
   }
 
   function useSurge() {

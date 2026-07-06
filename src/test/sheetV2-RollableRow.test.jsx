@@ -20,6 +20,5 @@ describe('RollableRow', () => {
     const row = screen.getByRole('button', { name: 'Rolar Atletismo, bônus +5' })
     await user.click(row)
     expect(roll).toHaveBeenCalledWith('1d20+5', 'Atletismo', { crit: false })
-    expect(openPanel).toHaveBeenCalled()
   })
 })

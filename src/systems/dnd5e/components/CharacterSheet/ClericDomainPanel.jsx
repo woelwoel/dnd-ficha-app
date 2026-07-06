@@ -134,7 +134,7 @@ function WarDomainPanel({ clericoLevel, cdUse, onSpend, featureUses, attributes 
 
 /* ── Domínio da Luz ──────────────────────────────────────────── */
 function LightDomainPanel({ clericoLevel, cdUse, onSpend, attributes }) {
-  const { roll, openPanel } = useDiceRoller()
+  const { roll } = useDiceRoller()
   const cdRemaining = cdUse ? cdUse.max - (cdUse.used ?? 0) : 0
   const wisMod = Math.max(0, Math.floor(((attributes?.wis ?? 10) - 10) / 2))
   const lureRolls = `2d10+${clericoLevel}`
@@ -148,7 +148,6 @@ function LightDomainPanel({ clericoLevel, cdUse, onSpend, attributes }) {
     if (cdRemaining <= 0 || !cdUse) return
     onSpend?.(cdUse.id)
     roll(lureRolls, 'Repreensão Radiante (dano)')
-    openPanel()
   }
 
   return (
@@ -195,7 +194,7 @@ function LightDomainPanel({ clericoLevel, cdUse, onSpend, attributes }) {
 
 /* ── Domínio da Tempestade ───────────────────────────────────── */
 function TempestDomainPanel({ clericoLevel, featureUses, onSpend }) {
-  const { roll, openPanel } = useDiceRoller()
+  const { roll } = useDiceRoller()
   const wrath = featureUses?.find(u => u.id === 'clerigo-wrath-of-storm')
   const wRemaining = wrath ? wrath.max - (wrath.used ?? 0) : 0
 
@@ -203,7 +202,6 @@ function TempestDomainPanel({ clericoLevel, featureUses, onSpend }) {
     if (wRemaining <= 0 || !wrath) return
     onSpend?.(wrath.id)
     roll('2d8', 'Investida Furiosa — dano (frio/elétrico/trovão)')
-    openPanel()
   }
 
   return (
