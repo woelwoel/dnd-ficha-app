@@ -11,6 +11,7 @@ import {
   stabilizeCharacter as stabilizeCharacterPure,
   rollDeathSave as rollDeathSavePure,
 } from '../domain/rules'
+import { upsertEffect, removeEffect, pruneOnConcentrationChange } from '../domain/activeEffects'
 
 /**
  * Resolve a lista de feature-uses para spend/regain. Se o caller passou `list`
@@ -76,6 +77,7 @@ export const DEFAULT_CHARACTER = {
     conditions: [],      // IDs de condições ativas (poisoned, stunned, …)
     inspiration: false,  // Inspiração
     exhaustion: 0,       // Nível de exaustão 0-6
+    activeEffects: [],   // Efeitos ativos de magia (buffs) — spec 2026-07-07
   },
   proficiencies: {
     savingThrows: [],
@@ -705,20 +707,43 @@ export function useCharacter(initialCharacter = null) {
     }))
   }, [setCharacter])
 
+  /** Adiciona/substitui um efeito ativo (buff de magia). Upsert por id. */
+  const addActiveEffect = useCallback((effect) => {
+    setCharacter(prev => ({
+      ...prev,
+      combat: { ...prev.combat, activeEffects: upsertEffect(prev.combat?.activeEffects, effect) },
+    }))
+  }, [setCharacter])
+
+  const removeActiveEffect = useCallback((id) => {
+    setCharacter(prev => ({
+      ...prev,
+      combat: { ...prev.combat, activeEffects: removeEffect(prev.combat?.activeEffects, id) },
+    }))
+  }, [setCharacter])
+
   /**
    * Define a magia em concentração (PHB p.203). Passar null/''  encerra.
    * Substituição é intencional: apenas uma magia de concentração por vez.
    */
   const setConcentration = useCallback((spell) => {
-    setCharacter(prev => ({
-      ...prev,
-      combat: {
-        ...prev.combat,
-        concentrating: spell
-          ? { spellIndex: spell.index, spellName: spell.name }
-          : { spellIndex: null, spellName: null },
-      },
-    }))
+    setCharacter(prev => {
+      const prevIndex = prev.combat?.concentrating?.spellIndex ?? null
+      const nextIndex = spell?.index ?? null
+      const activeEffects = prevIndex && prevIndex !== nextIndex
+        ? pruneOnConcentrationChange(prev.combat?.activeEffects, prevIndex)
+        : (prev.combat?.activeEffects ?? [])
+      return {
+        ...prev,
+        combat: {
+          ...prev.combat,
+          activeEffects,
+          concentrating: spell
+            ? { spellIndex: spell.index, spellName: spell.name }
+            : { spellIndex: null, spellName: null },
+        },
+      }
+    })
   }, [setCharacter])
 
   return useMemo(() => ({
@@ -776,6 +801,9 @@ export function useCharacter(initialCharacter = null) {
     lastDamageEvent,
     clearLastDamageEvent,
     consumeInspiration,
+    // v6 — efeitos ativos de magia (buffs)
+    addActiveEffect,
+    removeActiveEffect,
   }), [
     character, setCharacter,
     updateInfo, updateAttribute, updateCombat, updateTraits,
@@ -794,5 +822,6 @@ export function useCharacter(initialCharacter = null) {
     setRangerCompanion, updatePortent,
     applyDamage, applyHealing, gainTempHp, stabilize, rollDeathSave,
     lastDamageEvent, clearLastDamageEvent, consumeInspiration,
+    addActiveEffect, removeActiveEffect,
   ])
 }

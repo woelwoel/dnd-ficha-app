@@ -224,6 +224,13 @@ const combatSchema = z.object({
   }).passthrough()).default([]),
   /** Magia atualmente em concentração (PHB p.203). Apenas uma por vez. */
   concentrating: concentrationSchema.default({ spellIndex: null, spellName: null }),
+  /**
+   * Efeitos ativos de magia (buffs) — spec 2026-07-07. Cada item tem `id`
+   * (spellIndex ou id manual), `source` ('cast' | 'manual'), `concentration`,
+   * `mods`/`riders`/`advantages` e `summary`. Schema aberto (passthrough
+   * via z.any() nos itens) pois a agregação vive em domain/activeEffects.js.
+   */
+  activeEffects: z.array(z.any()).default([]),
   /** Usos limitados de class features (Action Surge, Ki, etc.). */
   classFeatureUses: z.array(classFeatureUseSchema).default([]),
   /**

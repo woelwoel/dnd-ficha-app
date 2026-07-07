@@ -159,6 +159,8 @@ export function performLongRest(character, { recoverChoices = null } = {}) {
       classFeatureUses: rechargeFeatures(combat.classFeatureUses, ['short', 'long', 'dawn']),
       // Reset da economia de ação (PHB p.189)
       turnState: { actionUsed: false, bonusUsed: false, reactionUsed: false, movementUsed: 0 },
+      // Buffs de magia não sobrevivem a 8h de descanso (spec efeitos ativos).
+      activeEffects: [],
     },
     spellcasting: {
       ...(character.spellcasting ?? {}),
