@@ -19,6 +19,7 @@ import {
   getWarlockPactSlots,
 } from '../utils/spellcasting'
 import { getActiveMagicEffects, getEffectiveAttributes } from '../domain/magicItems'
+import { aggregateSpellEffects } from '../domain/activeEffects'
 
 /**
  * Hook de cálculos reativos da ficha.
@@ -47,6 +48,7 @@ export function useCharacterCalculations(character, classData = null, classDataM
   const armorProfs        = proficiencies?.armor
   const currentHp         = combat?.currentHp ?? 0
   const maxHp             = combat?.maxHp ?? 0
+  const activeEffects     = combat?.activeEffects
   const items             = inventory?.items
   const { str = 10, dex = 10, con = 10, int: intel = 10, wis = 10, cha = 10 } = attributes ?? {}
 
@@ -57,6 +59,10 @@ export function useCharacterCalculations(character, classData = null, classDataM
 
     // Efeitos mágicos agregados (itens atunados/equipados).
     const magicEffects = getActiveMagicEffects(items ?? [])
+
+    // Efeitos ativos de magia (buffs). fx.ac/speed NÃO entram no suggestedAC
+    // (Sugerido grava na base editável) — só nos derivados effective*.
+    const spellFx = aggregateSpellEffects(activeEffects ?? [])
 
     // Atributos efetivos: base → attrSet → attrBonus (respeita max).
     // A partir daqui, todos os cálculos derivados usam estes valores.
@@ -152,6 +158,7 @@ export function useCharacterCalculations(character, classData = null, classDataM
       const magicSpecific = magicEffects.saveAbility?.[key] ?? 0
       savingThrows[key] = mods[key] + (isProficient ? profBonus : 0)
                         + magicGeneral + magicSpecific
+                        + (spellFx.fx.saves ?? 0) + (spellFx.fx.saveAbility?.[key] ?? 0)
     }
 
     const isPerceptionProficient = skills?.includes('perception') ?? false
@@ -169,6 +176,13 @@ export function useCharacterCalculations(character, classData = null, classDataM
     // Talento Mobilidade: +3m de velocidade (10 pés — PHB p.168)
     const hasMobilidade = (feats ?? []).some(f => f.index === 'mobilidade')
     const featSpeedBonus = hasMobilidade ? 3 : 0
+
+    // Derivados de efeitos ativos: NÃO contaminam suggestedAC (base editável).
+    const baseAC = combat?.armorClass ?? 10
+    const effectiveAC = baseAC + (spellFx.fx.ac ?? 0)
+    const baseSpeed = combat?.speed ?? 9
+    const effectiveSpeed = Math.round((baseSpeed + (spellFx.fx.speed ?? 0)) * (spellFx.fx.speedMultiplier ?? 1) * 2) / 2
+    const effectBreakdown = (activeEffects ?? []).map(e => ({ id: e.id, name: e.name, summary: e.summary }))
 
     return {
       profBonus,
@@ -195,6 +209,10 @@ export function useCharacterCalculations(character, classData = null, classDataM
       hpColor,
       spellAbilityKey,
       fmt: formatModifier,
+      effectiveAC,
+      effectiveSpeed,
+      effectBreakdown,
+      spellFx,
     }
   }, [
     // NOTA HONESTA (#19 super review): `character` é lido direto no corpo
@@ -212,5 +230,7 @@ export function useCharacterCalculations(character, classData = null, classDataM
     currentHp, maxHp, classData, classDataMap,
     // inventory.items muda a CA sugerida (armadura/escudo equipados).
     items,
+    // combat.activeEffects muda effectiveAC/effectiveSpeed/savingThrows (buffs).
+    activeEffects,
   ])
 }
