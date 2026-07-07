@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer } from 'react'
+import { useCallback, useEffect, useReducer, useRef } from 'react'
 import { DiceRollerContext, MAX_HISTORY, parseAndRoll } from '../hooks/useDiceRoller'
 import {
   DICE3D_SIDES, enqueueDice3d, isDice3dSupported, preloadDice3d, setDice3dAccent,
@@ -8,6 +8,14 @@ const DICE3D_KEY = 'dnd-ficha:dice3d'
 
 function readDice3dPref() {
   try { return window.localStorage.getItem(DICE3D_KEY) !== 'off' } catch { return true }
+}
+
+/** Combina gesto do usuário com vantagem de efeito (PHB p.173: par oposto = normal; nunca empilha). */
+function combineMode(userMode, fxMode) {
+  const u = userMode === 'adv' || userMode === 'dis' ? userMode : null
+  if (!fxMode) return userMode ?? 'normal'
+  if (!u) return fxMode
+  return u === fxMode ? u : 'normal'
 }
 
 function reducer(state, action) {
@@ -39,6 +47,9 @@ export function DiceRollerProvider({ children }) {
     if (state.dice3d && isDice3dSupported()) preloadDice3d()
   }, [state.dice3d])
 
+  const effectsResolverRef = useRef(null)
+  const setRollEffectsResolver = useCallback(fn => { effectsResolverRef.current = fn }, [])
+
   /**
    * Dispara uma rolagem. O resultado é calculado SINCRONAMENTE (parseAndRoll)
    * e retornado na hora — quem chama pode ler total/rolls (AttackRollButton
@@ -49,15 +60,30 @@ export function DiceRollerProvider({ children }) {
    * pendente do contexto, que reseta pra 'normal' após a rolagem.
    */
   const roll = useCallback((notation, label = '', opts = {}) => {
-    const effectiveMode = opts.mode ?? state.mode ?? 'normal'
-    const result = parseAndRoll(notation, { mode: effectiveMode, crit: !!opts.crit })
+    let effNotation = notation
+    let effLabel = label
+    let onApplied = null
+    let userMode = opts.mode ?? state.mode ?? 'normal'
+    // Efeitos ativos (buffs): só quando o call site anota a categoria.
+    if (opts.category && effectsResolverRef.current) {
+      const eff = effectsResolverRef.current(opts.category, opts.ability ?? null)
+      if (eff) {
+        for (const d of eff.extraDice ?? []) effNotation += `+${d}`
+        if (eff.labelSuffix) effLabel += eff.labelSuffix
+        userMode = combineMode(opts.mode ?? state.mode ?? null, eff.advantage)
+        onApplied = eff.onApplied ?? null
+      }
+    }
+    const effectiveMode = userMode
+    const result = parseAndRoll(effNotation, { mode: effectiveMode, crit: !!opts.crit })
     if (!result) return null
     const entry = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
-      label,
+      label: effLabel,
       timestamp: Date.now(),
       ...result,
     }
+    onApplied?.()
     if (state.mode !== 'normal' && !opts.mode) {
       dispatch({ type: 'SET_MODE', mode: 'normal' })
     }
@@ -68,7 +94,7 @@ export function DiceRollerProvider({ children }) {
       DICE3D_SIDES.has(result.sides) && isDice3dSupported()
 
     if (use3d) {
-      enqueueDice3d({ sides: result.sides, values, label, total: result.total })
+      enqueueDice3d({ sides: result.sides, values, label: effLabel, total: result.total })
         .then(({ animated }) => {
           dispatch({ type: 'ADD_ROLL', entry })
           if (!animated) dispatch({ type: 'OPEN' })
@@ -93,7 +119,7 @@ export function DiceRollerProvider({ children }) {
   return (
     <DiceRollerContext.Provider value={{
       ...state, roll, clearHistory, togglePanel, openPanel, setMode,
-      setDice3d, setDiceAccent: setDice3dAccent,
+      setDice3d, setDiceAccent: setDice3dAccent, setRollEffectsResolver,
     }}>
       {children}
     </DiceRollerContext.Provider>
