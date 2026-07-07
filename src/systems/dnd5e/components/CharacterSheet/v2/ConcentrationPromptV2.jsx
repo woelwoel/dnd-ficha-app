@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useCharacterContext } from '../CharacterContext'
 import { useDiceRoller } from '../../../../../hooks/useDiceRoller'
 
@@ -14,14 +14,14 @@ import { useDiceRoller } from '../../../../../hooks/useDiceRoller'
 export function ConcentrationPromptV2() {
   const { character, calc, updaters, readOnly } = useCharacterContext()
   const { roll } = useDiceRoller()
-  const [result, setResult] = useState(null)
-
   const event = updaters.lastDamageEvent
-  // Novo evento de dano zera o resultado anterior (reset de estado derivado).
-  const eventRef = useRef(event)
-  if (eventRef.current !== event) {
-    eventRef.current = event
-    if (result) setResult(null)
+  const [result, setResult] = useState(null)
+  const [prevEvent, setPrevEvent] = useState(event)
+  // Novo evento de dano zera o resultado anterior (padrão React de ajustar
+  // estado derivado durante o render — sem ref, sem efeito).
+  if (event !== prevEvent) {
+    setPrevEvent(event)
+    setResult(null)
   }
 
   const dc = event?.concentrationCheckDC
