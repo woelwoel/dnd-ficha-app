@@ -16,7 +16,9 @@ export function ConcentrationPromptV2() {
   const { roll } = useDiceRoller()
   const event = updaters.lastDamageEvent
   const [result, setResult] = useState(null)
-  const [prevEvent, setPrevEvent] = useState(event)
+  // Lazy init: se `event` fosse uma função (ex.: proxy de teste), useState(event)
+  // a trataria como inicializador e a chamaria — o wrapper evita isso.
+  const [prevEvent, setPrevEvent] = useState(() => event)
   // Novo evento de dano zera o resultado anterior (padrão React de ajustar
   // estado derivado durante o render — sem ref, sem efeito).
   if (event !== prevEvent) {
