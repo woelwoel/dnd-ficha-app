@@ -7,7 +7,8 @@ Fonte do material: PDF fan-translation PT-BR fornecido pelo dono (fora do repo)
 ## Objetivo
 
 Trazer o conteúdo de jogador do **Guia de Xanathar para Todas as Coisas** (XGE)
-para o sistema D&D 5e do app, reaproveitando integralmente a infraestrutura de
+para o sistema D&D 5e do app (31 subclasses, ~95 magias, 15 talentos raciais,
+invocações e itens comuns), reaproveitando integralmente a infraestrutura de
 procedência e seleção de fontes criada no sub-projeto Tasha:
 
 - `SOURCES` em `src/systems/dnd5e/domain/sources.js`
@@ -24,7 +25,7 @@ entra, e com ele a opção de **Carisma no ataque/dano da arma de pacto**
 
 ### Dentro do escopo (conteúdo que a ficha modela)
 
-- **Subclasses** (25, todas as 12 classes) — como `options` das choices
+- **Subclasses** (31, todas as 12 classes) — como `options` das choices
   existentes, formato `phb-class-choices-pt.json`:
   - Bárbaro: Guardião Ancestral, Arauto da Tempestade, Fanático
   - Bardo: Glamour, Espadas, Sussurros
@@ -169,7 +170,7 @@ estender o filtro (magia de clérigo oferecida a feiticeiro quando a subclasse
    provados ponta a ponta com os 15 talentos (inclui o prereq de raça).
 2. **Hexblade completo.** Patrono + Guerreiro Hediondo (CHA) + tracker da
    Maldição + lista expandida. Resolve o deferral.
-3. **Subclasses em volume.** Spike Alma Divina primeiro; depois as 24
+3. **Subclasses em volume.** Spike Alma Divina primeiro; depois as 30
    restantes com magias concedidas e escolhas internas.
 4. **Magias.** Extração das ~95 + curadoria de mecânicas (guard-rail verde).
 5. **Invocações + itens comuns.**
