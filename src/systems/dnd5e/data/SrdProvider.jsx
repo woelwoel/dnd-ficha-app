@@ -31,6 +31,7 @@ const DATASETS = {
   infusionsTasha:  { pt: 'tasha-infusions-pt.json',      fallback: null,                      lazy: true },
   magicItems:      { pt: 'phb-magic-items-pt.json',      fallback: null,                      lazy: true },
   magicItemsTasha: { pt: 'tasha-magic-items-pt.json',    fallback: null,                      lazy: true },
+  spellMechanics:  { pt: 'spell-mechanics-pt.json',      fallback: null,                      lazy: true },
 }
 
 // Datasets lógicos compostos por partes carimbadas por fonte.
@@ -95,7 +96,7 @@ function loadDataset(name, { pt, fallback }) {
 const EMPTY_DEFAULTS = {
   races: [], classes: [], backgrounds: [], spells: [], levels: [],
   progression: {}, classChoices: {}, classEquipment: {}, weaponsArmor: {}, multiclass: {}, feats: [],
-  infusions: [], magicItems: [],
+  infusions: [], magicItems: [], spellMechanics: {},
 }
 
 const SrdContext = createContext(null)

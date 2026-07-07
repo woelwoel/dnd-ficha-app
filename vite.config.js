@@ -93,10 +93,11 @@ export default defineConfig({
             //    Metamágico/Místico (prefixo "Magia de Pacto" vazado removido).
             //  v19 → v20 (2026-07-01): campo roles nos dados de classe
             //    (PHB + Artífice de Tasha).
+            //    v21 → v22 (2026-07-06): spell-mechanics-pt.json (rolagem de magias)
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v21',
+              cacheName: 'srd-data-v22',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias

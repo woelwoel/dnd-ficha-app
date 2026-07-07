@@ -6,6 +6,10 @@ import { useClassSpells } from '../../hooks/useClassSpells'
 import { SpellDetailModal } from '../SpellDetailModal'
 import { ConfirmDialog } from '../../../../components/ui/ConfirmDialog'
 import { Icon } from '../../../../components/ui/Icon'
+import { useDiceRoller } from '../../../../hooks/useDiceRoller'
+import { useLazySrdDataset } from '../../data/SrdProvider'
+import { spellRollPlan } from '../../domain/spellMechanics'
+import { executeCastPlan } from './castSpell'
 import {
   matchesFilters,
   EMPTY_FILTERS,
@@ -14,7 +18,7 @@ import {
   CASTING_TIME_LABELS,
 } from '../../utils/spellFilters'
 
-export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onTogglePrepared, onToggleSlot, onSetConcentration, onSpendPactSlot, onRegainPactSlot, focusSpellId, onClearFocusSpell }) {
+export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onTogglePrepared, onToggleSlot, onSetConcentration, onSpendPactSlot, onRegainPactSlot, onApplyHealing, focusSpellId, onClearFocusSpell }) {
   const [activeTab, setActiveTab] = useState(0)
   const [search, setSearch] = useState('')
   const [pickerOpen, setPickerOpen] = useState(false)
@@ -35,6 +39,37 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   const abilityScore  = spellAbility ? attributes[spellAbility] : 10
   const spellSaveDC   = calculateSpellSaveDC(abilityScore, profBonus)
   const spellAttack   = calculateSpellAttackBonus(abilityScore, profBonus)
+
+  const { roll } = useDiceRoller()
+  const spellMechanics = useLazySrdDataset('spellMechanics')
+  const spellMod = spellAbility ? Math.floor((abilityScore - 10) / 2) : 0
+
+  /**
+   * Conjurar = gastar o recurso E rolar o plano da magia (spec 2026-07-06).
+   * Shift no clique = vantagem, Alt = desvantagem (só nos d20 de ataque).
+   * Retorna { healTotal } pro SpellRow exibir "Aplicar N PV" (ou null).
+   */
+  function handleCast(spell, { slotLevel = null, pact = false, event = null } = {}) {
+    if (pact) {
+      if (!pactSlots) return null
+      onSpendPactSlot?.(pactSlots.qty)
+    } else if (slotLevel != null) {
+      onToggleSlot?.(slotLevel, (usedSlots[slotLevel] || 0) + 1)
+    }
+
+    const mech = spellMechanics?.[spell.index]
+    if (!mech) return null
+    const plan = spellRollPlan(spell, mech, {
+      slotLevel: pact ? pactSlots.slotLevel : slotLevel,
+      characterLevel: totalLevel,
+      spellAttack,
+      spellMod,
+      spellDC: spellSaveDC,
+    })
+    if (!plan) return null
+    const mode = event?.shiftKey ? 'adv' : event?.altKey ? 'dis' : undefined
+    return executeCastPlan(plan.steps, roll, { mode })
+  }
 
   const { classSpells, levelData, availableTabs } =
     useClassSpells(classIndex, level)
@@ -377,7 +412,10 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
                   slotLevels={unifiedSlotLevels}
                   slotMax={(slotLevel) => unifiedSlots[slotLevel] ?? 0}
                   usedSlots={usedSlots}
-                  onCastAtLevel={(slotLevel) => onToggleSlot?.(slotLevel, (usedSlots[slotLevel] || 0) + 1)}
+                  hasMechanics={!!spellMechanics?.[spell.index]}
+                  onCast={(opts) => handleCast(spell, opts)}
+                  pactOption={pactSlots ? { slotLevel: pactSlots.slotLevel, remaining: pactSlots.qty - pactUsed } : null}
+                  onApplyHealing={onApplyHealing}
                   canCast={spell.level === 0 || (isPrepared ? spell.prepared !== false : true)}
                   isPrepared={spell.level === 0 || spell.prepared !== false}
                   showPreparedToggle={isPrepared && spell.level > 0 && !!onTogglePrepared && spell.alwaysPrepared !== true}
@@ -456,22 +494,28 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   )
 }
 
-function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedToggle, onTogglePrepared, isConcentrating, canConcentrate, onToggleConcentration, slotLevels = [], slotMax, usedSlots = {}, onCastAtLevel, canCast = true }) {
+function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedToggle, onTogglePrepared, isConcentrating, canConcentrate, onToggleConcentration, slotLevels = [], slotMax, usedSlots = {}, canCast = true, hasMechanics, onCast, pactOption, onApplyHealing }) {
   const schoolAbbr = SCHOOL_ABBR[(spell.school || '').toLowerCase()] || (spell.school || '').slice(0, 3)
   const dimmed = showPreparedToggle && !isPrepared
   const [castOpen, setCastOpen] = useState(false)
   const [castedAt, setCastedAt] = useState(null)
+  const [pendingHeal, setPendingHeal] = useState(null)
   // Slots disponíveis para esta magia: nível ≥ nível da magia E sobrando ≥ 1
   const availableSlots = spell.level > 0 && canCast
     ? slotLevels.filter(sl => sl >= spell.level && ((slotMax?.(sl) ?? 0) - (usedSlots[sl] || 0)) > 0)
     : []
+  const pactAvailable = spell.level > 0 && canCast && pactOption
+    && pactOption.remaining > 0 && pactOption.slotLevel >= spell.level
 
-  function castAt(slotLevel) {
-    onCastAtLevel?.(slotLevel)
+  function castAt(slotLevel, e, { pact = false } = {}) {
+    const result = onCast?.({ slotLevel: pact ? null : slotLevel, pact, event: e })
     setCastOpen(false)
     setCastedAt(slotLevel)
-    // Pisca o badge "conjurada no nv X" e some
     setTimeout(() => setCastedAt(null), 1800)
+    if (result?.healTotal > 0) {
+      setPendingHeal(result.healTotal)
+      setTimeout(() => setPendingHeal(null), 10000)
+    }
   }
 
   return (
@@ -542,19 +586,29 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
       >
         ℹ
       </button>
+      {spell.level === 0 && hasMechanics && (
+        <button
+          onClick={(e) => onCast?.({ event: e })}
+          title={'Rolar truque\nShift+click: vantagem · Alt+click: desvantagem'}
+          aria-label={`Rolar ${spell.name}`}
+          className="flex-shrink-0 inline-flex items-center justify-center text-xs px-1.5 py-1 rounded border transition-colors border-amber-700 bg-amber-900/20 text-amber-300 hover:bg-amber-900/40"
+        >
+          <Icon name="bolt" size={12} strokeWidth={2} />
+        </button>
+      )}
       {spell.level > 0 && (
         <button
-          onClick={() => availableSlots.length > 0 && setCastOpen(v => !v)}
-          disabled={!canCast || availableSlots.length === 0}
+          onClick={() => (availableSlots.length > 0 || pactAvailable) && setCastOpen(v => !v)}
+          disabled={!canCast || (availableSlots.length === 0 && !pactAvailable)}
           title={
             !canCast
               ? 'Magia não está preparada'
-              : availableSlots.length === 0
+              : (availableSlots.length === 0 && !pactAvailable)
                 ? 'Sem espaços disponíveis'
                 : 'Conjurar (escolher nível do espaço)'
           }
           className={`flex-shrink-0 inline-flex items-center justify-center text-xs px-1.5 py-1 rounded border transition-colors ${
-            availableSlots.length > 0 && canCast
+            (availableSlots.length > 0 || pactAvailable) && canCast
               ? 'border-amber-700 bg-amber-900/20 text-amber-300 hover:bg-amber-900/40'
               : 'border-gray-700 text-gray-600 cursor-not-allowed'
           }`}
@@ -567,6 +621,14 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
         <span className="flex-shrink-0 text-xs text-emerald-400 font-bold animate-pulse">
           ✓ Nv {castedAt}
         </span>
+      )}
+      {pendingHeal != null && (
+        <button
+          onClick={() => { onApplyHealing?.(pendingHeal); setPendingHeal(null) }}
+          className="flex-shrink-0 text-xs px-2 py-0.5 rounded border font-bold transition-colors border-emerald-600 bg-emerald-900/20 text-emerald-400 hover:bg-emerald-900/40"
+        >
+          ✚ Aplicar {pendingHeal} PV
+        </button>
       )}
       {onRemove ? (
         <button
@@ -586,7 +648,7 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
         </span>
       )}
     </div>
-    {castOpen && availableSlots.length > 0 && (
+    {castOpen && (availableSlots.length > 0 || pactAvailable) && (
       <div className="flex flex-wrap gap-1 mt-1 pt-1.5 border-t border-gray-700/60">
         <span className="text-xs text-gray-500 self-center mr-1">Conjurar em:</span>
         {availableSlots.map(sl => {
@@ -595,7 +657,7 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
           return (
             <button
               key={sl}
-              onClick={() => castAt(sl)}
+              onClick={(e) => castAt(sl, e)}
               title={isUpcast ? `Espaço de nível ${sl} (efeito de nível superior)` : `Espaço de nível ${sl}`}
               className={`text-xs px-2 py-0.5 rounded border font-mono transition-colors ${
                 isUpcast
@@ -608,6 +670,15 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
             </button>
           )
         })}
+        {pactAvailable && (
+          <button
+            onClick={(e) => castAt(pactOption.slotLevel, e, { pact: true })}
+            title={`Pact Magic — espaço de nível ${pactOption.slotLevel} (recarrega em descanso curto)`}
+            className="text-xs px-2 py-0.5 rounded border font-mono transition-colors border-purple-500 bg-purple-900/20 text-purple-300 hover:bg-purple-900/40"
+          >
+            Pacto Nv {pactOption.slotLevel} ({pactOption.remaining})
+          </button>
+        )}
         {spell.higherLevel && (
           <button
             onClick={onDetail}
