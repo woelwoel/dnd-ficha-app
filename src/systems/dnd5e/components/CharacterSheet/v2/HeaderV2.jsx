@@ -68,8 +68,9 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
 
       {/* Linha 1: token + identidade + chips + ações + PV */}
       <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
-      {/* Identidade: nome (maior) + token à direita, agrupados */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+      {/* Identidade: nome (maior) + token à direita, agrupados.
+          flex:1 estica o grupo e devolve as condições/efeitos pra direita. */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
         {readOnly ? (
           <div style={{ minWidth: 0 }}>
             <div style={{ fontSize: 24, fontWeight: 700, lineHeight: 1.1 }}>{info.name || 'Sem nome'}</div>
@@ -124,7 +125,7 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
         <ActiveEffectsChips catalog={spellMechanics ?? {}} spellNames={spellNames} />
       </div>
 
-      <details style={{ position: 'relative', marginLeft: 'auto' }}>
+      <details style={{ position: 'relative' }}>
         <summary className="v2-btn" style={{ listStyle: 'none', cursor: 'pointer' }}>Descansos</summary>
         <div style={{ position: 'absolute', right: 0, zIndex: 40, marginTop: 6, minWidth: 320 }}>
           <fieldset disabled={readOnly} style={{ border: 0, margin: 0, padding: 0 }}>
@@ -293,14 +294,14 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
 
 function IdentityToken({ portrait, name, readOnly, onClick }) {
   const box = {
-    width: 54, height: 54, borderRadius: 12, overflow: 'hidden', flexShrink: 0,
+    width: 68, height: 68, borderRadius: 14, overflow: 'hidden', flexShrink: 0,
     border: '1px solid var(--v2-border)', background: 'var(--v2-surface-2)',
     display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0,
   }
   const inner = portrait
     ? <img src={portrait} alt="Retrato do personagem" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
     : (
-      <span aria-hidden="true" style={{ fontSize: 24, fontWeight: 600, color: 'var(--v2-accent)' }}>
+      <span aria-hidden="true" style={{ fontSize: 30, fontWeight: 600, color: 'var(--v2-accent)' }}>
         {(name || '?').trim().charAt(0).toUpperCase() || '?'}
       </span>
     )
