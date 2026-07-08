@@ -43,6 +43,33 @@
       }
     ]
   },
+  "patrulheiro": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "ranger_archetype",
+        "featureName": "Arquétipo de Patrulheiro",
+        "prompt": "Escolha seu Arquétipo de Patrulheiro",
+        "options": [
+          {
+            "value": "perseguidor-obscuro",
+            "name": "Perseguidor Obscuro",
+            "desc": "Perseguidores Obscuros se sentem em casa em ambientes escuros: nas profundezas da terra, becos sombrios e florestas primitivas. Eles se aventuram corajosamente na escuridão, buscando emboscar ameaças antes que cheguem ao mundo externo.\n\nFeatures de Arquétipo por nível:\n• Nv 3 — Magia do Perseguidor Obscuro: você aprende magias adicionais nos níveis indicados; contam como magias de patrulheiro e não contam pro seu limite de conhecidas.\n• Nv 3 — Emboscador Terrível: você ganha um bônus nas jogadas de iniciativa igual ao seu modificador de Sabedoria. No primeiro turno de cada combate, seu deslocamento aumenta em 3 metros e, se usar a ação de Ataque, faz um ataque adicional; se acertar, esse ataque causa 1d8 de dano extra do mesmo tipo da arma.\n• Nv 3 — Visão Umbral: você ganha visão no escuro de 18 metros (se já tiver, aumenta em 9 metros). Enquanto nas trevas, fica invisível para qualquer criatura que dependa de visão no escuro para enxergá-lo.\n• Nv 7 — Mente de Ferro: você ganha proficiência em testes de resistência de Sabedoria (se já tiver, escolhe Inteligência ou Carisma).\n• Nv 11 — Agitação Perseguidora: uma vez em cada um dos seus turnos, quando erra um ataque com arma, pode fazer outro ataque com arma como parte da mesma ação.\n• Nv 15 — Evasiva Sombria: quando uma criatura faz uma jogada de ataque contra você sem ter vantagem, pode usar sua reação para impor desvantagem (antes de conhecer o resultado)."
+          },
+          {
+            "value": "andarilho-do-horizonte",
+            "name": "Andarilho do Horizonte",
+            "desc": "Andarilhos do Horizonte guardam o mundo contra ameaças de outros planos. Procuram portais planares e os vigiam, arriscando-se aos Planos Internos e Externos para perseguir seus inimigos, e são aliados de forças que preservam a vida e a ordem dos planos.\n\nFeatures de Arquétipo por nível:\n• Nv 3 — Magia do Andarilho do Horizonte: você aprende magias adicionais nos níveis indicados; contam como magias de patrulheiro e não contam pro seu limite de conhecidas.\n• Nv 3 — Detectar Portais: como ação, detecta a distância e direção do portal planar mais próximo a até 1,5 km. Uma vez usada, não pode usá-la novamente até terminar um descanso curto ou longo.\n• Nv 3 — Guerreiro Planar: como ação bônus, escolhe uma criatura a até 9 metros; a próxima vez que a atingir neste turno com um ataque de arma, todo o dano do ataque vira dano de energia e ela sofre 1d8 de dano de energia adicional. No 11º nível, aumenta para 2d8.\n• Nv 7 — Passo Etéreo: como ação bônus, conjura forma etérea sem gastar espaço de magia, mas a magia termina no fim do turno atual. Uma vez usada, não pode usá-la novamente até terminar um descanso curto ou longo.\n• Nv 11 — Ataque Distante: quando realiza a ação de Ataque, pode se teleportar até 3 metros antes de cada ataque; e se atacar ao menos duas criaturas diferentes, faz um ataque adicional contra uma terceira.\n• Nv 15 — Defesa Espectral: quando sofre dano de um ataque, pode usar sua reação para ganhar resistência a todo o dano desse ataque neste turno."
+          },
+          {
+            "value": "exterminador-de-monstros",
+            "name": "Exterminador de Monstros",
+            "desc": "Um Exterminador de Monstros caça criaturas da noite e praticantes de magia sombria — vampiros, dragões, feéricos malignos e demônios. Treinados em técnicas sobrenaturais, são especialistas em desenterrar e derrotar inimigos poderosos e místicos.\n\nFeatures de Arquétipo por nível:\n• Nv 3 — Magia do Exterminador de Monstros: você aprende magias adicionais nos níveis indicados; contam como magias de patrulheiro e não contam pro seu limite de conhecidas.\n• Nv 3 — Sentido do Caçador: como ação, escolhe uma criatura a até 18 metros e aprende suas imunidades, resistências e vulnerabilidades de dano. Usos iguais ao seu modificador de Sabedoria (mínimo 1) por descanso longo.\n• Nv 3 — Exterminador de Presas: como ação bônus, marca uma criatura a até 18 metros; a primeira vez em cada turno que a atinge com um ataque de arma, causa 1d6 de dano adicional da arma. Dura até um descanso curto ou longo, ou até marcar outra criatura.\n• Nv 7 — Defesa Sobrenatural: sempre que o alvo do Exterminador de Presas o força a um teste de resistência, e nos testes para escapar dele, você adiciona 1d6 à rolagem.\n• Nv 11 — Nêmeses do Conjurador: quando vê uma criatura a até 18 metros conjurando uma magia ou se teleportando, pode usar sua reação para forçá-la a um teste de resistência de Sabedoria contra sua CD de magia; na falha, a magia ou teleporte é desperdiçado. Uma vez usada, não pode usá-la novamente até terminar um descanso curto ou longo.\n• Nv 15 — Contra-Ataque do Exterminador: se o alvo do Exterminador de Presas o força a um teste de resistência, pode usar sua reação para fazer um ataque de arma contra ele antes do teste; se acertar, o teste tem sucesso automático."
+          }
+        ]
+      }
+    ]
+  },
   "bruxo": {
     "choices": [
       {

@@ -45,3 +45,15 @@ describe('juramentos XGE do paladino', () => {
     }
   })
 })
+
+describe('arquétipos XGE do patrulheiro', () => {
+  it.each([['perseguidor-obscuro'], ['andarilho-do-horizonte'], ['exterminador-de-monstros']])(
+    '%s concede 1 magia/tier em 3/5/9/13/17', (arch) => {
+    for (const lvl of [3, 5, 9, 13, 17]) {
+      const r = getSubclassSpellsForLevel({ classIndex: 'patrulheiro', chosenFeatures: { ranger_archetype: arch }, classLevel: lvl })
+      expect(r.indices.length, `${arch} nv${lvl}`).toBe(1)
+      expect(r.alwaysPrepared).toBe(true)
+      for (const s of r.indices) expect(catalog.has(s), s).toBe(true)
+    }
+  })
+})

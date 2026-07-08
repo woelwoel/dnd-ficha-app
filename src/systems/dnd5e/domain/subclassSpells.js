@@ -284,6 +284,28 @@ const RANGER_ARCHETYPE_SPELLS = {
     ['olho-arcano'],                     // 13 (Arcane Eye)
     ['praga-de-insetos'],                // 17 (Insect Plague)
   ],
+  // ── Arquétipos do Guia de Xanathar (source: xanathar) — 1 magia por tier ──
+  'perseguidor-obscuro': [
+    ['disfarcar-se'],         // 3 (Disguise Self)
+    ['truque-de-corda'],      // 5 (Rope Trick)
+    ['medo'],                 // 9 (Fear)
+    ['invisibilidade-maior'], // 13 (Greater Invisibility)
+    ['similaridade'],         // 17 (Seeming)
+  ],
+  'andarilho-do-horizonte': [
+    ['protecao-contra-o-bem-e-mal'], // 3 (Protection from Evil and Good)
+    ['passo-nebuloso'],              // 5 (Misty Step)
+    ['velocidade'],                  // 9 (Haste)
+    ['banimento'],                   // 13 (Banishment)
+    ['circulo-de-teletransporte'],   // 17 (Teleportation Circle)
+  ],
+  'exterminador-de-monstros': [
+    ['protecao-contra-o-bem-e-mal'], // 3
+    ['zona-da-verdade'],             // 5 (Zone of Truth)
+    ['circulo-magico'],              // 9 (Magic Circle)
+    ['banimento'],                   // 13
+    ['imobilizar-monstro'],          // 17 (Hold Monster)
+  ],
 }
 
 /* ── Artificer Specialization Spells (Tasha's p.14-18) — tiers 3, 5, 9, 13, 17
