@@ -12,6 +12,9 @@ export function EffectsSync() {
   const { character, updaters } = useCharacterContext()
   const { setRollEffectsResolver } = useDiceRoller()
   const activeEffects = character.combat?.activeEffects
+  // Só isto é usado no efeito; depender do objeto `updaters` inteiro
+  // re-registraria o resolver a cada render da ficha (churn desnecessário).
+  const removeActiveEffect = updaters.removeActiveEffect
 
   useEffect(() => {
     const { riders, advantages } = aggregateSpellEffects(activeEffects ?? [])
@@ -32,13 +35,13 @@ export function EffectsSync() {
         labelSuffix: applicable.map(r => ` · ${r.effectName} +${r.dice}`).join(''),
         onApplied: () => {
           for (const r of applicable) {
-            if (r.oneShot) updaters.removeActiveEffect?.(r.effectId)
+            if (r.oneShot) removeActiveEffect?.(r.effectId)
           }
         },
       }
     })
     return () => setRollEffectsResolver(null)
-  }, [activeEffects, setRollEffectsResolver, updaters])
+  }, [activeEffects, setRollEffectsResolver, removeActiveEffect])
 
   return null
 }
