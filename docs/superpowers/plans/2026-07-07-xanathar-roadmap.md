@@ -13,7 +13,7 @@ por task) → bump `srd-data-vN` → merge na master + push (deploy) → próxim
 | # | Plano | Escopo | Análogo no Tasha | Status |
 |---|---|---|---|---|
 | 1 | `2026-07-07-xanathar-1-fundacao-talentos.md` | Fonte XGE + datasets no provider + esteira `scripts/xanathar/` + 15 talentos raciais + prereq de raça nos 2 FeatPickers | `tasha-fundacao-fontes` (infra provada com talentos) | **EXECUTADO 2026-07-08** |
-| 2 | `xanathar-2-hexblade.md` | Patrono Hexblade (dados parseáveis + tracker) + lista expandida + Guerreiro Hediondo (CHA na arma de pacto) — resolve o deferral | `subclasses-tasha-barbaro` (subclasse + infra de painel) | a detalhar |
+| 2 | `xanathar-2-hexblade.md` | Patrono Hexblade (dados parseáveis + tracker) + lista expandida + Guerreiro Maldito (CHA na arma de pacto) — resolve o deferral | `subclasses-tasha-barbaro` (subclasse + infra de painel) | **EXECUTADO 2026-07-08** |
 | 3 | `xanathar-3-subclasses-divinas.md` | Clérigo (Forja, Sepultura), Paladino (Conquista, Redenção), Patrulheiro (3), Druida (Sonhos, Pastor) — 9 subclasses + magias concedidas | `subclasses-tasha-barbaro` | a detalhar |
 | 4 | `xanathar-4-subclasses-marciais.md` | Guerreiro (3, inclui Disparos Arcanos), Monge (3), Ladino (4), Bárbaro (3) — 13 subclasses | idem | a detalhar |
 | 5 | `xanathar-5-subclasses-arcanas.md` | Bardo (3), Feiticeiro (3, spike Alma Divina no `useClassSpells`), Bruxo Celestial, Mago (Magia de Guerra) — 8 subclasses + teste de contagem 31 | idem | a detalhar |
