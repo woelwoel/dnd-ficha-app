@@ -1,1 +1,267 @@
-[]
+[
+  {
+    "index": "agachamento-agil",
+    "name": "Agachamento Ágil",
+    "desc": "Você é estranhamente ágil para sua raça. Receba os seguintes benefícios: • Aumente seu valor de Força ou Destreza em 1, até o máximo de 20. • Aumente seu deslocamento de caminhada em 1,5 metros. • Você ganha proficiência em Acrobacia ou Atletismo (a sua escolha). • Você tem vantagem em qualquer teste de Força (Atletismo) ou Destreza (Acrobacias) que faça para escapar de ser agarrado.",
+    "source": "xanathar",
+    "prereq": {
+      "type": "race",
+      "races": [
+        "anao",
+        "halfling",
+        "gnomo"
+      ]
+    },
+    "attrBonus": {
+      "choices": [
+        "str",
+        "dex"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "alta-magia-drow",
+    "name": "Alta Magia Drow",
+    "desc": "Você aprende mais da magia típica dos elfos negros. Aprende a magia detectar magia e pode conjurá-la à vontade, sem gastar um espaço de magia. Também aprende as magias levitação e dissipar magia, podendo conjurar cada uma delas uma vez sem gastar espaços de magias. Recupera a capacidade de conjurar essas duas magias dessa maneira assim que terminar um descanso longo. O Carisma é a sua habilidade de conjuração para as três magias.",
+    "source": "xanathar",
+    "prereq": {
+      "type": "race",
+      "races": [
+        "elfo-negro-drow"
+      ]
+    }
+  },
+  {
+    "index": "boa-sorte",
+    "name": "Boa Sorte",
+    "desc": "Seu povo têm uma sorte extraordinária, o que você aprendeu a emprestar místicamente a seus companheiros quando vê-los hesitar. Você não tem certeza de como fazê-lo; você apenas deseja, e isso acontece. Certamente, um sinal de favor da fortuna! Quando um aliado que você possa ver dentro de 9 metros de alcance rola um 1 no d20 para um teste de ataque, um teste de habilidade ou um teste de resistência, pode usar sua reação para permitir que o aliado refaça o teste. O aliado deve usar o novo resultado. Quando usa essa característica, não pode usar seu traço racial Sorte antes do final do seu próximo turno.",
+    "source": "xanathar",
+    "prereq": {
+      "type": "race",
+      "races": [
+        "halfling"
+      ]
+    }
+  },
+  {
+    "index": "chamas-de-phlegethos",
+    "name": "Chamas de Phlegethos",
+    "desc": "Você aprende a invocar o fogo infernal para servir seus comandos. Você ganha os seguintes benefícios: • Aumente seu valor de Inteligência ou Carisma em 1, até o máximo de 20. • Quando rolar dano de fogo por alguma magia que tenha conjurado, pode rolar novamente qualquer 1 no dado de dano por fogo, mas deve usar esta nova rolagem, mesmo que seja outro 1. • Sempre que conjurar uma magia que cause dano por fogo, pode produzir chamas que enrolam em você até o final do seu turno. As chamas não te causam dano ou as coisas que estiver portando, e elas vertem uma luz brilhante até 9 metros e luz fraca por mais 9 metros adicionais. Enquanto as chamas estiverem presentes qualquer criatura a até 1,5 metros de alcance que lhe atinja com um ataque corpo-a-corpo recebe 1d4 de dano por fogo.",
+    "source": "xanathar",
+    "prereq": {
+      "type": "race",
+      "races": [
+        "tiefling"
+      ]
+    },
+    "attrBonus": {
+      "choices": [
+        "int",
+        "cha"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "constituicao-infernal",
+    "name": "Constituição Infernal",
+    "desc": "Sangue demoníaco corre fortemente em suas veias, libertando uma resiliência semelhante à possuída por alguns demônios. Você ganha os seguintes benefícios: • Aumente seu valor de Constituição em 1, até o máximo de 20. • Recebe resistência a dano por frio e por veneno. Você tem vantagem em testes de resistência contra ser envenenado.",
+    "source": "xanathar",
+    "prereq": {
+      "type": "race",
+      "races": [
+        "tiefling"
+      ]
+    },
+    "attrBonus": {
+      "choices": [
+        "con"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "couro-de-dragao",
+    "name": "Couro de Dragão",
+    "desc": "Você desenvolve escamas e garras que relembram seus ancestrais dracônicos. Você ganha os seguintes benefícios: • Aumente seu valor de Força, Constituição, ou Carisma em 1, até o máximo de 20. • Suas escamas se endurecem. Enquanto não estiver vestindo armadura, pode calcular sua CA como 13 + seu modificador de Destreza. Você pode usar um escudo e ainda assim ganhar esse benefício. • Você faz crescer garras retráteis das pontas dos seus dedos. Estender ou retrair as garras não requer nenhuma ação. As garras são armas naturais com as quais você pode fazer ataques desarmados. Se atacar com elas, aplica dano cortante igual a 1d4 + seu modificador de Força, ao invés do dano de concussão convencional de um ataque desarmado.",
+    "source": "xanathar",
+    "prereq": {
+      "type": "race",
+      "races": [
+        "draconato"
+      ]
+    },
+    "attrBonus": {
+      "choices": [
+        "str",
+        "con",
+        "cha"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "desvanecer",
+    "name": "Desvanecer",
+    "desc": "Seu povo é esperto, com uma aptidão para ilusão mágica. Você aprendeu um truque mágico para desaparecer quando sofre danos. Você ganha os seguintes benefícios: • Aumente seu valor de Destreza ou Inteligência em 1, até o máximo de 20. • Imediatamente após receber dano, pode usar sua reação para magicamente se tornar invisível até o fim do seu próximo turno ou até que realize um ataque, cause dano, ou faça com que alguém realize um teste de resistência. Após usar essa característica, só pode usá-la novamente assim que termine um descanso curto ou longo.",
+    "source": "xanathar",
+    "prereq": {
+      "type": "race",
+      "races": [
+        "gnomo"
+      ]
+    },
+    "attrBonus": {
+      "choices": [
+        "dex",
+        "int"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "fortitude-ana",
+    "name": "Fortitude Anã",
+    "desc": "Você tem o sangue de heróis anões correndo em suas veias. Você ganha os seguintes benefícios: • Aumente seu valor de Constituição em 1, até o máximo de 20. • Sempre que você realiza a ação Esquivar em combate, pode gastar um Dado de Vida para se curar. Role o dado, e adicione seu modificador de Constituição, e recupere um número de pontos de vida igual a este total (mínimo de 1).",
+    "source": "xanathar",
+    "prereq": {
+      "type": "race",
+      "races": [
+        "anao"
+      ]
+    },
+    "attrBonus": {
+      "choices": [
+        "con"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "furia-orc",
+    "name": "Fúria Orc",
+    "desc": "Sua fúria interior queima incansavelmente. Você recebe os benefícios a seguir: • Aumente seu valor de Força ou Constituição em 1, até o máximo de 20. • Quando acertar um ataque usando uma arma simples ou marcial, pode rolar um dos dados de dano da arma uma vez adicionalmente e somar o resultado a jogada. O tipo de dano é o mesmo originario da arma. Uma vez que use essa característica, não pode usar novamente até terminar um descanso curto ou longo. • Imediatamente após usar seu traço racial Resistência Implacável, pode usar sua reação para realizar um ataque com arma.",
+    "source": "xanathar",
+    "prereq": {
+      "type": "race",
+      "races": [
+        "meio-orc"
+      ]
+    },
+    "attrBonus": {
+      "choices": [
+        "str",
+        "con"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "magia-do-elfo-da-floresta",
+    "name": "Magia do Elfo da Floresta",
+    "desc": "Você aprende a magia das florestas primitivas, que são reverenciadas e protegidas pelo seu povo. Aprende um truque de druida a sua escolha. Também aprende passos longos e passos sem pegadas, cada um dos quais pode conjurar uma vez sem gastar espaços de magia. Recupera a capacidade de conjurar essas duas magias desta maneira quando terminar um descanso longo. A Sabedoria é a sua habilidade de conjuração para as três magias.",
+    "source": "xanathar",
+    "prereq": {
+      "type": "race",
+      "races": [
+        "elfo-da-floresta"
+      ]
+    }
+  },
+  {
+    "index": "precisao-elfica",
+    "name": "Precisão Élfica",
+    "desc": "A precisão dos elfos é lendária, especialmente dos arqueiros e conjuradores. Você tem uma mira sobrenatural em ataques que dependem da precisão ao invés do dano bruto. Você ganha os seguintes benefícios: • Aumente seu valor de Destreza, Inteligência, Sabedoria ou Carisma em 1, até o máximo de 20. • Sempre que tiver vantagem em uma jogada de ataque usando Destreza, Inteligência, Sabedoria ou Carisma, você pode rolar novamente um dos dados do ataque, uma vez.",
+    "source": "xanathar",
+    "prereq": {
+      "type": "race",
+      "races": [
+        "elfo",
+        "meio-elfo"
+      ]
+    },
+    "attrBonus": {
+      "choices": [
+        "dex",
+        "int",
+        "wis",
+        "cha"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "prodigio",
+    "name": "Prodígio",
+    "desc": "Você tem facilidade de aprender coisas novas. você ganha os seguintes benefícios: • Você ganha uma proficiência de pericia de sua escolha, uma proficiência ferramenta de sua escolha, e fluência em um idioma de sua escolha. • Escolha uma perícia em que tenha proficiência. Você ganha especialização com essa pericia, o que significa que seu bônus de proficiência é dobrado para qualquer teste de habilidade que você venha a realizar com ela. A perícia que escolher deve ser uma que não esteja sobre o benefício de nenhuma outra característica, como Especialização, que já dobra seu bônus de proficiência.",
+    "source": "xanathar",
+    "prereq": {
+      "type": "race",
+      "races": [
+        "meio-elfo",
+        "meio-orc",
+        "humano"
+      ]
+    }
+  },
+  {
+    "index": "segunda-chance",
+    "name": "Segunda Chance",
+    "desc": "A sorte te favorece quando alguém tenta atingi-lo. Os seguintes benefícios a seguir lhe são dados: • Aumente seu valor de Destreza, Constituição ou Carisma em 1, até o máximo de 20. • Quando uma criatura que possa ver te acertar, você pode usar sua reação para forçar a criatura a rolar novamente. Uma vez usada essa característica, não pode usá-la novamente até que role a iniciativa ao iniciar outro combate ou então termine um descanso longo ou curto.",
+    "source": "xanathar",
+    "prereq": {
+      "type": "race",
+      "races": [
+        "halfling"
+      ]
+    },
+    "attrBonus": {
+      "choices": [
+        "dex",
+        "con",
+        "cha"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "teleporte-das-fadas",
+    "name": "Teleporte das Fadas",
+    "desc": "Seu estudo de combate dos elfos altos desbloqueou um poder feérico que apenas poucos elfos possuem, exceto seus primos eladrin. Com base em sua ascendência feérica, pode caminhar momentaneamente pela Agrestia das Fadas para encurtar seu caminho de um lugar para outro. Você ganha os seguintes benefícios: • Aumente seu valor de Inteligência ou Carisma em 1, até o máximo de 20. • Você aprende a falar, ler e escrever Sylvan. • Você aprende a magia passo nebuloso e pode conjurá-la uma vez sem gastar um espaço de magia. Recupera a capacidade de conjurá-la dessa maneira quando terminar um descanso curto ou longo. A Inteligência é a sua habilidade de conjuração para essa magia.",
+    "source": "xanathar",
+    "prereq": {
+      "type": "race",
+      "races": [
+        "alto-elfo"
+      ]
+    },
+    "attrBonus": {
+      "choices": [
+        "int",
+        "cha"
+      ],
+      "amount": 1
+    }
+  },
+  {
+    "index": "temor-draconico",
+    "name": "Temor Dracônico",
+    "desc": "Quando estiver com raiva, pode irradiar ameaça. Você ganha os seguintes benefícios: • Aumente seu valor de Força, Constituição, ou Carisma em 1, até o máximo de 20. • Ao invés de exalar energia destrutiva, pode gastar um uso do seu traço Arma de Sopro para rugir, forçando cada criatura a sua escolha a até 9 metros de alcance a fazer um teste de resistência de Sabedoria (CD 8 + seus bônus de proficiência + seu modificador de Carisma). Um alvo automaticamente tem sucesso no teste se ele não puder ouvir ou vê-lo. Em caso de falha, o alvo fica amedrontado de você por 1 minuto. Se o alvo amedrontado receber qualquer dano, ele pode repetir o teste de resistência, terminando o efeito em caso de sucesso.",
+    "source": "xanathar",
+    "prereq": {
+      "type": "race",
+      "races": [
+        "draconato"
+      ]
+    },
+    "attrBonus": {
+      "choices": [
+        "str",
+        "con",
+        "cha"
+      ],
+      "amount": 1
+    }
+  }
+]

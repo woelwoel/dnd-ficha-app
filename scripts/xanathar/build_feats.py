@@ -1,7 +1,7 @@
 """Estrutura os talentos raciais do Guia de Xanathar no schema de feats do app.
 
 Entrada (stdin): texto extraído das páginas de talentos por extract_text.py
-(pymupdf --pages 70-72 nesta edição do PDF).
+(pymupdf --pages 71-73 nesta edição do PDF).
 Saída (stdout): JSON no formato de public/srd-data/phb-feats-pt.json, com cada
 item carimbado `source: "xanathar"`.
 
@@ -45,8 +45,9 @@ FEAT_ORDER = [
 # Metadados estruturados por talento (interpretação das regras do PDF).
 # races: códigos de raça/sub-raça do app (phb-races-pt.json).
 # "Agachamento Ágil" = "Anão ou Raças Pequenas" → lista explícita (decisão da spec).
-# "Segunda Chance": o PDF traduz só CON/CAR (o original inglês inclui DES) —
-# seguimos o PDF; divergência marcada pra revisão com o dono.
+# "Segunda Chance": o PDF traduz só CON/CAR, mas o original inglês inclui DES
+# ("Dexterity, Constitution, or Charisma") — o dono decidiu (2026-07-08) seguir
+# o ORIGINAL; a desc ganha um patch correspondente.
 META = {
     "Agachamento Ágil":          {"races": ["anao", "halfling", "gnomo"], "attr": ["str", "dex"]},
     "Alta Magia Drow":           {"races": ["elfo-negro-drow"]},
@@ -60,7 +61,7 @@ META = {
     "Magia do Elfo da Floresta": {"races": ["elfo-da-floresta"]},
     "Precisão Élfica":           {"races": ["elfo", "meio-elfo"], "attr": ["dex", "int", "wis", "cha"]},
     "Prodígio":                  {"races": ["meio-elfo", "meio-orc", "humano"]},
-    "Segunda Chance":            {"races": ["halfling"], "attr": ["con", "cha"]},
+    "Segunda Chance":            {"races": ["halfling"], "attr": ["dex", "con", "cha"]},
     "Teleporte das Fadas":       {"races": ["alto-elfo"], "attr": ["int", "cha"]},
     "Temor Dracônico":           {"races": ["draconato"], "attr": ["str", "con", "cha"]},
 }
@@ -107,10 +108,40 @@ def clean_lines(raw: str) -> list[str]:
     return out
 
 
+# Correções pontuais de OCR quebrado (não-mecânico), documentadas uma a uma.
+# Cada par (padrão regex, correção) foi conferido contra o PDF na curadoria.
+PATCHES = [
+    # Constituição Infernal: sublinhado de título vazado + "1" engolido + "test_!!s"
+    (r"^_+\s*_*\s*(?=Sangue)", ""),
+    (r"valor de Constituição em, até", "valor de Constituição em 1, até"),
+    (r"test_!!s de resistencia", "testes de resistência"),
+    # Temor Dracônico: glifos exóticos de OCR na frase final
+    (r"fica \S*edrontado de você por 1 minuto\. Se o .*?sucesso\.",
+     "fica amedrontado de você por 1 minuto. Se o alvo amedrontado receber "
+     "qualquer dano, ele pode repetir o teste de resistência, terminando o "
+     "efeito em caso de sucesso."),
+    (r"atê o máximo", "até o máximo"),
+    # Magia do Elfo da Floresta: nome da magia (Longstrider = passos longos)
+    (r"passos kmgos", "passos longos"),
+    # Desvanecer / Teleporte das Fadas / Boa Sorte
+    (r"se tronar invisível", "se tornar invisível"),
+    (r"Inteligên<:ia", "Inteligência"),
+    (r"fazê-lo·", "fazê-lo;"),
+    # Segunda Chance: tradução omitiu Destreza; dono decidiu seguir o original
+    (r"Aumente seu valor de Constituição ou Carisma em 1",
+     "Aumente seu valor de Destreza, Constituição ou Carisma em 1"),
+]
+
+
 def fix_ocr(text: str) -> str:
     """Correções mecânicas seguras de OCR."""
-    text = re.sub(r"\bl(?=\d)", "1", text)          # ld4 → 1d4, l50 → 150
+    text = re.sub(r"\bl(?=d\d)", "1", text)         # ld4 → 1d4, ld6 → 1d6
+    text = re.sub(r"\bl(?=\d)", "1", text)          # l50 → 150
     text = text.replace("Meio-Ore", "Meio-Orc").replace("Meio-ore", "Meio-orc")
+    text = re.sub(r"\bbenefici[oa]s\b", "benefícios", text)
+    text = re.sub(r"\bbeneficio\b", "benefício", text)
+    for pat, repl in PATCHES:
+        text = re.sub(pat, repl, text)
     return text
 
 

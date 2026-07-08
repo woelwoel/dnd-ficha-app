@@ -11,6 +11,9 @@ editor ou via tool Read, nunca por `cat`.
 `C:\Users\gvfar\OneDrive\RPG BIGBIG\dd-5e-guia-de-xanathar-para-todas-as-coisas-fundo-branco-biblioteca-elfica.pdf`
 
 - 702 páginas; numeração impressa ≈ página pymupdf + 3 (no capítulo 1).
+- ATENÇÃO: o marcador `----- p.N -----` do extract_text vem DEPOIS do texto
+  da página N — ao mapear seções por um extrato largo, o conteúdo entre os
+  marcadores p.N e p.N+1 pertence à página **N+1**.
 - **OCR ruidoso** (diferente do Tasha): títulos corrompidos ("BoASORTE",
   "FÚRIA ÜRC"), `l` no lugar de `1` em dados ("ld4"), glifos exóticos em
   alguns parágrafos. Os build scripts usam âncora fuzzy + normalização
@@ -20,7 +23,7 @@ editor ou via tool Read, nunca por `cat`.
 ## Páginas (0-indexadas no pymupdf)
 
 - **Sumário/tabela de subclasses:** 4 (nomes oficiais desta tradução).
-- **Talentos raciais:** 70–72 (15 talentos, ordem alfabética).
+- **Talentos raciais:** 71–73 (15 talentos, ordem alfabética).
 - (Subclasses, magias, itens: mapear nos planos seguintes.)
 
 ## Uso
@@ -29,10 +32,10 @@ editor ou via tool Read, nunca por `cat`.
 PDF="/c/Users/gvfar/OneDrive/RPG BIGBIG/dd-5e-guia-de-xanathar-para-todas-as-coisas-fundo-branco-biblioteca-elfica.pdf"
 
 # 1) Extrair texto cru de um intervalo de páginas
-python scripts/xanathar/extract_text.py "$PDF" --pages 70-72 -o saida.txt
+python scripts/xanathar/extract_text.py "$PDF" --pages 71-73 -o saida.txt
 
 # 2) Estruturar talentos em JSON (pipe direto)
-python scripts/xanathar/extract_text.py "$PDF" --pages 70-72 \
+python scripts/xanathar/extract_text.py "$PDF" --pages 71-73 \
   | python scripts/xanathar/build_feats.py > public/srd-data/xanathar-feats-pt.json
 ```
 
