@@ -8,7 +8,7 @@ import {
   calculatePassivePerception,
   calculateInitiative,
 } from '../utils/calculations'
-import { calculateMaxHpMulticlass, listSpellcastingClasses, getEffectiveSaveProficiencies } from '../domain/rules'
+import { calculateMaxHpMulticlass, listSpellcastingClasses, getEffectiveSaveProficiencies, effectiveSpeed as domainEffectiveSpeed } from '../domain/rules'
 import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
 import { resolveAbilityKey } from '../domain/attributes'
 import {
@@ -180,7 +180,9 @@ export function useCharacterCalculations(character, classData = null, classDataM
     // Derivados de efeitos ativos: NÃO contaminam suggestedAC (base editável).
     const baseAC = combat?.armorClass ?? 10
     const effectiveAC = baseAC + (spellFx.fx.ac ?? 0)
-    const baseSpeed = combat?.speed ?? 9
+    // Base = deslocamento do domínio (preserva exaustão/penalidades), não o
+    // combat.speed cru — alinhado com o que o AbilityStrip exibe.
+    const baseSpeed = domainEffectiveSpeed(character)
     const effectiveSpeed = Math.round((baseSpeed + (spellFx.fx.speed ?? 0)) * (spellFx.fx.speedMultiplier ?? 1) * 2) / 2
     const effectBreakdown = (activeEffects ?? []).map(e => ({ id: e.id, name: e.name, summary: e.summary }))
 
