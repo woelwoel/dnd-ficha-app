@@ -34,3 +34,14 @@ describe('domínios XGE do clérigo', () => {
     }
   })
 })
+
+describe('juramentos XGE do paladino', () => {
+  it.each([['conquista'], ['redencao']])('%s concede 2 magias/tier em 3/5/9/13/17', (oath) => {
+    for (const lvl of [3, 5, 9, 13, 17]) {
+      const r = getSubclassSpellsForLevel({ classIndex: 'paladino', chosenFeatures: { sacred_oath: oath }, classLevel: lvl })
+      expect(r.indices.length, `${oath} nv${lvl}`).toBe(2)
+      expect(r.alwaysPrepared).toBe(true)
+      for (const s of r.indices) expect(catalog.has(s), s).toBe(true)
+    }
+  })
+})

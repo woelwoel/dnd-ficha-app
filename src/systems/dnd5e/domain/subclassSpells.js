@@ -50,6 +50,22 @@ const PALADIN_OATH_SPELLS = {
     ['banimento',         'porta-dimensional'],         // 13
     ['imobilizar-monstro','escrutinio'],                // 17 (Hold Monster, Scrying)
   ],
+  // Juramento da Conquista (Xanathar's p.51) — source: xanathar
+  conquista: [
+    ['armadura-de-agathys', 'comando'],        // 3 (Armor of Agathys, Command)
+    ['imobilizar-pessoa',   'arma-espiritual'],// 5 (Hold Person, Spiritual Weapon)
+    ['rogar-maldicao',      'medo'],           // 9 (Bestow Curse, Fear)
+    ['dominar-besta',       'pele-de-pedra'],  // 13 (Dominate Beast, Stoneskin)
+    ['nevoa-mortal',        'dominar-pessoa'], // 17 (Cloudkill, Dominate Person)
+  ],
+  // Juramento da Redenção (Xanathar's p.52) — source: xanathar
+  redencao: [
+    ['santuario',                   'sono'],             // 3 (Sanctuary, Sleep)
+    ['imobilizar-pessoa',           'acalmar-emocoes'],  // 5 (Hold Person, Calm Emotions)
+    ['contramagica',                'padrao-hipnotico'], // 9 (Counterspell, Hypnotic Pattern)
+    ['esfera-resiliente-de-otiluke','pele-de-pedra'],    // 13 (Otiluke's Resilient Sphere, Stoneskin)
+    ['imobilizar-monstro',          'muralha-de-energia'],// 17 (Hold Monster, Wall of Force)
+  ],
   // Juramento da Glória (Tasha's p.50) — source: tasha
   gloria: [
     ['raio-guiador',         'heroismo'],                  // 3 (Guiding Bolt)

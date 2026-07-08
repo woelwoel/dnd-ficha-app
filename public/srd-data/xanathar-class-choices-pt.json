@@ -21,6 +21,28 @@
       }
     ]
   },
+  "paladino": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "sacred_oath",
+        "featureName": "Juramento Sagrado",
+        "prompt": "Escolha seu Juramento Sagrado",
+        "options": [
+          {
+            "value": "conquista",
+            "name": "Juramento da Conquista",
+            "desc": "O Juramento da Conquista chama os paladinos que buscam glória na batalha e a subjugação de seus inimigos. Às vezes chamados de cavaleiros tiranos, eles valorizam o domínio da lei sobre a misericórdia e esmagam as forças do caos. Alguns chegam a conspirar com os poderes dos Nove Infernos.\n\nFeatures de Juramento por nível:\n• Nv 3 — Magias de Juramento: você sempre tem certas magias preparadas nos níveis indicados (contam como magias de paladino e não contam pro limite).\n• Nv 3 — Canalizar Divindade: você ganha duas opções. Presença Conquistadora: como ação, cada criatura à sua escolha a até 9 metros faz um teste de resistência de Sabedoria ou fica amedrontada por 1 minuto (repete o teste no fim de cada turno). Ataque Guiado: quando faz uma jogada de ataque, pode gastar Canalizar Divindade para ganhar +10 na rolagem.\n• Nv 7 — Aura da Conquista: enquanto não estiver incapacitado, criaturas amedrontadas têm deslocamento reduzido a 0 dentro de 3 metros de você e sofrem dano psíquico igual à metade do seu nível de paladino se começarem o turno na aura. No 18º nível, o alcance aumenta para 9 metros.\n• Nv 15 — Repreensão Arrogante: sempre que uma criatura o atinge com um ataque, ela sofre dano psíquico igual ao seu modificador de Carisma (mínimo 1), se você não estiver incapacitado.\n• Nv 20 — Conquistador Invencível: como ação, por 1 minuto você ganha resistência a todo dano, um ataque adicional ao usar a ação de Ataque, e seus ataques corpo-a-corpo são críticos em 19-20. Uma vez usada, não pode usá-la novamente até terminar um descanso longo."
+          },
+          {
+            "value": "redencao",
+            "name": "Juramento da Redenção",
+            "desc": "O Juramento da Redenção exige que o guerreiro sagrado use a violência apenas como último recurso. Esses paladinos, chamados redentores, acreditam que qualquer pessoa pode ser redimida e enfrentam o mal na esperança de convertê-lo — matando apenas quando isso claramente salvará outras vidas.\n\nFeatures de Juramento por nível:\n• Nv 3 — Magias de Juramento: você sempre tem certas magias preparadas nos níveis indicados (contam como magias de paladino e não contam pro limite).\n• Nv 3 — Canalizar Divindade: você ganha duas opções. Emissário da Paz: como ação bônus, ganha +5 em testes de Carisma (Persuasão) por 10 minutos. Repreendendo a Violência: quando um atacante a até 9 metros causa dano a outra criatura que não você, pode usar sua reação para forçá-lo a um teste de resistência de Sabedoria; na falha, sofre dano radiante igual ao dano causado (metade em caso de sucesso).\n• Nv 7 — Aura do Guardião: quando uma criatura a até 3 metros sofre dano, você pode usar sua reação para tomar esse dano no lugar dela (não transfere outros efeitos e o dano não pode ser reduzido). No 18º nível, o alcance aumenta para 9 metros.\n• Nv 15 — Espírito Protetor: você recupera PV iguais a 1d6 + metade do seu nível de paladino se terminar o turno em combate com menos da metade dos PV e não estiver incapacitado.\n• Nv 20 — Emissário da Redenção: você tem resistência a todo dano causado por outras criaturas; e sempre que uma criatura o atinge com um ataque, ela recebe dano radiante igual à metade do dano que você sofreu. Se você atacar, conjurar magia ou causar dano a uma criatura, esses benefícios não funcionam contra ela até você terminar um descanso longo."
+          }
+        ]
+      }
+    ]
+  },
   "bruxo": {
     "choices": [
       {
