@@ -93,6 +93,7 @@ export function SheetContent({ activeTab }) {
     updateSpellcasting, addSpell, removeSpell, togglePrepared, toggleSlot,
     spendPactSlot, regainPactSlot,
     setConcentration,
+    addActiveEffect,
     toggleLanguage,
     addAttack, removeAttack, updateAttack,
     setChosenFeature,
@@ -313,6 +314,7 @@ export function SheetContent({ activeTab }) {
           onRegainPactSlot={regainPactSlot}
           onSetConcentration={setConcentration}
           onApplyHealing={applyHealing}
+          onAddActiveEffect={addActiveEffect}
           focusSpellId={focusSpellId}
           onClearFocusSpell={clearFocusSpell}
         />

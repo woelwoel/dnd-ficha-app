@@ -17,7 +17,7 @@ vi.mock('../systems/dnd5e/components/CharacterSheet/CharacterInfo', () => ({ Cha
 vi.mock('../systems/dnd5e/components/CharacterSheet/SkillsList', () => ({ SkillsList: () => <div /> }))
 vi.mock('../systems/dnd5e/components/CharacterSheet/LevelProgression', () => ({ LevelProgression: () => <div /> }))
 vi.mock('../systems/dnd5e/components/SourcePicker', () => ({ SourcePicker: () => <div /> }))
-vi.mock('../systems/dnd5e/data/SrdProvider', () => ({ useLazySrdDataset: () => [] }))
+vi.mock('../systems/dnd5e/data/SrdProvider', () => ({ useLazySrdDataset: () => ({}), useSrd: () => ({ spells: [] }) }))
 
 import { SheetV2 } from '../systems/dnd5e/components/CharacterSheet/v2/SheetV2'
 

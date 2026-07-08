@@ -1,6 +1,9 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { screen } from '@testing-library/react'
 import { renderWithSheetContext } from './helpers/sheetV2TestContext'
+
+vi.mock('../systems/dnd5e/data/SrdProvider', () => ({ useLazySrdDataset: () => ({}), useSrd: () => ({ spells: [] }) }))
+
 import { HeaderV2 } from '../systems/dnd5e/components/CharacterSheet/v2/HeaderV2'
 
 const noop = () => {}

@@ -9,6 +9,7 @@ vi.mock('../systems/dnd5e/components/CharacterSheet/LevelProgression', () => ({
 vi.mock('../systems/dnd5e/components/CharacterSheet/RestActions', () => ({ RestActions: () => <div /> }))
 vi.mock('../systems/dnd5e/components/CharacterSheet/DamageModal', () => ({ DamageModal: () => null }))
 vi.mock('../systems/dnd5e/components/CharacterSheet/CharacterInfo', () => ({ CharacterInfo: () => <div /> }))
+vi.mock('../systems/dnd5e/data/SrdProvider', () => ({ useLazySrdDataset: () => ({}), useSrd: () => ({ spells: [] }) }))
 
 import { HeaderV2 } from '../systems/dnd5e/components/CharacterSheet/v2/HeaderV2'
 

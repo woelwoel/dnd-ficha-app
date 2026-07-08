@@ -67,8 +67,9 @@ function Harness({ initial, classData, onApplyHealing = () => {}, spies = {} }) 
           setCharacter(c => ({ ...c, spellcasting: { ...c.spellcasting, pactSlotsUsed: Math.min(qty, (c.spellcasting.pactSlotsUsed ?? 0) + 1) } }))
         }}
         onRegainPactSlot={() => {}}
-        onSetConcentration={() => {}}
+        onSetConcentration={spies.onSetConcentration ?? (() => {})}
         onApplyHealing={onApplyHealing}
+        onAddActiveEffect={spies.onAddActiveEffect ?? (() => {})}
       />
     </SrdProvider>
   )
@@ -180,5 +181,32 @@ describe('Pact Magic (Bruxo)', () => {
     await waitFor(() => expect(rollCalls).toHaveLength(1))
     expect(rollCalls[0].notation).toBe('8d6')
     expect(rollCalls[0].label).toContain('(Nv 3)')
+  })
+})
+
+describe('efeitos ativos no cast', () => {
+  it('magia de buff com alcance nao-Pessoal mostra o botao Aplicar em voce', async () => {
+    const user = userEvent.setup()
+    const onAddActiveEffect = vi.fn()
+    const onSetConcentration = vi.fn()
+    const ESCUDO_SPELL = { id: 's5', index: 'escudo-da-fe', name: 'Escudo da Fé', level: 1, school: 'Abjuração', prepared: true, range: '18 metros' }
+    render(<Harness initial={makeChar('clerigo', 'wis', [ESCUDO_SPELL])} classData={CLERIGO} spies={{ onAddActiveEffect, onSetConcentration }} />)
+    await openCastPicker(user)
+    await user.click(await screen.findByRole('button', { name: /^Nv 1/ }))
+    expect(onAddActiveEffect).not.toHaveBeenCalled()
+    await user.click(await screen.findByRole('button', { name: /Aplicar em você/ }))
+    expect(onAddActiveEffect).toHaveBeenCalledWith(expect.objectContaining({ id: 'escudo-da-fe', source: 'cast' }))
+    expect(onSetConcentration).toHaveBeenCalled()
+  })
+
+  it('alcance Pessoal aplica o efeito direto, sem prompt', async () => {
+    const user = userEvent.setup()
+    const onAddActiveEffect = vi.fn()
+    const BUFF_SELF = { id: 's6', index: 'bencao', name: 'Bênção', level: 1, school: 'Encantamento', prepared: true, range: 'Pessoal' }
+    render(<Harness initial={makeChar('clerigo', 'wis', [BUFF_SELF])} classData={CLERIGO} spies={{ onAddActiveEffect }} />)
+    await openCastPicker(user)
+    await user.click(await screen.findByRole('button', { name: /^Nv 1/ }))
+    expect(onAddActiveEffect).toHaveBeenCalledWith(expect.objectContaining({ id: 'bencao', source: 'cast' }))
+    expect(screen.queryByRole('button', { name: /Aplicar em você/ })).not.toBeInTheDocument()
   })
 })

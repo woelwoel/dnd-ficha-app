@@ -10,6 +10,7 @@ import { useDiceRoller } from '../../../../hooks/useDiceRoller'
 import { useLazySrdDataset } from '../../data/SrdProvider'
 import { spellRollPlan } from '../../domain/spellMechanics'
 import { executeCastPlan } from './castSpell'
+import { buildEffectInstance } from '../../domain/activeEffects'
 import {
   matchesFilters,
   EMPTY_FILTERS,
@@ -18,7 +19,7 @@ import {
   CASTING_TIME_LABELS,
 } from '../../utils/spellFilters'
 
-export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onTogglePrepared, onToggleSlot, onSetConcentration, onSpendPactSlot, onRegainPactSlot, onApplyHealing, focusSpellId, onClearFocusSpell }) {
+export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onTogglePrepared, onToggleSlot, onSetConcentration, onSpendPactSlot, onRegainPactSlot, onApplyHealing, onAddActiveEffect, focusSpellId, onClearFocusSpell }) {
   const [activeTab, setActiveTab] = useState(0)
   const [search, setSearch] = useState('')
   const [pickerOpen, setPickerOpen] = useState(false)
@@ -44,10 +45,21 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   const spellMechanics = useLazySrdDataset('spellMechanics')
   const spellMod = spellAbility ? Math.floor((abilityScore - 10) / 2) : 0
 
+  // Criar efeito de conjuração PRÓPRIA também marca a concentração — âncora
+  // da expiração automática (spec 2026-07-07 efeitos ativos).
+  function applyEffect(instance, spell, effectDef) {
+    onAddActiveEffect?.(instance)
+    if (effectDef.concentration) onSetConcentration?.(spell)
+  }
+
   /**
    * Conjurar = gastar o recurso E rolar o plano da magia (spec 2026-07-06).
    * Shift no clique = vantagem, Alt = desvantagem (só nos d20 de ataque).
-   * Retorna { healTotal } pro SpellRow exibir "Aplicar N PV" (ou null).
+   * Magias com `effect` curado (buff — spec 2026-07-07): alcance Pessoal
+   * aplica direto; alcance não-Pessoal devolve `effectOffer` pro SpellRow
+   * oferecer o prompt "✦ Aplicar em você?" (ex.: Escudo da Fé em terceiros).
+   * Retorna { healTotal, effectOffer } pro SpellRow exibir os botões (ou null
+   * se a magia não tem mecânica nem efeito).
    */
   function handleCast(spell, { slotLevel = null, pact = false, event = null } = {}) {
     if (pact) {
@@ -58,7 +70,20 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
     }
 
     const mech = spellMechanics?.[spell.index]
-    if (!mech) return null
+
+    const effectDef = mech?.effect
+    let effectOffer = null
+    if (effectDef) {
+      const instance = buildEffectInstance(spell, effectDef, 'cast')
+      const isSelf = /^pessoal/i.test(String(spell.range ?? ''))
+      if (isSelf) {
+        applyEffect(instance, spell, effectDef)
+      } else {
+        effectOffer = { instance, spell, effectDef }
+      }
+    }
+
+    if (!mech) return effectDef ? { healTotal: 0, effectOffer } : null
     const plan = spellRollPlan(spell, mech, {
       slotLevel: pact ? pactSlots.slotLevel : slotLevel,
       characterLevel: totalLevel,
@@ -66,9 +91,10 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
       spellMod,
       spellDC: spellSaveDC,
     })
-    if (!plan) return null
+    if (!plan) return effectDef ? { healTotal: 0, effectOffer } : null
     const mode = event?.shiftKey ? 'adv' : event?.altKey ? 'dis' : undefined
-    return executeCastPlan(plan.steps, roll, { mode })
+    const result = executeCastPlan(plan.steps, roll, { mode })
+    return { ...(result ?? {}), effectOffer }
   }
 
   const { classSpells, levelData, availableTabs } =
@@ -416,6 +442,7 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
                   onCast={(opts) => handleCast(spell, opts)}
                   pactOption={pactSlots ? { slotLevel: pactSlots.slotLevel, remaining: pactSlots.qty - pactUsed } : null}
                   onApplyHealing={onApplyHealing}
+                  onApplyEffect={({ instance, spell: sp, effectDef }) => applyEffect(instance, sp, effectDef)}
                   canCast={spell.level === 0 || (isPrepared ? spell.prepared !== false : true)}
                   isPrepared={spell.level === 0 || spell.prepared !== false}
                   showPreparedToggle={isPrepared && spell.level > 0 && !!onTogglePrepared && spell.alwaysPrepared !== true}
@@ -494,12 +521,13 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   )
 }
 
-function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedToggle, onTogglePrepared, isConcentrating, canConcentrate, onToggleConcentration, slotLevels = [], slotMax, usedSlots = {}, canCast = true, hasMechanics, onCast, pactOption, onApplyHealing }) {
+function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedToggle, onTogglePrepared, isConcentrating, canConcentrate, onToggleConcentration, slotLevels = [], slotMax, usedSlots = {}, canCast = true, hasMechanics, onCast, pactOption, onApplyHealing, onApplyEffect }) {
   const schoolAbbr = SCHOOL_ABBR[(spell.school || '').toLowerCase()] || (spell.school || '').slice(0, 3)
   const dimmed = showPreparedToggle && !isPrepared
   const [castOpen, setCastOpen] = useState(false)
   const [castedAt, setCastedAt] = useState(null)
   const [pendingHeal, setPendingHeal] = useState(null)
+  const [pendingEffect, setPendingEffect] = useState(null)
   // Slots disponíveis para esta magia: nível ≥ nível da magia E sobrando ≥ 1
   const availableSlots = spell.level > 0 && canCast
     ? slotLevels.filter(sl => sl >= spell.level && ((slotMax?.(sl) ?? 0) - (usedSlots[sl] || 0)) > 0)
@@ -515,6 +543,10 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
     if (result?.healTotal > 0) {
       setPendingHeal(result.healTotal)
       setTimeout(() => setPendingHeal(null), 10000)
+    }
+    if (result?.effectOffer) {
+      setPendingEffect(result.effectOffer)
+      setTimeout(() => setPendingEffect(null), 10000)
     }
   }
 
@@ -628,6 +660,14 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
           className="flex-shrink-0 text-xs px-2 py-0.5 rounded border font-bold transition-colors border-emerald-600 bg-emerald-900/20 text-emerald-400 hover:bg-emerald-900/40"
         >
           ✚ Aplicar {pendingHeal} PV
+        </button>
+      )}
+      {pendingEffect != null && (
+        <button
+          onClick={() => { onApplyEffect?.(pendingEffect); setPendingEffect(null) }}
+          className="flex-shrink-0 text-xs px-2 py-0.5 rounded border font-bold transition-colors border-amber-700 bg-amber-900/20 text-amber-300 hover:bg-amber-900/40"
+        >
+          ✦ Aplicar em você?
         </button>
       )}
       {onRemove ? (

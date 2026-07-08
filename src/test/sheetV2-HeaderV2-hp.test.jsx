@@ -2,6 +2,9 @@ import { describe, it, expect, vi } from 'vitest'
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithSheetContext, makeCharacter, makeUpdaters } from './helpers/sheetV2TestContext'
+
+vi.mock('../systems/dnd5e/data/SrdProvider', () => ({ useLazySrdDataset: () => ({}), useSrd: () => ({ spells: [] }) }))
+
 import { HeaderV2 } from '../systems/dnd5e/components/CharacterSheet/v2/HeaderV2'
 
 const noop = () => {}
