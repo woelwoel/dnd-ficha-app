@@ -95,10 +95,11 @@ export default defineConfig({
             //    (PHB + Artífice de Tasha).
             //    v21 → v22 (2026-07-06): spell-mechanics-pt.json (rolagem de magias)
             //    v22 → v23 (2026-07-07): campo effect no spell-mechanics (efeitos ativos)
+            //    v23 → v24 (2026-07-08): datasets xanathar-* (fundação + talentos raciais)
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v23',
+              cacheName: 'srd-data-v24',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
