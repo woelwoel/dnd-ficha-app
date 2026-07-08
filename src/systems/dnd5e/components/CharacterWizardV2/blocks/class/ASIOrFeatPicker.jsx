@@ -6,7 +6,7 @@ const ATTRS_ORDER = ['str', 'dex', 'con', 'int', 'wis', 'cha']
 
 const ABILITY_MAX = 20  // teto de aumento por ASI (regra oficial)
 
-export function ASIOrFeatPicker({ currentChoice, currentAttrs = {}, allowFeats, feats, onChoose }) {
+export function ASIOrFeatPicker({ currentChoice, currentAttrs = {}, allowFeats, feats, onChoose, raceInfo = null }) {
   const mode = currentChoice?.type ?? 'asi'
   const bonuses = (mode === 'asi' ? currentChoice?.bonuses : null) ?? {}
   const totalSpent = Object.values(bonuses).reduce((s, v) => s + v, 0)
@@ -131,6 +131,7 @@ export function ASIOrFeatPicker({ currentChoice, currentAttrs = {}, allowFeats, 
           feats={feats}
           value={currentChoice?.type === 'feat' ? currentChoice : null}
           onChange={f => onChoose({ type: 'feat', ...f })}
+          raceInfo={raceInfo}
         />
       )}
     </div>

@@ -271,6 +271,7 @@ export function RaceBlock({ draft, updateDraft, races, feats = [] }) {
             feats={feats}
             value={draft.racialFeat ?? null}
             onChange={f => updateDraft({ racialFeat: f })}
+            raceInfo={{ race: draft.race, subrace: draft.subrace }}
           />
         </div>
       )}

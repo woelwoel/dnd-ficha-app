@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { SourceBadge } from '../../SourceBadge'
+import { meetsRacePrereq, formatRacePrereq } from '../../../domain/featPrereqs'
 
 /**
  * Picker de talento reutilizável (Humano Variante e ASI de classe).
@@ -27,6 +28,8 @@ const PROF_LABEL = {
 function formatPrereq(prereq) {
   if (!prereq) return null
   switch (prereq.type) {
+    case 'race':
+      return formatRacePrereq(prereq)
     case 'spellcasting':
       return 'capaz de conjurar ao menos uma magia'
     case 'ability':
@@ -42,12 +45,15 @@ function formatPrereq(prereq) {
   }
 }
 
-export function FeatPicker({ feats = [], value = null, onChange }) {
+export function FeatPicker({ feats = [], value = null, onChange, raceInfo = null }) {
   const [search, setSearch] = useState('')
   const [expanded, setExpanded] = useState(() => new Set())
 
+  // Talentos raciais (Xanathar) só são oferecidos pra raça certa — mas apenas
+  // quando o call site fornece `raceInfo`; sem ele, comportamento antigo.
   const filtered = feats.filter(f =>
     f.name.toLowerCase().includes(search.toLowerCase())
+    && (!raceInfo || meetsRacePrereq(f.prereq, raceInfo))
   )
 
   function toggleExpanded(index) {

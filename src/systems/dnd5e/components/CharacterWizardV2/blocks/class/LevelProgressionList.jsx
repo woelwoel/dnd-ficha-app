@@ -68,6 +68,7 @@ export function LevelProgressionList({
                   allowFeats={allowFeats}
                   feats={feats}
                   onChoose={choice => onASIChoice(lvl, choice)}
+                  raceInfo={{ race: draft.race, subrace: draft.subrace }}
                 />
               ) : (
                 <div className="pt-2 border-t-2 border-parchment-600/50">

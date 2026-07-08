@@ -70,4 +70,36 @@ describe('<FeatPicker>', () => {
     expect(screen.getByText('Robusto')).toBeInTheDocument()
     expect(screen.queryByText('Atleta')).not.toBeInTheDocument()
   })
+
+  describe('prereq de raça (Xanathar)', () => {
+    const RACIAL = [
+      ...FEATS,
+      { index: 'fortitude-ana', name: 'Fortitude Anã', desc: 'Sangue de heróis anões.',
+        prereq: { type: 'race', races: ['anao'] }, attrBonus: { choices: ['con'], amount: 1 } },
+    ]
+
+    it('esconde talento racial de outra raça quando raceInfo é fornecido', () => {
+      render(<FeatPicker feats={RACIAL} value={null} onChange={() => {}} raceInfo={{ race: 'humano', subrace: '' }} />)
+      expect(screen.getByText('Atleta')).toBeInTheDocument()
+      expect(screen.queryByText('Fortitude Anã')).not.toBeInTheDocument()
+    })
+
+    it('mostra talento racial pra raça certa (match por raça ou sub-raça)', () => {
+      render(<FeatPicker feats={RACIAL} value={null} onChange={() => {}} raceInfo={{ race: 'anao', subrace: 'anao-da-colina' }} />)
+      expect(screen.getByText('Fortitude Anã')).toBeInTheDocument()
+    })
+
+    it('sem raceInfo mostra tudo (retrocompat)', () => {
+      render(<FeatPicker feats={RACIAL} value={null} onChange={() => {}} />)
+      expect(screen.getByText('Fortitude Anã')).toBeInTheDocument()
+    })
+
+    it('exibe o pré-requisito de raça legível', async () => {
+      const user = userEvent.setup()
+      render(<FeatPicker feats={RACIAL} value={null} onChange={() => {}} raceInfo={{ race: 'anao', subrace: '' }} />)
+      await user.click(screen.getByRole('button', { name: /o que faz.*fortitude anã/i }))
+      expect(screen.getByText(/Pré-requisito/i)).toBeInTheDocument()
+      expect(screen.getByText(/Anão/)).toBeInTheDocument()
+    })
+  })
 })
