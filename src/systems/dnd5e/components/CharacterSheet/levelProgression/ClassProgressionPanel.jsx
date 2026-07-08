@@ -189,6 +189,7 @@ export function ClassProgressionPanel({
   progression, currentLevel, hitDie, conMod, attributes, isMulticlass,
   onLevelChange, onApplyLevelUp, multiclassIndex,
   levelChoices, chosenFeatures, allowFeats = false, activeSources,
+  raceInfo = null,
 }) {
   const [wizardOpen, setWizardOpen]       = useState(false)
   const [selectedFeat, setSelectedFeat]   = useState(null)
@@ -265,6 +266,7 @@ export function ClassProgressionPanel({
           onCancel={() => setWizardOpen(false)}
           allowFeats={allowFeats}
           activeSources={activeSources}
+          raceInfo={raceInfo}
         />
       )}
 

@@ -137,6 +137,7 @@ export function LevelProgression({
           chosenFeatures={chosenFeatures}
           allowFeats={allowFeats}
           activeSources={activeSources}
+          raceInfo={{ race: character.info?.race, subrace: character.info?.subrace }}
         />
       )}
 
@@ -160,6 +161,7 @@ export function LevelProgression({
             chosenFeatures={chosenFeatures}
             allowFeats={allowFeats}
             activeSources={activeSources}
+            raceInfo={{ race: character.info?.race, subrace: character.info?.subrace }}
           />
         )
       })()}

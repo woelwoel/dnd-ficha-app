@@ -14,7 +14,7 @@ import { FeatPicker } from './FeatPicker'
 export function LevelUpPanel({
   nextLevel, nextEntry, hitDie, conMod, attributes,
   onConfirm, onCancel, levelChoices, currentChosenFeatures, allowFeats = false,
-  activeSources,
+  activeSources, raceInfo = null,
 }) {
   const [hpGain,              setHpGain]              = useState(null)
   const [boosts,              setBoosts]              = useState({})
@@ -188,6 +188,7 @@ export function LevelUpPanel({
               featChosenAttr={featChosenAttr}
               setFeatChosenAttr={setFeatChosenAttr}
               onFeatInfo={setFeatModal}
+              raceInfo={raceInfo}
             />
           )}
         </div>

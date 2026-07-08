@@ -2,6 +2,7 @@
 // Picker de talento (modo ASI=feat) com busca, filtragem por pré-requisito
 // e picker de atributo quando o talento concede attrBonus.
 import { ABILITY_SCORES } from '../../../utils/calculations'
+import { meetsRacePrereq, formatRacePrereq } from '../../../domain/featPrereqs'
 
 export function FeatPicker({
   feats, attributes,
@@ -9,6 +10,7 @@ export function FeatPicker({
   selectedFeatIdx, setSelectedFeatIdx,
   featChosenAttr, setFeatChosenAttr,
   onFeatInfo,
+  raceInfo = null,
 }) {
   const chosenFeat        = selectedFeatIdx !== null ? feats[selectedFeatIdx] : null
   const featNeedsAttrPick = chosenFeat?.attrBonus && (chosenFeat.attrBonus.choices?.length ?? 0) > 1
@@ -23,6 +25,11 @@ export function FeatPicker({
     }
     if (f.prereq.type === 'ability_or') {
       return f.prereq.abilities.some(a => (attributes[a.ability] ?? 10) >= a.min)
+    }
+    if (f.prereq.type === 'race') {
+      // Talento racial (Xanathar): só oferecido pra raça certa quando o call
+      // site fornece raceInfo; sem raceInfo, comportamento antigo (mostra).
+      return !raceInfo || meetsRacePrereq(f.prereq, raceInfo)
     }
     return true
   })
@@ -63,6 +70,7 @@ export function FeatPicker({
                       {feat.prereq.type === 'ability' && `(requer ${feat.prereq.ability.toUpperCase()} ${feat.prereq.min}+)`}
                       {feat.prereq.type === 'ability_or' && `(requer atributo ${feat.prereq.abilities[0].min}+)`}
                       {feat.prereq.type === 'proficiency' && '(requer proficiência)'}
+                      {feat.prereq.type === 'race' && `(requer ${formatRacePrereq(feat.prereq)})`}
                     </span>
                   )}
                 </div>
