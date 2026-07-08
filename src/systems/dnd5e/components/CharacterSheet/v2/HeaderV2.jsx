@@ -10,6 +10,7 @@ import { safeParseCharacter } from '../../../domain/characterSchema'
 import { EditDialog } from './EditDialog'
 import { useLazySrdDataset, useSrd } from '../../../data/SrdProvider'
 import { ActiveEffectsChips } from './ActiveEffectsChips'
+import { MoveToCampaignModal } from '../MoveToCampaignModal'
 
 export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, saving, saved, saveError }) {
   const { character, setCharacter, calc, readOnly, updaters, handlers, races, classes, backgrounds, fichaErrors, classData, onNavigateToSpells } = useCharacterContext()
@@ -24,7 +25,11 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
   const [identityOpen, setIdentityOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [progressionOpen, setProgressionOpen] = useState(false)
+  const [moveOpen, setMoveOpen] = useState(false)
   const importRef = useRef(null)
+
+  const characterId = character?.id ?? null
+  const campaignId = character?.campaignId ?? null
 
   function handleFile(e) {
     const file = e.target.files?.[0]
@@ -55,8 +60,20 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
   const conditions = combat?.conditions ?? []
 
   return (
-    <header className="v2-panel" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
-      <button type="button" className="v2-btn" onClick={onBack}>← Personagens</button>
+    <header className="v2-panel" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      {/* Linha 0: voltar (subiu pra cima do bloco de identidade) */}
+      <div style={{ display: 'flex' }}>
+        <button type="button" className="v2-btn" onClick={onBack}>← Personagens</button>
+      </div>
+
+      {/* Linha 1: token + identidade + chips + ações + PV */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
+      <IdentityToken
+        portrait={info.portrait ?? null}
+        name={info.name}
+        readOnly={readOnly}
+        onClick={() => setIdentityOpen(true)}
+      />
 
       {readOnly ? (
         <div style={{ flex: 1, minWidth: 160 }}>
@@ -163,6 +180,7 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
           {saveError ? 'Erro ao salvar' : saving ? 'Salvando…' : saved ? 'Salvo' : ''}
         </div>
       </div>
+      </div>
 
       <HpEditor open={hpEditOpen} onClose={() => setHpEditOpen(false)} />
       <HealEditor open={healOpen} onClose={() => setHealOpen(false)} />
@@ -186,7 +204,32 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
           onClassChange={handlers.handleClassChange}
           onToggleLanguage={updaters.toggleLanguage}
         />
+        {!readOnly && characterId && (
+          <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--v2-border)' }}>
+            <div className="v2-title" style={{ margin: 0, marginBottom: 6 }}>Mesa</div>
+            <p className="v2-mut" style={{ fontSize: 12, marginBottom: 8 }}>
+              {campaignId
+                ? 'Vinculada a uma mesa — o mestre pode lê-la em modo leitura.'
+                : 'Ficha pessoal. Vincule-a a uma mesa ou mantenha pessoal.'}
+            </p>
+            <button type="button" className="v2-btn" onClick={() => setMoveOpen(true)}>
+              {campaignId ? 'Mover / tornar pessoal' : 'Vincular a uma mesa'}
+            </button>
+          </div>
+        )}
       </EditDialog>
+
+      {moveOpen && (
+        <MoveToCampaignModal
+          characterId={characterId}
+          currentCampaignId={campaignId}
+          onClose={() => setMoveOpen(false)}
+          onMoved={(newCampaignId) => {
+            setMoveOpen(false)
+            setCharacter(prev => ({ ...prev, campaignId: newCampaignId }))
+          }}
+        />
+      )}
       <EditDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} title="Configurações da ficha" size="md">
         <SourcePicker
           value={character.meta?.settings?.sources ?? ['phb']}
@@ -243,6 +286,29 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
         />
       </EditDialog>
     </header>
+  )
+}
+
+function IdentityToken({ portrait, name, readOnly, onClick }) {
+  const box = {
+    width: 46, height: 46, borderRadius: 10, overflow: 'hidden', flexShrink: 0,
+    border: '1px solid var(--v2-border)', background: 'var(--v2-surface-2)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0,
+  }
+  const inner = portrait
+    ? <img src={portrait} alt="Retrato do personagem" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+    : (
+      <span aria-hidden="true" style={{ fontSize: 20, fontWeight: 600, color: 'var(--v2-accent)' }}>
+        {(name || '?').trim().charAt(0).toUpperCase() || '?'}
+      </span>
+    )
+  if (readOnly) {
+    return <div style={box} role="img" aria-label="Retrato do personagem">{inner}</div>
+  }
+  return (
+    <button type="button" aria-label="Editar retrato" onClick={onClick} style={{ ...box, cursor: 'pointer', color: 'inherit' }}>
+      {inner}
+    </button>
   )
 }
 

@@ -98,11 +98,14 @@ describe('Concentração E2E', () => {
   })
 
   it('magias com concentração mostram ⊙ na linha (não as outras)', async () => {
+    const user = userEvent.setup()
     const spells = [
       { id: 's1', index: 'voo', name: 'Voo', level: 3, school: 'Transmutação', concentration: true, prepared: true },
       { id: 's2', index: 'misseis-magicos', name: 'Mísseis Mágicos', level: 1, school: 'Evocação', concentration: false, prepared: true },
     ]
     render(<ControlledSpells initialCharacter={magoCharWithSpells(spells)} />)
+    // Lista dividida em sub-abas por nível — Voo está em Nível 3.
+    await user.click(await screen.findByRole('tab', { name: /Nível 3/ }))
     await waitFor(() => expect(screen.getByText('Voo')).toBeInTheDocument())
     // Botão de concentração só aparece nas magias com concentration: true.
     // O ícone do botão é ⊙ — buscamos pelo title que serve de pista.

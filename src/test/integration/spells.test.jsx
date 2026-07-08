@@ -150,6 +150,25 @@ describe('Spells E2E (Mago)', () => {
     expect(await screen.findByRole('button', { name: /Nv 3/i })).toBeInTheDocument()
   })
 
+  it('sub-abas por nível: mostra só o nível ativo e alterna ao clicar', async () => {
+    const spells = [
+      { id: 's1', index: 'misseis-magicos', name: 'Mísseis Mágicos', level: 1, school: 'Evocação', prepared: true },
+      { id: 's2', index: 'bola-de-fogo', name: 'Bola de Fogo', level: 3, school: 'Evocação', prepared: true },
+    ]
+    const user = userEvent.setup()
+    render(<ControlledSpells initialCharacter={makeMagoCharacter(spells)} />)
+    // Sub-abas por nível presentes
+    await screen.findByRole('tab', { name: /Nível 1/ })
+    expect(screen.getByRole('tab', { name: /Nível 3/ })).toBeInTheDocument()
+    // Default = primeiro nível presente (Nível 1): Mísseis visível, Bola oculta
+    expect(screen.getByText('Mísseis Mágicos')).toBeInTheDocument()
+    expect(screen.queryByText('Bola de Fogo')).toBeNull()
+    // Troca pra Nível 3 → Bola aparece, Mísseis some
+    await user.click(screen.getByRole('tab', { name: /Nível 3/ }))
+    expect(await screen.findByText('Bola de Fogo')).toBeInTheDocument()
+    expect(screen.queryByText('Mísseis Mágicos')).toBeNull()
+  })
+
   it('truques não exibem botão de preparar nem botão de conjurar (sempre castáveis)', async () => {
     const spells = [
       { id: 'c1', index: 'prestidigitacao', name: 'Prestidigitação', level: 0, school: 'Transmutação' },

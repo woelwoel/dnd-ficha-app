@@ -21,6 +21,9 @@ import {
 
 export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onTogglePrepared, onToggleSlot, onSetConcentration, onSpendPactSlot, onRegainPactSlot, onApplyHealing, onAddActiveEffect, focusSpellId, onClearFocusSpell }) {
   const [activeTab, setActiveTab] = useState(0)
+  // Sub-aba da LISTA da ficha (Truques / Nível N) — separado do `activeTab`,
+  // que controla o nível navegado no catálogo/picker.
+  const [spellView, setSpellView] = useState(0)
   const [search, setSearch] = useState('')
   const [pickerOpen, setPickerOpen] = useState(false)
   const [detailSpell, setDetailSpell] = useState(null)
@@ -123,6 +126,11 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   }, [focusSpellId])
   const myCantrips  = mySpells.filter(s => s.level === 0)
   const myLeveled   = mySpells.filter(s => s.level > 0)
+  // Níveis (incl. truque=0) que a ficha realmente tem — cada um vira uma sub-aba.
+  const presentSpellLevels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].filter(lvl => mySpells.some(s => s.level === lvl))
+  // Aba ativa da lista; se a selecionada esvaziou (ex.: removeu a última magia
+  // do nível), cai pra primeira disponível sem precisar de efeito.
+  const activeSpellView = presentSpellLevels.includes(spellView) ? spellView : (presentSpellLevels[0] ?? 0)
   // Conta como "preparada" qualquer magia leveled cujo flag não seja false
   // (undefined ou true = preparada — assim toda magia antiga já é castável).
   const myPrepared  = myLeveled.filter(s => s.prepared !== false)
@@ -419,49 +427,63 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
         )}
       </div>
 
-      {/* Magias da ficha agrupadas por nível */}
-      {[0, 1,2,3,4,5,6,7,8,9].map(lvl => {
-        const group = mySpells.filter(s => s.level === lvl)
-        if (group.length === 0) return null
-        const label = lvl === 0 ? 'Truques' : `Nível ${lvl}`
-        return (
-          <div key={lvl} className="bg-gray-800 border border-gray-600 rounded-lg p-4">
-            <h3 className="text-sm font-bold text-amber-400 uppercase tracking-widest mb-3">
-              {label}
-              <span className="ml-2 text-gray-500 font-normal normal-case text-xs">{group.length}</span>
-            </h3>
-            <div className="space-y-2">
-              {group.map(spell => (
-                <SpellRow
-                  key={spell.id}
-                  spell={spell}
-                  slotLevels={unifiedSlotLevels}
-                  slotMax={(slotLevel) => unifiedSlots[slotLevel] ?? 0}
-                  usedSlots={usedSlots}
-                  hasMechanics={!!spellMechanics?.[spell.index]}
-                  onCast={(opts) => handleCast(spell, opts)}
-                  pactOption={pactSlots ? { slotLevel: pactSlots.slotLevel, remaining: pactSlots.qty - pactUsed } : null}
-                  onApplyHealing={onApplyHealing}
-                  onApplyEffect={({ instance, spell: sp, effectDef }) => applyEffect(instance, sp, effectDef)}
-                  canCast={spell.level === 0 || (isPrepared ? spell.prepared !== false : true)}
-                  isPrepared={spell.level === 0 || spell.prepared !== false}
-                  showPreparedToggle={isPrepared && spell.level > 0 && !!onTogglePrepared && spell.alwaysPrepared !== true}
-                  onTogglePrepared={() => onTogglePrepared?.(spell.id)}
-                  isConcentrating={concentrating?.spellIndex === spell.index}
-                  canConcentrate={!!spell.concentration && !!onSetConcentration}
-                  onToggleConcentration={() =>
-                    concentrating?.spellIndex === spell.index
-                      ? onSetConcentration?.(null)
-                      : onSetConcentration?.(spell)
-                  }
-                  onDetail={() => setDetailSpell(spell)}
-                  onRemove={spell.alwaysPrepared === true ? null : () => onRemoveSpell(spell.id)}
-                />
-              ))}
-            </div>
+      {/* Magias da ficha — sub-abas por nível/truque (sem scroll gigante) */}
+      {presentSpellLevels.length > 0 && (
+        <div className="bg-gray-800 border border-gray-600 rounded-lg overflow-hidden">
+          <div role="tablist" aria-label="Magias por nível" className="flex overflow-x-auto border-b border-gray-700 bg-gray-900">
+            {presentSpellLevels.map(lvl => {
+              const count = mySpells.filter(s => s.level === lvl).length
+              const label = lvl === 0 ? 'Truques' : `Nível ${lvl}`
+              return (
+                <button
+                  key={lvl}
+                  role="tab"
+                  type="button"
+                  aria-selected={activeSpellView === lvl}
+                  onClick={() => setSpellView(lvl)}
+                  className={`flex-shrink-0 px-3 py-2 text-xs font-semibold whitespace-nowrap transition-colors ${
+                    activeSpellView === lvl
+                      ? 'bg-amber-900/40 text-amber-300 border-b-2 border-amber-500'
+                      : 'text-gray-500 hover:text-gray-300'
+                  }`}
+                >
+                  {label}
+                  <span className="ml-1.5 text-gray-500 font-normal">{count}</span>
+                </button>
+              )
+            })}
           </div>
-        )
-      })}
+          <div className="p-4 space-y-2">
+            {mySpells.filter(s => s.level === activeSpellView).map(spell => (
+              <SpellRow
+                key={spell.id}
+                spell={spell}
+                slotLevels={unifiedSlotLevels}
+                slotMax={(slotLevel) => unifiedSlots[slotLevel] ?? 0}
+                usedSlots={usedSlots}
+                hasMechanics={!!spellMechanics?.[spell.index]}
+                onCast={(opts) => handleCast(spell, opts)}
+                pactOption={pactSlots ? { slotLevel: pactSlots.slotLevel, remaining: pactSlots.qty - pactUsed } : null}
+                onApplyHealing={onApplyHealing}
+                onApplyEffect={({ instance, spell: sp, effectDef }) => applyEffect(instance, sp, effectDef)}
+                canCast={spell.level === 0 || (isPrepared ? spell.prepared !== false : true)}
+                isPrepared={spell.level === 0 || spell.prepared !== false}
+                showPreparedToggle={isPrepared && spell.level > 0 && !!onTogglePrepared && spell.alwaysPrepared !== true}
+                onTogglePrepared={() => onTogglePrepared?.(spell.id)}
+                isConcentrating={concentrating?.spellIndex === spell.index}
+                canConcentrate={!!spell.concentration && !!onSetConcentration}
+                onToggleConcentration={() =>
+                  concentrating?.spellIndex === spell.index
+                    ? onSetConcentration?.(null)
+                    : onSetConcentration?.(spell)
+                }
+                onDetail={() => setDetailSpell(spell)}
+                onRemove={spell.alwaysPrepared === true ? null : () => onRemoveSpell(spell.id)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Botão para abrir picker */}
       {isSpellcaster && (
