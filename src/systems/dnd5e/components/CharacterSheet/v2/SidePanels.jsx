@@ -23,6 +23,8 @@ export function SavesPanel() {
             notation={`1d20${calc.fmt(bonus)}`}
             label={`Salvaguarda — ${label}`}
             ariaLabel={`Rolar salvaguarda de ${label}, bônus ${calc.fmt(bonus)}`}
+            category="save"
+            ability={key}
           >
             <span className={isProf ? '' : 'v2-mut'}>
               <span aria-hidden className={isProf ? 'v2-acc' : 'v2-mut'}>{isProf ? '●' : '○'}</span> {label}

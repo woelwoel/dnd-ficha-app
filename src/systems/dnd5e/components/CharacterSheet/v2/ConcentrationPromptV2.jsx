@@ -34,7 +34,7 @@ export function ConcentrationPromptV2() {
 
   function handleRoll(e) {
     const mode = e.shiftKey ? 'adv' : e.altKey ? 'dis' : undefined
-    const entry = roll(`1d20${calc.fmt(bonus)}`, `Concentração · salvaguarda de CON (CD ${dc})`, mode ? { mode } : {})
+    const entry = roll(`1d20${calc.fmt(bonus)}`, `Concentração · salvaguarda de CON (CD ${dc})`, { ...(mode ? { mode } : {}), category: 'save', ability: 'con' })
     if (entry) setResult({ total: entry.total, passed: entry.total >= dc })
   }
 

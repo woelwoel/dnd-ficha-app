@@ -60,6 +60,8 @@ function AbilityCard({ a, mod, score, fmt, readOnly, onEdit }) {
   const { handlers, longPressActive, title } = useRollInteraction({
     notation: `1d20${fmt(mod)}`,
     label: `Teste de ${a.name}`,
+    category: 'check',
+    ability: a.key,
   })
   return (
     <div className="v2-panel v2-ability" style={{ position: 'relative', padding: 0 }}>
@@ -86,6 +88,8 @@ function InitiativeCard() {
   const { handlers, longPressActive, title } = useRollInteraction({
     notation: `1d20${calc.fmt(calc.initiative)}`,
     label: 'Iniciativa',
+    category: 'check',
+    ability: 'dex',
   })
   return (
     <button

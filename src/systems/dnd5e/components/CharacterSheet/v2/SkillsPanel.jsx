@@ -26,6 +26,8 @@ export function SkillsPanel() {
             notation={`1d20${calc.fmt(bonus)}`}
             label={s.name}
             ariaLabel={`Rolar ${s.name}, bônus ${calc.fmt(bonus)}`}
+            category="check"
+            ability={s.ability}
           >
             <span className={prof ? '' : 'v2-mut'} style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               <span aria-hidden className={prof ? 'v2-acc' : 'v2-mut'}>{expert ? '◆' : prof ? '●' : '○'}</span>{' '}

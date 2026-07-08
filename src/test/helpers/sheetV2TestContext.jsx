@@ -63,7 +63,7 @@ export function makeDice(overrides = {}) {
   return {
     history: [], open: false, mode: 'normal', dice3d: false,
     roll: noop, clearHistory: noop, togglePanel: noop, openPanel: noop,
-    setMode: noop, setDice3d: noop, setDiceAccent: noop,
+    setMode: noop, setDice3d: noop, setDiceAccent: noop, setRollEffectsResolver: noop,
     ...overrides,
   }
 }

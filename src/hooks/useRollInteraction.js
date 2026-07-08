@@ -11,7 +11,7 @@ const LONG_PRESS_MS = 500
  * Extraída do RollButton pra qualquer elemento (linha, card) virar gatilho.
  * Retorna { handlers, longPressActive, title } — espalhe `handlers` no elemento.
  */
-export function useRollInteraction({ notation, label, crit = false, onAfterRoll }) {
+export function useRollInteraction({ notation, label, crit = false, onAfterRoll, category = null, ability = null }) {
   const { roll } = useDiceRoller()
   const timerRef = useRef(null)
   const longPressedRef = useRef(false)
@@ -56,6 +56,7 @@ export function useRollInteraction({ notation, label, crit = false, onAfterRoll 
     if (longPressedRef.current) opts.mode = 'adv'
     else if (e.shiftKey) opts.mode = 'adv'
     else if (e.altKey) opts.mode = 'dis'
+    if (category) { opts.category = category; if (ability) opts.ability = ability }
     roll(notation, label, opts)
     onAfterRoll?.()
     longPressedRef.current = false

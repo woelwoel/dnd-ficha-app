@@ -15,7 +15,7 @@ export function executeCastPlan(steps, roll, { mode } = {}) {
 
   for (const step of steps) {
     if (step.kind === 'attack') {
-      const r = roll(step.notation, step.label, mode ? { mode } : {})
+      const r = roll(step.notation, step.label, { ...(mode ? { mode } : {}), category: 'attack' })
       const d20 = r && r.sides === 20 ? r.rolls?.[0] : null
       pendingAttack = { nat20: d20 === 20, nat1: d20 === 1 }
     } else if (step.kind === 'damage') {

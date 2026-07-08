@@ -63,7 +63,7 @@ describe('executeCastPlan', () => {
   it('mode adv propaga so pros ataques', () => {
     const { roll, calls } = makeRoll([15])
     executeCastPlan([{ kind: 'attack', notation: '1d20+6', label: 'a' }, dmgStep()], roll, { mode: 'adv' })
-    expect(calls[0].opts).toEqual({ mode: 'adv' })
+    expect(calls[0].opts).toEqual({ mode: 'adv', category: 'attack' })
     expect(calls[1].opts).toEqual({})
   })
 
