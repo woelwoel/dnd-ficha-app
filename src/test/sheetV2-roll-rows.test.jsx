@@ -16,7 +16,7 @@ describe('rolagem nas linhas do v2', () => {
     const openPanel = vi.fn()
     renderWithSheetContext(<SkillsPanel />, { dice: { roll, openPanel } })
     await user.click(screen.getByRole('button', { name: /Rolar Atletismo/ }))
-    expect(roll).toHaveBeenCalledWith('1d20+15', 'Atletismo', { crit: false })
+    expect(roll).toHaveBeenCalledWith('1d20+15', 'Atletismo', { crit: false, category: 'check', ability: 'str' })
   })
 
   it('clicar numa salvaguarda rola com o label do v1', async () => {
@@ -24,7 +24,7 @@ describe('rolagem nas linhas do v2', () => {
     const roll = vi.fn()
     renderWithSheetContext(<SavesPanel />, { dice: { roll, openPanel: vi.fn() } })
     await user.click(screen.getByRole('button', { name: /Rolar salvaguarda de CON/ }))
-    expect(roll).toHaveBeenCalledWith('1d20+9', 'Salvaguarda — CON', { crit: false })
+    expect(roll).toHaveBeenCalledWith('1d20+9', 'Salvaguarda — CON', { crit: false, category: 'save', ability: 'con' })
   })
 })
 
@@ -34,7 +34,7 @@ describe('AbilityStrip — rolagem', () => {
     const roll = vi.fn()
     renderWithSheetContext(<AbilityStrip />, { dice: { roll, openPanel: vi.fn() } })
     await user.click(screen.getByRole('button', { name: /Rolar teste de Força/ }))
-    expect(roll).toHaveBeenCalledWith('1d20+5', 'Teste de Força', { crit: false })
+    expect(roll).toHaveBeenCalledWith('1d20+5', 'Teste de Força', { crit: false, category: 'check', ability: 'str' })
     await user.click(screen.getByRole('button', { name: 'Editar FOR' }))
     expect(screen.getByRole('dialog')).toBeInTheDocument()
   })
@@ -44,7 +44,7 @@ describe('AbilityStrip — rolagem', () => {
     const roll = vi.fn()
     renderWithSheetContext(<AbilityStrip />, { dice: { roll, openPanel: vi.fn() } })
     await user.click(screen.getByRole('button', { name: /Rolar iniciativa/ }))
-    expect(roll).toHaveBeenCalledWith('1d20+1', 'Iniciativa', { crit: false })
+    expect(roll).toHaveBeenCalledWith('1d20+1', 'Iniciativa', { crit: false, category: 'check', ability: 'dex' })
   })
 
   it('readOnly: rola, mas não mostra ✎', () => {

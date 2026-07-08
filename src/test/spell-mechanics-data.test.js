@@ -10,7 +10,7 @@ const mech = JSON.parse(fs.readFileSync(path.join(DATA, 'spell-mechanics-pt.json
 const spells = loadSpellSources(DATA)
 const byIndex = new Map(spells.map(s => [s.index, s]))
 
-const ENTRY_KEYS = ['attack', 'save', 'damage', 'heal', 'upcast', 'cantripScaling', 'beams']
+const ENTRY_KEYS = ['attack', 'save', 'damage', 'heal', 'upcast', 'cantripScaling', 'beams', 'effect']
 const entries = Object.entries(mech).filter(([k]) => k !== '_ignore')
 const curated = entries.filter(([, v]) => !v._draft)
 
@@ -30,7 +30,7 @@ describe('spell-mechanics-pt.json — validacao integral (entradas curadas)', ()
     for (const [index, e] of curated) {
       const spell = byIndex.get(index)
       expect(Object.keys(e).filter(k => !ENTRY_KEYS.includes(k)), `${index}: chaves`).toEqual([])
-      expect(Boolean(e.damage?.length || e.heal), `${index}: sem dano nem cura`).toBe(true)
+      expect(Boolean(e.damage?.length || e.heal || e.effect), `${index}: sem dano, cura nem efeito`).toBe(true)
       for (const pkt of e.damage ?? []) {
         expect(parseDiceNotation(pkt.dice), `${index}: dice ${pkt.dice}`).not.toBeNull()
         expect(DAMAGE_TYPES_PT, `${index}: type ${pkt.type}`).toContain(pkt.type)
@@ -57,12 +57,42 @@ describe('spell-mechanics-pt.json — validacao integral (entradas curadas)', ()
         if (e.beams.perSlot) expect(e.upcast, `${index}: beams.perSlot E upcast.perSlot`).toBeUndefined()
         if (e.beams.cantripScaling) expect(spell.level, `${index}: beams.cantripScaling`).toBe(0)
       }
+      if (e.effect) {
+        const EF_KEYS = ['concentration', 'mods', 'riders', 'advantages', 'summary']
+        const MOD_KEYS = ['ac', 'saves', 'saveAbility', 'speed', 'speedMultiplier']
+        expect(Object.keys(e.effect).filter(k => !EF_KEYS.includes(k)), `${index}: effect chaves`).toEqual([])
+        expect(typeof e.effect.summary === 'string' && e.effect.summary.length > 0, `${index}: effect.summary`).toBe(true)
+        for (const k of Object.keys(e.effect.mods ?? {})) {
+          expect(MOD_KEYS, `${index}: effect.mods.${k}`).toContain(k)
+        }
+        if (e.effect.mods?.speedMultiplier != null) {
+          expect(e.effect.mods.speedMultiplier, `${index}: speedMultiplier`).toBeGreaterThanOrEqual(1)
+        }
+        for (const k of Object.keys(e.effect.mods?.saveAbility ?? {})) {
+          expect(ABILITY_KEYS, `${index}: effect saveAbility ${k}`).toContain(k)
+        }
+        for (const r of e.effect.riders ?? []) {
+          expect(parseDiceNotation(r.dice), `${index}: rider ${r.dice}`).not.toBeNull()
+          expect(r.categories?.length, `${index}: rider sem categoria`).toBeGreaterThan(0)
+          for (const c of r.categories) expect(['attack', 'save', 'check'], `${index}: rider cat ${c}`).toContain(c)
+        }
+        for (const a of e.effect.advantages ?? []) {
+          for (const c of a.categories ?? []) expect(['attack', 'save', 'check'], `${index}: adv cat ${c}`).toContain(c)
+          for (const ab of a.abilities ?? []) expect(ABILITY_KEYS, `${index}: adv ability ${ab}`).toContain(ab)
+        }
+      }
     }
   })
 
   it('arquivo 100% curado: nenhuma entrada _draft', () => {
     const pending = entries.filter(([, v]) => v._draft).map(([k]) => k)
     expect(pending).toEqual([])
+  })
+
+  it('buffs classicos tem effect curado', () => {
+    for (const idx of ['bencao', 'escudo-da-fe', 'velocidade', 'orientacao', 'resistencia']) {
+      expect(mech[idx]?.effect, `${idx}: sem effect`).toBeTruthy()
+    }
   })
 })
 

@@ -16,7 +16,9 @@ export function ConcentrationPromptV2() {
   const { roll } = useDiceRoller()
   const event = updaters.lastDamageEvent
   const [result, setResult] = useState(null)
-  const [prevEvent, setPrevEvent] = useState(event)
+  // Lazy init: se `event` fosse uma função (ex.: proxy de teste), useState(event)
+  // a trataria como inicializador e a chamaria — o wrapper evita isso.
+  const [prevEvent, setPrevEvent] = useState(() => event)
   // Novo evento de dano zera o resultado anterior (padrão React de ajustar
   // estado derivado durante o render — sem ref, sem efeito).
   if (event !== prevEvent) {
@@ -32,7 +34,7 @@ export function ConcentrationPromptV2() {
 
   function handleRoll(e) {
     const mode = e.shiftKey ? 'adv' : e.altKey ? 'dis' : undefined
-    const entry = roll(`1d20${calc.fmt(bonus)}`, `Concentração · salvaguarda de CON (CD ${dc})`, mode ? { mode } : {})
+    const entry = roll(`1d20${calc.fmt(bonus)}`, `Concentração · salvaguarda de CON (CD ${dc})`, { ...(mode ? { mode } : {}), category: 'save', ability: 'con' })
     if (entry) setResult({ total: entry.total, passed: entry.total >= dc })
   }
 

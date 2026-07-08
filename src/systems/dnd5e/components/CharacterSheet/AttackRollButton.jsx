@@ -29,7 +29,7 @@ export function AttackRollButton({
     e.preventDefault()
     if (disabled) return
 
-    const opts = {}
+    const opts = { category: 'attack' }
     if (e.shiftKey) opts.mode = 'adv'
     else if (e.altKey) opts.mode = 'dis'
 

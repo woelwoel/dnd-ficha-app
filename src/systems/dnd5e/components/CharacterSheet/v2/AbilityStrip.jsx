@@ -17,6 +17,12 @@ export function AbilityStrip() {
   const { character, calc, readOnly } = useCharacterContext()
   const [editing, setEditing] = useState(null)
   const [caOpen, setCaOpen] = useState(false)
+  const baseAC = character.combat?.armorClass ?? 10
+  const acBuffed = calc.effectiveAC !== baseAC
+  const acStyle = acBuffed ? { color: 'var(--v2-accent)' } : undefined
+  const acTitle = acBuffed
+    ? `${calc.effectiveAC} = ${baseAC} base + efeitos (${calc.effectBreakdown.map(e => e.name).join(', ')})`
+    : undefined
   return (
     <div className="grid grid-cols-4 lg:grid-cols-8 gap-2">
       {ABILITIES.map(a => (
@@ -33,7 +39,7 @@ export function AbilityStrip() {
       {readOnly ? (
         <div className="v2-panel v2-ability" style={{ background: 'var(--v2-surface-2)' }}>
           <span className="v2-title" style={{ margin: 0 }}>CA</span>
-          <span className="v2-ability-mod">{character.combat?.armorClass ?? 10}</span>
+          <span className="v2-ability-mod" style={acStyle} title={acTitle}>{calc.effectiveAC}</span>
           <span className="v2-mut" style={{ fontSize: 11 }}>armadura</span>
         </div>
       ) : (
@@ -45,7 +51,7 @@ export function AbilityStrip() {
           onClick={() => setCaOpen(true)}
         >
           <span className="v2-title" style={{ margin: 0 }}>CA</span>
-          <span className="v2-ability-mod">{character.combat?.armorClass ?? 10}</span>
+          <span className="v2-ability-mod" style={acStyle} title={acTitle}>{calc.effectiveAC}</span>
           <span className="v2-mut" style={{ fontSize: 11 }}>armadura</span>
         </button>
       )}
@@ -60,6 +66,8 @@ function AbilityCard({ a, mod, score, fmt, readOnly, onEdit }) {
   const { handlers, longPressActive, title } = useRollInteraction({
     notation: `1d20${fmt(mod)}`,
     label: `Teste de ${a.name}`,
+    category: 'check',
+    ability: a.key,
   })
   return (
     <div className="v2-panel v2-ability" style={{ position: 'relative', padding: 0 }}>
@@ -86,7 +94,14 @@ function InitiativeCard() {
   const { handlers, longPressActive, title } = useRollInteraction({
     notation: `1d20${calc.fmt(calc.initiative)}`,
     label: 'Iniciativa',
+    category: 'check',
+    ability: 'dex',
   })
+  const baseVel = effectiveSpeed(character)
+  const mult = calc.spellFx?.fx?.speedMultiplier ?? 1
+  const addVel = calc.spellFx?.fx?.speed ?? 0
+  const vel = Math.round((baseVel + addVel) * mult * 2) / 2
+  const velBuffed = vel !== baseVel
   return (
     <button
       type="button"
@@ -98,7 +113,10 @@ function InitiativeCard() {
     >
       <span className="v2-title" style={{ margin: 0 }}>INIT</span>
       <span className="v2-ability-mod">{calc.fmt(calc.initiative)}</span>
-      <span className="v2-mut" style={{ fontSize: 11 }}>VEL {effectiveSpeed(character)}m</span>
+      <span className="v2-mut" style={{ fontSize: 11, ...(velBuffed ? { color: 'var(--v2-accent)' } : {}) }}
+        title={velBuffed ? `${vel}m (base ${baseVel}m + efeitos)` : undefined}>
+        VEL {vel}m
+      </span>
     </button>
   )
 }

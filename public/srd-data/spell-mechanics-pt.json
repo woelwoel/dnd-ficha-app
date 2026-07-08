@@ -1359,6 +1359,100 @@
       }
     ]
   },
+  "bencao": {
+    "effect": {
+      "concentration": true,
+      "riders": [
+        {
+          "dice": "1d4",
+          "categories": ["attack", "save"]
+        }
+      ],
+      "summary": "+1d4 em ataques e salvaguardas"
+    }
+  },
+  "escudo-da-fe": {
+    "effect": {
+      "concentration": true,
+      "mods": {
+        "ac": 2
+      },
+      "summary": "+2 CA"
+    }
+  },
+  "velocidade": {
+    "effect": {
+      "concentration": true,
+      "mods": {
+        "ac": 2,
+        "speedMultiplier": 2
+      },
+      "advantages": [
+        {
+          "categories": ["save"],
+          "abilities": ["dex"]
+        }
+      ],
+      "summary": "+2 CA · deslocamento ×2 · vantagem em salv. de DES · 1 acao extra (narre)"
+    }
+  },
+  "orientacao": {
+    "effect": {
+      "concentration": true,
+      "riders": [
+        {
+          "dice": "1d4",
+          "categories": ["check"],
+          "oneShot": true
+        }
+      ],
+      "summary": "+1d4 em um teste de habilidade (uso unico)"
+    }
+  },
+  "resistencia": {
+    "effect": {
+      "concentration": true,
+      "riders": [
+        {
+          "dice": "1d4",
+          "categories": ["save"],
+          "oneShot": true
+        }
+      ],
+      "summary": "+1d4 em uma salvaguarda (uso unico)"
+    }
+  },
+  "escudo-arcano": {
+    "effect": {
+      "mods": {
+        "ac": 5
+      },
+      "summary": "+5 CA ate o inicio do seu proximo turno (reacao)"
+    }
+  },
+  "invisibilidade": {
+    "effect": {
+      "concentration": true,
+      "advantages": [
+        {
+          "categories": ["attack"]
+        }
+      ],
+      "summary": "ataques com vantagem; inimigos te atacam com desvantagem (narre); termina se atacar ou conjurar magia"
+    }
+  },
+  "heroismo": {
+    "effect": {
+      "concentration": true,
+      "summary": "imune a amedrontado; PV temporarios = mod. de conjuracao no inicio de cada turno (perdidos ao fim)"
+    }
+  },
+  "pele-de-arvore": {
+    "effect": {
+      "concentration": true,
+      "summary": "CA nao pode ser inferior a 16, independente da armadura"
+    }
+  },
   "_ignore": [
     "alterar-se",
     "animar-objetos",
@@ -1366,7 +1460,6 @@
     "arma-elemental",
     "aumentarreduzir",
     "auxilio-divino",
-    "bencao",
     "bordao-mistico",
     "bruxaria",
     "cao-fiel-de-mordenkainen",
@@ -1406,14 +1499,12 @@
     "mensagem",
     "missao",
     "mortalha-espiritual",
-    "orientacao",
     "parar-o-tempo",
     "perdicao",
     "piscar",
     "porta-dimensional",
     "reencarnacao",
     "reflexos",
-    "resistencia",
     "rogar-maldicao",
     "saraivada-de-espinhos",
     "sono",

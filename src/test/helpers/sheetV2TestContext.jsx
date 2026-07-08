@@ -44,6 +44,11 @@ export function makeCalc(overrides = {}) {
     suggestedAC: 11,
     suggestedMaxHp: 131,
     featSpeedBonus: 0,
+    // Efeitos ativos de magia (spec 2026-07-07) — sem buffs por padrão, então
+    // effectiveAC/effectiveSpeed == base.
+    effectiveAC: 11,
+    effectBreakdown: [],
+    spellFx: { fx: { ac: 0, saves: 0, saveAbility: {}, speed: 0, speedMultiplier: 1 }, riders: [], advantages: [] },
     fmt: n => (n >= 0 ? `+${n}` : `${n}`),
     ...overrides,
   }
@@ -63,7 +68,7 @@ export function makeDice(overrides = {}) {
   return {
     history: [], open: false, mode: 'normal', dice3d: false,
     roll: noop, clearHistory: noop, togglePanel: noop, openPanel: noop,
-    setMode: noop, setDice3d: noop, setDiceAccent: noop,
+    setMode: noop, setDice3d: noop, setDiceAccent: noop, setRollEffectsResolver: noop,
     ...overrides,
   }
 }

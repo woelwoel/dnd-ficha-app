@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useCharacterContext } from '../CharacterContext'
 import { classAccentOf } from './classAccents'
 import { DiceAccentSync } from './DiceAccentSync'
+import { EffectsSync } from './EffectsSync'
 import { ConcentrationPromptV2 } from './ConcentrationPromptV2'
 import { HeaderV2 } from './HeaderV2'
 import { AbilityStrip } from './AbilityStrip'
@@ -28,6 +29,7 @@ export function SheetV2({ onBack, onExport, onPrint, onImport, onImportError, sa
   return (
     <div className="sheet-v2 min-h-screen" style={{ '--v2-accent': classAccentOf(character?.info?.class) }}>
       <DiceAccentSync />
+      <EffectsSync />
       <div className="max-w-7xl mx-auto px-3 py-4 space-y-3">
         <HeaderV2
           onBack={onBack}

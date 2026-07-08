@@ -8,10 +8,15 @@ import { SourcePicker } from '../../SourcePicker'
 import { LevelProgression } from '../LevelProgression'
 import { safeParseCharacter } from '../../../domain/characterSchema'
 import { EditDialog } from './EditDialog'
+import { useLazySrdDataset, useSrd } from '../../../data/SrdProvider'
+import { ActiveEffectsChips } from './ActiveEffectsChips'
 
 export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, saving, saved, saveError }) {
   const { character, setCharacter, calc, readOnly, updaters, handlers, races, classes, backgrounds, fichaErrors, classData, onNavigateToSpells } = useCharacterContext()
   const { info, combat } = character
+  const spellMechanics = useLazySrdDataset('spellMechanics')
+  const { spells: allSpells } = useSrd()
+  const spellNames = Object.fromEntries((allSpells ?? []).map(s => [s.index, s.name]))
   const [hpEditOpen, setHpEditOpen] = useState(false)
   const [damageOpen, setDamageOpen] = useState(false)
   const [healOpen, setHealOpen] = useState(false)
@@ -97,6 +102,7 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
             + Condição
           </button>
         )}
+        <ActiveEffectsChips catalog={spellMechanics ?? {}} spellNames={spellNames} />
       </div>
 
       <details style={{ position: 'relative' }}>

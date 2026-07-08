@@ -40,7 +40,7 @@ describe('ConcentrationPromptV2', () => {
     const user = userEvent.setup()
     const { rollFn } = setup({ dc: 12, d20Total: 18 })
     await user.click(screen.getByRole('button', { name: /Rolar salvaguarda de CON/ }))
-    expect(rollFn).toHaveBeenCalledWith('1d20+9', expect.stringContaining('CD 12'), {})
+    expect(rollFn).toHaveBeenCalledWith('1d20+9', expect.stringContaining('CD 12'), { category: 'save', ability: 'con' })
     expect(screen.getByText(/✓ mantida/)).toBeInTheDocument()
   })
 

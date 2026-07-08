@@ -81,6 +81,7 @@ export function MainBox({ activeTab, onTabChange, hideTablist = false }) {
     spendPactSlot, regainPactSlot, setConcentration, applyHealing,
     addAttack, removeAttack,
     setChosenFeature, spendFeatureUse, regainFeatureUse,
+    addActiveEffect,
   } = updaters
 
   return (
@@ -132,6 +133,7 @@ export function MainBox({ activeTab, onTabChange, hideTablist = false }) {
             onRegainPactSlot={regainPactSlot}
             onSetConcentration={setConcentration}
             onApplyHealing={applyHealing}
+            onAddActiveEffect={addActiveEffect}
             focusSpellId={focusSpellId}
             onClearFocusSpell={clearFocusSpell}
           />
