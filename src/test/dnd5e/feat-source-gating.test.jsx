@@ -16,4 +16,13 @@ describe('gating de talentos por fonte (contrato de oferta)', () => {
   it('sources ausente cai em só phb', () => {
     expect(filterCatalogBySources(feats, undefined).map(f => f.index)).toEqual(['adepto-elemental'])
   })
+
+  it('talento xanathar só é oferecido com a fonte xanathar ativa', () => {
+    const racial = [...feats, { index: 'fortitude-ana', source: 'xanathar' }]
+    expect(filterCatalogBySources(racial, ['phb']).map(f => f.index)).toEqual(['adepto-elemental'])
+    expect(filterCatalogBySources(racial, ['phb', 'tasha']).map(f => f.index))
+      .toEqual(['adepto-elemental', 'esmagador'])
+    expect(filterCatalogBySources(racial, ['phb', 'xanathar']).map(f => f.index))
+      .toEqual(['adepto-elemental', 'fortitude-ana'])
+  })
 })
