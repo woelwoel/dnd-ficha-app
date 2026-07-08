@@ -69,8 +69,10 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
       {/* Linha 1: token + identidade + chips + ações + PV */}
       <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
       {/* Identidade: nome (maior) + token à direita, agrupados.
-          flex:1 estica o grupo e devolve as condições/efeitos pra direita. */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
+          flex:1 estica o grupo e devolve as condições/efeitos pra direita.
+          alignSelf:stretch faz o grupo (e o token) acompanharem a altura da
+          linha — o token preenche o vazio vertical sem aumentar o header. */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1, alignSelf: 'stretch' }}>
         {readOnly ? (
           <div style={{ minWidth: 0 }}>
             <div style={{ fontSize: 24, fontWeight: 700, lineHeight: 1.1 }}>{info.name || 'Sem nome'}</div>
@@ -294,7 +296,7 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
 
 function IdentityToken({ portrait, name, readOnly, onClick }) {
   const box = {
-    width: 100, height: 100, borderRadius: 16, overflow: 'hidden', flexShrink: 0,
+    alignSelf: 'stretch', aspectRatio: '1 / 1', borderRadius: 16, overflow: 'hidden', flexShrink: 0,
     border: '1px solid var(--v2-border)', background: 'var(--v2-surface-2)',
     display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0,
   }
