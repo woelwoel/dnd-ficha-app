@@ -3,8 +3,9 @@
  * e seus metadados de exibição. Ausência de `source` num item = 'phb' (básico).
  */
 export const SOURCES = {
-  phb:   { code: 'phb',   label: "Livro do Jogador",             abbr: 'PHB' },
-  tasha: { code: 'tasha', label: 'Caldeirão de Tasha para Tudo', abbr: 'TCE' },
+  phb:      { code: 'phb',      label: "Livro do Jogador",                       abbr: 'PHB' },
+  tasha:    { code: 'tasha',    label: 'Caldeirão de Tasha para Tudo',           abbr: 'TCE' },
+  xanathar: { code: 'xanathar', label: 'Guia de Xanathar para Todas as Coisas',  abbr: 'XGE' },
 }
 
 /** Código de fonte de um item, com fallback pro básico. */

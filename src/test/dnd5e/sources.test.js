@@ -8,6 +8,14 @@ describe('sources — procedência', () => {
     expect(SOURCES.tasha.abbr).toBe('TCE')
   })
 
+  it('conhece a fonte xanathar (XGE)', () => {
+    expect(SOURCES.xanathar).toMatchObject({
+      code: 'xanathar',
+      label: 'Guia de Xanathar para Todas as Coisas',
+      abbr: 'XGE',
+    })
+  })
+
   it('sourceOf cai em phb quando o item não declara source', () => {
     expect(sourceOf({ index: 'x' })).toBe('phb')
     expect(sourceOf({ index: 'x', source: 'tasha' })).toBe('tasha')
@@ -40,5 +48,11 @@ describe('filterCatalogBySources — oferta', () => {
   it('sources ausente/vazio cai em só phb (fichas legadas)', () => {
     expect(filterCatalogBySources(catalogo, undefined).map(i => i.index)).toEqual(['phb-feat'])
     expect(filterCatalogBySources(catalogo, []).map(i => i.index)).toEqual(['phb-feat'])
+  })
+
+  it('gating trata item xanathar como qualquer suplemento', () => {
+    const items = [{ index: 'a' }, { index: 'b', source: 'xanathar' }]
+    expect(filterCatalogBySources(items, ['phb']).map(i => i.index)).toEqual(['a'])
+    expect(filterCatalogBySources(items, ['phb', 'xanathar']).map(i => i.index)).toEqual(['a', 'b'])
   })
 })
