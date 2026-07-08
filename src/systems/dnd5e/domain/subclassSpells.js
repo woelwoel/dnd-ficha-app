@@ -185,6 +185,14 @@ const WARLOCK_PATRON_SPELLS = {
     ['dominar-besta',             'tentaculos-negros-de-evard'],// 7
     ['dominar-pessoa',            'telecinesia'],               // 9
   ],
+  // O Lâmina Maldita — Hexblade (Xanathar's p.55) — source: xanathar
+  hexblade: [
+    ['escudo-arcano',            'destruicao-colerica'],    // 1 (Shield, Wrathful Smite)
+    ['nublar',                   'marca-da-punicao'],       // 3 (Blur, Branding Smite)
+    ['piscar',                   'arma-elemental'],         // 5 (Blink, Elemental Weapon)
+    ['assassino-fantasmagorico', 'destruicao-estonteante'], // 7 (Phantasmal Killer, Staggering Smite)
+    ['destruicao-banidora',      'cone-de-frio'],           // 9 (Banishing Smite, Cone of Cold)
+  ],
   // O Insondável — Fathomless (Tasha's p.30) — source: tasha
   insondavel: [
     ['criar-ou-destruir-agua', 'onda-trovejante'],   // 1
