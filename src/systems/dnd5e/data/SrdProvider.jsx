@@ -16,11 +16,13 @@ const DATASETS = {
   backgrounds:       { pt: 'phb-backgrounds-pt.json',      fallback: '5e-SRD-Backgrounds.json', lazy: false },
   spells:            { pt: 'phb-spells-pt.json',           fallback: null,                      lazy: false },
   spellsTasha:       { pt: 'tasha-spells-pt.json',         fallback: null,                      lazy: false },
+  spellsXanathar:    { pt: 'xanathar-spells-pt.json',      fallback: null,                      lazy: false },
   levels:            { pt: '5e-SRD-Levels.json',           fallback: null,                      lazy: false },
   progression:       { pt: 'phb-class-progression-pt.json', fallback: null,                     lazy: false },
   progressionTasha:  { pt: 'tasha-class-progression-pt.json', fallback: null,                    lazy: false },
   classChoices:      { pt: 'phb-class-choices-pt.json',    fallback: null,                      lazy: false },
   classChoicesTasha: { pt: 'tasha-class-choices-pt.json',  fallback: null,                      lazy: false },
+  classChoicesXanathar: { pt: 'xanathar-class-choices-pt.json', fallback: null,                 lazy: false },
   // Lazy: só são acessados em telas específicas (Wizard, level-up flow).
   // Carregados sob demanda via `requestDataset(name)` ou `useLazySrdDataset(name)`.
   classEquipment:  { pt: 'phb-class-equipment-pt.json',  fallback: null,                      lazy: true },
@@ -28,22 +30,24 @@ const DATASETS = {
   multiclass:      { pt: 'phb-multiclass-pt.json',       fallback: null,                      lazy: true },
   feats:           { pt: 'phb-feats-pt.json',            fallback: null,                      lazy: true },
   featsTasha:      { pt: 'tasha-feats-pt.json',          fallback: null,                      lazy: true },
+  featsXanathar:   { pt: 'xanathar-feats-pt.json',       fallback: null,                      lazy: true },
   infusionsTasha:  { pt: 'tasha-infusions-pt.json',      fallback: null,                      lazy: true },
   magicItems:      { pt: 'phb-magic-items-pt.json',      fallback: null,                      lazy: true },
   magicItemsTasha: { pt: 'tasha-magic-items-pt.json',    fallback: null,                      lazy: true },
+  magicItemsXanathar: { pt: 'xanathar-magic-items-pt.json', fallback: null,                   lazy: true },
   spellMechanics:  { pt: 'spell-mechanics-pt.json',      fallback: null,                      lazy: true },
 }
 
 // Datasets lógicos compostos por partes carimbadas por fonte.
 // chave lógica → { strategy: 'array' (concat + tagSource) | 'object' (merge raso por chave), parts: [[parteKey, sourceCode], ...] }
 const COMPOSED = {
-  feats:        { strategy: 'array',  parts: [['feats', 'phb'], ['featsTasha', 'tasha']] },
+  feats:        { strategy: 'array',  parts: [['feats', 'phb'], ['featsTasha', 'tasha'], ['featsXanathar', 'xanathar']] },
   classes:      { strategy: 'array',  parts: [['classes', 'phb'], ['classesTasha', 'tasha']] },
-  spells:       { strategy: 'array',  parts: [['spells', 'phb'], ['spellsTasha', 'tasha']] },
-  classChoices: { strategy: 'classChoices', parts: [['classChoices', 'phb'], ['classChoicesTasha', 'tasha']] },
+  spells:       { strategy: 'array',  parts: [['spells', 'phb'], ['spellsTasha', 'tasha'], ['spellsXanathar', 'xanathar']] },
+  classChoices: { strategy: 'classChoices', parts: [['classChoices', 'phb'], ['classChoicesTasha', 'tasha'], ['classChoicesXanathar', 'xanathar']] },
   progression:  { strategy: 'object', parts: [['progression', 'phb'], ['progressionTasha', 'tasha']] },
   infusions:    { strategy: 'array',  parts: [['infusionsTasha', 'tasha']] },
-  magicItems:   { strategy: 'array',  parts: [['magicItems', 'phb'], ['magicItemsTasha', 'tasha']] },
+  magicItems:   { strategy: 'array',  parts: [['magicItems', 'phb'], ['magicItemsTasha', 'tasha'], ['magicItemsXanathar', 'xanathar']] },
 }
 
 // Chaves lógicas não-lazy carregadas no boot. Partes de composição (ex.:
@@ -61,8 +65,9 @@ async function loadComposed(name) {
     return loaded.flatMap(([code, data]) => tagSource(Array.isArray(data) ? data : [], code))
   }
   if (def.strategy === 'classChoices') {
-    const map = Object.fromEntries(loaded) // { phb: <obj>, tasha: <obj> }
-    return mergeClassChoices(map.phb, map.tasha, 'tasha')
+    // Base (1ª parte, phb) + suplementos encadeados na ordem das parts.
+    const [[, base], ...rest] = loaded
+    return rest.reduce((acc, [code, data]) => mergeClassChoices(acc, data, code), base ?? {})
   }
   return Object.assign({}, ...loaded.map(([, data]) => (data && typeof data === 'object' && !Array.isArray(data) ? data : {})))
 }

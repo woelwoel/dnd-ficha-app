@@ -54,4 +54,15 @@ describe('mergeClassChoices', () => {
     const out = mergeClassChoices(phb, {}, 'tasha')
     expect(out.barbaro.choices[0].options.map(o => o.value)).toEqual(['berserker'])
   })
+
+  it('encadeia tres fontes preservando o carimbo de cada uma', () => {
+    const basePhb = { bruxo: { choices: [{ id: 'patron', options: [{ value: 'feerico' }] }] } }
+    const extTasha = { bruxo: { choices: [{ id: 'patron', options: [{ value: 'genio' }] }] } }
+    const extXan = { bruxo: { choices: [{ id: 'patron', options: [{ value: 'hexblade' }] }] } }
+    const merged = mergeClassChoices(mergeClassChoices(basePhb, extTasha, 'tasha'), extXan, 'xanathar')
+    const opts = merged.bruxo.choices[0].options
+    expect(opts.map(o => [o.value, o.source ?? 'phb'])).toEqual([
+      ['feerico', 'phb'], ['genio', 'tasha'], ['hexblade', 'xanathar'],
+    ])
+  })
 })
