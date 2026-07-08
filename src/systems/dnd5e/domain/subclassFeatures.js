@@ -56,13 +56,17 @@ export function detectFeatureUses(text = '', { attributes = {}, profBonus = 2 } 
   // Indício de que o número é de USOS (e não dano/alcance/etc.).
   const isUses = /(usos?\s*=|usos?\s+iguais?|igual ao|vezes igual|uma vez)/i.test(t)
 
-  // 1) bônus de proficiência usos
-  if (isUses && /b[oô]nus\s+de\s+profici[êe]ncia/i.test(t)) {
-    return { max: Math.max(1, profBonus), recharge }
-  }
-  // 2) "1×/descanso..." ou "uma vez ... descanso..."
+  // 1) "1×/descanso..." ou "uma vez ... descanso...": uso único por descanso.
+  // Vem ANTES do padrão de bônus de proficiência: um "uma vez por descanso"
+  // explícito é evidência mais forte de contagem de usos do que uma menção
+  // incidental a "bônus de proficiência" (que muitas vezes é bônus de dano —
+  // ex.: Maldição do Hexblade). Evita o falso positivo de max = profBonus.
   if (/1\s*[×x]\s*\/?\s*desc/i.test(t) || /uma vez[\s\S]*?descanso/i.test(t)) {
     return { max: 1, recharge }
+  }
+  // 2) usos = bônus de proficiência
+  if (isUses && /b[oô]nus\s+de\s+profici[êe]ncia/i.test(t)) {
+    return { max: Math.max(1, profBonus), recharge }
   }
   // 3) modificador de atributo (com indício de usos)
   const mod = t.match(new RegExp(`m[oó]d(?:ificador)?\\.?\\s+(?:de\\s+)?(${ATTR_PT})`, 'i'))

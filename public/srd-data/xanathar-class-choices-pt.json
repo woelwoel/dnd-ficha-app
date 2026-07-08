@@ -1,1 +1,19 @@
-{}
+{
+  "bruxo": {
+    "choices": [
+      {
+        "level": 1,
+        "id": "patron",
+        "featureName": "Patrono Sobrenatural",
+        "prompt": "Escolha seu Patrono Sobrenatural",
+        "options": [
+          {
+            "value": "hexblade",
+            "name": "O Lâmina Maldita",
+            "desc": "Você fez o seu pacto com uma entidade misteriosa do Pendor das Sombras — uma força que se manifesta em armas mágicas inteligentes esculpidas da matéria da sombra. A poderosa espada Lâmina Negra é a mais notável dessas armas, que se espalharam pelo multiverso ao longo dos tempos. A força sombria por trás dessas armas pode oferecer poder para guerreiros que formam pactos com ela.\n\nFeatures de Patrono por nível:\n• Nv 1 — Guerreiro Maldito: Você ganha proficiência em armaduras médias, escudos e armas marciais. Sempre que terminar um descanso longo, pode tocar uma arma com a qual seja proficiente e que não possua a propriedade duas mãos; ao atacar com ela, pode usar seu modificador de Carisma, em vez de Força ou Destreza, para os testes de ataque e dano. Se ganhar a característica Pacto da Lâmina, o benefício se estende a todas as armas de pacto que conjurar, independente do tipo.\n• Nv 1 — Lista de Magias Expandida: as magias da Lâmina Maldita (por nível de bruxo) são adicionadas à sua lista de magias de bruxo e contam como magias de bruxo para você.\n• Nv 1 — Maldição da Lâmina Maldita: como ação bônus, escolha uma criatura que possa ver a até 9 metros; ela é amaldiçoada por 1 minuto (termina antes se o alvo ou você morrer, ou você for incapacitado). Enquanto durar: você ganha bônus de dano contra o alvo igual ao seu bônus de proficiência; seus ataques contra ele são críticos em 19-20; e se o alvo morrer, você recupera PV iguais ao seu nível de bruxo + seu modificador de Carisma (mínimo 1). Uma vez usada, não pode usá-la novamente até terminar um descanso curto ou longo.\n• Nv 6 — Espectro Amaldiçoado: quando você mata um humanoide, pode erguer seu espírito como um espectro aliado (PV temporários iguais à metade do seu nível de bruxo; bônus de ataque igual ao seu modificador de Carisma), que age em sua própria iniciativa e obedece a seus comandos até o fim do seu próximo descanso longo. Uma vez usada, não pode usá-la novamente até terminar um descanso longo.\n• Nv 10 — Armadura de Maldições: se o alvo da sua Maldição o acerta com um ataque, pode usar sua reação para rolar 1d6; em 4 ou mais, o ataque falha, não importa o resultado.\n• Nv 14 — Mestre das Maldições: quando a criatura amaldiçoada pela sua Maldição morre, você pode aplicar a maldição a outra criatura que possa ver a até 9 metros (sem recuperar PV por esta aplicação), desde que não esteja incapacitado."
+          }
+        ]
+      }
+    ]
+  }
+}

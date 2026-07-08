@@ -1,0 +1,45 @@
+import { describe, it, expect } from 'vitest'
+import { readFileSync } from 'node:fs'
+import { parseSubclassFeatures, detectFeatureUses } from '../../systems/dnd5e/domain/subclassFeatures'
+
+const choices = JSON.parse(readFileSync('public/srd-data/xanathar-class-choices-pt.json', 'utf8'))
+// Opções de subclasse (exclui choices internas como invocações/disparos arcanos).
+const NON_SUBCLASS = new Set(['eldritch_invocations', 'arcane_shots'])
+const subclassOptions = Object.values(choices)
+  .flatMap(c => c.choices ?? [])
+  .filter(ch => !NON_SUBCLASS.has(ch.id))
+  .flatMap(ch => ch.options ?? [])
+
+describe('subclasses do xanathar-class-choices-pt.json', () => {
+  it('toda subclasse parseia em features por nível', () => {
+    expect(subclassOptions.length).toBeGreaterThan(0)
+    for (const opt of subclassOptions) {
+      const { summary, features } = parseSubclassFeatures(opt.desc)
+      expect(summary.length, opt.value).toBeGreaterThan(20)
+      expect(features.length, opt.value).toBeGreaterThanOrEqual(3)
+      expect(features.every(f => f.level >= 1 && f.level <= 20), opt.value).toBe(true)
+    }
+  })
+})
+
+describe('hexblade (O Lâmina Maldita)', () => {
+  const patron = choices.bruxo.choices.find(c => c.id === 'patron')
+  const hexblade = patron.options.find(o => o.value === 'hexblade')
+
+  it('existe na choice patron do PHB (level 1)', () => {
+    expect(patron.level).toBe(1)
+    expect(hexblade).toBeTruthy()
+  })
+
+  it('tem features nos níveis 1, 6, 10 e 14', () => {
+    const levels = parseSubclassFeatures(hexblade.desc).features.map(f => f.level)
+    for (const lvl of [1, 6, 10, 14]) expect(levels, `nível ${lvl}`).toContain(lvl)
+  })
+
+  it('Maldição ganha tracker 1x/descanso curto', () => {
+    // /maldição/ (não /maldi/, que casaria "Guerreiro Maldito" primeiro).
+    const curse = parseSubclassFeatures(hexblade.desc).features.find(f => /maldição/i.test(f.name ?? ''))
+    expect(curse, 'feature Maldição').toBeTruthy()
+    expect(detectFeatureUses(`${curse.name}: ${curse.desc}`)).toMatchObject({ max: 1, recharge: 'short' })
+  })
+})
