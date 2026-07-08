@@ -45,6 +45,25 @@ describe('<WarlockPactPanel>', () => {
     expect(screen.getAllByText(/1d20\+7/).length).toBeGreaterThanOrEqual(1)
   })
 
+  it('Hexblade: Pacto da Lâmina usa CHA quando é o melhor (Guerreiro Maldito)', () => {
+    // nv 3, prof +2. CHA 18 (+4) > FOR/DES → 1d20+6. Nome do patrono aparece.
+    const char = makeChar({ info: { level: 3, chosenFeatures: { patron: 'hexblade', pact_boon: 'lamina' } },
+      attributes: { str: 10, dex: 12, cha: 18 } })
+    render(<WarlockPactPanel bruxoLevel={3} character={char} />)
+    expect(screen.getByText('O Lâmina Maldita')).toBeInTheDocument()
+    expect(screen.getAllByText(/1d20\+6/).length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText(/Carisma/).length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('patrono não-Hexblade continua max(FOR, DES), sem CHA', () => {
+    // infernal, CHA 18 ignorado; DES 12 (+1) → 1d20+3.
+    const char = makeChar({ info: { level: 3, chosenFeatures: { patron: 'infernal', pact_boon: 'lamina' } },
+      attributes: { str: 10, dex: 12, cha: 18 } })
+    render(<WarlockPactPanel bruxoLevel={3} character={char} />)
+    expect(screen.getAllByText(/1d20\+3/).length).toBeGreaterThanOrEqual(1)
+    expect(screen.queryByText(/1d20\+6/)).not.toBeInTheDocument()
+  })
+
   it('Pacto do Tomo nv 3+: info passiva', () => {
     const char = makeChar({ info: { chosenFeatures: { pact_boon: 'tomo' } } })
     render(<WarlockPactPanel bruxoLevel={3} character={char} />)

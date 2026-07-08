@@ -20,13 +20,14 @@ const PATRON_LABEL = {
   feerico:        'O Feérico',
   infernal:       'O Infernal',
   grande_antigo:  'O Grande Antigo',
-  insondavel:     'O Insondável',   // Tasha
-  genio:          'O Gênio',        // Tasha
+  insondavel:     'O Insondável',       // Tasha
+  genio:          'O Gênio',            // Tasha
+  hexblade:       'O Lâmina Maldita',   // Xanathar
 }
 
 const PATRON_ICON = {
   feerico: '🍄', infernal: '🔥', grande_antigo: '🐙',
-  insondavel: '🌊', genio: '🧞',
+  insondavel: '🌊', genio: '🧞', hexblade: '🗡',
 }
 
 const BOON_LABEL = {
@@ -55,20 +56,26 @@ const ARCANUM_TIERS = [
 ]
 
 /* ── Pacto da Lâmina ─────────────────────────────────────────── */
-function BladePactPanel({ totalLevel, attributes }) {
+function BladePactPanel({ totalLevel, attributes, patron }) {
   // PHB/Tasha: a arma de pacto é uma arma comum — ataque/dano usam Força ou
   // Destreza (a melhor; Destreza vale quando a forma escolhida tem acuidade).
-  // Usar Carisma viria do Hexblade (Xanathar), ainda não implementado.
-  const best = Math.max(getModifier(attributes?.str ?? 10), getModifier(attributes?.dex ?? 10))
+  // O Guerreiro Maldito (Hexblade, Xanathar) permite usar Carisma na arma de pacto.
+  const isHexblade = patron === 'hexblade'
+  const mods = [getModifier(attributes?.str ?? 10), getModifier(attributes?.dex ?? 10)]
+  if (isHexblade) mods.push(getModifier(attributes?.cha ?? 10))
+  const best = Math.max(...mods)
   const profBonus = getProficiencyBonus(totalLevel)
   const atk = `1d20${formatModifier(profBonus + best)}`
+  const abilityNote = isHexblade
+    ? 'Força, Destreza ou Carisma (Guerreiro Maldito) — a melhor'
+    : 'Força ou Destreza (a melhor)'
 
   return (
     <div className="flex items-center gap-2 bg-violet-100 rounded px-2 py-1.5 border border-violet-700/30">
       <div className="flex-1 min-w-0">
         <p className="text-xs font-bold text-violet-900">🗡 Pacto da Lâmina</p>
         <p className="text-xs ink-italic">
-          Arma de pacto usa Força ou Destreza (a melhor) pra ataque/dano. Rolar ataque rápido: {atk}.
+          Arma de pacto usa {abilityNote} pra ataque/dano. Rolar ataque rápido: {atk}.
         </p>
       </div>
       <span className="text-base font-bold text-violet-900 font-mono">{atk}</span>
@@ -115,7 +122,7 @@ export function WarlockPactPanel({ bruxoLevel, character }) {
       {/* Pacto da Lâmina — botão de ataque rápido */}
       {boon === 'lamina' && bruxoLevel >= 3 && (
         <div className="pt-2 border-t border-violet-700/30">
-          <BladePactPanel totalLevel={totalLevel} attributes={attributes} />
+          <BladePactPanel totalLevel={totalLevel} attributes={attributes} patron={patron} />
         </div>
       )}
 
