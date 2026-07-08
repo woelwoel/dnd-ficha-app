@@ -296,14 +296,14 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
 
 function IdentityToken({ portrait, name, readOnly, onClick }) {
   const box = {
-    alignSelf: 'stretch', aspectRatio: '1 / 1', borderRadius: 16, overflow: 'hidden', flexShrink: 0,
+    width: 70, height: 70, borderRadius: 14, overflow: 'hidden', flexShrink: 0,
     border: '1px solid var(--v2-border)', background: 'var(--v2-surface-2)',
     display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0,
   }
   const inner = portrait
     ? <img src={portrait} alt="Retrato do personagem" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
     : (
-      <span aria-hidden="true" style={{ fontSize: 44, fontWeight: 600, color: 'var(--v2-accent)' }}>
+      <span aria-hidden="true" style={{ fontSize: 32, fontWeight: 600, color: 'var(--v2-accent)' }}>
         {(name || '?').trim().charAt(0).toUpperCase() || '?'}
       </span>
     )
