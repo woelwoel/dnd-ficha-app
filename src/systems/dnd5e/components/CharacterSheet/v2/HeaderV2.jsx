@@ -68,29 +68,31 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
 
       {/* Linha 1: token + identidade + chips + ações + PV */}
       <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
-      <IdentityToken
-        portrait={info.portrait ?? null}
-        name={info.name}
-        readOnly={readOnly}
-        onClick={() => setIdentityOpen(true)}
-      />
-
-      {readOnly ? (
-        <div style={{ flex: 1, minWidth: 160 }}>
-          <div style={{ fontSize: 18, fontWeight: 600 }}>{info.name || 'Sem nome'}</div>
-          <div className="v2-mut" style={{ fontSize: 12 }}>{summary}</div>
-        </div>
-      ) : (
-        <button
-          type="button"
-          aria-label="Editar identidade"
+      {/* Identidade: nome (maior) + token à direita, agrupados */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+        {readOnly ? (
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 24, fontWeight: 700, lineHeight: 1.1 }}>{info.name || 'Sem nome'}</div>
+            <div className="v2-mut" style={{ fontSize: 12 }}>{summary}</div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            aria-label="Editar identidade"
+            onClick={() => setIdentityOpen(true)}
+            style={{ background: 'none', border: 0, textAlign: 'left', cursor: 'pointer', color: 'inherit', padding: 0, minWidth: 0 }}
+          >
+            <div style={{ fontSize: 24, fontWeight: 700, lineHeight: 1.1 }}>{info.name || 'Sem nome'}</div>
+            <div className="v2-mut" style={{ fontSize: 12 }}>{summary}</div>
+          </button>
+        )}
+        <IdentityToken
+          portrait={info.portrait ?? null}
+          name={info.name}
+          readOnly={readOnly}
           onClick={() => setIdentityOpen(true)}
-          style={{ flex: 1, minWidth: 160, background: 'none', border: 0, textAlign: 'left', cursor: 'pointer', color: 'inherit', padding: 0 }}
-        >
-          <div style={{ fontSize: 18, fontWeight: 600 }}>{info.name || 'Sem nome'}</div>
-          <div className="v2-mut" style={{ fontSize: 12 }}>{summary}</div>
-        </button>
-      )}
+        />
+      </div>
 
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
         {combat?.inspiration && (
@@ -122,7 +124,7 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
         <ActiveEffectsChips catalog={spellMechanics ?? {}} spellNames={spellNames} />
       </div>
 
-      <details style={{ position: 'relative' }}>
+      <details style={{ position: 'relative', marginLeft: 'auto' }}>
         <summary className="v2-btn" style={{ listStyle: 'none', cursor: 'pointer' }}>Descansos</summary>
         <div style={{ position: 'absolute', right: 0, zIndex: 40, marginTop: 6, minWidth: 320 }}>
           <fieldset disabled={readOnly} style={{ border: 0, margin: 0, padding: 0 }}>
@@ -291,14 +293,14 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
 
 function IdentityToken({ portrait, name, readOnly, onClick }) {
   const box = {
-    width: 46, height: 46, borderRadius: 10, overflow: 'hidden', flexShrink: 0,
+    width: 54, height: 54, borderRadius: 12, overflow: 'hidden', flexShrink: 0,
     border: '1px solid var(--v2-border)', background: 'var(--v2-surface-2)',
     display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0,
   }
   const inner = portrait
     ? <img src={portrait} alt="Retrato do personagem" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
     : (
-      <span aria-hidden="true" style={{ fontSize: 20, fontWeight: 600, color: 'var(--v2-accent)' }}>
+      <span aria-hidden="true" style={{ fontSize: 24, fontWeight: 600, color: 'var(--v2-accent)' }}>
         {(name || '?').trim().charAt(0).toUpperCase() || '?'}
       </span>
     )
