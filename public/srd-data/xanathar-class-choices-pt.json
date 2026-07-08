@@ -1,4 +1,26 @@
 {
+  "clerigo": {
+    "choices": [
+      {
+        "level": 1,
+        "id": "divine_domain",
+        "featureName": "Domínio Divino",
+        "prompt": "Escolha seu Domínio Divino",
+        "options": [
+          {
+            "value": "forja",
+            "name": "Domínio da Forja",
+            "desc": "Os deuses da forja são divindades do artesanato e da criação. Eles ensinam que, com paciência e trabalho, o metal mais intratável pode ser transformado num objeto belamente forjado. Seus clérigos se orgulham do trabalho e usam armaduras pesadas e armas poderosas. Divindades: Gond, Reorx, Onatar, Moradin, Hephaestus e Goibhniu.\n\nFeatures de Domínio por nível:\n• Nv 1 — Magias de Domínio: você sempre tem certas magias preparadas nos níveis indicados (contam como magias de clérigo e não contam pro limite de preparadas).\n• Nv 1 — Proficiência Bônus: você ganha proficiência com armadura pesada e ferramentas de ferreiro.\n• Nv 1 — Benção da Forja: no fim de um descanso longo, pode tocar um objeto não mágico que seja uma armadura ou uma arma simples ou marcial. Até o fim do seu próximo descanso longo (ou até você morrer), o objeto vira mágico: +1 de CA se for armadura, ou +1 nas jogadas de ataque e dano se for arma. Uma vez usada, não pode usá-la novamente até terminar um descanso longo.\n• Nv 2 — Canalizar Divindade: Benção do Artesão: um ritual de 1 hora cria um item não mágico que inclua metal (arma simples/marcial, armadura, 10 munições, um conjunto de ferramentas ou outro objeto metálico), no valor máximo de 100 po, consumindo metal de valor igual.\n• Nv 6 — Alma da Forja: você ganha resistência a dano de fogo; e enquanto vestir armadura pesada, +1 de CA.\n• Nv 8 — Impacto Divino: uma vez por turno, ao acertar uma criatura com um ataque de arma, pode causar 1d8 de dano de fogo adicional. No 14º nível, aumenta para 2d8.\n• Nv 17 — Santo da Forja e Fogo: você ganha imunidade a dano de fogo; e enquanto vestir armadura pesada, resistência a dano cortante, de concussão e perfurante de ataques não mágicos."
+          },
+          {
+            "value": "sepultura",
+            "name": "Domínio da Sepultura",
+            "desc": "Deuses da sepultura guardam a linha entre a vida e a morte, tratando a morte como parte fundamental do multiverso e profanar os mortos como abominação. Seus seguidores põem os espíritos errantes para descansar, destroem mortos-vivos e adiam a morte por um tempo. Divindades: Kelemvor, Wee Jas, Hades, Anubis e Osiris.\n\nFeatures de Domínio por nível:\n• Nv 1 — Magias de Domínio: você sempre tem certas magias preparadas nos níveis indicados (contam como magias de clérigo e não contam pro limite).\n• Nv 1 — Círculo da Mortalidade: quando você rolaria dados para restaurar PV de uma criatura a 0 PV com uma magia, use o valor máximo de cada dado. Você também aprende o truque estabilizar (não conta no seu limite), com alcance de 9 metros e conjurável como ação bônus.\n• Nv 1 — Olhos da Sepultura: como ação, detecta magicamente mortos-vivos a até 18 metros (que não estejam atrás de cobertura total nem protegidos de adivinhação) até o fim da sua próxima rodada. Usos iguais ao seu modificador de Sabedoria (mínimo 1) por descanso longo.\n• Nv 2 — Canalizar Divindade: Caminho da Sepultura: como ação, escolhe uma criatura a até 9 metros, amaldiçoando-a até o fim da próxima rodada; da próxima vez que você ou um aliado a atingir, ela tem vulnerabilidade a todo o dano desse ataque, e a maldição termina.\n• Nv 6 — Sentinela na Porta da Morte: como reação, quando você ou uma criatura a até 9 metros sofre um acerto crítico, transforma-o em acerto normal. Usos iguais ao seu modificador de Sabedoria (mínimo 1) por descanso longo.\n• Nv 8 — Conjuração Potente: você adiciona seu modificador de Sabedoria ao dano de qualquer truque.\n• Nv 17 — Guardião das Almas: quando um inimigo que você possa ver morre a até 18 metros, você ou uma criatura à sua escolha a até 18 metros recupera PV iguais ao número de Dados de Vida do inimigo (se você não estiver incapacitado); não pode repetir até o início do seu próximo turno."
+          }
+        ]
+      }
+    ]
+  },
   "bruxo": {
     "choices": [
       {

@@ -25,11 +25,14 @@ const DOMAIN_LABEL = {
   natureza:    'Domínio da Natureza',
   conhecimento:'Domínio do Conhecimento',
   enganacao:   'Domínio do Engano',
+  forja:       'Domínio da Forja',      // Xanathar
+  sepultura:   'Domínio da Sepultura',  // Xanathar
 }
 
 const DOMAIN_ICON = {
   vida: '❤️', guerra: '⚔', luz: '☀', tempestade: '⚡',
   natureza: '🌿', conhecimento: '📜', enganacao: '🎭',
+  forja: '🔨', sepultura: '🪦',
 }
 
 /* ── Preservar Vida (Vida) ────────────────────────────────────── */

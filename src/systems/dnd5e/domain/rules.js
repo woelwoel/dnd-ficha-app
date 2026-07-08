@@ -507,6 +507,21 @@ const CLERIC_DOMAIN_SPELLS = {
     ['aura-de-vida',         'invisibilidade-maior'],           // 7 (Aura of Life)
     ['circulo-de-poder',     'despistar'],                      // 9 (Circle of Power, Mislead)
   ],
+  // ── Domínios do Guia de Xanathar (source: xanathar) ─────────────────
+  forja: [
+    ['identificar',    'destruicao-lancinante'],   // 1 (Identify, Searing Smite)
+    ['esquentar-metal', 'arma-magica'],            // 3 (Heat Metal, Magic Weapon)
+    ['arma-elemental', 'protecao-contra-energia'], // 5
+    ['fabricar',       'muralha-de-fogo'],         // 7 (Fabricate, Wall of Fire)
+    ['animar-objetos', 'criacao'],                 // 9
+  ],
+  sepultura: [
+    ['vitalidade-falsa',        'perdicao'],              // 1 (False Life, Bane)
+    ['raio-do-enfraquecimento', 'repouso-tranquilo'],     // 3 (Ray of Enfeeblement, Gentle Repose)
+    ['revivificar',             'toque-vampirico'],       // 5 (Revivify, Vampiric Touch)
+    ['malogro',                 'protecao-contra-a-morte'],// 7 (Blight, Death Ward)
+    ['cupula-antivida',         'reviver-os-mortos'],     // 9 (Antilife Shell, Raise Dead)
+  ],
 }
 
 const CLERIC_DOMAIN_LEVELS = [1, 3, 5, 7, 9]
