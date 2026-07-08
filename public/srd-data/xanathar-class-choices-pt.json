@@ -21,6 +21,28 @@
       }
     ]
   },
+  "druida": {
+    "choices": [
+      {
+        "level": 2,
+        "id": "druid_circle",
+        "featureName": "Círculo Druídico",
+        "prompt": "Escolha seu Círculo Druídico",
+        "options": [
+          {
+            "value": "sonhos",
+            "name": "Círculo dos Sonhos",
+            "desc": "Druidas do Círculo dos Sonhos vêm de regiões com fortes laços com a Agrestia das Fadas e seus reinos de sonho. Aliados naturais das fadas de bom alinhamento, buscam preencher o mundo com uma maravilha sonhadora; sua magia cura feridas e traz alegria aos corações abatidos.\n\nFeatures de Círculo por nível:\n• Nv 2 — Bálsamo da Corte de Verão: você tem uma infusão de energia feérica representada por um número de d6 igual ao seu nível de druida. Como ação bônus, escolhe uma criatura a até 36 metros e gasta até metade do seu nível de druida em d6; o alvo recupera PV igual ao total rolado e ganha 1 PV temporário por dado gasto. Recupera todos os dados ao terminar um descanso longo.\n• Nv 6 — Lareira de Sombra e Luar: durante um descanso curto ou longo, invoca uma esfera de proteção de 9 metros de raio; dentro dela, você e aliados ganham +5 em Destreza (Furtividade) e Sabedoria (Percepção), e a luz interna não é visível de fora. Termina ao fim do descanso ou ao sair dela.\n• Nv 10 — Caminhos Ocultos: como ação bônus, teleporta-se até 18 metros para um espaço que possa ver; ou, como ação, teleporta uma criatura disposta que toque até 9 metros. Usos iguais ao seu modificador de Sabedoria (mínimo 1) por descanso longo.\n• Nv 14 — Caminhante dos Sonhos: ao terminar um descanso curto, pode conjurar sonho, vidência ou círculo de teletransporte sem gastar espaço de magia nem componentes materiais (o círculo de teletransporte abre um portal para o último local onde terminou um descanso longo neste plano). Uma vez usada, não pode usá-la novamente até terminar um descanso longo."
+          },
+          {
+            "value": "pastor",
+            "name": "Círculo do Pastor",
+            "desc": "Druidas do Círculo do Pastor comungam com os espíritos da natureza, especialmente os dos animais e das fadas, e os chamam para ajudar. Veem as criaturas que têm dificuldade de se defender como suas responsabilidades e as protegem de monstros, caçadores e da civilização invasora.\n\nFeatures de Círculo por nível:\n• Nv 2 — Voz da Natureza: você aprende a falar, ler e escrever Silvestre, e pode se comunicar com bestas, decifrando seus ruídos e movimentos (uma besta amigável pode transmitir o que viu recentemente).\n• Nv 2 — Espírito Totêmico: como ação bônus, invoca um espírito incorpóreo a até 18 metros, criando uma aura de 9 metros de raio por 1 minuto (ou até você ficar incapacitado). Escolha o tipo — Urso (PV temporários iguais a 5 + seu nível de druida e vantagem em Força para quem estiver na aura ao surgir), Falcão (reação para dar vantagem em ataques contra alvos na aura, e vantagem em Percepção) ou Unicórnio (vantagem em testes para detectar criaturas na aura, e cura extra ao conjurar magias de cura). Uma vez usada, não pode usá-la novamente até terminar um descanso curto ou longo.\n• Nv 6 — Invocador Poderoso: bestas e feéricos que você conjura ganham 2 PV adicionais por Dado de Vida e suas armas naturais contam como mágicas.\n• Nv 10 — Espírito Guardião: quando uma besta ou feérico que você conjurou termina o turno na aura do seu Espírito Totêmico, recupera PV iguais à metade do seu nível de druida.\n• Nv 14 — Chamado de Fidelidade: se você for reduzido a 0 PV ou ficar incapacitado contra a vontade, ganha imediatamente os benefícios de conjurar animais como se fosse num espaço de 9º nível (quatro bestas de ND 2 ou inferior, por 1 hora, sem concentração). Uma vez usada, não pode usá-la novamente até terminar um descanso longo."
+          }
+        ]
+      }
+    ]
+  },
   "paladino": {
     "choices": [
       {

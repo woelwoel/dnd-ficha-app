@@ -22,6 +22,16 @@ describe('subclasses do xanathar-class-choices-pt.json', () => {
   })
 })
 
+describe('círculos XGE do druida', () => {
+  const druida = choices.druida?.choices.find(c => c.id === 'druid_circle')
+  it.each([['sonhos'], ['pastor']])('%s parseia features em 2/6/10/14', (circle) => {
+    const opt = druida?.options.find(o => o.value === circle)
+    expect(opt, circle).toBeTruthy()
+    const levels = parseSubclassFeatures(opt.desc).features.map(f => f.level)
+    for (const lvl of [2, 6, 10, 14]) expect(levels, `${circle} nv${lvl}`).toContain(lvl)
+  })
+})
+
 describe('hexblade (O Lâmina Maldita)', () => {
   const patron = choices.bruxo.choices.find(c => c.id === 'patron')
   const hexblade = patron.options.find(o => o.value === 'hexblade')
