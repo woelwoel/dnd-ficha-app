@@ -97,10 +97,11 @@ export default defineConfig({
             //    v22 → v23 (2026-07-07): campo effect no spell-mechanics (efeitos ativos)
             //    v23 → v24 (2026-07-08): datasets xanathar-* (fundação + talentos raciais)
             //    v24 → v25 (2026-07-08): patrono Hexblade (O Lâmina Maldita)
+            //    v25 → v26 (2026-07-08): subclasses divinas/naturais (clérigo/paladino/patrulheiro/druida)
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v25',
+              cacheName: 'srd-data-v26',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
