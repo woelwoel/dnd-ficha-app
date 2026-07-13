@@ -33,6 +33,23 @@ describe('caminhos XGE do bárbaro', () => {
   })
 })
 
+describe('arquétipos XGE do guerreiro', () => {
+  const g = () => choices.guerreiro?.choices
+  it.each([['arqueiro-arcano'], ['cavaleiro'], ['samurai']])('%s parseia features', (v) => {
+    const opt = g().find(c => c.id === 'martial_archetype').options.find(o => o.value === v)
+    expect(opt, v).toBeTruthy()
+    expect(parseSubclassFeatures(opt.desc).features.length, v).toBeGreaterThanOrEqual(3)
+  })
+  it('Disparos Arcanos: choice gated ao Arqueiro Arcano, escala por nível', () => {
+    const shots = g().find(c => c.id === 'arcane_shots')
+    expect(shots.requires).toEqual({ martial_archetype: 'arqueiro-arcano' })
+    expect(shots.multiSelectByLevel['3']).toBe(2)
+    expect(shots.multiSelectByLevel['18']).toBe(6)
+    expect(shots.options.length).toBe(8)
+    expect(shots.options.every(o => o.source === 'xanathar')).toBe(true)
+  })
+})
+
 describe('círculos XGE do druida', () => {
   const druida = choices.druida?.choices.find(c => c.id === 'druid_circle')
   it.each([['sonhos'], ['pastor']])('%s parseia features em 2/6/10/14', (circle) => {

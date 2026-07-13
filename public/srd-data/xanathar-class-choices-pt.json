@@ -26,6 +26,51 @@
       }
     ]
   },
+  "guerreiro": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "martial_archetype",
+        "featureName": "Arquétipo Marcial",
+        "prompt": "Escolha seu Arquétipo Marcial",
+        "options": [
+          {
+            "value": "arqueiro-arcano",
+            "name": "Arqueiro Arcano",
+            "desc": "Um Arqueiro Arcano estuda um método élfico único de arquearia que mistura magia nos ataques para produzir efeitos sobrenaturais. São alguns dos maiores guerreiros de elite entre os elfos, vigiando as fronteiras dos domínios élficos com flechas infundidas de magia.\n\nFeatures de Arquétipo por nível:\n• Nv 3 — Tradição do Arqueiro Arcano: você ganha proficiência em Arcanismo ou Natureza, e aprende o truque prestidigitação ou druidismo.\n• Nv 3 — Disparo Arcano: você aprende opções de Disparo Arcano (escolhidas à parte) e ganha 2 usos que se recuperam em um descanso curto ou longo. Uma vez por turno, ao disparar uma flecha mágica de um arco como parte da ação de Ataque, pode aplicar uma opção. Ganha mais opções nos níveis 7, 10, 15 e 18.\n• Nv 7 — Flecha Mágica: sempre que dispara uma flecha não mágica de um arco, pode torná-la mágica para superar resistência e imunidade não mágicas.\n• Nv 7 — Tiro Curvado: quando erra um ataque com flecha mágica, pode usar uma ação bônus para rolar novamente o ataque contra um alvo diferente a até 18 metros do original.\n• Nv 15 — Disparo Sempre Pronto: se você rolar iniciativa sem usos de Disparo Arcano, recupera um uso.\n• Nv 18 — Disparos Aperfeiçoados: cada opção de Disparo Arcano fica mais poderosa (efeitos aprimorados)."
+          },
+          {
+            "value": "cavaleiro",
+            "name": "Cavaleiro",
+            "desc": "O arquétipo de Cavaleiro destaca-se no combate montado e na proteção dos aliados. Geralmente nascido entre a nobreza, um cavaleiro pode liderar a cavalaria numa investida ou proteger os fracos e seus superiores do mal.\n\nFeatures de Arquétipo por nível:\n• Nv 3 — Bônus de Proficiência: você ganha proficiência em uma perícia à escolha (Lidar com Animais, História, Intuição, Atuação ou Persuasão) ou aprende um idioma.\n• Nv 3 — Nascido Para a Sela: vantagem em testes para evitar cair da montaria; se cair de até 3 metros pode cair em pé; montar/desmontar custa só 1,5 metro de deslocamento.\n• Nv 3 — Marca Inabalável: ao atingir uma criatura com ataque corpo-a-corpo, pode marcá-la até o fim do seu próximo turno (desvantagem em ataques que não sejam contra você a até 1,5m). Se a criatura marcada danar outro, você pode fazer um ataque especial de reação/ação bônus com vantagem e dano extra igual à metade do seu nível. Usos iguais ao seu modificador de Força (mínimo 1) por descanso longo.\n• Nv 7 — Manobra de Proteção: se você ou uma criatura a até 1,5m for atingida, pode rolar 1d8 como reação (empunhando arma corpo-a-corpo ou escudo) e somar à CA do alvo; se ainda acertar, o alvo tem resistência ao dano. Usos iguais ao seu modificador de Constituição (mínimo 1) por descanso longo.\n• Nv 10 — Mantenha a Formação: criaturas provocam ataque de oportunidade ao se moverem 1,5m ou mais no seu alcance; se você acerta um ataque de oportunidade, o deslocamento do alvo vira 0 até o fim do turno.\n• Nv 15 — Investida Feroz: se você se desloca ao menos 3 metros em linha reta antes de atacar e acerta, o alvo faz TR de Força ou é derrubado. Uma vez por turno.\n• Nv 18 — Defensor Vigilante: você ganha uma reação especial a cada turno das outras criaturas, usável apenas para um ataque de oportunidade."
+          },
+          {
+            "value": "samurai",
+            "name": "Samurai",
+            "desc": "O Samurai é um lutador que se baseia num implacável espírito de luta. Sua determinação é quase indestrutível, e os inimigos em seu caminho têm duas escolhas: render-se ou morrer lutando.\n\nFeatures de Arquétipo por nível:\n• Nv 3 — Bônus de Proficiência: você ganha proficiência em uma perícia à escolha (História, Intuição, Atuação ou Persuasão) ou aprende um idioma.\n• Nv 3 — Espírito Guerreiro: como ação bônus, ganha vantagem em ataques com arma até o fim do turno e 5 PV temporários (10 no 10º nível, 15 no 15º). Você tem três usos e os recupera ao terminar um descanso longo.\n• Nv 7 — Cortesão Elegante: você adiciona seu modificador de Sabedoria aos testes de Carisma (Persuasão), e ganha proficiência em testes de resistência de Sabedoria (ou Inteligência/Carisma se já tiver).\n• Nv 10 — Espírito Incansável: se você rolar iniciativa sem usos de Espírito Guerreiro, recupera um uso.\n• Nv 15 — Golpe Rápido: se você faz a ação de Ataque e tem vantagem contra um alvo, pode abrir mão dessa vantagem para fazer um ataque adicional contra ele. Uma vez por turno.\n• Nv 18 — Força Diante da Morte: quando um dano o reduziria a 0 PV sem matá-lo, pode usar sua reação para adiar cair inconsciente e realizar imediatamente um turno extra. Uma vez usada, não pode usá-la novamente até terminar um descanso longo."
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "id": "arcane_shots",
+        "featureName": "Disparos Arcanos (Arqueiro Arcano)",
+        "requires": { "martial_archetype": "arqueiro-arcano" },
+        "multiSelectByLevel": { "3": 2, "7": 3, "10": 4, "15": 5, "18": 6 },
+        "prompt": "Escolha suas opções de Disparo Arcano. Ganha mais ao subir de nível (2→3→4→5→6). A CD é 8 + proficiência + Inteligência.",
+        "options": [
+          { "value": "flecha-da-explosao", "name": "Flecha da Explosão", "source": "xanathar", "desc": "Evocação. A energia detona após o acerto: o alvo e cada criatura a até 3 metros sofrem 2d6 de dano de energia (4d6 no 18º nível)." },
+          { "value": "flecha-da-seducao", "name": "Flecha da Sedução", "source": "xanathar", "desc": "Encantamento. O alvo sofre 2d6 de dano psíquico (4d6 no 18º) e faz TR de Sabedoria ou fica enfeitiçado por um aliado à sua escolha a até 9 metros até o início do seu próximo turno." },
+          { "value": "flecha-do-agarrar", "name": "Flecha do Agarrar", "source": "xanathar", "desc": "Conjuração. Espinheiros agarram o alvo: 2d6 de dano venenoso (4d6 no 18º), deslocamento -3m e 2d6 de cortante ao se mover; escapa com teste de Força (Atletismo) contra a CD." },
+          { "value": "flecha-do-banimento", "name": "Flecha do Banimento", "source": "xanathar", "desc": "Abjuração. O alvo faz TR de Carisma ou é banido à Agrestia das Fadas (deslocamento 0, incapacitado) até o fim do seu próximo turno. No 18º nível, ainda sofre 2d6 de dano de energia." },
+          { "value": "flecha-do-enfraquecimento", "name": "Flecha do Enfraquecimento", "source": "xanathar", "desc": "Necromancia. O alvo sofre 2d6 de dano necrótico (4d6 no 18º) e faz TR de Constituição ou tem o dano de seus ataques com arma reduzido à metade até o início do seu próximo turno." },
+          { "value": "flecha-perfurante", "name": "Flecha Perfurante", "source": "xanathar", "desc": "Transmutação. Sem jogada de ataque: a flecha atravessa uma linha de 30cm × 9m; cada criatura na linha faz TR de Destreza, sofrendo o dano da flecha + 1d6 perfurante (2d6 no 18º) na falha, metade no sucesso." },
+          { "value": "flecha-perseguidora", "name": "Flecha Perseguidora", "source": "xanathar", "desc": "Adivinhação. Sem jogada de ataque: escolhe uma criatura vista no último minuto; ela faz TR de Destreza, sofrendo o dano da flecha + 1d6 de energia (2d6 no 18º) e revelando sua posição na falha." },
+          { "value": "flecha-sombria", "name": "Flecha Sombria", "source": "xanathar", "desc": "Ilusão. O alvo sofre 2d6 de dano psíquico (4d6 no 18º) e faz TR de Sabedoria ou fica impedido de ver além de 1,5 metro até o seu próximo turno." }
+        ]
+      }
+    ]
+  },
   "clerigo": {
     "choices": [
       {
