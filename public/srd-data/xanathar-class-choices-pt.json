@@ -1,4 +1,31 @@
 {
+  "barbaro": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "primal_path",
+        "featureName": "Caminho Primitivo",
+        "prompt": "Escolha seu Caminho Primitivo",
+        "options": [
+          {
+            "value": "guardiao-ancestral",
+            "name": "Caminho do Guardião Ancestral",
+            "desc": "Alguns bárbaros vêm de culturas que reverenciam seus antepassados, ensinando que os guerreiros do passado permanecem como espíritos poderosos que guiam e protegem os vivos. Ao entrar em fúria, o bárbaro convida esses espíritos guardiões para ajudá-lo.\n\nFeatures de Caminho por nível:\n• Nv 3 — Protetor Ancestral: enquanto em fúria, a primeira criatura que você atinge no seu turno fica marcada até o início do seu próximo turno — ela tem desvantagem em qualquer ataque que não seja contra você, e quando atinge outra criatura que não você, essa criatura tem resistência ao dano do ataque.\n• Nv 6 — Escudo Espiritual: enquanto em fúria, quando outra criatura que possa ver a até 9 metros sofre dano, pode usar sua reação para reduzir esse dano em 2d6 (3d6 no 10º nível, 4d6 no 14º).\n• Nv 10 — Consultar os Espíritos: você pode conjurar augúrio ou clarividência sem gastar espaço de magia nem componentes materiais (Sabedoria é sua habilidade de conjuração). Uma vez usada, não pode usá-la novamente até terminar um descanso curto ou longo.\n• Nv 14 — Ancestrais Vingativos: quando usa o Escudo Espiritual para reduzir o dano de um ataque, o atacante sofre dano de energia igual ao dano reduzido."
+          },
+          {
+            "value": "arauto-da-tempestade",
+            "name": "Caminho do Arauto da Tempestade",
+            "desc": "Bárbaros que seguem o Caminho do Arauto da Tempestade transformam sua fúria em um manto de magia primal que permeia ao seu redor, tocando as forças da natureza para criar poderosos efeitos mágicos enquanto enfurecidos.\n\nFeatures de Caminho por nível:\n• Nv 3 — Aura da Tempestade: enquanto em fúria, você emana uma aura mágica de 3 metros. O efeito ativa ao entrar em fúria e pode ser reativado como ação bônus a cada turno; escolha um ambiente (a CD é 8 + proficiência + Constituição). Deserto: cada outra criatura na aura sofre dano de fogo (2, subindo com o nível). Mar: uma criatura na aura faz TR de Destreza ou sofre 1d6 de dano elétrico (sobe com o nível). Tundra: cada criatura à sua escolha na aura ganha 2 PV temporários (sobe com o nível).\n• Nv 6 — Alma da Tempestade: você ganha benefícios pelo ambiente escolhido — Deserto: resistência a fogo e imunidade ao calor extremo; Mar: resistência a dano elétrico, respira debaixo d'água e deslocamento de natação de 9m; Tundra: resistência a frio e imunidade ao frio extremo.\n• Nv 10 — Tempestade Protetora: cada criatura à sua escolha tem a resistência a dano que você ganhou com Alma da Tempestade enquanto estiver na sua Aura da Tempestade.\n• Nv 14 — Tempestade Furiosa: seu ambiente ganha um efeito ofensivo — Deserto: reação após ser atingido, TR de Destreza ou dano de fogo igual à metade do seu nível; Mar: reação ao atingir uma criatura na aura, TR de Força ou derrubada; Tundra: ao ativar a aura, uma criatura na aura faz TR de Força ou tem o deslocamento reduzido a 0 até o início do seu próximo turno."
+          },
+          {
+            "value": "fanatico",
+            "name": "Caminho do Fanático",
+            "desc": "Algumas divindades de combate, destruição e violência inspiram seus seguidores a se lançarem em fúria selvagem. Esses bárbaros são fanáticos-guerreiros que canalizam sua fúria em espetaculares demonstrações de poder divino.\n\nFeatures de Caminho por nível:\n• Nv 3 — Fúria Divina: enquanto em fúria, a primeira criatura que você atinge em cada turno com um ataque de arma sofre dano extra igual a 1d6 + metade do seu nível de bárbaro (necrótico ou radiante, escolhido ao ganhar a característica).\n• Nv 3 — Guerreiro dos Deuses: se uma magia como reviver os mortos tiver o único intuito de trazê-lo de volta à vida (não como morto-vivo), o conjurador não precisa de componentes materiais.\n• Nv 6 — Foco Fanático: se você falha em um teste de resistência enquanto em fúria, pode refazê-lo e deve usar o novo resultado. Uma vez por fúria.\n• Nv 10 — Presença Zelosa: como ação bônus, solta um grito de batalha; até dez criaturas à sua escolha a até 18 metros que possam ouvi-lo ganham vantagem em jogadas de ataque e testes de resistência até o início do seu próximo turno. Uma vez usada, não pode usá-la novamente até terminar um descanso longo.\n• Nv 14 — Fúria Além da Morte: enquanto em fúria, chegar a 0 PV não o deixa inconsciente (ainda faz testes de resistência contra morte e sofre efeitos de dano em 0 PV); se você morreria por falhas nesses testes, não morre até a fúria terminar."
+          }
+        ]
+      }
+    ]
+  },
   "clerigo": {
     "choices": [
       {
