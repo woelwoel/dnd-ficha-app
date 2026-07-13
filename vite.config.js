@@ -99,10 +99,11 @@ export default defineConfig({
             //    v24 → v25 (2026-07-08): patrono Hexblade (O Lâmina Maldita)
             //    v25 → v26 (2026-07-08): subclasses divinas/naturais (clérigo/paladino/patrulheiro/druida)
             //    v26 → v27 (2026-07-09): subclasses marciais (bárbaro/guerreiro/monge/ladino + Disparos Arcanos)
+            //    v27 → v28 (2026-07-09): subclasses arcanas (bardo/feiticeiro/bruxo-celestial/mago) — 31/31
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v27',
+              cacheName: 'srd-data-v28',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias

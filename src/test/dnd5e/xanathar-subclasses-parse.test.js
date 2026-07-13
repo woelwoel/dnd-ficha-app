@@ -20,6 +20,10 @@ describe('subclasses do xanathar-class-choices-pt.json', () => {
       expect(features.every(f => f.level >= 1 && f.level <= 20), opt.value).toBe(true)
     }
   })
+
+  it('as 31 subclasses do XGE estão presentes', () => {
+    expect(subclassOptions.length).toBe(31)
+  })
 })
 
 describe('caminhos XGE do bárbaro', () => {
