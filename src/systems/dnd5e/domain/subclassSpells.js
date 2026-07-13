@@ -201,6 +201,14 @@ const WARLOCK_PATRON_SPELLS = {
     ['dominar-besta',             'tentaculos-negros-de-evard'],// 7
     ['dominar-pessoa',            'telecinesia'],               // 9
   ],
+  // O Celestial (Xanathar's p.54) — source: xanathar
+  celestial: [
+    ['curar-ferimentos', 'raio-guiador'],      // 1 (Cure Wounds, Guiding Bolt)
+    ['esfera-flamejante','restauracao-menor'], // 3 (Flaming Sphere, Lesser Restoration)
+    ['luz-do-dia',       'revivificar'],        // 5 (Daylight, Revivify)
+    ['guardiao-da-fe',   'muralha-de-fogo'],    // 7 (Guardian of Faith, Wall of Fire)
+    ['coluna-de-chamas', 'restauracao-maior'],  // 9 (Flame Strike, Greater Restoration)
+  ],
   // O Lâmina Maldita — Hexblade (Xanathar's p.55) — source: xanathar
   hexblade: [
     ['escudo-arcano',            'destruicao-colerica'],    // 1 (Shield, Wrathful Smite)

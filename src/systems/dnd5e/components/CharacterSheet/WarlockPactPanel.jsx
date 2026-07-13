@@ -23,11 +23,12 @@ const PATRON_LABEL = {
   insondavel:     'O Insondável',       // Tasha
   genio:          'O Gênio',            // Tasha
   hexblade:       'O Lâmina Maldita',   // Xanathar
+  celestial:      'O Celestial',        // Xanathar
 }
 
 const PATRON_ICON = {
   feerico: '🍄', infernal: '🔥', grande_antigo: '🐙',
-  insondavel: '🌊', genio: '🧞', hexblade: '🗡',
+  insondavel: '🌊', genio: '🧞', hexblade: '🗡', celestial: '😇',
 }
 
 const BOON_LABEL = {

@@ -25,6 +25,17 @@ describe('lista expandida do Hexblade', () => {
   })
 })
 
+describe('lista expandida do Celestial', () => {
+  it('concede 2 magias/tier em 1/3/5/7/9, slugs no catálogo', () => {
+    for (const lvl of [1, 3, 5, 7, 9]) {
+      const r = getSubclassSpellsForLevel({ classIndex: 'bruxo', chosenFeatures: { patron: 'celestial' }, classLevel: lvl })
+      expect(r.indices.length, `nv${lvl}`).toBe(2)
+      expect(r.alwaysPrepared).toBe(true)
+      for (const s of r.indices) expect(catalog.has(s), s).toBe(true)
+    }
+  })
+})
+
 describe('domínios XGE do clérigo', () => {
   it.each([['forja'], ['sepultura']])('%s concede 2 magias/tier em 1/3/5/7/9', (domain) => {
     for (const lvl of [1, 3, 5, 7, 9]) {
