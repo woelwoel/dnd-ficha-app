@@ -50,6 +50,16 @@ describe('arquétipos XGE do guerreiro', () => {
   })
 })
 
+describe('tradições XGE do monge', () => {
+  const monge = choices.monge?.choices.find(c => c.id === 'monastic_tradition')
+  it.each([['mestre-bebado'], ['kensei'], ['alma-solar']])('%s parseia features em 3/6/11/17', (v) => {
+    const opt = monge?.options.find(o => o.value === v)
+    expect(opt, v).toBeTruthy()
+    const levels = parseSubclassFeatures(opt.desc).features.map(f => f.level)
+    for (const lvl of [3, 6, 11, 17]) expect(levels, `${v} nv${lvl}`).toContain(lvl)
+  })
+})
+
 describe('círculos XGE do druida', () => {
   const druida = choices.druida?.choices.find(c => c.id === 'druid_circle')
   it.each([['sonhos'], ['pastor']])('%s parseia features em 2/6/10/14', (circle) => {

@@ -115,6 +115,33 @@
       }
     ]
   },
+  "monge": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "monastic_tradition",
+        "featureName": "Tradição Monástica",
+        "prompt": "Escolha sua Tradição Monástica",
+        "options": [
+          {
+            "value": "mestre-bebado",
+            "name": "Estilo do Mestre Bêbado",
+            "desc": "O Estilo do Mestre Bêbado ensina movimentos imprevisíveis e cambaleantes de um bêbado. O que parece um combatente incompetente esconde uma dança cuidadosamente executada de bloqueios, esquivas, avanços e recuos.\n\nFeatures de Tradição por nível:\n• Nv 3 — Proficiências Bônus: você ganha proficiência na perícia Atuação e com suprimentos de cervejeiro (se não tiver).\n• Nv 3 — Técnica Bêbada: quando usa sua Rajada de Golpes, você ganha o benefício da ação Desengajar e seu deslocamento aumenta em 3 metros até o fim do turno.\n• Nv 6 — Balanço Bêbado: você pode se levantar de caído gastando apenas 3 metros de deslocamento; e quando uma criatura erra um ataque corpo-a-corpo contra você, pode gastar 1 ponto de ki como reação para redirecionar o ataque a outra criatura a até 1,5 metro.\n• Nv 11 — Sorte do Bêbado: quando você faz um teste de habilidade, ataque ou resistência com desvantagem, pode gastar 2 pontos de ki para cancelar a desvantagem.\n• Nv 17 — Frenesi do Bêbado: quando usa sua Rajada de Golpes, pode fazer até três ataques adicionais (totalizando cinco), desde que cada ataque da Rajada atinja uma criatura diferente neste turno."
+          },
+          {
+            "value": "kensei",
+            "name": "Estilo do Kensei",
+            "desc": "Monges do Estilo do Kensei treinam incansavelmente com suas armas, ao ponto de a arma se tornar uma extensão do corpo. Um kensei vê a arma como um calígrafo aprecia o pincel: uma ferramenta para expressar a beleza e a precisão das artes marciais.\n\nFeatures de Tradição por nível:\n• Nv 3 — Caminho do Kensei: escolha dois tipos de arma (uma corpo-a-corpo e uma à distância, sem as propriedades pesada e especial) como suas Armas Kensei, ganhando proficiência com elas. Esquiva Rápida: ao fazer um ataque desarmado empunhando uma Arma Kensei corpo-a-corpo, +2 de CA até seu próximo turno. Tiro do Kensei: ação bônus para adicionar 1d4 de dano aos ataques à distância com Arma Kensei até o fim do turno. Você também ganha proficiência com suprimentos de caligrafia ou ferramentas de pintor. Ganha outra Arma Kensei nos níveis 6, 11 e 17.\n• Nv 6 — Uno Com a Lâmina: seus ataques com Armas Kensei contam como mágicos; e, uma vez por turno, pode gastar 1 ponto de ki para causar dano extra igual ao seu dado de Artes Marciais (Golpe Habilidoso).\n• Nv 11 — Aguçar a Lâmina: como ação bônus, gasta até 3 pontos de ki para dar a uma Arma Kensei um bônus igual aos pontos gastos em ataque e dano por 1 minuto.\n• Nv 17 — Precisão Infalível: quando erra um ataque com uma arma de monge no seu turno, pode atacar novamente. Uma vez por turno."
+          },
+          {
+            "value": "alma-solar",
+            "name": "Estilo da Alma Solar",
+            "desc": "Monges do Estilo da Alma Solar aprendem a canalizar sua energia vital em calcinantes raios de luz solar, atacando à distância com energia radiante.\n\nFeatures de Tradição por nível:\n• Nv 3 — Raio Solar Radiante: você ganha um ataque especial à distância (alcance 9 metros) usável na ação de Ataque, proficiente e com seu modificador de Destreza; causa 1d4 de dano radiante (o dado escala pela coluna de Artes Marciais). Ao usar a ação de Ataque com ele, pode gastar 1 ponto de ki para disparar duas vezes como ação bônus.\n• Nv 6 — Golpe do Arco Abrasador: imediatamente após a ação de Ataque, pode gastar 2 pontos de ki para conjurar mãos flamejantes como ação bônus; cada ponto de ki adicional aumenta o círculo da magia (máximo igual à metade do seu nível de monge).\n• Nv 11 — Explosão Calcinante: como ação, cria um orbe de luz a até 45 metros; cada criatura numa esfera de 8 metros de raio faz TR de Constituição ou sofre 2d6 de dano radiante. Pode gastar até 3 pontos de ki, cada um aumentando o dano em 2d6.\n• Nv 17 — Escudo Solar: você é rodeado por uma aura luminosa (luz plena 9m, penumbra +9m). Quando uma criatura o atinge enquanto a luz brilha, pode usar sua reação para causar dano radiante."
+          }
+        ]
+      }
+    ]
+  },
   "paladino": {
     "choices": [
       {
