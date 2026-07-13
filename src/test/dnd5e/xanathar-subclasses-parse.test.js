@@ -70,6 +70,16 @@ describe('arquétipos XGE do ladino', () => {
   })
 })
 
+describe('origens XGE do feiticeiro', () => {
+  const feit = choices.feiticeiro?.choices.find(c => c.id === 'sorcerous_origin')
+  it.each([['alma-favorecida'], ['adepto-das-sombras'], ['feiticeiro-da-tempestade']])('%s parseia features em 1/6/14/18', (v) => {
+    const opt = feit?.options.find(o => o.value === v)
+    expect(opt, v).toBeTruthy()
+    const levels = parseSubclassFeatures(opt.desc).features.map(f => f.level)
+    for (const lvl of [1, 6, 14, 18]) expect(levels, `${v} nv${lvl}`).toContain(lvl)
+  })
+})
+
 describe('círculos XGE do druida', () => {
   const druida = choices.druida?.choices.find(c => c.id === 'druid_circle')
   it.each([['sonhos'], ['pastor']])('%s parseia features em 2/6/10/14', (circle) => {

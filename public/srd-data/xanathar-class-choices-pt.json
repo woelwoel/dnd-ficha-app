@@ -26,6 +26,33 @@
       }
     ]
   },
+  "feiticeiro": {
+    "choices": [
+      {
+        "level": 1,
+        "id": "sorcerous_origin",
+        "featureName": "Origem de Feiticeiro",
+        "prompt": "Escolha sua Origem de Feiticeiro",
+        "options": [
+          {
+            "value": "alma-favorecida",
+            "name": "Alma Favorecida",
+            "desc": "Às vezes a centelha de magia de um feiticeiro vem de uma fonte divina que brilha na alma — talvez um antepassado angelical ou o alinhamento do nascimento a uma antiga profecia. Uma Alma Favorecida domina o poder sagrado como um estranho, o que pode minar hierarquias religiosas.\n\nFeatures de Origem por nível:\n• Nv 1 — Magia Divina: você pode escolher magias da lista de clérigo além da lista de feiticeiro ao aprender ou substituir truques e magias de feiticeiro (elas contam como magias de feiticeiro). Escolha também uma afinidade (bem, mal, ordem, caos ou neutralidade) que concede uma magia adicional sempre preparada: curar ferimentos (bem), infligir ferimentos (mal), benção (ordem), perdição (caos) ou proteção contra o mal e o bem (neutralidade).\n• Nv 1 — Favorecido pelos Deuses: se você falha em um teste de resistência ou erra um ataque, pode rolar 2d4 e somar ao total, possivelmente alterando o resultado. Uma vez usada, não pode usá-la novamente até terminar um descanso curto ou longo.\n• Nv 6 — Cura Fortalecida: quando você ou um aliado a até 1,5m rola dados para restaurar PV com uma magia, pode gastar 1 ponto de feitiçaria para repetir qualquer número desses dados uma vez. Uma vez por turno.\n• Nv 14 — Asas Transcendentais: como ação bônus, manifesta asas espectrais com deslocamento de voo de 9 metros até você ficar incapacitado, morrer ou desfazê-las.\n• Nv 18 — Recuperação Sublime: como ação bônus, quando estiver com menos da metade dos PV, recupera PV iguais à metade do seu máximo. Uma vez usada, não pode usá-la novamente até terminar um descanso longo."
+          },
+          {
+            "value": "adepto-das-sombras",
+            "name": "Adepto das Sombras",
+            "desc": "Você é uma criatura de sombra, pois sua magia inata vem do próprio Pendor das Sombras — por linhagem ou por exposição à sua energia caída. Uma aura pálida e estranha molda sua presença física.\n\nFeatures de Origem por nível:\n• Nv 1 — Olhos da Escuridão: você tem visão no escuro de 36 metros. No 3º nível, aprende a magia escuridão (não conta no seu limite) e pode conjurá-la gastando 2 pontos de feitiçaria (podendo ver através dela) ou um espaço de magia.\n• Nv 1 — Força do Túmulo: quando um dano o reduziria a 0 PV, pode fazer um TR de Carisma (CD 5 + dano) para em vez disso cair a 1 PV (não funciona contra dano radiante ou crítico). Uma vez bem-sucedido, não pode usá-la novamente até terminar um descanso longo.\n• Nv 6 — Cão do Mau Presságio: como ação bônus, gasta 3 pontos de feitiçaria para invocar um cão sombrio (estatísticas de lobo atroz, com PV temporários) que persegue um alvo a até 36m, dando desvantagem em TRs contra suas magias enquanto adjacente. Dura 5 minutos.\n• Nv 14 — Caminhar nas Sombras: em luz fraca ou escuridão, como ação bônus, teleporta-se até 36 metros para outro espaço em luz fraca ou escuridão.\n• Nv 18 — Forma Umbral: como ação bônus, gasta 6 pontos de feitiçaria para virar sombra por 1 minuto — resistência a todo dano exceto energia e radiante, e atravessa criaturas e objetos como terreno difícil."
+          },
+          {
+            "value": "feiticeiro-da-tempestade",
+            "name": "Feiticeiro da Tempestade",
+            "desc": "Sua magia inata vem do poder elemental do ar — uma experiência de quase-morte numa Grande Tormenta, o nascimento sob um temporal lendário, ou a influência de criaturas de ar como um djinni. A magia da tempestade permeia seu ser.\n\nFeatures de Origem por nível:\n• Nv 1 — Orador do Vento: você fala, lê e escreve Primordial (e seus dialetos Aquan, Auran, Ignan e Terran).\n• Nv 1 — Magia Tempestuosa: imediatamente antes ou depois de conjurar uma magia de 1º círculo ou superior, pode usar uma ação bônus para voar até 3 metros sem provocar ataques de oportunidade.\n• Nv 6 — Coração da Tempestade: você ganha resistência a dano elétrico e trovejante; e ao começar a conjurar uma magia de 1º círculo ou superior que cause esses danos, criaturas à sua escolha a até 3m sofrem dano elétrico ou trovejante igual à metade do seu nível de feiticeiro.\n• Nv 6 — Guia da Tempestade: você pode acalmar a chuva numa esfera de 6m ao seu redor (ação) ou direcionar o vento numa esfera de 30m (ação bônus por rodada).\n• Nv 14 — Fúria da Tempestade: quando atingido por um ataque corpo-a-corpo, pode usar sua reação para causar dano elétrico igual ao seu nível de feiticeiro; o atacante faz TR de Força ou é empurrado até 6 metros.\n• Nv 18 — Alma do Vento: você ganha imunidade a dano elétrico e trovejante e deslocamento de voo mágico de 18 metros; como ação, pode reduzi-lo a 9m por 1 hora para conceder voo de 9m a até 3 + Carisma criaturas. Uma vez usada assim, não pode repetir até terminar um descanso curto ou longo."
+          }
+        ]
+      }
+    ]
+  },
   "guerreiro": {
     "choices": [
       {

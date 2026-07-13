@@ -33,8 +33,11 @@ export function SpellsBlock({ draft, updateDraft, classData }) {
   const spellSaveDC = spellAbilityKey ? calculateSpellSaveDC(spellScore, profBonus) : null
   const spellAttackBonus = spellAbilityKey ? calculateSpellAttackBonus(spellScore, profBonus) : null
 
+  // Alma Favorecida (Feiticeiro/XGE) também escolhe da lista de Clérigo.
+  const isAlmaFavorecida = draft.class === 'feiticeiro'
+    && draft.chosenFeatures?.sorcerous_origin === 'alma-favorecida'
   const { classSpells, levelData, slotLevels, availableTabs } =
-    useClassSpells(draft.class, draft.level ?? 1)
+    useClassSpells(draft.class, draft.level ?? 1, isAlmaFavorecida ? { extraClasses: ['clerigo'] } : undefined)
 
   const rules = getSpellcastingRules(draft.class, draft.level ?? 1, finalAttrs, levelData)
   const { type: castType, spellsLimit, cantripsLimit, spellsLabel } = rules

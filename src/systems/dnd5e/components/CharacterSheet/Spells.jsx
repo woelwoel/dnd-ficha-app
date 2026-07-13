@@ -100,8 +100,11 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
     return { ...(result ?? {}), effectOffer }
   }
 
+  // Alma Favorecida (Feiticeiro/XGE) também escolhe da lista de Clérigo.
+  const isAlmaFavorecida = classIndex === 'feiticeiro'
+    && character.info?.chosenFeatures?.sorcerous_origin === 'alma-favorecida'
   const { classSpells, levelData, availableTabs } =
-    useClassSpells(classIndex, level)
+    useClassSpells(classIndex, level, isAlmaFavorecida ? { extraClasses: ['clerigo'] } : undefined)
 
   const rules = useMemo(
     () => getSpellcastingRules(classIndex, level, attributes, levelData),

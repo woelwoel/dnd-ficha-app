@@ -8,8 +8,10 @@ import { getWarlockPactSlots, getSpellSlots } from '../utils/spellcasting'
  * Nada de fetch aqui — race conditions e requisições duplicadas ficam
  * resolvidas no provider.
  */
-export function useClassSpells(classIndex, level) {
+export function useClassSpells(classIndex, level, { extraClasses = [] } = {}) {
   const { spells: allSpells, levels, progression } = useSrd()
+  // Chave estável pro memo (array literal muda de identidade a cada render).
+  const extraClassesKey = extraClasses.join(',')
 
   const classIndexEn = PT_CLASS_TO_EN[classIndex] ?? classIndex
 
@@ -48,8 +50,12 @@ export function useClassSpells(classIndex, level) {
 
   const classSpells = useMemo(() => {
     if (!classIndex) return allSpells
-    return allSpells.filter(s => s.classes?.includes(classIndex))
-  }, [allSpells, classIndex])
+    // Alma Favorecida (Feiticeiro/XGE) conjura também da lista de Clérigo:
+    // o consumo passa extraClasses=['clerigo']. União das listas aceitas.
+    const accepted = [classIndex, ...extraClasses]
+    return allSpells.filter(s => accepted.some(c => s.classes?.includes(c)))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allSpells, classIndex, extraClassesKey])
 
   const availableTabs = useMemo(() => {
     const lvls = new Set(classSpells.map(s => s.level))
