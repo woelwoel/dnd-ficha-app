@@ -60,6 +60,16 @@ describe('tradições XGE do monge', () => {
   })
 })
 
+describe('arquétipos XGE do ladino', () => {
+  const ladino = choices.ladino?.choices.find(c => c.id === 'roguish_archetype')
+  it.each([['inquiridor'], ['mentor'], ['batedor'], ['espadachim']])('%s parseia features em 3/9/13/17', (v) => {
+    const opt = ladino?.options.find(o => o.value === v)
+    expect(opt, v).toBeTruthy()
+    const levels = parseSubclassFeatures(opt.desc).features.map(f => f.level)
+    for (const lvl of [3, 9, 13, 17]) expect(levels, `${v} nv${lvl}`).toContain(lvl)
+  })
+})
+
 describe('círculos XGE do druida', () => {
   const druida = choices.druida?.choices.find(c => c.id === 'druid_circle')
   it.each([['sonhos'], ['pastor']])('%s parseia features em 2/6/10/14', (circle) => {

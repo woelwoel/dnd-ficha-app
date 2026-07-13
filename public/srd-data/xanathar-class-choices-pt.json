@@ -164,6 +164,38 @@
       }
     ]
   },
+  "ladino": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "roguish_archetype",
+        "featureName": "Arquétipo Ladino",
+        "prompt": "Escolha seu Arquétipo Ladino",
+        "options": [
+          {
+            "value": "inquiridor",
+            "name": "Inquiridor",
+            "desc": "Como Inquiridor você é notável em desenterrar segredos e resolver mistérios. Confia em seus olhos afiados para detalhes e na habilidade de ler as intenções dos outros, sendo bem equipado para expor e acabar com os males ocultos.\n\nFeatures de Arquétipo por nível:\n• Nv 3 — Ouvir do Enganador: ao fazer um teste de Sabedoria (Intuição) para saber se uma criatura mente, trate 7 ou menos no d20 como 8.\n• Nv 3 — Olhar do Detalhe: como ação bônus, faz um teste de Sabedoria (Percepção) para detectar um objeto ou criatura, ou Inteligência (Investigação) para descobrir pistas.\n• Nv 3 — Combatente Perspicaz: como ação bônus, teste de Sabedoria (Intuição) contra Carisma (Enganação) do alvo; no sucesso, pode usar Ataque Furtivo contra ele sem vantagem (a menos que tenha desvantagem) por 1 minuto.\n• Nv 9 — Olhar Constante: vantagem em testes de Sabedoria (Percepção) e Inteligência (Investigação) se não se moveu mais da metade do deslocamento no turno.\n• Nv 13 — Olhar Inflexível: como ação, percebe ilusões, metamorfos e magias de disfarce a até 9 metros. Usos iguais ao seu modificador de Sabedoria (mínimo 1) por descanso longo.\n• Nv 17 — Olhar da Fraqueza: enquanto seu olhar de fraqueza estiver sobre um alvo, seu Ataque Furtivo contra ele é aumentado em 3d6."
+          },
+          {
+            "value": "mentor",
+            "name": "Mentor",
+            "desc": "Seu foco está nas pessoas, na influência e nos segredos que elas guardam. Muitos espiões, cortesãs e manipuladores escolhem este arquétipo. Palavras são suas armas tanto quanto facas ou veneno; segredos e favores, seus maiores tesouros.\n\nFeatures de Arquétipo por nível:\n• Nv 3 — Mestre da Intriga: proficiência com kit de disfarce, kit de falsificação e um conjunto de jogo; aprende dois idiomas; e pode imitar padrões de fala e sotaques de quem ouviu por ao menos 1 minuto.\n• Nv 3 — Mestre de Tática: você pode usar a ação de Ajuda como ação bônus, e a distância dela aumenta para 9 metros ao socorrer um aliado.\n• Nv 9 — Manipulador Perspicaz: gastando 1 minuto observando uma criatura fora de combate, compara com você os valores de Inteligência, Sabedoria, Carisma e nível de classe (igual, superior ou inferior).\n• Nv 13 — Redirecionar: quando é alvo de um ataque enquanto uma criatura a até 1,5m lhe dá cobertura, pode usar sua reação para tornar essa criatura o alvo do ataque.\n• Nv 17 — Alma do Enganador: seus pensamentos não podem ser lidos sem sua permissão; você pressente leitura mental e magia que detecta verdade indica sinceridade quando você quiser."
+          },
+          {
+            "value": "batedor",
+            "name": "Batedor",
+            "desc": "Você é hábil em furtividade e sobrevivência longe das cidades, alcançando à frente dos companheiros durante as expedições. Emboscadores, espiões e caçadores de recompensas — estes são alguns dos papéis que os batedores assumem.\n\nFeatures de Arquétipo por nível:\n• Nv 3 — Escaramuça: quando um inimigo termina o turno a até 1,5m, pode usar sua reação para mover-se até metade do deslocamento sem provocar ataques de oportunidade.\n• Nv 3 — Sobrevivente: proficiência (e especialização) nas perícias Natureza e Sobrevivência.\n• Nv 9 — Mobilidade Superior: seu deslocamento de caminhada aumenta em 3 metros (também escalada/natação, se tiver).\n• Nv 13 — Mestre da Emboscada: vantagem em iniciativa; e a primeira criatura que você atinge na primeira rodada fica vulnerável — ataques contra ela têm vantagem até o início do seu próximo turno.\n• Nv 17 — Golpe Súbito: se você faz a ação de Ataque, pode fazer um ataque adicional como ação bônus, que pode se beneficiar do Ataque Furtivo mesmo se já o usou (se for o único ataque contra aquele alvo no turno)."
+          },
+          {
+            "value": "espadachim",
+            "name": "Espadachim",
+            "desc": "Seu treinamento na arte da lâmina divide-se em velocidade, elegância e fascínio em partes iguais. Enquanto alguns guerreiros são brutos de armadura pesada, seu estilo é quase uma performance. Duelistas e piratas costumam escolher este arquétipo.\n\nFeatures de Arquétipo por nível:\n• Nv 3 — Passo Elegante: no seu turno, após um ataque corpo-a-corpo contra uma criatura, ela não pode fazer ataques de oportunidade contra você pelo resto do turno.\n• Nv 3 — Audácia Devassa: você adiciona seu modificador de Carisma à iniciativa; e pode usar Ataque Furtivo sem vantagem se estiver a 1,5m do alvo, sem outra criatura a 1,5m de você e sem desvantagem no ataque.\n• Nv 9 — Penachar: como ação, teste de Carisma (Persuasão) contra Sabedoria (Intuição) da criatura; no sucesso, um alvo hostil tem desvantagem em ataques contra outros que não você (por 1 minuto), ou um alvo não hostil fica enfeitiçado por 1 minuto.\n• Nv 13 — Manobra Elegante: como ação bônus, ganha vantagem no próximo teste de Destreza (Acrobacia) ou Força (Atletismo) neste turno.\n• Nv 17 — Mestre Duelista: quando erra um ataque, pode repeti-lo com vantagem. Uma vez usada, não pode usá-la novamente até terminar um descanso curto ou longo."
+          }
+        ]
+      }
+    ]
+  },
   "patrulheiro": {
     "choices": [
       {
