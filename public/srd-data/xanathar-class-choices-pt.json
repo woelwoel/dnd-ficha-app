@@ -1,4 +1,31 @@
 {
+  "bardo": {
+    "choices": [
+      {
+        "level": 3,
+        "id": "bard_college",
+        "featureName": "Colégio de Bardos",
+        "prompt": "Escolha seu Colégio de Bardos",
+        "options": [
+          {
+            "value": "glamour",
+            "name": "Colégio do Glamour",
+            "desc": "Bardos do Colégio do Glamour dominaram seus ofícios na Agrestia das Fadas ou sob a tutela de seres feéricos. Aprenderam a usar a magia para deleitar e cativar — suas apresentações são material de lendas e podem acalmar um dragão ou dobrar mentes.\n\nFeatures de Colégio por nível:\n• Nv 3 — Manto da Inspiração: como ação bônus, gasta uma Inspiração de Bardo para dar, a até Carisma criaturas a 18 metros, 5 PV temporários (8/11/14 em níveis maiores); cada uma pode usar a reação para se mover até o limite sem provocar ataques de oportunidade.\n• Nv 3 — Performance Deslumbrante: após atuar por 1 minuto, até Carisma humanoides que assistiram fazem TR de Sabedoria ou ficam enfeitiçados (idolatram você) por 1 hora. Uma vez usada, não pode usá-la novamente até terminar um descanso curto ou longo.\n• Nv 6 — Manto de Majestade: como ação bônus, conjura comando sem gastar espaço de magia e mantém uma aparência sobrenatural por 1 minuto (concentração), podendo reconjurar comando como ação bônus. Uma vez usada, não pode usá-la novamente até terminar um descanso longo.\n• Nv 14 — Majestade Inquebrável: como ação bônus, assume uma presença majestosa por 1 minuto; a primeira vez que uma criatura tenta atacá-lo por turno, faz TR de Carisma ou não pode atacá-lo. Uma vez usada, não pode usá-la novamente até terminar um descanso curto ou longo."
+          },
+          {
+            "value": "espadas",
+            "name": "Colégio das Espadas",
+            "desc": "Bardos do Colégio das Espadas são chamados Lâminas: entretêm com façanhas ousadas de armas — engolir espadas, atirar facas, combates simulados — mas são guerreiros de verdade. Muitos levam uma vida dupla, entre a trupe e o crime ou a justiça.\n\nFeatures de Colégio por nível:\n• Nv 3 — Proficiência Bônus: você ganha proficiência com armadura média e cimitarras, e pode usar uma arma simples ou marcial de proficiência como foco de conjuração.\n• Nv 3 — Estilo de Luta: escolha Duelo (+2 no ataque com uma arma corpo-a-corpo em uma mão) ou Combate com Duas Armas (adiciona o modificador de habilidade ao dano do segundo ataque).\n• Nv 3 — Floreio de Lâminas: quando você faz a ação de Ataque, o deslocamento aumenta 3 metros e, se um ataque acerta, pode gastar uma Inspiração de Bardo para um Floreio — Defensivo (dano extra + soma o dado à CA), Cortante (dano extra a uma segunda criatura a 1,5m) ou Móvel (dano extra + empurra o alvo e desloca-se). Uma opção por turno.\n• Nv 6 — Ataque Extra: você pode atacar duas vezes ao fazer a ação de Ataque.\n• Nv 14 — Floreio de Mestre: ao usar Floreio de Lâminas, pode rolar 1d6 em vez de gastar uma Inspiração de Bardo."
+          },
+          {
+            "value": "sussurros",
+            "name": "Colégio dos Sussurros",
+            "desc": "Bardos do Colégio dos Sussurros parecem como outros bardos, mas usam seus conhecimentos e magias para descobrir segredos e usá-los contra os outros por extorsão e ameaça. Muitos bardos os odeiam, e seus membros raramente revelam sua verdadeira natureza.\n\nFeatures de Colégio por nível:\n• Nv 3 — Lâminas Psíquicas: quando você atinge uma criatura com um ataque de arma, pode gastar uma Inspiração de Bardo para causar 2d6 de dano psíquico extra (3d6/5d6/8d6 em níveis maiores). Uma vez por turno.\n• Nv 3 — Palavras de Terror: se conversar a sós com um humanoide por 1 minuto, pode tentar semear paranoia; ao fim, o alvo faz TR de Sabedoria ou fica amedrontado de você (ou de outra criatura à escolha) por 1 hora. Uma vez usada, não pode usá-la novamente até terminar um descanso curto ou longo.\n• Nv 6 — Manto de Sussurros: quando um humanoide morre a até 9 metros, pode capturar sua sombra e usá-la como ação para assumir sua identidade por 1 hora, imitando aparência e voz.\n• Nv 14 — Conhecimento das Sombras: como ação, gasta uma Inspiração de Bardo para instantaneamente saber os maiores desejos de uma criatura que possa ver."
+          }
+        ]
+      }
+    ]
+  },
   "barbaro": {
     "choices": [
       {

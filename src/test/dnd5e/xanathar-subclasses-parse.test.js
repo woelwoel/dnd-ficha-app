@@ -80,6 +80,16 @@ describe('origens XGE do feiticeiro', () => {
   })
 })
 
+describe('colégios XGE do bardo', () => {
+  const bardo = choices.bardo?.choices.find(c => c.id === 'bard_college')
+  it.each([['glamour'], ['espadas'], ['sussurros']])('%s parseia features em 3/6/14', (v) => {
+    const opt = bardo?.options.find(o => o.value === v)
+    expect(opt, v).toBeTruthy()
+    const levels = parseSubclassFeatures(opt.desc).features.map(f => f.level)
+    for (const lvl of [3, 6, 14]) expect(levels, `${v} nv${lvl}`).toContain(lvl)
+  })
+})
+
 describe('círculos XGE do druida', () => {
   const druida = choices.druida?.choices.find(c => c.id === 'druid_circle')
   it.each([['sonhos'], ['pastor']])('%s parseia features em 2/6/10/14', (circle) => {
