@@ -90,6 +90,16 @@ describe('colégios XGE do bardo', () => {
   })
 })
 
+describe('tradição XGE do mago', () => {
+  const mago = choices.mago?.choices.find(c => c.id === 'arcane_tradition')
+  it('mago-de-guerra parseia features em 2/6/10/14', () => {
+    const opt = mago?.options.find(o => o.value === 'mago-de-guerra')
+    expect(opt).toBeTruthy()
+    const levels = parseSubclassFeatures(opt.desc).features.map(f => f.level)
+    for (const lvl of [2, 6, 10, 14]) expect(levels, `nv${lvl}`).toContain(lvl)
+  })
+})
+
 describe('círculos XGE do druida', () => {
   const druida = choices.druida?.choices.find(c => c.id === 'druid_circle')
   it.each([['sonhos'], ['pastor']])('%s parseia features em 2/6/10/14', (circle) => {

@@ -169,6 +169,23 @@
       }
     ]
   },
+  "mago": {
+    "choices": [
+      {
+        "level": 2,
+        "id": "arcane_tradition",
+        "featureName": "Tradição Arcana",
+        "prompt": "Escolha sua Tradição Arcana",
+        "options": [
+          {
+            "value": "mago-de-guerra",
+            "name": "Mago de Guerra",
+            "desc": "A tradição do Mago de Guerra combina os princípios de evocação e abjuração em vez de se especializar em uma só. Ela qualifica as magias do conjurador enquanto reforça suas defesas. Magos de guerra enxergam a magia como arma e armadura, agindo rápido para obter controle tático da batalha.\n\nFeatures de Tradição por nível:\n• Nv 2 — Deflexão Arcana: quando é atingido por um ataque ou falha num teste de resistência, pode usar sua reação para ganhar +2 na CA contra o ataque ou +4 no teste. Até o fim do seu próximo turno, você só pode conjurar truques.\n• Nv 2 — Astúcia Tática: você adiciona seu modificador de Inteligência às jogadas de iniciativa.\n• Nv 6 — Surto de Poder: você armazena até Inteligência surtos de poder (ganha um ao ter sucesso com dissipar magia ou contramágica, e um ao terminar um descanso longo sem nenhum). Uma vez por turno, ao causar dano com uma magia de mago, pode gastar um surto para causar dano de energia extra igual à metade do seu nível de mago.\n• Nv 10 — Magia Duradoura: enquanto mantiver concentração em uma magia, você tem +2 na CA e em todos os testes de resistência.\n• Nv 14 — Blindagem Defletora: ao usar Deflexão Arcana, até três criaturas à sua escolha a até 18 metros sofrem dano de energia igual à metade do seu nível de mago."
+          }
+        ]
+      }
+    ]
+  },
   "monge": {
     "choices": [
       {
