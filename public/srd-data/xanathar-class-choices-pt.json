@@ -109,18 +109,66 @@
         "level": 3,
         "id": "arcane_shots",
         "featureName": "Disparos Arcanos (Arqueiro Arcano)",
-        "requires": { "martial_archetype": "arqueiro-arcano" },
-        "multiSelectByLevel": { "3": 2, "7": 3, "10": 4, "15": 5, "18": 6 },
+        "requires": {
+          "martial_archetype": "arqueiro-arcano"
+        },
+        "multiSelectByLevel": {
+          "3": 2,
+          "7": 3,
+          "10": 4,
+          "15": 5,
+          "18": 6
+        },
         "prompt": "Escolha suas opções de Disparo Arcano. Ganha mais ao subir de nível (2→3→4→5→6). A CD é 8 + proficiência + Inteligência.",
         "options": [
-          { "value": "flecha-da-explosao", "name": "Flecha da Explosão", "source": "xanathar", "desc": "Evocação. A energia detona após o acerto: o alvo e cada criatura a até 3 metros sofrem 2d6 de dano de energia (4d6 no 18º nível)." },
-          { "value": "flecha-da-seducao", "name": "Flecha da Sedução", "source": "xanathar", "desc": "Encantamento. O alvo sofre 2d6 de dano psíquico (4d6 no 18º) e faz TR de Sabedoria ou fica enfeitiçado por um aliado à sua escolha a até 9 metros até o início do seu próximo turno." },
-          { "value": "flecha-do-agarrar", "name": "Flecha do Agarrar", "source": "xanathar", "desc": "Conjuração. Espinheiros agarram o alvo: 2d6 de dano venenoso (4d6 no 18º), deslocamento -3m e 2d6 de cortante ao se mover; escapa com teste de Força (Atletismo) contra a CD." },
-          { "value": "flecha-do-banimento", "name": "Flecha do Banimento", "source": "xanathar", "desc": "Abjuração. O alvo faz TR de Carisma ou é banido à Agrestia das Fadas (deslocamento 0, incapacitado) até o fim do seu próximo turno. No 18º nível, ainda sofre 2d6 de dano de energia." },
-          { "value": "flecha-do-enfraquecimento", "name": "Flecha do Enfraquecimento", "source": "xanathar", "desc": "Necromancia. O alvo sofre 2d6 de dano necrótico (4d6 no 18º) e faz TR de Constituição ou tem o dano de seus ataques com arma reduzido à metade até o início do seu próximo turno." },
-          { "value": "flecha-perfurante", "name": "Flecha Perfurante", "source": "xanathar", "desc": "Transmutação. Sem jogada de ataque: a flecha atravessa uma linha de 30cm × 9m; cada criatura na linha faz TR de Destreza, sofrendo o dano da flecha + 1d6 perfurante (2d6 no 18º) na falha, metade no sucesso." },
-          { "value": "flecha-perseguidora", "name": "Flecha Perseguidora", "source": "xanathar", "desc": "Adivinhação. Sem jogada de ataque: escolhe uma criatura vista no último minuto; ela faz TR de Destreza, sofrendo o dano da flecha + 1d6 de energia (2d6 no 18º) e revelando sua posição na falha." },
-          { "value": "flecha-sombria", "name": "Flecha Sombria", "source": "xanathar", "desc": "Ilusão. O alvo sofre 2d6 de dano psíquico (4d6 no 18º) e faz TR de Sabedoria ou fica impedido de ver além de 1,5 metro até o seu próximo turno." }
+          {
+            "value": "flecha-da-explosao",
+            "name": "Flecha da Explosão",
+            "source": "xanathar",
+            "desc": "Evocação. A energia detona após o acerto: o alvo e cada criatura a até 3 metros sofrem 2d6 de dano de energia (4d6 no 18º nível)."
+          },
+          {
+            "value": "flecha-da-seducao",
+            "name": "Flecha da Sedução",
+            "source": "xanathar",
+            "desc": "Encantamento. O alvo sofre 2d6 de dano psíquico (4d6 no 18º) e faz TR de Sabedoria ou fica enfeitiçado por um aliado à sua escolha a até 9 metros até o início do seu próximo turno."
+          },
+          {
+            "value": "flecha-do-agarrar",
+            "name": "Flecha do Agarrar",
+            "source": "xanathar",
+            "desc": "Conjuração. Espinheiros agarram o alvo: 2d6 de dano venenoso (4d6 no 18º), deslocamento -3m e 2d6 de cortante ao se mover; escapa com teste de Força (Atletismo) contra a CD."
+          },
+          {
+            "value": "flecha-do-banimento",
+            "name": "Flecha do Banimento",
+            "source": "xanathar",
+            "desc": "Abjuração. O alvo faz TR de Carisma ou é banido à Agrestia das Fadas (deslocamento 0, incapacitado) até o fim do seu próximo turno. No 18º nível, ainda sofre 2d6 de dano de energia."
+          },
+          {
+            "value": "flecha-do-enfraquecimento",
+            "name": "Flecha do Enfraquecimento",
+            "source": "xanathar",
+            "desc": "Necromancia. O alvo sofre 2d6 de dano necrótico (4d6 no 18º) e faz TR de Constituição ou tem o dano de seus ataques com arma reduzido à metade até o início do seu próximo turno."
+          },
+          {
+            "value": "flecha-perfurante",
+            "name": "Flecha Perfurante",
+            "source": "xanathar",
+            "desc": "Transmutação. Sem jogada de ataque: a flecha atravessa uma linha de 30cm × 9m; cada criatura na linha faz TR de Destreza, sofrendo o dano da flecha + 1d6 perfurante (2d6 no 18º) na falha, metade no sucesso."
+          },
+          {
+            "value": "flecha-perseguidora",
+            "name": "Flecha Perseguidora",
+            "source": "xanathar",
+            "desc": "Adivinhação. Sem jogada de ataque: escolhe uma criatura vista no último minuto; ela faz TR de Destreza, sofrendo o dano da flecha + 1d6 de energia (2d6 no 18º) e revelando sua posição na falha."
+          },
+          {
+            "value": "flecha-sombria",
+            "name": "Flecha Sombria",
+            "source": "xanathar",
+            "desc": "Ilusão. O alvo sofre 2d6 de dano psíquico (4d6 no 18º) e faz TR de Sabedoria ou fica impedido de ver além de 1,5 metro até o seu próximo turno."
+          }
         ]
       }
     ]
@@ -311,6 +359,95 @@
             "value": "celestial",
             "name": "O Celestial",
             "desc": "Você fez um pacto com um ser dos planos das bênçãos eternas — um empíreo, um unicórnio ou outra entidade celestial. Esse vínculo permite experimentar o toque mais alto da luz sagrada, e pode guiá-lo a aniquilar mortos-vivos, vencer demônios e proteger os inocentes.\n\nFeatures de Patrono por nível:\n• Nv 1 — Lista de Magias Expandida: as magias do Celestial (por nível de bruxo) são adicionadas à sua lista de magias de bruxo e contam como magias de bruxo para você.\n• Nv 1 — Truques Adicionais: você aprende os truques luz e chama sagrada; eles contam como truques de bruxo e não contam no seu limite de conhecidos.\n• Nv 1 — Iluminação Curativa: você tem uma reserva de d6 igual a 1 + seu nível de bruxo. Como ação bônus, cura uma criatura a até 18 metros gastando dados (máximo por vez igual ao seu modificador de Carisma). A reserva recupera todos os dados ao terminar um descanso longo.\n• Nv 6 — Alma Radiante: você ganha resistência a dano radiante; e ao conjurar uma magia que cause dano radiante ou de fogo, pode adicionar seu modificador de Carisma ao dano contra um alvo.\n• Nv 10 — Resiliência Celestial: ao terminar um descanso curto ou longo, você ganha PV temporários iguais ao seu nível de bruxo + Carisma, e até cinco criaturas à sua escolha ganham metade disso.\n• Nv 14 — Vingança Ardente: quando você teria que fazer um teste de resistência contra morte no início do seu turno, pode em vez disso se levantar recuperando metade dos PV máximos; cada criatura à sua escolha a até 9 metros sofre 2d8 + Carisma de dano radiante e fica cega até o fim do turno. Uma vez usada, não pode usá-la novamente até terminar um descanso longo."
+          }
+        ]
+      },
+      {
+        "id": "eldritch_invocations",
+        "options": [
+          {
+            "value": "aperto_de_hadar",
+            "name": "Aperto de Hadar",
+            "desc": "Pré-requisito: truque rajada mística\n\nUma vez em cada um dos seus turnos, quando atingir uma criatura com sua rajada mística, você pode deslocar essa criatura em uma linha reta 3 metros em sua direção.",
+            "combat": "situacional"
+          },
+          {
+            "value": "arma_de_pacto_aprimorada",
+            "name": "Arma de Pacto Aprimorada",
+            "desc": "Pré-requisito: característica Pacto da Lâmina\n\nVocê pode usar qualquer arma que conjure com sua característica Pacto da Lâmina como um foco de magia para suas magias de bruxo. Além disso, a arma ganha um bônus de +1 em seus testes de ataque e dano, a menos que seja uma arma mágica que já tenha um bônus para esses testes. Além disso, a arma que conjure pode ser um arco curto, arco longo, besta leve ou besta pesada.",
+            "combat": "essencial"
+          },
+          {
+            "value": "aspecto_da_lua",
+            "name": "Aspecto da Lua",
+            "desc": "Pré-requisito: característica Pacto do Tomo\n\nVocê não precisa mais dormir e não pode ser forçado a dormir de qualquer maneira. Para obter os benefícios de um descanso longo, pode passar todas as 8 horas fazendo atividades leves, como ler o seu Livro das Sombras e manter a vigília.",
+            "combat": "situacional"
+          },
+          {
+            "value": "dadiva_das_profundezas",
+            "name": "Dádiva das Profundezas",
+            "desc": "Pré-requisito: 5º nível\n\nVocê pode respirar debaixo d'água e ganha um deslocamento de natação igual ao seu deslocamento de caminhada. Também pode conjurar a magia respirar na água uma vez sem gastar um espaço de magia. Recupera a capacidade de fazê-lo quando terminar um descanso longo.",
+            "combat": "situacional"
+          },
+          {
+            "value": "destruicao_mistica",
+            "name": "Destruição Mística",
+            "desc": "Pré-requisito: 5º nível, característica Pacto da Lâmina\n\nUma vez por turno, quando você atinge uma criatura com sua arma de pacto, você pode gastar um espaço de magia de bruxo para causar 1d8 de dano de energia adicional ao alvo, além de mais 1d8 por nível do espaço de magia, e você pode derrubar o alvo se ele for Enorme ou menor.",
+            "combat": "essencial"
+          },
+          {
+            "value": "fuga_do_escapista",
+            "name": "Fuga do Escapista",
+            "desc": "Pré-requisito: 7º nível\n\nVocê pode conjurar a magia movimentação livre uma vez em si mesmo sem gastar um espaço de magia. Você recupera a capacidade de fazê-lo quando terminar um descanso longo.",
+            "combat": "situacional"
+          },
+          {
+            "value": "lanca_da_letargia",
+            "name": "Lança da Letargia",
+            "desc": "Pré-requisito: truque rajada mística\n\nUma vez em cada um de seus turnos, quando atingir uma criatura com sua rajada mística, você pode reduzir o deslocamento dessa criatura em 3 metros até o final do seu próximo turno.",
+            "combat": "situacional"
+          },
+          {
+            "value": "maldicao_enlouquecedora",
+            "name": "Maldição Enlouquecedora",
+            "desc": "Pré-requisito: 5º nível, magia bruxaria ou uma característica de bruxo que amaldiçoe\n\nComo uma ação bônus, você causa uma distorção psíquica em torno do alvo amaldiçoado pela magia bruxaria ou característica de bruxo, como Maldições da Lâmina Maldita ou Símbolo de Mal Agouro. Quando fizer isso, você causa dano psíquico ao alvo amaldiçoado e a cada criatura de sua escolha que possa ver a menos de 1,5 metros de alcance. O dano psíquico é igual ao seu modificador de Carisma (mínimo de 1 dano). Para usar essa invocação, deve poder ver o alvo amaldiçoado e ele deve estar a até 9 metros de alcance.",
+            "combat": "situacional"
+          },
+          {
+            "value": "maldicao_incansavel",
+            "name": "Maldição Incansável",
+            "desc": "Pré-requisito: 7º nível, magia bruxaria ou uma característica de bruxo que amaldiçoe\n\nSua maldição cria um vínculo temporário com seu alvo. Como uma ação bônus, pode se teleportar magicamente até 9 metros para um espaço desocupado que possa ver dentro de 1,5 metros do alvo amaldiçoado pela magia bruxaria ou característica de bruxo, como Maldições da Lâmina Maldita ou Símbolo de Mal Agouro. Para se teleportar dessa maneira, precisa poder ver o alvo amaldiçoado.",
+            "combat": "situacional"
+          },
+          {
+            "value": "manto_de_moscas",
+            "name": "Manto de Moscas",
+            "desc": "Pré-requisito: 5º nível\n\nComo ação bônus, pode cercar-se com uma aura mágica que parece o zumbir de moscas. A aura se estende a 1,5 metros de alcance em todas as direções, mas não através da cobertura total. Isso dura até que esteja incapacitado ou o descarte como uma ação bônus. A aura lhe concede vantagem em testes de Carisma (Intimidação), mas desvantagem em todos os outros testes de Carisma. Qualquer outra criatura que comece o seu turno na aura recebe dano de veneno igual ao seu modificador de Carisma (mínimo de 0 de dano). Uma vez que utilize essa invocação, não pode usá-la novamente até terminar um descanso curto ou longo.",
+            "combat": "situacional"
+          },
+          {
+            "value": "olhar_fantasmagorico",
+            "name": "Olhar Fantasmagórico",
+            "desc": "Pré-requisito: 7º nível\n\nComo ação, você ganha a capacidade de ver através de objetos sólidos até um alcance de 9 metros. Dentro desse intervalo, adquire uma visão no escuro caso ainda não a possua. Esta visão especial dura 1 minuto ou até a sua concentração terminar (como se estivesse se concentrando em uma magia). Durante esse tempo, você percebe objetos como imagens fantasmagóricas e translúcidas. Uma vez que utilize essa invocação, não pode usá-la novamente até terminar um descanso curto ou longo.",
+            "combat": "situacional"
+          },
+          {
+            "value": "presente_dos_sempre_vivos",
+            "name": "Presente dos Sempre Vivos",
+            "desc": "Pré-requisito: característica Pacto das Correntes\n\nSempre que recuperar pontos de vida enquanto o seu familiar estiver a menos de 30 metros de alcance, trate todos os dados rolados para determinar os pontos de vida que recupera como tendo obtido seu valor máximo.",
+            "combat": "situacional"
+          },
+          {
+            "value": "sudario_das_sombras",
+            "name": "Sudário das Sombras",
+            "desc": "Pré-requisito: 15º nível\n\nVocê pode conjurar invisibilidade à vontade, sem gastar um espaço de magia.",
+            "combat": "situacional"
+          },
+          {
+            "value": "tumulo_de_levistus",
+            "name": "Túmulo de Levistus",
+            "desc": "Pré-requisito: 5º nível\n\nComo uma reação, quando receber dano, pode se cobrir de gelo, que derrete no final do seu próximo turno. Você ganha 10 pontos de vida temporários por nível de bruxo, o que retira a maior parte possível do dano que desencadeia a característica. Imediatamente depois de reduzir o dano, você ganha vulnerabilidade ao dano de fogo, seu deslocamento é reduzido para 0 e você está incapacitado. Esses efeitos, incluindo quaisquer pontos de vida temporários remanescentes, terminam quando o gelo derrete. Uma vez que utilize essa invocação, não pode usá-la novamente até terminar um descanso curto ou longo.",
+            "combat": "situacional"
           }
         ]
       }
