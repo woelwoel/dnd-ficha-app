@@ -42,6 +42,12 @@ function scaleDice(base, tier) {
   return fmtDice({ count: b.count * tier, sides: b.sides, mod: b.mod })
 }
 
+/** Upcast por faixas: troca a notação pela maior faixa cujo nível ≤ castLevel. */
+function tierDice(base, tiers, castLevel) {
+  const lvl = Object.keys(tiers).map(Number).filter(l => l <= castLevel).sort((a, b) => b - a)[0]
+  return lvl ? tiers[lvl] : base
+}
+
 /** Acrescenta modificador plano à notação ('1d8' + 3 → '1d8+3'). */
 function withFlatMod(base, m) {
   if (!m) return base
@@ -57,8 +63,12 @@ function withFlatMod(base, m) {
  * @param ctx    { slotLevel, characterLevel, spellAttack, spellMod, spellDC }
  * @returns { steps, announce } | null
  *   steps: [{ kind: 'attack'|'damage'|'heal', notation, label, critLabel?, critable? }]
- *   O executor (castSpell.js) percorre em ordem: ataque nat 20 → dano
- *   seguinte com crit; nat 1 → dano seguinte pulado.
+ *   O executor (castSpell.js) percorre em ordem: ataque nat 20 → todo dano
+ *   critable do raio com crit; nat 1 → todo dano critable do raio pulado.
+ *   critable = attack && (pkt.onHit ?? primeiro pacote); pacotes independentes
+ *   do acerto (ex.: explosão da Faca de Gelo) rolam sempre.
+ *   Upcast: `packet` escolhe o pacote alvo (default 0); `tiers` troca a
+ *   notação pela faixa do slot (Lâmina Sombria), `perSlot`/`perLevels` somam.
  */
 export function spellRollPlan(spell, mech, ctx) {
   if (!mech) return null
@@ -93,7 +103,10 @@ export function spellRollPlan(spell, mech, ctx) {
     ;(mech.damage ?? []).forEach((pkt, i) => {
       let dice = pkt.dice
       if (mech.cantripScaling) dice = scaleDice(dice, tier)
-      if (i === 0 && mech.upcast?.perSlot) dice = addDice(dice, mech.upcast.perSlot, above)
+      if (i === (mech.upcast?.packet ?? 0)) {
+        if (mech.upcast?.tiers) dice = tierDice(dice, mech.upcast.tiers, castLevel)
+        else if (mech.upcast?.perSlot) dice = addDice(dice, mech.upcast.perSlot, above)
+      }
       if (pkt.addMod) dice = withFlatMod(dice, ctx.spellMod ?? 0)
       const typePart = (mech.damage.length > 1) ? ` (${pkt.type})` : ''
       const cd = i === 0 && b === 1 && announce ? ` · ${announce}` : ''
@@ -102,7 +115,7 @@ export function spellRollPlan(spell, mech, ctx) {
         notation: dice,
         label: `${spell.name} · dano${typePart}${lvlSuffix}${beamSuffix}${cd}`,
         critLabel: `${spell.name} · dano CRÍTICO${typePart}${lvlSuffix}${beamSuffix}${cd}`,
-        critable: !!mech.attack,
+        critable: !!mech.attack && (pkt.onHit ?? i === 0),
       })
     })
   }

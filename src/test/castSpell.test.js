@@ -53,6 +53,39 @@ describe('executeCastPlan', () => {
     ])
   })
 
+  it('nat 20 dobra TODOS os pacotes critable do raio; nao-critable rola normal', () => {
+    const { roll, calls } = makeRoll([20])
+    executeCastPlan([
+      { kind: 'attack', notation: '1d20+6', label: 'X · ataque' },
+      dmgStep({ label: 'X · dano 1', critLabel: 'X · dano 1 CRÍTICO' }),
+      dmgStep({ label: 'X · dano 2', critLabel: 'X · dano 2 CRÍTICO' }),
+      dmgStep({ critable: false, label: 'X · dano 3' }),
+    ], roll)
+    expect(calls[1]).toMatchObject({ label: 'X · dano 1 CRÍTICO', opts: { crit: true } })
+    expect(calls[2]).toMatchObject({ label: 'X · dano 2 CRÍTICO', opts: { crit: true } })
+    expect(calls[3]).toMatchObject({ label: 'X · dano 3', opts: {} })
+  })
+
+  it('nat 1 pula TODOS os pacotes critable do raio (Raio de Caos: 2d8 e 1d6)', () => {
+    const { roll, calls } = makeRoll([1])
+    executeCastPlan([
+      { kind: 'attack', notation: '1d20+6', label: 'X · ataque' },
+      dmgStep({ label: 'X · dano 1' }),
+      dmgStep({ label: 'X · dano 2' }),
+    ], roll)
+    expect(calls).toHaveLength(1)
+  })
+
+  it('nat 1 pula o critable mas rola o pacote independente (explosao da Faca de Gelo)', () => {
+    const { roll, calls } = makeRoll([1])
+    executeCastPlan([
+      { kind: 'attack', notation: '1d20+6', label: 'X · ataque' },
+      dmgStep({ label: 'X · perfurante' }),
+      dmgStep({ critable: false, label: 'X · frio' }),
+    ], roll)
+    expect(calls.map(c => c.label)).toEqual(['X · ataque', 'X · frio'])
+  })
+
   it('dano sem critable (salvaguarda) rola direto, sem d20', () => {
     const { roll, calls } = makeRoll()
     executeCastPlan([dmgStep({ critable: false })], roll)

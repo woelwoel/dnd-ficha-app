@@ -39,13 +39,36 @@ describe('spell-mechanics-pt.json — validacao integral (entradas curadas)', ()
       if (e.heal) expect(parseDiceNotation(e.heal.dice), `${index}: heal.dice`).not.toBeNull()
       if (e.save) expect(ABILITY_KEYS, `${index}: save.ability`).toContain(e.save.ability)
       if (e.upcast) {
-        const per = parseDiceNotation(e.upcast.perSlot)
-        expect(per, `${index}: upcast.perSlot`).not.toBeNull()
-        const target = e.damage?.length ? parseDiceNotation(e.damage[0].dice) : parseDiceNotation(e.heal.dice)
-        expect(per.sides, `${index}: upcast de lados diferentes`).toBe(target.sides)
         expect(spell.level, `${index}: upcast em truque`).toBeGreaterThan(0)
-        if ('perLevels' in e.upcast) {
-          expect(Number.isInteger(e.upcast.perLevels) && e.upcast.perLevels >= 1, `${index}: perLevels`).toBe(true)
+        const packet = e.upcast.packet ?? 0
+        const target = e.damage?.length ? parseDiceNotation(e.damage[packet]?.dice ?? '') : parseDiceNotation(e.heal.dice)
+        expect(target, `${index}: upcast.packet fora dos pacotes`).not.toBeNull()
+        if ('packet' in e.upcast) {
+          expect(Number.isInteger(e.upcast.packet) && e.upcast.packet >= 0, `${index}: packet`).toBe(true)
+          expect(e.damage?.length ?? 0, `${index}: packet sem damage`).toBeGreaterThan(e.upcast.packet)
+        }
+        if (e.upcast.tiers) {
+          expect(e.upcast.perSlot, `${index}: tiers E perSlot`).toBeUndefined()
+          expect(e.upcast.perLevels, `${index}: tiers E perLevels`).toBeUndefined()
+          for (const [lvl, dice] of Object.entries(e.upcast.tiers)) {
+            expect(Number(lvl), `${index}: tier ${lvl} abaixo do nivel base`).toBeGreaterThan(spell.level)
+            const t = parseDiceNotation(dice)
+            expect(t, `${index}: tier ${lvl} dice`).not.toBeNull()
+            expect(t.sides, `${index}: tier ${lvl} de lados diferentes`).toBe(target.sides)
+          }
+        } else {
+          const per = parseDiceNotation(e.upcast.perSlot)
+          expect(per, `${index}: upcast.perSlot`).not.toBeNull()
+          expect(per.sides, `${index}: upcast de lados diferentes`).toBe(target.sides)
+          if ('perLevels' in e.upcast) {
+            expect(Number.isInteger(e.upcast.perLevels) && e.upcast.perLevels >= 1, `${index}: perLevels`).toBe(true)
+          }
+        }
+      }
+      for (const pkt of e.damage ?? []) {
+        if ('onHit' in pkt) {
+          expect(typeof pkt.onHit, `${index}: onHit`).toBe('boolean')
+          expect(Boolean(e.attack), `${index}: onHit sem attack`).toBe(true)
         }
       }
       if (e.cantripScaling) {
@@ -93,6 +116,32 @@ describe('spell-mechanics-pt.json — validacao integral (entradas curadas)', ()
     for (const idx of ['bencao', 'escudo-da-fe', 'velocidade', 'orientacao', 'resistencia']) {
       expect(mech[idx]?.effect, `${idx}: sem effect`).toBeTruthy()
     }
+  })
+})
+
+describe('fidelidade XGE — correcoes da auditoria 2026-07-14', () => {
+  it('raio-de-caos: 2d8 + 1d6 do golpe (onHit), upcast +1d6 no d6', () => {
+    expect(mech['raio-de-caos']).toEqual({
+      attack: true,
+      damage: [{ dice: '2d8', type: 'força' }, { dice: '1d6', type: 'força', onHit: true }],
+      upcast: { perSlot: '1d6', packet: 1 },
+    })
+  })
+
+  it('diabo-da-poeira: metade do dano no sucesso', () => {
+    expect(mech['diabo-da-poeira'].save).toEqual({ ability: 'str', halfOnSuccess: true })
+  })
+
+  it('dragao-ilusorio: salvaguarda de Inteligencia', () => {
+    expect(mech['dragao-ilusorio'].save.ability).toBe('int')
+  })
+
+  it('faca-de-gelo: upcast +1d6 no pacote de frio', () => {
+    expect(mech['faca-de-gelo'].upcast).toEqual({ perSlot: '1d6', packet: 1 })
+  })
+
+  it('lamina-sombria: upcast por faixas de slot (3-4=3d8, 5-6=4d8, 7+=5d8)', () => {
+    expect(mech['lamina-sombria'].upcast).toEqual({ tiers: { 3: '3d8', 5: '4d8', 7: '5d8' } })
   })
 })
 

@@ -124,6 +124,51 @@ describe('spellRollPlan', () => {
     expect(plan.steps.find(s => s.kind === 'damage').notation).toBe('1d8+4')
   })
 
+  it('upcast.packet aplica perSlot no pacote indicado (Faca de Gelo: +1d6 no frio)', () => {
+    const mech = {
+      attack: true,
+      damage: [{ dice: '1d10', type: 'perfurante' }, { dice: '2d6', type: 'frio' }],
+      upcast: { perSlot: '1d6', packet: 1 },
+    }
+    const plan = spellRollPlan({ name: 'Faca de Gelo', level: 1 }, mech, { ...CTX, slotLevel: 3 })
+    const dmg = plan.steps.filter(s => s.kind === 'damage')
+    expect(dmg[0].notation).toBe('1d10')
+    expect(dmg[1].notation).toBe('4d6')
+  })
+
+  it('damage[].onHit marca pacote extra como critable (Raio de Caos: 2d8 + 1d6 do golpe)', () => {
+    const mech = {
+      attack: true,
+      damage: [{ dice: '2d8', type: 'força' }, { dice: '1d6', type: 'força', onHit: true }],
+      upcast: { perSlot: '1d6', packet: 1 },
+    }
+    const plan = spellRollPlan({ name: 'Raio de Caos', level: 1 }, mech, { ...CTX, slotLevel: 2 })
+    const dmg = plan.steps.filter(s => s.kind === 'damage')
+    expect(dmg[0]).toMatchObject({ notation: '2d8', critable: true })
+    expect(dmg[1]).toMatchObject({ notation: '2d6', critable: true })
+  })
+
+  it('sem onHit, so o primeiro pacote de magia de ataque e critable (explosao da Faca de Gelo rola mesmo errando)', () => {
+    const mech = { attack: true, damage: [{ dice: '1d10', type: 'perfurante' }, { dice: '2d6', type: 'frio' }] }
+    const plan = spellRollPlan({ name: 'Faca de Gelo', level: 1 }, mech, { ...CTX, slotLevel: 1 })
+    const dmg = plan.steps.filter(s => s.kind === 'damage')
+    expect(dmg[0].critable).toBe(true)
+    expect(dmg[1].critable).toBe(false)
+  })
+
+  it('upcast.tiers substitui a notacao pela faixa do slot (Lamina Sombria: 3-4=3d8, 5-6=4d8, 7+=5d8)', () => {
+    const mech = { damage: [{ dice: '2d8', type: 'psíquico' }], upcast: { tiers: { 3: '3d8', 5: '4d8', 7: '5d8' } } }
+    const at = lvl => spellRollPlan({ name: 'Lâmina Sombria', level: 2 }, mech, { ...CTX, slotLevel: lvl })
+      .steps.find(s => s.kind === 'damage').notation
+    expect(at(2)).toBe('2d8')
+    expect(at(3)).toBe('3d8')
+    expect(at(4)).toBe('3d8')
+    expect(at(5)).toBe('4d8')
+    expect(at(6)).toBe('4d8')
+    expect(at(7)).toBe('5d8')
+    expect(at(9)).toBe('5d8')
+  })
+
   it('perLevels default 1 nao muda upcast por nivel (Bola de Fogo)', () => {
     const mech = { save: { ability: 'dex', halfOnSuccess: true }, damage: [{ dice: '8d6', type: 'fogo' }], upcast: { perSlot: '1d6' } }
     const plan = spellRollPlan({ name: 'Bola de Fogo', level: 3 }, mech, { ...CTX, slotLevel: 5 })

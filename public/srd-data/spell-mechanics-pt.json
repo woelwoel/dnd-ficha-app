@@ -1581,7 +1581,7 @@
   "diabo-da-poeira": {
     "save": {
       "ability": "str",
-      "halfOnSuccess": false
+      "halfOnSuccess": true
     },
     "damage": [
       {
@@ -1595,7 +1595,7 @@
   },
   "dragao-ilusorio": {
     "save": {
-      "ability": "wis",
+      "ability": "int",
       "halfOnSuccess": true
     },
     "damage": [
@@ -1740,7 +1740,11 @@
         "dice": "2d6",
         "type": "frio"
       }
-    ]
+    ],
+    "upcast": {
+      "perSlot": "1d6",
+      "packet": 1
+    }
   },
   "flechas-flamejantes": {
     "damage": [
@@ -1856,7 +1860,14 @@
         "dice": "2d8",
         "type": "psíquico"
       }
-    ]
+    ],
+    "upcast": {
+      "tiers": {
+        "3": "3d8",
+        "5": "4d8",
+        "7": "5d8"
+      }
+    }
   },
   "manto-de-chamas": {
     "save": {
@@ -2033,8 +2044,17 @@
       {
         "dice": "2d8",
         "type": "força"
+      },
+      {
+        "dice": "1d6",
+        "type": "força",
+        "onHit": true
       }
-    ]
+    ],
+    "upcast": {
+      "perSlot": "1d6",
+      "packet": 1
+    }
   },
   "redemoinho": {
     "save": {
@@ -2203,6 +2223,7 @@
     "missao",
     "mortalha-espiritual",
     "parar-o-tempo",
+    "pequeno-servo",
     "perdicao",
     "piscar",
     "porta-dimensional",

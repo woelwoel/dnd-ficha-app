@@ -51,6 +51,21 @@ describe('xanathar-spells — schema de toda entrada', () => {
       expect(s.concentration, `${s.index}: ${s.duration}`).toBe(/concentra/i.test(s.duration))
     }
   })
+
+  it('prosa sem glifos de OCR fora do latino', () => {
+    // whitelist: controle, ASCII, latin-1/extended (acentos) e pontuação geral (–—…•“”)
+    const exotic = /[^\t\n\r\u0020-\u007E\u00A0-\u024F\u2010-\u2027\u2030-\u205E]/u
+    for (const s of xge) {
+      const m = `${s.desc} ${s.higher_level}`.match(exotic)
+      expect(m && `U+${m[0].codePointAt(0).toString(16)} "${m[0]}"`, `${s.index}: glifo exótico`).toBeNull()
+    }
+  })
+
+  it('higher_level não contém stat block vazado de outra página', () => {
+    for (const s of xge) {
+      expect(/Classe de Armadura|Percepção passiva|Pontos de Vida \d/i.test(s.higher_level), `${s.index}`).toBe(false)
+    }
+  })
 })
 
 describe('xanathar-spells — integridade do catálogo', () => {
