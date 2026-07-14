@@ -1,5 +1,11 @@
 """Estrutura as 95 magias do capítulo 3 do XGE no schema de phb-spells-pt.json.
 
+BOOTSTRAP ONE-SHOT: gera o rascunho de `xanathar-spells-pt.json`. Depois de
+gerado, o JSON é CURADO À MÃO (alguns `desc` têm OCR de scripts exóticos que
+destruíram palavras inteiras — reconstruídas na curadoria). NÃO re-rode por cima
+do JSON curado; as correções manuais seriam perdidas.
+
+
 Uso:
     python scripts/xanathar/extract_text.py "<pdf>" --pages 130-190 -o _spells.txt
     python scripts/xanathar/build_spells.py _spells.txt classes.json > out.json
@@ -47,6 +53,21 @@ def school_of(word):
     return None
 
 
+_PUNCT = set(" .,;:!?()\"'’•%°ºª+×&/–—-\n\t")
+
+
+def strip_exotic(text):
+    """Remove glifos de OCR fora do latino (armênio/cirílico/kannada/µ/·/§…),
+    preservando letras latinas acentuadas, dígitos e pontuação."""
+    out = []
+    for c in text:
+        if c in _PUNCT or c.isdigit():
+            out.append(c)
+        else:
+            out.append(c if unicodedata.name(c, '').startswith('LATIN') else ' ')
+    return ''.join(out)
+
+
 def fix_dice(text):
     """Normaliza notação de dado com ruído de OCR (l->1, I->1, O->0, espaços):
     "6d l 0"->"6d10", "ldlO"->"1d10", "4d 10"->"4d10"."""
@@ -60,8 +81,12 @@ def fix_dice(text):
 
 
 def clean_body(text):
-    # Remove rodapé corrente "CAPÍTULO 3 (MAGIAS)" que vaza no meio da coluna.
-    text = re.sub(r'C[AM][\wÍ\'’.]{0,3}TULO\s*3?\s*(?:MAGIAS)?', ' ', text)
+    # Remove rodapé corrente "CAPÍTULO N (MAGIAS)" (e variantes OCR "CAefcULO ,1
+    # MAGUS") que vaza no meio da coluna por causa da ordem de leitura.
+    text = re.sub(r'C[AÀ][A-Za-zÀ-ú\'’.]{1,5}LO\s*,?\s*\d?\s*(?:MAGI\w+|MAGUS)?', ' ', text)
+    # Remove nomes de magia vizinhos vazados (runs de 2+ palavras ALL-CAPS —
+    # não ocorrem legitimamente na prosa das descrições).
+    text = re.sub(r'\b[A-ZÀ-Ú]{2,}(?:\s+[A-ZÀ-Ú]{2,})+\b', ' ', text)
     # Junta dígitos separados por espaço ("1 8"->"18", "1 , 5"->"1,5").
     text = re.sub(r'(?<=\d)\s*,\s*(?=\d)', ',', text)
     text = fix_dice(text)
@@ -73,6 +98,7 @@ def clean_body(text):
     text = re.sub(r'\bl(?=\s*(?:pp|po|pc)\b)', '1', text)
     # 'O' usado como '0' em "cai para O pontos (de vida)".
     text = re.sub(r'\bO(?=\s+pontos\b)', '0', text)
+    text = strip_exotic(text)
     text = re.sub(r'\s+', ' ', text).strip()
     return text
 
