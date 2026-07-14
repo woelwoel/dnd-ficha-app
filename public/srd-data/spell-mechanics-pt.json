@@ -1365,7 +1365,10 @@
       "riders": [
         {
           "dice": "1d4",
-          "categories": ["attack", "save"]
+          "categories": [
+            "attack",
+            "save"
+          ]
         }
       ],
       "summary": "+1d4 em ataques e salvaguardas"
@@ -1389,8 +1392,12 @@
       },
       "advantages": [
         {
-          "categories": ["save"],
-          "abilities": ["dex"]
+          "categories": [
+            "save"
+          ],
+          "abilities": [
+            "dex"
+          ]
         }
       ],
       "summary": "+2 CA · deslocamento ×2 · vantagem em salv. de DES · 1 acao extra (narre)"
@@ -1402,7 +1409,9 @@
       "riders": [
         {
           "dice": "1d4",
-          "categories": ["check"],
+          "categories": [
+            "check"
+          ],
           "oneShot": true
         }
       ],
@@ -1415,7 +1424,9 @@
       "riders": [
         {
           "dice": "1d4",
-          "categories": ["save"],
+          "categories": [
+            "save"
+          ],
           "oneShot": true
         }
       ],
@@ -1435,7 +1446,9 @@
       "concentration": true,
       "advantages": [
         {
-          "categories": ["attack"]
+          "categories": [
+            "attack"
+          ]
         }
       ],
       "summary": "ataques com vantagem; inimigos te atacam com desvantagem (narre); termina se atacar ou conjurar magia"
@@ -1453,7 +1466,691 @@
       "summary": "CA nao pode ser inferior a 16, independente da armadura"
     }
   },
+  "abraco-terrestre-de-maximilian": {
+    "save": {
+      "ability": "str",
+      "halfOnSuccess": false
+    },
+    "damage": [
+      {
+        "dice": "2d6",
+        "type": "contundente"
+      }
+    ]
+  },
+  "arma-sagrada": {
+    "save": {
+      "ability": "con",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "4d8",
+        "type": "radiante"
+      }
+    ]
+  },
+  "ataque-do-vento-de-aco": {
+    "attack": true,
+    "damage": [
+      {
+        "dice": "6d10",
+        "type": "força"
+      }
+    ]
+  },
+  "aurora": {
+    "save": {
+      "ability": "con",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "4d10",
+        "type": "radiante"
+      }
+    ]
+  },
+  "bafo-de-dragao": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "3d6",
+        "type": "fogo"
+      }
+    ],
+    "upcast": {
+      "perSlot": "1d6"
+    }
+  },
+  "catapulta": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": false
+    },
+    "damage": [
+      {
+        "dice": "3d8",
+        "type": "contundente"
+      }
+    ],
+    "upcast": {
+      "perSlot": "1d8"
+    }
+  },
+  "chuva-de-bolas-de-neve-de-snilloc": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "3d6",
+        "type": "frio"
+      }
+    ],
+    "upcast": {
+      "perSlot": "1d6"
+    }
+  },
+  "coroa-de-estrelas": {
+    "attack": true,
+    "damage": [
+      {
+        "dice": "4d12",
+        "type": "radiante"
+      }
+    ]
+  },
+  "criar-fogueira": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": false
+    },
+    "damage": [
+      {
+        "dice": "1d8",
+        "type": "fogo"
+      }
+    ],
+    "cantripScaling": true
+  },
+  "diabo-da-poeira": {
+    "save": {
+      "ability": "str",
+      "halfOnSuccess": false
+    },
+    "damage": [
+      {
+        "dice": "1d8",
+        "type": "contundente"
+      }
+    ],
+    "upcast": {
+      "perSlot": "1d8"
+    }
+  },
+  "dragao-ilusorio": {
+    "save": {
+      "ability": "wis",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "7d6",
+        "type": "fogo"
+      }
+    ]
+  },
+  "enervacao": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "4d8",
+        "type": "necrótico"
+      }
+    ],
+    "upcast": {
+      "perSlot": "1d8"
+    }
+  },
+  "erupcao-de-terra": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "3d12",
+        "type": "contundente"
+      }
+    ],
+    "upcast": {
+      "perSlot": "1d12"
+    }
+  },
+  "escuridao-enlouquecedora": {
+    "save": {
+      "ability": "wis",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "8d8",
+        "type": "psíquico"
+      }
+    ]
+  },
+  "esfera-caustica": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "10d4",
+        "type": "ácido"
+      }
+    ],
+    "upcast": {
+      "perSlot": "2d4"
+    }
+  },
+  "esfera-tempestuosa": {
+    "save": {
+      "ability": "str",
+      "halfOnSuccess": false
+    },
+    "damage": [
+      {
+        "dice": "2d6",
+        "type": "contundente"
+      },
+      {
+        "dice": "4d6",
+        "type": "elétrico"
+      }
+    ],
+    "upcast": {
+      "perSlot": "1d6"
+    }
+  },
+  "espinho-mental": {
+    "save": {
+      "ability": "wis",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "3d8",
+        "type": "psíquico"
+      }
+    ],
+    "upcast": {
+      "perSlot": "1d8"
+    }
+  },
+  "espirito-curativo": {
+    "heal": {
+      "dice": "1d6",
+      "addMod": false
+    },
+    "upcast": {
+      "perSlot": "1d6"
+    }
+  },
+  "estatica-sinaptica": {
+    "save": {
+      "ability": "int",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "8d6",
+        "type": "psíquico"
+      }
+    ]
+  },
+  "evaporacao-de-abi-dalzim": {
+    "save": {
+      "ability": "con",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "12d8",
+        "type": "necrótico"
+      }
+    ]
+  },
+  "faca-de-gelo": {
+    "attack": true,
+    "damage": [
+      {
+        "dice": "1d10",
+        "type": "perfurante"
+      },
+      {
+        "dice": "2d6",
+        "type": "frio"
+      }
+    ]
+  },
+  "flechas-flamejantes": {
+    "damage": [
+      {
+        "dice": "1d6",
+        "type": "fogo"
+      }
+    ]
+  },
+  "gaiola-da-alma": {
+    "heal": {
+      "dice": "2d8",
+      "addMod": false
+    }
+  },
+  "golpe-de-zephyr": {
+    "damage": [
+      {
+        "dice": "1d8",
+        "type": "força"
+      }
+    ]
+  },
+  "golpe-trovejante": {
+    "save": {
+      "ability": "con",
+      "halfOnSuccess": false
+    },
+    "damage": [
+      {
+        "dice": "1d6",
+        "type": "trovejante"
+      }
+    ],
+    "cantripScaling": true
+  },
+  "grito-psiquico": {
+    "save": {
+      "ability": "int",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "14d6",
+        "type": "psíquico"
+      }
+    ]
+  },
+  "guardiao-da-natureza": {
+    "damage": [
+      {
+        "dice": "1d6",
+        "type": "força"
+      }
+    ]
+  },
+  "imolacao": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "7d6",
+        "type": "fogo"
+      }
+    ]
+  },
+  "infestacao": {
+    "save": {
+      "ability": "con",
+      "halfOnSuccess": false
+    },
+    "damage": [
+      {
+        "dice": "1d6",
+        "type": "veneno"
+      }
+    ],
+    "cantripScaling": true
+  },
+  "inundacao-de-energia-negativa": {
+    "save": {
+      "ability": "con",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "5d12",
+        "type": "necrótico"
+      }
+    ]
+  },
+  "ira-da-natureza": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": false
+    },
+    "damage": [
+      {
+        "dice": "4d6",
+        "type": "cortante"
+      },
+      {
+        "dice": "3d8",
+        "type": "contundente"
+      }
+    ]
+  },
+  "lamina-sombria": {
+    "damage": [
+      {
+        "dice": "2d8",
+        "type": "psíquico"
+      }
+    ]
+  },
+  "manto-de-chamas": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "1d10",
+        "type": "fogo"
+      },
+      {
+        "dice": "4d8",
+        "type": "fogo"
+      }
+    ]
+  },
+  "manto-de-gelo": {
+    "save": {
+      "ability": "con",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "4d6",
+        "type": "frio"
+      }
+    ]
+  },
+  "manto-de-vento": {
+    "save": {
+      "ability": "str",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "2d10",
+        "type": "contundente"
+      }
+    ]
+  },
+  "maremoto": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "4d8",
+        "type": "contundente"
+      }
+    ]
+  },
+  "meteoros-momentaneos-de-melf": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "2d6",
+        "type": "fogo"
+      }
+    ]
+  },
+  "ossos-da-terra": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": false
+    },
+    "damage": [
+      {
+        "dice": "6d6",
+        "type": "contundente"
+      }
+    ]
+  },
+  "palavra-do-esplendor": {
+    "save": {
+      "ability": "con",
+      "halfOnSuccess": false
+    },
+    "damage": [
+      {
+        "dice": "1d6",
+        "type": "radiante"
+      }
+    ],
+    "cantripScaling": true
+  },
+  "parede-de-luz": {
+    "save": {
+      "ability": "con",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "4d8",
+        "type": "radiante"
+      }
+    ],
+    "upcast": {
+      "perSlot": "1d8"
+    }
+  },
+  "passo-trovejante": {
+    "save": {
+      "ability": "con",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "3d10",
+        "type": "trovejante"
+      }
+    ],
+    "upcast": {
+      "perSlot": "1d10"
+    }
+  },
+  "pedra-encantada": {
+    "attack": true,
+    "damage": [
+      {
+        "dice": "1d6",
+        "type": "contundente",
+        "addMod": true
+      }
+    ]
+  },
+  "picada-congelante": {
+    "save": {
+      "ability": "con",
+      "halfOnSuccess": false
+    },
+    "damage": [
+      {
+        "dice": "1d6",
+        "type": "frio"
+      }
+    ],
+    "cantripScaling": true
+  },
+  "prisao-mental": {
+    "save": {
+      "ability": "int",
+      "halfOnSuccess": false
+    },
+    "damage": [
+      {
+        "dice": "5d10",
+        "type": "psíquico"
+      }
+    ]
+  },
+  "queimadura-de-aganazzar": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "3d8",
+        "type": "fogo"
+      }
+    ],
+    "upcast": {
+      "perSlot": "1d8"
+    }
+  },
+  "raio-de-caos": {
+    "attack": true,
+    "damage": [
+      {
+        "dice": "2d8",
+        "type": "força"
+      }
+    ]
+  },
+  "redemoinho": {
+    "save": {
+      "ability": "str",
+      "halfOnSuccess": false
+    },
+    "damage": [
+      {
+        "dice": "6d6",
+        "type": "contundente"
+      }
+    ]
+  },
+  "resplendor-enjoativo": {
+    "save": {
+      "ability": "con",
+      "halfOnSuccess": false
+    },
+    "damage": [
+      {
+        "dice": "4d10",
+        "type": "radiante"
+      }
+    ]
+  },
+  "selvageria-primitiva": {
+    "attack": true,
+    "damage": [
+      {
+        "dice": "1d10",
+        "type": "ácido"
+      }
+    ],
+    "cantripScaling": true
+  },
+  "soar-os-mortos": {
+    "save": {
+      "ability": "wis",
+      "halfOnSuccess": false
+    },
+    "damage": [
+      {
+        "dice": "1d8",
+        "type": "necrótico"
+      }
+    ],
+    "cantripScaling": true
+  },
+  "sombra-de-transtorno": {
+    "damage": [
+      {
+        "dice": "2d8",
+        "type": "necrótico"
+      }
+    ]
+  },
+  "transferencia-de-vida": {
+    "damage": [
+      {
+        "dice": "4d8",
+        "type": "necrótico"
+      }
+    ],
+    "upcast": {
+      "perSlot": "1d8"
+    }
+  },
+  "transformacao-de-tenser": {
+    "damage": [
+      {
+        "dice": "2d12",
+        "type": "força"
+      }
+    ]
+  },
+  "transmutar-pedra": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "4d8",
+        "type": "contundente"
+      }
+    ]
+  },
+  "tremor-de-terra": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": false
+    },
+    "damage": [
+      {
+        "dice": "1d6",
+        "type": "contundente"
+      }
+    ],
+    "upcast": {
+      "perSlot": "1d6"
+    }
+  },
+  "vendaval": {
+    "save": {
+      "ability": "dex",
+      "halfOnSuccess": true
+    },
+    "damage": [
+      {
+        "dice": "10d6",
+        "type": "contundente"
+      }
+    ]
+  },
   "_ignore": [
+    "absorver-elementos",
     "alterar-se",
     "animar-objetos",
     "aprimorar-habilidade",
@@ -1463,15 +2160,19 @@
     "bordao-mistico",
     "bruxaria",
     "cao-fiel-de-mordenkainen",
+    "cerimonia",
+    "chamado-infernal",
     "confusao",
     "conjurar-rajada",
     "conjurar-saraivada",
     "contato-extraplanar",
     "controlar-o-clima",
+    "criar-homunculo",
     "desejo",
     "destruicao-banidora",
     "destruicao-cegante",
     "destruicao-colerica",
+    "destruicao-elemental",
     "destruicao-estonteante",
     "destruicao-lancinante",
     "destruicao-trovejante",
@@ -1483,6 +2184,8 @@
     "invocar-celestial",
     "invocar-construto",
     "invocar-corruptor",
+    "invocar-demonio-maior",
+    "invocar-demonios-menores",
     "invocar-elemental",
     "invocar-feerico",
     "invocar-fera",
@@ -1510,6 +2213,7 @@
     "sono",
     "teia",
     "teletransporte",
+    "templo-dos-deuses",
     "vitalidade-falsa",
     "zona-da-verdade"
   ]
