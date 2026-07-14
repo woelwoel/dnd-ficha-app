@@ -7,9 +7,12 @@ import './index.css'
 import './theme/tokens.css'
 import './theme/legacy-bridge.css'
 import { applyThemeV2 } from './theme/applyTheme'
+import { installChunkReloadHandler } from './utils/chunkReload'
 import App from './App.jsx'
 
 applyThemeV2()
+// Sessão aberta atravessou um deploy → chunk lazy 404 → recarrega uma vez.
+installChunkReloadHandler()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
