@@ -1,0 +1,430 @@
+{
+"Abraço Terrestre de Maximilian": [
+"feiticeiro",
+"mago"
+],
+"Absorver Elementos": [
+"druida",
+"feiticeiro",
+"mago",
+"patrulheiro"
+],
+"Agarrão da Terra": [
+"bruxo",
+"druida",
+"feiticeiro",
+"mago"
+],
+"Arma Sagrada": [
+"clerigo",
+"paladino"
+],
+"Ataque do Vento de Aço": [
+"mago",
+"patrulheiro"
+],
+"Aurora": [
+"clerigo",
+"mago"
+],
+"Bafo de Dragão": [
+"feiticeiro",
+"mago"
+],
+"Bosque de Druida": [
+"druida"
+],
+"Catapulta": [
+"feiticeiro",
+"mago"
+],
+"Causar Medo": [
+"bruxo",
+"mago"
+],
+"Cerimônia": [
+"clerigo",
+"paladino"
+],
+"Chamado Infernal": [
+"bruxo",
+"mago"
+],
+"Chuva de Bolas de Neve de Snilloc": [
+"feiticeiro",
+"mago"
+],
+"Controlar Chamas": [
+"druida",
+"feiticeiro",
+"mago"
+],
+"Controlar os Ventos": [
+"druida",
+"feiticeiro",
+"mago"
+],
+"Coroa de Estrelas": [
+"bruxo",
+"feiticeiro",
+"mago"
+],
+"Criar Fogueira": [
+"bruxo",
+"druida",
+"feiticeiro",
+"mago"
+],
+"Criar Homúnculo": [
+"mago"
+],
+"Dança Macabra": [
+"bruxo",
+"mago"
+],
+"Destruição Elemental": [
+"bruxo",
+"druida",
+"mago"
+],
+"Diabo da Poeira": [
+"druida",
+"feiticeiro",
+"mago"
+],
+"Dispersão": [
+"bruxo",
+"feiticeiro",
+"mago"
+],
+"Dragão Ilusório": [
+"mago"
+],
+"Encontrar Montaria Maior": [
+"paladino"
+],
+"Enervação": [
+"bruxo",
+"feiticeiro",
+"mago"
+],
+"Enfeitiçar Monstro": [
+"bardo",
+"bruxo",
+"druida",
+"feiticeiro",
+"mago"
+],
+"Erupção de Terra": [
+"druida",
+"feiticeiro",
+"mago"
+],
+"Escrita Celeste": [
+"bardo",
+"druida",
+"mago"
+],
+"Escuridão Enlouquecedora": [
+"bruxo",
+"mago"
+],
+"Esfera Aquosa": [
+"druida",
+"feiticeiro",
+"mago"
+],
+"Esfera Cáustica": [
+"feiticeiro",
+"mago"
+],
+"Esfera Tempestuosa": [
+"feiticeiro",
+"mago"
+],
+"Espinho Mental": [
+"bruxo",
+"feiticeiro",
+"mago"
+],
+"Espírito Curativo": [
+"druida",
+"patrulheiro"
+],
+"Estática Sináptica": [
+"bardo",
+"bruxo",
+"feiticeiro",
+"mago"
+],
+"Evaporação de Abi-Dalzim": [
+"feiticeiro",
+"mago"
+],
+"Faca de Gelo": [
+"druida",
+"feiticeiro",
+"mago"
+],
+"Flechas Flamejantes": [
+"druida",
+"feiticeiro",
+"mago",
+"patrulheiro"
+],
+"Fortalecimento de Perícia": [
+"bardo",
+"feiticeiro",
+"mago"
+],
+"Fortaleza Poderosa": [
+"mago"
+],
+"Gaiola da Alma": [
+"bruxo",
+"mago"
+],
+"Golpe de Zephyr": [
+"patrulheiro"
+],
+"Golpe Trovejante": [
+"bardo",
+"bruxo",
+"druida",
+"feiticeiro",
+"mago"
+],
+"Grito Psíquico": [
+"bardo",
+"bruxo",
+"feiticeiro",
+"mago"
+],
+"Guardião da Natureza": [
+"druida",
+"patrulheiro"
+],
+"Imolação": [
+"feiticeiro",
+"mago"
+],
+"Infestação": [
+"bruxo",
+"druida",
+"feiticeiro",
+"mago"
+],
+"Infestar de Inimigos": [
+"bardo",
+"feiticeiro",
+"mago"
+],
+"Inundação de Energia Negativa": [
+"bruxo",
+"mago"
+],
+"Invocar Demônio Maior": [
+"bruxo",
+"mago"
+],
+"Invocar Demônios Menores": [
+"bardo",
+"mago"
+],
+"Invulnerabilidade": [
+"mago"
+],
+"Ira da Natureza": [
+"druida",
+"patrulheiro"
+],
+"Laço": [
+"druida",
+"mago",
+"patrulheiro"
+],
+"Lâmina Sombria": [
+"bruxo",
+"feiticeiro",
+"mago"
+],
+"Lufada": [
+"druida",
+"feiticeiro",
+"mago"
+],
+"Manto de Chamas": [
+"bruxo",
+"druida",
+"feiticeiro",
+"mago"
+],
+"Manto de Gelo": [
+"bruxo",
+"druida",
+"feiticeiro",
+"mago"
+],
+"Manto de Pedra": [
+"bruxo",
+"druida",
+"feiticeiro",
+"mago"
+],
+"Manto de Vento": [
+"bruxo",
+"druida",
+"feiticeiro",
+"mago"
+],
+"Maremoto": [
+"druida",
+"feiticeiro",
+"mago"
+],
+"Metamorfose em Massa": [
+"bardo",
+"feiticeiro",
+"mago"
+],
+"Meteoros Momentâneos de Melf": [
+"feiticeiro",
+"mago"
+],
+"Moldar Água": [
+"druida",
+"feiticeiro",
+"mago"
+],
+"Moldar Terra": [
+"druida",
+"feiticeiro",
+"mago"
+],
+"Muralha de Água": [
+"druida",
+"feiticeiro",
+"mago"
+],
+"Muralha de Areia": [
+"mago"
+],
+"Ossos da Terra": [
+"druida"
+],
+"Palavra de Poder Dor": [
+"bruxo",
+"feiticeiro",
+"mago"
+],
+"Palavra do Esplendor": [
+"clerigo"
+],
+"Parede de Luz": [
+"bruxo",
+"feiticeiro",
+"mago"
+],
+"Passo Distante": [
+"bruxo",
+"feiticeiro",
+"mago"
+],
+"Passo Trovejante": [
+"bardo",
+"feiticeiro",
+"mago"
+],
+"Pedra Encantada": [
+"bruxo",
+"druida"
+],
+"Pequeno Servo": [
+"mago"
+],
+"Picada Congelante": [
+"bruxo",
+"druida",
+"feiticeiro",
+"mago"
+],
+"Pirotecnia": [
+"bardo",
+"feiticeiro",
+"mago"
+],
+"Prisão Mental": [
+"bruxo",
+"feiticeiro",
+"mago"
+],
+"Proteção Primordial": [
+"druida"
+],
+"Queimadura de Aganazzar": [
+"feiticeiro",
+"mago"
+],
+"Raio de Caos": [
+"feiticeiro"
+],
+"Redemoinho": [
+"druida"
+],
+"Resplendor Enjoativo": [
+"bruxo",
+"feiticeiro",
+"mago"
+],
+"Selvageria Primitiva": [
+"druida"
+],
+"Soar os Mortos": [
+"bruxo",
+"clerigo",
+"mago"
+],
+"Sombra de Transtorno": [
+"bruxo"
+],
+"Soneca": [
+"bardo",
+"feiticeiro",
+"mago"
+],
+"Templo dos Deuses": [
+"clerigo"
+],
+"Transferência de Vida": [
+"clerigo",
+"mago"
+],
+"Transformação de Tenser": [
+"mago"
+],
+"Transmutar Pedra": [
+"druida",
+"mago"
+],
+"Tremor de Terra": [
+"bardo",
+"druida",
+"feiticeiro",
+"mago"
+],
+"Vendaval": [
+"druida",
+"feiticeiro",
+"mago"
+],
+"Vento Protetor": [
+"bardo",
+"druida",
+"feiticeiro",
+"mago"
+],
+"Vínculo com a Besta": [
+"druida",
+"patrulheiro"
+]
+}
