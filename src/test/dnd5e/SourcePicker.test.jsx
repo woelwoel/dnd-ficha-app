@@ -21,4 +21,10 @@ describe('SourcePicker', () => {
     fireEvent.click(screen.getByLabelText(/Tasha/i))
     expect(onChange).toHaveBeenCalledWith(['phb'])
   })
+  it('PHB mostra "sempre ativo"; as demais mostram a abreviação (TCE/XGE)', () => {
+    render(<SourcePicker value={['phb']} onChange={() => {}} />)
+    expect(screen.getByText(/sempre ativo/i)).toBeInTheDocument()
+    expect(screen.getByText('TCE')).toBeInTheDocument()
+    expect(screen.getByText('XGE')).toBeInTheDocument()
+  })
 })
