@@ -1,1 +1,386 @@
-[]
+[
+  {
+    "index": "amuleto-do-fragmento-negro",
+    "name": "Amuleto do Fragmento Negro",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": true,
+    "description": "Este amuleto é confeccionado a partir um fragmento de material extraplanar, originário do plano do patrono de seu bruxo. Enquanto usa o amuleto você recebe os seguintes beneficias: • Você pode usar o amuleto como o foco arcano de suas magias de bruxo. • Você pode tentar conjurar um truque que não conheça. O truque deve estar na lista de magias do bruxo e você deve fazer um teste de Inteligência (Arcanismo) com CD 10. Se o teste for bem sucedido, você conjura a magia. Se o teste falhar, a magia também falha, e a ação usada para tentar conjurar a magia é desperdiçada. Qualquer que seja o resultado, você não pode usar esta propriedade novamente até o término de um descanso longo."
+  },
+  {
+    "index": "amuleto-relogio",
+    "name": "Amuleto Relógio",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Este amuleto de cobre contém pequenas engrenagens interligadas e é alimentado pela magia de Mechanus, um plano de previsibilidade exata. Uma criatura que aproximar o ouvido do amuleto pode escutar suaves ruídos de zumbidos e tique-taques em seu interior. Ao usar o amuleto, quando fizer um ataque você pode se abster de rolar um d20 para obter um resultado 1 O. Uma vez usado, esta propriedade não pode ser usada até o próximo amanhecer."
+  },
+  {
+    "index": "armadura-ardente",
+    "name": "Armadura Ardente",
+    "category": "armadura",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Inofensivos e inodoros fios de fumaça emanam desta armadura enquanto é equipada."
+  },
+  {
+    "index": "armadura-brilhante",
+    "name": "Armadura Brilhante",
+    "category": "armadura",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Esta armadura nunca se suja."
+  },
+  {
+    "index": "armadura-da-libertacao",
+    "name": "Armadura da Libertação",
+    "category": "armadura",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Você pode retirar esta armadura como uma ação."
+  },
+  {
+    "index": "bengala-do-veterano",
+    "name": "Bengala do Veterano",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Quando você empunha esta bengala e usa uma ação bônus para proferir uma palavra de comando, ela se transforma em uma espada longa normal e deixa de ser mágica. 136 ----- p.134 -----"
+  },
+  {
+    "index": "bolsa-conveniente-de-especiarias-de-heward",
+    "name": "Bolsa Conveniente de Especiarias de Heward",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Esta bolsa aparenta estar vazia e tem 10 cargas. Enquanto segura a bolsa, você pode usar uma ação para gastar 1 de suas cargas, falar o nome de qualquer tempero não-mágico (como sal, pimenta, açafrão ou coentro) e remover uma pitada desse tempero do interior da bolsa. Uma pitada é suficiente para temperar uma refeição. A bolsa recupera diariamente 1d6 + 4 cargas gastas ao amanhecer."
+  },
+  {
+    "index": "boneca-falante",
+    "name": "Boneca Falante",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": true,
+    "description": "Enquanto esta boneca de pelúcia está há 1,5 metros de você, pode-se gastar um descanso curto dizendo-a para proferir até seis frases, nenhuma das quais pode ter mais de seis palavras, e definir uma condição na qual a boneca falará cada frase. Você também pode substituir frases antigas por frases novas. Qualquer que seja a condição definida, ela deve ocorrer há 1,5 metros da boneca para que ela fale. Por exemplo, sempre que alguém pegar a boneca ela pode dizer \"Quero um pouco de doce\". As frases da boneca se perdem quando sua sintonização com ela termina."
+  },
+  {
+    "index": "botas-de-pegadas-falsas",
+    "name": "Botas de Pegadas Falsas",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Apenas humanoides podem usar estas botas. Ao usar as botas você pode escolher que elas deixem pegadas semelhantes a outro tipo de humanoide de seu tamanho."
+  },
+  {
+    "index": "cachimbo-dos-monstros-de-fumaca",
+    "name": "Cachimbo dos Monstros de Fumaça",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Ao fumar este cachimbo você pode usar uma ação para baforar fumaça que assume a forma de uma criatura, como um dragão, um flumph ou um froghemoth. A forma deve ser pequena o suficiente para caber em um cubo com 30 centímetros e perde sua forma depois de alguns segundos, tornando-se fumaça normal."
+  },
+  {
+    "index": "cadeado-da-enganacao",
+    "name": "Cadeado da Enganação",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Este cadeado aparenta ser comum (do tipo descrito no capítulo 5 do Livro do Jogadorj e é acompanhado de uma chave. O mecanismo da fechadura ajusta-se magicamente para impedir ladrões. Testes de Destreza feitos para abrir a fechadura têm desvantagem."
+  },
+  {
+    "index": "cajado-canoro",
+    "name": "Cajado Canoro",
+    "category": "cajado",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Este cajado de madeira é decorado com xilogravuras de pássaros. Ele tem 10 cargas. Ao segurá-lo você pode usar uma ação para gastar 1 carga do cajado e fazê-lo criar um dos seguintes sons a até 18 metros de distância: o chilrear, gmjeio, chamado, grito ou canto de um canário, um corvo, um pato, uma galinha, um ganso, um mergulhão uma gaivota, uma coruja, ou uma águia. O cajado recupera diariamente 1d6 + 4 cargas gastas ao amanhecer. Se você gastar a - tima carga, role um d20. Em um res4.l ô.o l, o eç1.jado exploçle em uma nuvem inofensiva d penas de pã ,s os e é perdido,"
+  },
+  {
+    "index": "cajado-da-ornamentacao",
+    "name": "Cajado da Ornamentação",
+    "category": "cajado",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Ao colocar um objeto pesando não mais de 0,5 quilos (como um fragmento de cristal, um ovo ou uma rocha) na ponta do cajado enquanto o segura, esse objeto flutua a poucos centímetros do cajado, e permanece ali até ser removido ou até o que cajado não esteja mais em sua posse. O cajado pode carregar atê três desses objetos flutuando sobre sua ponta. Ao segurar o cajado você pode fazer com que um ou mais objetos rotacionem lentamente."
+  },
+  {
+    "index": "cajado-das-flores",
+    "name": "Cajado das Flores",
+    "category": "cajado",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Este cajado de madeira tem 10 cargas. Ao segurá- lo você pode usar uma ação para gastar 1 carga do cajado, fazendo uma flor brotar do próprio cajado, ou de um pedaço de terra ou solo há 1,5 metros de você. Caso você não escolha uma flor específica, o cajado gera uma margarida suavemente perfumada. A flor é inofensiva e não-mágica, e cresce ou murcha como uma flor normal. O cajado recupera diariamente 1d6 + 4 cargas gastas ao amanhecer. Se você gastar a última carga, role um d20. Em um resultado 1 , o cajado se transforma em pétalas de flores e é perdido."
+  },
+  {
+    "index": "caneca-da-sobriedade",
+    "name": "Caneca da Sobriedade",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Esta caneca tem um rosto severo esculpido em um dos lados. Você pode beber qualquer cerveja, vinho ou qualquer bebida alcoólica não mágica sem se embriagar. A caneca não faz efeito em liquidas mágicos ou substâncias perigosas, como veneno."
+  },
+  {
+    "index": "capa-da-ondulacao",
+    "name": "Capa da Ondulação",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Ao usar esta capa você pode usar uma ação bônus para fazê-la ondular dramaticamente."
+  },
+  {
+    "index": "capa-de-muitas-modas",
+    "name": "Capa de Muitas Modas",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Ao usar esta capa você pode usar uma ação bônus para alterar o estilo, cor e qualidade aparente do vestuário. O peso da capa não se altera. Independente da aparência a capa não pode ser nada além de uma capa. Embora possa duplicar a aparência de outras capas mágicas, ela não ganha suas propriedades mágicas."
+  },
+  {
+    "index": "chapeu-da-feiticaria",
+    "name": "Chapéu da Feitiçaria",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": true,
+    "description": "Este chapéu antiquado em formato de cone ê adornado com luas crescentes e estrelas. Ao usá-lo você recebe os seguintes beneficios: • Você pode usar o chapéu como o foco arcano de suas magias de mago. • Você pode tentar conjurar um truque que não conheça. O truque deve estar na lista de magias do mago e você deve fazer um teste de Inteligência (Arcanismo) com CD 10. Se o teste for bem sucedido, você conjura a magia. Se o teste falhar, a magia também falha, e a ação usada para tentar conjurar a magia é desperdiçada. Qualquer que seja o resultado, você não pode usar esta propriedade novamente até o fim de um descanso longo. 1 f'E. RRA M ENT! S 00 M il 1 R 137 ----- p.135 -----"
+  },
+  {
+    "index": "chapeu-dos-vermes",
+    "name": "Chapéu dos Vermes",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Este chapéu tem 3 cargas. Ao segurar o chapéu, você pode usar uma ação para gastar 1 de suas cargas e falar uma palavra de comando que conjura, à sua escolha, um morcego, um sapo ou um rato ver o Livro do Jogador ou o Manual dos Monstros para estatísticas). A criatura magicamente conjurada aparece dentro do chapéu e tenta escapar de você o mais rápido possível. A criatura não é amigável ou hostil, e não está sob seu controle. Ela se comporta como uma criatura ordinária de seu tipo, e desaparece depois de 1 hora ou quando cair a 0 pontos de vida. O chapéu recupera diariamente todas as cargas gastas ao amanhecer."
+  },
+  {
+    "index": "chave-misteriosa",
+    "name": "Chave Misteriosa",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Um símbolo de interrogação está entalhado na cabeça da chave. A chave tem 5% de chance de destravar qualquer fechadura na qual é inserida. Uma vez que a chave destranque algo, ela desaparece."
+  },
+  {
+    "index": "chifre-do-alarme-silencioso",
+    "name": "Chifre do Alarme Silencioso",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Este chifre tem 4 cargas. Ao usar uma ação para soprá-lo, uma criatura de sua escolha que possa ouvir o toque, desde que ela esteja dentro de 180 metros do chifre e não esteja surda. Nenhuma outra criatura ouve qualquer som emitido pelo chifre. O chifre recupera diariamente 1d4 cargas gastas ao amanhecer."
+  },
+  {
+    "index": "corda-do-reparo",
+    "name": "Corda do Reparo",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Você pode cortar esta corda de cânhamo de 15 metros em vários pedaços menores, e então usar uma ação para falar uma palavra de comando que faz o pedaços se unirem novamente. Os fragmentos devem estar em contato entre si e não sendo utilizados para qualquer fim. Uma corda do reparo é permanentemente encU1iada se um fragmento por perdido ou destruído."
+  },
+  {
+    "index": "dado-do-charlatao",
+    "name": "Dado do Charlatão",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": true,
+    "description": "Sempre que rolar este dado de seis lados, você pode controlar qual número irá rolar."
+  },
+  {
+    "index": "elmo-do-horror",
+    "name": "Elmo do Horror",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Este terrúvel elmo de aço faz seus olhos brilharem de vermelho enquanto o usa."
+  },
+  {
+    "index": "escudo-da-expressao",
+    "name": "Escudo da Expressão",
+    "category": "armadura",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "O formato frontal deste escudo assemelha-se a uma face. Ao usar este escudo você pode usar uma ação bônus para alterar a expressão dessa facec."
+  },
+  {
+    "index": "esfera-da-direcao",
+    "name": "Esfera da Direção",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Ao segurar esta esfera você pode usar uma ação para determinar onde está o norte. Esta propriedade funciona apenas no Plano Material."
+  },
+  {
+    "index": "esfera-do-tempo",
+    "name": "Esfera do Tempo",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Ao segurar esta esfera você pode usar uma ação para determinar se é de manhã, tarde ou noite. Esta propriedade funciona apenas no Plano Material."
+  },
+  {
+    "index": "espada-lunar",
+    "name": "Espada Lunar",
+    "category": "arma",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Na escuridão a lâmina desembainhada desta espada emana luar, criando luz brilhante em um raio de 4,5 metros e luz fraca por mais 4,5 metros."
+  },
+  {
+    "index": "flecha-inquebravel",
+    "name": "Flecha Inquebrável",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Esta flecha não se quebra, exceto se inserida em um campo antimagia."
+  },
+  {
+    "index": "gota-de-nutricao",
+    "name": "Gota de Nutrição",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Esta miçanga esponjosa, sem gosto e gelatinosa se dissolve em sua língua e fornece alimentação como 1 dia de provisões."
+  },
+  {
+    "index": "gota-de-refrescancia",
+    "name": "Gota de Refrescância",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Esta miçanga esponjosa, sem gosto e gelatinosa se dissolve em meio liquido, transformando até meio litro desse líquido em água fresca e gelada. A gota não tem efeito em líquidos mágicos ou danosos, como veneno."
+  },
+  {
+    "index": "grimorio-duradouro",
+    "name": "Grimório Duradouro",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Este grimório, assim como tudo que está escrito em suas páginas, não pode ser danificado por fogo ou imersão em água. Além disso, o grimório não se deteriora com o tempo."
+  },
+  {
+    "index": "instrumento-da-escrita",
+    "name": "Instrumento da Escrita",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": true,
+    "description": "Este instrumento musical tem 3 cargas. Ao tocá- lo você pode usar uma ação para gastar 1 carga do instrumento e escrever uma mensagem mágica em um objeto ou superfície não-mágicos que você possa ver dentro a até 9 metros de distância. A mensagem pode ter até seis palavras e é escrita em um idioma que você conheça. Se você é um bardo, você pode escrever uma sétima palavra e optar se deseja que a mensagem brilhe suavemente, permitindo que seja vista em escuridão não-mágica. Conjurar dissipar magia sobre ela apaga a mensagem. Do contrário a mensagem desaparece em 24 horas. O instrumento recupera diariamente todas as cargas gastas ao amanhecer. 138 ----- p.136 -----"
+  },
+  {
+    "index": "instrumento-de-ilusoes",
+    "name": "Instrumento de Ilusões",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": true,
+    "description": "Ao tocar este instrumento musical, você pode criar efeitos visuais ilusórios inofensivos em uma esfera com raio de 1,5 metros ao redor do instrumento. Se você é um bardo, este raio aumenta para 4,5 metros. Exemplos de efeitos incluem notas musicais ilusórias, um dançarino espectral, borboletas, ou neve caindo suavemente. Os efeitos mágicos não têm substância nem emitem sons, e são obviamente ilusórios. Os efeitos terminam quando você pára de tocar."
+  },
+  {
+    "index": "mastro-da-diminuicao",
+    "name": "Mastro da Diminuição",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Ao segurar este mastro de 3 metros você pode falar uma palavra de comando e transformá-lo em um bastão de 30 centímetros, facilitando seu armazenamento. O peso do mastro não se altera. Você pode uma palavra de comando diferente para reverter o bastão ao mastro; no entanto, o bastão irá se alongar somente se há espaço disponível ao redor."
+  },
+  {
+    "index": "mastro-da-pescaria",
+    "name": "Mastro da Pescaria",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Ao segurar este mastro de 3 metros você pode falar uma palavra de comando e transformá-lo em uma vara de pesca com anzol, linha e molinete. Falar a palavra de comando novamente a transforma de volta a em um mastro de 3 metros normal."
+  },
+  {
+    "index": "municao-colossal",
+    "name": "Munição Colossal",
+    "category": "arma",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Esta munição dá uma pancada assombrosa. Uma criatura atingida por ela deve passar em um teste CD 10 de Força ou ser derrubada."
+  },
+  {
+    "index": "olho-de-ersatz",
+    "name": "Olho de Ersatz",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": true,
+    "description": "Este olho artificial substitui um olho real que foi perdido ou removido. Enquanto o olho de ersatz estiver em sua cavidade ocular, ele só pode ser retirado por você, e você pode ver pela pequena orbe como se fosse um olho normal."
+  },
+  {
+    "index": "perfume-do-encantamento",
+    "name": "Perfume do Encantamento",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Este minúsculo frasco contém perfume mágico, suficiente para um uso. Você pode usar uma ação para aplicar o perfume em si e seus efeitos duram por 1 hora. Por essa duração você tem vantagem em testes de Carisma direcionados a humanoides com nível de desafio 1 ou menor. Criaturas sujeitas aos efeitos do perfume não se dão conta que foram influenciados por mágica."
+  },
+  {
+    "index": "roupas-do-remendo",
+    "name": "Roupas do Remendo",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Esta elegante roupa de viajante é capaz de reparar se magicamente para neutralizar o desgaste diário. Fragmentos da roupa que sejam destruídos não podem ser reparados desta forma."
+  },
+  {
+    "index": "rubi-do-mago-da-guerra",
+    "name": "Rubi do Mago da Guerra",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": true,
+    "description": "Entalhado com runas arcanas, este rubi de 2,5 centimeotros de diámetro permite a você usar uma arma simples ou marcial como foco arcano de suas magias. Para que esta propriedade funcione você deve encravar o rubi na arma, pressionando os objetos um ao outro por pelo menos 10 minutos. O rubi não pode ser removido posteriormente, exceto se você usar uma ação para desacoplá-lo ou se a arma for destruída. Nem mesmo um campo antimagia é capaz de retirá-lo. No entanto, o rubi cairá da arma se sua sintonização com a gema terminar."
+  },
+  {
+    "index": "trombeta-da-audicao",
+    "name": "Trombeta da Audição",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Ao segurar este item em seu ouvido, a trombeta suprime efeitos da condição surdo sobre você, permitindo-o ouvir normalmente."
+  },
+  {
+    "index": "varinha-carrancuda",
+    "name": "Varinha Carrancuda",
+    "category": "varinha",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Esta varinha tem 3 cargas. Ao segurá-la você pode usar uma ação para gastar 1 das cargas e selecionar um humanoide a até 9 metros de distância que você possa ver. O alvo deve passar em um teste CD 1 O de Carisma ou ser forçado a ficar carrancudo por 1 minuto. A varinha recupera diariame t todas as 'Cargas gastas ao amanhecer. e:você ga-Star a últiluacarga, role um d20. Em um resuftado 1, a varinha se transfouma em uma -varinha onidente. 139 ----- p.137 -----"
+  },
+  {
+    "index": "varinha-da-pirotecnia",
+    "name": "Varinha da Pirotecnia",
+    "category": "varinha",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Esta varinha tem 7 cargas. Ao segurá-la você pode usar uma ação para gastar 1 das cargas e criar uma explosão inofensiva de luzes multicoloridas em um ponto que você possa ver a até 18 metros de distância. A explosão é acompanhada de ruídos estalidos que podem ser ouvidos a até 90 metros. A luz ilumina como uma tocha, mas dura apenas um segundo. A varinha recupera diariamente 1d6 + 1 cargas gastas ao amanhecer. Se você gastar a última carga, role um d20. Em um resultado 1 , a varinha irrompe em um show pirotécnico inofensivo, sendo destruída."
+  },
+  {
+    "index": "varinha-da-regencia",
+    "name": "Varinha da Regência",
+    "category": "varinha",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Esta varinha tem 3 cargas. Ao segurá-la você pode usar uma ação para gastar 1 das cargas e criar música orquestral ao agitá-la. A música pode ser ouvida a uma distância de até 18 metros e termina quando você para de agitar a varinha. A varinha recupera diariamente todas as cargas gastas ao amanhecer. Se você gastar a última carga, role um d20. Em um resultado 1 , um som triste de tuba toca enquanto a varinha se desintegra em poeira, sendo destruída."
+  },
+  {
+    "index": "varinha-sorridente",
+    "name": "Varinha Sorridente",
+    "category": "varinha",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Esta varinha tem 3 cargas. Ao segurá-la você pode usar uma ação para gastar 1 das cargas e selecionar um humanoide a até 9 metros de distância que você possa ver. O alvo deve passar em um teste CD 1 O de Carisma ou ser forçado a sorrir por 1 minuto. A varinha recupera diariamente todas as cargas gastas ao amanhecer. Se você gastar a última carga, role um d20. Em um resultado 1 , a varinha se transforma em uma varinha carrancuda."
+  },
+  {
+    "index": "vaso-do-despertar",
+    "name": "Vaso do Despertar",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "Se você plantar um arbusto comum neste vaso de barro de 4,5 quilos, e deixá-lo crescer por 30 dias, ao término desse prazo o arbusto transforma-se magicamente em um arbusto desperto (ver o Manual dos Monstros para estatísticas) . Quando o arbusto desperta, ele é amigável com você. Sem comandos seus, ele não faz nada."
+  },
+  {
+    "index": "vela-das-profundezas",
+    "name": "Vela das Profundezas",
+    "category": "item-maravilhoso",
+    "rarity": "comum",
+    "requiresAttunement": false,
+    "description": "A chama desta vela não se extingue ao ser imersa em água. Ela emana luz e calor como uma vela normal. CRIA N U N S ADICIONAIS"
+  }
+]
