@@ -102,10 +102,12 @@ export default defineConfig({
             //    v27 → v28 (2026-07-09): subclasses arcanas (bardo/feiticeiro/bruxo-celestial/mago) — 31/31
             //    v28 → v29 (2026-07-13): catálogo de 95 magias do XGE (xanathar-spells-pt.json) + mecânicas curadas
             //    v29 → v30 (2026-07-13): 14 invocações místicas + 48 itens mágicos comuns do XGE (fecha o sub-projeto)
+            //    v30 → v31 (2026-07-14): auditoria XGE — 5 mecânicas corrigidas (raio-de-caos, faca-de-gelo,
+            //                            lamina-sombria, diabo-da-poeira, dragao-ilusorio) + limpeza de OCR
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v30',
+              cacheName: 'srd-data-v31',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
