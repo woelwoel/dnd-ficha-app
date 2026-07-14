@@ -17,7 +17,7 @@ por task) → bump `srd-data-vN` → merge na master + push (deploy) → próxim
 | 3 | `xanathar-3-subclasses-divinas.md` | Clérigo (Forja, Sepultura), Paladino (Conquista, Redenção), Patrulheiro (3), Druida (Sonhos, Pastor) — 9 subclasses + magias concedidas | `subclasses-tasha-barbaro` | **EXECUTADO 2026-07-08** |
 | 4 | `xanathar-4-subclasses-marciais.md` | Guerreiro (3, inclui Disparos Arcanos), Monge (3), Ladino (4), Bárbaro (3) — 13 subclasses | idem | **EXECUTADO 2026-07-09** |
 | 5 | `xanathar-5-subclasses-arcanas.md` | Bardo (3), Feiticeiro (3, spike Alma Favorecida no `useClassSpells`), Bruxo Celestial, Mago (Mago de Guerra) — 8 subclasses + teste de contagem 31 | idem | **EXECUTADO 2026-07-09** |
-| 6 | `xanathar-6-catalogo-magias.md` | ~95 magias + curadoria de mecânicas (guard-rail `findUncovered` verde) | `tasha-catalogo-magias` | a detalhar |
+| 6 | `xanathar-6-catalogo-magias.md` | 95 magias + curadoria de mecânicas (guard-rail `findUncovered` verde) | `tasha-catalogo-magias` | **EXECUTADO 2026-07-13** |
 | 7 | `xanathar-7-invocacoes-itens.md` | ~14 invocações místicas + itens mágicos comuns + auditoria final | `tasha-itens-magicos-D1` | a detalhar |
 
 ## Regras transversais (valem em todo plano)
