@@ -3,11 +3,11 @@ import { useCharacterContext } from '../CharacterContext'
 import { SKILLS } from '../../../utils/calculations'
 import { skillBonus, skillProficiencyState } from './skillBonus'
 import { EditDialog } from './EditDialog'
-import { SkillsList } from '../SkillsList'
+import { SkillsEditor } from './SkillsEditor'
 import { RollableRow } from './RollableRow'
 
 export function SkillsPanel() {
-  const { character, calc, updaters, classData, readOnly } = useCharacterContext()
+  const { character, calc, readOnly } = useCharacterContext()
   const [editOpen, setEditOpen] = useState(false)
   return (
     <section className="v2-panel" aria-label="Perícias">
@@ -38,14 +38,7 @@ export function SkillsPanel() {
         )
       })}
       <EditDialog open={editOpen} onClose={() => setEditOpen(false)} title="Perícias" size="md">
-        <SkillsList
-          attributes={character.attributes}
-          proficiencies={character.proficiencies}
-          profBonus={calc.profBonus}
-          onToggle={updaters.toggleSkillProficiency}
-          onToggleExpertise={updaters.toggleExpertiseSkill}
-          classData={classData}
-        />
+        <SkillsEditor />
       </EditDialog>
     </section>
   )

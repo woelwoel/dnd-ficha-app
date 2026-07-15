@@ -30,3 +30,12 @@ export function useCharacterContext() {
   }
   return ctx
 }
+
+/**
+ * Versão tolerante: devolve `null` fora do provider em vez de lançar. Para
+ * componentes genéricos que ENFEITAM a ficha quando estão dentro dela, mas
+ * também funcionam soltos (ex.: EditDialog pegando o accent da classe).
+ */
+export function useOptionalCharacterContext() {
+  return useContext(CharacterCtx)
+}
