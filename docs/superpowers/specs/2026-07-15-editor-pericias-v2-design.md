@@ -110,6 +110,20 @@ Arquivo novo `src/test/sheetV2-SkillsEditor.test.jsx`:
 `src/test/sheetV2-SkillsPanel-edit.test.jsx` passa a mockar `SkillsEditor` no
 lugar de `SkillsList`.
 
+## Achado na execução: accent não atravessa o portal
+
+O primeiro print do modal real saiu verde-água numa ficha de bardo. Causa: o
+`SheetV2` declara o accent da classe como estilo **inline** na div `.sheet-v2`
+(`SheetV2.jsx:30`), mas o `EditDialog` porta pro `<body>` e reaplica só a
+*classe* — o que restaura o `--v2-accent` padrão do `tokens.css` (`#4fc7ab`).
+
+Defeito pré-existente de **todos** os dialogs (o de ataques e o de efeitos
+também usam accent), invisível até o editor de perícias virar consumidor pesado
+de accent. Corrigido na raiz: `EditDialog` repete o override inline lendo a
+classe do contexto via `useOptionalCharacterContext()` (variante tolerante nova
+— `useCharacterContext` lança fora do provider e o `EditDialog` tem teste que o
+renderiza solto). Sem contexto, nenhum accent é forçado e vale o padrão.
+
 ## Fora de escopo
 
 - Reescrever o `SkillsList` v1 ou o `SheetContent`.

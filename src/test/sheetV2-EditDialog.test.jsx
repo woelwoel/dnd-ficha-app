@@ -2,6 +2,8 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { EditDialog } from '../systems/dnd5e/components/CharacterSheet/v2/EditDialog'
+import { CharacterProvider } from '../systems/dnd5e/components/CharacterSheet/CharacterContext'
+import { makeCharacter } from './helpers/sheetV2TestContext'
 
 describe('EditDialog', () => {
   it('renderiza título e conteúdo quando aberto', () => {
@@ -39,5 +41,25 @@ describe('EditDialog', () => {
       <EditDialog open onClose={() => {}} title="Tokens"><div /></EditDialog>
     )
     expect(document.querySelector('.sheet-v2 .v2-panel')).not.toBeNull()
+  })
+
+  // O Dialog porta pro <body>, fora da div .sheet-v2 onde o SheetV2 declara o
+  // accent da classe como estilo inline. Reaplicar só a classe traria de volta
+  // o accent PADRÃO do tokens.css — o modal ficaria verde-água numa ficha de
+  // bardo. O accent tem que viajar junto com o portal.
+  it('leva o accent da classe pro painel portado', () => {
+    render(
+      <CharacterProvider value={{ character: makeCharacter({ info: { class: 'bardo' } }) }}>
+        <EditDialog open onClose={() => {}} title="Accent"><div /></EditDialog>
+      </CharacterProvider>
+    )
+    const scope = document.querySelector('.sheet-v2')
+    expect(scope.style.getPropertyValue('--v2-accent')).toBe('#d49ae0')
+  })
+
+  it('fora da ficha, não força accent nenhum (usa o padrão do tokens.css)', () => {
+    render(<EditDialog open onClose={() => {}} title="Sem contexto"><div /></EditDialog>)
+    const scope = document.querySelector('.sheet-v2')
+    expect(scope.style.getPropertyValue('--v2-accent')).toBe('')
   })
 })
