@@ -1,4 +1,5 @@
 import { fixedRacialBonuses } from '../../../domain/racialBonuses'
+import { racialSkillCount } from '../../../domain/skillBudget'
 
 export const MAGO_CANTRIPS = [
   'Amizade', 'Ataque Certeiro', 'Consertar', 'Espirro Ácido',
@@ -31,7 +32,9 @@ export function getRaceRequirements(draft, _race, _subrace) {
     highElfCantrip:     isAltoElfo,
     freeAbility:        isHumanVariant ? 2 : isMeioElfo ? 2 : 0,
     freeAbilityExclude: isMeioElfo ? 'cha' : null,
-    racialSkills:       isHumanVariant ? 1 : isMeioElfo ? 2 : 0,
+    // Mesma fonte que o contador da ficha usa pra reconstruir o orçamento:
+    // se divergirem, a criação libera N perícias e a ficha acusa excesso.
+    racialSkills:       racialSkillCount(draft.race, draft.subrace),
     racialFeat:         isHumanVariant,
   }
 }
