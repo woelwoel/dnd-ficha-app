@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { SKILLS, ABILITY_SCORES } from '../../../utils/calculations'
 import { useCharacterContext } from '../CharacterContext'
+import { useLazySrdDataset } from '../../../data/SrdProvider'
+import { skillBudget } from '../../../domain/skillBudget'
 import { skillBonus, skillProficiencyState } from './skillBonus'
 
 /* Editor de perícias do v2 — vive dentro de um EditDialog, que já fornece a
@@ -64,10 +66,13 @@ function SkillEditorRow({ skill, prof, expert, fromBackground, bonus, locked, on
 
 export function SkillsEditor() {
   const { character, calc, classData, updaters } = useCharacterContext()
+  const multiclassData = useLazySrdDataset('multiclass')
   const [filter, setFilter] = useState(null)
 
   const { proficiencies } = character
-  const skillLimit    = classData?.skill_choices?.count ?? null
+  // O limite NÃO é só o da classe: raça (Humano Variante/Meio-Elfo) e
+  // multiclasse também concedem perícias, e todas caem no mesmo array.
+  const skillLimit    = skillBudget({ classData, info: character.info, multiclassData })
   const selectedCount = proficiencies.skills?.length ?? 0
   const excess        = skillLimit !== null ? selectedCount - skillLimit : 0
   const atLimit       = skillLimit !== null && selectedCount >= skillLimit
