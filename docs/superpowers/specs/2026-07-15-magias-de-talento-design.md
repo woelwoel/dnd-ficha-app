@@ -27,7 +27,7 @@ injeção na criação (`injectSubclassSpellsAtBuild`) e no level-up
 | Iniciado em Magia | phb | `byList` | escolhe classe (bardo/bruxo/clérigo/druida/feiticeiro/mago) → 2 truques da lista + 1 magia de 1º da lista (freeCast long, slots **classMatch** — Sage Advice) |
 | Iniciado Artífice | tasha | `int` | escolhe 1 truque de artífice + 1 magia de 1º de artífice (freeCast long, slots always — texto explícito) |
 | Conjurador de Ritual | phb | `byList` | escolhe classe → 2 magias de 1º com descritor ritual (**ritualOnly**: sem slot, sem freeCast, sem tracker) |
-| Atirador de Magia | phb | `byList` | escolhe classe → 1 truque de **ataque** (derivado de `spell-mechanics attack: true`) |
+| Atirador de Magia | phb | `byList` | escolhe classe (**só bruxo/druida/feiticeiro/mago** — ver nota) → 1 truque de **ataque** (derivado de `spell-mechanics attack: true`) |
 | Magia do Elfo da Floresta | xanathar | `wis` | escolhe 1 truque de druida + fixas `passos-longos` e `passar-sem-rastro` (cada uma freeCast long, slots never) |
 | Telepático | tasha | `chosenAttr` | fixa `detectar-pensamentos` (freeCast long, slots always) |
 | Telecinético | tasha | `chosenAttr` | fixa `maos-magicas` (truque, à vontade por natureza) |
@@ -95,6 +95,24 @@ Predicados de `choose`: `level` (exato), `schools[]`, `fromList` (a lista da
 classe em `pickList` escolhida, via campo `classes` do catálogo), `ritual`,
 `attack` (lê `spell-mechanics-pt.json` — `attack: true` E `level === 0`).
 
+**Nota — `pickList` só oferece listas satisfazíveis.** RAW, o Atirador de
+Magia lista as seis classes conjuradoras, mas bardo e clérigo não têm
+truque com jogada de ataque (Chama Sagrada e Escárnio Viciante são
+salvaguarda), nem no catálogo nem no livro. Como o grant é `count: 1`,
+oferecer essas listas criaria um beco sem saída permanente no gate. A
+`pickList` do Atirador é `['bruxo','druida','feiticeiro','mago']`. As
+`pickList` de Iniciado em Magia e Conjurador de Ritual continuam com as
+seis (todas satisfazíveis; feiticeiro tem exatamente 2 rituais de 1º, o
+mínimo pro `count: 2`).
+
+**Nota — dois espaços de índice sobre `grants`.** `spellChoices.picks` é
+indexado por ORDINAL entre os grants `choose`; `featGrant` (persistido) e
+`resolveFeatSpellOptions(featIndex, grantIdx)` usam a posição ABSOLUTA em
+`grants`. Eles divergem sempre que uma fixa vem antes de um choose
+(Tocado pelas Fadas/Sombras). O helper exportado `getChooseGrants(featIndex)`
+→ `[{ grantIdx, ordinal, choose, grant }]` é o ÚNICO lugar que computa o
+ordinal; todo consumidor (gate, injeção, picker) passa por ele.
+
 `ability` resolve em três modos:
 - `'chosenAttr'` → o atributo que o próprio talento aumentou (`chosenAttr`
   do feat em `info.feats`);
@@ -104,6 +122,8 @@ classe em `pickList` escolhida, via campo `classes` do catálogo), `ritual`,
 
 API pública:
 - `getFeatSpellDef(featIndex)` → declaração ou null;
+- `getChooseGrants(featIndex)` → `[{ grantIdx, ordinal, choose, grant }]`
+  (único lugar que computa o ordinal — ver nota acima);
 - `resolveFeatSpellOptions(def, grantIdx, { list, srdSpells, spellMechanics })`
   → candidatas do picker;
 - `getFeatSpellGrants(feat, srdSpells)` → lista resolvida de magias a
@@ -182,9 +202,9 @@ sub-escolha de atributo:
 - fixas → chips read-only ("Passo Nebuloso ✓");
 - `pickList` → botões de classe primeiro; listas só aparecem após escolher;
 - cada grant `choose` → bloco com busca + contador ("2 de 2 truques");
-- lista vazia (ex.: Atirador de Magia + clérigo, que não tem truque de
-  ataque no catálogo) → mensagem explícita "esta classe não tem truque de
-  ataque no catálogo", nunca lista muda.
+- lista vazia nunca deve acontecer (as `pickList` só oferecem listas
+  satisfazíveis — ver nota do Atirador de Magia); se acontecer mesmo assim,
+  mostrar mensagem explícita em vez de lista muda.
 
 **Gating**: `isASIChoiceComplete` (class-helpers) e o caso `race` do
 `useBlockStatus` passam a exigir `isFeatSpellChoiceComplete` — mesmo
@@ -261,9 +281,10 @@ laço de classes), lendo `info.feats` + declarações:
    criação e no level-up (merge + multiclasse). Entrega: magias fixas
    aparecem e rolam com CD certa em personagens novos e level-ups.
 2. **Pickers + gating + retrofit** — `FeatSpellPicker` inline nos dois
-   FeatPickers, gating no wizard (`useBlockStatus`/`isASIChoiceComplete`)
-   e no level-up, botão de retrofit na FeaturesTab. Entrega: escolhas
-   funcionam em todo lugar; o personagem do dono é consertado aqui.
+   FeatPickers (usando `getChooseGrants` pros dois índices), gating no
+   wizard (`useBlockStatus`/`isASIChoiceComplete`) e no level-up, botão de
+   retrofit na FeaturesTab. Entrega: escolhas funcionam em todo lugar; o
+   personagem do dono é consertado aqui.
 3. **Conjuração especial** — trackers, botão 1×/descanso, à vontade,
    ritual-only, política de slots. Entrega: os 11 talentos jogáveis por
    regra, incluindo não-conjuradores.
