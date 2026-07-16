@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import {
-  FEAT_SPELL_GRANTS, getFeatSpellDef, resolveFeatAbility,
-  isFeatSpellChoiceComplete,
+  FEAT_SPELL_GRANTS, LIST_ABILITY, getFeatSpellDef, getChooseGrants,
+  resolveFeatAbility, isFeatSpellChoiceComplete,
 } from '../../systems/dnd5e/domain/featSpells'
 
 const allSpells = [
@@ -46,6 +46,39 @@ describe('FEAT_SPELL_GRANTS — sanidade das declarações', () => {
     expect(getFeatSpellDef('robusto')).toBeNull()
     expect(getFeatSpellDef('tocado-pelas-fadas')).not.toBeNull()
   })
+
+  it('atirador-de-magia: pickList exclui bardo/clerigo (sem truque de ataque)', () => {
+    expect(FEAT_SPELL_GRANTS['atirador-de-magia'].pickList).toEqual(['bruxo', 'druida', 'feiticeiro', 'mago'])
+  })
+
+  it('invariantes estruturais de toda declaração', () => {
+    for (const [feat, def] of Object.entries(FEAT_SPELL_GRANTS)) {
+      expect(Array.isArray(def.grants), feat).toBe(true)
+      expect(def.grants.length, feat).toBeGreaterThan(0)
+      // byList ⟺ pickList: sem pickList o gate não exige `list` e ability vira null
+      expect(!!def.pickList, feat).toBe(def.ability === 'byList')
+      for (const l of def.pickList ?? []) expect(LIST_ABILITY[l], `${feat}: ${l}`).toBeTruthy()
+      for (const g of def.grants) {
+        expect(!!g.fixed !== !!g.choose, feat).toBe(true)
+        if (g.choose) {
+          expect(typeof g.choose.count, feat).toBe('number')
+          expect(typeof g.choose.level, feat).toBe('number')
+        }
+      }
+    }
+  })
+})
+
+describe('getChooseGrants', () => {
+  it('getChooseGrants: ordinal ≠ grantIdx quando fixa vem antes de choose', () => {
+    expect(getChooseGrants('tocado-pelas-fadas')).toEqual([
+      expect.objectContaining({ grantIdx: 1, ordinal: 0 }),
+    ])
+    expect(getChooseGrants('iniciado-em-magia').map(g => [g.grantIdx, g.ordinal]))
+      .toEqual([[0, 0], [1, 1]])
+    expect(getChooseGrants('telepatico')).toEqual([])
+    expect(getChooseGrants('robusto')).toEqual([])
+  })
 })
 
 describe('resolveFeatAbility', () => {
@@ -87,6 +120,10 @@ describe('isFeatSpellChoiceComplete', () => {
     expect(isFeatSpellChoiceComplete('tocado-pelas-fadas', null)).toBe(false)
     expect(isFeatSpellChoiceComplete('tocado-pelas-fadas', { list: null, picks: [[]] })).toBe(false)
     expect(isFeatSpellChoiceComplete('tocado-pelas-fadas', { list: null, picks: [['enfeiticar-pessoa']] })).toBe(true)
+  })
+
+  it('over-pick também é incompleto (strict !==, não >=)', () => {
+    expect(isFeatSpellChoiceComplete('tocado-pelas-fadas', { picks: [['enfeiticar-pessoa', 'comando']] })).toBe(false)
   })
 
   it('iniciado-em-magia: exige list + 2 truques + 1 magia', () => {

@@ -20,7 +20,7 @@
 const SIX_CASTER_LISTS = ['bardo', 'bruxo', 'clerigo', 'druida', 'feiticeiro', 'mago']
 
 // Atributo de conjuração por lista de classe (modo 'byList')
-const LIST_ABILITY = {
+export const LIST_ABILITY = {
   bardo: 'cha', bruxo: 'cha', feiticeiro: 'cha',
   clerigo: 'wis', druida: 'wis',
   mago: 'int', artifice: 'int',
@@ -85,7 +85,10 @@ export const FEAT_SPELL_GRANTS = {
   },
   'atirador-de-magia': {
     ability: 'byList',
-    pickList: SIX_CASTER_LISTS,
+    // RAW lista as seis classes, mas bardo e clérigo não têm truque com jogada
+    // de ataque (Chama Sagrada e Escárnio Viciante são salvaguarda) — oferecer
+    // essas listas criaria um beco sem saída: count:1 nunca satisfeito.
+    pickList: ['bruxo', 'druida', 'feiticeiro', 'mago'],
     grants: [
       { choose: { count: 1, level: 0, attack: true, fromList: true } },
     ],
@@ -133,18 +136,30 @@ export function resolveFeatAbility(def, feat) {
 }
 
 /**
+ * Grants `choose` de um talento, com AMBOS os índices: `grantIdx` (posição
+ * absoluta em grants — é o `featGrant` persistido) e `ordinal` (posição entre
+ * os choose — é o índice em `spellChoices.picks`). Divergem sempre que uma
+ * fixa vem antes de um choose (Tocado pelas Fadas/Sombras).
+ */
+export function getChooseGrants(featIndex) {
+  const def = getFeatSpellDef(featIndex)
+  if (!def) return []
+  let ordinal = 0
+  return (def.grants ?? []).flatMap((g, grantIdx) =>
+    g.choose ? [{ grantIdx, ordinal: ordinal++, choose: g.choose, grant: g }] : []
+  )
+}
+
+/**
  * Escolhas completas? Sem def → true. Com pickList, exige `list`; cada grant
- * `choose` exige `picks[ordinal].length === count`.
+ * `choose` exige `picks[ordinal].length === count` (estrito: over-pick também
+ * é incompleto).
  */
 export function isFeatSpellChoiceComplete(featIndex, spellChoices) {
   const def = getFeatSpellDef(featIndex)
   if (!def) return true
   if (def.pickList && !spellChoices?.list) return false
-  let ordinal = 0
-  for (const g of def.grants) {
-    if (!g.choose) continue
-    if ((spellChoices?.picks?.[ordinal]?.length ?? 0) !== g.choose.count) return false
-    ordinal++
-  }
-  return true
+  return getChooseGrants(featIndex).every(
+    ({ ordinal, choose }) => (spellChoices?.picks?.[ordinal]?.length ?? 0) === choose.count
+  )
 }
