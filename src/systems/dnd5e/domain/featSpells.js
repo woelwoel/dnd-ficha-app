@@ -382,7 +382,15 @@ export function enrichWithFeatSpells({ patch, character, srdSpells }) {
   }
   const ability = resolveFeatAbility(def, featLike)
   const label = `Talento: ${chosenFeat.name}`
-  const existing = new Map((character.spellcasting?.spells ?? []).map(s => [s.index, s]))
+  // Inclui `patch.bonusSpells`: o enrich de SUBCLASSE roda ANTES deste e pode
+  // já ter staged a mesma magia no patch. Enxergar só o personagem faria a
+  // magia ser empurrada de novo pro `bonus`, e o `uniqueBy` do applyLevelUp
+  // (first-wins) descartaria a cópia do talento — perdendo `featGrants` em
+  // silêncio. Vendo o staged, a proveniência vai pelo merge, que se aplica
+  // sobre a cópia sobrevivente.
+  const existing = new Map(
+    [...(character.spellcasting?.spells ?? []), ...(patch.bonusSpells ?? [])].map(s => [s.index, s])
+  )
 
   const bonus = []
   const merges = []
@@ -399,11 +407,19 @@ export function enrichWithFeatSpells({ patch, character, srdSpells }) {
     }
     const srd = srdSpells?.find(s => s.index === ref.index)
     if (!srd) continue
-    bonus.push({
+    const mapped = {
       ...mapSrdSpellToCharacter(srd, { source: 'feat', alwaysPrepared: true, label }),
       featGrants: [{ featIndex: chosenFeat.index, featGrant: ref.grantIdx }],
       ...(ability ? { ability } : {}),
-    })
+    }
+    bonus.push(mapped)
+    // Simetria com o `working` do injectFeatSpells: a magia que ESTE loop cria
+    // fica visível pros refs seguintes da MESMA chamada, então um segundo ref
+    // pro mesmo index mescla em vez de empurrar duplicata. Inalcançável com as
+    // declarações atuais (dentro de um talento, fixed e choose nunca colidem —
+    // níveis de magia diferentes), mas a assimetria seria armadilha pra quem
+    // editar as declarações depois.
+    existing.set(ref.index, mapped)
   }
 
   if (bonus.length === 0 && merges.length === 0) return patch

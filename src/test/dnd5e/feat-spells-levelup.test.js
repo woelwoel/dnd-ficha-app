@@ -121,4 +121,26 @@ describe('enrichWithFeatSpells + applyLevelUp', () => {
     const out = enrichWithFeatSpells({ patch, character: c, srdSpells: allSpells })
     expect(out.bonusSpells.map(s => s.index)).toEqual(['raio-guiador', 'passo-nebuloso', 'enfeiticar-pessoa'])
   })
+
+  it('magia já staged em bonusSpells pelo enrich de subclasse: merge, não duplica', () => {
+    // O enrich de subclasse roda ANTES e pode ter posto a mesma magia em
+    // bonusSpells. Sem enxergar isso, a ref do talento se perderia no
+    // uniqueBy (first-wins) do applyLevelUp.
+    const c = makeChar()
+    const staged = { index: 'passo-nebuloso', name: 'Passo Nebuloso', level: 2, source: 'oath' }
+    const patch = feyPatch({ bonusSpells: [staged] })
+    const out = enrichWithFeatSpells({ patch, character: c, srdSpells: allSpells })
+    // não empurra passo-nebuloso de novo
+    expect(out.bonusSpells.filter(s => s.index === 'passo-nebuloso')).toHaveLength(1)
+    // e a proveniência vai pelo merge
+    expect(out.featSpellMerges).toEqual([
+      { index: 'passo-nebuloso', featGrants: [{ featIndex: 'tocado-pelas-fadas', featGrant: 0 }] },
+    ])
+    // ponta a ponta: applyLevelUp aplica o merge sobre a cópia sobrevivente
+    const next = applyLevelUp(c, out)
+    const pn = next.spellcasting.spells.filter(s => s.index === 'passo-nebuloso')
+    expect(pn).toHaveLength(1)
+    expect(pn[0].featGrants).toEqual([{ featIndex: 'tocado-pelas-fadas', featGrant: 0 }])
+    expect(pn[0].source).toBe('oath')
+  })
 })
