@@ -212,9 +212,20 @@ spellcasting.ability ?? atributo da classe (SRD)
 - o ctx de `spellRollPlan` em `handleCast` (`spellAttack`, `spellMod`,
   `spellDC`) passa a ser derivado da magia clicada, não global;
 - o cabeçalho da aba (CD/ataque geral) continua usando o atributo da classe;
-- linha de magia cujo `ability` difere do global exibe a CD própria
-  (ex.: "CD 14 · CAR") — sem isso a CD divergente ficaria invisível pro
-  jogador (necessidade de UX incluída no design, não pedida pelo dono).
+- linha de magia cujo `ability` difere do global exibe um badge — sem isso a
+  CD divergente ficaria invisível pro jogador (necessidade de UX incluída no
+  design, não pedida pelo dono). **O badge só afirma número quando existe
+  um**, lendo `spell-mechanics-pt.json`:
+  - tem salvaguarda → `CD 13 · CAR`
+  - tem jogada de ataque → `+5 · CAR`
+  - nenhum dos dois → só `CAR`
+
+  O terceiro caso não é hipotético: é o Passo Nebuloso, a magia-símbolo
+  deste projeto. Teleporte não tem rolagem, e a versão anterior desta spec
+  mandava exibir "CD 13 · CAR" nele — o jogador leria que Passo Nebuloso tem
+  CD 13. Badge não renderiza se `abbrOfKey(ability)` não resolver (dado
+  corrompido não vira separador solto). Durante o load do `spellMechanics`
+  (lazy) o badge degrada pro caso 3 e se corrige sozinho.
 
 Resolve o caso crítico: Guerreiro com Tocado pelas Fadas rolava CD 10
 (sem `spellcasting.ability`); agora rola com o atributo do talento.
