@@ -90,6 +90,11 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
     // Magias de talento carregam atributo próprio (spec 2026-07-15): a CD, o
     // ataque e o modificador saem da magia clicada, não do global. Sem isso o
     // Guerreiro com Tocado pelas Fadas rolava Passo Nebuloso com CD 10.
+    //
+    // NÃO gate isto em `spellAbility`: o Guerreiro com Tocado pelas Fadas tem
+    // spellAbility null e é exatamente quem precisa do atributo da magia.
+    // Hoje ele não tem como conjurar (sem slot; o botão de free cast é do
+    // plano 3), então nenhum teste pega essa regressão — mas ela é real.
     const rowMath = getSpellMathForSpell(spell, attributes, profBonus, spellAbility)
     const plan = spellRollPlan(spell, mech, {
       slotLevel: pact ? pactSlots.slotLevel : slotLevel,
@@ -487,7 +492,16 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
                 onDetail={() => setDetailSpell(spell)}
                 onRemove={spell.alwaysPrepared === true ? null : () => onRemoveSpell(spell.id)}
                 abilityOverride={spell.ability && spell.ability !== spellAbility
-                  ? getSpellMathForSpell(spell, attributes, profBonus, null)
+                  ? {
+                      ...getSpellMathForSpell(spell, attributes, profBonus, null),
+                      // Só afirma um número quando a magia TEM o que rolar:
+                      // Passo Nebuloso (teleporte) não tem CD nem ataque — o
+                      // badge cai pro atributo puro. `spellMechanics` é lazy:
+                      // durante o load ambos são false e o badge degrada pro
+                      // atributo, se corrigindo sozinho (igual `hasMechanics`).
+                      hasSave:   !!spellMechanics?.[spell.index]?.save,
+                      hasAttack: !!spellMechanics?.[spell.index]?.attack,
+                    }
                   : null}
               />
             ))}
@@ -627,14 +641,32 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
           </span>
         )}
         <span className="text-gray-600">{schoolAbbr}</span>
-        {abilityOverride && (
-          <span
-            className="text-amber-300/90 font-semibold"
-            title={`Magia de talento — usa ${abbrOfKey(abilityOverride.ability)} (CD ${abilityOverride.save}, ataque ${formatModifier(abilityOverride.attack)})`}
-          >
-            CD {abilityOverride.save} · {abbrOfKey(abilityOverride.ability)}
-          </span>
-        )}
+        {/* Badge de magia de talento: mostra a proveniência (atributo próprio)
+            e SÓ afirma um número quando a magia realmente tem o que rolar.
+            Passo Nebuloso é teleporte puro — anunciar "CD 13" ali seria uma
+            regra inventada. `abbrOfKey` nulo (ability corrompido) esconde o
+            badge inteiro em vez de renderizar "CD 10 · " pendurado. */}
+        {abilityOverride && abbrOfKey(abilityOverride.ability) && (() => {
+          const abbr = abbrOfKey(abilityOverride.ability)
+          // O tooltip mente igual ao texto se anunciar CD/ataque que não
+          // existem — monta só as partes reais.
+          const parts = [
+            ...(abilityOverride.hasSave   ? [`CD ${abilityOverride.save}`] : []),
+            ...(abilityOverride.hasAttack ? [`ataque ${formatModifier(abilityOverride.attack)}`] : []),
+          ]
+          return (
+            <span
+              className="text-amber-300/90 font-semibold"
+              title={`Magia de talento — usa ${abbr}${parts.length ? ` (${parts.join(', ')})` : ''}`}
+            >
+              {abilityOverride.hasSave
+                ? `CD ${abilityOverride.save} · ${abbr}`
+                : abilityOverride.hasAttack
+                  ? `${formatModifier(abilityOverride.attack)} · ${abbr}`
+                  : abbr}
+            </span>
+          )
+        })()}
         <span className="text-gray-600 text-xs">{spell.castingTime || ''}</span>
       </div>
       {canConcentrate && (
