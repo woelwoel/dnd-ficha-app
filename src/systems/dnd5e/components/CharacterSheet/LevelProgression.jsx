@@ -7,6 +7,7 @@ import { getSpellSlots } from '../../utils/spellcasting'
 import { useSrd } from '../../data/SrdProvider'
 import { useClassProgressionData } from './levelProgression/useClassProgressionData'
 import { enrichWithSubclassSpells } from '../../domain/subclassSpells'
+import { enrichWithFeatSpells } from '../../domain/featSpells'
 import { TotalLevelHeader } from './levelProgression/TotalLevelHeader'
 import { MulticlassTabs } from './levelProgression/MulticlassTabs'
 import { AddMulticlassPicker } from './levelProgression/AddMulticlassPicker'
@@ -62,7 +63,9 @@ export function LevelProgression({
     const enriched = enrichWithSubclassSpells({
       patch, classIndex, chosenFeatures, srdSpells,
     })
-    onApplyLevelUp?.(enriched)
+    // Talentos com magia (spec 2026-07-15): roda também em level-up de
+    // multiclasse — o guard de multiclassIndex é só do enrich de subclasse.
+    onApplyLevelUp?.(enrichWithFeatSpells({ patch: enriched, character, srdSpells }))
   }
 
   function handleConfirmAddMC({ classIndex: mcIndex, proficiencies, chosenSkills }) {

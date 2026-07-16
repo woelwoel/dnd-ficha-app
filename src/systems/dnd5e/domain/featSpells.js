@@ -350,3 +350,66 @@ export function injectFeatSpells(character, srdSpells) {
     spellcasting: { ...character.spellcasting, spells: order.map(idx => working.get(idx)) },
   }
 }
+
+/**
+ * Enriquece o patch de level-up com as magias do talento recém-escolhido.
+ * Espelha `enrichWithSubclassSpells`, mas com duas diferenças-chave:
+ *  - NÃO retorna cedo em `multiclassIndex != null` — ASI de nível de
+ *    multiclasse também pode virar talento (o guard de multiclasse do
+ *    enrich de subclasse é específico das tabelas de subclasse por nível);
+ *  - magia nova entra em `bonusSpells` (o `applyLevelUp` já mescla por
+ *    index), magia já conhecida entra em `featSpellMerges` (o `applyLevelUp`
+ *    aplica a ref sobre a entrada EXISTENTE, sem tocar em `ability`/`source`).
+ *
+ * Espelha os gates do próprio `applyLevelUp`: sem talento sem allowFeats,
+ * ASI vence feat (PHB p.165) — nesses casos devolve o `patch` intacto (mesma
+ * referência), útil pra idempotência/testes.
+ */
+export function enrichWithFeatSpells({ patch, character, srdSpells }) {
+  const chosenFeat = patch?.chosenFeat
+  if (!chosenFeat) return patch
+  const allowFeats = character?.meta?.settings?.allowFeats ?? false
+  const hasAsi = !!patch.attrBoosts && Object.values(patch.attrBoosts).some(v => Number(v) > 0)
+  if (!allowFeats || hasAsi) return patch
+  const def = getFeatSpellDef(chosenFeat.index)
+  if (!def) return patch
+
+  const featLike = {
+    index: chosenFeat.index,
+    name: chosenFeat.name,
+    chosenAttr: patch.featChosenAttr ?? chosenFeat.attrBonus?.choices?.[0] ?? null,
+    spellChoices: patch.featSpellChoices ?? null,
+  }
+  const ability = resolveFeatAbility(def, featLike)
+  const label = `Talento: ${chosenFeat.name}`
+  const existing = new Map((character.spellcasting?.spells ?? []).map(s => [s.index, s]))
+
+  const bonus = []
+  const merges = []
+  for (const ref of getGrantedSpellRefs(def, featLike)) {
+    const cur = existing.get(ref.index)
+    if (cur) {
+      const refs = cur.featGrants ?? []
+      if (refs.some(r => r.featIndex === chosenFeat.index && r.featGrant === ref.grantIdx)) continue
+      merges.push({
+        index: ref.index,
+        featGrants: [...refs, { featIndex: chosenFeat.index, featGrant: ref.grantIdx }],
+      })
+      continue
+    }
+    const srd = srdSpells?.find(s => s.index === ref.index)
+    if (!srd) continue
+    bonus.push({
+      ...mapSrdSpellToCharacter(srd, { source: 'feat', alwaysPrepared: true, label }),
+      featGrants: [{ featIndex: chosenFeat.index, featGrant: ref.grantIdx }],
+      ...(ability ? { ability } : {}),
+    })
+  }
+
+  if (bonus.length === 0 && merges.length === 0) return patch
+  return {
+    ...patch,
+    bonusSpells: [...(patch.bonusSpells ?? []), ...bonus],
+    ...(merges.length ? { featSpellMerges: merges } : {}),
+  }
+}
