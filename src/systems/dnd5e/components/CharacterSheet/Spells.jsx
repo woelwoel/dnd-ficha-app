@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { ABILITY_SCORES, SCHOOL_ABBR, SPELL_ABILITY_PT_TO_KEY, formatModifier, calculateSpellSaveDC, calculateSpellAttackBonus, getProficiencyBonus } from '../../utils/calculations'
 import { abbrOfKey } from '../../domain/attributes'
-import { getSpellcastingRules, getWarlockPactSlots, getClassSpellMath, getSpellSlots } from '../../utils/spellcasting'
+import { getSpellcastingRules, getWarlockPactSlots, getClassSpellMath, getSpellSlots, getSpellMathForSpell } from '../../utils/spellcasting'
 import { useClassSpells } from '../../hooks/useClassSpells'
 import { SpellDetailModal } from '../SpellDetailModal'
 import { ConfirmDialog } from '../../../../components/ui/ConfirmDialog'
@@ -87,12 +87,16 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
     }
 
     if (!mech) return effectDef ? { healTotal: 0, effectOffer } : null
+    // Magias de talento carregam atributo próprio (spec 2026-07-15): a CD, o
+    // ataque e o modificador saem da magia clicada, não do global. Sem isso o
+    // Guerreiro com Tocado pelas Fadas rolava Passo Nebuloso com CD 10.
+    const rowMath = getSpellMathForSpell(spell, attributes, profBonus, spellAbility)
     const plan = spellRollPlan(spell, mech, {
       slotLevel: pact ? pactSlots.slotLevel : slotLevel,
       characterLevel: totalLevel,
-      spellAttack,
-      spellMod,
-      spellDC: spellSaveDC,
+      spellAttack: rowMath?.attack ?? spellAttack,
+      spellMod:    rowMath?.mod    ?? spellMod,
+      spellDC:     rowMath?.save   ?? spellSaveDC,
     })
     if (!plan) return effectDef ? { healTotal: 0, effectOffer } : null
     const mode = event?.shiftKey ? 'adv' : event?.altKey ? 'dis' : undefined
@@ -482,6 +486,9 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
                 }
                 onDetail={() => setDetailSpell(spell)}
                 onRemove={spell.alwaysPrepared === true ? null : () => onRemoveSpell(spell.id)}
+                abilityOverride={spell.ability && spell.ability !== spellAbility
+                  ? getSpellMathForSpell(spell, attributes, profBonus, null)
+                  : null}
               />
             ))}
           </div>
@@ -546,7 +553,7 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   )
 }
 
-function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedToggle, onTogglePrepared, isConcentrating, canConcentrate, onToggleConcentration, slotLevels = [], slotMax, usedSlots = {}, canCast = true, hasMechanics, onCast, pactOption, onApplyHealing, onApplyEffect }) {
+function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedToggle, onTogglePrepared, isConcentrating, canConcentrate, onToggleConcentration, slotLevels = [], slotMax, usedSlots = {}, canCast = true, hasMechanics, onCast, pactOption, onApplyHealing, onApplyEffect, abilityOverride = null }) {
   const schoolAbbr = SCHOOL_ABBR[(spell.school || '').toLowerCase()] || (spell.school || '').slice(0, 3)
   const dimmed = showPreparedToggle && !isPrepared
   const [castOpen, setCastOpen] = useState(false)
@@ -620,6 +627,14 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
           </span>
         )}
         <span className="text-gray-600">{schoolAbbr}</span>
+        {abilityOverride && (
+          <span
+            className="text-amber-300/90 font-semibold"
+            title={`Magia de talento — usa ${abbrOfKey(abilityOverride.ability)} (CD ${abilityOverride.save}, ataque ${formatModifier(abilityOverride.attack)})`}
+          >
+            CD {abilityOverride.save} · {abbrOfKey(abilityOverride.ability)}
+          </span>
+        )}
         <span className="text-gray-600 text-xs">{spell.castingTime || ''}</span>
       </div>
       {canConcentrate && (
