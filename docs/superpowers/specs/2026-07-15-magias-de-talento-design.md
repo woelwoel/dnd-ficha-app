@@ -247,9 +247,23 @@ Três pontos, todos com merge idempotente:
    como "Talento:"). Lê `info.feats` (que já agrega talento racial + ASIs
    primário + ASIs de multiclasse).
 2. **Level-up**: `enrichWithFeatSpells({ patch, character, srdSpells })`
-   alimentando `bonusSpells` (que `applyLevelUp` já consome).
+   alimentando `bonusSpells` (magias novas) e `featSpellMerges` (magias já
+   conhecidas), ambos consumidos pelo `applyLevelUp`.
    **DIFERENÇA do irmão de subclasse**: NÃO retorna cedo quando
    `multiclassIndex != null` — ASI de multiclasse também vira talento.
+   O `existing` do enrich enxerga `character.spellcasting.spells` **E**
+   `patch.bonusSpells`: o enrich de subclasse roda ANTES e pode ter posto a
+   mesma magia lá; sem isso a ref do talento se perderia no `uniqueBy`
+   (first-wins) do `applyLevelUp`.
+
+   **Estado do level-up até o plano 2**: o patch do `LevelUpPanel` carrega
+   `featChosenAttr` mas ainda NÃO carrega `featSpellChoices` (o picker é do
+   plano 2). Degradação é limpa e intencional: os 5 talentos de magia FIXA
+   (Telepático, Telecinético, Teleporte das Fadas, Alta Magia Drow, Magia do
+   Elfo da Floresta) já funcionam ponta a ponta no level-up; os 4 que exigem
+   escolha (Iniciado em Magia, Conjurador de Ritual, Atirador de Magia,
+   Iniciado Artífice) não injetam nada até o picker existir. Tocado pelas
+   Fadas/Sombras injetam só a fixa.
 3. **Retrofit** (ficha existente): ver §6.
 
 **Merge, nunca skip**: se a magia já existe em `spellcasting.spells`
