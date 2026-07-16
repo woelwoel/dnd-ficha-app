@@ -285,8 +285,9 @@ function getGrantedSpellRefs(def, feat) {
  * então dois talentos concedendo a mesma magia (ex.: Passo Nebuloso via
  * Tocado pelas Fadas + Teleporte das Fadas) acumulam no mesmo objeto em vez
  * de duplicar. `featGrants` ACUMULA a referência (nunca sobrescreve);
- * `ability` só é setado se ainda ausente. Nada muda → retorna o MESMO
- * objeto `character` (identidade preservada, útil pra idempotência).
+ * `ability` é gravado APENAS na magia que o talento CRIA — no merge a magia
+ * mantém o atributo da fonte original. Nada muda → retorna o MESMO objeto
+ * `character` (identidade preservada, útil pra idempotência).
  *
  * Usado no build do wizard e no retrofit da ficha (plano 2).
  */
@@ -294,7 +295,9 @@ export function injectFeatSpells(character, srdSpells) {
   if (!character || !srdSpells?.length) return character
 
   const spells = character.spellcasting?.spells ?? []
-  const order = spells.map(s => s.index)
+  // Set: entrada com índice repetido (documento salvo pode ter) não pode
+  // virar duas linhas apontando pro MESMO objeto do `working`.
+  const order = [...new Set(spells.map(s => s.index))]
   const working = new Map(spells.map(s => [s.index, s]))
   let changed = false
 
@@ -302,6 +305,7 @@ export function injectFeatSpells(character, srdSpells) {
     refs.some(r => r.featIndex === featIndex && r.featGrant === grantIdx)
 
   for (const feat of character.info?.feats ?? []) {
+    if (!feat?.index) continue
     const def = getFeatSpellDef(feat.index)
     if (!def) continue
     const ability = resolveFeatAbility(def, feat)
@@ -313,10 +317,15 @@ export function injectFeatSpells(character, srdSpells) {
       if (cur) {
         const refs = cur.featGrants ?? []
         if (hasRef(refs, feat.index, ref.grantIdx)) continue   // idempotente
+        // NÃO grava `ability` no merge: a magia já existia por outra fonte
+        // (classe, subclasse, escolha do jogador) e o atributo de conjuração
+        // dela é o daquela fonte. Só a magia que o TALENTO cria carrega o
+        // `ability` do talento. Guardar por ausência não funcionaria:
+        // mapSrdSpellToCharacter nunca seta `ability`, então "ausente" é
+        // sempre verdadeiro e carimbaríamos INT no Enfeitiçar Pessoa do bardo.
         working.set(ref.index, {
           ...cur,
           featGrants: [...refs, { featIndex: feat.index, featGrant: ref.grantIdx }],
-          ...(cur.ability == null && ability ? { ability } : {}),
         })
         changed = true
         continue

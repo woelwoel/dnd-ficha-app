@@ -60,18 +60,53 @@ describe('injectFeatSpells', () => {
     const matches = next.spellcasting.spells.filter(s => s.index === 'passo-nebuloso')
     expect(matches).toHaveLength(1)
     expect(matches[0].featGrants).toEqual([{ featIndex: 'tocado-pelas-fadas', featGrant: 0 }])
-    expect(matches[0].ability).toBe('cha')
+    // ability NÃO é carimbada no merge — a magia é do juramento, atributo dele
+    expect(matches[0].ability).toBeUndefined()
     expect(matches[0].sourceLabel).toBe('Juramento: vinganca') // não sobrescreve
   })
 
-  it('MERGE não sobrescreve ability já existente', () => {
+  it('MERGE não carimba ability em magia que já existia por outra fonte', () => {
+    // Bardo que JÁ conhece Enfeitiçar Pessoa (CAR) pega Tocado pelas Fadas
+    // com INT: a magia dele continua sem `ability` própria e cai no atributo
+    // da classe. Carimbar INT aqui trocaria a CD dele silenciosamente.
+    const existing = { index: 'enfeiticar-pessoa', name: 'Enfeitiçar Pessoa', level: 1, source: 'PHB-PT' }
+    const c = makeChar(
+      [{ index: 'tocado-pelas-fadas', name: 'Tocado pelas Fadas', takenAtLevel: 4,
+         chosenAttr: 'int', spellChoices: { list: null, picks: [['enfeiticar-pessoa']] } }],
+      [existing],
+    )
+    const next = injectFeatSpells(c, allSpells)
+    const sp = next.spellcasting.spells.find(s => s.index === 'enfeiticar-pessoa')
+    expect(sp.ability).toBeUndefined()
+    // mas a proveniência entra — é o que dá o free cast
+    expect(sp.featGrants).toEqual([{ featIndex: 'tocado-pelas-fadas', featGrant: 1 }])
+  })
+
+  it('MERGE preserva ability pré-existente (não sobrescreve)', () => {
     const existing = { index: 'passo-nebuloso', name: 'Passo Nebuloso', level: 2, ability: 'int' }
     const c = makeChar(
       [{ index: 'tocado-pelas-fadas', name: 'Tocado pelas Fadas', takenAtLevel: 4, chosenAttr: 'cha' }],
       [existing],
     )
+    expect(injectFeatSpells(c, allSpells).spellcasting.spells[0].ability).toBe('int')
+  })
+
+  it('CREATE carimba ability do talento (Guerreiro sem conjuração)', () => {
+    const c = makeChar([{ index: 'tocado-pelas-fadas', name: 'Tocado pelas Fadas', takenAtLevel: 4, chosenAttr: 'cha' }])
+    expect(injectFeatSpells(c, allSpells).spellcasting.spells[0].ability).toBe('cha')
+  })
+
+  it('índice duplicado na entrada não vira linha duplicada na saída', () => {
+    const dup = { index: 'passo-nebuloso', name: 'Passo Nebuloso', level: 2 }
+    const c = makeChar([{ index: 'tocado-pelas-fadas', name: 'Tocado pelas Fadas', takenAtLevel: 4, chosenAttr: 'cha' }], [dup, { ...dup }])
     const next = injectFeatSpells(c, allSpells)
-    expect(next.spellcasting.spells[0].ability).toBe('int')
+    expect(next.spellcasting.spells.filter(s => s.index === 'passo-nebuloso')).toHaveLength(1)
+  })
+
+  it('entrada nula/sem index em info.feats é ignorada', () => {
+    const c = makeChar([null, { name: 'sem index' }, { index: 'telepatico', name: 'Telepático', takenAtLevel: 4, chosenAttr: 'wis' }])
+    expect(() => injectFeatSpells(c, allSpells)).not.toThrow()
+    expect(injectFeatSpells(c, allSpells).spellcasting.spells).toHaveLength(1)
   })
 
   it('DOIS talentos, mesma magia: featGrants ACUMULA (não sobrescreve)', () => {
