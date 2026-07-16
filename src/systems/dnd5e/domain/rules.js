@@ -547,7 +547,7 @@ export function applyLevelUp(character, patch) {
   const {
     newLevel, hpIncrease, attrBoosts,
     multiclassIndex, newChoices, bonusSpells, chosenFeat,
-    featChosenAttr,
+    featChosenAttr, featSpellChoices, featSpellMerges,
   } = patch
   const allowFeats = character.meta?.settings?.allowFeats ?? false
 
@@ -614,6 +614,7 @@ export function applyLevelUp(character, patch) {
         name:        chosenFeat.name,
         takenAtLevel: newLevel,
         ...(chosenFeat.attrBonus ? { chosenAttr: featChosenAttr ?? chosenFeat.attrBonus.choices[0] ?? null } : {}),
+        ...(featSpellChoices ? { spellChoices: featSpellChoices } : {}),
       }],
     }
   }
@@ -643,10 +644,23 @@ export function applyLevelUp(character, patch) {
     proficiencies = { ...proficiencies, expertiseSkills }
   }
 
-  const mergedSpells = uniqueBy(
+  let mergedSpells = uniqueBy(
     [...(character.spellcasting?.spells ?? []), ...(bonusSpells ?? [])],
     s => s.index
   )
+  // Magias que o personagem JÁ conhecia e que um talento novo também concede:
+  // ganham a ref anexada em `featGrants` (merge), nunca duplicam. Ver
+  // featSpells.js — a proveniência é lista porque dois talentos podem
+  // conceder a mesma magia com políticas diferentes.
+  if (Array.isArray(featSpellMerges) && featSpellMerges.length > 0) {
+    const mergeByIdx = new Map(featSpellMerges.map(m => [m.index, m]))
+    mergedSpells = mergedSpells.map(s => {
+      const m = mergeByIdx.get(s.index)
+      if (!m) return s
+      const { index: _index, ...fields } = m
+      return { ...s, ...fields }
+    })
+  }
 
   // Talento Robusto: +2 PV por nível ao ser adquirido (PHB p.170)
   const isRobusto = hasFeat && !hasAsi && chosenFeat.index === 'robusto'

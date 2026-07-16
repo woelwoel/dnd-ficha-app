@@ -27,7 +27,7 @@ injeção na criação (`injectSubclassSpellsAtBuild`) e no level-up
 | Iniciado em Magia | phb | `byList` | escolhe classe (bardo/bruxo/clérigo/druida/feiticeiro/mago) → 2 truques da lista + 1 magia de 1º da lista (freeCast long, slots **classMatch** — Sage Advice) |
 | Iniciado Artífice | tasha | `int` | escolhe 1 truque de artífice + 1 magia de 1º de artífice (freeCast long, slots always — texto explícito) |
 | Conjurador de Ritual | phb | `byList` | escolhe classe → 2 magias de 1º com descritor ritual (**ritualOnly**: sem slot, sem freeCast, sem tracker) |
-| Atirador de Magia | phb | `byList` | escolhe classe → 1 truque de **ataque** (derivado de `spell-mechanics attack: true`) |
+| Atirador de Magia | phb | `byList` | escolhe classe (**só bruxo/druida/feiticeiro/mago** — ver nota) → 1 truque de **ataque** (derivado de `spell-mechanics attack: true`) |
 | Magia do Elfo da Floresta | xanathar | `wis` | escolhe 1 truque de druida + fixas `passos-longos` e `passar-sem-rastro` (cada uma freeCast long, slots never) |
 | Telepático | tasha | `chosenAttr` | fixa `detectar-pensamentos` (freeCast long, slots always) |
 | Telecinético | tasha | `chosenAttr` | fixa `maos-magicas` (truque, à vontade por natureza) |
@@ -95,6 +95,24 @@ Predicados de `choose`: `level` (exato), `schools[]`, `fromList` (a lista da
 classe em `pickList` escolhida, via campo `classes` do catálogo), `ritual`,
 `attack` (lê `spell-mechanics-pt.json` — `attack: true` E `level === 0`).
 
+**Nota — `pickList` só oferece listas satisfazíveis.** RAW, o Atirador de
+Magia lista as seis classes conjuradoras, mas bardo e clérigo não têm
+truque com jogada de ataque (Chama Sagrada e Escárnio Viciante são
+salvaguarda), nem no catálogo nem no livro. Como o grant é `count: 1`,
+oferecer essas listas criaria um beco sem saída permanente no gate. A
+`pickList` do Atirador é `['bruxo','druida','feiticeiro','mago']`. As
+`pickList` de Iniciado em Magia e Conjurador de Ritual continuam com as
+seis (todas satisfazíveis; feiticeiro tem exatamente 2 rituais de 1º, o
+mínimo pro `count: 2`).
+
+**Nota — dois espaços de índice sobre `grants`.** `spellChoices.picks` é
+indexado por ORDINAL entre os grants `choose`; `featGrant` (persistido) e
+`resolveFeatSpellOptions(featIndex, grantIdx)` usam a posição ABSOLUTA em
+`grants`. Eles divergem sempre que uma fixa vem antes de um choose
+(Tocado pelas Fadas/Sombras). O helper exportado `getChooseGrants(featIndex)`
+→ `[{ grantIdx, ordinal, choose, grant }]` é o ÚNICO lugar que computa o
+ordinal; todo consumidor (gate, injeção, picker) passa por ele.
+
 `ability` resolve em três modos:
 - `'chosenAttr'` → o atributo que o próprio talento aumentou (`chosenAttr`
   do feat em `info.feats`);
@@ -104,14 +122,23 @@ classe em `pickList` escolhida, via campo `classes` do catálogo), `ritual`,
 
 API pública:
 - `getFeatSpellDef(featIndex)` → declaração ou null;
-- `resolveFeatSpellOptions(def, grantIdx, { list, srdSpells, spellMechanics })`
-  → candidatas do picker;
-- `getFeatSpellGrants(feat, srdSpells)` → lista resolvida de magias a
-  injetar (fixas + escolhidas), com `ability` resolvido;
+- `getChooseGrants(featIndex)` → `[{ grantIdx, ordinal, choose, grant }]`
+  (único lugar que computa o ordinal — ver nota acima);
+- `resolveFeatSpellOptions(featIndex, grantIdx, { list, srdSpells, spellMechanics })`
+  → candidatas do picker. `grantIdx` é ABSOLUTO em `grants`. **Lança** se o
+  grant tem `attack: true` e `spellMechanics` não veio — o dataset é `lazy`
+  no SrdProvider, então lista vazia silenciosa seria indistinguível de
+  "nenhuma opção válida" na UI. Quem chama gate no dataset, não no `[]`;
+- `injectFeatSpells(character, srdSpells)` → injeta as magias de todos os
+  talentos com merge idempotente (usado no build E no retrofit do plano 2);
 - `isFeatSpellChoiceComplete(featIndex, spellChoices)` → gating;
-- `getCastPolicy(spell, character)` → `{ slots: bool, freeCast, atWill,
-  ritualOnly }` resolvido AO VIVO (classMatch reavaliado a cada render —
-  multiclassar depois muda o resultado).
+- `getCastPolicy(spell, character)` → `{ slots: bool, ritualOnly: bool,
+  atWill: bool, freeCast: [{ recharge, trackerId }] }` resolvido AO VIVO
+  (classMatch reavaliado a cada render — multiclassar depois muda o
+  resultado). União sobre `featGrants` — ver nota do modelo de dados. Lança
+  em política de `slots` desconhecida (erro de declaração); `featGrant`
+  órfão (declaração editada, ficha salva) é ignorado com warn em DEV, e se
+  TODOS forem órfãos retorna null.
 
 ### 2. Modelo de dados
 
@@ -140,16 +167,36 @@ atual do `selectFeat`, agora coberto por teste).
 { ...mapSrdSpellToCharacter(srd),
   source: 'feat',
   sourceLabel: 'Talento: Tocado pelas Fadas',
-  featIndex: 'tocado-pelas-fadas',   // proveniência → política de conjuração
-  featGrant: 0,                       // posição do grant na declaração
+  featGrants: [                       // proveniência: LISTA, não escalar
+    { featIndex: 'tocado-pelas-fadas', featGrant: 0 },
+  ],
   ability: 'cha',                     // resolvido na injeção (estável)
   alwaysPrepared: true, prepared: true }
 ```
 
 Regras de conjuração (freeCast/atWill/ritualOnly/slots) **NÃO** são
-persistidas na magia — derivam ao vivo de `featIndex`+`featGrant` via
-`getCastPolicy`. Mudança futura na declaração corrige fichas existentes de
-graça; o doc do personagem guarda só escolhas e proveniência.
+persistidas na magia — derivam ao vivo de `featGrants` via `getCastPolicy`.
+Mudança futura na declaração corrige fichas existentes de graça; o doc do
+personagem guarda só escolhas e proveniência.
+
+**Por que `featGrants` é lista (e não `featIndex`/`featGrant` escalares).**
+Dois talentos podem conceder a MESMA magia com políticas diferentes, em
+builds legais:
+
+- `passo-nebuloso` — `tocado-pelas-fadas` (slots sim, grátis 1×/longo) +
+  `teleporte-das-fadas` (slots não, grátis 1×/**curto**): alto elfo com os
+  dois talentos.
+- `detectar-magia` — `alta-magia-drow` (à vontade) + `tocado-pelas-fadas`
+  escolhendo ela (é adivinhação de 1º): drow com os dois talentos.
+
+Com proveniência escalar, a política vira dependente da ORDEM em
+`info.feats`, e uma das ordens viola a regra (o jogador perde o "você também
+pode conjurar usando espaço de magia" que o Tocado pelas Fadas concede
+explicitamente). `getCastPolicy` faz a **união**: `slots` e `atWill` são OR,
+`ritualOnly` é AND (só é ritual-only se TODA concessão for), e `freeCast` é
+uma LISTA — cada concessão tem seu tracker independente (o alto elfo tem
+genuinamente dois Passos Nebulosos grátis: um por descanso curto, um por
+longo). A união é comutativa por construção.
 
 ### 3. Atributo de conjuração por magia
 
@@ -165,9 +212,20 @@ spellcasting.ability ?? atributo da classe (SRD)
 - o ctx de `spellRollPlan` em `handleCast` (`spellAttack`, `spellMod`,
   `spellDC`) passa a ser derivado da magia clicada, não global;
 - o cabeçalho da aba (CD/ataque geral) continua usando o atributo da classe;
-- linha de magia cujo `ability` difere do global exibe a CD própria
-  (ex.: "CD 14 · CAR") — sem isso a CD divergente ficaria invisível pro
-  jogador (necessidade de UX incluída no design, não pedida pelo dono).
+- linha de magia cujo `ability` difere do global exibe um badge — sem isso a
+  CD divergente ficaria invisível pro jogador (necessidade de UX incluída no
+  design, não pedida pelo dono). **O badge só afirma número quando existe
+  um**, lendo `spell-mechanics-pt.json`:
+  - tem salvaguarda → `CD 13 · CAR`
+  - tem jogada de ataque → `+5 · CAR`
+  - nenhum dos dois → só `CAR`
+
+  O terceiro caso não é hipotético: é o Passo Nebuloso, a magia-símbolo
+  deste projeto. Teleporte não tem rolagem, e a versão anterior desta spec
+  mandava exibir "CD 13 · CAR" nele — o jogador leria que Passo Nebuloso tem
+  CD 13. Badge não renderiza se `abbrOfKey(ability)` não resolver (dado
+  corrompido não vira separador solto). Durante o load do `spellMechanics`
+  (lazy) o badge degrada pro caso 3 e se corrige sozinho.
 
 Resolve o caso crítico: Guerreiro com Tocado pelas Fadas rolava CD 10
 (sem `spellcasting.ability`); agora rola com o atributo do talento.
@@ -182,9 +240,9 @@ sub-escolha de atributo:
 - fixas → chips read-only ("Passo Nebuloso ✓");
 - `pickList` → botões de classe primeiro; listas só aparecem após escolher;
 - cada grant `choose` → bloco com busca + contador ("2 de 2 truques");
-- lista vazia (ex.: Atirador de Magia + clérigo, que não tem truque de
-  ataque no catálogo) → mensagem explícita "esta classe não tem truque de
-  ataque no catálogo", nunca lista muda.
+- lista vazia nunca deve acontecer (as `pickList` só oferecem listas
+  satisfazíveis — ver nota do Atirador de Magia); se acontecer mesmo assim,
+  mostrar mensagem explícita em vez de lista muda.
 
 **Gating**: `isASIChoiceComplete` (class-helpers) e o caso `race` do
 `useBlockStatus` passam a exigir `isFeatSpellChoiceComplete` — mesmo
@@ -194,21 +252,49 @@ mecanismo que hoje trava sem o `featChosenAttr`.
 
 Três pontos, todos com merge idempotente:
 
-1. **Criação**: `injectFeatSpellsAtBuild(character, srdSpells)` no wrapper
-   de `build-character.js`, ao lado de `injectSubclassSpellsAtBuild`. Lê
-   `info.feats` (que já agrega talento racial + ASIs primário + ASIs de
-   multiclasse).
+1. **Criação**: `injectFeatSpells(character, srdSpells)` no wrapper de
+   `build-character.js`, DEPOIS de `injectSubclassSpellsAtBuild` (a ordem
+   importa: inverter faria a magia do juramento do paladino ser rotulada
+   como "Talento:"). Lê `info.feats` (que já agrega talento racial + ASIs
+   primário + ASIs de multiclasse).
 2. **Level-up**: `enrichWithFeatSpells({ patch, character, srdSpells })`
-   alimentando `bonusSpells` (que `applyLevelUp` já consome).
+   alimentando `bonusSpells` (magias novas) e `featSpellMerges` (magias já
+   conhecidas), ambos consumidos pelo `applyLevelUp`.
    **DIFERENÇA do irmão de subclasse**: NÃO retorna cedo quando
    `multiclassIndex != null` — ASI de multiclasse também vira talento.
+   O `existing` do enrich enxerga `character.spellcasting.spells` **E**
+   `patch.bonusSpells`: o enrich de subclasse roda ANTES e pode ter posto a
+   mesma magia lá; sem isso a ref do talento se perderia no `uniqueBy`
+   (first-wins) do `applyLevelUp`.
+
+   **Estado do level-up até o plano 2**: o patch do `LevelUpPanel` carrega
+   `featChosenAttr` mas ainda NÃO carrega `featSpellChoices` (o picker é do
+   plano 2). Degradação é limpa e intencional: os 5 talentos de magia FIXA
+   (Telepático, Telecinético, Teleporte das Fadas, Alta Magia Drow, Magia do
+   Elfo da Floresta) já funcionam ponta a ponta no level-up; os 4 que exigem
+   escolha (Iniciado em Magia, Conjurador de Ritual, Atirador de Magia,
+   Iniciado Artífice) não injetam nada até o picker existir. Tocado pelas
+   Fadas/Sombras injetam só a fixa.
 3. **Retrofit** (ficha existente): ver §6.
 
 **Merge, nunca skip**: se a magia já existe em `spellcasting.spells`
 (ex.: Passo Nebuloso via Juramento de Vingança + Tocado pelas Fadas), a
-entrada existente ganha `featIndex`/`featGrant` (e `ability` apenas se
-ausente) em vez de ser duplicada ou de a concessão ser descartada. O free
-cast do talento continua funcionando sobre a entrada única.
+entrada existente ganha a referência **anexada** a `featGrants` em vez de ser
+duplicada ou de a concessão ser descartada. O free cast do talento continua
+funcionando sobre a entrada única.
+
+**`ability` só na magia que o talento CRIA** — nunca no merge. Chave é
+proveniência, não ausência: `mapSrdSpellToCharacter` nunca grava `ability`,
+então "ausente" é sempre verdadeiro e carimbar no merge trocaria a CD de
+magia que o jogador já tinha por outra fonte. Um bardo com Enfeitiçar Pessoa
+(CAR) que pega Tocado pelas Fadas com INT continua conjurando pela CAR; só o
+Guerreiro, cujo Passo Nebuloso o talento criou do zero, carrega o `ability`
+do talento — que é exatamente o bug da CD 10 que este projeto conserta.
+
+**Anexar, não sobrescrever**: quando um SEGUNDO talento concede uma magia
+que já tem `featGrants`, a referência nova é ACRESCENTADA à lista (sem
+duplicar o par `featIndex`+`featGrant`). É o que torna a união do
+`getCastPolicy` alcançável — sobrescrever recriaria o bug de ordem.
 
 ### 6. Retrofit na ficha (fichas já salvas)
 
@@ -237,9 +323,10 @@ laço de classes), lendo `info.feats` + declarações:
   max: 1, used: 0, recharge: 'long', source: 'feat' }
 ```
 
-- um tracker POR MAGIA com `freeCast` (o texto diz "a mesma magia" —
-  contadores independentes); id incorpora o índice da magia (estável,
-  escolha é permanente);
+- um tracker por CONCESSÃO com `freeCast` (o texto diz "a mesma magia" —
+  contadores independentes); id = `feat-<talento>-<magia>`, estável porque a
+  escolha é permanente. Uma magia concedida por dois talentos gera DOIS
+  trackers — é exatamente o que `getCastPolicy` devolve em `freeCast[]`;
 - Teleporte das Fadas → `recharge: 'short'`;
 - `atWill` e `ritualOnly` e truques NÃO geram tracker;
 - invariantes existentes preservadas: `mergeFeatureUses` mantém `used`,
@@ -247,12 +334,20 @@ laço de classes), lendo `info.feats` + declarações:
 
 **Na linha da magia** (`SpellRow`), conforme `getCastPolicy`:
 
-- botão "1×/descanso" quando há `freeCast` com tracker disponível — gasta o
-  tracker, não o slot;
+- um botão "1×/descanso" POR entrada de `freeCast[]` com tracker disponível
+  — gasta o tracker, não o slot. Normalmente é zero ou um; o alto elfo com
+  Tocado pelas Fadas + Teleporte das Fadas vê dois (curto e longo);
 - botões de slot escondidos quando `slots` resolve false (`'never'`, ou
   `'classMatch'` sem classe correspondente) e quando `ritualOnly`;
 - botão "à vontade" (conjura sem gastar nada) quando `atWill`;
 - `ritualOnly` → apenas o caminho de ritual.
+
+**Limite conhecido do `ritualOnly`** (aceito neste escopo): ele expressa a
+RESTRIÇÃO ("só como ritual"), não a CAPACIDADE ("dá pra ritualizar"). Uma
+magia vinda do Conjurador de Ritual E do Iniciado em Magia volta
+`ritualOnly: false` — correto pra esconder/mostrar os botões de slot, que é
+tudo que a UI precisa hoje. Se algum dia o ritual virar botão próprio, isso
+pede um `ritual: bool` separado ao lado do `ritualOnly`.
 
 ## Fatiamento em 3 planos
 
@@ -261,9 +356,10 @@ laço de classes), lendo `info.feats` + declarações:
    criação e no level-up (merge + multiclasse). Entrega: magias fixas
    aparecem e rolam com CD certa em personagens novos e level-ups.
 2. **Pickers + gating + retrofit** — `FeatSpellPicker` inline nos dois
-   FeatPickers, gating no wizard (`useBlockStatus`/`isASIChoiceComplete`)
-   e no level-up, botão de retrofit na FeaturesTab. Entrega: escolhas
-   funcionam em todo lugar; o personagem do dono é consertado aqui.
+   FeatPickers (usando `getChooseGrants` pros dois índices), gating no
+   wizard (`useBlockStatus`/`isASIChoiceComplete`) e no level-up, botão de
+   retrofit na FeaturesTab. Entrega: escolhas funcionam em todo lugar; o
+   personagem do dono é consertado aqui.
 3. **Conjuração especial** — trackers, botão 1×/descanso, à vontade,
    ritual-only, política de slots. Entrega: os 11 talentos jogáveis por
    regra, incluindo não-conjuradores.

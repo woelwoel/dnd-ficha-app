@@ -366,3 +366,32 @@ export function getClassSpellMath(classIndex, totalProfBonus, attributes) {
     attack: totalProfBonus + mod,
   }
 }
+
+/**
+ * CD/ataque/mod de UMA magia. Magias concedidas por talento carregam
+ * `ability` próprio (spec 2026-07-15 — magias-talento) e vencem o atributo
+ * global do personagem; as demais caem no `fallbackAbilityKey` (atributo da
+ * classe). Retorna null quando não há atributo nenhum — ex.: Guerreiro sem
+ * nenhuma magia de talento não tem CD de conjuração.
+ *
+ * Sem isso, o Guerreiro com o talento "Tocado pelas Fadas" rolava o Passo
+ * Nebuloso com CD 10: `spellcasting.ability` é null pra não-conjurador e o
+ * score de atributo caía no default 10 (bug que originou este sub-projeto).
+ *
+ * @param {object|null} spell             - magia da ficha (pode ter `.ability`)
+ * @param {object} attributes             - { str, dex, con, int, wis, cha }
+ * @param {number} profBonus              - bônus de proficiência do personagem
+ * @param {string|null} [fallbackAbilityKey] - atributo global (classe) quando a magia não tem o seu
+ * @returns {{ ability:string, mod:number, save:number, attack:number }|null}
+ */
+export function getSpellMathForSpell(spell, attributes, profBonus, fallbackAbilityKey = null) {
+  const ability = spell?.ability ?? fallbackAbilityKey
+  if (!ability) return null
+  const mod = getModifier(attributes?.[ability] ?? 10)
+  return {
+    ability,
+    mod,
+    save:   8 + profBonus + mod,
+    attack: profBonus + mod,
+  }
+}
