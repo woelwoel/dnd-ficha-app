@@ -2,6 +2,7 @@
 import { generateId } from '../../../hooks/useCharacter'
 import { calculateMaxHpFromHitDice, racialHpPerLevel, getModifier, RACE_LANGUAGES } from '../../../utils/calculations'
 import { injectSubclassSpellsAtBuild } from '../../../domain/subclassSpells'
+import { injectFeatSpells } from '../../../domain/featSpells'
 import { classSpeedBonusMeters } from '../../../domain/rules'
 
 export function resolveClassEquipmentItems(draft, classEquipment) {
@@ -185,12 +186,14 @@ export function buildCharacter(draft, classData, classEquipment, srdSpells = nul
           ...(draft.racialFeat.featAttrBonus
             ? { chosenAttr: draft.racialFeat.featChosenAttr ?? draft.racialFeat.featAttrBonus.choices?.[0] ?? null }
             : {}),
+          ...(draft.racialFeat.featSpellChoices ? { spellChoices: draft.racialFeat.featSpellChoices } : {}),
         }] : []),
         ...Object.entries(draft.asiChoices ?? {})
           .filter(([, c]) => c?.type === 'feat' && c.featIndex)
           .map(([lvl, c]) => ({
             index: c.featIndex, name: c.featName, takenAtLevel: Number(lvl),
             ...(c.featAttrBonus ? { chosenAttr: c.featChosenAttr ?? c.featAttrBonus.choices?.[0] ?? null } : {}),
+            ...(c.featSpellChoices ? { spellChoices: c.featSpellChoices } : {}),
           })),
         ...((draft.multiclasses ?? []).flatMap(mc =>
           Object.entries(mc.asiChoices ?? {})
@@ -198,6 +201,7 @@ export function buildCharacter(draft, classData, classEquipment, srdSpells = nul
             .map(([lvl, c]) => ({
               index: c.featIndex, name: c.featName, takenAtLevel: Number(lvl), fromClass: mc.class,
               ...(c.featAttrBonus ? { chosenAttr: c.featChosenAttr ?? c.featAttrBonus.choices?.[0] ?? null } : {}),
+              ...(c.featSpellChoices ? { spellChoices: c.featSpellChoices } : {}),
             }))
         )),
       ],
@@ -290,11 +294,12 @@ export function buildCharacter(draft, classData, classEquipment, srdSpells = nul
 /**
  * Wrapper de buildCharacter que pós-processa o personagem para injetar
  * magias concedidas por subclasse (Cleric domain, Paladin oath, Druid
- * Land circle, Warlock patron). Separado de buildCharacter pra manter o
- * core puro/testável sem dependência da lista SRD.
+ * Land circle, Warlock patron) E por talento (spec 2026-07-15). Separado
+ * de buildCharacter pra manter o core puro/testável sem dependência da
+ * lista SRD.
  */
 export function buildCharacterWithSubclassSpells(draft, classData, classEquipment, srdSpells) {
   const base = buildCharacter(draft, classData, classEquipment)
   if (!srdSpells || srdSpells.length === 0) return base
-  return injectSubclassSpellsAtBuild(base, srdSpells)
+  return injectFeatSpells(injectSubclassSpellsAtBuild(base, srdSpells), srdSpells)
 }

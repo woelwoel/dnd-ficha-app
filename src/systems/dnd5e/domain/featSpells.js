@@ -12,11 +12,9 @@
  *
  * `picks[i]` do spellChoices alinha com o i-ésimo grant `choose` do talento
  * (ordinal entre os choose, não índice absoluto em grants).
- *
- * NOTA: `mapSrdSpellToCharacter` (de subclassSpells.js) será importado aqui
- * pela Task 4 (injectFeatSpells/enrichWithFeatSpells) — omitido neste PR
- * porque ainda não é usado (lint reclama de import sem uso).
  */
+
+import { mapSrdSpellToCharacter } from './subclassSpells'
 
 const SIX_CASTER_LISTS = ['bardo', 'bruxo', 'clerigo', 'druida', 'feiticeiro', 'mago']
 
@@ -257,5 +255,89 @@ export function getCastPolicy(spell, character) {
     ritualOnly: policies.every(p => p.ritualOnly),
     atWill:     policies.some(p => p.atWill),
     freeCast:   policies.map(p => p.freeCast).filter(Boolean),
+  }
+}
+
+/**
+ * Refs `{ index, grantIdx }` das magias concedidas por UM feat persistido.
+ * `grantIdx` é a posição ABSOLUTA em `def.grants` (o que vai pro `featGrant`
+ * persistido); `picks[ordinal]` alinha com o i-ésimo grant `choose`
+ * (getChooseGrants faz a tradução ordinal→grantIdx).
+ */
+function getGrantedSpellRefs(def, feat) {
+  const out = []
+  for (const [grantIdx, g] of def.grants.entries()) {
+    if (g.fixed) out.push({ index: g.fixed, grantIdx })
+  }
+  for (const { grantIdx, ordinal } of getChooseGrants(feat.index)) {
+    for (const idx of feat?.spellChoices?.picks?.[ordinal] ?? []) {
+      out.push({ index: idx, grantIdx })
+    }
+  }
+  return out
+}
+
+/**
+ * Injeta as magias de TODOS os talentos do personagem (info.feats) em
+ * `spellcasting.spells`. MERGE idempotente: usa um único mapa de trabalho
+ * (`working`, index→spell) seedado com as magias existentes — uma magia
+ * criada por um talento fica visível pro próximo talento do MESMO loop,
+ * então dois talentos concedendo a mesma magia (ex.: Passo Nebuloso via
+ * Tocado pelas Fadas + Teleporte das Fadas) acumulam no mesmo objeto em vez
+ * de duplicar. `featGrants` ACUMULA a referência (nunca sobrescreve);
+ * `ability` só é setado se ainda ausente. Nada muda → retorna o MESMO
+ * objeto `character` (identidade preservada, útil pra idempotência).
+ *
+ * Usado no build do wizard e no retrofit da ficha (plano 2).
+ */
+export function injectFeatSpells(character, srdSpells) {
+  if (!character || !srdSpells?.length) return character
+
+  const spells = character.spellcasting?.spells ?? []
+  const order = spells.map(s => s.index)
+  const working = new Map(spells.map(s => [s.index, s]))
+  let changed = false
+
+  const hasRef = (refs, featIndex, grantIdx) =>
+    refs.some(r => r.featIndex === featIndex && r.featGrant === grantIdx)
+
+  for (const feat of character.info?.feats ?? []) {
+    const def = getFeatSpellDef(feat.index)
+    if (!def) continue
+    const ability = resolveFeatAbility(def, feat)
+    const label = `Talento: ${feat.name}`
+
+    for (const ref of getGrantedSpellRefs(def, feat)) {
+      const cur = working.get(ref.index)
+
+      if (cur) {
+        const refs = cur.featGrants ?? []
+        if (hasRef(refs, feat.index, ref.grantIdx)) continue   // idempotente
+        working.set(ref.index, {
+          ...cur,
+          featGrants: [...refs, { featIndex: feat.index, featGrant: ref.grantIdx }],
+          ...(cur.ability == null && ability ? { ability } : {}),
+        })
+        changed = true
+        continue
+      }
+
+      const srd = srdSpells.find(s => s.index === ref.index)
+      if (!srd) continue
+      working.set(ref.index, {
+        ...mapSrdSpellToCharacter(srd, { source: 'feat', alwaysPrepared: true, label }),
+        featGrants: [{ featIndex: feat.index, featGrant: ref.grantIdx }],
+        ...(ability ? { ability } : {}),
+      })
+      order.push(ref.index)
+      changed = true
+    }
+  }
+
+  if (!changed) return character
+
+  return {
+    ...character,
+    spellcasting: { ...character.spellcasting, spells: order.map(idx => working.get(idx)) },
   }
 }
