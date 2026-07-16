@@ -129,8 +129,8 @@ API pública:
   grant tem `attack: true` e `spellMechanics` não veio — o dataset é `lazy`
   no SrdProvider, então lista vazia silenciosa seria indistinguível de
   "nenhuma opção válida" na UI. Quem chama gate no dataset, não no `[]`;
-- `getFeatSpellGrants(feat, srdSpells)` → lista resolvida de magias a
-  injetar (fixas + escolhidas), com `ability` resolvido;
+- `injectFeatSpells(character, srdSpells)` → injeta as magias de todos os
+  talentos com merge idempotente (usado no build E no retrofit do plano 2);
 - `isFeatSpellChoiceComplete(featIndex, spellChoices)` → gating;
 - `getCastPolicy(spell, character)` → `{ slots: bool, ritualOnly: bool,
   atWill: bool, freeCast: [{ recharge, trackerId }] }` resolvido AO VIVO
@@ -241,10 +241,11 @@ mecanismo que hoje trava sem o `featChosenAttr`.
 
 Três pontos, todos com merge idempotente:
 
-1. **Criação**: `injectFeatSpellsAtBuild(character, srdSpells)` no wrapper
-   de `build-character.js`, ao lado de `injectSubclassSpellsAtBuild`. Lê
-   `info.feats` (que já agrega talento racial + ASIs primário + ASIs de
-   multiclasse).
+1. **Criação**: `injectFeatSpells(character, srdSpells)` no wrapper de
+   `build-character.js`, DEPOIS de `injectSubclassSpellsAtBuild` (a ordem
+   importa: inverter faria a magia do juramento do paladino ser rotulada
+   como "Talento:"). Lê `info.feats` (que já agrega talento racial + ASIs
+   primário + ASIs de multiclasse).
 2. **Level-up**: `enrichWithFeatSpells({ patch, character, srdSpells })`
    alimentando `bonusSpells` (que `applyLevelUp` já consome).
    **DIFERENÇA do irmão de subclasse**: NÃO retorna cedo quando
@@ -253,9 +254,17 @@ Três pontos, todos com merge idempotente:
 
 **Merge, nunca skip**: se a magia já existe em `spellcasting.spells`
 (ex.: Passo Nebuloso via Juramento de Vingança + Tocado pelas Fadas), a
-entrada existente ganha a referência **anexada** a `featGrants` (e `ability`
-apenas se ausente) em vez de ser duplicada ou de a concessão ser descartada.
-O free cast do talento continua funcionando sobre a entrada única.
+entrada existente ganha a referência **anexada** a `featGrants` em vez de ser
+duplicada ou de a concessão ser descartada. O free cast do talento continua
+funcionando sobre a entrada única.
+
+**`ability` só na magia que o talento CRIA** — nunca no merge. Chave é
+proveniência, não ausência: `mapSrdSpellToCharacter` nunca grava `ability`,
+então "ausente" é sempre verdadeiro e carimbar no merge trocaria a CD de
+magia que o jogador já tinha por outra fonte. Um bardo com Enfeitiçar Pessoa
+(CAR) que pega Tocado pelas Fadas com INT continua conjurando pela CAR; só o
+Guerreiro, cujo Passo Nebuloso o talento criou do zero, carrega o `ability`
+do talento — que é exatamente o bug da CD 10 que este projeto conserta.
 
 **Anexar, não sobrescrever**: quando um SEGUNDO talento concede uma magia
 que já tem `featGrants`, a referência nova é ACRESCENTADA à lista (sem
