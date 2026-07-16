@@ -174,10 +174,16 @@ describe('resolveFeatSpellOptions', () => {
     expect(opts.every(s => s.ritual === true && s.level === 1 && (s.classes ?? []).includes('mago'))).toBe(true)
   })
 
-  it('atirador-de-magia com list bruxo: inclui rajada-mistica', () => {
+  it('atirador-de-magia com list bruxo: só os truques de ataque do bruxo', () => {
     const opts = resolveFeatSpellOptions('atirador-de-magia', 0, { list: 'bruxo', srdSpells: allSpells, spellMechanics })
-    expect(opts.some(s => s.index === 'rajada-mistica')).toBe(true)
-    expect(opts.every(s => s.level === 0)).toBe(true)
+    // Oráculo independente: os 3 truques de ataque do bruxo no catálogo atual.
+    // Sem o predicado `attack`, bruxo devolveria 20 truques.
+    expect(opts.map(s => s.index).sort()).toEqual(['pedra-encantada', 'rajada-mistica', 'toque-arrepiante'])
+  })
+
+  it('grant com attack:true sem spellMechanics → erro alto (não [] silencioso)', () => {
+    expect(() => resolveFeatSpellOptions('atirador-de-magia', 0, { list: 'bruxo', srdSpells: allSpells }))
+      .toThrow(/exige spellMechanics/)
   })
 
   it('GUARD-RAIL: conjunto de truques de ataque derivado do spell-mechanics', () => {

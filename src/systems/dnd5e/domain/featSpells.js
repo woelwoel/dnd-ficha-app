@@ -166,8 +166,8 @@ export function isFeatSpellChoiceComplete(featIndex, spellChoices) {
 
 /**
  * Candidatas de um grant `choose`. `list` = classe escolhida no pickList
- * (irrelevante quando o grant tem `list` fixa). `spellMechanics` só é
- * necessário para grants com `attack: true`.
+ * (irrelevante quando o grant tem `list` fixa). `spellMechanics` é
+ * OBRIGATÓRIO para grants com `attack: true` — sem ele, lança.
  */
 export function resolveFeatSpellOptions(featIndex, grantIdx, { list = null, srdSpells = [], spellMechanics = null } = {}) {
   const def = getFeatSpellDef(featIndex)
@@ -175,13 +175,19 @@ export function resolveFeatSpellOptions(featIndex, grantIdx, { list = null, srdS
   if (!grant?.choose) return []
   const c = grant.choose
   const wantList = c.list ?? (c.fromList ? list : null)
-  if ((c.fromList || c.list) && !wantList) return []
+  if (c.fromList && !wantList) return []
+  // `spellMechanics` é lazy (SrdProvider): `undefined` é estado real de
+  // carregamento. Falhar alto — lista vazia silenciosa é indistinguível de
+  // "nenhuma opção válida" na UI. Quem chama gate no dataset, não no [].
+  if (c.attack && !spellMechanics) {
+    throw new Error(`resolveFeatSpellOptions: grant com attack:true exige spellMechanics (${featIndex}#${grantIdx})`)
+  }
   return srdSpells.filter(s => {
-    if ((s.level ?? -1) !== c.level) return false
-    if (c.schools && !c.schools.includes(String(s.school ?? '').toLowerCase())) return false
+    if (s.level !== c.level) return false
+    if (c.schools && !c.schools.includes(s.school)) return false
     if (c.ritual && !s.ritual) return false
     if (wantList && !(s.classes ?? []).includes(wantList)) return false
-    if (c.attack && spellMechanics?.[s.index]?.attack !== true) return false
+    if (c.attack && spellMechanics[s.index]?.attack !== true) return false
     return true
   })
 }
