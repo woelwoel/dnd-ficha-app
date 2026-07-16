@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import {
   FEAT_SPELL_GRANTS, LIST_ABILITY, getFeatSpellDef, getChooseGrants,
-  resolveFeatAbility, isFeatSpellChoiceComplete,
+  resolveFeatAbility, isFeatSpellChoiceComplete, resolveFeatSpellOptions,
 } from '../../systems/dnd5e/domain/featSpells'
 
 const allSpells = [
@@ -11,6 +11,7 @@ const allSpells = [
   ...JSON.parse(readFileSync('public/srd-data/xanathar-spells-pt.json', 'utf8')),
 ]
 const spellIdxSet = new Set(allSpells.map(s => s.index))
+const spellMechanics = JSON.parse(readFileSync('public/srd-data/spell-mechanics-pt.json', 'utf8'))
 
 describe('FEAT_SPELL_GRANTS — sanidade das declarações', () => {
   it('cobre exatamente os 11 talentos da spec', () => {
@@ -130,5 +131,74 @@ describe('isFeatSpellChoiceComplete', () => {
     expect(isFeatSpellChoiceComplete('iniciado-em-magia', { list: null, picks: [['luz', 'raio-de-fogo'], ['escudo-arcano']] })).toBe(false)
     expect(isFeatSpellChoiceComplete('iniciado-em-magia', { list: 'mago', picks: [['luz'], ['escudo-arcano']] })).toBe(false)
     expect(isFeatSpellChoiceComplete('iniciado-em-magia', { list: 'mago', picks: [['luz', 'raio-de-fogo'], ['escudo-arcano']] })).toBe(true)
+  })
+})
+
+describe('resolveFeatSpellOptions', () => {
+  it('tocado-pelas-fadas: 1º círculo de adivinhação/encantamento (21 no catálogo atual)', () => {
+    const opts = resolveFeatSpellOptions('tocado-pelas-fadas', 1, { srdSpells: allSpells })
+    expect(opts.length).toBe(21)
+    expect(opts.every(s => s.level === 1)).toBe(true)
+    expect(opts.every(s => ['adivinhação', 'encantamento'].includes(s.school))).toBe(true)
+    expect(opts.some(s => s.index === 'enfeiticar-pessoa')).toBe(true)
+  })
+
+  it('tocado-pelas-sombras: ilusão/necromancia (9 no catálogo atual)', () => {
+    const opts = resolveFeatSpellOptions('tocado-pelas-sombras', 1, { srdSpells: allSpells })
+    expect(opts.length).toBe(9)
+  })
+
+  it('grant sem choose (fixa) → []', () => {
+    expect(resolveFeatSpellOptions('tocado-pelas-fadas', 0, { srdSpells: allSpells })).toEqual([])
+  })
+
+  it('fromList sem list escolhida → []', () => {
+    expect(resolveFeatSpellOptions('iniciado-em-magia', 0, { srdSpells: allSpells })).toEqual([])
+  })
+
+  it('iniciado-em-magia com list mago: truques da lista do mago', () => {
+    const opts = resolveFeatSpellOptions('iniciado-em-magia', 0, { list: 'mago', srdSpells: allSpells })
+    expect(opts.length).toBeGreaterThan(0)
+    expect(opts.every(s => s.level === 0 && (s.classes ?? []).includes('mago'))).toBe(true)
+  })
+
+  it('iniciado-artifice: list fixa artifice, 14 truques no catálogo atual', () => {
+    const opts = resolveFeatSpellOptions('iniciado-artifice', 0, { srdSpells: allSpells })
+    expect(opts.length).toBe(14)
+    expect(opts.every(s => (s.classes ?? []).includes('artifice'))).toBe(true)
+  })
+
+  it('conjurador-de-ritual com list mago: só rituais de 1º da lista', () => {
+    const opts = resolveFeatSpellOptions('conjurador-de-ritual', 0, { list: 'mago', srdSpells: allSpells })
+    expect(opts.length).toBeGreaterThan(0)
+    expect(opts.every(s => s.ritual === true && s.level === 1 && (s.classes ?? []).includes('mago'))).toBe(true)
+  })
+
+  it('atirador-de-magia com list bruxo: inclui rajada-mistica', () => {
+    const opts = resolveFeatSpellOptions('atirador-de-magia', 0, { list: 'bruxo', srdSpells: allSpells, spellMechanics })
+    expect(opts.some(s => s.index === 'rajada-mistica')).toBe(true)
+    expect(opts.every(s => s.level === 0)).toBe(true)
+  })
+
+  it('GUARD-RAIL: conjunto de truques de ataque derivado do spell-mechanics', () => {
+    // Congela o conjunto derivado (attack:true + level 0) — se o
+    // spell-mechanics mudar, este teste avisa. Ao falhar: imprima o
+    // recebido, confira nome a nome se são truques com jogada de ataque
+    // e atualize a lista conscientemente.
+    const cantripIdx = new Set(allSpells.filter(s => s.level === 0).map(s => s.index))
+    const derived = Object.entries(spellMechanics)
+      .filter(([idx, m]) => m && m.attack === true && cantripIdx.has(idx))
+      .map(([idx]) => idx)
+      .sort()
+    expect(derived).toHaveLength(9)
+    expect(derived).toContain('rajada-mistica')
+    expect(derived).toContain('raio-de-fogo')
+    expect(derived).toContain('toque-chocante')
+  })
+
+  it('magia-do-elfo-da-floresta: truques de druida', () => {
+    const opts = resolveFeatSpellOptions('magia-do-elfo-da-floresta', 0, { srdSpells: allSpells })
+    expect(opts.length).toBeGreaterThan(0)
+    expect(opts.every(s => s.level === 0 && (s.classes ?? []).includes('druida'))).toBe(true)
   })
 })

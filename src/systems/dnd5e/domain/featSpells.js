@@ -163,3 +163,25 @@ export function isFeatSpellChoiceComplete(featIndex, spellChoices) {
     ({ ordinal, choose }) => (spellChoices?.picks?.[ordinal]?.length ?? 0) === choose.count
   )
 }
+
+/**
+ * Candidatas de um grant `choose`. `list` = classe escolhida no pickList
+ * (irrelevante quando o grant tem `list` fixa). `spellMechanics` só é
+ * necessário para grants com `attack: true`.
+ */
+export function resolveFeatSpellOptions(featIndex, grantIdx, { list = null, srdSpells = [], spellMechanics = null } = {}) {
+  const def = getFeatSpellDef(featIndex)
+  const grant = def?.grants?.[grantIdx]
+  if (!grant?.choose) return []
+  const c = grant.choose
+  const wantList = c.list ?? (c.fromList ? list : null)
+  if ((c.fromList || c.list) && !wantList) return []
+  return srdSpells.filter(s => {
+    if ((s.level ?? -1) !== c.level) return false
+    if (c.schools && !c.schools.includes(String(s.school ?? '').toLowerCase())) return false
+    if (c.ritual && !s.ritual) return false
+    if (wantList && !(s.classes ?? []).includes(wantList)) return false
+    if (c.attack && spellMechanics?.[s.index]?.attack !== true) return false
+    return true
+  })
+}
