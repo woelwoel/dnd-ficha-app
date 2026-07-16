@@ -218,54 +218,137 @@ describe('getCastPolicy', () => {
     },
   })
 
-  it('magia sem featIndex → null (não é de talento)', () => {
+  it('magia sem featGrants → null (não é de talento)', () => {
     expect(getCastPolicy({ index: 'bola-de-fogo', level: 3 }, baseChar())).toBeNull()
   })
 
   it('ritualOnly: sem slots, sem freeCast', () => {
-    const p = getCastPolicy({ featIndex: 'conjurador-de-ritual', featGrant: 0, index: 'alarme', level: 1 }, baseChar())
-    expect(p).toEqual({ slots: false, ritualOnly: true, atWill: false, freeCast: null })
+    const p = getCastPolicy({ featGrants: [{ featIndex: 'conjurador-de-ritual', featGrant: 0 }], index: 'alarme', level: 1 }, baseChar())
+    expect(p).toEqual({ slots: false, ritualOnly: true, atWill: false, freeCast: [] })
   })
 
   it('atWill: detectar-magia da alta-magia-drow', () => {
-    const p = getCastPolicy({ featIndex: 'alta-magia-drow', featGrant: 0, index: 'detectar-magia', level: 1 }, baseChar())
-    expect(p).toEqual({ slots: false, ritualOnly: false, atWill: true, freeCast: null })
+    const p = getCastPolicy({ featGrants: [{ featIndex: 'alta-magia-drow', featGrant: 0 }], index: 'detectar-magia', level: 1 }, baseChar())
+    expect(p).toEqual({ slots: false, ritualOnly: false, atWill: true, freeCast: [] })
   })
 
   it('truque de talento → atWill', () => {
-    const p = getCastPolicy({ featIndex: 'telecinetico', featGrant: 0, index: 'maos-magicas', level: 0 }, baseChar())
-    expect(p).toEqual({ slots: false, ritualOnly: false, atWill: true, freeCast: null })
+    const p = getCastPolicy({ featGrants: [{ featIndex: 'telecinetico', featGrant: 0 }], index: 'maos-magicas', level: 0 }, baseChar())
+    expect(p).toEqual({ slots: false, ritualOnly: false, atWill: true, freeCast: [] })
   })
 
   it('freeCast long + slots always (tocado-pelas-fadas fixa)', () => {
-    const p = getCastPolicy({ featIndex: 'tocado-pelas-fadas', featGrant: 0, index: 'passo-nebuloso', level: 2 }, baseChar())
+    const p = getCastPolicy({ featGrants: [{ featIndex: 'tocado-pelas-fadas', featGrant: 0 }], index: 'passo-nebuloso', level: 2 }, baseChar())
     expect(p).toEqual({
       slots: true, ritualOnly: false, atWill: false,
-      freeCast: { recharge: 'long', trackerId: 'feat-tocado-pelas-fadas-passo-nebuloso' },
+      freeCast: [{ recharge: 'long', trackerId: 'feat-tocado-pelas-fadas-passo-nebuloso' }],
     })
   })
 
   it('slots never + freeCast short (teleporte-das-fadas)', () => {
-    const p = getCastPolicy({ featIndex: 'teleporte-das-fadas', featGrant: 0, index: 'passo-nebuloso', level: 2 }, baseChar())
+    const p = getCastPolicy({ featGrants: [{ featIndex: 'teleporte-das-fadas', featGrant: 0 }], index: 'passo-nebuloso', level: 2 }, baseChar())
     expect(p.slots).toBe(false)
-    expect(p.freeCast).toEqual({ recharge: 'short', trackerId: 'feat-teleporte-das-fadas-passo-nebuloso' })
+    expect(p.freeCast).toEqual([{ recharge: 'short', trackerId: 'feat-teleporte-das-fadas-passo-nebuloso' }])
   })
 
   it('classMatch negativo: guerreiro com iniciado-em-magia (mago) → sem slots', () => {
-    const p = getCastPolicy({ featIndex: 'iniciado-em-magia', featGrant: 1, index: 'escudo-arcano', level: 1 }, baseChar())
+    const p = getCastPolicy({ featGrants: [{ featIndex: 'iniciado-em-magia', featGrant: 1 }], index: 'escudo-arcano', level: 1 }, baseChar())
     expect(p.slots).toBe(false)
-    expect(p.freeCast?.recharge).toBe('long')
+    expect(p.freeCast).toEqual([{ recharge: 'long', trackerId: 'feat-iniciado-em-magia-escudo-arcano' }])
   })
 
   it('classMatch positivo pela classe primária', () => {
     const c = baseChar({ class: 'mago' })
-    const p = getCastPolicy({ featIndex: 'iniciado-em-magia', featGrant: 1, index: 'escudo-arcano', level: 1 }, c)
+    const p = getCastPolicy({ featGrants: [{ featIndex: 'iniciado-em-magia', featGrant: 1 }], index: 'escudo-arcano', level: 1 }, c)
     expect(p.slots).toBe(true)
   })
 
   it('classMatch positivo por multiclasse', () => {
     const c = baseChar({ multiclasses: [{ class: 'mago', level: 2 }] })
-    const p = getCastPolicy({ featIndex: 'iniciado-em-magia', featGrant: 1, index: 'escudo-arcano', level: 1 }, c)
+    const p = getCastPolicy({ featGrants: [{ featIndex: 'iniciado-em-magia', featGrant: 1 }], index: 'escudo-arcano', level: 1 }, c)
     expect(p.slots).toBe(true)
+  })
+
+  it('UNIÃO: Passo Nebuloso por Tocado pelas Fadas + Teleporte das Fadas', () => {
+    // Alto elfo com os dois talentos: slots (OR) + DOIS free casts independentes.
+    const spell = {
+      index: 'passo-nebuloso', level: 2,
+      featGrants: [
+        { featIndex: 'tocado-pelas-fadas', featGrant: 0 },   // slots always, long
+        { featIndex: 'teleporte-das-fadas', featGrant: 0 },  // slots never, short
+      ],
+    }
+    const p = getCastPolicy(spell, baseChar())
+    expect(p.slots).toBe(true) // Tocado pelas Fadas concede slot explicitamente
+    expect(p.freeCast).toEqual([
+      { recharge: 'long',  trackerId: 'feat-tocado-pelas-fadas-passo-nebuloso' },
+      { recharge: 'short', trackerId: 'feat-teleporte-das-fadas-passo-nebuloso' },
+    ])
+  })
+
+  it('UNIÃO é comutativa: ordem em featGrants não muda slots nem os trackers', () => {
+    const refs = [
+      { featIndex: 'tocado-pelas-fadas', featGrant: 0 },
+      { featIndex: 'teleporte-das-fadas', featGrant: 0 },
+    ]
+    const a = getCastPolicy({ index: 'passo-nebuloso', level: 2, featGrants: refs }, baseChar())
+    const b = getCastPolicy({ index: 'passo-nebuloso', level: 2, featGrants: [...refs].reverse() }, baseChar())
+    expect(a.slots).toBe(b.slots)
+    expect([...a.freeCast].sort((x, y) => x.trackerId.localeCompare(y.trackerId)))
+      .toEqual([...b.freeCast].sort((x, y) => x.trackerId.localeCompare(y.trackerId)))
+  })
+
+  it('UNIÃO: atWill do Alta Magia Drow + Tocado pelas Fadas escolhendo Detectar Magia', () => {
+    const p = getCastPolicy({
+      index: 'detectar-magia', level: 1,
+      featGrants: [
+        { featIndex: 'alta-magia-drow', featGrant: 0 },     // atWill
+        { featIndex: 'tocado-pelas-fadas', featGrant: 1 },  // slots always, freeCast long
+      ],
+    }, baseChar())
+    expect(p.atWill).toBe(true)
+    expect(p.slots).toBe(true)
+    expect(p.ritualOnly).toBe(false)
+    expect(p.freeCast).toEqual([{ recharge: 'long', trackerId: 'feat-tocado-pelas-fadas-detectar-magia' }])
+  })
+
+  it('ritualOnly é AND: uma concessão não-ritual destrava a magia', () => {
+    const p = getCastPolicy({
+      index: 'detectar-magia', level: 1,
+      featGrants: [
+        { featIndex: 'conjurador-de-ritual', featGrant: 0 }, // ritualOnly
+        { featIndex: 'tocado-pelas-fadas', featGrant: 1 },   // slots always
+      ],
+    }, baseChar())
+    expect(p.ritualOnly).toBe(false)
+    expect(p.slots).toBe(true)
+  })
+
+  it('featGrant órfão é ignorado; se TODOS forem órfãos → null', () => {
+    expect(getCastPolicy({ index: 'x', level: 1, featGrants: [{ featIndex: 'tocado-pelas-fadas', featGrant: 99 }] }, baseChar())).toBeNull()
+    expect(getCastPolicy({ index: 'x', level: 1, featGrants: [{ featIndex: 'inexistente', featGrant: 0 }] }, baseChar())).toBeNull()
+    // um órfão + um válido → o válido vale
+    const p = getCastPolicy({
+      index: 'passo-nebuloso', level: 2,
+      featGrants: [{ featIndex: 'tocado-pelas-fadas', featGrant: 99 }, { featIndex: 'tocado-pelas-fadas', featGrant: 0 }],
+    }, baseChar())
+    expect(p.slots).toBe(true)
+  })
+
+  it('política de slots desconhecida → erro alto (erro de declaração)', () => {
+    const orig = FEAT_SPELL_GRANTS['telepatico'].grants[0].slots
+    FEAT_SPELL_GRANTS['telepatico'].grants[0].slots = 'typo'
+    try {
+      expect(() => getCastPolicy({ index: 'detectar-pensamentos', level: 2, featGrants: [{ featIndex: 'telepatico', featGrant: 0 }] }, baseChar()))
+        .toThrow(/política de slots desconhecida/)
+    } finally {
+      FEAT_SPELL_GRANTS['telepatico'].grants[0].slots = orig
+    }
+  })
+
+  it('classMatch sem list escolhida → conservador, sem slots', () => {
+    const c = { info: { class: 'mago', multiclasses: [], feats: [{ index: 'iniciado-em-magia', name: 'Iniciado em Magia' }] } }
+    const p = getCastPolicy({ index: 'escudo-arcano', level: 1, featGrants: [{ featIndex: 'iniciado-em-magia', featGrant: 1 }] }, c)
+    expect(p.slots).toBe(false)
   })
 })

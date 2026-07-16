@@ -3,8 +3,9 @@
  *
  * Espelha o subclassSpells.js: declaração no domínio + injeção na criação
  * (build) e no level-up (bonusSpells). Diferenças importantes:
- *  - MERGE, nunca skip: magia já presente ganha proveniência do talento
- *    (featIndex/featGrant e ability se ausente) em vez de ser descartada;
+ *  - MERGE, nunca skip: magia já presente ACUMULA a proveniência do talento
+ *    (mais uma entrada em `featGrants`, e ability se ausente) em vez de ser
+ *    descartada — a mesma magia pode vir de mais de um talento;
  *  - roda TAMBÉM em level-up de multiclasse (ASI de MC pode virar talento);
  *  - regras de conjuração (freeCast/atWill/ritualOnly/slots) derivam AO VIVO
  *    das declarações via getCastPolicy — nunca são persistidas na magia.
@@ -193,35 +194,68 @@ export function resolveFeatSpellOptions(featIndex, grantIdx, { list = null, srdS
 }
 
 /**
- * Política de conjuração de uma magia de talento, derivada AO VIVO da
- * declaração (nada disso é persistido na magia). Retorna null para magias
- * que não vieram de talento — o caller usa o comportamento padrão.
- * `slots: 'classMatch'` reavalia a cada chamada: multiclassar depois de
- * pegar o talento muda o resultado (Sage Advice, Iniciado em Magia).
+ * Política de UM grant. Extraída de getCastPolicy pra que a união sobre
+ * `featGrants` reuse exatamente a mesma lógica por concessão.
  */
-export function getCastPolicy(spell, character) {
-  if (spell?.featIndex == null) return null
-  const def = getFeatSpellDef(spell.featIndex)
-  const grant = def?.grants?.[spell.featGrant]
-  if (!grant) return null
+function policyForGrant(ref, spell, character) {
+  const def = getFeatSpellDef(ref.featIndex)
+  const grant = def?.grants?.[ref.featGrant]
+  if (!grant) {
+    // `featGrant` é persistido: editar uma declaração pode orfanar fichas
+    // salvas. Avisa em DEV — throw derrubaria a ficha inteira (isso roda por
+    // linha, a cada render).
+    if (import.meta.env?.DEV) {
+      console.warn(`getCastPolicy: featGrant órfão (${ref.featIndex}#${ref.featGrant})`)
+    }
+    return null
+  }
   if (grant.ritualOnly) return { slots: false, ritualOnly: true, atWill: false, freeCast: null }
   if (grant.atWill)     return { slots: false, ritualOnly: false, atWill: true, freeCast: null }
-  if ((spell.level ?? 0) === 0) return { slots: false, ritualOnly: false, atWill: true, freeCast: null }
+  if (spell.level === 0) return { slots: false, ritualOnly: false, atWill: true, freeCast: null }
 
   const freeCast = grant.freeCast
-    ? { recharge: grant.freeCast, trackerId: `feat-${spell.featIndex}-${spell.index}` }
+    ? { recharge: grant.freeCast, trackerId: `feat-${ref.featIndex}-${spell.index}` }
     : null
 
   const policy = grant.slots ?? 'always'
   let slots
   if (policy === 'always') slots = true
   else if (policy === 'never') slots = false
-  else {
-    const feat = (character?.info?.feats ?? []).find(f => f.index === spell.featIndex)
+  else if (policy === 'classMatch') {
+    const feat = (character?.info?.feats ?? []).find(f => f.index === ref.featIndex)
     const list = feat?.spellChoices?.list ?? null
     const classes = [character?.info?.class, ...(character?.info?.multiclasses ?? []).map(m => m.class)]
       .filter(Boolean)
-    slots = !!list && classes.includes(list)
+    slots = classes.includes(list)
+  } else {
+    throw new Error(`getCastPolicy: política de slots desconhecida '${policy}' (${ref.featIndex}#${ref.featGrant})`)
   }
   return { slots, ritualOnly: false, atWill: false, freeCast }
+}
+
+/**
+ * Política de conjuração de uma magia de talento, derivada AO VIVO das
+ * declarações (nada disso é persistido na magia). Retorna null pra magia que
+ * não veio de talento — o caller usa o comportamento padrão.
+ *
+ * UNIÃO sobre `featGrants`: dois talentos podem conceder a MESMA magia com
+ * políticas diferentes (Passo Nebuloso via Tocado pelas Fadas + Teleporte das
+ * Fadas; Detectar Magia via Alta Magia Drow + Tocado pelas Fadas). O jogador
+ * tem os dois benefícios, então `slots`/`atWill` são OR, `ritualOnly` é AND
+ * (só é ritual-only se TODA concessão for), e `freeCast` é uma LISTA — cada
+ * concessão tem seu próprio tracker independente.
+ *
+ * `slots: 'classMatch'` reavalia a cada chamada: multiclassar depois de pegar
+ * o talento muda o resultado (Sage Advice, Iniciado em Magia).
+ */
+export function getCastPolicy(spell, character) {
+  const refs = spell?.featGrants ?? []
+  const policies = refs.map(ref => policyForGrant(ref, spell, character)).filter(Boolean)
+  if (policies.length === 0) return null
+  return {
+    slots:      policies.some(p => p.slots),
+    ritualOnly: policies.every(p => p.ritualOnly),
+    atWill:     policies.some(p => p.atWill),
+    freeCast:   policies.map(p => p.freeCast).filter(Boolean),
+  }
 }
