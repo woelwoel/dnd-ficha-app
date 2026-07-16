@@ -132,9 +132,13 @@ API pública:
 - `getFeatSpellGrants(feat, srdSpells)` → lista resolvida de magias a
   injetar (fixas + escolhidas), com `ability` resolvido;
 - `isFeatSpellChoiceComplete(featIndex, spellChoices)` → gating;
-- `getCastPolicy(spell, character)` → `{ slots: bool, freeCast, atWill,
-  ritualOnly }` resolvido AO VIVO (classMatch reavaliado a cada render —
-  multiclassar depois muda o resultado).
+- `getCastPolicy(spell, character)` → `{ slots: bool, ritualOnly: bool,
+  atWill: bool, freeCast: [{ recharge, trackerId }] }` resolvido AO VIVO
+  (classMatch reavaliado a cada render — multiclassar depois muda o
+  resultado). União sobre `featGrants` — ver nota do modelo de dados. Lança
+  em política de `slots` desconhecida (erro de declaração); `featGrant`
+  órfão (declaração editada, ficha salva) é ignorado com warn em DEV, e se
+  TODOS forem órfãos retorna null.
 
 ### 2. Modelo de dados
 
@@ -163,16 +167,36 @@ atual do `selectFeat`, agora coberto por teste).
 { ...mapSrdSpellToCharacter(srd),
   source: 'feat',
   sourceLabel: 'Talento: Tocado pelas Fadas',
-  featIndex: 'tocado-pelas-fadas',   // proveniência → política de conjuração
-  featGrant: 0,                       // posição do grant na declaração
+  featGrants: [                       // proveniência: LISTA, não escalar
+    { featIndex: 'tocado-pelas-fadas', featGrant: 0 },
+  ],
   ability: 'cha',                     // resolvido na injeção (estável)
   alwaysPrepared: true, prepared: true }
 ```
 
 Regras de conjuração (freeCast/atWill/ritualOnly/slots) **NÃO** são
-persistidas na magia — derivam ao vivo de `featIndex`+`featGrant` via
-`getCastPolicy`. Mudança futura na declaração corrige fichas existentes de
-graça; o doc do personagem guarda só escolhas e proveniência.
+persistidas na magia — derivam ao vivo de `featGrants` via `getCastPolicy`.
+Mudança futura na declaração corrige fichas existentes de graça; o doc do
+personagem guarda só escolhas e proveniência.
+
+**Por que `featGrants` é lista (e não `featIndex`/`featGrant` escalares).**
+Dois talentos podem conceder a MESMA magia com políticas diferentes, em
+builds legais:
+
+- `passo-nebuloso` — `tocado-pelas-fadas` (slots sim, grátis 1×/longo) +
+  `teleporte-das-fadas` (slots não, grátis 1×/**curto**): alto elfo com os
+  dois talentos.
+- `detectar-magia` — `alta-magia-drow` (à vontade) + `tocado-pelas-fadas`
+  escolhendo ela (é adivinhação de 1º): drow com os dois talentos.
+
+Com proveniência escalar, a política vira dependente da ORDEM em
+`info.feats`, e uma das ordens viola a regra (o jogador perde o "você também
+pode conjurar usando espaço de magia" que o Tocado pelas Fadas concede
+explicitamente). `getCastPolicy` faz a **união**: `slots` e `atWill` são OR,
+`ritualOnly` é AND (só é ritual-only se TODA concessão for), e `freeCast` é
+uma LISTA — cada concessão tem seu tracker independente (o alto elfo tem
+genuinamente dois Passos Nebulosos grátis: um por descanso curto, um por
+longo). A união é comutativa por construção.
 
 ### 3. Atributo de conjuração por magia
 
@@ -229,9 +253,14 @@ Três pontos, todos com merge idempotente:
 
 **Merge, nunca skip**: se a magia já existe em `spellcasting.spells`
 (ex.: Passo Nebuloso via Juramento de Vingança + Tocado pelas Fadas), a
-entrada existente ganha `featIndex`/`featGrant` (e `ability` apenas se
-ausente) em vez de ser duplicada ou de a concessão ser descartada. O free
-cast do talento continua funcionando sobre a entrada única.
+entrada existente ganha a referência **anexada** a `featGrants` (e `ability`
+apenas se ausente) em vez de ser duplicada ou de a concessão ser descartada.
+O free cast do talento continua funcionando sobre a entrada única.
+
+**Anexar, não sobrescrever**: quando um SEGUNDO talento concede uma magia
+que já tem `featGrants`, a referência nova é ACRESCENTADA à lista (sem
+duplicar o par `featIndex`+`featGrant`). É o que torna a união do
+`getCastPolicy` alcançável — sobrescrever recriaria o bug de ordem.
 
 ### 6. Retrofit na ficha (fichas já salvas)
 
@@ -260,9 +289,10 @@ laço de classes), lendo `info.feats` + declarações:
   max: 1, used: 0, recharge: 'long', source: 'feat' }
 ```
 
-- um tracker POR MAGIA com `freeCast` (o texto diz "a mesma magia" —
-  contadores independentes); id incorpora o índice da magia (estável,
-  escolha é permanente);
+- um tracker por CONCESSÃO com `freeCast` (o texto diz "a mesma magia" —
+  contadores independentes); id = `feat-<talento>-<magia>`, estável porque a
+  escolha é permanente. Uma magia concedida por dois talentos gera DOIS
+  trackers — é exatamente o que `getCastPolicy` devolve em `freeCast[]`;
 - Teleporte das Fadas → `recharge: 'short'`;
 - `atWill` e `ritualOnly` e truques NÃO geram tracker;
 - invariantes existentes preservadas: `mergeFeatureUses` mantém `used`,
@@ -270,12 +300,20 @@ laço de classes), lendo `info.feats` + declarações:
 
 **Na linha da magia** (`SpellRow`), conforme `getCastPolicy`:
 
-- botão "1×/descanso" quando há `freeCast` com tracker disponível — gasta o
-  tracker, não o slot;
+- um botão "1×/descanso" POR entrada de `freeCast[]` com tracker disponível
+  — gasta o tracker, não o slot. Normalmente é zero ou um; o alto elfo com
+  Tocado pelas Fadas + Teleporte das Fadas vê dois (curto e longo);
 - botões de slot escondidos quando `slots` resolve false (`'never'`, ou
   `'classMatch'` sem classe correspondente) e quando `ritualOnly`;
 - botão "à vontade" (conjura sem gastar nada) quando `atWill`;
 - `ritualOnly` → apenas o caminho de ritual.
+
+**Limite conhecido do `ritualOnly`** (aceito neste escopo): ele expressa a
+RESTRIÇÃO ("só como ritual"), não a CAPACIDADE ("dá pra ritualizar"). Uma
+magia vinda do Conjurador de Ritual E do Iniciado em Magia volta
+`ritualOnly: false` — correto pra esconder/mostrar os botões de slot, que é
+tudo que a UI precisa hoje. Se algum dia o ritual virar botão próprio, isso
+pede um `ritual: bool` separado ao lado do `ritualOnly`.
 
 ## Fatiamento em 3 planos
 
