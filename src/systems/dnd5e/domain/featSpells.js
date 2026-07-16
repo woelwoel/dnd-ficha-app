@@ -191,3 +191,37 @@ export function resolveFeatSpellOptions(featIndex, grantIdx, { list = null, srdS
     return true
   })
 }
+
+/**
+ * Política de conjuração de uma magia de talento, derivada AO VIVO da
+ * declaração (nada disso é persistido na magia). Retorna null para magias
+ * que não vieram de talento — o caller usa o comportamento padrão.
+ * `slots: 'classMatch'` reavalia a cada chamada: multiclassar depois de
+ * pegar o talento muda o resultado (Sage Advice, Iniciado em Magia).
+ */
+export function getCastPolicy(spell, character) {
+  if (spell?.featIndex == null) return null
+  const def = getFeatSpellDef(spell.featIndex)
+  const grant = def?.grants?.[spell.featGrant]
+  if (!grant) return null
+  if (grant.ritualOnly) return { slots: false, ritualOnly: true, atWill: false, freeCast: null }
+  if (grant.atWill)     return { slots: false, ritualOnly: false, atWill: true, freeCast: null }
+  if ((spell.level ?? 0) === 0) return { slots: false, ritualOnly: false, atWill: true, freeCast: null }
+
+  const freeCast = grant.freeCast
+    ? { recharge: grant.freeCast, trackerId: `feat-${spell.featIndex}-${spell.index}` }
+    : null
+
+  const policy = grant.slots ?? 'always'
+  let slots
+  if (policy === 'always') slots = true
+  else if (policy === 'never') slots = false
+  else {
+    const feat = (character?.info?.feats ?? []).find(f => f.index === spell.featIndex)
+    const list = feat?.spellChoices?.list ?? null
+    const classes = [character?.info?.class, ...(character?.info?.multiclasses ?? []).map(m => m.class)]
+      .filter(Boolean)
+    slots = !!list && classes.includes(list)
+  }
+  return { slots, ritualOnly: false, atWill: false, freeCast }
+}

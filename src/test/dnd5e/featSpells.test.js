@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import {
   FEAT_SPELL_GRANTS, LIST_ABILITY, getFeatSpellDef, getChooseGrants,
-  resolveFeatAbility, isFeatSpellChoiceComplete, resolveFeatSpellOptions,
+  resolveFeatAbility, isFeatSpellChoiceComplete, resolveFeatSpellOptions, getCastPolicy,
 } from '../../systems/dnd5e/domain/featSpells'
 
 const allSpells = [
@@ -206,5 +206,66 @@ describe('resolveFeatSpellOptions', () => {
     const opts = resolveFeatSpellOptions('magia-do-elfo-da-floresta', 0, { srdSpells: allSpells })
     expect(opts.length).toBeGreaterThan(0)
     expect(opts.every(s => s.level === 0 && (s.classes ?? []).includes('druida'))).toBe(true)
+  })
+})
+
+describe('getCastPolicy', () => {
+  const baseChar = (over = {}) => ({
+    info: {
+      class: 'guerreiro', multiclasses: [],
+      feats: [{ index: 'iniciado-em-magia', name: 'Iniciado em Magia', spellChoices: { list: 'mago', picks: [['luz', 'raio-de-fogo'], ['escudo-arcano']] } }],
+      ...over,
+    },
+  })
+
+  it('magia sem featIndex → null (não é de talento)', () => {
+    expect(getCastPolicy({ index: 'bola-de-fogo', level: 3 }, baseChar())).toBeNull()
+  })
+
+  it('ritualOnly: sem slots, sem freeCast', () => {
+    const p = getCastPolicy({ featIndex: 'conjurador-de-ritual', featGrant: 0, index: 'alarme', level: 1 }, baseChar())
+    expect(p).toEqual({ slots: false, ritualOnly: true, atWill: false, freeCast: null })
+  })
+
+  it('atWill: detectar-magia da alta-magia-drow', () => {
+    const p = getCastPolicy({ featIndex: 'alta-magia-drow', featGrant: 0, index: 'detectar-magia', level: 1 }, baseChar())
+    expect(p).toEqual({ slots: false, ritualOnly: false, atWill: true, freeCast: null })
+  })
+
+  it('truque de talento → atWill', () => {
+    const p = getCastPolicy({ featIndex: 'telecinetico', featGrant: 0, index: 'maos-magicas', level: 0 }, baseChar())
+    expect(p).toEqual({ slots: false, ritualOnly: false, atWill: true, freeCast: null })
+  })
+
+  it('freeCast long + slots always (tocado-pelas-fadas fixa)', () => {
+    const p = getCastPolicy({ featIndex: 'tocado-pelas-fadas', featGrant: 0, index: 'passo-nebuloso', level: 2 }, baseChar())
+    expect(p).toEqual({
+      slots: true, ritualOnly: false, atWill: false,
+      freeCast: { recharge: 'long', trackerId: 'feat-tocado-pelas-fadas-passo-nebuloso' },
+    })
+  })
+
+  it('slots never + freeCast short (teleporte-das-fadas)', () => {
+    const p = getCastPolicy({ featIndex: 'teleporte-das-fadas', featGrant: 0, index: 'passo-nebuloso', level: 2 }, baseChar())
+    expect(p.slots).toBe(false)
+    expect(p.freeCast).toEqual({ recharge: 'short', trackerId: 'feat-teleporte-das-fadas-passo-nebuloso' })
+  })
+
+  it('classMatch negativo: guerreiro com iniciado-em-magia (mago) → sem slots', () => {
+    const p = getCastPolicy({ featIndex: 'iniciado-em-magia', featGrant: 1, index: 'escudo-arcano', level: 1 }, baseChar())
+    expect(p.slots).toBe(false)
+    expect(p.freeCast?.recharge).toBe('long')
+  })
+
+  it('classMatch positivo pela classe primária', () => {
+    const c = baseChar({ class: 'mago' })
+    const p = getCastPolicy({ featIndex: 'iniciado-em-magia', featGrant: 1, index: 'escudo-arcano', level: 1 }, c)
+    expect(p.slots).toBe(true)
+  })
+
+  it('classMatch positivo por multiclasse', () => {
+    const c = baseChar({ multiclasses: [{ class: 'mago', level: 2 }] })
+    const p = getCastPolicy({ featIndex: 'iniciado-em-magia', featGrant: 1, index: 'escudo-arcano', level: 1 }, c)
+    expect(p.slots).toBe(true)
   })
 })
