@@ -124,8 +124,11 @@ API pública:
 - `getFeatSpellDef(featIndex)` → declaração ou null;
 - `getChooseGrants(featIndex)` → `[{ grantIdx, ordinal, choose, grant }]`
   (único lugar que computa o ordinal — ver nota acima);
-- `resolveFeatSpellOptions(def, grantIdx, { list, srdSpells, spellMechanics })`
-  → candidatas do picker;
+- `resolveFeatSpellOptions(featIndex, grantIdx, { list, srdSpells, spellMechanics })`
+  → candidatas do picker. `grantIdx` é ABSOLUTO em `grants`. **Lança** se o
+  grant tem `attack: true` e `spellMechanics` não veio — o dataset é `lazy`
+  no SrdProvider, então lista vazia silenciosa seria indistinguível de
+  "nenhuma opção válida" na UI. Quem chama gate no dataset, não no `[]`;
 - `getFeatSpellGrants(feat, srdSpells)` → lista resolvida de magias a
   injetar (fixas + escolhidas), com `ability` resolvido;
 - `isFeatSpellChoiceComplete(featIndex, spellChoices)` → gating;
