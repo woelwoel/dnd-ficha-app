@@ -74,7 +74,7 @@ Esta task entrega o caminho do **Tocado pelas Fadas** (fixa + 1 escolha por esco
 
 - [ ] **Step 1: Escrever os testes que falham**
 
-Siga o padrão de `src/test/dnd5e/feat-spell-math-badge.test.jsx` (já existe, do plano 1) pro setup do provider. Criar `src/test/dnd5e/FeatSpellPicker.test.jsx`:
+**LEIA `src/test/dnd5e/feat-spell-math-badge.test.jsx` ANTES** (já existe, do plano 1, e renderiza componente + `SrdProvider` real com sucesso). O código abaixo assume que envolver em `<SrdProvider>` puro basta no ambiente de teste — se o arquivo de referência tiver setup extra (stub de fetch, mock de setup file), copie o padrão dele e reporte o que precisou. Criar `src/test/dnd5e/FeatSpellPicker.test.jsx`:
 
 ```jsx
 import { describe, it, expect, vi } from 'vitest'
@@ -567,6 +567,14 @@ const LIST_LABEL = {
         if (choose.fromList && !value?.list) return null
 ```
 
+(e) `grantLabel` ganha o qualificador da lista FIXA — Iniciado Artífice e Elfo da Floresta mostram uma lista de magias sem dizer de onde ela vem. Acrescentar em `grantLabel`, ANTES do `if (choose.ritual)`:
+
+```jsx
+  if (choose.list) quals.push(`da lista de ${LIST_LABEL[choose.list] ?? choose.list}`)
+```
+
+(Os testes já planejados não quebram: as asserções usam regex de substring — `/Escolha 1 truque/` continua casando com "Escolha 1 truque da lista de Artífice". Grants `fromList` não ganham qualificador — os botões de classe logo acima já dizem a lista.)
+
 - [ ] **Step 4: Rodar e ver passar**
 
 Run: `npx vitest run src/test/dnd5e/FeatSpellPicker.test.jsx`
@@ -760,7 +768,10 @@ import { getFeatSpellDef } from '../../../domain/featSpells'
 Run: `npx vitest run src/test/wizardV2-class-helpers.test.js src/test/wizardV2-FeatPicker.test.jsx src/test/wizardV2-useBlockStatus.test.js src/test/wizardV2-RaceBlock.test.jsx src/test/wizardV2-ASIOrFeatPicker.test.jsx`
 Expected: PASS
 
-**Se algum teste PRÉ-EXISTENTE quebrar**, provavelmente é um fixture que usava um talento com magia e agora fica incompleto. Isso é a mudança de gate FUNCIONANDO. Conserte o fixture (troque pra `robusto`, ou acrescente `featSpellChoices` completo) — NÃO relaxe o `isASIChoiceComplete`. Reporte qual teste e o que fez.
+**Se algum teste PRÉ-EXISTENTE quebrar**, são dois modos possíveis — trate cada um do jeito certo e reporte qual teste e o que fez:
+
+1. **Gate incompleto**: um fixture usava talento com magia e agora fica incompleto. Isso é a mudança de gate FUNCIONANDO. Conserte o fixture (troque pra `robusto`, ou acrescente `featSpellChoices` completo) — NÃO relaxe o `isASIChoiceComplete`.
+2. **Throw de provider**: um teste renderiza `FeatPicker`/`RaceBlock`/`ASIOrFeatPicker` SEM `<SrdProvider>` e com um talento-de-magia selecionado → o `FeatSpellPicker` monta e `useSrd()` lança ("useSrd deve estar dentro de <SrdProvider>"). Só monta quando `value.featIndex` tem declaração — testes com `robusto`/`resilient` ou `value` null NÃO montam e ficam intactos. Conserte envolvendo o render em `<SrdProvider>` — NÃO condicione o mount do picker a ter provider.
 
 - [ ] **Step 6: Lint**
 
@@ -854,6 +865,8 @@ describe('FeatPicker do level-up — magias do talento', () => {
 ```
 
 Acrescente os imports que faltarem (`SrdProvider`, `vi`, `userEvent`) aos existentes — sem import duplicado do mesmo módulo.
+
+**ATENÇÃO aos testes PRÉ-EXISTENTES deste arquivo**: eles testam filtragem por pré-requisito de raça usando talentos raciais do Xanathar — e vários DESSES concedem magia (`alta-magia-drow`, `magia-do-elfo-da-floresta`, `teleporte-das-fadas`). Se algum teste existente renderiza o FeatPicker com `selectedFeatIdx` apontando pra um deles SEM `<SrdProvider>`, o `FeatSpellPicker` novo monta e `useSrd()` lança. Se só listam sem selecionar (`selectedFeatIdx: null`), nada monta e ficam intactos. Quebrou → envolva em `<SrdProvider>`; NÃO condicione o mount a ter provider. Reporte.
 
 - [ ] **Step 2: Rodar e ver falhar**
 
@@ -1230,7 +1243,11 @@ export function FeaturesTab({ character, featureUses, onSpend, onRegain, onSetCh
 ```jsx
           {featFeatures.length > 0 && (
             <>
-              {onSetFeatSpellChoices && pendingFeatSpells.length > 0 && (
+              {/* Gate no catálogo: clicar antes do SRD carregar chamaria
+                  injectFeatSpells com catálogo vazio — no-op SILENCIOSO
+                  (mesma classe de bug do spellMechanics lazy). Sem catálogo,
+                  sem botões. */}
+              {onSetFeatSpellChoices && srdSpells?.length > 0 && pendingFeatSpells.length > 0 && (
                 <div className="rounded-lg border border-amber-700/60 bg-amber-900/20 p-3 space-y-2">
                   <p className="text-xs text-amber-200">
                     {pendingFeatSpells.length === 1
@@ -1372,7 +1389,9 @@ describe('retrofit de magias de talento na aba Habilidades', () => {
     const onSetFeatSpellChoices = vi.fn()
     renderTab({ onSetFeatSpellChoices })
     await userEvent.click(await screen.findByRole('button', { name: /Habilidades/i }))
-    await userEvent.click(screen.getByRole('button', { name: /Escolher magias: Tocado pelas Fadas/ }))
+    // findBy: o aviso/botões só renderizam depois do catálogo SRD carregar
+    // (gate do srdSpells no bloco)
+    await userEvent.click(await screen.findByRole('button', { name: /Escolher magias: Tocado pelas Fadas/ }))
 
     // O modal abre com o picker
     expect(await screen.findByText(/Magias concedidas/)).toBeInTheDocument()
@@ -1430,6 +1449,7 @@ Expected: exit 0 nos arquivos que você tocou. Se `FeaturesTab.jsx` ou `MainBox.
   b) `getPendingFeatSpells`: `.some(r => !present.has(r.index))` → `.every(...)` — deve falhar algum teste
   c) `setFeatSpellChoices` no useCharacter: não chama `injectFeatSpells` (só grava o spellChoices) — reporte se algum teste pega. Se não, é buraco real; um teste honesto do updater vale a pena (renderize o hook ou teste o corpo isolado).
   d) o botão "Adicionar à ficha" sem o `disabled` — deve falhar o teste do disabled
+  e) remove o gate `srdSpells?.length > 0` do bloco do aviso — reporte se algum teste pega (provavelmente não: o provider dos testes carrega rápido demais pra flagrar a janela; diga plainly em vez de inventar teste de corrida)
 
 - [ ] **Step 12: Commit**
 
@@ -1446,7 +1466,7 @@ git commit -m "@ feat(feat-spells): retrofit das magias de talento na ficha salv
 - Modify: `src/systems/dnd5e/components/CharacterSheet/Spells.jsx:471`
 - Test: `src/test/dnd5e/feat-spell-math-badge.test.jsx` (já existe e JÁ renderiza `Spells` com sucesso — ACRESCENTE aqui, reaproveitando o fixture dele)
 
-`mapSrdSpellToCharacter` não gera `id` (nem o `PACT_FAMILIAR_SPELL`). A linha renderiza com `key={spell.id}` → `undefined`. Com UMA magia injetada por nível passa despercebido; o **Iniciado em Magia concede 2 truques** (mesmo nível, mesma aba) → duas `key={undefined}` = React reclama de key duplicada e pode reconciliar errado. É pré-existente (magias de subclasse têm o mesmo problema), mas este plano torna comum.
+`mapSrdSpellToCharacter` não gera `id` (nem o `PACT_FAMILIAR_SPELL`). A linha renderiza com `key={spell.id}` → `undefined`. **Atenção à semântica real do React:** `key={undefined}` é o MESMO que não passar key — o aviso emitido é o de key AUSENTE (`Each child in a list should have a unique "key" prop`), NÃO o de "same key", e a reconciliação vira posicional. O risco concreto: estado de linha (`castOpen`, resultado de cura pendente) grudando na linha errada quando a lista muda. Com UMA magia injetada por nível passa despercebido; o **Iniciado em Magia concede 2 truques** (mesmo nível, mesma aba) e torna isso comum. É pré-existente (magias de subclasse têm o mesmo problema).
 
 Não gere `id` no domínio: `generateId()` é não-determinístico e quebraria a identidade que `injectFeatSpells` preserva (os testes de idempotência usam `toBe`).
 
@@ -1455,11 +1475,13 @@ Não gere `id` no domínio: `generateId()` é não-determinístico e quebraria a
 Acrescentar em `src/test/dnd5e/feat-spell-math-badge.test.jsx`, reaproveitando o helper de render que o arquivo já tem (leia-o primeiro e siga o padrão dele):
 
 ```jsx
-describe('magias injetadas sem id não colidem na key do React', () => {
-  it('duas magias de talento no mesmo nível não geram aviso de key duplicada', async () => {
+describe('linha de magia injetada (sem id) tem key estável', () => {
+  it('duas magias de talento no mesmo nível não disparam aviso de key do React', async () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     // Iniciado em Magia (mago): dois truques, mesmo nível, ambos SEM `id` —
     // é o que injectFeatSpells produz (mapSrdSpellToCharacter não gera id).
+    // key={undefined} = sem key: o React avisa 'unique "key" prop' e cai em
+    // reconciliação posicional (estado de linha gruda na linha errada).
     const spells = [
       { index: 'luz', name: 'Luz', level: 0, school: 'evocação', source: 'feat',
         featGrants: [{ featIndex: 'iniciado-em-magia', featGrant: 0 }] },
@@ -1468,8 +1490,10 @@ describe('magias injetadas sem id não colidem na key do React', () => {
     ]
     // ... renderize Spells com essas magias usando o helper do arquivo ...
     await screen.findByText('Luz')
-    const dup = errSpy.mock.calls.some(c => String(c[0]).includes('same key'))
-    expect(dup).toBe(false)
+    // Cobre os DOIS avisos: key ausente (o que este bug dispara) e key
+    // duplicada (regressão futura de um `?? spell.index` errado).
+    const keyWarn = errSpy.mock.calls.some(c => /unique "key"|same key/i.test(String(c[0])))
+    expect(keyWarn).toBe(false)
     errSpy.mockRestore()
   })
 })
@@ -1477,10 +1501,12 @@ describe('magias injetadas sem id não colidem na key do React', () => {
 
 O comentário `// ... renderize ...` é o ÚNICO ponto do plano onde não dou o código pronto: o helper de render desse arquivo foi escrito por outro agente e eu não o tenho em contexto. Leia o arquivo, use o helper existente, e escreva a chamada. Se renderizar `Spells` com duas magias de nível 0 provar-se inviável, diga plainly e faça o fix sem esse teste (reportando que ficou sem pin) — não invente um teste contrived.
 
+**Se o teste continuar VERMELHO depois do fix**, o aviso pode estar vindo de OUTRA lista sem key na página (pré-existente) — verifique o component stack do aviso antes de concluir que o fix não funcionou, e reporte o que encontrou.
+
 - [ ] **Step 2: Rodar e ver falhar**
 
-Run: `npx vitest run src/test/dnd5e/feat-spells-retrofit.test.jsx`
-Expected: FAIL — React avisa de key duplicada
+Run: `npx vitest run src/test/dnd5e/feat-spell-math-badge.test.jsx`
+Expected: FAIL — o React emite o aviso de key AUSENTE (`Each child in a list should have a unique "key" prop`); `key={undefined}` é o mesmo que não passar key. Se o teste nascer VERDE, o red do TDD falhou: pare e investigue antes de implementar (imprima `errSpy.mock.calls` e ajuste o regex pra mensagem real).
 
 - [ ] **Step 3: Implementar**
 
