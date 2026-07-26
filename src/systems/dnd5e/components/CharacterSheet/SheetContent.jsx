@@ -317,6 +317,8 @@ export function SheetContent({ activeTab }) {
           onAddActiveEffect={addActiveEffect}
           focusSpellId={focusSpellId}
           onClearFocusSpell={clearFocusSpell}
+          featureUses={featureUses}
+          onSpendFeatureUse={(id) => spendFeatureUse(id, featureUses)}
         />
       </TabPanel>
     )

@@ -10,6 +10,7 @@ import { useDiceRoller } from '../../../../hooks/useDiceRoller'
 import { useLazySrdDataset } from '../../data/SrdProvider'
 import { spellRollPlan } from '../../domain/spellMechanics'
 import { resolveSpellDetail } from '../../domain/spellDetails'
+import { getSpellCastPolicy } from '../../domain/castPolicy'
 import { executeCastPlan } from './castSpell'
 import { buildEffectInstance } from '../../domain/activeEffects'
 import {
@@ -20,7 +21,7 @@ import {
   CASTING_TIME_LABELS,
 } from '../../utils/spellFilters'
 
-export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onTogglePrepared, onToggleSlot, onSetConcentration, onSpendPactSlot, onRegainPactSlot, onApplyHealing, onAddActiveEffect, focusSpellId, onClearFocusSpell }) {
+export function Spells({ character, attributes, level, profBonus: profBonusProp, classData, onUpdateSpellcasting, onAddSpell, onRemoveSpell, onTogglePrepared, onToggleSlot, onSetConcentration, onSpendPactSlot, onRegainPactSlot, onApplyHealing, onAddActiveEffect, focusSpellId, onClearFocusSpell, featureUses = [], onSpendFeatureUse }) {
   const [activeTab, setActiveTab] = useState(0)
   // Sub-aba da LISTA da ficha (Truques / Nível N) — separado do `activeTab`,
   // que controla o nível navegado no catálogo/picker.
@@ -65,8 +66,11 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
    * Retorna { healTotal, effectOffer } pro SpellRow exibir os botões (ou null
    * se a magia não tem mecânica nem efeito).
    */
-  function handleCast(spell, { slotLevel = null, pact = false, event = null } = {}) {
-    if (pact) {
+  function handleCast(spell, { slotLevel = null, pact = false, freeUse = null, event = null } = {}) {
+    if (freeUse) {
+      // Uso concedido por traço racial/talento: gasta o tracker, não o espaço.
+      onSpendFeatureUse?.(freeUse.trackerId)
+    } else if (pact) {
       if (!pactSlots) return null
       onSpendPactSlot?.(pactSlots.qty)
     } else if (slotLevel != null) {
@@ -98,7 +102,9 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
     // plano 3), então nenhum teste pega essa regressão — mas ela é real.
     const rowMath = getSpellMathForSpell(spell, attributes, profBonus, spellAbility)
     const plan = spellRollPlan(spell, mech, {
-      slotLevel: pact ? pactSlots.slotLevel : slotLevel,
+      // O uso grátis conjura no nível que a declaração manda (Repreensão
+      // Infernal do tiefling sai como 2º nível, não como 1º).
+      slotLevel: freeUse ? freeUse.castAtLevel : (pact ? pactSlots.slotLevel : slotLevel),
       characterLevel: totalLevel,
       spellAttack: rowMath?.attack ?? spellAttack,
       spellMod:    rowMath?.mod    ?? spellMod,
@@ -498,6 +504,8 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
                     ? onSetConcentration?.(null)
                     : onSetConcentration?.(spell)
                 }
+                castPolicy={getSpellCastPolicy(spell, character)}
+                freeUses={featureUses}
                 onDetail={() => openSpellDetail(spell)}
                 onRemove={spell.alwaysPrepared === true ? null : () => onRemoveSpell(spell.id)}
                 abilityOverride={spell.ability && spell.ability !== spellAbility
@@ -576,24 +584,33 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   )
 }
 
-function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedToggle, onTogglePrepared, isConcentrating, canConcentrate, onToggleConcentration, slotLevels = [], slotMax, usedSlots = {}, canCast = true, hasMechanics, onCast, pactOption, onApplyHealing, onApplyEffect, abilityOverride = null }) {
+function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedToggle, onTogglePrepared, isConcentrating, canConcentrate, onToggleConcentration, slotLevels = [], slotMax, usedSlots = {}, canCast = true, hasMechanics, onCast, pactOption, onApplyHealing, onApplyEffect, abilityOverride = null, castPolicy = null, freeUses = [] }) {
   const schoolAbbr = SCHOOL_ABBR[(spell.school || '').toLowerCase()] || (spell.school || '').slice(0, 3)
   const dimmed = showPreparedToggle && !isPrepared
   const [castOpen, setCastOpen] = useState(false)
   const [castedAt, setCastedAt] = useState(null)
   const [pendingHeal, setPendingHeal] = useState(null)
   const [pendingEffect, setPendingEffect] = useState(null)
-  // Slots disponíveis para esta magia: nível ≥ nível da magia E sobrando ≥ 1
-  const availableSlots = spell.level > 0 && canCast
+  // Slots disponíveis para esta magia: nível ≥ nível da magia E sobrando ≥ 1.
+  // `castPolicy.slots === false` (magia que SÓ existe pelo traço/talento)
+  // esconde os espaços — o traço não dá acesso a eles.
+  const slotsAllowed = castPolicy ? castPolicy.slots : true
+  const availableSlots = spell.level > 0 && canCast && slotsAllowed
     ? slotLevels.filter(sl => sl >= spell.level && ((slotMax?.(sl) ?? 0) - (usedSlots[sl] || 0)) > 0)
     : []
   const pactAvailable = spell.level > 0 && canCast && pactOption
     && pactOption.remaining > 0 && pactOption.slotLevel >= spell.level
+  // Usos grátis (1×/descanso) desta magia, com o que sobrou de cada tracker.
+  const freeOptions = (castPolicy?.freeCast ?? []).map(fc => {
+    const tracker = freeUses.find(u => u.id === fc.trackerId)
+    return { ...fc, remaining: tracker ? Math.max(0, (tracker.max ?? 1) - (tracker.used ?? 0)) : 0 }
+  })
+  const hasFreeOption = spell.level > 0 && canCast && freeOptions.length > 0
 
-  function castAt(slotLevel, e, { pact = false } = {}) {
-    const result = onCast?.({ slotLevel: pact ? null : slotLevel, pact, event: e })
+  function castAt(slotLevel, e, { pact = false, freeUse = null } = {}) {
+    const result = onCast?.({ slotLevel: pact || freeUse ? null : slotLevel, pact, freeUse, event: e })
     setCastOpen(false)
-    setCastedAt(slotLevel)
+    setCastedAt(freeUse ? freeUse.castAtLevel : slotLevel)
     setTimeout(() => setCastedAt(null), 1800)
     if (result?.healTotal > 0) {
       setPendingHeal(result.healTotal)
@@ -711,17 +728,17 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
       )}
       {spell.level > 0 && (
         <button
-          onClick={() => (availableSlots.length > 0 || pactAvailable) && setCastOpen(v => !v)}
-          disabled={!canCast || (availableSlots.length === 0 && !pactAvailable)}
+          onClick={() => (availableSlots.length > 0 || pactAvailable || hasFreeOption) && setCastOpen(v => !v)}
+          disabled={!canCast || (availableSlots.length === 0 && !pactAvailable && !hasFreeOption)}
           title={
             !canCast
               ? 'Magia não está preparada'
-              : (availableSlots.length === 0 && !pactAvailable)
+              : (availableSlots.length === 0 && !pactAvailable && !hasFreeOption)
                 ? 'Sem espaços disponíveis'
                 : 'Conjurar (escolher nível do espaço)'
           }
           className={`flex-shrink-0 inline-flex items-center justify-center text-xs px-1.5 py-1 rounded border transition-colors ${
-            (availableSlots.length > 0 || pactAvailable) && canCast
+            (availableSlots.length > 0 || pactAvailable || hasFreeOption) && canCast
               ? 'border-amber-700 bg-amber-900/20 text-amber-300 hover:bg-amber-900/40'
               : 'border-gray-700 text-gray-600 cursor-not-allowed'
           }`}
@@ -769,9 +786,26 @@ function SpellRow({ spell, onDetail, onRemove, isPrepared = true, showPreparedTo
         </span>
       )}
     </div>
-    {castOpen && (availableSlots.length > 0 || pactAvailable) && (
+    {castOpen && (availableSlots.length > 0 || pactAvailable || hasFreeOption) && (
       <div className="flex flex-wrap gap-1 mt-1 pt-1.5 border-t border-gray-700/60">
         <span className="text-xs text-gray-500 self-center mr-1">Conjurar em:</span>
+        {freeOptions.map(fc => (
+          <button
+            key={fc.trackerId}
+            onClick={(e) => fc.remaining > 0 && castAt(null, e, { freeUse: fc })}
+            disabled={fc.remaining === 0}
+            title={fc.remaining > 0
+              ? `${fc.label} — uso grátis, recupera em descanso ${fc.recharge === 'short' ? 'curto' : 'longo'}`
+              : `${fc.label} — uso já gasto, volta no descanso ${fc.recharge === 'short' ? 'curto' : 'longo'}`}
+            className={`text-xs px-2 py-0.5 rounded border font-mono transition-colors ${
+              fc.remaining > 0
+                ? 'border-emerald-600 bg-emerald-900/20 text-emerald-300 hover:bg-emerald-900/40'
+                : 'border-gray-700 bg-gray-900 text-gray-600 cursor-not-allowed'
+            }`}
+          >
+            1×/desc. {fc.recharge === 'short' ? 'curto' : 'longo'} ({fc.remaining})
+          </button>
+        ))}
         {availableSlots.map(sl => {
           const remaining = (slotMax?.(sl) ?? 0) - (usedSlots[sl] || 0)
           const isUpcast  = sl > spell.level

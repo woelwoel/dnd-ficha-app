@@ -17,6 +17,7 @@ import { isSheetReadOnly } from './sheet-access'
 import { PrintView } from '../PrintView/PrintView'
 import { PrintPreviewModal } from '../PrintView/PrintPreviewModal'
 import { defaultClassFeatureUses, mergeFeatureUses } from '../../domain/rules'
+import { specialCastingUses } from '../../domain/castPolicy'
 import { SheetV2 } from './v2/SheetV2'
 import { isSheetV2Enabled } from './v2/flag'
 
@@ -228,8 +229,14 @@ function SheetBody({ initialCharacter, adminContext = false, onBack }) {
   }
 
   // featureUses é derivado de character — memo para evitar recalcular nos filhos.
+  // `specialCastingUses` acrescenta os usos 1×/descanso de magia racial e de
+  // talento; mora fora de `defaultClassFeatureUses` pra não fechar ciclo de
+  // import (rules → subclassSpells → featSpells → rules).
   const featureUses = useMemo(
-    () => mergeFeatureUses(character.combat?.classFeatureUses ?? [], defaultClassFeatureUses(character, classChoices)),
+    () => mergeFeatureUses(character.combat?.classFeatureUses ?? [], [
+      ...defaultClassFeatureUses(character, classChoices),
+      ...specialCastingUses(character),
+    ]),
     [character, classChoices],
   )
 
