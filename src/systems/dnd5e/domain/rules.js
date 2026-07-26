@@ -937,11 +937,17 @@ export function mergeFeatureUses(existing = [], next = []) {
  * Útil após level up ou troca de atributos.
  */
 export function syncClassFeatureUses(character) {
-  const next = defaultClassFeatureUses(character)
-  const merged = mergeFeatureUses(character.combat?.classFeatureUses ?? [], next)
+  const persisted = character.combat?.classFeatureUses ?? []
+  const merged = mergeFeatureUses(persisted, defaultClassFeatureUses(character))
+  // Trackers que os defaults de classe NÃO conhecem (subclasse, que depende de
+  // `classChoices`; conjuração especial de raça/talento, que vive em
+  // `castPolicy`) são preservados — mesma regra que `resolveFeatureUseList` já
+  // aplica no hook. Sem isto, subir de nível apagaria o uso gasto do traço.
+  const known = new Set(merged.map(u => u.id))
+  const extras = persisted.filter(u => !known.has(u.id))
   return {
     ...character,
-    combat: { ...character.combat, classFeatureUses: merged },
+    combat: { ...character.combat, classFeatureUses: [...merged, ...extras] },
   }
 }
 

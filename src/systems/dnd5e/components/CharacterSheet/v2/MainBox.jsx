@@ -136,6 +136,8 @@ export function MainBox({ activeTab, onTabChange, hideTablist = false }) {
             onAddActiveEffect={addActiveEffect}
             focusSpellId={focusSpellId}
             onClearFocusSpell={clearFocusSpell}
+            featureUses={featureUses}
+            onSpendFeatureUse={id => spendFeatureUse(id, featureUses)}
           />
         )}
 

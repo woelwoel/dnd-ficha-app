@@ -212,7 +212,11 @@ function policyForGrant(ref, spell, character) {
   if (spell.level === 0) return { slots: false, ritualOnly: false, atWill: true, freeCast: null }
 
   const freeCast = grant.freeCast
-    ? { recharge: grant.freeCast, trackerId: `feat-${ref.featIndex}-${spell.index}` }
+    ? {
+        recharge: grant.freeCast,
+        trackerId: `feat-${ref.featIndex}-${spell.index}`,
+        featIndex: ref.featIndex, // rótulo do tracker + origem do uso na UI
+      }
     : null
 
   const policy = grant.slots ?? 'always'

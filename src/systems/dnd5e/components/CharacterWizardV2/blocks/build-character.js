@@ -4,6 +4,7 @@ import { calculateMaxHpFromHitDice, racialHpPerLevel, getModifier, RACE_LANGUAGE
 import { injectSubclassSpellsAtBuild } from '../../../domain/subclassSpells'
 import { injectFeatSpells } from '../../../domain/featSpells'
 import { resolveSpellDetails } from '../../../domain/spellDetails'
+import { injectRacialSpells } from '../../../domain/racialSpells'
 import { classSpeedBonusMeters } from '../../../domain/rules'
 
 export function resolveClassEquipmentItems(draft, classEquipment) {
@@ -302,7 +303,10 @@ export function buildCharacter(draft, classData, classEquipment, srdSpells = nul
 export function buildCharacterWithSubclassSpells(draft, classData, classEquipment, srdSpells) {
   const base = buildCharacter(draft, classData, classEquipment)
   if (!srdSpells || srdSpells.length === 0) return base
-  const withSpells = injectFeatSpells(injectSubclassSpellsAtBuild(base, srdSpells), srdSpells)
+  const withSpells = injectRacialSpells(
+    injectFeatSpells(injectSubclassSpellsAtBuild(base, srdSpells), srdSpells),
+    srdSpells,
+  )
   // Truque racial e familiar do pacto nascem como objetos mínimos aqui dentro
   // (o wizard não tem o catálogo na mão) — completa antes de gravar.
   return {
