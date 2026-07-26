@@ -9,6 +9,7 @@ import { Icon } from '../../../../components/ui/Icon'
 import { useDiceRoller } from '../../../../hooks/useDiceRoller'
 import { useLazySrdDataset } from '../../data/SrdProvider'
 import { spellRollPlan } from '../../domain/spellMechanics'
+import { resolveSpellDetail } from '../../domain/spellDetails'
 import { executeCastPlan } from './castSpell'
 import { buildEffectInstance } from '../../domain/activeEffects'
 import {
@@ -112,8 +113,16 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   // Alma Favorecida (Feiticeiro/XGE) também escolhe da lista de Clérigo.
   const isAlmaFavorecida = classIndex === 'feiticeiro'
     && character.info?.chosenFeatures?.sorcerous_origin === 'alma-favorecida'
-  const { classSpells, levelData, availableTabs } =
+  const { allSpells, classSpells, levelData, availableTabs } =
     useClassSpells(classIndex, level, isAlmaFavorecida ? { extraClasses: ['clerigo'] } : undefined)
+
+  // Magias concedidas por feature (truque racial, familiar do pacto, Consciência
+  // Primordial) são gravadas como objetos mínimos, com uma linha de resumo no
+  // lugar do texto do livro. Completa contra o catálogo na hora de exibir —
+  // assim fichas JÁ SALVAS também ganham a descrição, sem migração.
+  function openSpellDetail(spell) {
+    setDetailSpell(resolveSpellDetail(spell, allSpells))
+  }
 
   const rules = useMemo(
     () => getSpellcastingRules(classIndex, level, attributes, levelData),
@@ -130,7 +139,7 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   useEffect(() => {
     if (!focusSpellId) return
     const match = mySpells.find(s => s.id === focusSpellId || s.index === focusSpellId)
-    if (match) setDetailSpell(match)
+    if (match) openSpellDetail(match)
     onClearFocusSpell?.()
     // Intencional: só dispara quando focusSpellId muda. mySpells/onClearFocusSpell
     // são lidos no momento da execução.
@@ -489,7 +498,7 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
                     ? onSetConcentration?.(null)
                     : onSetConcentration?.(spell)
                 }
-                onDetail={() => setDetailSpell(spell)}
+                onDetail={() => openSpellDetail(spell)}
                 onRemove={spell.alwaysPrepared === true ? null : () => onRemoveSpell(spell.id)}
                 abilityOverride={spell.ability && spell.ability !== spellAbility
                   ? {
