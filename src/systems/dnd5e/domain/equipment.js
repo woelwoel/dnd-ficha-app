@@ -141,6 +141,8 @@ export function hasArmorProficiency(profList, category) {
  * @param {object|null} params.armor - entrada de ARMOR_TABLE ou null
  * @param {boolean} params.hasShield - true se um escudo está equipado
  * @param {string[]} [params.armorProficiencies] - lista de proficiências
+ * @param {string[]} [params.fightingStyles] - chaves de Estilo de Combate
+ *        (ver domain/fightingStyles.js). Só 'defense' afeta a CA.
  * @returns {{ ac:number, warnings:string[], speedPenalty:number,
  *             noProficiency:boolean }}
  */
@@ -153,6 +155,7 @@ export function calculateArmorClass({
   hasShield,
   armorProficiencies = [],
   magicEffects = null,       // efeitos agregados de itens mágicos atunados/equipados
+  fightingStyles = [],       // Estilos de Combate ativos (PHB p.72)
 }) {
   const dexMod = mods?.dex ?? 0
   const conMod = mods?.con ?? 0
@@ -198,6 +201,10 @@ export function calculateArmorClass({
   if (hasShield) base += ARMOR_TABLE.shield.baseAC
 
   base += acBonus
+
+  // Estilo de Combate: Defesa — +1 CA "enquanto estiver usando armadura"
+  // (PHB p.72). Escudo NÃO conta como armadura vestida.
+  if (armor && (fightingStyles ?? []).includes('defense')) base += 1
 
   // ── Avisos de regra (não modificam CA) ─────────────────────
   let noProficiency = false

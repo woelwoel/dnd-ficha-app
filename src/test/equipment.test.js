@@ -73,6 +73,51 @@ describe('calculateArmorClass', () => {
     expect(r.speedPenalty).toBe(10)
     expect(r.warnings.some(w => /FOR/.test(w))).toBe(true)
   })
+
+  // ── Estilo de Combate: Defesa (PHB p.72) ──────────────────
+  // "Enquanto estiver USANDO ARMADURA, você ganha +1 na CA."
+  describe('estilo de combate Defesa', () => {
+    const chain = ARMOR_TABLE['chain-mail']
+
+    it('soma +1 na CA quando há armadura equipada', () => {
+      const base = calculateArmorClass({
+        mods: mods(0), classIndex: 'paladino', armor: chain, hasShield: false,
+        armorProficiencies: allProfs,
+      }).ac
+      const withStyle = calculateArmorClass({
+        mods: mods(0), classIndex: 'paladino', armor: chain, hasShield: false,
+        armorProficiencies: allProfs, fightingStyles: ['defense'],
+      }).ac
+      expect(withStyle).toBe(base + 1)
+    })
+
+    it('NÃO soma sem armadura, nem mesmo com escudo', () => {
+      expect(calculateArmorClass({
+        mods: mods(3), classIndex: 'paladino', armor: null, hasShield: false,
+        armorProficiencies: allProfs, fightingStyles: ['defense'],
+      }).ac).toBe(13)
+      expect(calculateArmorClass({
+        mods: mods(3), classIndex: 'paladino', armor: null, hasShield: true,
+        armorProficiencies: allProfs, fightingStyles: ['defense'],
+      }).ac).toBe(15) // escudo não é "usar armadura"
+    })
+
+    it('não afeta quem não tem o estilo (ou tem outro)', () => {
+      expect(calculateArmorClass({
+        mods: mods(0), classIndex: 'paladino', armor: chain, hasShield: false,
+        armorProficiencies: allProfs, fightingStyles: ['dueling', 'archery'],
+      }).ac).toBe(16)
+    })
+
+    it('soma uma vez só (não acumula com escudo nem com bônus mágico)', () => {
+      const r = calculateArmorClass({
+        mods: mods(0), classIndex: 'paladino', armor: chain, hasShield: true,
+        armorProficiencies: allProfs, fightingStyles: ['defense'],
+        magicEffects: { ac: 1 },
+      })
+      expect(r.ac).toBe(16 + 2 + 1 + 1)
+    })
+  })
 })
 
 describe('findArmorByName', () => {
