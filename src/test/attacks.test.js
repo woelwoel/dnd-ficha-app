@@ -61,3 +61,67 @@ describe('calculateWeaponDamage', () => {
     expect(r.modifier).toBe(4) // 3 FOR + 1 mágico
   })
 })
+
+/**
+ * Estilos de Combate (PHB p.72). O personagem pode ter MAIS DE UM (multiclasse
+ * guerreiro+paladino, Campeão nv10), então o campo é uma lista — cada estilo
+ * aplica-se só à arma que se qualifica.
+ */
+describe('estilos de combate nos ataques', () => {
+  it('Arqueiro dá +2 no ataque à distância', () => {
+    const atk = { properties: ['ranged'], proficient: true, fightingStyles: ['archery'] }
+    // DES 16 (+3) + BP 3 + 2 do estilo
+    expect(calculateWeaponAttackBonus(atk, atts(10, 16), 3)).toBe(8)
+  })
+
+  it('Arqueiro não afeta arma corpo a corpo', () => {
+    const atk = { properties: [], proficient: true, fightingStyles: ['archery'] }
+    expect(calculateWeaponAttackBonus(atk, atts(16, 10), 3)).toBe(6)
+  })
+
+  it('Duelo dá +2 de dano com arma de uma mão', () => {
+    const atk = { damageDice: '1d8', properties: [], fightingStyles: ['dueling'] }
+    expect(calculateWeaponDamage(atk, atts(16)).modifier).toBe(5) // 3 FOR + 2
+  })
+
+  it('Duelo não vale para arma de duas mãos nem à distância', () => {
+    const twoHanded = { damageDice: '2d6', properties: ['two-handed'], fightingStyles: ['dueling'] }
+    expect(calculateWeaponDamage(twoHanded, atts(16)).modifier).toBe(3)
+    const bow = { damageDice: '1d8', properties: ['ranged'], fightingStyles: ['dueling'] }
+    expect(calculateWeaponDamage(bow, atts(10, 16)).modifier).toBe(3)
+  })
+
+  it('Grande Arma marca a rerrolagem de 1 e 2 na arma de duas mãos', () => {
+    const atk = { damageDice: '2d6', properties: ['two-handed'], fightingStyles: ['great-weapon'] }
+    expect(calculateWeaponDamage(atk, atts(16)).dice).toBe('2d6 (rr 1-2)')
+  })
+
+  it('Combate com Duas Armas devolve o modificador no golpe off-hand', () => {
+    const semEstilo = { damageDice: '1d6', properties: ['light'], offHand: true }
+    expect(calculateWeaponDamage(semEstilo, atts(16)).modifier).toBe(0)
+    const comEstilo = { ...semEstilo, fightingStyles: ['two-weapon'] }
+    expect(calculateWeaponDamage(comEstilo, atts(16)).modifier).toBe(3)
+  })
+
+  it('estilos que não são de arma (Defesa) não mexem em ataque nem dano', () => {
+    const atk = { damageDice: '1d8', properties: [], proficient: true, fightingStyles: ['defense'] }
+    expect(calculateWeaponAttackBonus(atk, atts(16), 3)).toBe(6)
+    expect(calculateWeaponDamage(atk, atts(16)).modifier).toBe(3)
+  })
+
+  it('com dois estilos, cada arma recebe o que se qualifica', () => {
+    const styles = ['dueling', 'great-weapon'] // Campeão nv10
+    const espada = { damageDice: '1d8', properties: [], fightingStyles: styles }
+    expect(calculateWeaponDamage(espada, atts(16)).modifier).toBe(5)
+    expect(calculateWeaponDamage(espada, atts(16)).dice).toBe('1d8')
+
+    const montante = { damageDice: '2d6', properties: ['two-handed'], fightingStyles: styles }
+    expect(calculateWeaponDamage(montante, atts(16)).modifier).toBe(3)
+    expect(calculateWeaponDamage(montante, atts(16)).dice).toBe('2d6 (rr 1-2)')
+  })
+
+  it('aceita o campo singular legado do schema', () => {
+    const atk = { properties: ['ranged'], proficient: true, fightingStyle: 'archery' }
+    expect(calculateWeaponAttackBonus(atk, atts(10, 16), 3)).toBe(8)
+  })
+})

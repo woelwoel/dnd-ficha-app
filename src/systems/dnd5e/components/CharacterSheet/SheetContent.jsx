@@ -174,6 +174,7 @@ export function SheetContent({ activeTab }) {
               attributes={character.attributes}
               profBonus={calc.profBonus}
               inventoryItems={character.inventory?.items ?? []}
+              fightingStyles={calc.fightingStyles}
               onAdd={addAttack}
               onRemove={removeAttack}
               onUpdate={updateAttack}

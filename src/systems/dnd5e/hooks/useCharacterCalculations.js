@@ -10,6 +10,7 @@ import {
 } from '../utils/calculations'
 import { calculateMaxHpMulticlass, listSpellcastingClasses, getEffectiveSaveProficiencies, effectiveSpeed as domainEffectiveSpeed } from '../domain/rules'
 import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
+import { getFightingStyles } from '../domain/fightingStyles'
 import { resolveAbilityKey } from '../domain/attributes'
 import {
   getSpellSlots,
@@ -80,6 +81,10 @@ export function useCharacterCalculations(character, classData = null, classDataM
       cha: getModifier(effectiveAttrs.cha),
     }
 
+    // Estilos de Combate (PHB p.72) — alimentam a CA (Defesa) e os ataques
+    // (Arqueiro/Duelo/Grande Arma/Duas Armas, via `calc.fightingStyles`).
+    const fightingStyles = getFightingStyles(character)
+
     // CA sugerida (PHB p.144–145) — agora retorna objeto rico com avisos.
     const { armor, hasShield } = getEquippedArmor(items)
     const acResult = calculateArmorClass({
@@ -94,6 +99,7 @@ export function useCharacterCalculations(character, classData = null, classDataM
       hasShield,
       armorProficiencies: armorProfs ?? [],
       magicEffects,
+      fightingStyles,
     })
     const suggestedAC   = acResult.ac
     const acWarnings    = acResult.warnings
@@ -215,6 +221,7 @@ export function useCharacterCalculations(character, classData = null, classDataM
       effectiveSpeed,
       effectBreakdown,
       spellFx,
+      fightingStyles,
     }
   }, [
     // NOTA HONESTA (#19 super review): `character` é lido direto no corpo

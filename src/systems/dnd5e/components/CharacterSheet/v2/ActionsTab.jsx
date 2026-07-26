@@ -31,7 +31,9 @@ function SectionTitle({ children }) {
    AttackRollButton (fluxo ataque→crítico→dano) + RollButton pra dano avulso;
    consumo de munição idêntico ao AttackRow v1. A edição completa fica no
    Attacks v1 sob "Gerenciar ataques". */
-function AttackRowV2({ atk, attributes, profBonus, ammoItem, onUpdateItem }) {
+function AttackRowV2({ atk: rawAtk, attributes, profBonus, ammoItem, fightingStyles = [], onUpdateItem }) {
+  // Estilos de Combate vêm do personagem (calc), não do ataque — ver AttackRow v1.
+  const atk = { ...rawAtk, fightingStyles }
   const bonus = calculateWeaponAttackBonus(atk, attributes, profBonus)
   const dmg = calculateWeaponDamage(atk, attributes, {})
   const abbr = abbrOfKey(resolveAttackAbility(atk, attributes))
@@ -212,6 +214,7 @@ export function ActionsTab() {
                 attributes={character.attributes}
                 profBonus={calc.profBonus}
                 ammoItem={findAmmoForAttack(atk, character.inventory?.items ?? [])}
+                fightingStyles={calc.fightingStyles}
                 onUpdateItem={updateItem}
               />
             ))}
@@ -259,6 +262,7 @@ export function ActionsTab() {
           attributes={character.attributes}
           profBonus={calc.profBonus}
           inventoryItems={character.inventory?.items ?? []}
+          fightingStyles={calc.fightingStyles}
           onAdd={addAttack}
           onRemove={removeAttack}
           onUpdate={updateAttack}

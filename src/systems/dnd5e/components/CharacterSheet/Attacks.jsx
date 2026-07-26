@@ -133,9 +133,12 @@ function AttackForm({ value, onChange, onSave, onCancel, title }) {
    Linha de um ataque (mobile + desktop)
    ────────────────────────────────────────────────────────────────── */
 function AttackRow({
-  atk, attributes, profBonus, ammoItem, isDesktop,
+  atk: rawAtk, attributes, profBonus, ammoItem, isDesktop, fightingStyles = [],
   onEdit, onRemove, onUpdate, onUpdateItem,
 }) {
+  // Os Estilos de Combate são do PERSONAGEM (PHB p.72), não do ataque: o motor
+  // decide sozinho quais se qualificam para esta arma.
+  const atk = { ...rawAtk, fightingStyles }
   const versatileMode = !!atk.versatileTwoHanded && !!atk.versatileDice
   const attackBonus = calculateWeaponAttackBonus(atk, attributes, profBonus)
   const damage      = calculateWeaponDamage(atk, attributes, { versatileTwoHanded: versatileMode })
@@ -294,7 +297,7 @@ function AttackRow({
    ────────────────────────────────────────────────────────────────── */
 export function Attacks({
   attacks = [], attributes, profBonus,
-  inventoryItems = [],
+  inventoryItems = [], fightingStyles = [],
   onAdd, onRemove, onUpdate, onUpdateItem,
 }) {
   // Modo do formulário: null = fechado, 'new' = criando, id = editando
@@ -383,6 +386,7 @@ export function Attacks({
                 <AttackRow
                   key={atk.id} atk={atk}
                   attributes={attributes} profBonus={profBonus}
+                  fightingStyles={fightingStyles}
                   ammoItem={ammoItem} isDesktop={false}
                   onEdit={startEdit} onRemove={onRemove}
                   onUpdate={onUpdate} onUpdateItem={onUpdateItem}
@@ -405,6 +409,7 @@ export function Attacks({
                 <AttackRow
                   key={atk.id} atk={atk}
                   attributes={attributes} profBonus={profBonus}
+                  fightingStyles={fightingStyles}
                   ammoItem={ammoItem} isDesktop={true}
                   onEdit={startEdit} onRemove={onRemove}
                   onUpdate={onUpdate} onUpdateItem={onUpdateItem}

@@ -9,7 +9,10 @@
  *   - versatileDice?: string ('1d10') — dano alternativo de duas mãos
  *   - proficient: boolean — proficiente na arma (soma BP ao ataque)
  *   - magicBonus: number — bônus mágico (soma ataque e dano)
+ *   - fightingStyles?: string[] — estilos do PERSONAGEM (domain/fightingStyles.js),
+ *     injetados pela UI; cada um se aplica só à arma que se qualifica
  *   - fightingStyle?: 'archery' | 'dueling' | 'great-weapon' | 'two-weapon' | 'none'
+ *     (campo legado por-ataque do schema; ainda respeitado)
  *   - offHand?: boolean — TRUE se o ataque é um golpe off-hand (TWF)
  *   - useThrown?: boolean — força ranged (DEX) para arma com `thrown`
  *
@@ -55,13 +58,27 @@ export function resolveAttackAbility(attack, attributes) {
 }
 
 /**
+ * Estilos de Combate ativos deste ataque, como Set.
+ *
+ * Fonte preferida é `attack.fightingStyles` (lista) — um personagem pode ter
+ * mais de um estilo (multiclasse guerreiro+paladino, Campeão nv10) e cada um
+ * se aplica só à arma que se qualifica. `attack.fightingStyle` (string) é o
+ * campo legado do schema e continua aceito.
+ */
+function stylesOf(attack) {
+  const list = Array.isArray(attack?.fightingStyles) ? attack.fightingStyles : []
+  const legacy = attack?.fightingStyle
+  return new Set(legacy && legacy !== 'none' ? [...list, legacy] : list)
+}
+
+/**
  * Aplica modificadores de Fighting Style ao bônus DE ATAQUE.
  *  - Archery   : +2 a ataque com armas à distância (PHB p.72).
  *  - Outros    : sem efeito no ataque.
  */
 function fightingStyleAttackBonus(attack) {
-  if (attack?.fightingStyle === 'archery'
-      && hasProperty(attack.properties, RANGED_PROPERTIES)) {
+  if (stylesOf(attack).has('archery')
+      && hasProperty(attack?.properties, RANGED_PROPERTIES)) {
     return 2
   }
   return 0
@@ -86,31 +103,25 @@ function fightingStyleDamageMods(attack, abilityMod, { versatileTwoHanded }) {
   let extraDamageMod = 0
   let diceOverride = null
 
-  switch (attack?.fightingStyle) {
-    case 'dueling': {
-      const isMelee = !hasProperty(attack.properties, RANGED_PROPERTIES)
-      const isTwoHanded = hasProperty(attack.properties, TWO_HANDED_PROPS)
-        || (versatileTwoHanded && hasProperty(attack.properties, VERSATILE_PROPS))
-      if (isMelee && !isTwoHanded && !attack.offHand) extraDamageMod += 2
-      break
-    }
-    case 'great-weapon': {
-      const isTwoHanded = hasProperty(attack.properties, TWO_HANDED_PROPS)
-        || (versatileTwoHanded && hasProperty(attack.properties, VERSATILE_PROPS))
-      const isMelee = !hasProperty(attack.properties, RANGED_PROPERTIES)
-      if (isMelee && isTwoHanded) {
-        const baseDice = (versatileTwoHanded && attack.versatileDice) ? attack.versatileDice : (attack.damageDice || '1d4')
-        diceOverride = `${baseDice} (rr 1-2)`
-      }
-      break
-    }
-    default:
-      break
+  const styles = stylesOf(attack)
+  const isMelee = !hasProperty(attack?.properties, RANGED_PROPERTIES)
+  const isTwoHanded = hasProperty(attack?.properties, TWO_HANDED_PROPS)
+    || (versatileTwoHanded && hasProperty(attack?.properties, VERSATILE_PROPS))
+
+  if (styles.has('dueling') && isMelee && !isTwoHanded && !attack?.offHand) {
+    extraDamageMod += 2
+  }
+
+  if (styles.has('great-weapon') && isMelee && isTwoHanded) {
+    const baseDice = (versatileTwoHanded && attack.versatileDice)
+      ? attack.versatileDice
+      : (attack.damageDice || '1d4')
+    diceOverride = `${baseDice} (rr 1-2)`
   }
 
   // Two-Weapon Fighting: off-hand normalmente perde abilityMod no dano (PHB p.195).
   // Quando o personagem TEM o estilo TWF, esse mod é restaurado.
-  if (attack?.offHand && attack?.fightingStyle !== 'two-weapon' && abilityMod > 0) {
+  if (attack?.offHand && !styles.has('two-weapon') && abilityMod > 0) {
     extraDamageMod -= abilityMod
   }
 

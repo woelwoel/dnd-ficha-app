@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo } from 'react'
 import { SCHEMA_VERSION } from '../domain/characterSchema'
 import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
+import { getFightingStyles } from '../domain/fightingStyles'
 import { getModifier } from '../utils/calculations'
 import {
   defaultClassFeatureUses, mergeFeatureUses,
@@ -262,6 +263,7 @@ export function useCharacter(initialCharacter = null) {
           armor,
           hasShield,
           armorProficiencies: prev.proficiencies?.armor ?? [],
+          fightingStyles: getFightingStyles(prev),
         })
         return { ...base, combat: { ...base.combat, armorClass: ac } }
       }
