@@ -241,20 +241,20 @@ describe('getCastPolicy', () => {
     const p = getCastPolicy({ featGrants: [{ featIndex: 'tocado-pelas-fadas', featGrant: 0 }], index: 'passo-nebuloso', level: 2 }, baseChar())
     expect(p).toEqual({
       slots: true, ritualOnly: false, atWill: false,
-      freeCast: [{ recharge: 'long', trackerId: 'feat-tocado-pelas-fadas-passo-nebuloso' }],
+      freeCast: [{ recharge: 'long', trackerId: 'feat-tocado-pelas-fadas-passo-nebuloso', featIndex: 'tocado-pelas-fadas' }],
     })
   })
 
   it('slots never + freeCast short (teleporte-das-fadas)', () => {
     const p = getCastPolicy({ featGrants: [{ featIndex: 'teleporte-das-fadas', featGrant: 0 }], index: 'passo-nebuloso', level: 2 }, baseChar())
     expect(p.slots).toBe(false)
-    expect(p.freeCast).toEqual([{ recharge: 'short', trackerId: 'feat-teleporte-das-fadas-passo-nebuloso' }])
+    expect(p.freeCast).toEqual([{ recharge: 'short', trackerId: 'feat-teleporte-das-fadas-passo-nebuloso', featIndex: 'teleporte-das-fadas' }])
   })
 
   it('classMatch negativo: guerreiro com iniciado-em-magia (mago) → sem slots', () => {
     const p = getCastPolicy({ featGrants: [{ featIndex: 'iniciado-em-magia', featGrant: 1 }], index: 'escudo-arcano', level: 1 }, baseChar())
     expect(p.slots).toBe(false)
-    expect(p.freeCast).toEqual([{ recharge: 'long', trackerId: 'feat-iniciado-em-magia-escudo-arcano' }])
+    expect(p.freeCast).toEqual([{ recharge: 'long', trackerId: 'feat-iniciado-em-magia-escudo-arcano', featIndex: 'iniciado-em-magia' }])
   })
 
   it('classMatch positivo pela classe primária', () => {
@@ -281,8 +281,8 @@ describe('getCastPolicy', () => {
     const p = getCastPolicy(spell, baseChar())
     expect(p.slots).toBe(true) // Tocado pelas Fadas concede slot explicitamente
     expect(p.freeCast).toEqual([
-      { recharge: 'long',  trackerId: 'feat-tocado-pelas-fadas-passo-nebuloso' },
-      { recharge: 'short', trackerId: 'feat-teleporte-das-fadas-passo-nebuloso' },
+      { recharge: 'long',  trackerId: 'feat-tocado-pelas-fadas-passo-nebuloso',  featIndex: 'tocado-pelas-fadas' },
+      { recharge: 'short', trackerId: 'feat-teleporte-das-fadas-passo-nebuloso', featIndex: 'teleporte-das-fadas' },
     ])
   })
 
@@ -309,7 +309,7 @@ describe('getCastPolicy', () => {
     expect(p.atWill).toBe(true)
     expect(p.slots).toBe(true)
     expect(p.ritualOnly).toBe(false)
-    expect(p.freeCast).toEqual([{ recharge: 'long', trackerId: 'feat-tocado-pelas-fadas-detectar-magia' }])
+    expect(p.freeCast).toEqual([{ recharge: 'long', trackerId: 'feat-tocado-pelas-fadas-detectar-magia', featIndex: 'tocado-pelas-fadas' }])
   })
 
   it('ritualOnly é AND: uma concessão não-ritual destrava a magia', () => {
