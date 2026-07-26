@@ -56,6 +56,18 @@ describe('getFightingStyles', () => {
     expect(getFightingStyles(c)).toEqual(['defense'])
   })
 
+  it('soma o estilo adicional do Campeão nv10 ao estilo de nível 1', () => {
+    const c = char({
+      cls: 'guerreiro', level: 10,
+      chosen: {
+        fighting_style: 'defesa',
+        martial_archetype: 'campeao',
+        fighting_style_champion: 'arqueiro',
+      },
+    })
+    expect(getFightingStyles(c)).toEqual(['defense', 'archery'])
+  })
+
   it('ignora estilos sem mecânica implementada (Proteção, Tasha)', () => {
     expect(getFightingStyles(char({ chosen: { fighting_style_paladin: 'protecao' } }))).toEqual([])
     expect(getFightingStyles(char({ chosen: { fighting_style_paladin: 'interceptador' } }))).toEqual([])

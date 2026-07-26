@@ -267,6 +267,48 @@
         ]
       },
       {
+        "level": 10,
+        "id": "fighting_style_champion",
+        "featureName": "Estilo de Combate Adicional",
+        "prompt": "Escolha um segundo Estilo de Combate",
+        "requires": {
+          "martial_archetype": "campeao"
+        },
+        "excludesOptionsOf": "fighting_style",
+        "options": [
+          {
+            "value": "luta_as_cegas",
+            "name": "Luta às Cegas",
+            "combat": "essencial",
+            "desc": "Você tem percepção às cegas com alcance de 3m: dentro dela, enxerga o que não estiver sob cobertura total mesmo cego ou no escuro, e vê criaturas invisíveis (a menos que se escondam de você com sucesso)."
+          },
+          {
+            "value": "interceptador",
+            "name": "Interceptador",
+            "combat": "situacional",
+            "desc": "Quando uma criatura que você veja acerta um alvo (que não seja você) a até 1,5m de você, use sua reação para reduzir o dano em 1d10 + seu bônus de proficiência (mínimo 0). Você precisa empunhar um escudo ou uma arma simples ou marcial."
+          },
+          {
+            "value": "tecnica_superior",
+            "name": "Técnica Superior",
+            "combat": "essencial",
+            "desc": "Você aprende uma manobra à sua escolha dentre as do Mestre de Batalha e ganha um dado de superioridade (d6, somado a outros que você tenha). A CD da manobra = 8 + seu bônus de proficiência + Força ou Destreza (à sua escolha). O dado é recuperado num descanso curto ou longo."
+          },
+          {
+            "value": "arremesso_de_armas",
+            "name": "Arremesso de Armas",
+            "combat": "essencial",
+            "desc": "Você pode sacar uma arma com a propriedade arremesso como parte da ação de ataque com ela. Além disso, ao acertar um ataque à distância com arma de arremesso, ganha +2 na jogada de dano."
+          },
+          {
+            "value": "ataque_desarmado",
+            "name": "Ataque Desarmado",
+            "combat": "essencial",
+            "desc": "Seus ataques desarmados causam 1d6 + seu modificador de Força de dano contundente (o d6 vira d8 se você não empunhar arma nem escudo). No início de cada turno, pode causar 1d4 contundente a uma criatura agarrada por você."
+          }
+        ]
+      },
+      {
         "level": 3,
         "id": "martial_archetype_maneuvers",
         "featureName": "Manobras",

@@ -49,3 +49,52 @@ test('estilo Defesa: CA sugerida do paladino sobe de 16 para 17', async ({ conte
 
   await expect(page.getByRole('button', { name: 'Editar CA', exact: true }).locator('.v2-ability-mod')).toHaveText('17')
 })
+
+// Campeão nv10 ganha um SEGUNDO Estilo de Combate. O picker não existia; agora
+// existe, não repete o estilo de nível 1, e o que for escolhido muda o ataque.
+test('Campeao nv10: escolher o segundo estilo muda o bonus de ataque', async ({ context, page }) => {
+  const id = '88888888-8888-4888-8888-888888888888'
+  await installAuthedApp(context, {
+    characters: [makeCharacter(id, 'Campeao Arqueiro', {
+      shortId: 'CAMPARQE23',
+      info: {
+        name: 'Campeao Arqueiro', race: 'humano', class: 'guerreiro', level: 10,
+        alignment: '', multiclasses: [], feats: [],
+        chosenFeatures: { fighting_style: 'defesa', martial_archetype: 'campeao' },
+        asiOrFeatByLevel: {}, background: 'soldado',
+      },
+      attributes: { str: 12, dex: 16, con: 14, int: 10, wis: 12, cha: 10 },
+      combat: {
+        maxHp: 84, currentHp: 84, tempHp: 0, armorClass: 15, speed: 9,
+        hitDice: { pool: { d10: { total: 10, used: 0 } } },
+        attacks: [{
+          id: 'atk1', name: 'Arco Longo', damageDice: '1d8', damageType: 'perfurante',
+          properties: ['ranged'], proficient: true, magicBonus: 0,
+        }],
+        concentrating: { spellIndex: null, spellName: null }, activeEffects: [],
+        deathSaves: { successes: 0, failures: 0 }, classFeatureUses: [],
+        conditions: [], inspiration: false, exhaustion: 0,
+      },
+    })],
+  })
+  await page.goto('/c/CAMPARQE23')
+  await expect(page.getByText('Campeao Arqueiro').first()).toBeVisible()
+
+  // DES 16 (+3) + BP 4 = +7, sem estilo que se aplique ao arco.
+  const linhaArco = page.locator('.v2-row').filter({ hasText: 'Arco Longo' }).first()
+  await expect(linhaArco).toContainText('+7')
+
+  // A escolha pendente aparece em Características > Habilidades...
+  await page.getByRole('tab', { name: 'Características' }).first().click()
+  await page.getByRole('button', { name: /Habilidades/ }).first().click()
+  await expect(page.getByText('Escolha um segundo Estilo de Combate')).toBeVisible()
+
+  // ...sem repetir Defesa, o estilo já escolhido no nível 1.
+  const picker = page.getByText('Escolha um segundo Estilo de Combate').locator('..')
+  await expect(picker.getByRole('button', { name: /Defesa/ })).toHaveCount(0)
+  await picker.getByRole('button', { name: /Arqueiro/ }).click()
+
+  // Escolhido Arqueiro, o arco passa a +9.
+  await page.getByRole('tab', { name: 'Ações' }).first().click()
+  await expect(page.locator('.v2-row').filter({ hasText: 'Arco Longo' }).first()).toContainText('+9')
+})
