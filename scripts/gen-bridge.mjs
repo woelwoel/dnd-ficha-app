@@ -195,6 +195,16 @@ html.theme-v2 { scrollbar-color: var(--v2-border-strong) var(--v2-surface-1); }
 .theme-v2 .rule-double { border-top-color: var(--v2-border-strong); box-shadow: 0 3px 0 -2px var(--v2-border-strong); }
 .theme-v2 .rule-double-b { border-bottom-color: var(--v2-border-strong); box-shadow: 0 -3px 0 -2px var(--v2-border-strong) inset; }
 .theme-v2 .setup-modal-bg { background-image: none; }
+/* Estado ESCOLHIDO dos pickers legados (talento, atributo, perícia, equipamento).
+   Sozinha, cada classe do par cai no mesmo destino do não-escolhido —
+   bg-parchment-200 e bg-parchment-50 viram --v2-surface-1; border-ink-500 e
+   border-parchment-600 viram --v2-border-strong — e a escolha fica invisível no
+   escuro. O seletor de duas classes tem especificidade acima da ponte. */
+.theme-v2 .border-ink-500.bg-parchment-200,
+.sheet-v2 .border-ink-500.bg-parchment-200 {
+  background-color: var(--v2-surface-2) !important;
+  border-color: var(--v2-accent) !important;
+}
 .theme-v2 .dice3d-toast {
   background: var(--v2-surface-1);
   color: var(--v2-text-1);

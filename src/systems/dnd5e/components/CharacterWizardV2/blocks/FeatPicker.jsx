@@ -172,6 +172,7 @@ export function FeatPicker({ feats = [], value = null, onChange, raceInfo = null
                 <button
                   key={attrKey}
                   type="button"
+                  aria-pressed={isSel}
                   onClick={() => onChange({ ...value, featChosenAttr: attrKey })}
                   className={[
                     'px-2.5 py-1 text-[13px] rounded-sm border-2 font-display transition-colors',
