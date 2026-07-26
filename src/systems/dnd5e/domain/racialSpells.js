@@ -1,9 +1,13 @@
 // @ts-check
+import { mapSrdSpellToCharacter } from './subclassSpells'
+
 /**
  * Magias concedidas por TRAÇO RACIAL (DADOS, não regra).
  *
- * Módulo FOLHA de propósito: não importa nada do domínio, então `rules.js` e
- * qualquer outro consumidor podem lê-lo sem risco de ciclo de import.
+ * CUIDADO com ciclo de import: este módulo puxa `subclassSpells`, que puxa
+ * `rules.js`. Ou seja, `rules.js` NÃO pode importar daqui — é por isso que os
+ * trackers de conjuração especial moram em `castPolicy.js` e são compostos na
+ * `CharacterSheet`, e não dentro de `defaultClassFeatureUses`.
  *
  * `grantIdx` (posição ABSOLUTA em `grants`) é persistido na proveniência da
  * magia — REORDENAR `grants` orfana ficha salva. Acrescente no fim.
@@ -84,4 +88,58 @@ export function getRacialGrants(character) {
 
 export function racialTrackerId(raceKey, spellIndex) {
   return `raca-${raceKey}-${spellIndex}`
+}
+
+/**
+ * Injeta as magias do traço racial em `spellcasting.spells`.
+ *
+ * MERGE idempotente por `index`, espelhando `injectFeatSpells`:
+ *  - `ability` e `raceCreated` só vão na magia que a RAÇA CRIA. Se o Bruxo
+ *    drow já conhecia Escuridão pela classe, o atributo dele continua sendo o
+ *    da classe e os espaços continuam valendo (ver `castPolicy`);
+ *  - `raceGrants` ACUMULA a referência, nunca sobrescreve;
+ *  - nada muda → devolve o MESMO objeto `character`. A ficha abre sem se
+ *    marcar como alterada (senão o autosave dispararia a cada abertura).
+ */
+export function injectRacialSpells(character, srdSpells) {
+  if (!character || !srdSpells?.length) return character
+  const info = getRacialGrants(character)
+  if (!info || info.grants.length === 0) return character
+
+  const spells = character.spellcasting?.spells ?? []
+  const order = [...new Set(spells.map(s => s.index))]
+  const working = new Map(spells.map(s => [s.index, s]))
+  let changed = false
+
+  for (const g of info.grants) {
+    const cur = working.get(g.spell)
+
+    if (cur) {
+      const refs = cur.raceGrants ?? []
+      if (refs.some(r => r.raceKey === info.raceKey && r.grantIdx === g.grantIdx)) continue
+      working.set(g.spell, {
+        ...cur,
+        raceGrants: [...refs, { raceKey: info.raceKey, grantIdx: g.grantIdx }],
+      })
+      changed = true
+      continue
+    }
+
+    const srd = srdSpells.find(s => s.index === g.spell)
+    if (!srd) continue
+    working.set(g.spell, {
+      ...mapSrdSpellToCharacter(srd, { source: 'race', alwaysPrepared: true, label: info.label }),
+      raceGrants: [{ raceKey: info.raceKey, grantIdx: g.grantIdx }],
+      raceCreated: true,
+      ability: info.ability,
+    })
+    order.push(g.spell)
+    changed = true
+  }
+
+  if (!changed) return character
+  return {
+    ...character,
+    spellcasting: { ...character.spellcasting, spells: order.map(idx => working.get(idx)) },
+  }
 }
