@@ -80,6 +80,37 @@ export function isChoiceDone(choice, value, characterLevel = 1) {
   return !!value
 }
 
+/** Normaliza um valor de chosenFeatures (string, "a,b" ou array) em lista. */
+function pickedValues(raw) {
+  if (Array.isArray(raw)) return raw.filter(Boolean)
+  if (typeof raw === 'string') return raw.split(',').filter(Boolean)
+  return raw != null && raw !== '' ? [raw] : []
+}
+
+/**
+ * Aplica o campo opcional `excludesOptionsOf: '<outro choice id>'`: remove das
+ * opções desta escolha o que já foi escolhido naquela outra.
+ *
+ * Caso de uso: o Estilo de Combate Adicional do Campeão (nv10) é um SEGUNDO
+ * estilo — não pode repetir o de nível 1 (PHB p.72).
+ *
+ * O valor já gravado NESTA escolha nunca é removido: se uma ficha antiga tiver
+ * o mesmo estilo nos dois campos, o picker ainda mostra o que ela escolheu em
+ * vez de renderizar vazio. Pura: devolve a própria `choice` quando não há nada
+ * a fazer.
+ */
+export function excludeOptionsAlreadyPicked(choice, chosenFeatures = {}) {
+  const sourceId = choice?.excludesOptionsOf
+  if (!sourceId || !Array.isArray(choice.options)) return choice
+  const taken = new Set(pickedValues(chosenFeatures?.[sourceId]))
+  if (taken.size === 0) return choice
+  const own = new Set(pickedValues(chosenFeatures?.[choice.id]))
+  return {
+    ...choice,
+    options: choice.options.filter(o => !taken.has(o.value) || own.has(o.value)),
+  }
+}
+
 /**
  * Lista de escolhas que se aplicam até o nível atual.
  *
@@ -97,6 +128,7 @@ export function getLeveledChoices(classChoicesData, level, chosenFeatures = {}, 
       return Object.entries(c.requires).every(([k, v]) => chosenFeatures?.[k] === v)
     })
     .map(c => filterChoiceBySources(c, chosenFeatures, activeSources))
+    .map(c => excludeOptionsAlreadyPicked(c, chosenFeatures))
     .filter(c => !Array.isArray(c.options) || c.options.length > 0)
     .sort((a, b) => a.level - b.level)
 }

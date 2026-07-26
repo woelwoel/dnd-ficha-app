@@ -3,7 +3,7 @@ import { useSrd, useLazySrdDataset } from '../../data/SrdProvider'
 import { enrichDraconicTopics } from '../../utils/draconicAncestors'
 import { getFeatureTypeMeta } from '../../domain/featureMeta'
 import { ChosenFeaturePicker } from '../CharacterWizardV2/blocks/class/ChosenFeaturePicker'
-import { resolveMultiSelect, isChoiceDone } from '../CharacterWizardV2/blocks/class-helpers'
+import { resolveMultiSelect, isChoiceDone, excludeOptionsAlreadyPicked } from '../CharacterWizardV2/blocks/class-helpers'
 import { Icon } from '../../../../components/ui/Icon'
 import {
   detectActionType, combatTier, featureCategory, actionTypeOf, isAttributeIncrease,
@@ -365,7 +365,7 @@ function PendingChoicesSection({
               </p>
             )}
             <ChosenFeaturePicker
-              choice={choice}
+              choice={excludeOptionsAlreadyPicked(choice, chosenFeatures)}
               value={chosenFeatures?.[choice.id]}
               effectiveMultiSelect={resolveMultiSelect(choice, scopeLevel)}
               onChange={v => onSetChosenFeature(choice.id, v)}

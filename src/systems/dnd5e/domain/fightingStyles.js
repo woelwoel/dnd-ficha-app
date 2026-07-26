@@ -14,9 +14,10 @@
 
 /** Ids de escolha que carregam um Estilo de Combate, por classe. */
 export const FIGHTING_STYLE_CHOICE_IDS = [
-  'fighting_style',          // guerreiro (nv1)
-  'fighting_style_paladin',  // paladino (nv2)
-  'fighting_style_ranger',   // patrulheiro (nv2)
+  'fighting_style',           // guerreiro (nv1)
+  'fighting_style_paladin',   // paladino (nv2)
+  'fighting_style_ranger',    // patrulheiro (nv2)
+  'fighting_style_champion',  // guerreiro Campeão (nv10) — segundo estilo
 ]
 
 /** Valor do JSON (PT) → chave do motor (EN). Sem entrada = sem mecânica. */
