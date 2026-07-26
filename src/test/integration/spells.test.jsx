@@ -169,6 +169,25 @@ describe('Spells E2E (Mago)', () => {
     expect(screen.queryByText('Mísseis Mágicos')).toBeNull()
   })
 
+  // Ficha SALVA antes da correção: o truque racial do Alto Elfo foi gravado
+  // como objeto mínimo, com uma linha de resumo no lugar do texto do livro.
+  it('truque racial guardado como stub abre a descrição REAL do livro', async () => {
+    const spells = [{
+      id: 'rc1', index: 'racial-cantrip-maos-magicas', name: 'Mãos Mágicas',
+      level: 0, school: '', ritual: false, concentration: false,
+      desc: 'Truque racial (Alto Elfo — Inteligência).',
+    }]
+    const user = userEvent.setup()
+    render(<ControlledSpells initialCharacter={makeMagoCharacter(spells)} />)
+    await user.click(await screen.findByRole('button', { name: 'Mãos Mágicas' }))
+    const dialog = await screen.findByRole('dialog')
+    expect(dialog).not.toHaveTextContent(/Truque racial/)
+    expect(dialog).toHaveTextContent(/mão espectral flutuante/i)
+    // A papelada da magia também vem junto (o card vinha praticamente vazio).
+    expect(dialog).toHaveTextContent(/Tempo/)
+    expect(dialog).toHaveTextContent(/Alcance/)
+  })
+
   it('truques não exibem botão de preparar nem botão de conjurar (sempre castáveis)', async () => {
     const spells = [
       { id: 'c1', index: 'prestidigitacao', name: 'Prestidigitação', level: 0, school: 'Transmutação' },
