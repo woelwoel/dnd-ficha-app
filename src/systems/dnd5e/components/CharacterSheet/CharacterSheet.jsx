@@ -18,6 +18,7 @@ import { PrintView } from '../PrintView/PrintView'
 import { PrintPreviewModal } from '../PrintView/PrintPreviewModal'
 import { defaultClassFeatureUses, mergeFeatureUses } from '../../domain/rules'
 import { specialCastingUses } from '../../domain/castPolicy'
+import { injectRacialSpells } from '../../domain/racialSpells'
 import { SheetV2 } from './v2/SheetV2'
 import { isSheetV2Enabled } from './v2/flag'
 
@@ -125,7 +126,7 @@ export function CharacterSheet({ characterId, adminContext = false, onBack }) {
  * Layout: header fixo + sidebar de navegação (desktop) + área de conteúdo scrollável.
  */
 function SheetBody({ initialCharacter, adminContext = false, onBack }) {
-  const { races, classes, backgrounds, classChoices } = useSrd()
+  const { races, classes, backgrounds, classChoices, spells: srdSpells } = useSrd()
   const classDataMap = useClassDataMap()
 
   const [activeTab, setActiveTab] = useState('ficha')
@@ -239,6 +240,16 @@ function SheetBody({ initialCharacter, adminContext = false, onBack }) {
     ]),
     [character, classChoices],
   )
+
+  // Retrofit das magias raciais: ficha criada antes do traço existir no app (ou
+  // que subiu de nível e destravou a próxima magia) ganha o que falta ao abrir.
+  // `injectRacialSpells` é idempotente e devolve o MESMO objeto quando nada
+  // muda — sem isso o setCharacter reentraria a cada render e o autosave
+  // dispararia à toa.
+  useEffect(() => {
+    if (!srdSpells?.length) return
+    setCharacter(prev => injectRacialSpells(prev, srdSpells))
+  }, [srdSpells, setCharacter, character.info?.race, character.info?.subrace, character.info?.level])
 
   const contextValue = useMemo(() => ({
     character,
