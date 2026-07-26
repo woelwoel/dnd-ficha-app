@@ -143,6 +143,53 @@ describe('getBlockStatus', () => {
     expect(getBlockStatus('race', draft).status).toBe('completo')
   })
 
+  it('race parcial: diz o que falta (pra não virar caça ao tesouro)', () => {
+    const draft = {
+      ...empty, race: 'humano', subrace: 'tracos-raciais-alternativos',
+      racialAbilityChoices: ['str'], racialSkills: [],
+    }
+    const r = getBlockStatus('race', draft)
+    expect(r.status).toBe('parcial')
+    expect(r.missing).toEqual(['2 atributos', 'perícia', 'talento'])
+  })
+
+  it('race parcial: talento escolhido mas sem o atributo dele', () => {
+    const draft = {
+      ...empty, race: 'humano', subrace: 'tracos-raciais-alternativos',
+      racialAbilityChoices: ['str', 'con'], racialSkills: ['atletismo'],
+      racialFeat: { featIndex: 'atleta', featName: 'Atleta', featAttrBonus: { choices: ['str', 'dex'], amount: 1 }, featChosenAttr: null },
+    }
+    expect(getBlockStatus('race', draft).missing).toEqual(['atributo do talento'])
+  })
+
+  it('race completo não lista pendências', () => {
+    expect(getBlockStatus('race', { ...empty, race: 'anao' }).missing).toEqual([])
+  })
+
+  // Tasha, "Customizando sua Origem": o RaceBlock TROCA o picker de +1 livres
+  // pelos selects de realocação, então racialAbilityChoices nunca é preenchido.
+  // Exigi-lo aí deixava o bloco eternamente parcial — sem UI pra desatolar.
+  it('race completo: Humano Variante com origem customizada (sem +1 livres)', () => {
+    const draft = {
+      ...empty, race: 'humano', subrace: 'tracos-raciais-alternativos',
+      settings: { ...empty.settings, flexibleRacialAsi: true },
+      racialAsiOverride: { str: 2, con: 1 }, racialBonuses: { str: 2, con: 1 },
+      racialAbilityChoices: [], racialSkills: ['atletismo'],
+      racialFeat: { featIndex: 'robusto', featName: 'Robusto', featAttrBonus: null, featChosenAttr: null },
+    }
+    expect(getBlockStatus('race', draft).status).toBe('completo')
+  })
+
+  it('race completo: Meio-Elfo com origem customizada (sem +1 livres)', () => {
+    const draft = {
+      ...empty, race: 'meio-elfo',
+      settings: { ...empty.settings, flexibleRacialAsi: true },
+      racialAsiOverride: { dex: 2, wis: 1 }, racialBonuses: { dex: 2, wis: 1 },
+      racialAbilityChoices: [], racialSkills: ['atletismo', 'historia'],
+    }
+    expect(getBlockStatus('race', draft).status).toBe('completo')
+  })
+
   it('class parcial: sem srdData, fallback é completo se preenchido', () => {
     expect(getBlockStatus('class', { ...empty, class: 'guerreiro' }).status).toBe('completo')
   })

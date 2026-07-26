@@ -73,6 +73,34 @@ test.describe('Wizard de criação', () => {
     await expect(page.getByRole('button', { name: /✦ Inscrever Herói ✦/ })).toBeDisabled()
   })
 
+  test('Humano Variante com "Customizando sua Origem" consegue fechar o bloco Raça', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: /Recrutar Aventureiro/i }).click()
+    await page.getByRole('checkbox', { name: /Caldeirão de Tasha/i }).check()
+    // O input do card é sr-only (fica no fluxo de tab, mas invisível) — o
+    // clique real do jogador acontece no rótulo.
+    await page.getByText(/Customizando sua Origem \(realocar/).click()
+    await expect(page.getByRole('checkbox', { name: /Customizando sua Origem/i })).toBeChecked()
+    await page.getByRole('button', { name: /^Começar$/ }).click()
+
+    await openBlock(page, 'race')
+    await page.locator('#race-select').selectOption('humano')
+    await page.locator('#subrace-select').selectOption('tracos-raciais-alternativos')
+
+    // Sob a regra de Tasha os +1 livres viram os selects de realocação — o card
+    // não pode cobrar uma escolha que a tela não oferece mais.
+    await expect(page.locator('[data-testid="block-card-race"]')).toContainText('falta')
+    await page.getByLabel('Atributo +2').selectOption('str')
+    await page.getByLabel('Atributo +1').selectOption('con')
+    await page.getByRole('button', { name: /^Atletismo$/ }).click()
+    await page.getByPlaceholder(/buscar talento/i).fill('Robusto')
+    await page.getByRole('button', { name: /^Selecionar Robusto$/ }).click()
+    await closeBlock(page)
+
+    await expect(page.locator('[data-testid="block-card-race"]')).toContainText('✓')
+    await expect(page.locator('[data-testid="block-card-race"]')).not.toContainText('falta')
+  })
+
   test('a escolha de atributo do talento fica visível no tema escuro', async ({ page }) => {
     await openWizardGrid(page)
     await openBlock(page, 'race')

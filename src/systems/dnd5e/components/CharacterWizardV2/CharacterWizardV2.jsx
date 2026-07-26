@@ -303,6 +303,7 @@ function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete })
                         step={originalIndex}
                         status={s.status}
                         summary={summaryFor(b.id, draft)}
+                        missing={s.missing}
                         blockedBy={s.blockedBy.map(id => LABEL_BY_ID[id] ?? id)}
                         onClick={() => setOpenBlockId(b.id)}
                       />

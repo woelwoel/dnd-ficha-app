@@ -16,7 +16,7 @@ const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']
 
 export function BlockCard({
   label, status, summary, onClick,
-  blockedBy = [], dataTestId,
+  blockedBy = [], missing = [], dataTestId,
   icon, step, hint,
 }) {
   const isBlocked = status === 'bloqueado'
@@ -102,6 +102,13 @@ export function BlockCard({
       ].join(' ')}>
         {displayText}
       </div>
+
+      {/* O que ainda falta — sem isso o "parcial" vira caça ao tesouro */}
+      {status === 'parcial' && missing.length > 0 && (
+        <div className="text-xs font-display text-amber-700 normal-case">
+          falta: {missing.join(', ')}
+        </div>
+      )}
     </button>
   )
 }
