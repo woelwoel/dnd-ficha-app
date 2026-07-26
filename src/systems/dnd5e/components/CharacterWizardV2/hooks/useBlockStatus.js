@@ -10,17 +10,38 @@ import { allPicksDone } from '../blocks/class/equipment-helpers'
 
 const ATTR_KEYS = ['str', 'dex', 'con', 'int', 'wis', 'cha']
 
+/**
+ * O que ainda falta no bloco Raça, em rótulos curtos pro card — um bloco
+ * "parcial" sem dizer o quê deixa o jogador caçando a escolha que ficou pra
+ * trás (e achando que o wizard travou).
+ */
+function raceMissing(draft) {
+  const reqs = getRaceRequirements(draft, null, null)
+  // Tasha, "Customizando sua Origem": os +1 livres da raça saem de cena — o
+  // RaceBlock mostra os selects de realocação no lugar do picker, e
+  // racialAbilityChoices fica vazio pra sempre. Cobrar aqui trancava o Humano
+  // Variante e o Meio-Elfo num "parcial" sem UI pra resolver.
+  const flexibleAsi = draft.settings?.flexibleRacialAsi === true
+  const missing = []
+  if (reqs.draconicAncestry && !draft.draconicAncestry) missing.push('ancestralidade')
+  if (reqs.highElfCantrip && !draft.racialCantrip) missing.push('truque')
+  if (!flexibleAsi && reqs.freeAbility > 0 && (draft.racialAbilityChoices?.length ?? 0) < reqs.freeAbility) {
+    missing.push(`${reqs.freeAbility} atributos`)
+  }
+  if (reqs.racialSkills > 0 && (draft.racialSkills?.length ?? 0) < reqs.racialSkills) {
+    missing.push(reqs.racialSkills > 1 ? `${reqs.racialSkills} perícias` : 'perícia')
+  }
+  if (reqs.racialFeat && !isASIChoiceComplete(draft.racialFeat ? { type: 'feat', ...draft.racialFeat } : null)) {
+    missing.push(draft.racialFeat ? 'atributo do talento' : 'talento')
+  }
+  return missing
+}
+
 function statusOf(blockId, draft, srdData = {}) {
   switch (blockId) {
     case 'race': {
       if (!draft.race) return 'vazio'
-      const reqs = getRaceRequirements(draft, null, null)
-      if (reqs.draconicAncestry && !draft.draconicAncestry) return 'parcial'
-      if (reqs.highElfCantrip && !draft.racialCantrip) return 'parcial'
-      if (reqs.freeAbility > 0 && (draft.racialAbilityChoices?.length ?? 0) < reqs.freeAbility) return 'parcial'
-      if (reqs.racialSkills > 0 && (draft.racialSkills?.length ?? 0) < reqs.racialSkills) return 'parcial'
-      if (reqs.racialFeat && !isASIChoiceComplete(draft.racialFeat ? { type: 'feat', ...draft.racialFeat } : null)) return 'parcial'
-      return 'completo'
+      return raceMissing(draft).length > 0 ? 'parcial' : 'completo'
     }
 
     case 'class': {
@@ -142,7 +163,11 @@ export function getBlockStatus(blockId, draft, srdData = {}) {
   if (bb.length > 0) {
     return { status: 'bloqueado', missing: [], blockedBy: bb }
   }
-  return { status: statusOf(blockId, draft, srdData), missing: [], blockedBy: [] }
+  const status = statusOf(blockId, draft, srdData)
+  // Só Raça detalha o que falta por enquanto — é onde as escolhas extras se
+  // escondem (ancestralidade, truque, perícia racial, talento).
+  const missing = status === 'parcial' && blockId === 'race' ? raceMissing(draft) : []
+  return { status, missing, blockedBy: [] }
 }
 
 export function useBlockStatus(draft, srdData = {}) {
