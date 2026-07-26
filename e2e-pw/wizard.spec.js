@@ -72,4 +72,28 @@ test.describe('Wizard de criação', () => {
     // Ainda incompleto (faltam atributos/perícias) → finalize travado.
     await expect(page.getByRole('button', { name: /✦ Inscrever Herói ✦/ })).toBeDisabled()
   })
+
+  test('a escolha de atributo do talento fica visível no tema escuro', async ({ page }) => {
+    await openWizardGrid(page)
+    await openBlock(page, 'race')
+    await page.locator('#race-select').selectOption('humano')
+    await page.locator('#subrace-select').selectOption('tracos-raciais-alternativos')
+
+    // Humano Variante escolhe 1 talento; Atleta concede +1 em FOR ou DES.
+    await page.getByPlaceholder(/buscar talento/i).fill('Atleta')
+    await page.getByRole('button', { name: /^Selecionar Atleta$/ }).click()
+
+    const forca = page.getByRole('button', { name: /^FOR$/ })
+    const destreza = page.getByRole('button', { name: /^DES$/ })
+    await forca.click()
+    await expect(forca).toHaveAttribute('aria-pressed', 'true')
+
+    // Regressão: a ponte CSS achatava escolhido e não-escolhido na mesma cor,
+    // então clicar não mudava nada na tela e a escolha parecia não registrar.
+    const skin = el => el.evaluate(n => {
+      const s = getComputedStyle(n)
+      return `${s.backgroundColor}|${s.borderTopColor}`
+    })
+    expect(await skin(forca)).not.toBe(await skin(destreza))
+  })
 })
