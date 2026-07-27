@@ -486,6 +486,39 @@ describe('condições de monstro', () => {
 })
 
 describe('removeCombatant', () => {
+  it('remove o ativo do MEIO da ordem: turno vai pro seguinte, rodada intacta', () => {
+    let s = addNpc(addNpc(one(), OGRE), GOBLIN)
+    s = startEncounter(rollInitiative(s, () => 0.5).state)
+    s = nextTurn(s) // ativo agora é o segundo da ordem
+    const meio = s.activeId
+    const seguinte = s.combatants[2].id
+    const round = s.round
+    s = removeCombatant(s, meio)
+    expect(s.activeId).toBe(seguinte)
+    expect(s.round).toBe(round)
+  })
+
+  it('remove o ativo que é o ÚLTIMO da ordem: dá a volta e vira a rodada', () => {
+    let s = addNpc(addNpc(one(), OGRE), GOBLIN)
+    s = startEncounter(rollInitiative(s, () => 0.5).state)
+    s = nextTurn(nextTurn(s)) // ativo é o último da ordem
+    const ultimo = s.activeId
+    const primeiro = s.combatants[0].id
+    const round = s.round
+    s = removeCombatant(s, ultimo)
+    expect(s.activeId).toBe(primeiro)
+    expect(s.round).toBe(round + 1)
+  })
+
+  it('remover quem NÃO é o ativo não mexe no turno nem na rodada', () => {
+    let s = addNpc(addNpc(one(), OGRE), GOBLIN)
+    s = startEncounter(rollInitiative(s, () => 0.5).state)
+    const ativo = s.activeId
+    const outro = s.combatants.find(c => c.id !== ativo).id
+    s = removeCombatant(s, outro)
+    expect(s).toMatchObject({ activeId: ativo, round: 1 })
+  })
+
   it('passa o turno pro seguinte quando remove o ativo', () => {
     let s = addNpc(addNpc(one(), OGRE), GOBLIN)
     s = startEncounter(rollInitiative(s, () => 0.5).state)
@@ -591,10 +624,13 @@ export function removeCombatant(state, id) {
   const i = state.combatants.findIndex(c => c.id === id)
   if (i === -1) return state
   const rest = state.combatants.filter(c => c.id !== id)
-  const activeId = state.activeId === id
-    ? (rest.length === 0 ? null : rest[Math.min(i, rest.length - 1)].id)
-    : state.activeId
-  return { ...state, combatants: rest, activeId }
+  if (state.activeId !== id) return { ...state, combatants: rest }
+  if (rest.length === 0) return { ...state, combatants: rest, activeId: null }
+  // O turno passa pro sucessor natural. Se o removido era o ÚLTIMO da ordem, dá
+  // a volta pro primeiro e vira a rodada — mesmo wraparound do nextTurn (senão
+  // o turno voltaria pra quem já jogou nesta rodada).
+  if (i >= rest.length) return { ...state, combatants: rest, activeId: rest[0].id, round: state.round + 1 }
+  return { ...state, combatants: rest, activeId: rest[i].id }
 }
 
 /**
@@ -619,7 +655,7 @@ export function totalXp(state) {
 - [ ] **Step 4: Run test to verify it passes**
 
 Run: `npx vitest run src/test/encounter-npc.test.js`
-Expected: PASS — 12 testes.
+Expected: PASS — 15 testes.
 
 - [ ] **Step 5: Commit**
 

@@ -225,7 +225,7 @@ Sem React, sem Supabase. Exporta:
 | `previousTurn(state)` | inverso, sem descer abaixo de `round: 1` |
 | `applyNpcDamage(state, id, amount)` / `applyNpcHealing` / `setNpcTempHp` | HP de monstro fica em 0..maxHp; chegar a 0 marca `defeated: true` |
 | `toggleCondition(state, id, conditionId)` | só para `npc`; PJ passa pela RPC |
-| `removeCombatant(state, id)` | se era o ativo, `activeId` passa pro próximo antes de remover |
+| `removeCombatant(state, id)` | se era o ativo, `activeId` passa pro sucessor na ordem; se era o último da ordem, dá a volta pro primeiro e vira a rodada (mesmo wraparound do `nextTurn`, senão o turno voltaria pra quem já jogou) |
 | `totalXp(state)` | soma `xp` dos statblocks dos `npc` |
 
 `rollInitiative` recebe `rng` injetável — os testes fixam a rolagem.
