@@ -888,7 +888,20 @@ Insira este bloco imediatamente antes de
 ```js
     console.log('\n▶ [#5] Mesa de Combate: perímetro das RPCs do Mestre (0015)')
     {
-      // A ficha do player já está vinculada a `campaignId` (bloco #3).
+      // O bloco #2 tirou o player da mesa de propósito e o trigger
+      // detach_characters_on_member_removal desvinculou a ficha. As RPCs do
+      // Mestre só fazem sentido no estado real: player MEMBRO e ficha
+      // VINCULADA. Este bloco restaura isso em vez de herdar estado do #2.
+      // (O código de convite foi rotacionado antes, então `inviteCode` está
+      // velho — relemos o atual.)
+      const { data: camp } = await dm.from('campaigns')
+        .select('invite_code').eq('id', campaignId).maybeSingle()
+      const { error: rejoinErr } = await player.rpc('join_campaign', { p_code: camp?.invite_code })
+      assert(!rejoinErr, `player volta pra mesa (err=${rejoinErr?.message})`)
+      const { error: relinkErr } = await player.from('characters')
+        .update({ campaign_id: campaignId }).eq('id', charId)
+      assert(!relinkErr, `ficha revinculada à mesa (err=${relinkErr?.message})`)
+
       const { data: row } = await dm.from('characters')
         .select('data, version').eq('id', charId).maybeSingle()
       const v = row?.version
@@ -934,7 +947,13 @@ Insira este bloco imediatamente antes de
       assert(!!e4 && /not_dm_of_campaign/.test(e4.message), `player bloqueado na RPC do DM (got "${e4?.message}")`)
 
       // 5.6 doc completo pelo DM (caminho do descanso) → OK.
-      const restored = { ...after.data, combat: { ...after.data.combat, currentHp: after.data.combat.maxHp ?? 10, conditions: [] } }
+      // Guarda antes de espalhar: `after.data` cru derrubaria o processo com
+      // TypeError se a leitura viesse vazia, abortando os testes seguintes.
+      assert(!!after?.data, 'DM relê a ficha após o patch')
+      const restored = {
+        ...(after?.data ?? {}),
+        combat: { ...(after?.data?.combat ?? {}), currentHp: after?.data?.combat?.maxHp ?? 10, conditions: [] },
+      }
       const { error: e5 } = await dm.rpc('dm_save_character', {
         p_character_id: charId, p_data: restored, p_expected_version: after?.version,
       })
@@ -954,19 +973,26 @@ Insira este bloco imediatamente antes de
       assert(!!e7, `player bloqueado ao criar encontro (err=${e7?.message})`)
 
       // 5.8 lock otimista do encontro: update com version antiga não pega linha.
-      await dm.from('encounters').update({ state: { round: 2 } }).eq('id', enc.id)
-      const { data: stale } = await dm.from('encounters')
-        .update({ state: { round: 3 } }).eq('id', enc.id).eq('version', enc.version).select('version')
-      assert((stale ?? []).length === 0, 'update com version velha não afeta linha (lock otimista)')
+      // Só roda se o insert acima deu certo — `enc` cru aqui derrubaria o
+      // processo com TypeError e pularia o teste de rate limit.
+      if (enc?.id) {
+        await dm.from('encounters').update({ state: { round: 2 } }).eq('id', enc.id)
+        const { data: stale } = await dm.from('encounters')
+          .update({ state: { round: 3 } }).eq('id', enc.id).eq('version', enc.version).select('version')
+        assert((stale ?? []).length === 0, 'update com version velha não afeta linha (lock otimista)')
 
-      await dm.from('encounters').delete().eq('id', enc.id)
+        await dm.from('encounters').delete().eq('id', enc.id)
+      }
     }
 ```
 
 - [ ] **Step 2: Rodar contra o Supabase real**
 
 Run: `npm run test:rls`
-Expected: todos os `✓`, incluindo os 13 asserts novos do bloco `[#5]`; exit code 0.
+Expected: todos os `✓`, incluindo os asserts novos do bloco `[#5]`; exit code 0.
+
+Este passo é **ação do dono** — o script roda contra o Supabase real, exige as
+credenciais de `.env.local` e cria/apaga dados de verdade.
 
 - [ ] **Step 3: Commit**
 

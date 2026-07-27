@@ -327,12 +327,16 @@ async function main() {
       assert(!!e7, `player bloqueado ao criar encontro (err=${e7?.message})`)
 
       // 5.8 lock otimista do encontro: update com version antiga não pega linha.
-      await dm.from('encounters').update({ state: { round: 2 } }).eq('id', enc.id)
-      const { data: stale } = await dm.from('encounters')
-        .update({ state: { round: 3 } }).eq('id', enc.id).eq('version', enc.version).select('version')
-      assert((stale ?? []).length === 0, 'update com version velha não afeta linha (lock otimista)')
+      // Só roda se o insert acima deu certo — `enc` cru aqui derrubaria o
+      // processo com TypeError e pularia o teste de rate limit.
+      if (enc?.id) {
+        await dm.from('encounters').update({ state: { round: 2 } }).eq('id', enc.id)
+        const { data: stale } = await dm.from('encounters')
+          .update({ state: { round: 3 } }).eq('id', enc.id).eq('version', enc.version).select('version')
+        assert((stale ?? []).length === 0, 'update com version velha não afeta linha (lock otimista)')
 
-      await dm.from('encounters').delete().eq('id', enc.id)
+        await dm.from('encounters').delete().eq('id', enc.id)
+      }
     }
 
     console.log('\n▶ Rate limit: 11 tentativas em sequência → última falha com rate_limited')
