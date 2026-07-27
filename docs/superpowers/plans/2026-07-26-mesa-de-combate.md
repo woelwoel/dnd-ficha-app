@@ -1688,11 +1688,15 @@ export function useEncounter(campaignId) {
   const [loading, setLoading] = useState(true)
   const [conflict, setConflict] = useState(false)
   const versionRef = useRef(null)
+  // Espelho do state para o `update` compor sem depender da closure.
+  const stateRef = useRef(state)
 
   const adopt = useCallback((r) => {
     setRow(r)
     versionRef.current = r?.version ?? null
-    setState(r?.state && Array.isArray(r.state.combatants) ? r.state : emptyEncounterState())
+    const next = r?.state && Array.isArray(r.state.combatants) ? r.state : emptyEncounterState()
+    setState(next)
+    stateRef.current = next
   }, [])
 
   useEffect(() => {
@@ -1704,7 +1708,13 @@ export function useEncounter(campaignId) {
       if (existing) { adopt(existing); setLoading(false); return }
       const created = await createEncounter(campaignId, emptyEncounterState())
       if (!alive) return
-      if (created.ok) adopt(created.row)
+      if (created.ok) { adopt(created.row); setLoading(false); return }
+      // getActiveEncounter devolve null também quando a LEITURA falhou. Nesse
+      // caso a criação bate no índice único parcial da 0015 (um ativo por
+      // mesa) — relemos e adotamos o encontro que já existia.
+      const retry = await getActiveEncounter(campaignId)
+      if (!alive) return
+      if (retry) adopt(retry)
       setLoading(false)
     })()
     return () => { alive = false }
@@ -1713,16 +1723,21 @@ export function useEncounter(campaignId) {
   useEffect(() => {
     if (!row?.id) return
     return subscribeEncounter(row.id, (fresh) => {
-      // Ignora o eco do próprio save (versão que já conhecemos).
-      if (fresh.version === versionRef.current) return
+      // Ignora o eco do próprio save E qualquer evento atrasado: só adotamos
+      // versão MAIOR que a conhecida. Com `===`, um evento fora de ordem
+      // (v5 chegando depois de já sabermos v6) faria o estado regredir.
+      if (!(fresh.version > versionRef.current)) return
       adopt(fresh)
     })
   }, [row?.id, adopt])
 
   const update = useCallback(async (fn) => {
     if (!row?.id) return { ok: false, reason: 'no-encounter' }
-    const next = fn(state)
+    // `fn` parte do REF, não da closure: dois toques rápidos (o Mestre batendo
+    // "dano" duas vezes) precisam compor, senão o segundo descarta o primeiro.
+    const next = fn(stateRef.current)
     setState(next) // otimista: a mesa não pode travar esperando a rede
+    stateRef.current = next
     const res = await saveEncounterState(row.id, next, versionRef.current)
     if (res.ok) { versionRef.current = res.version; setConflict(false); return res }
     if (res.reason === 'conflict') {
@@ -1731,12 +1746,17 @@ export function useEncounter(campaignId) {
       setConflict(true)
     }
     return res
-  }, [row?.id, state, campaignId, adopt])
+  }, [row?.id, campaignId, adopt])
 
   const close = useCallback(async () => {
     if (!row?.id) return { ok: true }
     const res = await closeEncounter(row.id)
-    if (res.ok) { setRow(null); versionRef.current = null; setState(emptyEncounterState()) }
+    if (res.ok) {
+      setRow(null)
+      versionRef.current = null
+      setState(emptyEncounterState())
+      setConflict(false) // encontro novo não herda o aviso do anterior
+    }
     return res
   }, [row?.id])
 
