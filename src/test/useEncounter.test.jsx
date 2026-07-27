@@ -75,6 +75,33 @@ describe('useEncounter', () => {
     expect(result.current.state.round).toBe(5)
   })
 
+  it('realtime atrasado (versão menor) não regride o state; versão maior aplica', async () => {
+    api.active = { id: 'enc-1', state: { round: 10, started: true, combatants: [], nextSeq: 1, activeId: null }, version: 5 }
+    const { result } = renderHook(() => useEncounter('camp-1'))
+    await waitFor(() => expect(result.current.loading).toBe(false))
+
+    act(() => { api.onRow({ id: 'enc-1', state: { round: 999, started: true, combatants: [], nextSeq: 1, activeId: null }, version: 4 }) })
+    expect(result.current.state.round).toBe(10)
+
+    act(() => { api.onRow({ id: 'enc-1', state: { round: 20, started: true, combatants: [], nextSeq: 1, activeId: null }, version: 6 }) })
+    expect(result.current.state.round).toBe(20)
+  })
+
+  it('duas chamadas de update em sequência (sem esperar a primeira) compõem no cliente', async () => {
+    const { result } = renderHook(() => useEncounter('camp-1'))
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    expect(result.current.state.round).toBe(0)
+
+    await act(async () => {
+      const p1 = result.current.update(s => ({ ...s, round: s.round + 1 }))
+      const p2 = result.current.update(s => ({ ...s, round: s.round + 10 }))
+      await Promise.all([p1, p2])
+    })
+    // A segunda parte do resultado da primeira (0+1=1, depois +10=11) — não
+    // descarta o que a primeira chamada já tinha composto.
+    expect(result.current.state.round).toBe(11)
+  })
+
   it('criar falhando porque JÁ existe um ativo relê em vez de desistir', async () => {
     // getActiveEncounter devolve null tanto pra "não existe" quanto pra falha
     // de leitura. Se a criação bater no índice único da 0015, o encontro real
