@@ -26,3 +26,4 @@ function getLazy(systemId, key) {
 export const getLazyWizard = (systemId) => getLazy(systemId, 'Wizard')
 export const getLazySheet = (systemId) => getLazy(systemId, 'Sheet')
 export const getLazyGlobalWidgets = (systemId) => getLazy(systemId, 'GlobalWidgets')
+export const getLazyEncounter = (systemId) => getLazy(systemId, 'Encounter')

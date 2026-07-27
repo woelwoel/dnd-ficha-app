@@ -54,10 +54,13 @@ const supabaseMock = vi.hoisted(() => {
         return { data: id, error: null }
       }
       if (name === 'join_campaign') {
+        // Contrato da migration 0016: falha de código/já-membro volta como
+        // `data: null` SEM erro, pra que o registro da tentativa sobreviva à
+        // transação e o rate limit funcione. Ver 0016_join_rate_limit_fix.sql.
         const c = store.campaigns.find(x => x.invite_code === args.p_code)
-        if (!c) return { data: null, error: { message: 'not_found_or_already_member' } }
+        if (!c) return { data: null, error: null }
         if (store.members.some(m => m.campaign_id === c.id && m.user_id === store.uid)) {
-          return { data: null, error: { message: 'not_found_or_already_member' } }
+          return { data: null, error: null }
         }
         store.members.push({ campaign_id: c.id, user_id: store.uid, role: 'player' })
         return { data: c.id, error: null }
@@ -115,6 +118,25 @@ describe('campaigns (lib)', () => {
     store.uid = 'user-2'
     expect(await joinCampaign(code)).toEqual({ ok: true, id })
     expect(await joinCampaign('NOPE')).toEqual({ ok: false, reason: 'not-found-or-already-member' })
+  })
+
+  it('joinCampaign: entrar de novo na mesma mesa dá a MESMA razão genérica', async () => {
+    await createCampaign('M1')
+    const code = store.campaigns[0].invite_code
+    store.uid = 'user-2'
+    await joinCampaign(code)
+    // Já é membro: a resposta tem que ser indistinguível de código errado,
+    // senão o convite vira oráculo de "esta mesa existe".
+    expect(await joinCampaign(code)).toEqual({ ok: false, reason: 'not-found-or-already-member' })
+  })
+
+  it('joinCampaign ainda entende o contrato ANTIGO (exceção) da RPC', async () => {
+    // Janela de deploy: o código sobe antes de a migration 0016 ser aplicada,
+    // então o cliente precisa mapear os dois formatos pra mesma razão.
+    store.rpcErr = 'not_found_or_already_member'
+    expect(await joinCampaign('QUALQUER')).toEqual({ ok: false, reason: 'not-found-or-already-member' })
+    store.rpcErr = 'rate_limited'
+    expect(await joinCampaign('QUALQUER')).toEqual({ ok: false, reason: 'rate-limited' })
   })
 
   it('rotateInviteCode devolve novo código', async () => {

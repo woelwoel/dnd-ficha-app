@@ -12,7 +12,7 @@ import { AuthProvider, useAuth } from './auth/AuthProvider'
 import { LoginScreen } from './auth/LoginScreen'
 import { ResetPasswordScreen } from './auth/ResetPasswordScreen'
 import { lazyWithReload } from './utils/lazyWithReload'
-import { getLazyWizard, getLazySheet, getLazyGlobalWidgets } from './systems/ui-registry'
+import { getLazyWizard, getLazySheet, getLazyGlobalWidgets, getLazyEncounter } from './systems/ui-registry'
 import { listSystems, getSystemCore } from './systems'
 import { DEFAULT_SYSTEM } from './systems/envelope'
 import { getCharacterSystem } from './utils/storage'
@@ -180,6 +180,27 @@ function SheetRoute() {
   )
 }
 
+function EncounterRoute() {
+  const navigate = useNavigate()
+  const { id } = useParams()
+  const [system, setSystem] = useState(null)
+  useEffect(() => {
+    let alive = true
+    getCampaignSystem(id).then(s => { if (alive) setSystem(s) })
+    return () => { alive = false }
+  }, [id])
+
+  if (system === null) return <Loader />
+  const Encounter = getLazyEncounter(system)
+  if (!Encounter) return <Navigate to={`/campaigns/${id}`} replace />
+  return (
+    <RouteShell>
+      {/* eslint-disable-next-line react-hooks/static-components */}
+      <Encounter campaignId={id} onBack={() => navigate(`/campaigns/${id}`)} />
+    </RouteShell>
+  )
+}
+
 function CampaignDetailRoute() {
   const navigate = useNavigate()
   const { id } = useParams()
@@ -212,6 +233,7 @@ function AuthedRoutes() {
           <Route path="/c/:id" element={<SheetRoute />} />
           <Route path="/campaigns" element={<RouteShell><CampaignsScreen /></RouteShell>} />
           <Route path="/campaigns/:id" element={<CampaignDetailRoute />} />
+          <Route path="/campaigns/:id/combate" element={<EncounterRoute />} />
           <Route path="/admin" element={<AdminRoute />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

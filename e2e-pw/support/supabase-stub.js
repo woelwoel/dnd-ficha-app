@@ -63,11 +63,15 @@ function json(route, body, status = 200) {
 /**
  * Intercepta auth + rest do Supabase com um store em memória.
  * @param {import('@playwright/test').BrowserContext} context
- * @param {{ characters?: any[], onUpsert?: (row:any)=>void, failUpsert?: number }} opts
+ * @param {{ characters?: any[], campaigns?: any[], onUpsert?: (row:any)=>void, failUpsert?: number }} opts
  */
 export async function stubSupabase(context, opts = {}) {
   const store = new Map() // id → row { data, short_id, campaign_id, owner_id, ... }
   let shortSeq = 1
+  // Mesa de Combate: mesas, encontros e as RPCs do Mestre (migration 0015).
+  const campaigns = opts.campaigns ?? []       // [{ id, name, dm_id, system }]
+  const encounters = new Map()                 // id → row
+  let encSeq = 1
   for (const ch of opts.characters ?? []) {
     store.set(ch.id, {
       id: ch.id,
@@ -97,6 +101,56 @@ export async function stubSupabase(context, opts = {}) {
     const url = new URL(req.url())
     const path = url.pathname.replace('/rest/v1/', '')
     const wantsSingle = (req.headers()['accept'] || '').includes('pgrst.object')
+
+    if (path.startsWith('campaigns')) {
+      if (method === 'GET') return json(route, wantsSingle ? (campaigns[0] ?? null) : campaigns)
+      return json(route, wantsSingle ? {} : [])
+    }
+
+    if (path.startsWith('encounters')) {
+      if (method === 'GET') {
+        const rows = [...encounters.values()].filter(r => r.active)
+        return json(route, wantsSingle ? (rows[0] ?? null) : rows)
+      }
+      if (method === 'POST') {
+        let body = {}
+        try { body = JSON.parse(req.postData() || '{}') } catch { /* noop */ }
+        const incoming = Array.isArray(body) ? body[0] : body
+        const row = { id: `enc-${encSeq++}`, campaign_id: incoming.campaign_id, state: incoming.state, version: 1, active: true }
+        encounters.set(row.id, row)
+        return json(route, wantsSingle ? row : [row], 201)
+      }
+      if (method === 'PATCH') {
+        let body = {}
+        try { body = JSON.parse(req.postData() || '{}') } catch { /* noop */ }
+        const id = url.searchParams.get('id')?.replace('eq.', '')
+        const row = encounters.get(id)
+        if (!row) return json(route, wantsSingle ? null : [])
+        Object.assign(row, body, { version: row.version + 1 })
+        const repr = { version: row.version }
+        return json(route, wantsSingle ? repr : [repr])
+      }
+    }
+
+    if (path.startsWith('rpc/dm_apply_combat_state')) {
+      let body = {}
+      try { body = JSON.parse(req.postData() || '{}') } catch { /* noop */ }
+      const row = store.get(body.p_character_id)
+      if (!row) return json(route, { message: 'not_dm_of_campaign' }, 400)
+      row.data = { ...row.data, combat: { ...row.data.combat, ...body.p_patch } }
+      row.version += 1
+      return json(route, row.version)
+    }
+
+    if (path.startsWith('rpc/dm_save_character')) {
+      let body = {}
+      try { body = JSON.parse(req.postData() || '{}') } catch { /* noop */ }
+      const row = store.get(body.p_character_id)
+      if (!row) return json(route, { message: 'not_dm_of_campaign' }, 400)
+      row.data = body.p_data
+      row.version += 1
+      return json(route, row.version)
+    }
 
     // characters
     if (path.startsWith('characters')) {

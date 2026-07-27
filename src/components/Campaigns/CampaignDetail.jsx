@@ -90,6 +90,14 @@ export function CampaignDetail({ campaignId, onBack }) {
           onChanged={(ev) => ev?.left ? navigate('/campaigns') : null}
         />
         {isDM && (
+          <div>
+            <Button size="sm" onClick={() => navigate(`/campaigns/${campaign.id}/combate`)}>
+              Rodar combate
+            </Button>
+          </div>
+        )}
+
+        {isDM && (
           <CampaignCharactersList
             campaignId={campaign.id}
             onOpen={(idOrShort) => navigate(`/c/${idOrShort}`)}
