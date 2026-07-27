@@ -1,0 +1,47 @@
+// e2e-pw/encounter.spec.js
+import { test, expect } from '@playwright/test'
+import { installAuthedApp, USER_ID } from './support/supabase-stub.js'
+
+const CAMPAIGN_ID = '11111111-1111-4111-8111-111111111111'
+
+const ANA = {
+  id: '22222222-2222-4222-8222-222222222222',
+  system: 'dnd5e',
+  campaignId: CAMPAIGN_ID,
+  info: { name: 'Ana', level: 3, class: 'Guerreiro', race: 'Humano', feats: [] },
+  attributes: { str: 14, dex: 14, con: 14, int: 10, wis: 10, cha: 10 },
+  combat: {
+    maxHp: 20, currentHp: 18, tempHp: 0, armorClass: 16, conditions: [],
+    deathSaves: { successes: 0, failures: 0 }, attacks: [], classFeatureUses: [],
+    hitDice: { pool: { d10: { total: 3, used: 0 } } },
+  },
+  proficiencies: {}, spellcasting: {}, inventory: {},
+}
+
+test('Mestre monta combate, aplica dano e a ficha reflete', async ({ page, context }) => {
+  await installAuthedApp(context, {
+    characters: [ANA],
+    campaigns: [{ id: CAMPAIGN_ID, name: 'Mesa de Teste', dm_id: USER_ID, system: 'dnd5e' }],
+  })
+
+  await page.goto(`/campaigns/${CAMPAIGN_ID}/combate`)
+
+  const ana = page.getByLabel('Ana')
+  await expect(ana).toBeChecked()
+
+  await page.getByRole('button', { name: /rolar iniciativa/i }).click()
+  await expect(page.getByText(/rodada 1/i)).toBeVisible()
+  await expect(page.getByText('18/20')).toBeVisible()
+
+  await page.getByLabel(/valor de dano ou cura/i).fill('5')
+  await page.getByRole('button', { name: /^dano$/i }).click()
+  await expect(page.getByText('13/20')).toBeVisible()
+
+  await page.getByRole('button', { name: /condi/i }).click()
+  await page.getByRole('button', { name: /prostrado/i }).click()
+  await expect(page.getByText(/Prostrado/).first()).toBeVisible()
+
+  await page.getByRole('button', { name: /descanso longo/i }).click()
+  await expect(page.getByText(/1 ficha descansou/i)).toBeVisible()
+  await expect(page.getByText('20/20')).toBeVisible()
+})
