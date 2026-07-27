@@ -102,6 +102,60 @@ describe('useEncounter', () => {
     expect(result.current.state.round).toBe(11)
   })
 
+  it('conflito sem reload fresco desfaz o otimista em vez de deixar preso no rejeitado', async () => {
+    const { result } = renderHook(() => useEncounter('camp-1'))
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    expect(result.current.state.round).toBe(0)
+
+    api.saveResult = { ok: false, reason: 'conflict' }
+    api.active = null // leitura de reload falhou (ou não há mais ativo) — o mesmo null ambíguo do mount
+    await act(async () => { await result.current.update(s => ({ ...s, round: 7 })) })
+
+    expect(result.current.conflict).toBe(true)
+    // Sem dado fresco do servidor, o otimista rejeitado é desfeito — a UI
+    // não pode mostrar como aplicado o que o save recusou.
+    expect(result.current.state.round).toBe(0)
+  })
+
+  it('close() reseta o conflito junto com o resto do estado local', async () => {
+    const { result } = renderHook(() => useEncounter('camp-1'))
+    await waitFor(() => expect(result.current.loading).toBe(false))
+
+    api.saveResult = { ok: false, reason: 'conflict' }
+    api.active = null
+    await act(async () => { await result.current.update(s => ({ ...s, round: 7 })) })
+    expect(result.current.conflict).toBe(true)
+
+    await act(async () => { await result.current.close() })
+    expect(result.current.conflict).toBe(false)
+  })
+
+  it('troca de campaignId limpa o encontro da mesa anterior antes de carregar a nova', async () => {
+    const { result, rerender } = renderHook(
+      ({ campaignId }) => useEncounter(campaignId),
+      { initialProps: { campaignId: 'camp-1' } },
+    )
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    expect(result.current.encounterId).toBe('enc-1')
+
+    const mod = await import('../lib/encounters')
+    let resolveActive
+    mod.getActiveEncounter.mockImplementationOnce(() => new Promise((resolve) => { resolveActive = resolve }))
+
+    rerender({ campaignId: 'camp-2' })
+    // Limpeza síncrona, antes do primeiro `await` do efeito: não pode
+    // continuar apontando pra mesa 1 enquanto a mesa 2 ainda carrega.
+    expect(result.current.encounterId).toBe(null)
+    expect(result.current.loading).toBe(true)
+
+    await act(async () => {
+      resolveActive({ id: 'enc-2', state: { round: 1, started: false, combatants: [], nextSeq: 1, activeId: null }, version: 1 })
+      await Promise.resolve()
+    })
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    expect(result.current.encounterId).toBe('enc-2')
+  })
+
   it('criar falhando porque JÁ existe um ativo relê em vez de desistir', async () => {
     // getActiveEncounter devolve null tanto pra "não existe" quanto pra falha
     // de leitura. Se a criação bater no índice único da 0015, o encontro real

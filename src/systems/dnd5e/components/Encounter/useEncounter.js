@@ -34,6 +34,16 @@ export function useEncounter(campaignId) {
 
   useEffect(() => {
     let alive = true
+    // Limpa TUDO de forma síncrona antes do primeiro `await`: enquanto
+    // `campaignId` troca, `row`/`state`/`versionRef` não podem continuar
+    // apontando pra mesa anterior — `encounterId` e `update` vazariam pra lá
+    // durante a janela de carregamento da mesa nova.
+    setRow(null)
+    versionRef.current = null
+    setConflict(false)
+    const empty = emptyEncounterState()
+    stateRef.current = empty
+    setState(empty)
     setLoading(true)
     ;(async () => {
       const existing = await getActiveEncounter(campaignId)
@@ -70,7 +80,8 @@ export function useEncounter(campaignId) {
     // Compõe sobre o ref (o mais recente), não sobre a `state` da closure —
     // duas chamadas disparadas em sequência sem esperar a primeira precisam
     // compor uma sobre a outra no cliente.
-    const next = fn(stateRef.current)
+    const prev = stateRef.current
+    const next = fn(prev)
     const versionUsed = versionRef.current
     stateRef.current = next
     setState(next) // otimista: a mesa não pode travar esperando a rede
@@ -82,9 +93,15 @@ export function useEncounter(campaignId) {
       // Não serializamos as chamadas nem criamos fila; é o comportamento
       // desenhado.
       const fresh = await getActiveEncounter(campaignId)
-      if (fresh) adopt(fresh)
-      setConflict(true)
+      if (fresh) { adopt(fresh); setConflict(true); return res }
     }
+    // Save falhou (ou o reload do conflito não trouxe dado fresco — o mesmo
+    // `null` ambíguo do mount) e não temos verdade nova do servidor: desfaz o
+    // otimista em vez de deixar a UI mostrando como aplicado o que o servidor
+    // recusou.
+    setState(prev)
+    stateRef.current = prev
+    if (res.reason === 'conflict') setConflict(true)
     return res
   }, [row?.id, campaignId, adopt])
 
