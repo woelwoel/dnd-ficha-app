@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
-  emptyEncounterState, addPc, addNpc, startEncounter, rollInitiative,
+  emptyEncounterState, addPc, addNpc, startEncounter, rollInitiative, setInitiative, nextTurn,
   applyNpcDamage, applyNpcHealing, setNpcTempHp, toggleNpcCondition,
   removeCombatant, markOrphans, totalXp,
 } from '../systems/dnd5e/domain/encounter'
@@ -10,6 +10,16 @@ const OGRE   = { index: 'ogre',   name: 'Ogro',   hit_points: 59, hit_points_rol
 
 const one = () => addNpc(emptyEncounterState(), GOBLIN)
 const npc = (s) => s.combatants[0]
+
+// Ordem determinística k1 > k2 > k3 (iniciativa 20/15/10), pra não depender
+// de startEncounter deixar o ativo sempre no índice 0.
+const orderedThree = () => {
+  let s = addNpc(addNpc(addNpc(emptyEncounterState(), GOBLIN), GOBLIN), GOBLIN)
+  s = setInitiative(s, 'k1', 20)
+  s = setInitiative(s, 'k2', 15)
+  s = setInitiative(s, 'k3', 10)
+  return startEncounter(s)
+}
 
 describe('HP de monstro', () => {
   it('desconta dano e marca defeated ao chegar a 0', () => {
@@ -83,6 +93,30 @@ describe('removeCombatant', () => {
   it('id inexistente devolve o mesmo state', () => {
     const s = one()
     expect(removeCombatant(s, 'nope')).toBe(s)
+  })
+
+  it('remove o ativo do MEIO da ordem: activeId vira o seguinte, round inalterado', () => {
+    let s = orderedThree() // k1, k2, k3 — ativo k1
+    s = nextTurn(s) // ativo k2 (meio)
+    s = removeCombatant(s, 'k2')
+    expect(s.round).toBe(1)
+    expect(s.activeId).toBe('k3')
+  })
+
+  it('remove o ativo que é o ÚLTIMO da ordem: dá a volta e incrementa round', () => {
+    let s = orderedThree() // k1, k2, k3 — ativo k1
+    s = nextTurn(nextTurn(s)) // ativo k3 (último)
+    s = removeCombatant(s, 'k3')
+    expect(s.round).toBe(2)
+    expect(s.activeId).toBe('k1')
+  })
+
+  it('remove um combatente que NÃO é o ativo: activeId e round inalterados', () => {
+    let s = orderedThree() // ativo k1
+    s = removeCombatant(s, 'k3')
+    expect(s.round).toBe(1)
+    expect(s.activeId).toBe('k1')
+    expect(s.combatants.map(c => c.id)).toEqual(['k1', 'k2'])
   })
 })
 

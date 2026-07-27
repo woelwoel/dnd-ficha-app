@@ -193,10 +193,15 @@ export function removeCombatant(state, id) {
   const i = state.combatants.findIndex(c => c.id === id)
   if (i === -1) return state
   const rest = state.combatants.filter(c => c.id !== id)
-  const activeId = state.activeId === id
-    ? (rest.length === 0 ? null : rest[Math.min(i, rest.length - 1)].id)
-    : state.activeId
-  return { ...state, combatants: rest, activeId }
+  if (state.activeId !== id) return { ...state, combatants: rest }
+  if (rest.length === 0) return { ...state, combatants: rest, activeId: null }
+  // O removido era o último da ordem: mesma volta do nextTurn ao passar do
+  // fim da lista — vai pro primeiro e avança a rodada. Se não era o último,
+  // quem ocupa o índice `i` em `rest` já é o sucessor natural.
+  if (i >= rest.length) {
+    return { ...state, combatants: rest, activeId: rest[0].id, round: state.round + 1 }
+  }
+  return { ...state, combatants: rest, activeId: rest[i].id }
 }
 
 /**
