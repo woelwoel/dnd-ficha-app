@@ -78,3 +78,62 @@ export function addNpc(state, monster, opts = {}) {
     }],
   }
 }
+
+/** Ordena por iniciativa desc; empate por bônus desc; depois nome (determinístico). */
+export function sortByInitiative(combatants) {
+  return [...combatants].sort((a, b) =>
+    (b.initiative ?? -Infinity) - (a.initiative ?? -Infinity)
+    || (b.initiativeBonus ?? 0) - (a.initiativeBonus ?? 0)
+    || String(a.name).localeCompare(String(b.name), 'pt-BR'),
+  )
+}
+
+/**
+ * Rola d20+bônus pra todo mundo. `rng` injetável (mesma convenção do
+ * rollDeathSave em rules.js: teste fixa o dado).
+ * @returns {{ state: object, rolls: Array<{id,die,bonus,total}> }}
+ */
+export function rollInitiative(state, rng = Math.random) {
+  const rolls = []
+  const combatants = state.combatants.map(c => {
+    const die = Math.floor(rng() * 20) + 1
+    const bonus = c.initiativeBonus ?? 0
+    rolls.push({ id: c.id, die, bonus, total: die + bonus })
+    return { ...c, initiative: die + bonus }
+  })
+  return { state: { ...state, combatants: sortByInitiative(combatants) }, rolls }
+}
+
+/** Correção manual (o jogador rolou o dado físico dele e falou o número). */
+export function setInitiative(state, id, value) {
+  const n = Number(value)
+  const valid = value !== '' && value !== null && Number.isFinite(n)
+  const combatants = state.combatants.map(c =>
+    c.id === id ? { ...c, initiative: valid ? n : null } : c)
+  return { ...state, combatants: sortByInitiative(combatants) }
+}
+
+export function startEncounter(state) {
+  const combatants = sortByInitiative(state.combatants)
+  return { ...state, combatants, started: true, round: 1, activeId: combatants[0]?.id ?? null }
+}
+
+export function nextTurn(state) {
+  if (!state.started || state.combatants.length === 0) return state
+  const i = state.combatants.findIndex(c => c.id === state.activeId)
+  const next = i + 1
+  if (next >= state.combatants.length) {
+    return { ...state, round: state.round + 1, activeId: state.combatants[0].id }
+  }
+  return { ...state, activeId: state.combatants[next].id }
+}
+
+export function previousTurn(state) {
+  if (!state.started || state.combatants.length === 0) return state
+  const i = state.combatants.findIndex(c => c.id === state.activeId)
+  if (i <= 0) {
+    if (state.round <= 1) return { ...state, activeId: state.combatants[0].id }
+    return { ...state, round: state.round - 1, activeId: state.combatants[state.combatants.length - 1].id }
+  }
+  return { ...state, activeId: state.combatants[i - 1].id }
+}
