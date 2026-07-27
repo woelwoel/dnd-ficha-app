@@ -14,7 +14,12 @@ import { useLanguage } from '../../../../utils/useLanguage'
 import { mergeMonster, indexOverrides } from '../../utils/monsters-i18n'
 import { MonsterStatBlock } from './MonsterStatBlock'
 
-export function BestiaryModal({ isOpen, onClose }) {
+/**
+ * Bestiário SRD. `onPick` é OPCIONAL: quando presente, o painel do stat block
+ * ganha um botão de adicionar (usado pela Mesa de Combate) e o modal NÃO fecha
+ * ao adicionar — o Mestre costuma pôr 3 goblins de uma vez.
+ */
+export function BestiaryModal({ isOpen, onClose, onPick = null }) {
   const [monstersEn, setMonstersEn] = useState([])
   const [ptOverrides, setPtOverrides] = useState(null) // Map<index, override>
   const [search, setSearch] = useState('')
@@ -196,6 +201,15 @@ export function BestiaryModal({ isOpen, onClose }) {
                 >
                   ← Voltar à lista
                 </button>
+                {onPick && (
+                  <button
+                    type="button"
+                    onClick={() => onPick(selected)}
+                    className="w-full mb-3 px-3 py-2 rounded-sm border-2 border-ink-600 bg-ink-500 text-parchment-50 text-sm font-display tracking-wide uppercase hover:bg-ink-600"
+                  >
+                    Adicionar ao combate
+                  </button>
+                )}
                 <MonsterStatBlock monster={selected} lang={lang} />
               </div>
             ) : (
