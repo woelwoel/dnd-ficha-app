@@ -244,6 +244,97 @@ async function main() {
         `trigger bloqueia ficha de outro sistema (got "${mismatchErr?.message}")`)
     }
 
+    console.log('\n▶ [#5] Mesa de Combate: perímetro das RPCs do Mestre (0015)')
+    {
+      // O bloco #2 tirou o player da mesa de propósito e o trigger
+      // detach_characters_on_member_removal desvinculou a ficha. As RPCs do
+      // Mestre só fazem sentido no estado real: player MEMBRO e ficha
+      // VINCULADA. Este bloco restaura isso em vez de herdar estado do #2.
+      const { data: camp } = await dm.from('campaigns')
+        .select('invite_code').eq('id', campaignId).maybeSingle()
+      const { error: rejoinErr } = await player.rpc('join_campaign', { p_code: camp?.invite_code })
+      assert(!rejoinErr, `player volta pra mesa (err=${rejoinErr?.message})`)
+      const { error: relinkErr } = await player.from('characters')
+        .update({ campaign_id: campaignId }).eq('id', charId)
+      assert(!relinkErr, `ficha revinculada à mesa (err=${relinkErr?.message})`)
+
+      const { data: row } = await dm.from('characters')
+        .select('data, version').eq('id', charId).maybeSingle()
+      const v = row?.version
+
+      // 5.1 DM aplica patch estreito na ficha do player → OK.
+      const { data: v1, error: e1 } = await dm.rpc('dm_apply_combat_state', {
+        p_character_id: charId,
+        p_patch: { currentHp: 3, conditions: ['prone'] },
+        p_expected_version: v,
+      })
+      assert(!e1 && Number.isInteger(v1), `DM aplica patch de combate (err=${e1?.message})`)
+
+      // 5.2 o patch entrou e NÃO apagou o resto de data.combat.
+      const { data: after } = await dm.from('characters')
+        .select('data, version').eq('id', charId).maybeSingle()
+      assert(after?.data?.combat?.currentHp === 3, `currentHp gravado (got ${after?.data?.combat?.currentHp})`)
+      assert(Array.isArray(after?.data?.combat?.conditions) && after.data.combat.conditions[0] === 'prone',
+        'conditions gravado')
+      assert(after?.data?.info?.name === row?.data?.info?.name, 'resto da ficha preservado (merge, não replace)')
+
+      // 5.3 chave fora da lista → recusa.
+      const { error: e2 } = await dm.rpc('dm_apply_combat_state', {
+        p_character_id: charId,
+        p_patch: { maxHp: 999 },
+        p_expected_version: after?.version,
+      })
+      assert(!!e2 && /illegal_patch_key/.test(e2.message), `chave ilegal recusada (got "${e2?.message}")`)
+
+      // 5.4 versão errada → conflito, sem escrever.
+      const { error: e3 } = await dm.rpc('dm_apply_combat_state', {
+        p_character_id: charId,
+        p_patch: { currentHp: 1 },
+        p_expected_version: 999999,
+      })
+      assert(!!e3 && /version_conflict/.test(e3.message), `versão divergente recusada (got "${e3?.message}")`)
+
+      // 5.5 o próprio player NÃO é DM da mesa → recusa (a RPC é do Mestre).
+      const { error: e4 } = await player.rpc('dm_apply_combat_state', {
+        p_character_id: charId,
+        p_patch: { currentHp: 7 },
+        p_expected_version: after?.version,
+      })
+      assert(!!e4 && /not_dm_of_campaign/.test(e4.message), `player bloqueado na RPC do DM (got "${e4?.message}")`)
+
+      // 5.6 doc completo pelo DM (caminho do descanso) → OK.
+      assert(!!after?.data, 'DM relê a ficha após o patch')
+      const restored = {
+        ...(after?.data ?? {}),
+        combat: { ...(after?.data?.combat ?? {}), currentHp: after?.data?.combat?.maxHp ?? 10, conditions: [] },
+      }
+      const { error: e5 } = await dm.rpc('dm_save_character', {
+        p_character_id: charId, p_data: restored, p_expected_version: after?.version,
+      })
+      assert(!e5, `DM salva doc completo da ficha da mesa (err=${e5?.message})`)
+
+      // 5.7 encounters: DM cria e lê; player não vê nada.
+      const { data: enc, error: e6 } = await dm.from('encounters')
+        .insert({ campaign_id: campaignId, state: { round: 1, combatants: [] } })
+        .select('id, version').single()
+      assert(!e6 && !!enc?.id, `DM cria encontro (err=${e6?.message})`)
+
+      const { data: pRows } = await player.from('encounters').select('id').eq('campaign_id', campaignId)
+      assert((pRows ?? []).length === 0, `player não enxerga encontro da mesa (got ${(pRows ?? []).length})`)
+
+      const { error: e7 } = await player.from('encounters')
+        .insert({ campaign_id: campaignId, state: {} })
+      assert(!!e7, `player bloqueado ao criar encontro (err=${e7?.message})`)
+
+      // 5.8 lock otimista do encontro: update com version antiga não pega linha.
+      await dm.from('encounters').update({ state: { round: 2 } }).eq('id', enc.id)
+      const { data: stale } = await dm.from('encounters')
+        .update({ state: { round: 3 } }).eq('id', enc.id).eq('version', enc.version).select('version')
+      assert((stale ?? []).length === 0, 'update com version velha não afeta linha (lock otimista)')
+
+      await dm.from('encounters').delete().eq('id', enc.id)
+    }
+
     console.log('\n▶ Rate limit: 11 tentativas em sequência → última falha com rate_limited')
     {
       let last = null
