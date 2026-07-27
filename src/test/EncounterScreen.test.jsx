@@ -96,4 +96,35 @@ describe('EncounterScreen', () => {
     await userEvent.click(screen.getByRole('button', { name: /pr[óo]ximo/i }))
     expect(await screen.findByText(/rodada 2/i)).toBeInTheDocument()
   })
+
+  it('aviso de concentração some ao avançar o turno', async () => {
+    api.party = [anaRow({
+      combat: { maxHp: 20, currentHp: 18, tempHp: 0, conditions: [], deathSaves: { successes: 0, failures: 0 }, concentrating: { spellIndex: 'bless', spellName: 'Bênção' } },
+    })]
+    render(<EncounterScreen campaignId="camp-1" onBack={() => {}} />)
+    await userEvent.click(await screen.findByRole('button', { name: /rolar iniciativa/i }))
+    await userEvent.type(await screen.findByLabelText(/valor de dano ou cura/i), '20')
+    await userEvent.click(screen.getByRole('button', { name: /^dano$/i }))
+    expect(await screen.findByText(/CD 10 de concentração/i)).toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: /pr[óo]ximo/i }))
+    expect(screen.queryByText(/CD 10 de concentração/i)).not.toBeInTheDocument()
+  })
+
+  it('falha na escrita E no resync avisa e não apaga a companhia da tela', async () => {
+    render(<EncounterScreen campaignId="camp-1" onBack={() => {}} />)
+    await userEvent.click(await screen.findByRole('button', { name: /rolar iniciativa/i }))
+
+    // loadCampaignCharacters NUNCA lança (engole erro de rede e devolve []
+    // igual a uma mesa vazia — ver src/lib/campaigns.js:199); simulamos essa
+    // devolução vazia pra exercitar o pior caso: nem a escrita, nem o resync.
+    api.writeResult = { ok: false, reason: 'unknown' }
+    api.party = []
+    await userEvent.type(await screen.findByLabelText(/valor de dano ou cura/i), '5')
+    await userEvent.click(screen.getByRole('button', { name: /^dano$/i }))
+
+    expect(await screen.findByText(/falha ao escrever e ao recarregar/i)).toBeInTheDocument()
+    // a companhia continua na tela — o resync vazio não pode apagar a ficha
+    expect(screen.getByText('Ana')).toBeInTheDocument()
+  })
 })
