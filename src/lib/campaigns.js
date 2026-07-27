@@ -182,7 +182,7 @@ export async function loadCampaignRoster(campaignId) {
 export async function loadCampaignCharacters(campaignId) {
   const { data, error } = await supabase
     .from('characters')
-    .select('id, owner_id, data, last_opened_at, short_id, campaign_id')
+    .select('id, owner_id, data, last_opened_at, short_id, campaign_id, version')
     .eq('campaign_id', campaignId)
     .order('created_at', { ascending: true })
   if (error) { logDev('loadCampaignCharacters', error); return [] }

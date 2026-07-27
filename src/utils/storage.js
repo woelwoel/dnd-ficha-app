@@ -26,7 +26,7 @@ function validateForSave(character) {
 const SHORT_ID_REGEX = /^[A-HJ-NP-Za-hj-km-np-z2-9]{10}$/
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
-function rowToCharacter(row) {
+export function rowToCharacter(row) {
   // O payload da ficha vive em row.data. Outros campos (owner_id, campaign_id,
   // short_id, last_opened_at, version) são metadados relacionais e são
   // espelhados no objeto pra que o cliente possa consultar sem outra query.
