@@ -86,10 +86,12 @@ async function main() {
       assert(Array.isArray(data) && data.length === 0, 'Player não-membro recebe lista vazia (RLS)')
     }
 
-    console.log('\n▶ Player tenta código inválido → mensagem genérica')
+    console.log('\n▶ Player tenta código inválido → resposta genérica (null)')
     {
-      const { error } = await player.rpc('join_campaign', { p_code: 'XXXXXXXXXX' })
-      assert(!!error && /not_found_or_already_member/.test(error.message), `erro genérico (got "${error?.message}")`)
+      // Desde a 0016 a falha volta como `data: null` sem erro, pra que o
+      // registro da tentativa sobreviva à transação e o rate limit funcione.
+      const { data, error } = await player.rpc('join_campaign', { p_code: 'XXXXXXXXXX' })
+      assert(!error && data === null, `código inválido devolve null sem erro (data=${data}, err="${error?.message}")`)
     }
 
     console.log('\n▶ Player entra com código válido')
@@ -98,10 +100,10 @@ async function main() {
       assert(!error && data === campaignId, `join_campaign devolve cid (err=${error?.message})`)
     }
 
-    console.log('\n▶ Player tenta entrar de novo → mesma mensagem genérica')
+    console.log('\n▶ Player tenta entrar de novo → mesma resposta genérica')
     {
-      const { error } = await player.rpc('join_campaign', { p_code: inviteCode })
-      assert(!!error && /not_found_or_already_member/.test(error.message), 'já-membro mascarado')
+      const { data, error } = await player.rpc('join_campaign', { p_code: inviteCode })
+      assert(!error && data === null, `já-membro mascarado como null (data=${data}, err="${error?.message}")`)
     }
 
     console.log('\n▶ Player agora ENXERGA a mesa')
@@ -339,14 +341,22 @@ async function main() {
       }
     }
 
-    console.log('\n▶ Rate limit: 11 tentativas em sequência → última falha com rate_limited')
+    console.log('\n▶ Rate limit: tentativas FRACASSADAS acumulam e barram (0016)')
     {
-      let last = null
-      for (let i = 0; i < 11; i++) {
+      // Este teste não podia passar antes da 0016: cada tentativa fracassada
+      // levantava exceção, o rollback apagava o próprio registro em
+      // join_attempts, e o contador nunca subia. Agora a falha volta como
+      // null, a transação commita, e o acúmulo é real.
+      let tripped = null
+      let attempts = 0
+      for (let i = 0; i < 12 && tripped === null; i++) {
         const { error } = await player.rpc('join_campaign', { p_code: 'NEVERMATCH' })
-        last = error
+        attempts += 1
+        if (error) tripped = error
       }
-      assert(!!last && /rate_limited/.test(last.message), `rate limit dispara (got "${last?.message}")`)
+      assert(!!tripped && /rate_limited/.test(tripped.message),
+        `rate limit dispara por tentativas fracassadas (após ${attempts}, got "${tripped?.message}")`)
+      assert(attempts <= 11, `barrou dentro de 11 tentativas (foram ${attempts})`)
     }
   } finally {
     console.log('\n▶ Cleanup: DM apaga as mesas + player apaga a ficha de teste')

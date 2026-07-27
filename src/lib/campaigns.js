@@ -95,6 +95,16 @@ export async function getCampaignSystem(campaignId) {
   return data.system
 }
 
+/**
+ * Entra numa mesa pelo código de convite.
+ *
+ * Aceita os DOIS contratos da RPC de propósito: até a migration 0016 ser
+ * aplicada, "código inválido / já é membro" chega como exceção
+ * `not_found_or_already_member`; depois dela, chega como `data: null` sem erro
+ * (a troca foi necessária pro registro da tentativa sobreviver e o rate limit
+ * funcionar — ver o cabeçalho da 0016). Os dois viram a MESMA razão genérica,
+ * que é o ponto: o chamador não distingue código errado de já-membro.
+ */
 export async function joinCampaign(code) {
   const { data, error } = await supabase.rpc('join_campaign', { p_code: code })
   if (error) {
@@ -103,6 +113,7 @@ export async function joinCampaign(code) {
     logDev('joinCampaign', error)
     return { ok: false, reason: 'unknown' }
   }
+  if (data == null) return { ok: false, reason: 'not-found-or-already-member' }
   return { ok: true, id: data }
 }
 
