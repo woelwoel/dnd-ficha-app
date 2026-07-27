@@ -89,8 +89,9 @@ export function sortByInitiative(combatants) {
 }
 
 /**
- * Rola d20+bônus pra todo mundo. `rng` injetável (mesma convenção do
- * rollDeathSave em rules.js: teste fixa o dado).
+ * Rola d20+bônus pra todo mundo de uma vez. `rng` é uma FUNÇÃO (não um valor
+ * já rolado) porque essa função invoca o dado uma vez por combatente; o
+ * teste passa um `rng` fixo pra tornar as N rolagens determinísticas.
  * @returns {{ state: object, rolls: Array<{id,die,bonus,total}> }}
  */
 export function rollInitiative(state, rng = Math.random) {

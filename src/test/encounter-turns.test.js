@@ -89,4 +89,20 @@ describe('startEncounter / nextTurn / previousTurn', () => {
     expect(nextTurn(s)).toBe(s)
     expect(previousTurn(s)).toBe(s)
   })
+
+  it('lista com um combatente só (chefe solo): vira rodada sem trocar de ativo', () => {
+    let s = emptyEncounterState()
+    s = addPc(s, { characterId: 'a', name: 'Chefe', initiativeBonus: 3 })
+    s = startEncounter(rollInitiative(s, () => 0.5).state)
+    expect(s).toMatchObject({ round: 1, activeId: 'k1' })
+
+    s = nextTurn(s)
+    expect(s).toMatchObject({ round: 2, activeId: 'k1' })
+
+    s = previousTurn(s)
+    expect(s).toMatchObject({ round: 1, activeId: 'k1' })
+
+    s = previousTurn(s) // já na rodada 1: não desce
+    expect(s).toMatchObject({ round: 1, activeId: 'k1' })
+  })
 })
