@@ -138,3 +138,81 @@ export function previousTurn(state) {
   }
   return { ...state, activeId: state.combatants[i - 1].id }
 }
+
+/** Aplica `fn` só no combatente `npc` de id dado (PJ passa pela RPC, não aqui). */
+function mapNpc(state, id, fn) {
+  return {
+    ...state,
+    combatants: state.combatants.map(c => (c.id === id && c.kind === 'npc' ? fn(c) : c)),
+  }
+}
+
+function toAmount(v) {
+  const n = Math.floor(Number(v))
+  return Number.isFinite(n) && n > 0 ? n : 0
+}
+
+export function applyNpcDamage(state, id, amount) {
+  const dmg = toAmount(amount)
+  if (dmg === 0) return state
+  return mapNpc(state, id, c => {
+    const absorbed = Math.min(c.tempHp ?? 0, dmg)
+    const currentHp = Math.max(0, (c.currentHp ?? 0) - (dmg - absorbed))
+    return { ...c, tempHp: (c.tempHp ?? 0) - absorbed, currentHp, defeated: currentHp === 0 }
+  })
+}
+
+export function applyNpcHealing(state, id, amount) {
+  const heal = toAmount(amount)
+  if (heal === 0) return state
+  return mapNpc(state, id, c => {
+    const currentHp = Math.min(c.maxHp ?? 0, (c.currentHp ?? 0) + heal)
+    return { ...c, currentHp, defeated: currentHp === 0 }
+  })
+}
+
+/** PHB p.198: HP temporário não empilha — fica o maior. */
+export function setNpcTempHp(state, id, amount) {
+  const t = toAmount(amount)
+  return mapNpc(state, id, c => ({ ...c, tempHp: Math.max(t, c.tempHp ?? 0) }))
+}
+
+export function toggleNpcCondition(state, id, conditionId) {
+  return mapNpc(state, id, c => {
+    const list = c.conditions ?? []
+    return {
+      ...c,
+      conditions: list.includes(conditionId)
+        ? list.filter(x => x !== conditionId)
+        : [...list, conditionId],
+    }
+  })
+}
+
+export function removeCombatant(state, id) {
+  const i = state.combatants.findIndex(c => c.id === id)
+  if (i === -1) return state
+  const rest = state.combatants.filter(c => c.id !== id)
+  const activeId = state.activeId === id
+    ? (rest.length === 0 ? null : rest[Math.min(i, rest.length - 1)].id)
+    : state.activeId
+  return { ...state, combatants: rest, activeId }
+}
+
+/**
+ * Marca PJ cuja ficha não está mais legível na mesa (o trigger da migration
+ * 0007 desvincula a ficha quando o membro sai). Combatente órfão CONTINUA na
+ * ordem de iniciativa — só perde as ações de escrita.
+ */
+export function markOrphans(state, liveCharacterIds) {
+  const live = new Set(liveCharacterIds)
+  return {
+    ...state,
+    combatants: state.combatants.map(c =>
+      c.kind === 'pc' ? { ...c, orphaned: !live.has(c.characterId) } : c),
+  }
+}
+
+export function totalXp(state) {
+  return state.combatants.reduce((s, c) => s + (c.kind === 'npc' ? (c.xp ?? 0) : 0), 0)
+}
