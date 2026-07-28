@@ -74,17 +74,23 @@ export function EncounterLibraryScreen({ campaignId, onBack }) {
 
   function novo() {
     setError(null)
-    setEditing({ id: null, name: '', group: emptyEncounterState() })
+    setEditing({ id: null, name: '', group: emptyEncounterState(), unknown: [] })
   }
 
   function editar(tpl) {
     setError(null)
-    const { state } = fromRecipe(tpl.monsters, byIndex)
-    setEditing({ id: tpl.id, name: tpl.name, group: state })
+    const { state, unknown } = fromRecipe(tpl.monsters, byIndex)
+    // Guarda as entradas que o catálogo não reconheceu pra devolvê-las
+    // intactas ao salvar — descartar dado do Mestre em silêncio é pior que
+    // exibir um encontro incompleto. Isso importa em especial porque o
+    // catálogo é dataset PREGUIÇOSO: se a tela abrir antes dele resolver,
+    // `byIndex` está vazio e todo monstro vira "desconhecido" nesse instante.
+    const perdidos = (tpl.monsters ?? []).filter(m => unknown.includes(m.monsterIndex))
+    setEditing({ id: tpl.id, name: tpl.name, group: state, unknown: perdidos })
   }
 
   async function salvar() {
-    const recipe = toRecipe(editing.group)
+    const recipe = [...toRecipe(editing.group), ...(editing.unknown ?? [])]
     const res = editing.id
       ? await updateTemplate(editing.id, { name: editing.name, monsters: recipe })
       : await createTemplate(campaignId, editing.name, recipe)
@@ -125,6 +131,12 @@ export function EncounterLibraryScreen({ campaignId, onBack }) {
                 />
               </label>
               {error && <p className="text-xs text-red-700">{error}</p>}
+              {editing.unknown?.length > 0 && (
+                <p className="text-xs ink-italic text-amber-800">
+                  {editing.unknown.length} monstro(s) desta receita não foi(ram) encontrado(s) no catálogo.
+                  Eles serão mantidos como estão ao salvar.
+                </p>
+              )}
             </section>
 
             <MonsterGroupPanel value={editing.group} onChange={g => setEditing(v => ({ ...v, group: g }))} />
@@ -146,7 +158,7 @@ export function EncounterLibraryScreen({ campaignId, onBack }) {
 
             <section className="rounded-sm border-2 border-parchment-600 bg-parchment-50 overflow-hidden">
               <h2 className="px-4 py-2 text-xs font-display tracking-widest uppercase text-ink-500 border-b border-parchment-600 bg-parchment-100">
-                Salvos ({templates.length})
+                Salvos ({templates.length}) <span className="normal-case tracking-normal ink-italic text-ink-300">· dificuldade vs. a companhia de agora</span>
               </h2>
               {templates.length === 0 ? (
                 <p className="p-4 text-sm ink-italic text-ink-300">

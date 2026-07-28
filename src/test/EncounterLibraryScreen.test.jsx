@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-const api = vi.hoisted(() => ({ templates: [], party: [], created: [], deleted: [], createResult: null }))
+const api = vi.hoisted(() => ({ templates: [], party: [], created: [], updated: [], deleted: [], createResult: null }))
 
 vi.mock('../lib/encounterTemplates', () => ({
   listTemplates: vi.fn(async () => api.templates),
@@ -14,7 +14,9 @@ vi.mock('../lib/encounterTemplates', () => ({
     api.templates = [...api.templates, row]
     return { ok: true, row }
   }),
-  updateTemplate: vi.fn(async () => ({ ok: true })),
+  // Captura (id, patch) pra testar que a receita enviada preserva monstros
+  // desconhecidos em vez de descartá-los silenciosamente.
+  updateTemplate: vi.fn(async (id, patch) => { api.updated.push({ id, patch }); return { ok: true } }),
   deleteTemplate: vi.fn(async (id) => { api.deleted.push(id); api.templates = api.templates.filter(t => t.id !== id); return { ok: true } }),
 }))
 vi.mock('../lib/campaigns', () => ({ loadCampaignCharacters: vi.fn(async () => api.party) }))
@@ -46,6 +48,7 @@ beforeEach(() => {
   api.templates = []
   api.party = [anaRow(), { ...anaRow(), id: 'b', data: { ...anaRow().data, id: 'b', info: { name: 'Bruno', level: 3 } } }]
   api.created = []
+  api.updated = []
   api.deleted = []
   api.createResult = null
 })
@@ -107,5 +110,35 @@ describe('EncounterLibraryScreen', () => {
     await userEvent.click(await screen.findByRole('button', { name: /apagar emboscada/i }))
     await userEvent.click(screen.getByRole('button', { name: /^apagar$/i }))
     await waitFor(() => expect(api.deleted).toEqual(['t1']))
+  })
+
+  it('editar um template com monstro desconhecido preserva a entrada perdida ao salvar', async () => {
+    // 'monstro-sumido' não existe no catálogo mockado (só 'goblin') — simula
+    // tanto um índice extinto quanto o catálogo lazy ainda não ter chegado.
+    api.templates = [{
+      id: 't1',
+      name: 'Emboscada',
+      monsters: [{ monsterIndex: 'goblin', count: 2 }, { monsterIndex: 'monstro-sumido', count: 1 }],
+    }]
+    render(<EncounterLibraryScreen campaignId="camp-1" onBack={() => {}} />)
+    await userEvent.click(await screen.findByText('editar'))
+    await userEvent.click(screen.getByRole('button', { name: /^salvar$/i }))
+    await waitFor(() => expect(api.updated).toHaveLength(1))
+    expect(api.updated[0].id).toBe('t1')
+    expect(api.updated[0].patch.monsters).toEqual([
+      { monsterIndex: 'goblin', count: 2 },
+      { monsterIndex: 'monstro-sumido', count: 1 },
+    ])
+  })
+
+  it('mostra aviso de monstro desconhecido no formulário de edição', async () => {
+    api.templates = [{
+      id: 't1',
+      name: 'Emboscada',
+      monsters: [{ monsterIndex: 'monstro-sumido', count: 1 }],
+    }]
+    render(<EncounterLibraryScreen campaignId="camp-1" onBack={() => {}} />)
+    await userEvent.click(await screen.findByText('editar'))
+    expect(await screen.findByText(/1 monstro\(s\) desta receita não foi\(ram\) encontrado/i)).toBeInTheDocument()
   })
 })
