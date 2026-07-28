@@ -34,11 +34,17 @@ const docs = { a: doc('a', 'Ana', 5), b: doc('b', 'Bruno', 11) }
 
 beforeEach(() => { api.calls = []; api.results = {} })
 
+/** Descanso longo confirma antes de escrever — dispara os dois passos. */
+async function descansoLongo() {
+  await userEvent.click(screen.getByRole('button', { name: /descanso longo/i }))
+  await userEvent.click(screen.getByRole('button', { name: /^descansar$/i }))
+}
+
 describe('PartyRestPanel', () => {
   it('descanso longo salva cada ficha com HP cheio e recursos recuperados', async () => {
     const onRested = vi.fn()
     render(<PartyRestPanel docs={docs} onRested={onRested} />)
-    await userEvent.click(screen.getByRole('button', { name: /descanso longo/i }))
+    await descansoLongo()
     await waitFor(() => expect(api.calls).toHaveLength(2))
     for (const call of api.calls) {
       expect(call.v).toBe(3)
@@ -65,10 +71,32 @@ describe('PartyRestPanel', () => {
   it('uma ficha falhando não impede as outras e o erro aparece', async () => {
     api.results.a = { ok: false, reason: 'conflict' }
     render(<PartyRestPanel docs={docs} onRested={() => {}} />)
-    await userEvent.click(screen.getByRole('button', { name: /descanso longo/i }))
+    await descansoLongo()
     await waitFor(() => expect(api.calls).toHaveLength(2))
     expect(await screen.findByText(/1 ficha descansou/i)).toBeInTheDocument()
     expect(screen.getByText(/Ana/)).toBeInTheDocument()
+  })
+
+  it('cancelar a confirmação não escreve em ficha nenhuma', async () => {
+    render(<PartyRestPanel docs={docs} onRested={() => {}} />)
+    await userEvent.click(screen.getByRole('button', { name: /descanso longo/i }))
+    expect(screen.getByText(/não há como desfazer/i)).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: /cancelar/i }))
+    expect(api.calls).toHaveLength(0)
+    expect(screen.queryByText(/não há como desfazer/i)).not.toBeInTheDocument()
+  })
+
+  it('a confirmação nomeia quem vai ser afetado e avisa dos efeitos ativos', async () => {
+    render(<PartyRestPanel docs={docs} onRested={() => {}} />)
+    await userEvent.click(screen.getByRole('button', { name: /descanso longo/i }))
+    expect(screen.getByText(/Ana, Bruno/)).toBeInTheDocument()
+    expect(screen.getByText(/efeitos ativos removidos/i)).toBeInTheDocument()
+  })
+
+  it('descanso curto NÃO pede confirmação (só recarrega recursos)', async () => {
+    render(<PartyRestPanel docs={docs} onRested={() => {}} />)
+    await userEvent.click(screen.getByRole('button', { name: /descanso curto/i }))
+    await waitFor(() => expect(api.calls).toHaveLength(2))
   })
 
   it('sem fichas o painel não oferece botão', () => {

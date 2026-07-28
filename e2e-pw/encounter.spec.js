@@ -41,7 +41,10 @@ test('Mestre monta combate, aplica dano e a ficha reflete', async ({ page, conte
   await page.getByRole('button', { name: /prostrado/i }).click()
   await expect(page.getByText(/Prostrado/).first()).toBeVisible()
 
+  // Descanso longo reescreve a ficha de todo mundo sem desfazer: confirma antes.
   await page.getByRole('button', { name: /descanso longo/i }).click()
+  await expect(page.getByText(/não há como desfazer/i)).toBeVisible()
+  await page.getByRole('button', { name: /^descansar$/i }).click()
   await expect(page.getByText(/1 ficha descansou/i)).toBeVisible()
   await expect(page.getByText('20/20')).toBeVisible()
 })

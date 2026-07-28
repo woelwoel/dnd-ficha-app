@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { dmSaveCharacter } from '../../../../lib/dmWrites'
 import { performLongRest, performShortRest } from '../../utils/rest'
 import { Button } from '../../../../components/ui/Button'
+import { ConfirmDialog } from '../../../../components/ui/ConfirmDialog'
 
 /**
  * Descanso da companhia inteira, disparado pelo Mestre.
@@ -17,11 +18,13 @@ import { Button } from '../../../../components/ui/Button'
 export function PartyRestPanel({ docs, onRested }) {
   const [busy, setBusy] = useState(false)
   const [summary, setSummary] = useState(null)
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   const list = Object.values(docs ?? {})
   if (list.length === 0) return null
 
   async function rest(kind) {
+    setConfirmOpen(false)
     setBusy(true)
     setSummary(null)
     const failed = []
@@ -44,7 +47,7 @@ export function PartyRestPanel({ docs, onRested }) {
       </h2>
       <div className="p-4 flex flex-col gap-3">
         <div className="flex gap-2">
-          <Button size="sm" disabled={busy} onClick={() => rest('long')}>Descanso longo</Button>
+          <Button size="sm" disabled={busy} onClick={() => setConfirmOpen(true)}>Descanso longo</Button>
           <Button size="sm" variant="ghost" disabled={busy} onClick={() => rest('short')}>Descanso curto</Button>
         </div>
         <p className="text-xs ink-italic text-ink-300">
@@ -65,6 +68,33 @@ export function PartyRestPanel({ docs, onRested }) {
           </div>
         )}
       </div>
+
+      {/* Descanso longo reescreve a ficha de todo mundo e não tem desfazer —
+          por isso confirma. O curto só recarrega recursos, então vai direto. */}
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Descanso longo da companhia?"
+        message={
+          <>
+            <p className="mb-2">
+              Vai reescrever {list.length === 1 ? 'a ficha de' : 'as fichas de'}{' '}
+              <strong>{list.map(d => d.info?.name ?? d.id).join(', ')}</strong>.
+            </p>
+            <ul className="mb-2 list-disc pl-5 text-xs">
+              <li>PV cheio e PV temporário zerado</li>
+              <li>espaços de magia e recursos de classe recuperados</li>
+              <li>metade dos dados de vida de volta</li>
+              <li><strong>efeitos ativos removidos</strong> — buffs de magia não sobrevivem a 8 horas</li>
+            </ul>
+            <p className="ink-italic text-ink-300">Não há como desfazer.</p>
+          </>
+        }
+        confirmLabel={busy ? 'Descansando…' : 'Descansar'}
+        cancelLabel="Cancelar"
+        busy={busy}
+        onConfirm={() => rest('long')}
+        onCancel={() => setConfirmOpen(false)}
+      />
     </section>
   )
 }
