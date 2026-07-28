@@ -59,3 +59,33 @@ export function partyThresholds(levels) {
     }
   }, { easy: 0, medium: 0, hard: 0, deadly: 0 })
 }
+
+/**
+ * Sete posições: o ×0,5 existe porque companhia de 6+ DESCE um degrau, e um
+ * monstro solitário contra seis personagens cai abaixo do ×1.
+ */
+export const MULTIPLIER_LADDER = [0.5, 1, 1.5, 2, 2.5, 3, 4]
+
+/** Posição na escada antes do ajuste por tamanho de grupo. */
+function ladderIndexFor(monsterCount) {
+  if (monsterCount <= 1) return 1  // ×1
+  if (monsterCount === 2) return 2 // ×1,5
+  if (monsterCount <= 6) return 3  // ×2
+  if (monsterCount <= 10) return 4 // ×2,5
+  if (monsterCount <= 14) return 5 // ×3
+  return 6                         // ×4
+}
+
+/**
+ * Multiplicador de encontro. `partySize` 0 (companhia desconhecida) não aplica
+ * ajuste nenhum — o bônus de "grupo pequeno" só faz sentido com gente na mesa.
+ */
+export function encounterMultiplier(monsterCount, partySize) {
+  const count = Math.max(0, Math.floor(Number(monsterCount) || 0))
+  if (count === 0) return 1
+  const size = Math.max(0, Math.floor(Number(partySize) || 0))
+  let i = ladderIndexFor(count)
+  if (size > 0 && size < 3) i += 1
+  else if (size >= 6) i -= 1
+  return MULTIPLIER_LADDER[Math.min(MULTIPLIER_LADDER.length - 1, Math.max(0, i))]
+}
