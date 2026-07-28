@@ -11,7 +11,11 @@ export const MAX_LEVEL = 20
 /** Nível total: classe primária + multiclasses, clampado em 1..20. */
 export function characterLevel(doc) {
   const primary = Number(doc?.info?.level) || 0
-  const extra = (doc?.info?.multiclasses ?? [])
+  // `Array.isArray` e não `?? []`: uma ficha malformada com `multiclasses`
+  // truthy não-array (objeto, string) faria o `.reduce` estourar, enquanto o
+  // resto da função trata lixo devolvendo nível 1.
+  const mcs = doc?.info?.multiclasses
+  const extra = (Array.isArray(mcs) ? mcs : [])
     .reduce((s, m) => s + (Number(m?.level) || 0), 0)
   const total = primary + extra
   return Math.min(MAX_LEVEL, Math.max(MIN_LEVEL, total))

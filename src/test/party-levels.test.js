@@ -22,6 +22,11 @@ describe('characterLevel', () => {
     expect(characterLevel(null)).toBe(1)
     expect(characterLevel({ info: { level: 'abc' } })).toBe(1)
   })
+
+  it('multiclasses malformado não estoura — o resto da função tolera lixo', () => {
+    expect(characterLevel({ info: { level: 4, multiclasses: 'nao é lista' } })).toBe(4)
+    expect(characterLevel({ info: { level: 4, multiclasses: { level: 3 } } })).toBe(4)
+  })
 })
 
 describe('partyLevels', () => {
