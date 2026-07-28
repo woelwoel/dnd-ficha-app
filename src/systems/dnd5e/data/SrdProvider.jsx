@@ -36,6 +36,10 @@ const DATASETS = {
   magicItemsTasha: { pt: 'tasha-magic-items-pt.json',    fallback: null,                      lazy: true },
   magicItemsXanathar: { pt: 'xanathar-magic-items-pt.json', fallback: null,                   lazy: true },
   spellMechanics:  { pt: 'spell-mechanics-pt.json',      fallback: null,                      lazy: true },
+  // Catálogo do bestiário: 1,3 MB, só o construtor de encontros e o bestiário
+  // precisam. `pt` aponta direto pro arquivo SRD, mesmo padrão de `levels` —
+  // o PT dos monstros é um OVERLAY parcial (63 de 334), não um substituto.
+  monsters:        { pt: '5e-SRD-Monsters.json',         fallback: null,                      lazy: true },
 }
 
 // Datasets lógicos compostos por partes carimbadas por fonte.
@@ -101,7 +105,7 @@ function loadDataset(name, { pt, fallback }) {
 const EMPTY_DEFAULTS = {
   races: [], classes: [], backgrounds: [], spells: [], levels: [],
   progression: {}, classChoices: {}, classEquipment: {}, weaponsArmor: {}, multiclass: {}, feats: [],
-  infusions: [], magicItems: [], spellMechanics: {},
+  infusions: [], magicItems: [], spellMechanics: {}, monsters: [],
 }
 
 const SrdContext = createContext(null)
