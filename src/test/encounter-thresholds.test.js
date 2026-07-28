@@ -15,6 +15,13 @@ describe('thresholdsForLevel', () => {
     expect(thresholdsForLevel(99)).toEqual(thresholdsForLevel(20))
     expect(thresholdsForLevel(undefined)).toEqual(thresholdsForLevel(1))
   })
+
+  it('devolve cópia — mutar o objeto retornado não corrompe a tabela', () => {
+    const t = thresholdsForLevel(5)
+    t.easy += 10
+    t.deadly = 0
+    expect(thresholdsForLevel(5)).toEqual({ easy: 250, medium: 500, hard: 750, deadly: 1100 })
+  })
 })
 
 describe('partyThresholds', () => {

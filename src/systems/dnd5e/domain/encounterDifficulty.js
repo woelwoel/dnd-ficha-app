@@ -41,7 +41,9 @@ export function thresholdsForLevel(level) {
   const clamped = Number.isFinite(n)
     ? Math.min(MAX_LEVEL, Math.max(MIN_LEVEL, n))
     : MIN_LEVEL
-  return TABLE[clamped - 1]
+  // Cópia: devolver a referência da tabela deixaria um `t.easy += 10` de um
+  // chamador descuidado corromper a tabela pro processo inteiro.
+  return { ...TABLE[clamped - 1] }
 }
 
 /**
