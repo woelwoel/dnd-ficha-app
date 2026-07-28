@@ -72,6 +72,8 @@ export async function stubSupabase(context, opts = {}) {
   const campaigns = opts.campaigns ?? []       // [{ id, name, dm_id, system }]
   const encounters = new Map()                 // id → row
   let encSeq = 1
+  const templates = new Map()                  // id → row
+  let tplSeq = 1
   for (const ch of opts.characters ?? []) {
     store.set(ch.id, {
       id: ch.id,
@@ -105,6 +107,34 @@ export async function stubSupabase(context, opts = {}) {
     if (path.startsWith('campaigns')) {
       if (method === 'GET') return json(route, wantsSingle ? (campaigns[0] ?? null) : campaigns)
       return json(route, wantsSingle ? {} : [])
+    }
+
+    if (path.startsWith('encounter_templates')) {
+      if (method === 'GET') return json(route, [...templates.values()])
+      if (method === 'POST') {
+        let body = {}
+        try { body = JSON.parse(req.postData() || '{}') } catch { /* noop */ }
+        const incoming = Array.isArray(body) ? body[0] : body
+        const dup = [...templates.values()].some(
+          t => t.name.trim().toLowerCase() === String(incoming.name).trim().toLowerCase())
+        if (dup) return json(route, { code: '23505', message: 'duplicate key' }, 409)
+        const row = { id: `tpl-${tplSeq++}`, ...incoming }
+        templates.set(row.id, row)
+        return json(route, wantsSingle ? row : [row], 201)
+      }
+      if (method === 'PATCH') {
+        let body = {}
+        try { body = JSON.parse(req.postData() || '{}') } catch { /* noop */ }
+        const id = url.searchParams.get('id')?.replace('eq.', '')
+        const row = templates.get(id)
+        if (row) Object.assign(row, body)
+        return json(route, wantsSingle ? (row ?? null) : (row ? [row] : []))
+      }
+      if (method === 'DELETE') {
+        const id = url.searchParams.get('id')?.replace('eq.', '')
+        templates.delete(id)
+        return json(route, wantsSingle ? null : [])
+      }
     }
 
     if (path.startsWith('encounters')) {
