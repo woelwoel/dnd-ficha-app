@@ -87,6 +87,25 @@ export async function createCampaign(name, system = DEFAULT_SYSTEM) {
   return { ok: true, id: data }
 }
 
+/**
+ * O usuário corrente é o Mestre desta mesa?
+ *
+ * Usado pela rota do combate, que é exclusiva do Mestre. A RLS de `encounters`
+ * (0015) já barra os dados de quem não é DM — esta checagem existe pra dar um
+ * redirect honesto em vez de uma tela vazia pra quem digitar a URL na mão.
+ *
+ * NEGA por padrão: erro de leitura, mesa escondida pela RLS (não-membro recebe
+ * `null`) ou ausência de sessão devolvem `false`.
+ */
+export async function isCampaignDM(campaignId) {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return false
+  const { data, error } = await supabase
+    .from(T_CAMPAIGNS).select('dm_id').eq('id', campaignId).maybeSingle()
+  if (error || !data) return false
+  return data.dm_id === user.id
+}
+
 /** Sistema de uma mesa (pra forçar o sistema na criação de ficha dentro dela). */
 export async function getCampaignSystem(campaignId) {
   const { data, error } = await supabase

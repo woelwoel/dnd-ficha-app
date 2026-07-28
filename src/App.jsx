@@ -16,7 +16,7 @@ import { getLazyWizard, getLazySheet, getLazyGlobalWidgets, getLazyEncounter } f
 import { listSystems, getSystemCore } from './systems'
 import { DEFAULT_SYSTEM } from './systems/envelope'
 import { getCharacterSystem } from './utils/storage'
-import { getCampaignSystem } from './lib/campaigns'
+import { getCampaignSystem, isCampaignDM } from './lib/campaigns'
 import { SystemPicker } from './components/SystemPicker'
 import './index.css'
 
@@ -180,18 +180,24 @@ function SheetRoute() {
   )
 }
 
+// A tela de combate é exclusiva do Mestre. A RLS de `encounters` (0015) já
+// barra os dados de quem não é DM, mas sem esta guarda um jogador que digitasse
+// a URL na mão cairia numa tela vazia em vez de voltar pra mesa.
 function EncounterRoute() {
   const navigate = useNavigate()
   const { id } = useParams()
-  const [system, setSystem] = useState(null)
+  const [resolved, setResolved] = useState(null) // { system, isDM }
   useEffect(() => {
     let alive = true
-    getCampaignSystem(id).then(s => { if (alive) setSystem(s) })
+    setResolved(null)
+    Promise.all([getCampaignSystem(id), isCampaignDM(id)])
+      .then(([system, isDM]) => { if (alive) setResolved({ system, isDM }) })
     return () => { alive = false }
   }, [id])
 
-  if (system === null) return <Loader />
-  const Encounter = getLazyEncounter(system)
+  if (resolved === null) return <Loader />
+  if (!resolved.isDM) return <Navigate to={`/campaigns/${id}`} replace />
+  const Encounter = getLazyEncounter(resolved.system)
   if (!Encounter) return <Navigate to={`/campaigns/${id}`} replace />
   return (
     <RouteShell>
