@@ -1113,7 +1113,9 @@ export function DifficultyMeter({ monsterXpTotal, monsterCount, levels }) {
             nível
             <input
               type="number" min="1" max="20"
-              aria-label="Nível dos personagens"
+              {/* NÃO use "Nível dos personagens": colidiria com o
+                  getByLabelText(/personagens/i) do campo de quantidade. */}
+              aria-label="Nível da companhia"
               value={level}
               onChange={e => patch('level', e.target.value)}
               className="w-14 px-2 py-1 text-sm border-2 border-parchment-600 bg-parchment-50 rounded-sm"
