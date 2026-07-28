@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Button } from '../../../../components/ui/Button'
-import { emptyEncounterState, addPc, rollInitiative, startEncounter } from '../../domain/encounter'
+import { emptyEncounterState, addPc, rollInitiative, startEncounter, totalXp } from '../../domain/encounter'
 import { MonsterGroupPanel } from './MonsterGroupPanel'
+import { DifficultyMeter } from './DifficultyMeter'
 
 /**
  * Fase de montagem: quem da companhia está na cena, quais monstros entram, e a
@@ -20,6 +21,10 @@ export function SetupPanel({ party, onStart, rng = Math.random }) {
 
   const chosen = party.filter(p => !excluded.has(p.characterId))
   const canStart = chosen.length + monsters.combatants.length > 0
+
+  // O medidor usa quem está MARCADO na cena, não a mesa inteira — é a
+  // informação mais precisa disponível neste momento.
+  const levels = chosen.map(p => p.level ?? 1)
 
   function toggle(characterId) {
     setExcluded(prev => {
@@ -75,6 +80,12 @@ export function SetupPanel({ party, onStart, rng = Math.random }) {
       </section>
 
       <MonsterGroupPanel value={monsters} onChange={setMonsters} />
+
+      <DifficultyMeter
+        monsterXpTotal={totalXp(monsters)}
+        monsterCount={monsters.combatants.length}
+        levels={levels}
+      />
 
       <div>
         <Button onClick={start} disabled={!canStart}>Rolar iniciativa</Button>

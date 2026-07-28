@@ -61,4 +61,36 @@ describe('SetupPanel', () => {
     setup({ party: [] })
     expect(screen.getByRole('button', { name: /rolar iniciativa/i })).toBeDisabled()
   })
+
+  it('mostra a dificuldade contra quem está marcado na cena', async () => {
+    const { rerender } = render(
+      <SetupPanel
+        party={[
+          { characterId: 'a', name: 'Ana', initiativeBonus: 2, level: 3 },
+          { characterId: 'b', name: 'Bruno', initiativeBonus: 0, level: 3 },
+        ]}
+        onStart={() => {}}
+        rng={() => 0.5}
+      />,
+    )
+    void rerender
+    // Sem monstros ainda.
+    expect(screen.getByText(/sem monstros/i)).toBeInTheDocument()
+  })
+
+  it('desmarcar um PJ muda a companhia usada no medidor', async () => {
+    render(
+      <SetupPanel
+        party={[
+          { characterId: 'a', name: 'Ana', initiativeBonus: 2, level: 3 },
+          { characterId: 'b', name: 'Bruno', initiativeBonus: 0, level: 3 },
+        ]}
+        onStart={() => {}}
+        rng={() => 0.5}
+      />,
+    )
+    expect(screen.getByLabelText(/quantidade de personagens/i)).toHaveValue(2)
+    await userEvent.click(screen.getByLabelText('Bruno'))
+    expect(screen.getByLabelText(/quantidade de personagens/i)).toHaveValue(1)
+  })
 })

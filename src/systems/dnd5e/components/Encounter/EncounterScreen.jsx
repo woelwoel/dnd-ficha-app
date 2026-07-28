@@ -5,6 +5,7 @@ import { dmApplyCombatState } from '../../../../lib/dmWrites'
 import { Button } from '../../../../components/ui/Button'
 import { applyDamage, applyHealing, gainTempHp } from '../../domain/rules'
 import { calculateInitiative } from '../../utils/calculations'
+import { characterLevel } from '../../domain/party'
 import { combatPatchFrom } from '../../domain/dmPatch'
 import {
   applyNpcDamage, applyNpcHealing, setNpcTempHp, toggleNpcCondition,
@@ -71,6 +72,7 @@ export function EncounterScreen({ campaignId, onBack }) {
   const party = useMemo(() => Object.values(docs).map(doc => ({
     characterId: doc.id,
     name: doc.info?.name ?? 'Sem nome',
+    level: characterLevel(doc),
     initiativeBonus: calculateInitiative(doc.attributes?.dex ?? 10, { feats: doc.info?.feats ?? [] }),
   })), [docs])
 
