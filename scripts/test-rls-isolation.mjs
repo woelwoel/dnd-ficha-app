@@ -369,6 +369,17 @@ async function main() {
         .insert({ campaign_id: campaignId, name: 'Do jogador', monsters: [] })
       assert(!!t4, `player bloqueado ao criar encontro salvo (err=${t4?.message})`)
 
+      // Trigger normalize_encounter_template apara o nome ANTES de gravar.
+      const { data: padded, error: t6 } = await dm.from('encounter_templates')
+        .insert({ campaign_id: campaignId, name: '  Tocaia no desfiladeiro  ', monsters: [] })
+        .select('id, name')
+        .single()
+      assert(!t6 && padded?.name === 'Tocaia no desfiladeiro',
+        `nome vem aparado do trigger (err=${t6?.message}, got "${padded?.name}")`)
+      if (padded?.id) {
+        await dm.from('encounter_templates').delete().eq('id', padded.id)
+      }
+
       if (tpl?.id) {
         // Update de quem não é o Mestre não pode pegar a linha.
         const { error: t5 } = await player.from('encounter_templates')

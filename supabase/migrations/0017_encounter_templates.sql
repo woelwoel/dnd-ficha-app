@@ -39,13 +39,17 @@ create policy "encounter_templates_all_dm"
   using (public.is_campaign_dm(campaign_id))
   with check (public.is_campaign_dm(campaign_id));
 
-create or replace function public.touch_encounter_template()
+create or replace function public.normalize_encounter_template()
 returns trigger
 language plpgsql
 security invoker
 set search_path = public, pg_temp
 as $$
 begin
+  -- Apara na GRAVAÇÃO: o índice único compara `btrim(lower(name))`, então sem
+  -- isso o banco aceitaria guardar '  Emboscada  ' e a tela mostraria os
+  -- espaços. Normalizar aqui cobre qualquer caminho de escrita, não só a UI.
+  new.name := btrim(new.name);
   new.updated_at := now();
   return new;
 end;
@@ -53,7 +57,7 @@ $$;
 
 drop trigger if exists encounter_templates_touch on public.encounter_templates;
 create trigger encounter_templates_touch
-  before update on public.encounter_templates
-  for each row execute function public.touch_encounter_template();
+  before insert or update on public.encounter_templates
+  for each row execute function public.normalize_encounter_template();
 
 NOTIFY pgrst, 'reload schema';
