@@ -18,13 +18,14 @@ import { ConfirmDialog } from '../../../../components/ui/ConfirmDialog'
 export function PartyRestPanel({ docs, onRested }) {
   const [busy, setBusy] = useState(false)
   const [summary, setSummary] = useState(null)
-  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [confirmKind, setConfirmKind] = useState(null) // null | 'long' | 'short'
 
   const list = Object.values(docs ?? {})
   if (list.length === 0) return null
+  const nomes = list.map(d => d.info?.name ?? d.id).join(', ')
 
   async function rest(kind) {
-    setConfirmOpen(false)
+    setConfirmKind(null)
     setBusy(true)
     setSummary(null)
     const failed = []
@@ -47,12 +48,12 @@ export function PartyRestPanel({ docs, onRested }) {
       </h2>
       <div className="p-4 flex flex-col gap-3">
         <div className="flex gap-2">
-          <Button size="sm" disabled={busy} onClick={() => setConfirmOpen(true)}>Descanso longo</Button>
-          <Button size="sm" variant="ghost" disabled={busy} onClick={() => rest('short')}>Descanso curto</Button>
+          <Button size="sm" disabled={busy} onClick={() => setConfirmKind('long')}>Descanso longo</Button>
+          <Button size="sm" variant="ghost" disabled={busy} onClick={() => setConfirmKind('short')}>Descanso curto</Button>
         </div>
         <p className="text-xs ink-italic text-ink-300">
-          O descanso curto recarrega os recursos e zera a economia de ação — gastar dados de vida
-          continua sendo escolha de cada jogador na ficha dele.
+          Os dois reescrevem a ficha de toda a companhia de uma vez, então pedem confirmação.
+          Gastar dados de vida continua sendo escolha de cada jogador na ficha dele.
         </p>
         {summary && (
           <div className="text-sm text-ink-500">
@@ -69,31 +70,42 @@ export function PartyRestPanel({ docs, onRested }) {
         )}
       </div>
 
-      {/* Descanso longo reescreve a ficha de todo mundo e não tem desfazer —
-          por isso confirma. O curto só recarrega recursos, então vai direto. */}
+      {/* Os dois descansos reescrevem a ficha de todo mundo de uma vez e não
+          têm desfazer, então os dois confirmam. O que muda é o que cada um
+          apaga — e o diálogo diz exatamente isso. */}
       <ConfirmDialog
-        open={confirmOpen}
-        title="Descanso longo da companhia?"
+        open={confirmKind !== null}
+        title={confirmKind === 'short'
+          ? 'Descanso curto da companhia?'
+          : 'Descanso longo da companhia?'}
         message={
           <>
             <p className="mb-2">
               Vai reescrever {list.length === 1 ? 'a ficha de' : 'as fichas de'}{' '}
-              <strong>{list.map(d => d.info?.name ?? d.id).join(', ')}</strong>.
+              <strong>{nomes}</strong>.
             </p>
-            <ul className="mb-2 list-disc pl-5 text-xs">
-              <li>PV cheio e PV temporário zerado</li>
-              <li>espaços de magia e recursos de classe recuperados</li>
-              <li>metade dos dados de vida de volta</li>
-              <li><strong>efeitos ativos removidos</strong> — buffs de magia não sobrevivem a 8 horas</li>
-            </ul>
+            {confirmKind === 'short' ? (
+              <ul className="mb-2 list-disc pl-5 text-xs">
+                <li>recursos de descanso curto recuperados</li>
+                <li>economia de ação zerada</li>
+                <li><strong>não gasta dado de vida e não cura PV</strong> — isso continua sendo escolha de cada jogador na ficha dele</li>
+              </ul>
+            ) : (
+              <ul className="mb-2 list-disc pl-5 text-xs">
+                <li>PV cheio e PV temporário zerado</li>
+                <li>espaços de magia e recursos de classe recuperados</li>
+                <li>metade dos dados de vida de volta</li>
+                <li><strong>efeitos ativos removidos</strong> — buffs de magia não sobrevivem a 8 horas</li>
+              </ul>
+            )}
             <p className="ink-italic text-ink-300">Não há como desfazer.</p>
           </>
         }
         confirmLabel={busy ? 'Descansando…' : 'Descansar'}
         cancelLabel="Cancelar"
         busy={busy}
-        onConfirm={() => rest('long')}
-        onCancel={() => setConfirmOpen(false)}
+        onConfirm={() => rest(confirmKind)}
+        onCancel={() => setConfirmKind(null)}
       />
     </section>
   )

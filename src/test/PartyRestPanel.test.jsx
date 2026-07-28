@@ -34,9 +34,14 @@ const docs = { a: doc('a', 'Ana', 5), b: doc('b', 'Bruno', 11) }
 
 beforeEach(() => { api.calls = []; api.results = {} })
 
-/** Descanso longo confirma antes de escrever — dispara os dois passos. */
+/** Os dois descansos confirmam antes de escrever — dispara os dois passos. */
 async function descansoLongo() {
   await userEvent.click(screen.getByRole('button', { name: /descanso longo/i }))
+  await userEvent.click(screen.getByRole('button', { name: /^descansar$/i }))
+}
+
+async function descansoCurto() {
+  await userEvent.click(screen.getByRole('button', { name: /descanso curto/i }))
   await userEvent.click(screen.getByRole('button', { name: /^descansar$/i }))
 }
 
@@ -60,7 +65,7 @@ describe('PartyRestPanel', () => {
 
   it('descanso curto NÃO gasta dados de vida nem cura', async () => {
     render(<PartyRestPanel docs={docs} onRested={() => {}} />)
-    await userEvent.click(screen.getByRole('button', { name: /descanso curto/i }))
+    await descansoCurto()
     await waitFor(() => expect(api.calls).toHaveLength(2))
     const ana = api.calls.find(c => c.id === 'a')
     expect(ana.data.combat.currentHp).toBe(5)
@@ -93,10 +98,37 @@ describe('PartyRestPanel', () => {
     expect(screen.getByText(/efeitos ativos removidos/i)).toBeInTheDocument()
   })
 
-  it('descanso curto NÃO pede confirmação (só recarrega recursos)', async () => {
+  it('descanso curto também confirma, e o aviso é o do curto (não o do longo)', async () => {
     render(<PartyRestPanel docs={docs} onRested={() => {}} />)
     await userEvent.click(screen.getByRole('button', { name: /descanso curto/i }))
+    // Nada foi escrito só por abrir o diálogo.
+    expect(api.calls).toHaveLength(0)
+    expect(screen.getByText(/descanso curto da companhia\?/i)).toBeInTheDocument()
+    expect(screen.getByText(/não gasta dado de vida e não cura PV/i)).toBeInTheDocument()
+    // O texto do LONGO não pode aparecer no diálogo do curto.
+    expect(screen.queryByText(/efeitos ativos removidos/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/PV cheio/i)).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: /^descansar$/i }))
     await waitFor(() => expect(api.calls).toHaveLength(2))
+  })
+
+  it('cancelar o curto não escreve nada', async () => {
+    render(<PartyRestPanel docs={docs} onRested={() => {}} />)
+    await userEvent.click(screen.getByRole('button', { name: /descanso curto/i }))
+    await userEvent.click(screen.getByRole('button', { name: /cancelar/i }))
+    expect(api.calls).toHaveLength(0)
+  })
+
+  it('abrir o curto depois de cancelar o longo não confunde os dois', async () => {
+    render(<PartyRestPanel docs={docs} onRested={() => {}} />)
+    await userEvent.click(screen.getByRole('button', { name: /descanso longo/i }))
+    await userEvent.click(screen.getByRole('button', { name: /cancelar/i }))
+    await descansoCurto()
+    await waitFor(() => expect(api.calls).toHaveLength(2))
+    // Se o tipo tivesse vazado, o curto teria zerado o HP temporário e curado.
+    const ana = api.calls.find(c => c.id === 'a')
+    expect(ana.data.combat.currentHp).toBe(5)
+    expect(ana.data.combat.tempHp).toBe(4)
   })
 
   it('sem fichas o painel não oferece botão', () => {
