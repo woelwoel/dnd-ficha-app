@@ -84,6 +84,18 @@ describe('lib/encounterTemplates', () => {
     expect(store.rows[0]).toMatchObject({ name: 'Depois' })
   })
 
+  it('update num id que não existe devolve not-found', async () => {
+    expect(await updateTemplate('tpl-inexistente', { name: 'Novo nome' }))
+      .toEqual({ ok: false, reason: 'not-found' })
+  })
+
+  it('update bem-sucedido devolve ok e persiste', async () => {
+    const { row } = await createTemplate('camp-1', 'Original', [])
+    const res = await updateTemplate(row.id, { name: 'Renomeado' })
+    expect(res).toEqual({ ok: true })
+    expect(store.rows[0]).toMatchObject({ id: row.id, name: 'Renomeado' })
+  })
+
   it('update sem campo nenhum não vai ao servidor', async () => {
     const { row } = await createTemplate('camp-1', 'Intacto', [])
     store.nextError = { code: '23505', message: 'não deveria chegar aqui' }

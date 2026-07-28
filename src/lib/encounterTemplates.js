@@ -8,7 +8,7 @@ import { supabase } from './supabase'
  * sessão, e o custo de um conflito é reescrever um nome.
  */
 const T = 'encounter_templates'
-const NAME_MAX = 80
+export const NAME_MAX = 80
 
 function logDev(label, payload) {
   if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
@@ -63,11 +63,15 @@ export async function updateTemplate(id, { name, monsters } = {}) {
   if (monsters !== undefined) patch.monsters = monsters ?? []
   if (Object.keys(patch).length === 0) return { ok: true }
 
-  const { error } = await supabase.from(T).update(patch).eq('id', id)
+  const { data, error } = await supabase
+    .from(T).update(patch).eq('id', id).select('id').maybeSingle()
   if (error) {
     logDev('updateTemplate', error)
     return { ok: false, reason: reasonFor(error), message: error.message }
   }
+  // Nenhuma linha voltou: o template sumiu (outra aba apagou) ou a RLS barrou.
+  // Devolver ok aqui faria o Mestre achar que salvou o que não foi salvo.
+  if (!data) return { ok: false, reason: 'not-found' }
   return { ok: true }
 }
 
