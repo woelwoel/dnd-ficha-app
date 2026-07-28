@@ -166,7 +166,7 @@ export function EncounterScreen({ campaignId, onBack }) {
 
       <div className="max-w-3xl mx-auto grid gap-4">
         {!state.started ? (
-          <SetupPanel party={party} onStart={(next) => update(() => next)} />
+          <SetupPanel party={party} campaignId={campaignId} onStart={(next) => update(() => next)} />
         ) : (
           <>
             <div className="flex gap-2">

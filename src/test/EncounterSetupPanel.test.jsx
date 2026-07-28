@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { SetupPanel } from '../systems/dnd5e/components/Encounter/SetupPanel'
 
@@ -7,6 +7,15 @@ vi.mock('../systems/dnd5e/components/Bestiary/BestiaryModal', () => ({
   BestiaryModal: ({ isOpen, onPick }) => isOpen
     ? <button onClick={() => onPick({ index: 'goblin', name: 'Goblin', hit_points: 7, dexterity: 14, xp: 50, armor_class: [{ value: 15 }] })}>stub-add-goblin</button>
     : null,
+}))
+
+const tpl = vi.hoisted(() => ({ list: [] }))
+vi.mock('../lib/encounterTemplates', () => ({
+  listTemplates: vi.fn(async () => tpl.list),
+}))
+
+vi.mock('../systems/dnd5e/data/SrdProvider', () => ({
+  useLazySrdDataset: () => ([{ index: 'goblin', name: 'Goblin', hit_points: 7, dexterity: 14, xp: 50, armor_class: [{ value: 15 }] }]),
 }))
 
 const party = [
@@ -92,5 +101,20 @@ describe('SetupPanel', () => {
     expect(screen.getByLabelText(/quantidade de personagens/i)).toHaveValue(2)
     await userEvent.click(screen.getByLabelText('Bruno'))
     expect(screen.getByLabelText(/quantidade de personagens/i)).toHaveValue(1)
+  })
+
+  it('sem encontros salvos não oferece carregar', async () => {
+    tpl.list = []
+    setup()
+    await waitFor(() => expect(screen.queryByRole('button', { name: /carregar encontro salvo/i })).toBeNull())
+  })
+
+  it('carregar um salvo injeta os monstros na cena', async () => {
+    tpl.list = [{ id: 't1', name: 'Emboscada', monsters: [{ monsterIndex: 'goblin', count: 2 }] }]
+    setup({ campaignId: 'camp-1' })
+    await userEvent.click(await screen.findByRole('button', { name: /carregar encontro salvo/i }))
+    await userEvent.click(screen.getByRole('button', { name: /^emboscada$/i }))
+    expect(await screen.findByText('Goblin')).toBeInTheDocument()
+    expect(screen.getByText('Goblin 2')).toBeInTheDocument()
   })
 })

@@ -1,8 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Button } from '../../../../components/ui/Button'
 import { emptyEncounterState, addPc, rollInitiative, startEncounter, totalXp } from '../../domain/encounter'
 import { MonsterGroupPanel } from './MonsterGroupPanel'
 import { DifficultyMeter } from './DifficultyMeter'
+import { listTemplates } from '../../../../lib/encounterTemplates'
+import { useLazySrdDataset } from '../../data/SrdProvider'
+import { fromRecipe } from './EncounterLibraryScreen'
 
 /**
  * Fase de montagem: quem da companhia está na cena, quais monstros entram, e a
@@ -13,11 +16,38 @@ import { DifficultyMeter } from './DifficultyMeter'
  *
  * @param {Array<{characterId,name,initiativeBonus}>} party — companhia da mesa
  * @param {(state:object) => void} onStart — recebe o state já iniciado
+ * @param {string} [campaignId] — pra listar encontros salvos da mesa
  * @param {() => number} [rng] — injetável pro teste fixar o dado
  */
-export function SetupPanel({ party, onStart, rng = Math.random }) {
+export function SetupPanel({ party, onStart, campaignId, rng = Math.random }) {
   const [excluded, setExcluded] = useState(() => new Set())
   const [monsters, setMonsters] = useState(emptyEncounterState)
+  const catalog = useLazySrdDataset('monsters')
+  const [saved, setSaved] = useState([])
+  const [pickerOpen, setPickerOpen] = useState(false)
+
+  useEffect(() => {
+    let alive = true
+    if (!campaignId) return
+    listTemplates(campaignId).then(rows => { if (alive) setSaved(rows) })
+    return () => { alive = false }
+  }, [campaignId])
+
+  const byIndex = useMemo(() => {
+    const m = new Map()
+    for (const mon of catalog ?? []) m.set(mon.index, mon)
+    return m
+  }, [catalog])
+
+  function carregar(tpl) {
+    // Acrescenta à cena em vez de substituir: o Mestre pode juntar dois grupos.
+    const { state: grupo } = fromRecipe(tpl.monsters, byIndex)
+    setMonsters(prev => grupo.combatants.reduce(
+      (s, m) => ({ ...s, nextSeq: s.nextSeq + 1, combatants: [...s.combatants, { ...m, id: `k${s.nextSeq}` }] }),
+      prev,
+    ))
+    setPickerOpen(false)
+  }
 
   const chosen = party.filter(p => !excluded.has(p.characterId))
   const canStart = chosen.length + monsters.combatants.length > 0
@@ -78,6 +108,31 @@ export function SetupPanel({ party, onStart, rng = Math.random }) {
           </ul>
         )}
       </section>
+
+      {saved.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <div>
+            <Button variant="ghost" size="sm" onClick={() => setPickerOpen(o => !o)}>
+              Carregar encontro salvo
+            </Button>
+          </div>
+          {pickerOpen && (
+            <ul className="rounded-sm border-2 border-parchment-600 bg-parchment-50 divide-y divide-parchment-600/50">
+              {saved.map(t => (
+                <li key={t.id}>
+                  <button
+                    type="button"
+                    onClick={() => carregar(t)}
+                    className="w-full text-left px-4 py-2 text-sm text-ink-500 hover:bg-parchment-200"
+                  >
+                    {t.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
 
       <MonsterGroupPanel value={monsters} onChange={setMonsters} />
 

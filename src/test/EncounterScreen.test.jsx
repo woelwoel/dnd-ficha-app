@@ -29,6 +29,15 @@ vi.mock('../lib/encounters', () => ({
   subscribeEncounter: vi.fn(() => () => {}),
 }))
 vi.mock('../systems/dnd5e/components/Bestiary/BestiaryModal', () => ({ BestiaryModal: () => null }))
+// SetupPanel (Task 13) lista encontros salvos e usa o catálogo de monstros —
+// nenhum dos dois é o foco deste arquivo, então ficam vazios/mockados pra não
+// bater no Supabase real nem exigir <SrdProvider> ancestral.
+vi.mock('../lib/encounterTemplates', () => ({
+  listTemplates: vi.fn(async () => []),
+}))
+vi.mock('../systems/dnd5e/data/SrdProvider', () => ({
+  useLazySrdDataset: () => ([]),
+}))
 
 const { EncounterScreen } = await import('../systems/dnd5e/components/Encounter/EncounterScreen')
 
