@@ -90,9 +90,12 @@ export function CampaignDetail({ campaignId, onBack }) {
           onChanged={(ev) => ev?.left ? navigate('/campaigns') : null}
         />
         {isDM && (
-          <div>
+          <div className="flex gap-2">
             <Button size="sm" onClick={() => navigate(`/campaigns/${campaign.id}/combate`)}>
               Rodar combate
+            </Button>
+            <Button size="sm" variant="ghost" onClick={() => navigate(`/campaigns/${campaign.id}/encontros`)}>
+              Encontros
             </Button>
           </div>
         )}

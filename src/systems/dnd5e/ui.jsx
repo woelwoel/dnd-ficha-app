@@ -5,7 +5,7 @@ import { SrdProvider } from './data/SrdProvider'
 import { CharacterWizardV2 } from './components/CharacterWizardV2'
 import { CharacterSheet as RawSheet } from './components/CharacterSheet/CharacterSheet'
 import { BestiaryButton } from './components/Bestiary/BestiaryButton'
-import { EncounterScreen } from './components/Encounter'
+import { EncounterScreen, EncounterLibraryScreen } from './components/Encounter'
 
 export function Wizard(props) {
   return (
@@ -27,6 +27,14 @@ export function Encounter(props) {
   return (
     <SrdProvider>
       <EncounterScreen {...props} />
+    </SrdProvider>
+  )
+}
+
+export function EncounterLibrary(props) {
+  return (
+    <SrdProvider>
+      <EncounterLibraryScreen {...props} />
     </SrdProvider>
   )
 }
