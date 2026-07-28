@@ -45,3 +45,18 @@ test('Mestre monta combate, aplica dano e a ficha reflete', async ({ page, conte
   await expect(page.getByText(/1 ficha descansou/i)).toBeVisible()
   await expect(page.getByText('20/20')).toBeVisible()
 })
+
+test('quem não é o Mestre da mesa é devolvido pra tela da mesa', async ({ page, context }) => {
+  // Mesma URL, mas o dm_id da mesa é de OUTRA pessoa. A RLS de `encounters` já
+  // barraria os dados; a guarda da rota existe pra devolver o jogador em vez de
+  // deixá-lo numa tela vazia.
+  await installAuthedApp(context, {
+    characters: [ANA],
+    campaigns: [{ id: CAMPAIGN_ID, name: 'Mesa Alheia', dm_id: 'ffffffff-ffff-4fff-8fff-ffffffffffff', system: 'dnd5e' }],
+  })
+
+  await page.goto(`/campaigns/${CAMPAIGN_ID}/combate`)
+
+  await expect(page).toHaveURL(new RegExp(`/campaigns/${CAMPAIGN_ID}$`))
+  await expect(page.getByRole('button', { name: /rolar iniciativa/i })).toHaveCount(0)
+})
