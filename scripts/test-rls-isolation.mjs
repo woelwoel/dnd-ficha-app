@@ -341,6 +341,47 @@ async function main() {
       }
     }
 
+    console.log('\n▶ [#6] Construtor de Encontros: perímetro de encounter_templates (0017)')
+    {
+      // O bloco [#5] já revinculou o player à mesa e deixou o estado real.
+      const { data: tpl, error: t1 } = await dm.from('encounter_templates')
+        .insert({ campaign_id: campaignId, name: 'Emboscada na ponte', monsters: [{ monsterIndex: 'goblin', count: 3 }] })
+        .select('id, name')
+        .single()
+      assert(!t1 && !!tpl?.id, `DM cria encontro salvo (err=${t1?.message})`)
+
+      // Nome repetido na MESMA mesa → recusado pelo índice único (case-insensitive).
+      const { error: t2 } = await dm.from('encounter_templates')
+        .insert({ campaign_id: campaignId, name: '  emboscada NA ponte ', monsters: [] })
+      assert(!!t2, `nome duplicado recusado (err=${t2?.message})`)
+
+      // Nome em branco → recusado pelo check.
+      const { error: t3 } = await dm.from('encounter_templates')
+        .insert({ campaign_id: campaignId, name: '   ', monsters: [] })
+      assert(!!t3, `nome em branco recusado (err=${t3?.message})`)
+
+      // Player não lê nem escreve.
+      const { data: pRows } = await player.from('encounter_templates')
+        .select('id').eq('campaign_id', campaignId)
+      assert((pRows ?? []).length === 0, `player não enxerga encontros salvos (got ${(pRows ?? []).length})`)
+
+      const { error: t4 } = await player.from('encounter_templates')
+        .insert({ campaign_id: campaignId, name: 'Do jogador', monsters: [] })
+      assert(!!t4, `player bloqueado ao criar encontro salvo (err=${t4?.message})`)
+
+      if (tpl?.id) {
+        // Update de quem não é o Mestre não pode pegar a linha.
+        const { error: t5 } = await player.from('encounter_templates')
+          .update({ name: 'Renomeado pelo jogador' }).eq('id', tpl.id)
+        const { data: after } = await dm.from('encounter_templates')
+          .select('name').eq('id', tpl.id).maybeSingle()
+        assert(after?.name === 'Emboscada na ponte',
+          `update do player não pega (err=${t5?.message}, nome=${after?.name})`)
+
+        await dm.from('encounter_templates').delete().eq('id', tpl.id)
+      }
+    }
+
     console.log('\n▶ Rate limit: tentativas FRACASSADAS acumulam e barram (0016)')
     {
       // Este teste não podia passar antes da 0016: cada tentativa fracassada
