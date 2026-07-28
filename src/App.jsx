@@ -12,7 +12,7 @@ import { AuthProvider, useAuth } from './auth/AuthProvider'
 import { LoginScreen } from './auth/LoginScreen'
 import { ResetPasswordScreen } from './auth/ResetPasswordScreen'
 import { lazyWithReload } from './utils/lazyWithReload'
-import { getLazyWizard, getLazySheet, getLazyGlobalWidgets, getLazyEncounter } from './systems/ui-registry'
+import { getLazyWizard, getLazySheet, getLazyGlobalWidgets, getLazyEncounter, getLazyEncounterLibrary } from './systems/ui-registry'
 import { listSystems, getSystemCore } from './systems'
 import { DEFAULT_SYSTEM } from './systems/envelope'
 import { getCharacterSystem } from './utils/storage'
@@ -207,6 +207,33 @@ function EncounterRoute() {
   )
 }
 
+// A biblioteca de encontros é exclusiva do Mestre — mesma guarda do
+// EncounterRoute (a RLS de `encounters`/0017 já barra os dados, mas sem isto
+// um jogador que digitasse a URL na mão cairia numa tela vazia).
+function EncounterLibraryRoute() {
+  const navigate = useNavigate()
+  const { id } = useParams()
+  const [resolved, setResolved] = useState(null) // { system, isDM }
+  useEffect(() => {
+    let alive = true
+    setResolved(null)
+    Promise.all([getCampaignSystem(id), isCampaignDM(id)])
+      .then(([system, isDM]) => { if (alive) setResolved({ system, isDM }) })
+    return () => { alive = false }
+  }, [id])
+
+  if (resolved === null) return <Loader />
+  if (!resolved.isDM) return <Navigate to={`/campaigns/${id}`} replace />
+  const Library = getLazyEncounterLibrary(resolved.system)
+  if (!Library) return <Navigate to={`/campaigns/${id}`} replace />
+  return (
+    <RouteShell>
+      {/* eslint-disable-next-line react-hooks/static-components */}
+      <Library campaignId={id} onBack={() => navigate(`/campaigns/${id}`)} />
+    </RouteShell>
+  )
+}
+
 function CampaignDetailRoute() {
   const navigate = useNavigate()
   const { id } = useParams()
@@ -240,6 +267,7 @@ function AuthedRoutes() {
           <Route path="/campaigns" element={<RouteShell><CampaignsScreen /></RouteShell>} />
           <Route path="/campaigns/:id" element={<CampaignDetailRoute />} />
           <Route path="/campaigns/:id/combate" element={<EncounterRoute />} />
+          <Route path="/campaigns/:id/encontros" element={<EncounterLibraryRoute />} />
           <Route path="/admin" element={<AdminRoute />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
