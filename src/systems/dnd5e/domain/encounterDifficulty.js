@@ -89,3 +89,42 @@ export function encounterMultiplier(monsterCount, partySize) {
   else if (size >= 6) i -= 1
   return MULTIPLIER_LADDER[Math.min(MULTIPLIER_LADDER.length - 1, Math.max(0, i))]
 }
+
+export const BANDS = ['trivial', 'easy', 'medium', 'hard', 'deadly']
+
+export function adjustedXp(monsterXpTotal, monsterCount, partySize) {
+  const xp = Math.max(0, Math.floor(Number(monsterXpTotal) || 0))
+  return Math.round(xp * encounterMultiplier(monsterCount, partySize))
+}
+
+/**
+ * Faixa do encontro. A fronteira é sempre "igual entra na faixa de cima":
+ * bater exatamente o limiar mortal é mortal, não difícil.
+ * Companhia vazia devolve `null` — sem orçamento não existe faixa, e inventar
+ * uma seria pior que admitir que não dá pra saber.
+ */
+export function difficultyBand(xp, thresholds) {
+  if (!thresholds || thresholds.deadly <= 0) return null
+  const n = Math.max(0, Math.floor(Number(xp) || 0))
+  if (n >= thresholds.deadly) return 'deadly'
+  if (n >= thresholds.hard) return 'hard'
+  if (n >= thresholds.medium) return 'medium'
+  if (n >= thresholds.easy) return 'easy'
+  return 'trivial'
+}
+
+/** Tudo que a tela precisa, numa chamada só. */
+export function summarizeEncounter({ monsterXpTotal = 0, monsterCount = 0, levels = [] } = {}) {
+  const partySize = (levels ?? []).length
+  const thresholds = partyThresholds(levels)
+  const multiplier = encounterMultiplier(monsterCount, partySize)
+  const adjusted = adjustedXp(monsterXpTotal, monsterCount, partySize)
+  return {
+    raw: Math.max(0, Math.floor(Number(monsterXpTotal) || 0)),
+    adjusted,
+    multiplier,
+    partySize,
+    thresholds,
+    band: difficultyBand(adjusted, thresholds),
+  }
+}
