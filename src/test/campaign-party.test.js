@@ -30,10 +30,15 @@ describe('companhia da mesa para o Mestre', () => {
     })
   })
 
-  it('loadCampaignCharacters pede version na query', async () => {
+  // A version tem que chegar na companhia (o combate faz lock otimista com
+  // ela), mas o select NÃO pode nomear colunas: um banco sem `version` fazia
+  // o PostgREST recusar a query inteira (42703) e a mesa parecia vazia.
+  // Ver campaign-characters-schema-drift.test.js.
+  it('loadCampaignCharacters traz a version sem nomear colunas na query', async () => {
     store.rows = [{ id: 'x', owner_id: 'u2', campaign_id: 'camp-1', version: 4, data: { id: 'x' } }]
     const rows = await loadCampaignCharacters('camp-1')
     expect(rows).toHaveLength(1)
-    expect(store.selected).toMatch(/version/)
+    expect(rows[0].version).toBe(4)
+    expect(store.selected).toBe('*')
   })
 })

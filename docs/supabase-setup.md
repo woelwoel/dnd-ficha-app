@@ -17,9 +17,17 @@ cp .env.example .env.local
 
 ## 3. Aplicar migrations SQL
 
-No dashboard, abra **SQL Editor** e execute o conteúdo de `supabase/migrations/0001_profiles.sql`.
+No dashboard, abra **SQL Editor** e execute o conteúdo de **cada** arquivo de
+`supabase/migrations/`, em ordem numérica, começando por `0001_profiles.sql`
+até o último do diretório. Uma migration pulada não dá erro visível no app —
+ela apaga uma feature em silêncio.
 
-> No futuro, migrations adicionais serão aplicadas na mesma ordem (0002, 0003, …).
+Como conferir se o banco está em dia, sem abrir o dashboard: o app nunca
+nomeia a coluna `characters.version` na leitura da companhia justamente porque
+a `0009` já ficou pendente uma vez (a query morria com `42703` e a mesa do
+Mestre exibia "nenhum jogador criou ficha"). Se o combate do Mestre recusar
+escritas nas fichas, a suspeita nº 1 é migration faltando — reaplique a `0009`
+e a `0015`, ambas idempotentes.
 
 ## 4. Configurar Authentication
 

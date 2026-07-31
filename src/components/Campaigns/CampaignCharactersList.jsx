@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { loadCampaignCharacters } from '../../lib/campaigns'
+import { fetchCampaignCharacters } from '../../lib/campaigns'
 import { supabase } from '../../lib/supabase'
 
 /**
@@ -11,11 +11,20 @@ import { supabase } from '../../lib/supabase'
 export function CampaignCharactersList({ campaignId, onOpen }) {
   const [rows, setRows] = useState([])
   const [loading, setLoading] = useState(true)
+  // Lista vazia por falha de leitura é indistinguível de mesa sem fichas — e
+  // dizer "nenhum jogador criou ficha" quando na verdade a query morreu já
+  // escondeu um bug de schema por semanas. Guardamos a falha e mostramos.
+  const [failure, setFailure] = useState(null)
 
   const reload = useCallback(() => {
     setLoading(true)
-    return loadCampaignCharacters(campaignId).then(list => {
-      setRows(list)
+    return fetchCampaignCharacters(campaignId).then(res => {
+      if (res.ok) {
+        setRows(res.rows)
+        setFailure(null)
+      } else {
+        setFailure(res)
+      }
       setLoading(false)
     })
   }, [campaignId])
@@ -48,9 +57,25 @@ export function CampaignCharactersList({ campaignId, onOpen }) {
   return (
     <div className="rounded-sm border-2 border-parchment-600 bg-parchment-50 shadow-parchment-sm overflow-hidden">
       <div className="px-4 py-2 text-xs font-display tracking-widest uppercase text-ink-500 border-b border-parchment-600 bg-parchment-100">
-        Fichas dos jogadores ({rows.length}) — modo leitura
+        Fichas dos jogadores {failure ? '' : `(${rows.length}) `}— modo leitura
       </div>
-      {rows.length === 0 ? (
+      {failure ? (
+        <div className="p-4 flex flex-col items-start gap-2">
+          <p role="alert" className="text-sm text-red-700">
+            Não foi possível carregar as fichas desta mesa.
+            {failure.message && (
+              <span className="block mt-1 text-xs ink-italic text-ink-300">{failure.message}</span>
+            )}
+          </p>
+          <button
+            type="button"
+            onClick={reload}
+            className="text-xs font-display tracking-wide uppercase px-3 py-1 border-2 border-parchment-600 rounded-sm text-ink-500 hover:bg-parchment-200 transition"
+          >
+            Tentar de novo
+          </button>
+        </div>
+      ) : rows.length === 0 ? (
         <p className="p-4 text-ink-300 ink-italic text-sm">Nenhum jogador criou ficha vinculada à mesa ainda.</p>
       ) : (
         <ul className="divide-y divide-parchment-600">

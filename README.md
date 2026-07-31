@@ -64,8 +64,11 @@ na **Vercel**.
 Este app requer um projeto Supabase configurado. Veja
 [docs/supabase-setup.md](docs/supabase-setup.md).
 
-1. Crie o projeto Supabase e aplique as migrations de `supabase/migrations/`
-   na ordem (0001 → 0006) pelo SQL Editor.
+1. Crie o projeto Supabase e aplique **todas** as migrations de
+   `supabase/migrations/` na ordem numérica (0001 → a última do diretório)
+   pelo SQL Editor. Pular uma quebra features inteiras em silêncio: a `0009`
+   ficou de fora por meses e, sem a coluna `characters.version`, a companhia
+   da mesa vinha vazia e o combate do Mestre não escrevia nas fichas.
 2. Copie `.env.example` para `.env.local` e preencha:
 
    ```

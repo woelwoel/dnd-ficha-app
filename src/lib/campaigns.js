@@ -1,5 +1,6 @@
 import { supabase } from './supabase'
 import { DEFAULT_SYSTEM } from '../systems/envelope'
+import { reportError } from './report'
 
 const T_CAMPAIGNS = 'campaigns'
 const T_MEMBERS   = 'campaign_members'
@@ -209,14 +210,37 @@ export async function loadCampaignRoster(campaignId) {
 }
 
 /** Carrega fichas DA MESA (apenas o DM vê via policy). */
-export async function loadCampaignCharacters(campaignId) {
+export async function fetchCampaignCharacters(campaignId) {
+  // `*` e NÃO uma lista explícita de colunas: nomear uma coluna que o banco
+  // ainda não tem faz o PostgREST devolver 400/42703 e a leitura inteira
+  // morre. Foi o que aconteceu em produção — o select pedia `version`
+  // (migration 0009) num banco sem a coluna, e a tela do Mestre passou a
+  // jurar que nenhum jogador tinha ficha na mesa. Mesmo motivo do
+  // CHARACTER_COLUMNS em utils/storage.js. A `version` continua vindo
+  // quando existe (o combate depende dela pro lock otimista).
   const { data, error } = await supabase
     .from('characters')
-    .select('id, owner_id, data, last_opened_at, short_id, campaign_id, version')
+    .select('*')
     .eq('campaign_id', campaignId)
     .order('created_at', { ascending: true })
-  if (error) { logDev('loadCampaignCharacters', error); return [] }
-  return data ?? []
+  if (error) {
+    logDev('loadCampaignCharacters', error)
+    // logDev é no-op em produção; sem isto a falha some sem deixar rastro.
+    reportError('campaign_characters_load_failed', new Error(error.message ?? 'erro desconhecido'), {
+      code: error.code ?? null,
+    })
+    return { ok: false, rows: [], code: error.code ?? null, message: error.message ?? null }
+  }
+  return { ok: true, rows: data ?? [] }
+}
+
+/**
+ * Contrato legado: array direto, `[]` em qualquer falha. Quem precisa
+ * distinguir "mesa vazia" de "não deu pra ler" usa `fetchCampaignCharacters`.
+ */
+export async function loadCampaignCharacters(campaignId) {
+  const { rows } = await fetchCampaignCharacters(campaignId)
+  return rows
 }
 
 /**
