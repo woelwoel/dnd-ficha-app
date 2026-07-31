@@ -53,16 +53,16 @@ describe('LoginScreen', () => {
     render(<LoginScreen />)
     await user.click(screen.getByRole('tab', { name: /criar conta/i }))
     await user.type(screen.getByLabelText(/email/i), 'novo@b.com')
-    await user.type(screen.getByLabelText(/senha/i), 'segredo12')
+    await user.type(screen.getByLabelText(/senha/i), 'Segredo12!')
     await user.click(screen.getByRole('button', { name: /criar conta/i }))
-    expect(auth.signUp).toHaveBeenCalledWith({ email: 'novo@b.com', password: 'segredo12' })
+    expect(auth.signUp).toHaveBeenCalledWith({ email: 'novo@b.com', password: 'Segredo12!' })
   })
 
   it('mostra mensagem após cadastro pedindo confirmação de email (sem sessão)', async () => {
     render(<LoginScreen />)
     await user.click(screen.getByRole('tab', { name: /criar conta/i }))
     await user.type(screen.getByLabelText(/email/i), 'novo@b.com')
-    await user.type(screen.getByLabelText(/senha/i), 'segredo12')
+    await user.type(screen.getByLabelText(/senha/i), 'Segredo12!')
     await user.click(screen.getByRole('button', { name: /criar conta/i }))
     expect(await screen.findByText(/confirme seu email/i)).toBeInTheDocument()
   })
@@ -72,20 +72,68 @@ describe('LoginScreen', () => {
     render(<LoginScreen />)
     await user.click(screen.getByRole('tab', { name: /criar conta/i }))
     await user.type(screen.getByLabelText(/email/i), 'novo@b.com')
-    await user.type(screen.getByLabelText(/senha/i), 'segredo12')
+    await user.type(screen.getByLabelText(/senha/i), 'Segredo12!')
     await user.click(screen.getByRole('button', { name: /criar conta/i }))
     expect(auth.signUp).toHaveBeenCalled()
     expect(screen.queryByText(/confirme seu email/i)).not.toBeInTheDocument()
   })
 
-  it('valida senha mínima de 8 chars no cadastro antes de chamar signUp', async () => {
+  it('valida tamanho da senha no cadastro antes de chamar signUp', async () => {
     render(<LoginScreen />)
     await user.click(screen.getByRole('tab', { name: /criar conta/i }))
     await user.type(screen.getByLabelText(/email/i), 'novo@b.com')
-    await user.type(screen.getByLabelText(/senha/i), 'curta')
+    await user.type(screen.getByLabelText(/senha/i), 'Cur1!')
     await user.click(screen.getByRole('button', { name: /criar conta/i }))
     expect(auth.signUp).not.toHaveBeenCalled()
-    expect(await screen.findByText(/pelo menos 8/i)).toBeInTheDocument()
+    expect(await screen.findByRole('alert')).toHaveTextContent(/de 8 a 50 caracteres/i)
+  })
+
+  it('barra senha sem maiúscula/símbolo e diz em português o que falta', async () => {
+    render(<LoginScreen />)
+    await user.click(screen.getByRole('tab', { name: /criar conta/i }))
+    await user.type(screen.getByLabelText(/email/i), 'novo@b.com')
+    await user.type(screen.getByLabelText(/senha/i), 'segredo12')
+    await user.click(screen.getByRole('button', { name: /criar conta/i }))
+    expect(auth.signUp).not.toHaveBeenCalled()
+    const alerta = await screen.findByRole('alert')
+    expect(alerta).toHaveTextContent(/maiúscula/i)
+    expect(alerta).toHaveTextContent(/símbolo/i)
+  })
+
+  it('mostra a lista de requisitos da senha na aba Criar conta', async () => {
+    render(<LoginScreen />)
+    await user.click(screen.getByRole('tab', { name: /criar conta/i }))
+    expect(screen.getByText(/de 8 a 50 caracteres/i)).toBeInTheDocument()
+    expect(screen.getByText(/letra maiúscula/i)).toBeInTheDocument()
+    expect(screen.getByText(/um número/i)).toBeInTheDocument()
+    expect(screen.getByText(/um símbolo/i)).toBeInTheDocument()
+  })
+
+  it('não mostra a lista de requisitos na aba Entrar', () => {
+    render(<LoginScreen />)
+    expect(screen.queryByText(/de 8 a 50 caracteres/i)).not.toBeInTheDocument()
+  })
+
+  it('limita o campo de senha do cadastro a 50 caracteres', async () => {
+    render(<LoginScreen />)
+    await user.click(screen.getByRole('tab', { name: /criar conta/i }))
+    expect(screen.getByLabelText(/senha/i)).toHaveAttribute('maxlength', '50')
+  })
+
+  it('traduz o erro cru de requisitos de senha vindo do Supabase', async () => {
+    auth.signUp.mockResolvedValue({
+      data: {},
+      error: { message: 'Password should contain at least one character of each: abcdefghijklmnopqrstuvwxyz, ABCDEFGHIJKLMNOPQRSTUVWXYZ, 0123456789.' },
+    })
+    render(<LoginScreen />)
+    await user.click(screen.getByRole('tab', { name: /criar conta/i }))
+    await user.type(screen.getByLabelText(/email/i), 'novo@b.com')
+    await user.type(screen.getByLabelText(/senha/i), 'Segredo12!')
+    await user.click(screen.getByRole('button', { name: /criar conta/i }))
+    const alerta = await screen.findByRole('alert')
+    expect(alerta).not.toHaveTextContent(/abcdefghijklmnopqrstuvwxyz/)
+    expect(alerta).toHaveTextContent(/senha/i)
+    expect(alerta).toHaveTextContent(/maiúscula/i)
   })
 
   it('fluxo de esqueci a senha pede email e chama requestPasswordReset', async () => {

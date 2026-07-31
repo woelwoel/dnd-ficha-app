@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useAuth } from './AuthProvider'
 import { Button } from '../components/ui/Button'
 import { Icon } from '../components/ui/Icon'
+import { PasswordRequirements } from './PasswordRequirements'
+import { PASSWORD_MAX, describePasswordProblem } from './passwordPolicy'
 
 export function ResetPasswordScreen() {
   const { updatePassword } = useAuth()
@@ -16,8 +18,9 @@ export function ResetPasswordScreen() {
     e.preventDefault()
     setError(null)
     setInfo(null)
-    if (pw1.length < 8) {
-      setError('Senha deve ter pelo menos 8 caracteres.')
+    const problema = describePasswordProblem(pw1)
+    if (problema) {
+      setError(problema)
       return
     }
     if (pw1 !== pw2) {
@@ -56,7 +59,9 @@ export function ResetPasswordScreen() {
               type={show ? 'text' : 'password'}
               required
               autoComplete="new-password"
-              placeholder="mín. 8 caracteres"
+              maxLength={PASSWORD_MAX}
+              aria-describedby="reset-password-rules"
+              placeholder="crie uma senha"
               value={pw1}
               onChange={(e) => setPw1(e.target.value)}
               className="w-full px-3 py-2 pr-10 bg-parchment-100 border-2 border-parchment-600 rounded-sm text-sm text-ink-500 placeholder:text-ink-200 focus:outline-none focus:border-ink-300"
@@ -72,6 +77,7 @@ export function ResetPasswordScreen() {
               <Icon name={show ? 'eye-off' : 'eye'} size={16} strokeWidth={1.75} />
             </button>
           </div>
+          <PasswordRequirements id="reset-password-rules" password={pw1} />
         </label>
 
         <label className="block">
@@ -80,6 +86,7 @@ export function ResetPasswordScreen() {
             type={show ? 'text' : 'password'}
             required
             autoComplete="new-password"
+            maxLength={PASSWORD_MAX}
             value={pw2}
             onChange={(e) => setPw2(e.target.value)}
             className="mt-1 w-full px-3 py-2 bg-parchment-100 border-2 border-parchment-600 rounded-sm text-sm text-ink-500 placeholder:text-ink-200 focus:outline-none focus:border-ink-300"

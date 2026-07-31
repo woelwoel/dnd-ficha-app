@@ -21,27 +21,41 @@ describe('ResetPasswordScreen', () => {
 
   it('rejeita senhas diferentes', async () => {
     render(<ResetPasswordScreen />)
-    await userEvent.type(screen.getByLabelText(/nova senha/i), 'senhaabc1')
-    await userEvent.type(screen.getByLabelText(/confirmar senha/i), 'outracoisa')
+    await userEvent.type(screen.getByLabelText(/nova senha/i), 'Senhaabc1!')
+    await userEvent.type(screen.getByLabelText(/confirmar senha/i), 'Outracoisa2!')
     await userEvent.click(screen.getByRole('button', { name: /salvar/i }))
     expect(auth.updatePassword).not.toHaveBeenCalled()
     expect(await screen.findByText(/não conferem/i)).toBeInTheDocument()
   })
 
-  it('rejeita senha < 8 chars', async () => {
+  it('rejeita senha fora dos requisitos e diz o que falta', async () => {
     render(<ResetPasswordScreen />)
     await userEvent.type(screen.getByLabelText(/nova senha/i), 'curta')
     await userEvent.type(screen.getByLabelText(/confirmar senha/i), 'curta')
     await userEvent.click(screen.getByRole('button', { name: /salvar/i }))
     expect(auth.updatePassword).not.toHaveBeenCalled()
-    expect(await screen.findByText(/pelo menos 8/i)).toBeInTheDocument()
+    const alerta = await screen.findByRole('alert')
+    expect(alerta).toHaveTextContent(/de 8 a 50 caracteres/i)
+    expect(alerta).toHaveTextContent(/maiúscula/i)
+  })
+
+  it('mostra a lista de requisitos da senha', () => {
+    render(<ResetPasswordScreen />)
+    expect(screen.getByText(/de 8 a 50 caracteres/i)).toBeInTheDocument()
+    expect(screen.getByText(/um símbolo/i)).toBeInTheDocument()
+  })
+
+  it('limita os campos de senha a 50 caracteres', () => {
+    render(<ResetPasswordScreen />)
+    expect(screen.getByLabelText(/nova senha/i)).toHaveAttribute('maxlength', '50')
+    expect(screen.getByLabelText(/confirmar senha/i)).toHaveAttribute('maxlength', '50')
   })
 
   it('chama updatePassword quando válido', async () => {
     render(<ResetPasswordScreen />)
-    await userEvent.type(screen.getByLabelText(/nova senha/i), 'novasenha1')
-    await userEvent.type(screen.getByLabelText(/confirmar senha/i), 'novasenha1')
+    await userEvent.type(screen.getByLabelText(/nova senha/i), 'Novasenha1!')
+    await userEvent.type(screen.getByLabelText(/confirmar senha/i), 'Novasenha1!')
     await userEvent.click(screen.getByRole('button', { name: /salvar/i }))
-    expect(auth.updatePassword).toHaveBeenCalledWith('novasenha1')
+    expect(auth.updatePassword).toHaveBeenCalledWith('Novasenha1!')
   })
 })

@@ -2,8 +2,16 @@ import { useState } from 'react'
 import { useAuth } from './AuthProvider'
 import { Button } from '../components/ui/Button'
 import { Icon } from '../components/ui/Icon'
+import { PasswordRequirements } from './PasswordRequirements'
+import { PASSWORD_MAX, describePasswordProblem } from './passwordPolicy'
 
 const TABS = { SIGNIN: 'signin', SIGNUP: 'signup', FORGOT: 'forgot' }
+
+/* O Supabase devolve os requisitos de senha em inglês e com os alfabetos
+ * inteiros no texto ("...: abcdefghijklmnopqrstuvwxyz, ABCDEF..."). Trocamos
+ * por uma frase curta em português. */
+export const PASSWORD_HINT =
+  'A senha precisa ter uma letra maiúscula, uma minúscula, um número e um símbolo (ex.: ! @ # $).'
 
 function translateError(message) {
   if (!message) return 'Erro desconhecido.'
@@ -12,6 +20,8 @@ function translateError(message) {
   if (m.includes('email not confirmed')) return 'Confirme seu email antes de entrar.'
   if (m.includes('user already registered')) return 'Email já cadastrado.'
   if (m.includes('password') && m.includes('weak')) return 'Senha muito fraca.'
+  if (m.includes('password') && m.includes('should contain')) return PASSWORD_HINT
+  if (m.includes('password') && m.includes('should be at least')) return PASSWORD_HINT
   return message
 }
 
@@ -57,8 +67,9 @@ export function LoginScreen() {
   async function onSubmitSignUp(e) {
     e.preventDefault()
     reset()
-    if (password.length < 8) {
-      setError('Senha deve ter pelo menos 8 caracteres.')
+    const problema = describePasswordProblem(password)
+    if (problema) {
+      setError(problema)
       return
     }
     setBusy(true)
@@ -188,7 +199,9 @@ export function LoginScreen() {
                     required
                     autoComplete={tab === TABS.SIGNIN ? 'current-password' : 'new-password'}
                     minLength={tab === TABS.SIGNUP ? 8 : undefined}
-                    placeholder={tab === TABS.SIGNUP ? 'mín. 8 caracteres' : ''}
+                    maxLength={tab === TABS.SIGNUP ? PASSWORD_MAX : undefined}
+                    aria-describedby={tab === TABS.SIGNUP ? 'signup-password-rules' : undefined}
+                    placeholder={tab === TABS.SIGNUP ? 'crie uma senha' : ''}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-3 py-2 pr-10 bg-parchment-100 border-2 border-parchment-600 rounded-sm text-sm text-ink-500 placeholder:text-ink-200 focus:outline-none focus:border-ink-300"
@@ -205,6 +218,9 @@ export function LoginScreen() {
                   </button>
                 </div>
               </label>
+              {tab === TABS.SIGNUP && (
+                <PasswordRequirements id="signup-password-rules" password={password} />
+              )}
               {tab === TABS.SIGNIN && (
                 <div className="flex justify-end mt-1">
                   <button
