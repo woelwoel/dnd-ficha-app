@@ -2,32 +2,43 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { loadCampaignCharacters } from '../../../../lib/campaigns'
 import { rowToCharacter } from '../../../../utils/storage'
 import { dmApplyCombatState } from '../../../../lib/dmWrites'
-import { Button } from '../../../../components/ui/Button'
 import { applyDamage, applyHealing, gainTempHp } from '../../domain/rules'
 import { calculateInitiative } from '../../utils/calculations'
 import { characterLevel } from '../../domain/party'
 import { combatPatchFrom } from '../../domain/dmPatch'
 import {
-  applyNpcDamage, applyNpcHealing, setNpcTempHp, toggleNpcCondition,
+  applyNpcDamage, applyNpcHealing, setNpcTempHp, toggleNpcCondition, setConditionDuration,
   removeCombatant, setInitiative, nextTurn, previousTurn, markOrphans, totalXp,
+  addNpc, rollInitiativeFor, restoreCombatant,
 } from '../../domain/encounter'
+import { BestiaryModal } from '../Bestiary/BestiaryModal'
 import { useEncounter } from './useEncounter'
 import { SetupPanel } from './SetupPanel'
 import { CombatantRow } from './CombatantRow'
+import { CombatantDetail } from './CombatantDetail'
+import { EncounterToolbar, UndoBar } from './EncounterToolbar'
 import { PartyRestPanel } from './PartyRestPanel'
 
 /**
- * Tela do Mestre pra rodar o combate da mesa (spec 2026-07-26).
+ * Tela do Mestre pra rodar o combate da mesa (specs 2026-07-26 e 2026-07-31).
  *
- * Duas fases: montagem (SetupPanel) e combate. O HP do PJ NUNCA é copiado pro
- * encontro — vem do doc da ficha, que esta tela mantém em `docs` e reescreve
- * pela RPC estreita do Mestre.
+ * Casca de layout e orquestração: duas fases (montagem e combate) e, na fase de
+ * combate, duas colunas — ordem de iniciativa à esquerda, detalhe do
+ * selecionado à direita.
+ *
+ * O HP do PJ NUNCA é copiado pro encontro — vem do doc da ficha, que esta tela
+ * mantém em `docs` e reescreve pela RPC estreita do Mestre.
  */
 export function EncounterScreen({ campaignId, onBack }) {
   const { state, update, close, loading, conflict: encConflict } = useEncounter(campaignId)
   const [docs, setDocs] = useState({})       // characterId → doc da ficha
   const [notes, setNotes] = useState({})     // combatantId → aviso transitório
   const [loadingParty, setLoadingParty] = useState(true)
+  const [selectedId, setSelectedId] = useState(null)
+  const [lastAction, setLastAction] = useState(null)
+  const [log, setLog] = useState([])
+  const [bestiaryOpen, setBestiaryOpen] = useState(false)
+  const logSeq = useRef(0)
   // Espelho de `docs` pra decidir de forma SÍNCRONA se a releitura trouxe
   // verdade nova: o updater do setDocs só roda no próximo render, tarde demais
   // pra quem precisa da resposta ainda dentro da mesma função.
@@ -76,13 +87,39 @@ export function EncounterScreen({ campaignId, onBack }) {
     initiativeBonus: calculateInitiative(doc.attributes?.dex ?? 10, { feats: doc.info?.feats ?? [] }),
   })), [docs])
 
+  const byId = useCallback(
+    (id) => state.combatants.find(c => c.id === id),
+    [state.combatants],
+  )
+
+  // Seleção é estado LOCAL, nunca do jsonb: persistir faria os dois aparelhos
+  // do Mestre brigarem pelo foco e queimaria um bump de versão por clique.
+  const selected = byId(selectedId) ?? null
+
   function note(combatantId, text) {
     setNotes(prev => ({ ...prev, [combatantId]: text }))
   }
 
+  const appendLog = useCallback((text) => {
+    logSeq.current += 1
+    const entry = { seq: logSeq.current, round: state.round, text }
+    setLog(prev => [entry, ...prev].slice(0, 50))
+  }, [state.round])
+
+  /** Virar o turno zera o que é do turno anterior: avisos e desfazer. */
+  function turn(fn) {
+    setNotes({})
+    setLastAction(null)
+    update(s => {
+      const next = fn(s)
+      setSelectedId(next.activeId)
+      return next
+    })
+  }
+
   /** Roda a regra em JS e manda só o patch estreito pro banco. */
-  async function writePc(combatant, mutate) {
-    const doc = docs[combatant.characterId]
+  const writePc = useCallback(async (combatant, mutate) => {
+    const doc = docsRef.current[combatant.characterId]
     if (!doc) return
     const { character: next, sideEffects } = mutate(doc)
     commitDocs({ ...docsRef.current, [doc.id]: next })   // otimista
@@ -95,6 +132,7 @@ export function EncounterScreen({ campaignId, onBack }) {
       else if (sideEffects?.died) msgs.push('morreu (3 falhas)')
       else if (sideEffects?.droppedTo0) msgs.push('caiu a 0 PV')
       note(combatant.id, msgs.join(' · '))
+      if (msgs.length > 0) appendLog(`${combatant.name}: ${msgs.join(' · ')}`)
       return
     }
     // A escrita foi recusada: `docs` está preso no valor otimista, que pode
@@ -108,26 +146,50 @@ export function EncounterScreen({ campaignId, onBack }) {
       : res.reason === 'conflict'
         ? 'a ficha mudou no meio — recarregada, tente de novo'
         : `falha ao escrever na ficha (${res.reason})`)
-  }
+  }, [commitDocs, reloadParty, appendLog])
 
-  const byId = (id) => state.combatants.find(c => c.id === id)
+  /**
+   * Arma o slot único de desfazer. Monstro volta pelo snapshot do combatente
+   * (restaurar o `state` inteiro atropelaria o outro aparelho do Mestre);
+   * PJ volta reescrevendo o bloco `combat` anterior pela mesma RPC.
+   */
+  const armUndo = useCallback((combatant, label) => {
+    if (combatant.kind === 'npc') {
+      const snapshot = combatant
+      setLastAction({ combatantId: combatant.id, label, undo: () => update(s => restoreCombatant(s, snapshot)) })
+      return
+    }
+    const anterior = docsRef.current[combatant.characterId]?.combat
+    if (!anterior) return
+    setLastAction({
+      combatantId: combatant.id,
+      label,
+      undo: () => writePc(combatant, doc => ({ character: { ...doc, combat: anterior }, sideEffects: null })),
+    })
+  }, [update, writePc])
 
   const onDamage = (id, amount) => {
     const c = byId(id)
-    if (!c) return
+    if (!c || amount <= 0) return
+    armUndo(c, `Dano de ${amount} em ${c.name}`)
+    appendLog(`${c.name} sofreu ${amount} de dano`)
     if (c.kind === 'npc') return update(s => applyNpcDamage(s, id, amount))
     return writePc(c, doc => applyDamage(doc, amount))
   }
   const onHeal = (id, amount) => {
     const c = byId(id)
-    if (!c) return
+    if (!c || amount <= 0) return
+    armUndo(c, `Cura de ${amount} em ${c.name}`)
+    appendLog(`${c.name} recuperou ${amount} de vida`)
     if (c.kind === 'npc') return update(s => applyNpcHealing(s, id, amount))
     // applyHealing já devolve { character, sideEffects } (rules.js:1145).
     return writePc(c, doc => applyHealing(doc, amount))
   }
   const onTempHp = (id, amount) => {
     const c = byId(id)
-    if (!c) return
+    if (!c || amount <= 0) return
+    armUndo(c, `HP temporário de ${amount} em ${c.name}`)
+    appendLog(`${c.name} ganhou ${amount} de HP temporário`)
     if (c.kind === 'npc') return update(s => setNpcTempHp(s, id, amount))
     // gainTempHp devolve { character } sem sideEffects (rules.js:1179).
     return writePc(c, doc => gainTempHp(doc, amount))
@@ -144,61 +206,114 @@ export function EncounterScreen({ campaignId, onBack }) {
       return { character: { ...doc, combat: { ...doc.combat, conditions } }, sideEffects: null }
     })
   }
+  const onSetConditionDuration = (id, conditionId, rounds) =>
+    update(s => setConditionDuration(s, id, conditionId, rounds))
+
+  function addMonster(monster) {
+    setBestiaryOpen(false)
+    setLastAction(null)
+    update(s => {
+      // `addNpc` usa `s.nextSeq` pro id, então o id do recém-entrado é
+      // previsível — é o que permite rolar a iniciativa só dele em seguida.
+      const novoId = `k${s.nextSeq}`
+      return rollInitiativeFor(addNpc(s, monster), novoId)
+    })
+    appendLog(`${monster.name} entrou no combate`)
+  }
+
+  function onRemove(id) {
+    const c = byId(id)
+    setLastAction(null)
+    if (selectedId === id) setSelectedId(null)
+    if (c) appendLog(`${c.name} saiu do combate`)
+    update(s => removeCombatant(s, id))
+  }
+
+  async function undo() {
+    const acao = lastAction
+    setLastAction(null)
+    if (!acao) return
+    appendLog(`desfeito: ${acao.label.toLowerCase()}`)
+    await acao.undo()
+  }
 
   if (loading || loadingParty) {
     return <div className="p-6 text-ink-300 ink-italic text-sm">Carregando mesa de combate…</div>
   }
 
+  // Desfazer some junto com o combatente que ele desfaria.
+  const undoAtivo = lastAction && byId(lastAction.combatantId) ? lastAction : null
+
   return (
     <div className="min-h-screen p-4 bg-parchment-100 text-ink-500">
-      <header className="max-w-3xl mx-auto mb-4">
+      <header className="max-w-6xl mx-auto mb-3">
         <button onClick={onBack} className="text-xs ink-italic text-ink-300 hover:text-ink-500">← Mesa</button>
         <h1 className="text-2xl font-display tracking-widest uppercase text-ink-500 mt-1">Combate</h1>
-        {state.started && (
-          <p className="text-xs ink-italic text-ink-300">
-            Rodada {state.round} · {totalXp(state)} XP em monstros
-          </p>
-        )}
         {encConflict && (
           <p className="text-xs text-amber-800 ink-italic">o encontro mudou em outra tela — recarregado</p>
         )}
       </header>
 
-      <div className="max-w-3xl mx-auto grid gap-4">
+      <div className="max-w-6xl mx-auto">
         {!state.started ? (
-          <SetupPanel party={party} campaignId={campaignId} onStart={(next) => update(() => next)} />
+          <div className="max-w-3xl">
+            <SetupPanel party={party} campaignId={campaignId} onStart={(next) => update(() => next)} />
+          </div>
         ) : (
           <>
-            <div className="flex gap-2">
-              {/* Aviso transitório (ex.: CD de concentração) não deve sobreviver à
-                  virada de turno — senão parece um alerta do turno atual. */}
-              <Button size="sm" variant="ghost" onClick={() => { setNotes({}); update(previousTurn) }}>Anterior</Button>
-              <Button size="sm" onClick={() => { setNotes({}); update(nextTurn) }}>Próximo</Button>
+            <EncounterToolbar
+              round={state.round}
+              xp={totalXp(state)}
+              onPrevious={() => turn(previousTurn)}
+              onNext={() => turn(nextTurn)}
+              onAdd={() => setBestiaryOpen(true)}
+              onClose={close}
+            />
+
+            <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_24rem] items-start">
+              <div className="flex flex-col gap-4 min-w-0">
+                <UndoBar action={undoAtivo} onUndo={undo} />
+
+                <ul
+                  aria-label="Ordem de iniciativa"
+                  className="rounded-sm border-2 border-parchment-600 bg-parchment-50 divide-y divide-parchment-600/50 overflow-hidden"
+                >
+                  {state.combatants.map(c => (
+                    <CombatantRow
+                      key={c.id}
+                      combatant={c}
+                      doc={c.kind === 'pc' ? docs[c.characterId] ?? null : null}
+                      active={state.activeId === c.id}
+                      selected={selectedId === c.id}
+                      warning={notes[c.id]}
+                      onSelect={setSelectedId}
+                      onDamage={onDamage}
+                      onHeal={onHeal}
+                      onRemove={onRemove}
+                      onInitiativeChange={(id, v) => update(s => setInitiative(s, id, v))}
+                    />
+                  ))}
+                </ul>
+
+                <PartyRestPanel docs={docs} onRested={reloadParty} />
+              </div>
+
+              <CombatantDetail
+                combatant={selected}
+                doc={selected?.kind === 'pc' ? docs[selected.characterId] ?? null : null}
+                round={state.round}
+                log={log}
+                onTempHp={onTempHp}
+                onToggleCondition={onToggleCondition}
+                onSetConditionDuration={onSetConditionDuration}
+              />
             </div>
 
-            <ul className="rounded-sm border-2 border-parchment-600 bg-parchment-50 divide-y divide-parchment-600/50 overflow-hidden">
-              {state.combatants.map(c => (
-                <CombatantRow
-                  key={c.id}
-                  combatant={c}
-                  doc={c.kind === 'pc' ? docs[c.characterId] ?? null : null}
-                  active={state.activeId === c.id}
-                  warning={notes[c.id]}
-                  onDamage={onDamage}
-                  onHeal={onHeal}
-                  onTempHp={onTempHp}
-                  onToggleCondition={onToggleCondition}
-                  onRemove={(id) => update(s => removeCombatant(s, id))}
-                  onInitiativeChange={(id, v) => update(s => setInitiative(s, id, v))}
-                />
-              ))}
-            </ul>
-
-            <PartyRestPanel docs={docs} onRested={reloadParty} />
-
-            <div>
-              <Button variant="ghost" size="sm" onClick={close}>Encerrar combate</Button>
-            </div>
+            <BestiaryModal
+              isOpen={bestiaryOpen}
+              onClose={() => setBestiaryOpen(false)}
+              onPick={addMonster}
+            />
           </>
         )}
       </div>

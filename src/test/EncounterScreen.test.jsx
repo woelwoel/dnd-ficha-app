@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+
+/** A lista de iniciativa — escopo pra distinguir a linha do registro. */
+const ordem = () => screen.getByRole('list', { name: /ordem de iniciativa/i })
 
 // `encounterRow` fica dentro do objeto hoisted (não numa closure isolada do
 // factory) justamente pra poder ser resetado no beforeEach — sem isso, o
@@ -87,7 +90,7 @@ describe('EncounterScreen', () => {
     await userEvent.click(await screen.findByRole('button', { name: /rolar iniciativa/i }))
     await userEvent.type(await screen.findByLabelText(/valor de dano ou cura/i), '20')
     await userEvent.click(screen.getByRole('button', { name: /^dano$/i }))
-    expect(await screen.findByText(/CD 10 de concentração/i)).toBeInTheDocument()
+    expect(await within(ordem()).findByText(/CD 10 de concentração/i)).toBeInTheDocument()
   })
 
   it('conflito de versão avisa sem sobrescrever', async () => {
@@ -114,10 +117,12 @@ describe('EncounterScreen', () => {
     await userEvent.click(await screen.findByRole('button', { name: /rolar iniciativa/i }))
     await userEvent.type(await screen.findByLabelText(/valor de dano ou cura/i), '20')
     await userEvent.click(screen.getByRole('button', { name: /^dano$/i }))
-    expect(await screen.findByText(/CD 10 de concentração/i)).toBeInTheDocument()
+    expect(await within(ordem()).findByText(/CD 10 de concentração/i)).toBeInTheDocument()
 
     await userEvent.click(screen.getByRole('button', { name: /pr[óo]ximo/i }))
-    expect(screen.queryByText(/CD 10 de concentração/i)).not.toBeInTheDocument()
+    // Some da LINHA. O registro guarda o que aconteceu e é justamente por isso
+    // que ele existe — a asserção é escopada na ordem de iniciativa.
+    expect(within(ordem()).queryByText(/CD 10 de concentração/i)).not.toBeInTheDocument()
   })
 
   it('falha na escrita E no resync avisa e não apaga a companhia da tela', async () => {

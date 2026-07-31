@@ -16,8 +16,8 @@ const anaDoc = { id: 'a', combat: { maxHp: 20, currentHp: 18, tempHp: 0, conditi
 
 function setup(combatant, extra = {}) {
   const handlers = {
-    onDamage: vi.fn(), onHeal: vi.fn(), onTempHp: vi.fn(),
-    onToggleCondition: vi.fn(), onRemove: vi.fn(), onInitiativeChange: vi.fn(),
+    onDamage: vi.fn(), onHeal: vi.fn(), onSelect: vi.fn(),
+    onRemove: vi.fn(), onInitiativeChange: vi.fn(),
   }
   render(<CombatantRow combatant={combatant} doc={combatant.kind === 'pc' ? anaDoc : null} active={false} {...handlers} {...extra} />)
   return handlers
@@ -39,13 +39,30 @@ describe('CombatantRow — monstro', () => {
     expect(h.onDamage).toHaveBeenCalledWith('k1', 5)
   })
 
-  it('cura e HP temporário usam o mesmo campo', async () => {
+  it('cura usa o mesmo campo do dano', async () => {
     const h = setup(npc)
     await userEvent.type(screen.getByLabelText(/valor de dano ou cura/i), '4')
     await userEvent.click(screen.getByRole('button', { name: /^cura$/i }))
     expect(h.onHeal).toHaveBeenCalledWith('k1', 4)
-    await userEvent.click(screen.getByRole('button', { name: /tempor/i }))
-    expect(h.onTempHp).toHaveBeenCalledWith('k1', 4)
+  })
+
+  it('HP temporário e paleta de condições saíram da linha', () => {
+    setup(npc)
+    // Moveram-se pro painel de detalhe (spec 2026-07-31): a linha só carrega o
+    // que se repete a cada golpe.
+    expect(screen.queryByRole('button', { name: /tempor/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /^condi/i })).not.toBeInTheDocument()
+  })
+
+  it('clicar no nome seleciona o combatente', async () => {
+    const h = setup(npc)
+    await userEvent.click(screen.getByRole('button', { name: /abrir detalhe de goblin/i }))
+    expect(h.onSelect).toHaveBeenCalledWith('k1')
+  })
+
+  it('condições ativas aparecem como ícone na linha', () => {
+    setup({ ...npc, conditions: ['prone'] })
+    expect(screen.getByRole('button', { name: /abrir detalhe de goblin/i }).textContent).toContain('⬇️')
   })
 
   it('editar iniciativa avisa o pai', async () => {
@@ -54,13 +71,6 @@ describe('CombatantRow — monstro', () => {
     await userEvent.clear(input)
     await userEvent.type(input, '3')
     expect(h.onInitiativeChange).toHaveBeenLastCalledWith('k1', '3')
-  })
-
-  it('condição liga pelo id do catálogo do PHB', async () => {
-    const h = setup(npc)
-    await userEvent.click(screen.getByRole('button', { name: /condi/i }))
-    await userEvent.click(screen.getByRole('button', { name: /prostrado/i }))
-    expect(h.onToggleCondition).toHaveBeenCalledWith('k1', 'prone')
   })
 
   it('monstro derrotado aparece riscado', () => {

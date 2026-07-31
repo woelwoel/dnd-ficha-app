@@ -119,12 +119,40 @@ export function startEncounter(state) {
   return { ...state, combatants, started: true, round: 1, activeId: combatants[0]?.id ?? null }
 }
 
+/**
+ * Remove as condições cujo prazo já venceu na rodada informada.
+ *
+ * `conditionUntil[id]` é a rodada ABSOLUTA em que a condição some — não uma
+ * contagem regressiva. Absoluto sobrevive ao `previousTurn` (que decrementa a
+ * rodada) sem recalcular nada, e combatente gravado antes desta mudança, sem a
+ * chave, simplesmente nunca expira sozinho.
+ */
+function expireConditions(state, round) {
+  return {
+    ...state,
+    combatants: state.combatants.map(c => {
+      const until = c.conditionUntil
+      if (!until) return c
+      const vencidas = Object.keys(until).filter(id => round >= until[id])
+      if (vencidas.length === 0) return c
+      const restante = { ...until }
+      for (const id of vencidas) delete restante[id]
+      return {
+        ...c,
+        conditions: (c.conditions ?? []).filter(id => !vencidas.includes(id)),
+        conditionUntil: restante,
+      }
+    }),
+  }
+}
+
 export function nextTurn(state) {
   if (!state.started || state.combatants.length === 0) return state
   const i = state.combatants.findIndex(c => c.id === state.activeId)
   const next = i + 1
   if (next >= state.combatants.length) {
-    return { ...state, round: state.round + 1, activeId: state.combatants[0].id }
+    const round = state.round + 1
+    return expireConditions({ ...state, round, activeId: state.combatants[0].id }, round)
   }
   return { ...state, activeId: state.combatants[next].id }
 }
@@ -187,6 +215,48 @@ export function toggleNpcCondition(state, id, conditionId) {
         : [...list, conditionId],
     }
   })
+}
+
+/**
+ * Marca (ou tira) o prazo de uma condição de monstro. `rounds` é a duração em
+ * rodadas a partir de AGORA; 0 (ou vazio) tira o prazo sem tirar a condição.
+ */
+export function setConditionDuration(state, id, conditionId, rounds) {
+  const n = Math.floor(Number(rounds))
+  return mapNpc(state, id, c => {
+    const until = { ...(c.conditionUntil ?? {}) }
+    if (Number.isFinite(n) && n > 0) until[conditionId] = (state.round ?? 0) + n
+    else delete until[conditionId]
+    return { ...c, conditionUntil: until }
+  })
+}
+
+/**
+ * Rola iniciativa só para um combatente (monstro que entrou no meio da luta) e
+ * reordena. Não mexe em `activeId` nem na rodada: `nextTurn` acha o ativo por
+ * id, não por índice, então inserir alguém antes dele não faz ninguém agir duas
+ * vezes nem pular a vez.
+ */
+export function rollInitiativeFor(state, id, rng = Math.random) {
+  const alvo = state.combatants.find(c => c.id === id)
+  if (!alvo) return state
+  const initiative = Math.floor(rng() * 20) + 1 + (alvo.initiativeBonus ?? 0)
+  const combatants = state.combatants.map(c => (c.id === id ? { ...c, initiative } : c))
+  return { ...state, combatants: sortByInitiative(combatants) }
+}
+
+/**
+ * Devolve UM combatente ao estado de um snapshot anterior, sobre o estado
+ * atual. É o motor do desfazer: restaurar o `state` inteiro seria mais simples
+ * e errado — atropelaria o que o outro aparelho do Mestre mudou no meio e
+ * reverteria a rodada junto.
+ */
+export function restoreCombatant(state, snapshot) {
+  if (!snapshot || !state.combatants.some(c => c.id === snapshot.id)) return state
+  return {
+    ...state,
+    combatants: state.combatants.map(c => (c.id === snapshot.id ? snapshot : c)),
+  }
 }
 
 export function removeCombatant(state, id) {
