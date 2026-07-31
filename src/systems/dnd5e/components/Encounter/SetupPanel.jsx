@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from '../../../../components/ui/Button'
 import { emptyEncounterState, addPc, rollInitiative, startEncounter, totalXp } from '../../domain/encounter'
 import { MonsterGroupPanel } from './MonsterGroupPanel'
@@ -17,19 +17,29 @@ import { fromRecipe } from './EncounterLibraryScreen'
  * @param {Array<{characterId,name,initiativeBonus}>} party — companhia da mesa
  * @param {(state:object) => void} onStart — recebe o state já iniciado
  * @param {string} [campaignId] — pra listar encontros salvos da mesa
+ * @param {string} [preloadId] — id de encontro salvo pra já carregar na cena
+ *   (é o "Rodar" da biblioteca). Chega como prop, e não por hook de rota, pra
+ *   este painel não passar a exigir um <Router> em volta.
  * @param {() => number} [rng] — injetável pro teste fixar o dado
  */
-export function SetupPanel({ party, onStart, campaignId, rng = Math.random }) {
+export function SetupPanel({ party, onStart, campaignId, preloadId = null, rng = Math.random }) {
   const [excluded, setExcluded] = useState(() => new Set())
   const [monsters, setMonsters] = useState(emptyEncounterState)
   const catalog = useLazySrdDataset('monsters')
   const [saved, setSaved] = useState([])
+  const [savedLoaded, setSavedLoaded] = useState(false)
   const [pickerOpen, setPickerOpen] = useState(false)
+  const [aviso, setAviso] = useState(null)
+  const preloadDone = useRef(false)
 
   useEffect(() => {
     let alive = true
     if (!campaignId) return
-    listTemplates(campaignId).then(rows => { if (alive) setSaved(rows) })
+    listTemplates(campaignId).then(rows => {
+      if (!alive) return
+      setSaved(rows)
+      setSavedLoaded(true)
+    })
     return () => { alive = false }
   }, [campaignId])
 
@@ -38,6 +48,28 @@ export function SetupPanel({ party, onStart, campaignId, rng = Math.random }) {
     for (const mon of catalog ?? []) m.set(mon.index, mon)
     return m
   }, [catalog])
+
+  // "Rodar" na biblioteca chega aqui pela query string. Só carrega quando a
+  // lista E o catálogo já resolveram: o catálogo é dataset preguiçoso, e
+  // montar a receita antes dele chegar transformaria todo monstro em
+  // "desconhecido" e descartaria o encontro inteiro em silêncio.
+  useEffect(() => {
+    if (!preloadId || preloadDone.current || !savedLoaded || byIndex.size === 0) return
+    preloadDone.current = true
+    const tpl = saved.find(t => t.id === preloadId)
+    if (!tpl) {
+      setAviso('O encontro escolhido não existe mais — monte a cena por aqui.')
+      return
+    }
+    const { state: grupo, unknown } = fromRecipe(tpl.monsters, byIndex)
+    setMonsters(prev => grupo.combatants.reduce(
+      (s, m) => ({ ...s, nextSeq: s.nextSeq + 1, combatants: [...s.combatants, { ...m, id: `k${s.nextSeq}` }] }),
+      prev,
+    ))
+    setAviso(unknown.length > 0
+      ? `"${tpl.name}" carregado — ${unknown.length} monstro(s) da receita não estão no catálogo e ficaram de fora.`
+      : `"${tpl.name}" carregado.`)
+  }, [preloadId, savedLoaded, saved, byIndex])
 
   function carregar(tpl) {
     // Acrescenta à cena em vez de substituir: o Mestre pode juntar dois grupos.
@@ -80,6 +112,10 @@ export function SetupPanel({ party, onStart, campaignId, rng = Math.random }) {
 
   return (
     <div className="flex flex-col gap-4">
+      {aviso && (
+        <p role="status" className="text-xs ink-italic text-amber-800 border-l-2 border-amber-700 pl-2">{aviso}</p>
+      )}
+
       <section className="rounded-sm border-2 border-parchment-600 bg-parchment-50 overflow-hidden">
         <h2 className="px-4 py-2 text-xs font-display tracking-widest uppercase text-ink-500 border-b border-parchment-600 bg-parchment-100">
           Quem está na cena ({chosen.length})

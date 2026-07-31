@@ -20,6 +20,16 @@ import { EncounterToolbar, UndoBar } from './EncounterToolbar'
 import { PartyRestPanel } from './PartyRestPanel'
 
 /**
+ * Lê `?encontro=` sem hook de rota: é um valor de leitura única, usado na
+ * montagem, e exigir `useSearchParams` faria toda a árvore de combate passar a
+ * depender de um <Router> em volta — inclusive nos testes de componente.
+ */
+function templateIdFromUrl() {
+  if (typeof window === 'undefined') return null
+  return new URLSearchParams(window.location.search).get('encontro')
+}
+
+/**
  * Tela do Mestre pra rodar o combate da mesa (specs 2026-07-26 e 2026-07-31).
  *
  * Casca de layout e orquestração: duas fases (montagem e combate) e, na fase de
@@ -28,8 +38,13 @@ import { PartyRestPanel } from './PartyRestPanel'
  *
  * O HP do PJ NUNCA é copiado pro encontro — vem do doc da ficha, que esta tela
  * mantém em `docs` e reescreve pela RPC estreita do Mestre.
+ *
+ * @param {string} [preloadId] — encontro salvo a carregar na montagem. O
+ *   padrão lê `?encontro=` da própria URL (é assim que o botão "Rodar" da
+ *   biblioteca chega aqui): query string, e não estado de rota, pra sobreviver
+ *   a um recarregamento no meio da sessão.
  */
-export function EncounterScreen({ campaignId, onBack }) {
+export function EncounterScreen({ campaignId, onBack, preloadId = templateIdFromUrl() }) {
   const { state, update, close, loading, conflict: encConflict } = useEncounter(campaignId)
   const [docs, setDocs] = useState({})       // characterId → doc da ficha
   const [notes, setNotes] = useState({})     // combatantId → aviso transitório
@@ -257,7 +272,12 @@ export function EncounterScreen({ campaignId, onBack }) {
       <div className="max-w-6xl mx-auto">
         {!state.started ? (
           <div className="max-w-3xl">
-            <SetupPanel party={party} campaignId={campaignId} onStart={(next) => update(() => next)} />
+            <SetupPanel
+              party={party}
+              campaignId={campaignId}
+              preloadId={preloadId}
+              onStart={(next) => update(() => next)}
+            />
           </div>
         ) : (
           <>
