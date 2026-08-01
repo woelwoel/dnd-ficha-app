@@ -107,7 +107,7 @@ export function PartyList({
 
             {onRemoveMember && !r.isSelf && (
               <Button
-                variant="ghost"
+                variant="danger"
                 size="sm"
                 disabled={busyMemberId === r.userId}
                 onClick={() => onRemoveMember(r.userId)}

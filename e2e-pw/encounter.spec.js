@@ -37,7 +37,11 @@ test('Mestre monta combate, aplica dano e a ficha reflete', async ({ page, conte
   await page.getByRole('button', { name: /^dano$/i }).click()
   await expect(page.getByText('13/20')).toBeVisible()
 
-  await page.getByRole('button', { name: /condi/i }).click()
+  // O workspace de duas colunas exige escolher alguém na ordem de iniciativa
+  // antes: statblock, condições e registro vivem na coluna da direita, que até
+  // lá só mostra o convite ("Escolha alguém na ordem de iniciativa..."). O
+  // teste vinha do layout de uma coluna e clicava em "condições" sem seleção.
+  await page.getByRole('button', { name: /abrir detalhe de ana/i }).click()
   await page.getByRole('button', { name: /prostrado/i }).click()
   await expect(page.getByText(/Prostrado/).first()).toBeVisible()
 
@@ -46,7 +50,9 @@ test('Mestre monta combate, aplica dano e a ficha reflete', async ({ page, conte
   await expect(page.getByText(/não há como desfazer/i)).toBeVisible()
   await page.getByRole('button', { name: /^descansar$/i }).click()
   await expect(page.getByText(/1 ficha descansou/i)).toBeVisible()
-  await expect(page.getByText('20/20')).toBeVisible()
+  // Com Ana selecionada, "20/20" aparece duas vezes: na linha de iniciativa e
+  // no statblock da direita ("PV 20/20"). A da linha é a que interessa aqui.
+  await expect(page.getByText('20/20', { exact: true }).first()).toBeVisible()
 })
 
 test('Mestre salva um encontro na prep e carrega no combate', async ({ page, context }) => {

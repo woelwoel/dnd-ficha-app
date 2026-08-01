@@ -45,7 +45,7 @@ export function EncounterStatusCard({ encounter, readFailed, onRun, onLibrary, o
         </Button>
         <Button size="sm" variant="ghost" onClick={onLibrary}>Encontros</Button>
         {emAndamento && (
-          <Button size="sm" variant="ghost" disabled={closing} onClick={onClose}>
+          <Button size="sm" variant="danger" disabled={closing} onClick={onClose}>
             {closing ? 'Encerrando…' : 'Encerrar'}
           </Button>
         )}

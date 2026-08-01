@@ -87,7 +87,10 @@ export function CombatantRow({
         onClick={() => onSelect(combatant.id)}
         aria-label={`Abrir detalhe de ${combatant.name}`}
         aria-pressed={selected}
-        className="flex-1 min-w-[8rem] text-left"
+        /* min-w menor que os 8rem originais: o ✕ ao lado do campo de dano
+           passou a ter alvo de toque de 32px (clicar nele por engano REMOVE o
+           combatente) e os 2rem a mais estouravam a linha, que tem flex-wrap. */
+        className="flex-1 min-w-[6rem] text-left"
       >
         <span className={`text-sm font-display tracking-wide text-ink-500 ${dead ? 'line-through opacity-60' : ''} ${selected ? 'underline decoration-amber-700 underline-offset-4' : ''}`}>
           {combatant.name}
@@ -130,7 +133,7 @@ export function CombatantRow({
           type="button"
           aria-label={`Remover ${combatant.name} do combate`}
           onClick={() => onRemove(combatant.id)}
-          className="text-xs px-1 text-red-700 hover:underline"
+          className="ui-icon-btn text-xs text-red-700"
         >
           ✕
         </button>

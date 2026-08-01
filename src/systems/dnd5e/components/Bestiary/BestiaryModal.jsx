@@ -197,15 +197,17 @@ export function BestiaryModal({ isOpen, onClose, onPick = null }) {
                 <button
                   type="button"
                   onClick={() => setSelectedIndex(null)}
-                  className="sm:hidden mb-3 text-xs ink-italic text-ink-300 hover:text-ink-500"
+                  className="sm:hidden mb-3 text-xs ink-italic ui-btn--quiet"
                 >
                   ← Voltar à lista
                 </button>
                 {onPick && (
+                  /* CTA da tela. Sem preenchimento ele lia como cabeçalho da
+                     seção, já que ocupa a largura inteira do painel. */
                   <button
                     type="button"
                     onClick={() => onPick(selected)}
-                    className="w-full mb-3 px-3 py-2 rounded-sm border-2 border-ink-600 bg-ink-500 text-parchment-50 text-sm font-display tracking-wide uppercase hover:bg-ink-600"
+                    className="ui-btn ui-btn--primary w-full mb-3 px-3 py-2 text-sm font-display tracking-wide uppercase"
                   >
                     Adicionar ao combate
                   </button>

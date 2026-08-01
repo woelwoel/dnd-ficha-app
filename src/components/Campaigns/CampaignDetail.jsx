@@ -220,11 +220,10 @@ export function CampaignDetail({ campaignId, onBack }) {
         {isDM && (
           <div className="mt-6 pt-4 border-t-2 border-parchment-600">
             <Button
-              variant="ghost"
+              variant="danger"
               size="sm"
               onClick={() => setConfirmOpen(true)}
               disabled={deleting}
-              className="!text-red-700 !border-red-700 hover:!bg-red-50"
             >
               Apagar mesa
             </Button>
