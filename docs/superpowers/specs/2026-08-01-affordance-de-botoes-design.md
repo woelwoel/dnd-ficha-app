@@ -151,10 +151,24 @@ cor do Tailwind (que a ponte achatava) e passam a mapear para as classes novas:
 
 Os 411 `<button>` crus **não** são migrados para o componente agora.
 
+### 6. Controles nativos (incluído a pedido, depois da revisão)
+
+`checkbox` e `radio` vinham na variante clara do agente de usuário — o quadrado
+branco era o elemento mais claro da tela de preparação de combate.
+
+`color-scheme: dark` no `.theme-v2`/`.sheet-v2` é o que resolve: o estado
+**desmarcado** não é estilizável por CSS sem reconstruir o controle (e perder
+acessibilidade de teclado e leitor de tela); quem desenha é o browser, e
+`color-scheme` é como se pede a variante escura. `accent-color` pinta o marcado.
+
+O acento (`--v2-accent`), não o dourado: um checkbox dourado competiria com o
+primário na mesma tela — "Rolar iniciativa" fica logo abaixo da lista.
+
+Dentro de `@media screen`, porque a impressão (`#print-character-view`) desenha
+em papel e precisa dos controles claros.
+
 ## Fora de escopo
 
-- O `<input type="checkbox">` nativo da preparação de combate (quadrado branco
-  sólido, destoa do tema escuro). Anotado, não incluído.
 - Migrar os `<button>` existentes para o componente `Button`.
 - Distância entre CTA e conteúdo em telas largas.
 

@@ -203,6 +203,31 @@
    sinal de "isto responde ao clique" que faltava neles. */
 :is(.theme-v2, .sheet-v2) button:not(:disabled) { cursor: pointer; }
 
+/* 3. CONTROLES NATIVOS — checkbox e radio vinham na variante CLARA do agente
+   de usuário: um quadrado branco sólido, o elemento mais claro da tela de
+   preparação de combate. `color-scheme: dark` é o que manda o browser desenhar
+   o controle nativo no escuro (não dá pra estilizar o desmarcado por CSS sem
+   reconstruir o controle e perder acessibilidade), e `accent-color` pinta o
+   marcado.
+
+   O acento, e não o dourado: um checkbox dourado competiria com o botão
+   primário na mesma tela ("Rolar iniciativa" está logo abaixo da lista).
+
+   Dentro de @media screen porque a impressão (#print-character-view) desenha em
+   papel e precisa dos controles claros. */
+@media screen {
+  html.theme-v2,
+  .sheet-v2 { color-scheme: dark; }
+
+  :is(.theme-v2, .sheet-v2) :is(input[type='checkbox'], input[type='radio']) {
+    accent-color: var(--v2-accent);
+  }
+  :is(.theme-v2, .sheet-v2)
+    :is(input[type='checkbox'], input[type='radio']):not(:disabled) {
+    cursor: pointer;
+  }
+}
+
 /* 2. PRIMITIVAS EXPLÍCITAS — para os botões nus e para marcar hierarquia.
    `legacy-bridge.css` é gerado por scripts/gen-bridge.mjs, então tudo novo
    mora aqui. Ao marcar um botão com --primary/--danger, REMOVA as classes
