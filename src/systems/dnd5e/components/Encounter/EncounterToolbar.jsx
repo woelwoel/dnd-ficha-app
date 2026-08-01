@@ -17,7 +17,7 @@ export function EncounterToolbar({ round, xp, onPrevious, onNext, onAdd, onArea,
       <Button size="sm" onClick={onNext}>Próximo turno</Button>
       <Button size="sm" variant="ghost" onClick={onAdd}>Adicionar monstro</Button>
       <Button size="sm" variant="ghost" disabled={areaOn} onClick={onArea}>Dano em área</Button>
-      <Button size="sm" variant="ghost" onClick={onClose}>Encerrar</Button>
+      <Button size="sm" variant="danger" onClick={onClose}>Encerrar</Button>
     </div>
   )
 }

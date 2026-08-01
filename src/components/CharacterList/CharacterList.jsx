@@ -147,7 +147,7 @@ export function CharacterList({ onSelect, onCreate }) {
 
         <div className="flex items-center gap-2" role="group" aria-label="Modo de visualização">
           <Button
-            variant={view === VIEW_MAP ? 'gold' : 'ghost'}
+            variant={view === VIEW_MAP ? 'selected' : 'ghost'}
             size="sm"
             onClick={() => switchView(VIEW_MAP)}
             aria-pressed={view === VIEW_MAP}
@@ -155,7 +155,7 @@ export function CharacterList({ onSelect, onCreate }) {
             ▦ Mapa
           </Button>
           <Button
-            variant={view === VIEW_LIST ? 'gold' : 'ghost'}
+            variant={view === VIEW_LIST ? 'selected' : 'ghost'}
             size="sm"
             onClick={() => switchView(VIEW_LIST)}
             aria-pressed={view === VIEW_LIST}

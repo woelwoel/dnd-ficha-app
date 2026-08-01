@@ -48,7 +48,10 @@ export function PartyRestPanel({ docs, onRested }) {
       </h2>
       <div className="p-4 flex flex-col gap-3">
         <div className="flex gap-2">
-          <Button size="sm" disabled={busy} onClick={() => setConfirmKind('long')}>Descanso longo</Button>
+          {/* Os dois descansos são irmãos e nenhum é a ação principal da tela
+              de combate — o primário aqui roubaria o destaque de "Próximo
+              turno" e ainda por cima num botão que reescreve a ficha de todos. */}
+          <Button size="sm" variant="ghost" disabled={busy} onClick={() => setConfirmKind('long')}>Descanso longo</Button>
           <Button size="sm" variant="ghost" disabled={busy} onClick={() => setConfirmKind('short')}>Descanso curto</Button>
         </div>
         <p className="text-xs ink-italic text-ink-300">

@@ -126,7 +126,7 @@ export function Modal({
                 type="button"
                 onClick={onClose}
                 aria-label={closeLabel}
-                className="text-ink-300 hover:text-ink-500 transition-colors shrink-0 inline-flex items-center justify-center w-6 h-6 -mr-1"
+                className="ui-icon-btn text-ink-300 hover:text-ink-500 transition-colors shrink-0 -mr-1"
               >
                 <Icon name="close" size={18} strokeWidth={1.75} />
               </button>

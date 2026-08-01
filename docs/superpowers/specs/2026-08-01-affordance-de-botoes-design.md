@@ -57,64 +57,99 @@ manual, então tudo novo vive em `tokens.css`. Escopo duplo `.theme-v2` /
 | Classe | Papel |
 | --- | --- |
 | `.ui-btn` | superfície `--v2-surface-2`, borda `--v2-border`, radius 8, `min-height: 32px`, `cursor: pointer`; hover eleva borda para `--v2-border-strong`; `:active` desloca 1px; `:focus-visible` com ring do acento; `:disabled` opacidade 0.5 e cursor bloqueado |
-| `.ui-btn--primary` | preenchido no acento com texto escuro — **no máximo um por tela** |
+| `.ui-btn--primary` | preenchido, texto escuro — **no máximo um por tela**. Dourado (`--v2-warning`) no site, que é a linguagem que o header do Mapa já usa em "Recrutar"; acento-da-classe dentro da ficha, onde o dourado competiria com os avisos |
 | `.ui-btn--danger` | borda e texto em `--v2-danger`, preenche no hover |
+| `.ui-btn--selected` | lado ligado de um par de alternância (Mapa/Lista); NÃO é dourado, para não competir com o CTA |
 | `.ui-btn--quiet` | link de texto: sem caixa, mas com cursor, underline no hover e foco visível |
+| `.ui-icon-btn` | botão-ícone: mantém o desenho, ganha alvo de toque de 32px e foco |
 
 ### 2. Regra de adoção automática
 
 Uma regra que dá superfície, hover, `:active` e cursor a todo `button` que já se
-declara botão por classe de borda ou de fundo:
+declara botão por classe de borda ou de fundo, e que **só preenche buraco**:
+qualquer utilitário do Tailwind sobrescreve, `bg-transparent` continua
+transparente, `border-2` continua com 2px, e a ponte (`!important`) segue acima
+de tudo.
 
-```css
-button:where([class*="border-"], [class*="bg-"]):where(:not(.token-coin), ...)
-```
-
-O seletor inteiro fica dentro de `:where()`, de propósito: a especificidade
-resultante é `0,0,1`. Consequências desejadas:
-
-- qualquer utilitário do Tailwind (`0,1,0`) sobrescreve — botão que já tem cor
-  própria (Dano, Cura) mantém a cor;
-- a ponte, que usa `!important`, continua mandando;
-- `bg-transparent` continua transparente;
-- `.v2-btn` (`0,1,0`) e as demais classes `custom` continuam mandando nas suas.
-
-Ou seja: a regra **só preenche buraco**, nunca disputa.
+O que garante isso é a regra morar em **`@layer components`**, não a
+especificidade. A primeira versão usava `:where()` para ficar em `0,0,1`
+acreditando que assim perderia dos utilitários — e atropelou todos eles:
+`bg-transparent` virou opaco, `rounded-full` virou 8px, `border-2` virou 1px. O
+Tailwind v4 emite os utilitários dentro de `@layer utilities`, e **CSS fora de
+qualquer layer vence qualquer layer**, independente de especificidade. Truque de
+especificidade não resolve cascade layer. `index.css` declara
+`theme, base, components, utilities`, então `components` fica exatamente onde
+precisa.
 
 Exclusões explícitas: `token-coin` (ficha do mapa, tem borda própria e é arte) e
-as classes `v2-*` que já têm chrome.
+tudo que casa `[class*="v2-"]`, que já tem chrome.
 
-### 3. Hierarquia, aplicada à mão
+Além disso, `cursor: pointer` em **todo** `button` do tema. É o que dá
+affordance aos 123 nus sem encaixotar nenhum deles.
+
+### 3. Hierarquia
+
+**A hierarquia já estava codificada e não aparecia.** `<Button>` sem `variant`
+significava `primary`, e os autores marcaram assim exatamente os CTAs certos —
+"Próximo turno", "Rodar combate", "Rolar iniciativa", "Aplicar em N". O que
+apagava a intenção era a ponte: `bg-ink-500` (primary) e `border-parchment-600`
+(ghost) chegavam no escuro como a **mesma** superfície. Corrigir o primitivo,
+portanto, acende a hierarquia das telas de uma vez.
 
 | Tela | Primário | Perigo |
 | --- | --- | --- |
-| Mesas | Criar mesa · Entrar | — |
+| Mesas | Criar mesa · Entrar (um por card) | — |
 | Detalhe da mesa | Rodar combate | Apagar mesa · Remover |
 | Preparação de combate | Rolar iniciativa | — |
 | Bestiário | Adicionar ao combate | — |
 | Workspace de combate | Próximo turno | Encerrar · ✕ do combatente |
-| Ficha v2 | levantado na execução | — |
+| Biblioteca de encontros | Salvar / Novo encontro (ramos exclusivos) | — |
+
+Ajustes contra primário indevido, achados na revisão visual:
+
+- **Descanso longo** era primário por omissão. Não é a ação principal da tela de
+  combate, tem um irmão de mesmo peso ("Descanso curto") e ainda reescreve a
+  ficha de todos — virou `ghost`.
+- **Mapa / Lista** usavam `gold` para o lado ligado. Estado de seleção não é
+  CTA: os dois dourados competiam com "Recrutar" no mesmo header. Ganharam a
+  variante nova `selected` (superfície mais clara, sem dourado).
 
 Ao marcar um botão como `--primary` ou `--danger`, as classes Tailwind de cor
 daquele botão são **removidas** do JSX. Deixá-las conviveria com o `!important`
-da ponte e a variante perderia.
+da ponte e a variante perderia. Foi o caso de "Apagar mesa", cujo
+`!text-red-700 !border-red-700 hover:!bg-red-50` chegava no escuro como um bloco
+avermelhado de texto ilegível.
 
 ### 4. Triagem dos 123 `bare`
 
-Regra de decisão, por botão:
+Todos ganham `cursor: pointer` pela regra global — é o que faltava para o grupo
+inteiro sinalizar que responde ao clique, sem encaixotar nada. Além disso:
 
 - **é ação** (executa algo, muda estado) → recebe `.ui-btn`;
 - **é navegação/link** (breadcrumb, "renomear", "esqueci a senha") →
   `.ui-btn--quiet`;
-- **é ícone de controle** (✕ de fechar, ✕ de remover linha) → mantém o desenho,
-  ganha só `cursor: pointer`, área de toque mínima de 32px e `:focus-visible`;
+- **é ícone de controle** (✕ de fechar, ✕ de remover linha) → `.ui-icon-btn`:
+  mantém o desenho, ganha alvo de toque de 32px e `:focus-visible`;
 - **é accordion / linha rolável / toggle** → intocado.
+
+O alvo de 32px no ✕ do combatente custou layout: a linha tem `flex-wrap` e os
+2rem extras a quebravam em duas. O `min-w` do nome caiu de 8rem para 6rem. Vale
+o troco — aquele ✕ é vizinho do campo de dano e clicar nele por engano **remove
+o combatente**.
 
 ### 5. `Button.jsx`
 
-`src/components/ui/Button.jsx` tem 4 variantes do tema pergaminho e **zero
-imports** — está morto. Reescrito sobre `.ui-btn` para que componente novo nasça
-certo. Os 411 `<button>` existentes **não** são migrados para ele agora.
+**Correção ao levantamento inicial:** o componente não está morto. São 49 usos
+em 19 arquivos — e justamente nas telas de campanha, mesa e combate do relato. O
+grep que dizia "zero imports" estava mal formado.
+
+Isso muda o peso do item: reescrever o primitivo sobre `.ui-btn*` conserta a
+maior parte das telas de uma vez. As variantes deixam de carregar utilitários de
+cor do Tailwind (que a ponte achatava) e passam a mapear para as classes novas:
+`primary`/`gold` → `.ui-btn--primary`, `ghost`/`ghost-dark` → `.ui-btn`, mais
+`danger`, `selected` e `quiet`. O default segue `primary`.
+
+Os 411 `<button>` crus **não** são migrados para o componente agora.
 
 ## Fora de escopo
 

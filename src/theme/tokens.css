@@ -18,6 +18,12 @@
   --v2-success: #58c98c;
   --v2-warning: #e8b04c;
   --v2-danger: #f0908a;
+
+  /* Botões: um degrau acima de surface-2, pra o hover ser perceptível sem
+     precisar mexer na borda sozinho (borda de #3a4756 sobre #1a222c dá ~1.4:1,
+     contraste que o olho lê como "desabilitado"). */
+  --v2-btn-hover: #2e3d4d;
+  --v2-btn-ink: #0f141a; /* texto sobre preenchimento de acento */
 }
 
 /* Aparência própria da FICHA (tipografia Inter etc.) — não vaza pro site. */
@@ -67,7 +73,8 @@
   color: var(--v2-text-1);
   cursor: pointer;
 }
-.v2-btn:hover { border-color: var(--v2-border-strong); }
+.v2-btn:hover { border-color: var(--v2-border-strong); background: var(--v2-btn-hover); }
+.v2-btn:active:not(:disabled) { transform: translateY(1px); }
 .v2-btn:focus-visible { outline: 2px solid var(--v2-accent); outline-offset: 1px; }
 .v2-mut { color: var(--v2-text-2); }
 .v2-acc { color: var(--v2-accent); }
@@ -144,3 +151,182 @@
   cursor: pointer; border-radius: 6px; font-size: 12px; line-height: 1;
 }
 .v2-ability-edit:hover { color: var(--v2-text-1); background: var(--v2-surface-2); }
+
+/* ══ Affordance de botão ════════════════════════════════════════════════
+   No escuro, o padrão legado (`border-2 border-parchment-600`, 163 usos) vira
+   uma borda de --v2-border-strong SEM preenchimento: o botão lê como legenda
+   desabilitada. As duas regras abaixo consertam isso em duas frentes.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* TUDO AQUI MORA EM `@layer components` E ISSO É LOAD-BEARING.
+
+   O Tailwind v4 emite os utilitários dentro de `@layer utilities`, e CSS FORA
+   de qualquer layer vence QUALQUER layer, independente de especificidade. A
+   primeira versão desta regra usava `:where()` pra ficar em 0,0,1 achando que
+   assim perderia dos utilitários — e atropelou todos eles: `bg-transparent`
+   virou opaco, `rounded-full` virou 8px, `border-2` virou 1px.
+   Truque de especificidade não resolve cascade layer. Dentro de `components`,
+   que o index.css declara antes de `utilities`, a precedência fica correta.
+   A ponte continua acima de tudo porque usa `!important`. */
+@layer components {
+
+/* 1. ADOÇÃO AUTOMÁTICA — todo <button> que já se declara botão por classe de
+   borda ou de fundo ganha superfície, hover, :active e cursor. Cobre os 251
+   botões legados sem tocar em JSX nenhum. Como está em `components`, a regra
+   apenas PREENCHE BURACO: qualquer utilitário sobrescreve, `bg-transparent`
+   continua transparente, `border-2` continua com 2px.
+
+   Não declara `min-height` de propósito: `min-height` venceria os `h-*` do
+   Tailwind (que setam `height`) e esticaria botões-ícone pequenos. */
+:is(.theme-v2, .sheet-v2)
+  button:is([class*='border-'], [class*='bg-']):not(.token-coin, [class*='v2-']) {
+  background-color: var(--v2-surface-2);
+  border: 1px solid var(--v2-border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease, transform 60ms ease;
+}
+:is(.theme-v2, .sheet-v2)
+  button:is([class*='border-'], [class*='bg-']):not(.token-coin, [class*='v2-']):hover:not(:disabled) {
+  background-color: var(--v2-btn-hover);
+  border-color: var(--v2-border-strong);
+}
+:is(.theme-v2, .sheet-v2)
+  button:is([class*='border-'], [class*='bg-']):not(.token-coin, [class*='v2-']):active:not(:disabled) {
+  transform: translateY(1px);
+}
+:is(.theme-v2, .sheet-v2) button:disabled { cursor: not-allowed; }
+
+/* Ponteiro em TODO botão. Vale principalmente para os 123 que não têm borda
+   nem fundo (breadcrumb, ✕ de fechar, cabeçalho de accordion, toggle): eles
+   continuam sem caixa — encaixotá-los pioraria a ficha — mas o ponteiro é o
+   sinal de "isto responde ao clique" que faltava neles. */
+:is(.theme-v2, .sheet-v2) button:not(:disabled) { cursor: pointer; }
+
+/* 2. PRIMITIVAS EXPLÍCITAS — para os botões nus e para marcar hierarquia.
+   `legacy-bridge.css` é gerado por scripts/gen-bridge.mjs, então tudo novo
+   mora aqui. Ao marcar um botão com --primary/--danger, REMOVA as classes
+   Tailwind de cor dele no JSX: a ponte usa !important e venceria a variante. */
+.theme-v2 .ui-btn,
+.sheet-v2 .ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 6px 12px;
+  background: var(--v2-surface-2);
+  border: 1px solid var(--v2-border);
+  border-radius: 8px;
+  color: var(--v2-text-1);
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease, transform 60ms ease;
+}
+.theme-v2 .ui-btn:hover:not(:disabled),
+.sheet-v2 .ui-btn:hover:not(:disabled) {
+  background: var(--v2-btn-hover);
+  border-color: var(--v2-border-strong);
+}
+.theme-v2 .ui-btn:active:not(:disabled),
+.sheet-v2 .ui-btn:active:not(:disabled) { transform: translateY(1px); }
+.theme-v2 .ui-btn:focus-visible,
+.sheet-v2 .ui-btn:focus-visible { outline: 2px solid var(--v2-accent); outline-offset: 1px; }
+.theme-v2 .ui-btn:disabled,
+.sheet-v2 .ui-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Ação principal da tela — no máximo UMA por tela.
+   Dourado no site (é a linguagem que o header do Mapa já usa no "Recrutar") e
+   acento-da-classe dentro da ficha, onde o dourado competiria com os avisos. */
+.theme-v2 .ui-btn--primary {
+  background: var(--v2-warning);
+  border-color: var(--v2-warning);
+  color: var(--v2-btn-ink);
+  font-weight: 600;
+}
+.theme-v2 .ui-btn--primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--v2-warning) 85%, #fff);
+  border-color: color-mix(in srgb, var(--v2-warning) 85%, #fff);
+}
+.sheet-v2 .ui-btn--primary {
+  background: var(--v2-accent);
+  border-color: var(--v2-accent);
+  color: var(--v2-btn-ink);
+  font-weight: 600;
+}
+.sheet-v2 .ui-btn--primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--v2-accent) 85%, #fff);
+  border-color: color-mix(in srgb, var(--v2-accent) 85%, #fff);
+}
+
+/* Primário desligado NÃO é primário desbotado: `opacity: .5` sobre o dourado
+   com texto escuro apaga o rótulo. Cai para uma superfície neutra, que lê como
+   inativo e continua legível. */
+.theme-v2 .ui-btn--primary:disabled,
+.sheet-v2 .ui-btn--primary:disabled {
+  opacity: 1;
+  background: var(--v2-surface-2);
+  border-color: var(--v2-border);
+  color: var(--v2-text-3);
+}
+
+/* Estado ligado de um par de alternância (Mapa/Lista). NÃO é primário: o
+   dourado do CTA e o dourado do "estado atual" competiriam pelo mesmo olhar. */
+.theme-v2 .ui-btn--selected,
+.sheet-v2 .ui-btn--selected {
+  background: var(--v2-btn-hover);
+  border-color: var(--v2-border-strong);
+  color: var(--v2-text-1);
+  font-weight: 600;
+}
+
+/* Ação destrutiva — discreta em repouso, explícita no hover. */
+.theme-v2 .ui-btn--danger,
+.sheet-v2 .ui-btn--danger {
+  background: transparent;
+  border-color: color-mix(in srgb, var(--v2-danger) 45%, transparent);
+  color: var(--v2-danger);
+}
+.theme-v2 .ui-btn--danger:hover:not(:disabled),
+.sheet-v2 .ui-btn--danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--v2-danger) 15%, transparent);
+  border-color: var(--v2-danger);
+}
+
+/* Navegação em forma de texto (breadcrumb, "renomear", "esqueci a senha"):
+   não é caixa, mas precisa de cursor, alvo de toque e foco visível. */
+.theme-v2 .ui-btn--quiet,
+.sheet-v2 .ui-btn--quiet {
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  padding: 2px 4px;
+  color: var(--v2-text-2);
+  cursor: pointer;
+}
+.theme-v2 .ui-btn--quiet:hover:not(:disabled),
+.sheet-v2 .ui-btn--quiet:hover:not(:disabled) {
+  color: var(--v2-text-1);
+  text-decoration: underline;
+}
+.theme-v2 .ui-btn--quiet:focus-visible,
+.sheet-v2 .ui-btn--quiet:focus-visible { outline: 2px solid var(--v2-accent); outline-offset: 1px; }
+
+/* Botão-ícone (✕ de fechar, ✕ de remover linha): mantém o desenho de ícone,
+   ganha alvo de toque de 32px, cursor e foco. */
+.theme-v2 .ui-icon-btn,
+.sheet-v2 .ui-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+.theme-v2 .ui-icon-btn:hover:not(:disabled),
+.sheet-v2 .ui-icon-btn:hover:not(:disabled) { background: var(--v2-surface-2); }
+.theme-v2 .ui-icon-btn:focus-visible,
+.sheet-v2 .ui-icon-btn:focus-visible { outline: 2px solid var(--v2-accent); outline-offset: 1px; }
+
+}
