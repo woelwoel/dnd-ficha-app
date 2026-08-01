@@ -9,8 +9,9 @@ import { combatPatchFrom } from '../../domain/dmPatch'
 import {
   applyNpcDamage, applyNpcHealing, setNpcTempHp, toggleNpcCondition, setConditionDuration,
   removeCombatant, setInitiative, nextTurn, previousTurn, markOrphans, totalXp,
-  addNpc, rollInitiativeFor, restoreCombatant,
+  addNpc, rollInitiativeFor, restoreCombatant, applyNpcDamageMany, halfDamage,
 } from '../../domain/encounter'
+import { AreaDamagePanel } from './AreaDamagePanel'
 import { BestiaryModal } from '../Bestiary/BestiaryModal'
 import { useEncounter } from './useEncounter'
 import { SetupPanel } from './SetupPanel'
@@ -53,6 +54,7 @@ export function EncounterScreen({ campaignId, onBack, preloadId = templateIdFrom
   const [lastAction, setLastAction] = useState(null)
   const [log, setLog] = useState([])
   const [bestiaryOpen, setBestiaryOpen] = useState(false)
+  const [area, setArea] = useState(null) // { amount, targets:Set, saved:Set, busy }
   const logSeq = useRef(0)
   // Espelho de `docs` pra decidir de forma SÍNCRONA se a releitura trouxe
   // verdade nova: o updater do setDocs só roda no próximo render, tarde demais
@@ -164,22 +166,35 @@ export function EncounterScreen({ campaignId, onBack, preloadId = templateIdFrom
   }, [commitDocs, reloadParty, appendLog])
 
   /**
-   * Arma o slot único de desfazer. Monstro volta pelo snapshot do combatente
-   * (restaurar o `state` inteiro atropelaria o outro aparelho do Mestre);
-   * PJ volta reescrevendo o bloco `combat` anterior pela mesma RPC.
+   * Arma o slot único de desfazer, para um ou vários combatentes.
+   *
+   * Monstro volta pelo snapshot do combatente — restaurar o `state` inteiro
+   * seria mais simples e atropelaria o que o outro aparelho do Mestre mudou no
+   * meio. PJ volta reescrevendo o bloco `combat` anterior pela mesma RPC.
+   *
+   * A lista existe por causa do dano em área: desfazer só metade de uma bola de
+   * fogo seria pior que não desfazer.
    */
-  const armUndo = useCallback((combatant, label) => {
-    if (combatant.kind === 'npc') {
-      const snapshot = combatant
-      setLastAction({ combatantId: combatant.id, label, undo: () => update(s => restoreCombatant(s, snapshot)) })
-      return
-    }
-    const anterior = docsRef.current[combatant.characterId]?.combat
-    if (!anterior) return
+  const armUndo = useCallback((combatants, label) => {
+    const alvos = [].concat(combatants)
+    const npcs = alvos.filter(c => c.kind === 'npc')
+    const pcs = alvos
+      .filter(c => c.kind === 'pc')
+      .map(c => ({ combatant: c, combat: docsRef.current[c.characterId]?.combat }))
+      .filter(x => x.combat)
+    if (npcs.length === 0 && pcs.length === 0) return
+
     setLastAction({
-      combatantId: combatant.id,
+      ids: alvos.map(c => c.id),
       label,
-      undo: () => writePc(combatant, doc => ({ character: { ...doc, combat: anterior }, sideEffects: null })),
+      undo: async () => {
+        // Monstros numa escrita só, pelo mesmo motivo do dano em lote.
+        if (npcs.length > 0) {
+          await update(s => npcs.reduce((acc, snap) => restoreCombatant(acc, snap), s))
+        }
+        await Promise.all(pcs.map(({ combatant, combat }) =>
+          writePc(combatant, doc => ({ character: { ...doc, combat }, sideEffects: null }))))
+      },
     })
   }, [update, writePc])
 
@@ -252,12 +267,54 @@ export function EncounterScreen({ campaignId, onBack, preloadId = templateIdFrom
     await acao.undo()
   }
 
+  function toggleTarget(id) {
+    setArea(a => {
+      if (!a) return a
+      const targets = new Set(a.targets)
+      const saved = new Set(a.saved)
+      if (targets.has(id)) { targets.delete(id); saved.delete(id) }
+      else targets.add(id)
+      return { ...a, targets, saved }
+    })
+  }
+
+  /**
+   * Resolve a área inteira de uma vez: monstros numa única escrita no jsonb
+   * (senão o segundo save levaria conflito contra o primeiro), PJs em paralelo
+   * pela RPC, que é por natureza uma escrita por ficha.
+   */
+  async function applyArea() {
+    if (!area) return
+    const valor = Math.max(0, Math.floor(Number(area.amount) || 0))
+    const alvos = state.combatants.filter(c => area.targets.has(c.id))
+    // PJ órfão fica de fora, como já fica do dano individual.
+    const validos = alvos.filter(c => !(c.kind === 'pc' && (c.orphaned || !docs[c.characterId])))
+    if (valor <= 0 || validos.length === 0) return
+
+    const dano = (c) => (area.saved.has(c.id) ? halfDamage(valor) : valor)
+
+    setArea(a => ({ ...a, busy: true }))
+    armUndo(validos, `Dano em área de ${valor} em ${validos.length} alvo(s)`)
+    appendLog(`área de ${valor}: ${validos.map(c => `${c.name} ${dano(c)}`).join(', ')}`)
+
+    const npcs = validos.filter(c => c.kind === 'npc')
+    if (npcs.length > 0) {
+      await update(s => applyNpcDamageMany(s, npcs.map(c => ({ id: c.id, amount: dano(c) }))))
+    }
+    await Promise.all(validos
+      .filter(c => c.kind === 'pc')
+      .map(c => writePc(c, doc => applyDamage(doc, dano(c)))))
+
+    setArea(null)
+  }
+
   if (loading || loadingParty) {
     return <div className="p-6 text-ink-300 ink-italic text-sm">Carregando mesa de combate…</div>
   }
 
-  // Desfazer some junto com o combatente que ele desfaria.
-  const undoAtivo = lastAction && byId(lastAction.combatantId) ? lastAction : null
+  // Some quando TODOS os alvos saíram: um monstro removido dos seis não invalida
+  // o desfazer dos outros cinco, e `restoreCombatant` já ignora quem sumiu.
+  const undoAtivo = lastAction && lastAction.ids.some(id => byId(id)) ? lastAction : null
 
   return (
     <div className="min-h-screen p-4 bg-parchment-100 text-ink-500">
@@ -287,12 +344,31 @@ export function EncounterScreen({ campaignId, onBack, preloadId = templateIdFrom
               onPrevious={() => turn(previousTurn)}
               onNext={() => turn(nextTurn)}
               onAdd={() => setBestiaryOpen(true)}
+              onArea={() => setArea({ amount: '', targets: new Set(), saved: new Set(), busy: false })}
+              areaOn={!!area}
               onClose={close}
             />
 
             <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_24rem] items-start">
               <div className="flex flex-col gap-4 min-w-0">
                 <UndoBar action={undoAtivo} onUndo={undo} />
+
+                {area && (
+                  <AreaDamagePanel
+                    amount={area.amount}
+                    onAmountChange={(v) => setArea(a => ({ ...a, amount: v }))}
+                    targets={state.combatants.filter(c => area.targets.has(c.id))}
+                    saved={area.saved}
+                    onToggleSaved={(id) => setArea(a => {
+                      const saved = new Set(a.saved)
+                      if (saved.has(id)) saved.delete(id); else saved.add(id)
+                      return { ...a, saved }
+                    })}
+                    onApply={applyArea}
+                    onCancel={() => setArea(null)}
+                    busy={area.busy}
+                  />
+                )}
 
                 <ul
                   aria-label="Ordem de iniciativa"
@@ -306,6 +382,9 @@ export function EncounterScreen({ campaignId, onBack, preloadId = templateIdFrom
                       active={state.activeId === c.id}
                       selected={selectedId === c.id}
                       warning={notes[c.id]}
+                      targeting={!!area}
+                      targeted={!!area?.targets.has(c.id)}
+                      onToggleTarget={toggleTarget}
                       onSelect={setSelectedId}
                       onDamage={onDamage}
                       onHeal={onHeal}

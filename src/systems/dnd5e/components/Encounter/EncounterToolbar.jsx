@@ -5,7 +5,7 @@ import { Button } from '../../../../components/ui/Button'
  * Fica grudada no topo porque a lista de iniciativa cresce e passar o turno não
  * pode exigir rolar a página de volta.
  */
-export function EncounterToolbar({ round, xp, onPrevious, onNext, onAdd, onClose }) {
+export function EncounterToolbar({ round, xp, onPrevious, onNext, onAdd, onArea, areaOn, onClose }) {
   return (
     <div className="sticky top-0 z-10 -mx-4 px-4 py-2 bg-parchment-100 border-b-2 border-parchment-600 flex flex-wrap items-center gap-2">
       <span className="text-sm font-display tracking-widest uppercase text-ink-500">
@@ -16,6 +16,7 @@ export function EncounterToolbar({ round, xp, onPrevious, onNext, onAdd, onClose
       <Button size="sm" variant="ghost" onClick={onPrevious}>Anterior</Button>
       <Button size="sm" onClick={onNext}>Próximo turno</Button>
       <Button size="sm" variant="ghost" onClick={onAdd}>Adicionar monstro</Button>
+      <Button size="sm" variant="ghost" disabled={areaOn} onClick={onArea}>Dano em área</Button>
       <Button size="sm" variant="ghost" onClick={onClose}>Encerrar</Button>
     </div>
   )

@@ -18,9 +18,12 @@ import { HpBar } from './HpBar'
  * @param {string} [warning] — aviso transitório (ex.: CD de concentração).
  *   Fica na linha, e não no painel, porque uma CD de concentração é urgente:
  *   escondê-la atrás de um clique de seleção seria perdê-la.
+ * @param {boolean} [targeting] — modo de mira do dano em área ligado
+ * @param {boolean} [targeted] — está marcado como alvo da área
  */
 export function CombatantRow({
   combatant, doc, active, selected = false, warning,
+  targeting = false, targeted = false, onToggleTarget,
   onSelect, onDamage, onHeal, onRemove, onInitiativeChange,
 }) {
   const [amount, setAmount] = useState('')
@@ -57,6 +60,17 @@ export function CombatantRow({
         selected && !active ? 'bg-parchment-200' : '',
       ].join(' ')}
     >
+      {targeting && (
+        <input
+          type="checkbox"
+          aria-label={`${combatant.name} na área`}
+          checked={targeted}
+          disabled={locked}
+          onChange={() => onToggleTarget(combatant.id)}
+          className="w-4 h-4"
+        />
+      )}
+
       <input
         type="number"
         aria-label={`Iniciativa de ${combatant.name}`}

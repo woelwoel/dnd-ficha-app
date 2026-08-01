@@ -6,11 +6,17 @@ const GOBLIN = {
   index: 'goblin', name: 'Goblin', hit_points: 7, xp: 50, challenge_rating: 0.25,
   armor_class: [{ value: 15 }], dexterity: 14, size: 'Small', type: 'humanoid',
   strength: 8, constitution: 10, intelligence: 10, wisdom: 8, charisma: 8,
-  speed: { walk: '30 ft.' }, proficiencies: [], special_abilities: [], actions: [],
+  speed: { walk: '30 ft.' }, proficiencies: [], special_abilities: [],
+  actions: [{
+    name: 'Scimitar',
+    desc: 'Melee Weapon Attack: +4 to hit. Hit: 5 (1d6 + 2) slashing damage.',
+    attack_bonus: 4,
+    damage: [{ damage_dice: '1d6+2', damage_type: { name: 'Slashing' } }],
+  }],
 }
 
 const api = vi.hoisted(() => ({
-  party: [], writes: [], writeResult: { ok: true, version: 5 }, encounterRow: null, picked: null,
+  party: [], writes: [], writeResult: { ok: true, version: 5 }, encounterRow: null, picked: null, rolls: [],
 }))
 
 vi.mock('../lib/campaigns', () => ({
@@ -46,6 +52,13 @@ vi.mock('../systems/dnd5e/components/Bestiary/BestiaryModal', () => ({
     : null,
 }))
 
+// O provider de dados fica na raiz do app (App.jsx); aqui só o `roll` importa,
+// e o teste quer inspecionar a notação que chegou nele.
+vi.mock('../hooks/useDiceRoller', async (orig) => ({
+  ...(await orig()),
+  useDiceRoller: () => ({ roll: (...args) => { api.rolls.push(args); return null } }),
+}))
+
 const { EncounterScreen } = await import('../systems/dnd5e/components/Encounter/EncounterScreen')
 
 function anaRow(overrides = {}) {
@@ -79,6 +92,7 @@ beforeEach(() => {
   api.writes = []
   api.writeResult = { ok: true, version: 5 }
   api.encounterRow = null
+  api.rolls = []
 })
 
 describe('painel de detalhe', () => {
@@ -225,5 +239,120 @@ describe('registro', () => {
     await userEvent.click(screen.getByRole('button', { name: /^dano$/i }))
 
     expect(await within(painel()).findByText(/ana sofreu 5 de dano/i)).toBeInTheDocument()
+  })
+})
+
+async function comGoblin() {
+  await iniciarCombate()
+  await userEvent.click(screen.getByRole('button', { name: /adicionar monstro/i }))
+  await userEvent.click(await screen.findByRole('button', { name: /escolher goblin/i }))
+  return (await within(ordem()).findAllByRole('listitem'))
+    .find(li => within(li).queryByRole('button', { name: /abrir detalhe de goblin/i }))
+}
+
+describe('ações do monstro', () => {
+  it('atacar rola d20 com o bônus do statblock', async () => {
+    await comGoblin()
+    await userEvent.click(screen.getByRole('button', { name: /abrir detalhe de goblin/i }))
+    await userEvent.click(await within(painel()).findByRole('button', { name: /atacar/i }))
+
+    expect(api.rolls[0][0]).toBe('1d20+4')
+    expect(api.rolls[0][1]).toMatch(/goblin/i)
+    expect(api.rolls[0][1]).toMatch(/scimitar/i)
+  })
+
+  it('dano rola a notação da linha, com o tipo no rótulo', async () => {
+    await comGoblin()
+    await userEvent.click(screen.getByRole('button', { name: /abrir detalhe de goblin/i }))
+    await userEvent.click(await within(painel()).findByRole('button', { name: /1d6\+2 slashing/i }))
+
+    expect(api.rolls[0][0]).toBe('1d6+2')
+    expect(api.rolls[0][1]).toMatch(/slashing/i)
+  })
+
+  it('o botão de crítico manda crit ao motor', async () => {
+    await comGoblin()
+    await userEvent.click(screen.getByRole('button', { name: /abrir detalhe de goblin/i }))
+    await userEvent.click(await within(painel()).findByRole('button', { name: /dano crítico de scimitar/i }))
+
+    expect(api.rolls[0][0]).toBe('1d6+2')
+    expect(api.rolls[0][2]).toMatchObject({ crit: true })
+  })
+
+  it('PJ selecionado não mostra lista de ações de monstro', async () => {
+    await iniciarCombate()
+    await userEvent.click(screen.getByRole('button', { name: /abrir detalhe de ana/i }))
+
+    expect(within(painel()).queryByRole('button', { name: /atacar/i })).not.toBeInTheDocument()
+  })
+})
+
+describe('dano em área', () => {
+  it('só aparece quando o Mestre pede', async () => {
+    await iniciarCombate()
+    expect(screen.queryByRole('region', { name: /dano em área/i })).not.toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: /dano em área/i }))
+    expect(screen.getByRole('region', { name: /dano em área/i })).toBeInTheDocument()
+  })
+
+  it('aplica cheio em quem falhou e metade arredondada pra baixo em quem passou', async () => {
+    const linhaGoblin = await comGoblin()
+    await userEvent.click(screen.getByRole('button', { name: /dano em área/i }))
+
+    await userEvent.type(screen.getByLabelText(/dano da área/i), '5')
+    await userEvent.click(within(linhaGoblin).getByLabelText(/goblin na área/i))
+    const linhaAna = (await within(ordem()).findAllByRole('listitem'))
+      .find(li => within(li).queryByLabelText(/ana na área/i))
+    await userEvent.click(within(linhaAna).getByLabelText(/ana na área/i))
+
+    // Ana passou na salvaguarda: 5 → 2 (arredonda pra baixo).
+    await userEvent.click(screen.getByRole('button', { name: /ana · falhou/i }))
+    await userEvent.click(screen.getByRole('button', { name: /aplicar em 2/i }))
+
+    await waitFor(() => expect(api.writes).toHaveLength(1))
+    expect(api.writes[0].patch).toMatchObject({ currentHp: 16 })   // 18 - 2
+    expect(await within(linhaGoblin).findByText('2/7')).toBeInTheDocument()  // 7 - 5
+  })
+
+  it('não deixa aplicar sem valor ou sem alvo', async () => {
+    await comGoblin()
+    await userEvent.click(screen.getByRole('button', { name: /dano em área/i }))
+
+    expect(screen.getByRole('button', { name: /aplicar em 0/i })).toBeDisabled()
+    await userEvent.type(screen.getByLabelText(/dano da área/i), '5')
+    expect(screen.getByRole('button', { name: /aplicar em 0/i })).toBeDisabled()
+  })
+
+  it('desfazer devolve TODOS os alvos de uma vez', async () => {
+    const linhaGoblin = await comGoblin()
+    await userEvent.click(screen.getByRole('button', { name: /dano em área/i }))
+    await userEvent.type(screen.getByLabelText(/dano da área/i), '4')
+    await userEvent.click(within(linhaGoblin).getByLabelText(/goblin na área/i))
+    const linhaAna = (await within(ordem()).findAllByRole('listitem'))
+      .find(li => within(li).queryByLabelText(/ana na área/i))
+    await userEvent.click(within(linhaAna).getByLabelText(/ana na área/i))
+    await userEvent.click(screen.getByRole('button', { name: /aplicar em 2/i }))
+
+    expect(await within(linhaGoblin).findByText('3/7')).toBeInTheDocument()
+    await waitFor(() => expect(api.writes).toHaveLength(1))
+
+    await userEvent.click(await screen.findByRole('button', { name: /^desfazer$/i }))
+
+    expect(await within(linhaGoblin).findByText('7/7')).toBeInTheDocument()
+    await waitFor(() => expect(api.writes).toHaveLength(2))
+    expect(api.writes[1].patch).toMatchObject({ currentHp: 18 })
+  })
+
+  it('sai do modo de mira depois de aplicar', async () => {
+    const linhaGoblin = await comGoblin()
+    await userEvent.click(screen.getByRole('button', { name: /dano em área/i }))
+    await userEvent.type(screen.getByLabelText(/dano da área/i), '3')
+    await userEvent.click(within(linhaGoblin).getByLabelText(/goblin na área/i))
+    await userEvent.click(screen.getByRole('button', { name: /aplicar em 1/i }))
+
+    await waitFor(() =>
+      expect(screen.queryByRole('region', { name: /dano em área/i })).not.toBeInTheDocument())
+    expect(screen.queryByLabelText(/goblin na área/i)).not.toBeInTheDocument()
   })
 })

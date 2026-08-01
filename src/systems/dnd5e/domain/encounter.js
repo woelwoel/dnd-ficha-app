@@ -190,6 +190,28 @@ export function applyNpcDamage(state, id, amount) {
   })
 }
 
+/** PHB p.196: dano dividido arredonda pra baixo. */
+export function halfDamage(amount) {
+  return Math.floor(Math.max(0, Number(amount) || 0) / 2)
+}
+
+/**
+ * Dano em vários monstros de uma vez (bola de fogo e afins).
+ *
+ * Existe pra ser UMA escrita: um `applyNpcDamage` por alvo significaria um
+ * `update` por alvo, e o segundo save sairia com a versão que o primeiro acabou
+ * de invalidar — conflito de propósito, recarga do servidor no meio da
+ * aplicação e metade da área aplicada.
+ *
+ * @param {Array<{id: string, amount: number}>} hits
+ */
+export function applyNpcDamageMany(state, hits) {
+  return (hits ?? []).reduce(
+    (s, h) => applyNpcDamage(s, h.id, h.amount),
+    state,
+  )
+}
+
 export function applyNpcHealing(state, id, amount) {
   const heal = toAmount(amount)
   if (heal === 0) return state

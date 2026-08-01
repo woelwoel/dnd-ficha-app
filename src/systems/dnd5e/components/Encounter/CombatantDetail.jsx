@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { MonsterStatBlock } from '../Bestiary/MonsterStatBlock'
 import { useMonsterCatalog } from '../../utils/useMonsterCatalog'
 import { useLanguage } from '../../../../utils/useLanguage'
+import { MonsterActionList } from './MonsterActionList'
 import { PcTacticalCard } from './PcTacticalCard'
 import { ConditionPalette } from './ConditionPalette'
 import { CombatLog } from './CombatLog'
@@ -48,7 +49,10 @@ export function CombatantDetail({
         {isPc ? (
           <PcTacticalCard doc={doc} />
         ) : monster ? (
-          <div className="text-sm"><MonsterStatBlock monster={monster} lang={lang} /></div>
+          <>
+            <MonsterActionList monster={monster} combatantName={combatant.name} />
+            <div className="text-sm"><MonsterStatBlock monster={monster} lang={lang} /></div>
+          </>
         ) : carregandoCatalogo ? (
           <p className="text-sm ink-italic text-ink-300">Carregando statblock…</p>
         ) : (

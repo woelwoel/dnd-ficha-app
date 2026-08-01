@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   emptyEncounterState, addPc, addNpc, startEncounter, nextTurn, previousTurn,
   restoreCombatant, rollInitiativeFor, setConditionDuration, toggleNpcCondition,
+  applyNpcDamageMany,
 } from '../systems/dnd5e/domain/encounter'
 
 const GOBLIN = {
@@ -184,5 +185,54 @@ describe('condições com duração', () => {
     depois = previousTurn(depois)
 
     expect(depois.combatants.find(c => c.id === goblin.id).conditions).toEqual([])
+  })
+})
+
+describe('applyNpcDamageMany', () => {
+  it('aplica em todos os alvos numa passada só', () => {
+    const s = mesa()
+    const [goblin, orc] = [s.combatants.find(c => c.name === 'Goblin'), s.combatants.find(c => c.name === 'Orc')]
+
+    const depois = applyNpcDamageMany(s, [
+      { id: goblin.id, amount: 3 },
+      { id: orc.id, amount: 10 },
+    ])
+
+    expect(depois.combatants.find(c => c.id === goblin.id).currentHp).toBe(4)
+    expect(depois.combatants.find(c => c.id === orc.id).currentHp).toBe(5)
+  })
+
+  it('cada alvo absorve o próprio HP temporário', () => {
+    let s = mesa()
+    const goblin = s.combatants.find(c => c.name === 'Goblin')
+    const orc = s.combatants.find(c => c.name === 'Orc')
+    s = { ...s, combatants: s.combatants.map(c => c.id === goblin.id ? { ...c, tempHp: 5 } : c) }
+
+    const depois = applyNpcDamageMany(s, [
+      { id: goblin.id, amount: 6 },
+      { id: orc.id, amount: 6 },
+    ])
+
+    // Goblin: 5 temporários absorvem, sobra 1 no HP real (7 → 6).
+    expect(depois.combatants.find(c => c.id === goblin.id)).toMatchObject({ tempHp: 0, currentHp: 6 })
+    expect(depois.combatants.find(c => c.id === orc.id).currentHp).toBe(9)
+  })
+
+  it('marca derrotado quem chega a zero e ignora id que não existe', () => {
+    const s = mesa()
+    const goblin = s.combatants.find(c => c.name === 'Goblin')
+
+    const depois = applyNpcDamageMany(s, [
+      { id: goblin.id, amount: 99 },
+      { id: 'k999', amount: 5 },
+    ])
+
+    expect(depois.combatants.find(c => c.id === goblin.id)).toMatchObject({ currentHp: 0, defeated: true })
+    expect(depois.combatants).toHaveLength(s.combatants.length)
+  })
+
+  it('lista vazia devolve o mesmo estado', () => {
+    const s = mesa()
+    expect(applyNpcDamageMany(s, [])).toEqual(s)
   })
 })
