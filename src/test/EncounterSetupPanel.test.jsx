@@ -118,3 +118,20 @@ describe('SetupPanel', () => {
     expect(screen.getByText('Goblin 2')).toBeInTheDocument()
   })
 })
+
+describe('SetupPanel — preload da biblioteca', () => {
+  it('carrega o encontro pedido pelo id assim que o catálogo resolve', async () => {
+    tpl.list = [{ id: 't1', name: 'Emboscada', monsters: [{ monsterIndex: 'goblin', count: 2 }] }]
+    render(<SetupPanel party={party} campaignId="camp-1" preloadId="t1" onStart={() => {}} />)
+
+    expect(await screen.findByText(/"Emboscada" carregado/i)).toBeInTheDocument()
+    expect(await screen.findByText(/monstros \(2\)/i)).toBeInTheDocument()
+  })
+
+  it('id que não existe mais avisa em vez de abrir vazio em silêncio', async () => {
+    tpl.list = []
+    render(<SetupPanel party={party} campaignId="camp-1" preloadId="sumiu" onStart={() => {}} />)
+
+    expect(await screen.findByText(/não existe mais/i)).toBeInTheDocument()
+  })
+})

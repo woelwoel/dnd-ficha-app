@@ -14,15 +14,30 @@ function logDev(label, payload) {
 }
 
 /** Encontro ativo da mesa, ou null. */
-export async function getActiveEncounter(campaignId) {
+/**
+ * Distingue "não há combate aberto" de "a leitura não respondeu" — os dois
+ * viram o mesmo `null` no contrato legado abaixo, e a tela de Mesa precisa
+ * saber a diferença pra não anunciar "nenhum combate" quando na verdade não
+ * conseguiu perguntar. Mesmo motivo do `fetchCampaignCharacters`.
+ */
+export async function fetchActiveEncounter(campaignId) {
   const { data, error } = await supabase
     .from(T)
     .select('*')
     .eq('campaign_id', campaignId)
     .eq('active', true)
     .maybeSingle()
-  if (error) { logDev('getActiveEncounter', error); return null }
-  return data ?? null
+  if (error) {
+    logDev('getActiveEncounter', error)
+    return { ok: false, row: null, message: error.message ?? null }
+  }
+  return { ok: true, row: data ?? null }
+}
+
+/** Contrato legado: a linha ou `null`, sem distinguir falha de ausência. */
+export async function getActiveEncounter(campaignId) {
+  const { row } = await fetchActiveEncounter(campaignId)
+  return row
 }
 
 export async function createEncounter(campaignId, state) {

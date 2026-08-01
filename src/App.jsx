@@ -229,7 +229,11 @@ function EncounterLibraryRoute() {
   return (
     <RouteShell>
       {/* eslint-disable-next-line react-hooks/static-components */}
-      <Library campaignId={id} onBack={() => navigate(`/campaigns/${id}`)} />
+      <Library
+        campaignId={id}
+        onBack={() => navigate(`/campaigns/${id}`)}
+        onRun={(templateId) => navigate(`/campaigns/${id}/combate?encontro=${templateId}`)}
+      />
     </RouteShell>
   )
 }

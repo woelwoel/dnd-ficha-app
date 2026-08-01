@@ -7,6 +7,7 @@ import { ConfirmDialog } from '../../../../components/ui/ConfirmDialog'
 import { partyLevels } from '../../domain/party'
 import { emptyEncounterState, addNpc, totalXp } from '../../domain/encounter'
 import { summarizeEncounter } from '../../domain/encounterDifficulty'
+import { describeRecipe, nextCopyName } from '../../domain/encounterRecipe'
 import { MonsterGroupPanel } from './MonsterGroupPanel'
 import { DifficultyMeter } from './DifficultyMeter'
 import { useLazySrdDataset } from '../../data/SrdProvider'
@@ -14,6 +15,9 @@ import { useLazySrdDataset } from '../../data/SrdProvider'
 const BAND_LABEL = {
   trivial: 'Trivial', easy: 'Fácil', medium: 'Médio', hard: 'Difícil', deadly: 'Mortal',
 }
+
+/** Acima disso a lista precisa de busca; abaixo, o campo só ocuparia espaço. */
+const LIMITE_SEM_BUSCA = 5
 
 /** `state` de encontro → receita salva: agrupa repetidos em `count`. */
 export function toRecipe(state) {
@@ -42,17 +46,23 @@ export function fromRecipe(recipe, monstersByIndex) {
  * Tela de preparação: a biblioteca de encontros salvos da mesa.
  *
  * Separada da tela de combate de propósito — abrir aquela CRIA um encontro
- * ativo no banco, e preparar não deveria abrir uma luta que ninguém joga.
+ * ativo no banco, e preparar não deveria abrir uma luta que ninguém joga. O
+ * botão "Rodar" é atalho de navegação: leva o id do template na query string e
+ * a montagem carrega a receita de lá.
+ *
+ * A navegação chega por prop (`onRun`), como o `onBack` — a tela não usa hook
+ * de rota pra continuar renderizável em teste sem um <Router> em volta.
  */
-export function EncounterLibraryScreen({ campaignId, onBack }) {
+export function EncounterLibraryScreen({ campaignId, onBack, onRun }) {
   // Catálogo sob demanda: 1,3 MB que só esta tela e o bestiário precisam.
   const catalog = useLazySrdDataset('monsters')
   const [templates, setTemplates] = useState([])
   const [levels, setLevels] = useState([])
   const [loading, setLoading] = useState(true)
-  const [editing, setEditing] = useState(null) // { id|null, name, group }
+  const [editing, setEditing] = useState(null) // { id|null, name, notes, group }
   const [error, setError] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(null)
+  const [filtro, setFiltro] = useState('')
 
   const byIndex = useMemo(() => {
     const m = new Map()
@@ -74,7 +84,7 @@ export function EncounterLibraryScreen({ campaignId, onBack }) {
 
   function novo() {
     setError(null)
-    setEditing({ id: null, name: '', group: emptyEncounterState(), unknown: [] })
+    setEditing({ id: null, name: '', notes: '', group: emptyEncounterState(), unknown: [] })
   }
 
   function editar(tpl) {
@@ -86,26 +96,43 @@ export function EncounterLibraryScreen({ campaignId, onBack }) {
     // catálogo é dataset PREGUIÇOSO: se a tela abrir antes dele resolver,
     // `byIndex` está vazio e todo monstro vira "desconhecido" nesse instante.
     const perdidos = (tpl.monsters ?? []).filter(m => unknown.includes(m.monsterIndex))
-    setEditing({ id: tpl.id, name: tpl.name, group: state, unknown: perdidos })
+    setEditing({ id: tpl.id, name: tpl.name, notes: tpl.notes ?? '', group: state, unknown: perdidos })
+  }
+
+  function mensagemDeErro(reason) {
+    if (reason === 'duplicate-name') return 'Já existe um encontro com esse nome nesta mesa.'
+    if (reason === 'invalid-name') return 'O nome precisa ter de 1 a 80 caracteres.'
+    if (reason === 'not-found') return 'Este encontro não existe mais — outra aba pode tê-lo apagado.'
+    return 'Não consegui salvar. Tente de novo.'
   }
 
   async function salvar() {
     const recipe = [...toRecipe(editing.group), ...(editing.unknown ?? [])]
     const res = editing.id
-      ? await updateTemplate(editing.id, { name: editing.name, monsters: recipe })
-      : await createTemplate(campaignId, editing.name, recipe)
+      ? await updateTemplate(editing.id, { name: editing.name, monsters: recipe, notes: editing.notes })
+      : await createTemplate(campaignId, editing.name, recipe, editing.notes)
     if (!res.ok) {
-      setError(res.reason === 'duplicate-name'
-        ? 'Já existe um encontro com esse nome nesta mesa.'
-        : res.reason === 'invalid-name'
-          ? 'O nome precisa ter de 1 a 80 caracteres.'
-          : 'Não consegui salvar. Tente de novo.')
+      setError(mensagemDeErro(res.reason))
       return
     }
     setEditing(null)
     setError(null)
     reload()
   }
+
+  async function duplicar(tpl) {
+    setError(null)
+    const nome = nextCopyName(tpl.name, templates.map(t => t.name))
+    const res = await createTemplate(campaignId, nome, tpl.monsters ?? [], tpl.notes ?? '')
+    if (!res.ok) { setError(mensagemDeErro(res.reason)); return }
+    reload()
+  }
+
+  const visiveis = useMemo(() => {
+    const termo = filtro.trim().toLowerCase()
+    if (!termo) return templates
+    return templates.filter(t => t.name.toLowerCase().includes(termo))
+  }, [templates, filtro])
 
   if (loading) return <div className="p-6 text-ink-300 ink-italic text-sm">Carregando encontros…</div>
 
@@ -127,6 +154,16 @@ export function EncounterLibraryScreen({ campaignId, onBack }) {
                   aria-label="Nome do encontro"
                   value={editing.name}
                   onChange={e => setEditing(v => ({ ...v, name: e.target.value }))}
+                  className="px-2 py-1 text-sm text-ink-500 border-2 border-parchment-600 bg-parchment-50 rounded-sm"
+                />
+              </label>
+              <label className="text-xs ink-italic text-ink-300 flex flex-col gap-1">
+                Notas — gancho da cena, tática dos monstros, tesouro
+                <textarea
+                  rows={3}
+                  aria-label="Notas do encontro"
+                  value={editing.notes}
+                  onChange={e => setEditing(v => ({ ...v, notes: e.target.value }))}
                   className="px-2 py-1 text-sm text-ink-500 border-2 border-parchment-600 bg-parchment-50 rounded-sm"
                 />
               </label>
@@ -154,45 +191,80 @@ export function EncounterLibraryScreen({ campaignId, onBack }) {
           </>
         ) : (
           <>
-            <div><Button size="sm" onClick={novo}>Novo encontro</Button></div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button size="sm" onClick={novo}>Novo encontro</Button>
+              {templates.length > LIMITE_SEM_BUSCA && (
+                <input
+                  type="search"
+                  aria-label="Buscar encontro pelo nome"
+                  placeholder="Buscar…"
+                  value={filtro}
+                  onChange={e => setFiltro(e.target.value)}
+                  className="px-2 py-1 text-sm text-ink-500 border-2 border-parchment-600 bg-parchment-50 rounded-sm"
+                />
+              )}
+            </div>
+
+            {error && <p className="text-xs text-red-700">{error}</p>}
 
             <section className="rounded-sm border-2 border-parchment-600 bg-parchment-50 overflow-hidden">
               <h2 className="px-4 py-2 text-xs font-display tracking-widest uppercase text-ink-500 border-b border-parchment-600 bg-parchment-100">
-                Salvos ({templates.length}) <span className="normal-case tracking-normal ink-italic text-ink-300">· dificuldade vs. a companhia de agora</span>
+                Salvos ({visiveis.length}) <span className="normal-case tracking-normal ink-italic text-ink-300">· dificuldade vs. a companhia de agora</span>
               </h2>
               {templates.length === 0 ? (
                 <p className="p-4 text-sm ink-italic text-ink-300">
                   Nenhum encontro salvo nesta mesa ainda.
                 </p>
+              ) : visiveis.length === 0 ? (
+                <p className="p-4 text-sm ink-italic text-ink-300">
+                  Nenhum encontro com "{filtro.trim()}" no nome.
+                </p>
               ) : (
                 <ul className="divide-y divide-parchment-600/50">
-                  {templates.map(tpl => {
+                  {visiveis.map(tpl => {
                     const { state, unknown } = fromRecipe(tpl.monsters, byIndex)
                     const s = summarizeEncounter({
                       monsterXpTotal: totalXp(state),
                       monsterCount: state.combatants.length,
                       levels,
                     })
+                    const composicao = describeRecipe(tpl.monsters, byIndex)
                     return (
-                      <li key={tpl.id} className="px-4 py-2 flex flex-wrap items-center gap-3">
-                        <span className="flex-1 text-sm font-display tracking-wide">{tpl.name}</span>
-                        <span className="text-xs ink-italic text-ink-300">{s.adjusted} XP ajustado</span>
-                        {s.band && <span className="text-xs text-ink-500">{BAND_LABEL[s.band]}</span>}
-                        {unknown.length > 0 && (
-                          <span className="text-xs ink-italic text-red-700">
-                            {unknown.length} monstro(s) desconhecido(s)
-                          </span>
+                      <li key={tpl.id} className="px-4 py-3 flex flex-col gap-1">
+                        <div className="flex flex-wrap items-center gap-3">
+                          <span className="flex-1 min-w-[8rem] text-sm font-display tracking-wide">{tpl.name}</span>
+                          <span className="text-xs ink-italic text-ink-300">{s.adjusted} XP ajustado</span>
+                          {s.band && <span className="text-xs text-ink-500">{BAND_LABEL[s.band]}</span>}
+                          {onRun && (
+                            <button type="button" aria-label={`Rodar ${tpl.name}`} onClick={() => onRun(tpl.id)}
+                              className="text-xs font-display uppercase tracking-wide px-2 py-1 border-2 border-parchment-600 rounded-sm text-ink-500 hover:bg-parchment-200">
+                              Rodar
+                            </button>
+                          )}
+                          <button type="button" onClick={() => editar(tpl)}
+                            className="text-xs text-ink-500 underline">editar</button>
+                          <button type="button" aria-label={`Duplicar ${tpl.name}`} onClick={() => duplicar(tpl)}
+                            className="text-xs text-ink-500 underline">duplicar</button>
+                          <button
+                            type="button"
+                            aria-label={`Apagar ${tpl.name}`}
+                            onClick={() => setConfirmDelete(tpl)}
+                            className="text-xs text-red-700 underline"
+                          >
+                            apagar
+                          </button>
+                        </div>
+                        {composicao && (
+                          <p className="text-xs text-ink-300">{composicao}</p>
                         )}
-                        <button type="button" onClick={() => editar(tpl)}
-                          className="text-xs text-ink-500 underline">editar</button>
-                        <button
-                          type="button"
-                          aria-label={`Apagar ${tpl.name}`}
-                          onClick={() => setConfirmDelete(tpl)}
-                          className="text-xs text-red-700 underline"
-                        >
-                          apagar
-                        </button>
+                        {tpl.notes && (
+                          <p className="text-xs ink-italic text-ink-300 truncate">{tpl.notes}</p>
+                        )}
+                        {unknown.length > 0 && (
+                          <p className="text-xs ink-italic text-red-700">
+                            {unknown.length} monstro(s) desconhecido(s)
+                          </p>
+                        )}
                       </li>
                     )
                   })}
