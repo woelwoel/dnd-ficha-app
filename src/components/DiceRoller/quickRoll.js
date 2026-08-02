@@ -35,3 +35,33 @@ export function buildNotation({ count, sides, mod = 0 }) {
   if (!m) return base
   return m > 0 ? `${base}+${m}` : `${base}${m}`
 }
+
+export const QUICK_ROLL_KEY = 'dnd-ficha:quickroll'
+
+const DEFAULTS = { sides: 20, count: MIN_COUNT, mod: 0 }
+
+/**
+ * Última escolha do usuário. Nunca confia no que está guardado: valor
+ * corrompido, lado desconhecido ou quantidade fora da faixa caem no padrão —
+ * mesmo tratamento das outras chaves do app (dnd-ficha:dice3d, :fab-dice).
+ */
+export function readQuickRollPref() {
+  try {
+    const raw = window.localStorage.getItem(QUICK_ROLL_KEY)
+    if (!raw) return { ...DEFAULTS }
+    const saved = JSON.parse(raw)
+    return {
+      sides: QUICK_ROLL_SIDES.includes(saved?.sides) ? saved.sides : DEFAULTS.sides,
+      count: clampCount(saved?.count),
+      mod: parseMod(saved?.mod ?? 0),
+    }
+  } catch {
+    return { ...DEFAULTS }
+  }
+}
+
+export function writeQuickRollPref({ sides, count, mod }) {
+  try {
+    window.localStorage.setItem(QUICK_ROLL_KEY, JSON.stringify({ sides, count, mod }))
+  } catch { /* storage indisponível — a preferência é conveniência, não estado */ }
+}

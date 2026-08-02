@@ -1,5 +1,13 @@
-import { describe, it, expect } from 'vitest'
-import { buildNotation, clampCount, parseMod, QUICK_ROLL_SIDES } from '../components/DiceRoller/quickRoll'
+import { describe, it, expect, beforeEach } from 'vitest'
+import {
+  buildNotation,
+  clampCount,
+  parseMod,
+  QUICK_ROLL_SIDES,
+  readQuickRollPref,
+  writeQuickRollPref,
+  QUICK_ROLL_KEY,
+} from '../components/DiceRoller/quickRoll'
 import { parseAndRoll } from '../hooks/useDiceRoller'
 import { DICE3D_SIDES } from '../components/DiceRoller/dice3d'
 
@@ -126,5 +134,35 @@ describe('buildNotation + parseAndRoll (integração com o motor real)', () => {
     const result = parseAndRoll(notation)
     expect(result).not.toBeNull()
     expect(result.sides).toBe(20)
+  })
+})
+
+describe('preferência persistida', () => {
+  beforeEach(() => {
+    window.localStorage.removeItem(QUICK_ROLL_KEY)
+  })
+
+  it('sem nada guardado, devolve d20 x1 sem modificador', () => {
+    expect(readQuickRollPref()).toEqual({ sides: 20, count: 1, mod: 0 })
+  })
+
+  it('lê de volta o que gravou', () => {
+    writeQuickRollPref({ sides: 6, count: 8, mod: -1 })
+    expect(readQuickRollPref()).toEqual({ sides: 6, count: 8, mod: -1 })
+  })
+
+  it('JSON corrompido cai no padrão', () => {
+    window.localStorage.setItem(QUICK_ROLL_KEY, '{isso não é json')
+    expect(readQuickRollPref()).toEqual({ sides: 20, count: 1, mod: 0 })
+  })
+
+  it('lado desconhecido cai no d20', () => {
+    window.localStorage.setItem(QUICK_ROLL_KEY, JSON.stringify({ sides: 7, count: 2, mod: 0 }))
+    expect(readQuickRollPref().sides).toBe(20)
+  })
+
+  it('quantidade fora da faixa é presa na leitura', () => {
+    window.localStorage.setItem(QUICK_ROLL_KEY, JSON.stringify({ sides: 6, count: 999, mod: 0 }))
+    expect(readQuickRollPref().count).toBe(20)
   })
 })
