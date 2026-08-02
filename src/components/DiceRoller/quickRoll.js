@@ -23,9 +23,15 @@ export function parseMod(value) {
   return Number.isFinite(n) ? n : 0
 }
 
-/** "3d6+2" — formato que o parseAndRoll já entende. */
+/**
+ * "3d6+2" — formato que o parseAndRoll já entende.
+ *
+ * `mod` passa por `parseMod` antes de tudo: aceita número ou string
+ * (inclusive "0" como string, que é truthy e não pode furar o guard).
+ */
 export function buildNotation({ count, sides, mod = 0 }) {
+  const m = parseMod(mod)
   const base = `${clampCount(count)}d${sides}`
-  if (!mod) return base
-  return mod > 0 ? `${base}+${mod}` : `${base}${mod}`
+  if (!m) return base
+  return m > 0 ? `${base}+${m}` : `${base}${m}`
 }
