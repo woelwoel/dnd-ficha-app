@@ -143,6 +143,16 @@ describe('QuickRollBar', () => {
     expect(roll).toHaveBeenCalledTimes(2)
   })
 
+  it('Enter também normaliza a quantidade (o campo não desfoca sozinho)', async () => {
+    const user = userEvent.setup()
+    const { roll } = setup()
+    const campo = screen.getByRole('textbox', { name: 'Quantidade de dados' })
+    await user.clear(campo)
+    await user.type(campo, '99{Enter}')
+    expect(campo).toHaveValue('20')
+    expect(roll).toHaveBeenCalledWith('20d20', 'Rolagem livre')
+  })
+
   it('agrupa os tipos de dado com nome acessível', () => {
     setup()
     expect(screen.getByRole('group', { name: 'Tipo de dado' })).toBeInTheDocument()

@@ -31,7 +31,15 @@ export function QuickRollBar() {
   useEffect(() => { writeQuickRollPref({ sides, count, mod }) }, [sides, count, mod])
 
   const handleRoll = () => roll(notation, 'Rolagem livre')
-  const onEnter = e => { if (e.key === 'Enter') handleRoll() }
+
+  /* Enter não tira o foco do campo, então o `onBlur` que normaliza a quantidade
+     não roda: sem isto um "99" digitado rola 20d20 (certo) mas continua exibindo
+     "99" na tela (resíduo visual). Normalizamos antes de rolar. */
+  const onEnter = e => {
+    if (e.key !== 'Enter') return
+    setCountText(String(count))
+    handleRoll()
+  }
 
   /* Sem classe de cor do Tailwind aqui de propósito: pintado à mão, o chip
      ficava com a affordance INVERTIDA no escuro. `bg-parchment-50` (ativo) e o
@@ -45,7 +53,7 @@ export function QuickRollBar() {
      então zeramos na horizontal. Ele vive em `@layer components` e utilitário
      do Tailwind vence layer — por isso `px-0`/`py-1` continuam valendo. */
   const chip = (active) => [
-    'text-xs font-bold px-0 py-1 transition-all',
+    'text-xs font-bold px-0 py-1',
     active ? 'ui-btn ui-btn--selected' : 'ui-btn',
   ].join(' ')
 
