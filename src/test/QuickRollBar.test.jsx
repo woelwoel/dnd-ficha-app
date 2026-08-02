@@ -91,6 +91,63 @@ describe('QuickRollBar', () => {
     expect(screen.getByRole('button', { name: 'Rolar 2d6' })).toBeInTheDocument()
   })
 
+  it('campo de quantidade vazio vale 1 (o usuário pode apagar pra digitar)', async () => {
+    const user = userEvent.setup()
+    const { roll } = setup()
+    const campo = screen.getByRole('textbox', { name: 'Quantidade de dados' })
+    await user.click(screen.getByRole('button', { name: 'Aumentar quantidade' }))
+    await user.clear(campo)
+    expect(campo).toHaveValue('')
+    await user.click(screen.getByRole('button', { name: 'Rolar 1d20' }))
+    expect(roll).toHaveBeenCalledWith('1d20', 'Rolagem livre')
+  })
+
+  it('rola d100, o único tipo de três dígitos', async () => {
+    const user = userEvent.setup()
+    const { roll } = setup()
+    await user.click(screen.getByRole('button', { name: 'd100' }))
+    await user.click(screen.getByRole('button', { name: 'Rolar 1d100' }))
+    expect(roll).toHaveBeenCalledWith('1d100', 'Rolagem livre')
+  })
+
+  it('modificador inválido vira 0 sem quebrar a notação', async () => {
+    const user = userEvent.setup()
+    const { roll } = setup()
+    await user.type(screen.getByRole('textbox', { name: 'Modificador' }), 'abc')
+    await user.click(screen.getByRole('button', { name: 'Rolar 1d20' }))
+    expect(roll).toHaveBeenCalledWith('1d20', 'Rolagem livre')
+  })
+
+  it('guarda também o modificador entre montagens', async () => {
+    const user = userEvent.setup()
+    const { view } = setup()
+    await user.type(screen.getByRole('textbox', { name: 'Modificador' }), '-2')
+    view.unmount()
+
+    render(
+      <DiceRollerContext.Provider value={{ roll: vi.fn() }}>
+        <QuickRollBar />
+      </DiceRollerContext.Provider>,
+    )
+    expect(screen.getByRole('textbox', { name: 'Modificador' })).toHaveValue('-2')
+    expect(screen.getByRole('button', { name: 'Rolar 1d20-2' })).toBeInTheDocument()
+  })
+
+  it('rola com Enter a partir dos campos de texto', async () => {
+    const user = userEvent.setup()
+    const { roll } = setup()
+    await user.type(screen.getByRole('textbox', { name: 'Modificador' }), '3{Enter}')
+    expect(roll).toHaveBeenCalledWith('1d20+3', 'Rolagem livre')
+
+    await user.type(screen.getByRole('textbox', { name: 'Quantidade de dados' }), '{Enter}')
+    expect(roll).toHaveBeenCalledTimes(2)
+  })
+
+  it('agrupa os tipos de dado com nome acessível', () => {
+    setup()
+    expect(screen.getByRole('group', { name: 'Tipo de dado' })).toBeInTheDocument()
+  })
+
   it('não passa opts para o roll (rolagem livre não recebe buffs)', async () => {
     const user = userEvent.setup()
     const { roll } = setup()
