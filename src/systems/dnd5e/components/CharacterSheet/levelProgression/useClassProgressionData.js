@@ -1,29 +1,25 @@
 // src/components/CharacterSheet/levelProgression/useClassProgressionData.js
-// Hook que carrega as 3 fontes de dados JSON necessárias para a progressão
-// de classes: progressões 1-20, escolhas de feature por nível e regras de
-// multiclasse (pré-requisitos + proficiências ganhas).
-import { useState, useEffect } from 'react'
+// Hook que entrega as 3 fontes de dados da progressão de classes: progressões
+// 1-20, escolhas de feature por nível e regras de multiclasse.
+//
+// Tudo vem do SrdProvider, que já COMPÕE as fontes (PHB + Tasha + Xanathar).
+// Antes este hook dava `fetch` nos JSONs do PHB direto, por fora do provider —
+// e era por isso que subir de nível só oferecia conteúdo do livro básico
+// (nenhuma subclasse de Tasha/Xanathar) enquanto o wizard de criação, que lê do
+// provider, oferecia tudo. A progressão do Artífice, que só existe em Tasha,
+// nem aparecia: o painel dizia "dados de progressão não encontrados".
+import { useSrd, useLazySrdDataset } from '../../../data/SrdProvider'
 
 export function useClassProgressionData() {
-  const [allProgressions, setAllProgressions] = useState(null)
-  const [classChoices,    setClassChoices]    = useState({})
-  const [mcRules,         setMcRules]         = useState({})
+  const { progression, classChoices, ready } = useSrd()
+  // Regras de multiclasse só interessam a quem abre o seletor — dataset lazy.
+  const mcRules = useLazySrdDataset('multiclass')
 
-  useEffect(() => {
-    const ctrl = new AbortController()
-    const handle = (label, setter, fallback) => err => {
-      if (err.name === 'AbortError') return
-      console.error(`Falha ao carregar ${label}:`, err)
-      setter(fallback)
-    }
-    fetch('/srd-data/phb-class-progression-pt.json', { signal: ctrl.signal })
-      .then(r => r.json()).then(setAllProgressions).catch(handle('progressão', setAllProgressions, {}))
-    fetch('/srd-data/phb-class-choices-pt.json', { signal: ctrl.signal })
-      .then(r => r.json()).then(setClassChoices).catch(handle('escolhas de classe', setClassChoices, {}))
-    fetch('/srd-data/phb-multiclass-pt.json', { signal: ctrl.signal })
-      .then(r => r.json()).then(setMcRules).catch(handle('regras de multiclasse', setMcRules, {}))
-    return () => ctrl.abort()
-  }, [])
-
-  return { allProgressions, classChoices, mcRules }
+  return {
+    // `null` enquanto o core não terminou: é assim que o painel distingue
+    // "ainda carregando" de "esta classe não tem progressão".
+    allProgressions: ready ? (progression ?? {}) : null,
+    classChoices: classChoices ?? {},
+    mcRules: mcRules ?? {},
+  }
 }
