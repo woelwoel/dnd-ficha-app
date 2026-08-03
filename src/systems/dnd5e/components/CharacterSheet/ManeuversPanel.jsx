@@ -34,9 +34,15 @@ import { MANEUVER_TYPES } from './maneuverTypes'
 
 const MANEUVERS_CHOICE_ID = 'martial_archetype_maneuvers'
 
-/** Option de class-choices (`{ value, name, type, desc }`) → shape do catálogo. */
+/** Option de class-choices (`{ value, name, type, trigger, desc }`) → shape do catálogo. */
 function optionToManeuver(opt) {
-  return { index: opt.value, name: opt.name, desc: opt.desc, type: opt.type ?? 'manobra' }
+  return {
+    index: opt.value,
+    name: opt.name,
+    desc: opt.desc,
+    type: opt.type ?? 'manobra',
+    trigger: opt.trigger,
+  }
 }
 
 export function ManeuversPanel({ character, featureUses, onSpend }) {

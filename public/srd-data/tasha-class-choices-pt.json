@@ -317,6 +317,7 @@
             "value": "emboscada",
             "name": "Emboscada",
             "type": "passiva",
+            "trigger": "Ao fazer um teste de Furtividade ou rolar iniciativa",
             "combat": "situacional",
             "desc": "Ao fazer um teste de Destreza (Furtividade) ou uma jogada de iniciativa, você pode gastar um dado de superioridade e somar o resultado à rolagem, desde que não esteja incapacitado."
           },
@@ -324,6 +325,7 @@
             "value": "engodo",
             "name": "Engodo",
             "type": "movimento",
+            "trigger": "No seu turno, a até 1,5m de uma criatura voluntária",
             "combat": "situacional",
             "desc": "Estando a até 1,5m de uma criatura no seu turno, gaste um dado de superioridade e troque de lugar com ela (criatura voluntária e não incapacitada; gaste ao menos 1,5m de movimento). O movimento não provoca ataques de oportunidade. Role o dado: até o início do seu próximo turno, você ou a criatura (à sua escolha) ganha um bônus de CA igual ao valor rolado."
           },
@@ -331,6 +333,7 @@
             "value": "enganchar",
             "name": "Enganchar",
             "type": "reação",
+            "trigger": "Quando uma criatura entra no alcance da sua arma",
             "combat": "situacional",
             "desc": "Quando uma criatura que você veja se mover para dentro do alcance da sua arma corpo a corpo empunhada, use sua reação e gaste um dado de superioridade para atacá-la com essa arma. Se acertar, some o dado de superioridade ao dano."
           },
@@ -338,6 +341,7 @@
             "value": "presenca-dominante",
             "name": "Presença Dominante",
             "type": "passiva",
+            "trigger": "Ao fazer um teste de Intimidação, Atuação ou Persuasão",
             "combat": "situacional",
             "desc": "Ao fazer um teste de Carisma (Intimidação, Atuação ou Persuasão), você pode gastar um dado de superioridade e somar o resultado ao teste."
           },
@@ -345,6 +349,7 @@
             "value": "golpe-imobilizador",
             "name": "Golpe Imobilizador",
             "type": "ação bônus",
+            "trigger": "Logo após acertar um ataque corpo a corpo no seu turno",
             "combat": "situacional",
             "desc": "Logo após acertar uma criatura com um ataque corpo a corpo no seu turno, você pode gastar um dado de superioridade e tentar agarrar o alvo como ação bônus; some o dado ao seu teste de Força (Atletismo)."
           },
@@ -352,6 +357,7 @@
             "value": "lancamento-rapido",
             "name": "Lançamento Rápido",
             "type": "ação bônus",
+            "trigger": "Como ação bônus, no seu turno",
             "combat": "essencial",
             "desc": "Como ação bônus, gaste um dado de superioridade e ataque com uma arma de arremesso (pode sacá-la como parte dessa ação). Se acertar, some o dado de superioridade ao dano."
           },
@@ -359,6 +365,7 @@
             "value": "avaliacao-tatica",
             "name": "Avaliação Tática",
             "type": "passiva",
+            "trigger": "Ao fazer um teste de Investigação, História ou Intuição",
             "combat": "situacional",
             "desc": "Ao fazer um teste de Inteligência (Investigação), Inteligência (História) ou Sabedoria (Intuição), você pode gastar um dado de superioridade e somar o resultado ao teste."
           }

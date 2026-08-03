@@ -175,6 +175,15 @@ describe('<ManeuversPanel>', () => {
       expect(screen.getByText('PAS')).toBeInTheDocument()
     })
 
+    it('mostra a linha de gatilho da manobra de Tasha', async () => {
+      const char = makeChar({ info: {
+        chosenFeatures: { martial_archetype: 'mestre_combate', martial_archetype_maneuvers: ['lancamento-rapido'] },
+      } })
+      render(<ManeuversPanel character={char} featureUses={defaultFeatureUses} onSpend={() => {}} />)
+      await screen.findByText('Lançamento Rápido')
+      expect(screen.getByText('Como ação bônus, no seu turno')).toBeInTheDocument()
+    })
+
     it('option sem `type` cai no selo neutro em vez de afirmar "passiva"', async () => {
       // Fonte hipotética/nova ainda não curada: melhor não afirmar regra.
       srdMock.value = { classChoices: { guerreiro: { choices: [{

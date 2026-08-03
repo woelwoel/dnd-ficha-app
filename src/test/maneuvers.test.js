@@ -75,6 +75,15 @@ describe('manobras de Tasha: tipo de ação curado nas options', () => {
     }
   })
 
+  it('as 7 options têm `trigger` no estilo do catálogo do PHB', () => {
+    for (const o of options) {
+      // linha de gatilho é curta (a UI trunca) e sem ponto final, como no PHB
+      expect(o.trigger, `manobra ${o.value}`).toBeTruthy()
+      expect(o.trigger.length, `manobra ${o.value}`).toBeLessThanOrEqual(70)
+      expect(o.trigger.endsWith('.'), `manobra ${o.value}`).toBe(false)
+    }
+  })
+
   it('o tipo bate com o texto da regra', () => {
     const byValue = Object.fromEntries(options.map(o => [o.value, o.type]))
     // somam o dado a um teste/rolagem, sem custar ação
