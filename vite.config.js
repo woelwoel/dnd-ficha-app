@@ -107,7 +107,7 @@ export default defineConfig({
             urlPattern: ({ url }) => url.pathname.startsWith('/srd-data/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'srd-data-v33',
+              cacheName: 'srd-data-v34',
               expiration: {
                 maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
