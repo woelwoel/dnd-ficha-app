@@ -108,4 +108,16 @@ describe('DiceRoller E2E', () => {
     await user.keyboard('{/Shift}')
     expect(screen.queryByText('↑VANT')).toBeNull()
   })
+
+  it('rolagem livre do painel entra no histórico', async () => {
+    const user = userEvent.setup()
+    render(<Harness />)
+    await user.click(screen.getByLabelText(/Abrir histórico/))
+    await user.click(screen.getByRole('button', { name: 'd6' }))
+    await user.click(screen.getByRole('button', { name: 'Aumentar quantidade' }))
+    await user.click(screen.getByRole('button', { name: 'Rolar 2d6' }))
+    expect(await screen.findByText('Rolagem livre')).toBeInTheDocument()
+    // Math.random alterna 0.95/0.05 → 6 + 1 = 7
+    expect(screen.getAllByText('7').length).toBeGreaterThanOrEqual(1)
+  })
 })

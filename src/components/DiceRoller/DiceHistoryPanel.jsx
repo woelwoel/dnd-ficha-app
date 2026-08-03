@@ -4,6 +4,7 @@ import { useDiceRoller } from '../../hooks/useDiceRoller'
 import { useDraggableFab } from '../../hooks/useDraggableFab'
 import { Icon } from '../ui/Icon'
 import { isDice3dSupported } from './dice3d'
+import { QuickRollBar } from './QuickRollBar'
 
 function timeAgo(ts) {
   const diff = Math.floor((Date.now() - ts) / 1000)
@@ -280,6 +281,9 @@ export function DiceHistoryPanel() {
           )
         })}
       </div>
+
+      {/* ── Rolagem livre ─────────────────────────────────────── */}
+      <QuickRollBar />
 
       {/* ── Histórico ─────────────────────────────────────────── */}
       <div
