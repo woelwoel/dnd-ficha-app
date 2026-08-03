@@ -15,19 +15,30 @@ import {
 import { upsertEffect, removeEffect, pruneOnConcentrationChange } from '../domain/activeEffects'
 
 /**
- * Resolve a lista de feature-uses para spend/regain. Se o caller passou `list`
- * (ex.: SheetContent, que tem `classChoices` no memo), usa ela. Senão re-deriva
- * dos defaults — mas PRESERVA entradas persistidas ausentes dos defaults deste
- * hook (os trackers de subclasse dependem de `classChoices`, indisponível aqui).
- * Sem essa preservação, um gasto por caller sem lista (ex.: ManeuversPanel)
- * zeraria os `used` dos trackers de subclasse ao reescrever classFeatureUses.
+ * Resolve a lista de feature-uses para spend/regain.
+ *
+ * A `list` do caller (ex.: SheetContent, que tem `classChoices` no memo) entra
+ * como ESTRUTURA — ids, `max`, `recharge`, e principalmente os trackers de
+ * subclasse, que dependem de `classChoices` e não são deriváveis aqui. Sem
+ * ela, cai nos defaults.
+ *
+ * O `used`, porém, vem SEMPRE do `prev`: a lista é uma foto do último render e
+ * congela o `used` de antes do clique. Os pools grandes (Imposição das Mãos,
+ * Ki, Pontos de Feitiçaria) gastam N pontos chamando esta função N vezes no
+ * mesmo handler, com a MESMA foto — usar o `used` dela fazia as N chamadas
+ * gravarem todas `used + 1`, e "Gastar 10" tirava 1 ponto do pool.
+ *
+ * Entradas persistidas fora da lista (trackers de subclasse quando o caller
+ * não passou lista; conjuração especial de raça/talento, que vive no
+ * `castPolicy`) são preservadas ao final — senão um gasto sem lista
+ * (ex.: ManeuversPanel) zeraria o `used` delas ao reescrever classFeatureUses.
  */
 function resolveFeatureUseList(prev, list) {
-  if (list) return list
   const persisted = prev.combat?.classFeatureUses ?? []
-  const derived = mergeFeatureUses(persisted, defaultClassFeatureUses(prev))
-  const known = new Set(derived.map(u => u.id))
-  return [...derived, ...persisted.filter(u => !known.has(u.id))]
+  const structure = list ?? defaultClassFeatureUses(prev)
+  const merged = mergeFeatureUses(persisted, structure)
+  const known = new Set(merged.map(u => u.id))
+  return [...merged, ...persisted.filter(u => !known.has(u.id))]
 }
 
 export const DEFAULT_CHARACTER = {
