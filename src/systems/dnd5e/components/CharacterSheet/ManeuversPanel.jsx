@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useDiceRoller } from '../../../../hooks/useDiceRoller'
 import { Icon } from '../../../../components/ui/Icon'
 import { InfoPopover } from '../../../../components/ui/InfoPopover'
+import { useSrdOptional } from '../../data/SrdProvider'
 
 /**
  * Painel rápido de Manobras (Mestre de Combate) — aparece na aba Ficha
@@ -20,6 +21,14 @@ import { InfoPopover } from '../../../../components/ui/InfoPopover'
  *
  * Carrega `phb-maneuvers-pt.json` sob demanda (tem campos `trigger` e
  * `type` que `phb-class-choices-pt.json` não tem).
+ *
+ * As fontes suplementares (Tasha, Xanathar) acrescentam manobras ao MESMO
+ * choice `martial_archetype_maneuvers` e NÃO têm arquivo de catálogo próprio —
+ * elas só existem como `options` em `*-class-choices-pt.json`. Por isso o
+ * painel resolve em duas camadas: catálogo do PHB primeiro (traz `type` e
+ * `trigger`), `classChoices` do SrdProvider (já mesclado PHB+Tasha+Xanathar)
+ * depois. Sem a segunda camada a manobra escolhida sumia da lista em silêncio
+ * e a contagem do cabeçalho mentia.
  */
 
 const TYPE_COLOR = {
@@ -27,6 +36,9 @@ const TYPE_COLOR = {
   'ação':        'bg-amber-100 border-amber-400 text-amber-800',
   'ação bônus':  'bg-blue-100  border-blue-400  text-blue-800',
   'reação':      'bg-purple-100 border-purple-400 text-purple-800',
+  // Sentinela: manobra vinda só do class-choices, que não declara tipo de ação.
+  // Melhor um selo neutro do que afirmar "passiva" (o default) e mentir.
+  'manobra':     'bg-gray-100  border-gray-400  text-gray-600',
 }
 
 const TYPE_ABBR = {
@@ -34,11 +46,20 @@ const TYPE_ABBR = {
   'ação':        'AÇÃO',
   'ação bônus':  'BÔNUS',
   'reação':      'REAÇÃO',
+  'manobra':     'MAN.',
+}
+
+const MANEUVERS_CHOICE_ID = 'martial_archetype_maneuvers'
+
+/** Option de class-choices (`{ value, name, desc }`) → shape do catálogo. */
+function optionToManeuver(opt) {
+  return { index: opt.value, name: opt.name, desc: opt.desc, type: 'manobra' }
 }
 
 export function ManeuversPanel({ character, featureUses, onSpend }) {
   const [maneuversData, setManeuversData] = useState(null)
   const { roll } = useDiceRoller()
+  const classChoices = useSrdOptional()?.classChoices ?? {}
 
   // Guarda de classe + escolha antes de gastar fetch.
   const chosen = character?.info?.chosenFeatures ?? {}
@@ -74,9 +95,18 @@ export function ManeuversPanel({ character, featureUses, onSpend }) {
   const noDice = remaining <= 0
 
   // Resolve manobras escolhidas (preserva ordem do array).
+  // Catálogo do PHB primeiro; o que não estiver lá vem das options do
+  // class-choices mesclado (Tasha/Xanathar).
   const allManeuvers = maneuversData?.maneuvers ?? []
+  const supplementalOptions = (classChoices?.guerreiro?.choices ?? [])
+    .find(c => c.id === MANEUVERS_CHOICE_ID)?.options ?? []
   const maneuverList = chosenIds
-    .map(id => allManeuvers.find(m => m.index === id))
+    .map(id => {
+      const fromCatalog = allManeuvers.find(m => m.index === id)
+      if (fromCatalog) return fromCatalog
+      const opt = supplementalOptions.find(o => o.value === id)
+      return opt ? optionToManeuver(opt) : null
+    })
     .filter(Boolean)
 
   function spendDie(maneuver) {

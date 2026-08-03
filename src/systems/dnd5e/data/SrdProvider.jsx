@@ -172,6 +172,16 @@ export function useSrd() {
   return ctx
 }
 
+/**
+ * Como `useSrd`, mas devolve `null` fora do provider em vez de lançar.
+ * Para componentes-folha que só ENRIQUECEM a UI com dados SRD e precisam
+ * continuar renderizando (degradados) sem o provider — em testes que montam
+ * a ficha isolada, por exemplo.
+ */
+export function useSrdOptional() {
+  return useContext(SrdContext)
+}
+
 /** Hook derivado: mapa classIndex → classData para O(1) lookups. */
 export function useClassDataMap() {
   const { classes } = useSrd()
