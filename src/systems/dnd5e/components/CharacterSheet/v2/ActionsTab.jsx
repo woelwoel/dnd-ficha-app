@@ -4,6 +4,7 @@ import { EditDialog } from './EditDialog'
 import { Attacks } from '../Attacks'
 import { CombatClassActions } from '../CombatClassActions'
 import { ManeuversPanel } from '../ManeuversPanel'
+import { RunesPanel } from '../RunesPanel'
 import { AttackRollButton } from '../AttackRollButton'
 import { RollButton } from '../../../../../components/DiceRoller/RollButton'
 import {
@@ -251,6 +252,12 @@ export function ActionsTab() {
               character={character}
               featureUses={featureUses}
               onSpend={id => spendFeatureUse(id, featureUses)}
+            />
+            <RunesPanel
+              character={character}
+              featureUses={featureUses}
+              onSpend={id => spendFeatureUse(id, featureUses)}
+              onRegain={id => regainFeatureUse(id, featureUses)}
             />
           </div>
         </>

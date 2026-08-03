@@ -3,7 +3,7 @@ import { useDiceRoller } from '../../../../hooks/useDiceRoller'
 import { Icon } from '../../../../components/ui/Icon'
 import { InfoPopover } from '../../../../components/ui/InfoPopover'
 import { useSrdOptional } from '../../data/SrdProvider'
-import { MANEUVER_TYPES } from './maneuverTypes'
+import { ACTION_BADGES } from './actionBadges'
 
 /**
  * Painel rápido de Manobras (Mestre de Combate) — aparece na aba Ficha
@@ -129,8 +129,8 @@ export function ManeuversPanel({ character, featureUses, onSpend }) {
         <div className="space-y-1.5">
           {maneuverList.map(m => {
             const typeKey = (m.type ?? 'passiva').toLowerCase()
-            const typeColor = MANEUVER_TYPES[typeKey]?.color ?? MANEUVER_TYPES.passiva.color
-            const typeAbbr  = MANEUVER_TYPES[typeKey]?.abbr ?? typeKey.toUpperCase()
+            const typeColor = ACTION_BADGES[typeKey]?.color ?? ACTION_BADGES.passiva.color
+            const typeAbbr  = ACTION_BADGES[typeKey]?.abbr ?? typeKey.toUpperCase()
             return (
               <div
                 key={m.index}

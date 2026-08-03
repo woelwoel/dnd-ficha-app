@@ -28,6 +28,16 @@ describe('ActionsTab', () => {
     expect(screen.getByText('Machado grande')).toBeInTheDocument()
   })
 
+  it('monta o painel de Runas pro Cavaleiro Rúnico', () => {
+    const ch = charWithAttack()
+    ch.info = { ...ch.info, class: 'guerreiro', chosenFeatures: {
+      martial_archetype: 'cavaleiro-runico',
+      guerreiro_rune_knight_runes: ['fogo'],
+    } }
+    renderWithSheetContext(<ActionsTab />, { character: ch })
+    expect(screen.getByRole('heading', { name: /Runas/i })).toBeInTheDocument()
+  })
+
   it('botão gerenciar ataques abre o Attacks v1', async () => {
     const user = userEvent.setup()
     renderWithSheetContext(<ActionsTab />, { character: charWithAttack() })
