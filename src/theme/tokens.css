@@ -294,14 +294,32 @@
   color: var(--v2-text-3);
 }
 
-/* Estado ligado de um par de alternância (Mapa/Lista). NÃO é primário: o
-   dourado do CTA e o dourado do "estado atual" competiriam pelo mesmo olhar. */
+/* Estado ligado de um par de alternância (Mapa/Lista, "Próxima:", os 7 chips
+   do rolador). NÃO é primário: o dourado do CTA e o dourado do "estado atual"
+   competiriam pelo mesmo olhar.
+
+   O sinal é a BORDA DE ACENTO, mesma convenção que `legacy-bridge.css` já usa
+   pro estado escolhido dos pickers legados. Antes daqui o ligado repetia
+   `--v2-btn-hover` + `--v2-border-strong`, que é EXATAMENTE o hover do
+   não-ligado — as duas diferenças no papel não existiam no DOM (`color` já vem
+   de `.ui-btn` e o `font-weight: 600` perde pro `font-bold` do call site), e
+   qualquer botão sob o cursor ficava pixel-idêntico ao ligado. O anel interno
+   engrossa a borda sem mexer no layout. */
 .theme-v2 .ui-btn--selected,
 .sheet-v2 .ui-btn--selected {
-  background: var(--v2-btn-hover);
-  border-color: var(--v2-border-strong);
+  background: color-mix(in srgb, var(--v2-accent) 18%, var(--v2-surface-2));
+  border-color: var(--v2-accent);
+  box-shadow: inset 0 0 0 1px var(--v2-accent);
   color: var(--v2-text-1);
   font-weight: 600;
+}
+/* `.ui-btn:hover:not(:disabled)` tem especificidade 0,4,0 contra os 0,2,0 do
+   modificador e devolveria fundo e borda de não-ligado justamente sob o
+   cursor — que é o caso que este arquivo está consertando. */
+.theme-v2 .ui-btn--selected:hover:not(:disabled),
+.sheet-v2 .ui-btn--selected:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--v2-accent) 28%, var(--v2-surface-2));
+  border-color: var(--v2-accent);
 }
 
 /* Ação destrutiva — discreta em repouso, explícita no hover. */
