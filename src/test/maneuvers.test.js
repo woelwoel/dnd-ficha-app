@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { defaultClassFeatureUses } from '../systems/dnd5e/domain/rules'
 import { resolveMultiSelect, isChoiceDone } from '../systems/dnd5e/components/CharacterWizardV2/blocks/class-helpers'
+import { MANEUVER_TYPES } from '../systems/dnd5e/components/CharacterSheet/maneuverTypes'
+import tashaChoices from '../../public/srd-data/tasha-class-choices-pt.json'
 
 function fighterChar(level, chosenArchetype = null) {
   return {
@@ -59,6 +61,33 @@ describe('Dado de Superioridade (Mestre de Combate)', () => {
       .find(u => u.id === 'guerreiro-superiority-dice')
     expect(sup.max).toBe(6)
     expect(sup.name).toContain('d12')
+  })
+})
+
+describe('manobras de Tasha: tipo de ação curado nas options', () => {
+  const options = tashaChoices.guerreiro.choices
+    .find(c => c.id === 'martial_archetype_maneuvers').options
+
+  it('as 7 options declaram um `type` do vocabulário do painel', () => {
+    expect(options).toHaveLength(7)
+    for (const o of options) {
+      expect(Object.keys(MANEUVER_TYPES), `manobra ${o.value}`).toContain(o.type)
+    }
+  })
+
+  it('o tipo bate com o texto da regra', () => {
+    const byValue = Object.fromEntries(options.map(o => [o.value, o.type]))
+    // somam o dado a um teste/rolagem, sem custar ação
+    expect(byValue['emboscada']).toBe('passiva')
+    expect(byValue['presenca-dominante']).toBe('passiva')
+    expect(byValue['avaliacao-tatica']).toBe('passiva')
+    // "como ação bônus"
+    expect(byValue['lancamento-rapido']).toBe('ação bônus')
+    expect(byValue['golpe-imobilizador']).toBe('ação bônus')
+    // "use sua reação" (o texto PT de `enganchar` é o da manobra Brace)
+    expect(byValue['enganchar']).toBe('reação')
+    // troca de lugar gastando movimento no seu turno — nem ação, nem bônus
+    expect(byValue['engodo']).toBe('movimento')
   })
 })
 
