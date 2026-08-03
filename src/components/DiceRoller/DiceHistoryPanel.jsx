@@ -260,20 +260,30 @@ export function DiceHistoryPanel() {
       {/* ── Modo da próxima rolagem (vantagem/desvantagem) ────── */}
       <div className="flex items-center gap-1 px-3 py-1.5 border-b border-parchment-600 bg-parchment-100 shrink-0">
         <span className="text-xs ink-italic uppercase tracking-widest shrink-0 mr-1">Próxima:</span>
+        {/* Par de alternância pelas primitivas `.ui-btn`/`.ui-btn--selected`:
+            pintar o estado ligado com utilitários de cor não funciona aqui —
+            `bg-parchment-50` e o fundo do painel caem no MESMO destino pela
+            ponte, que usa `!important`, enquanto o desligado ganha superfície
+            pela adoção automática do tokens.css. O ligado ficava mais ESCURO
+            que os desligados. A cor semântica de vantagem/desvantagem entra só
+            no rótulo: uma classe `border-*`/`bg-*` reativaria a adoção
+            automática, que vence `.ui-btn--selected` por especificidade e
+            devolveria o achatamento. */}
         {[
-          { v: 'normal', lbl: 'Normal', cls: 'border-ink-300 bg-parchment-50 text-ink-500' },
-          { v: 'adv',    lbl: '↑ Vant.', cls: 'border-emerald-700 bg-emerald-100 text-emerald-800' },
-          { v: 'dis',    lbl: '↓ Desv.', cls: 'border-rose-700 bg-rose-100 text-rose-800' },
+          { v: 'normal', lbl: 'Normal',  tint: '' },
+          { v: 'adv',    lbl: '↑ Vant.', tint: 'text-emerald-800' },
+          { v: 'dis',    lbl: '↓ Desv.', tint: 'text-rose-800' },
         ].map(opt => {
           const active = mode === opt.v
           return (
             <button
               key={opt.v}
               onClick={() => setMode?.(opt.v)}
-              className={`flex-1 text-xs font-bold py-0.5 rounded border transition-all ${
+              aria-pressed={active}
+              className={`ui-btn flex-1 text-xs font-bold px-1 py-0.5 ${
                 active
-                  ? opt.cls + ' shadow-inner'
-                  : 'border-parchment-600 text-ink-200 hover:border-ink-300 hover:text-ink-500'
+                  ? `ui-btn--selected ${opt.tint}`
+                  : 'text-ink-200 hover:text-ink-500'
               }`}
             >
               {opt.lbl}
