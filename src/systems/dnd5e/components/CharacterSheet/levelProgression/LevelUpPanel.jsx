@@ -4,7 +4,8 @@
 import { useMemo, useState } from 'react'
 import { DetailsModal } from '../../DetailsModal'
 import { useLazySrdDataset } from '../../../data/SrdProvider'
-import { filterCatalogBySources, filterChoiceBySources } from '../../../domain/sources'
+import { filterCatalogBySources } from '../../../domain/sources'
+import { getLeveledChoices } from '../../CharacterWizardV2/blocks/class-helpers'
 import { isASIEntry } from './helpers'
 import { HPSection } from './HPSection'
 import { ASIPicker } from './ASIPicker'
@@ -48,10 +49,17 @@ export function LevelUpPanel({
   // ASI pronto: se modo ASI precisam boosts; se modo talento precisa talento + atributo (se aplicável)
   const asiReady    = !hasASI || (asiMode === 'asi' ? Object.keys(boosts).length > 0 : chosenFeat !== null && featAttrReady)
 
-  const choicesForLevel = (levelChoices ?? [])
+  // O que o jogador tem DEPOIS deste painel: a ficha mais o que ele acabou de
+  // marcar aqui. Escolhas condicionais (`requires`) costumam cair no mesmo
+  // nível da subclasse que as concede — runas do Cavaleiro Rúnico, disparos do
+  // Arqueiro Arcano, espírito totêmico do Bárbaro — então o gate tem que
+  // enxergar a marcação do momento, não só o que já estava salvo.
+  const chosenSoFar = { ...(currentChosenFeatures ?? {}), ...newChoices }
+  // Mesma regra do wizard de criação (`getLeveledChoices`): fontes ativas,
+  // `requires`, e opções já pegas em outra escolha. `optional` (features
+  // opcionais de Tasha) fica de fora — contrato "nunca pendência no level-up".
+  const choicesForLevel = getLeveledChoices({ choices: levelChoices ?? [] }, nextLevel, chosenSoFar, activeSources)
     .filter(c => c.level === nextLevel)
-    .filter(c => !c.optional) // opcionais de Tasha nunca são obrigatórias no level-up (contrato "nunca pendência")
-    .map(c => filterChoiceBySources(c, currentChosenFeatures, activeSources))
     .filter(c => (c.options?.length ?? 0) > 0)
   const choicesReady = choicesForLevel.every(c => {
     if ((c.multiSelect ?? 0) > 1) {
@@ -227,7 +235,12 @@ export function LevelUpPanel({
             newLevel: nextLevel,
             hpIncrease: hpGain,
             attrBoosts: asiMode === 'asi' ? boosts : {},
-            newChoices,
+            // Só o que ainda está na tela: trocar de subclasse no meio do
+            // painel deixa para trás a escolha condicional da anterior, e ela
+            // não pode ir parar na ficha.
+            newChoices: Object.fromEntries(
+              Object.entries(newChoices).filter(([id]) => choicesForLevel.some(c => c.id === id))
+            ),
             bonusSpells: bonusCantripsChosen,
             chosenFeat: asiMode === 'feat' ? chosenFeat : null,
             featChosenAttr: asiMode === 'feat' ? (featChosenAttr ?? (chosenFeat?.attrBonus?.choices?.[0] ?? null)) : null,
