@@ -17,6 +17,19 @@ export function clampCount(value) {
   return Math.min(MAX_COUNT, Math.max(MIN_COUNT, n))
 }
 
+/**
+ * O que pode SER DIGITADO em cada campo. Não é validação de valor — é o filtro
+ * de tecla, aplicado antes do estado; `clampCount`/`parseMod` seguem cuidando
+ * do valor final.
+ *
+ * Existe porque `Number()` aceita notação exponencial: "1e9" cabe nos três
+ * caracteres do campo de modificador e produzia uma rolagem real de
+ * 20d100+1000000000 no histórico. Filtrar na entrada resolve na origem sem
+ * mexer em `parseMod`, que é puro e também roda sobre o localStorage.
+ */
+export const COUNT_INPUT_RE = /^\d*$/
+export const MOD_INPUT_RE = /^[+-]?\d*$/
+
 /** Modificador: aceita "", "2", "+2", "-1". Qualquer outra coisa é 0. */
 export function parseMod(value) {
   const n = Math.trunc(Number(String(value).trim()))

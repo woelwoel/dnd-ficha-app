@@ -163,8 +163,13 @@ function showToast(label, total) {
  * os dados PARAM (ou no timeout): é a hora de liberar a entrada no histórico.
  * Resolve { animated: false } se o 3D não pôde animar (import/init falhou) —
  * o provider então cai no fluxo clássico.
+ *
+ * `toast: false` anima sem o balão de resultado. O balão é ancorado no centro/
+ * baixo do viewport e o overlay vive ABAIXO do painel de rolagens (z-45 contra
+ * z-50): no celular ele cai atrás do painel. Quem chama sabe se o resultado já
+ * está visível em outro lugar — é o provider quem decide, não este módulo.
  */
-export function enqueueDice3d({ sides, values, label, total }) {
+export function enqueueDice3d({ sides, values, label, total, toast = true }) {
   const run = queue.then(async () => {
     let box
     try {
@@ -178,7 +183,7 @@ export function enqueueDice3d({ sides, values, label, total }) {
     }
     const notation = `${values.length}d${sides}@${values.join(',')}`
     await animateOnce(box, notation)
-    showToast(label, total)
+    if (toast) showToast(label, total)
     clearTimer = setTimeout(() => {
       try { box.clearDice() } catch { /* ignore */ }
     }, CLEAR_AFTER_MS)

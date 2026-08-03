@@ -160,10 +160,22 @@ export function DiceHistoryPanel() {
    * para sobrepor qualquer CSS de classe (ex: arcane-card tem
    * position:relative que perderia para o inline style).
    * ─────────────────────────────────────────────────────────── */
+  /* Piso de altura com teto absoluto. Só 60vh deixava o histórico com 24px em
+   * viewport deitado (812×375, plausível numa mesa presencial): o cabeçalho, a
+   * linha de "Próxima:" e o rolador livre não encolhem, então quem cede é o
+   * histórico. O piso de 340px só age quando 60vh cai abaixo dele — em desktop
+   * (1280×800) e em retrato (375×667) a altura fica idêntica à de antes.
+   *
+   * O teto NÃO pode ser relativo: `vh` mede o viewport SEM descontar a barra
+   * de rolagem horizontal, e o painel está ancorado a 1.25rem do fundo do
+   * viewport de layout — com 90vh o topo do painel saía 3px pra fora da tela em
+   * 812×375 e o cabeçalho (que também é a alça de arrasto) ficava cortado. Os
+   * 72px cobrem a âncora de baixo (25px com a fonte-raiz de 20px do app), a
+   * barra de rolagem e uma margem de respiro em cima. */
   const baseStyle = {
     position:  'fixed',
     zIndex:    50,
-    maxHeight: '60vh',
+    maxHeight: 'min(calc(100vh - 72px), max(60vh, 340px))',
   }
   const posStyle = pos
     ? { ...baseStyle, left: pos.x, top: pos.y }
@@ -305,8 +317,9 @@ export function DiceHistoryPanel() {
               <Icon name="dice" size={36} strokeWidth={1.5} />
             </div>
             <p className="text-xs ink-italic">Nenhuma rolagem ainda.</p>
-            <p className="text-xs mt-1 ink-italic flex items-center justify-center gap-1 flex-wrap">
-              Clique no <Icon name="dice" size={14} strokeWidth={1.75} className="inline" />
+            <p className="text-xs mt-1 ink-italic">Role um dado na barra acima,</p>
+            <p className="text-xs ink-italic flex items-center justify-center gap-1 flex-wrap">
+              ou clique no <Icon name="dice" size={14} strokeWidth={1.75} className="inline" />
               <span>ao lado de perícias, salvaguardas e ataques.</span>
             </p>
           </div>

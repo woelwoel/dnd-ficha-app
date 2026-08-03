@@ -16,12 +16,13 @@ import { DiceRollerProvider } from '../context/DiceRollerContext'
 import { useDiceRoller } from '../hooks/useDiceRoller'
 
 function Probe({ notation = '1d20+3', opts }) {
-  const { roll, history, open, dice3d, setDice3d } = useDiceRoller()
+  const { roll, history, open, dice3d, setDice3d, openPanel } = useDiceRoller()
   const [lastReturn, setLastReturn] = React.useState(null)
   return (
     <div>
       <button onClick={() => setLastReturn(roll(notation, 'Teste', opts))}>rolar</button>
       <button onClick={() => setDice3d(!dice3d)}>toggle3d</button>
+      <button onClick={openPanel}>abrir</button>
       <span data-testid="count">{history.length}</span>
       <span data-testid="open">{String(open)}</span>
       <span data-testid="dice3d">{String(dice3d)}</span>
@@ -80,6 +81,23 @@ describe('DiceRollerProvider — caminho 3D', () => {
     await userEvent.click(screen.getByText('rolar'))
     await vi.waitFor(() => expect(screen.getByTestId('count').textContent).toBe('1'))
     expect(screen.getByTestId('open').textContent).toBe('true')
+  })
+
+  /* O balão do 3D é ancorado no centro/baixo do viewport e, no celular, cai
+     DENTRO do painel — que fica acima do overlay. Com o painel aberto o
+     resultado já aparece duas vezes (entrada nova + "último:" do cabeçalho),
+     então o balão só teria valor escondido. */
+  it('painel fechado: pede o balão', async () => {
+    setup()
+    await userEvent.click(screen.getByText('rolar'))
+    expect(mockDice3d.enqueueDice3d.mock.calls[0][0].toast).toBe(true)
+  })
+
+  it('painel aberto: anima sem balão', async () => {
+    setup()
+    await userEvent.click(screen.getByText('abrir'))
+    await userEvent.click(screen.getByText('rolar'))
+    expect(mockDice3d.enqueueDice3d.mock.calls[0][0].toast).toBe(false)
   })
 
   it('pré-carrega o chunk quando 3D ativo e suportado', () => {

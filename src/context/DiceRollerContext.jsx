@@ -93,8 +93,14 @@ export function DiceRollerProvider({ children }) {
     const use3d = state.dice3d && values.length > 0 &&
       DICE3D_SIDES.has(result.sides) && isDice3dSupported()
 
+    /* Balão só com o painel FECHADO: aberto, o resultado já aparece duas vezes
+       (entrada nova no topo do histórico + "último:" no cabeçalho) e o balão
+       ficaria escondido atrás do painel no celular. */
     if (use3d) {
-      enqueueDice3d({ sides: result.sides, values, label: effLabel, total: result.total })
+      enqueueDice3d({
+        sides: result.sides, values, label: effLabel,
+        total: result.total, toast: !state.open,
+      })
         .then(({ animated }) => {
           dispatch({ type: 'ADD_ROLL', entry })
           if (!animated) dispatch({ type: 'OPEN' })
@@ -104,7 +110,7 @@ export function DiceRollerProvider({ children }) {
       dispatch({ type: 'OPEN' })
     }
     return entry
-  }, [state.mode, state.dice3d])
+  }, [state.mode, state.dice3d, state.open])
 
   const setDice3d = useCallback(enabled => {
     try { window.localStorage.setItem(DICE3D_KEY, enabled ? 'on' : 'off') } catch { /* ignore */ }

@@ -110,6 +110,38 @@ describe('QuickRollBar', () => {
     expect(roll).toHaveBeenCalledWith('1d100', 'Rolagem livre')
   })
 
+  /* `parseMod` usa Number(), que aceita notação exponencial: "1e9" cabe nos 3
+     caracteres do campo e rolava 20d100+1000000000 de verdade. O campo passa a
+     recusar o que não for dígito ou sinal — `parseMod` fica intocado. */
+  it('modificador não aceita notação exponencial', async () => {
+    const user = userEvent.setup()
+    const { roll } = setup()
+    const campo = screen.getByRole('textbox', { name: 'Modificador' })
+    await user.type(campo, '1e9')
+    expect(campo).toHaveValue('19')
+    await user.click(screen.getByRole('button', { name: 'Rolar 1d20+19' }))
+    expect(roll).toHaveBeenCalledWith('1d20+19', 'Rolagem livre')
+  })
+
+  it('modificador aceita sinal só na frente', async () => {
+    const user = userEvent.setup()
+    setup()
+    const campo = screen.getByRole('textbox', { name: 'Modificador' })
+    await user.type(campo, '-5')
+    expect(campo).toHaveValue('-5')
+    await user.type(campo, '-')
+    expect(campo).toHaveValue('-5')
+  })
+
+  it('quantidade recusa letras e sinal', async () => {
+    const user = userEvent.setup()
+    setup()
+    const campo = screen.getByRole('textbox', { name: 'Quantidade de dados' })
+    await user.clear(campo)
+    await user.type(campo, '-a7')
+    expect(campo).toHaveValue('7')
+  })
+
   it('modificador inválido vira 0 sem quebrar a notação', async () => {
     const user = userEvent.setup()
     const { roll } = setup()

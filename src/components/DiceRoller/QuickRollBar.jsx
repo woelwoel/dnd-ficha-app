@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { useDiceRoller } from '../../hooks/useDiceRoller'
 import { Button } from '../ui/Button'
 import {
-  QUICK_ROLL_SIDES, buildNotation, clampCount, parseMod,
+  COUNT_INPUT_RE, MOD_INPUT_RE, QUICK_ROLL_SIDES,
+  buildNotation, clampCount, parseMod,
   readQuickRollPref, writeQuickRollPref,
 } from './quickRoll'
 
@@ -59,6 +60,10 @@ export function QuickRollBar() {
 
   const stepper = 'px-2 py-0.5 text-sm font-bold text-ink-200 hover:text-ink-500 transition-colors'
 
+  /* Tecla que não casa é simplesmente ignorada (o estado não muda), em vez de
+     limpar o campo: o usuário mantém o que já tinha digitado. */
+  const filtered = (re, set) => e => { if (re.test(e.target.value)) set(e.target.value) }
+
   return (
     <div className="flex flex-col gap-1.5 px-3 py-2 border-b border-parchment-600 bg-parchment-100 shrink-0">
       <div className="grid grid-cols-7 gap-1" role="group" aria-label="Tipo de dado">
@@ -91,7 +96,7 @@ export function QuickRollBar() {
             maxLength={2}
             aria-label="Quantidade de dados"
             value={countText}
-            onChange={e => setCountText(e.target.value)}
+            onChange={filtered(COUNT_INPUT_RE, setCountText)}
             onBlur={() => setCountText(String(count))}
             onKeyDown={onEnter}
             className="w-7 bg-transparent text-center text-xs font-mono text-ink-500"
@@ -108,7 +113,9 @@ export function QuickRollBar() {
 
         {/* maxLength nos dois campos: `parseMod` não tem faixa, e um
             "999999999" digitado produzia uma notação larga demais pro botão.
-            ±99 basta pro modificador e a quantidade tem teto 20. */}
+            ±99 basta pro modificador e a quantidade tem teto 20. O maxLength
+            sozinho não bastava: "1e9" tem três caracteres e o Number() de
+            dentro do parseMod lê expoente — daí o filtro de entrada. */}
         <input
           type="text"
           inputMode="numeric"
@@ -116,7 +123,7 @@ export function QuickRollBar() {
           aria-label="Modificador"
           placeholder="mod"
           value={modText}
-          onChange={e => setModText(e.target.value)}
+          onChange={filtered(MOD_INPUT_RE, setModText)}
           onKeyDown={onEnter}
           className="w-10 shrink-0 rounded border border-parchment-600 bg-parchment-50 px-1 py-0.5
             text-center text-xs font-mono text-ink-500 placeholder:text-ink-200"

@@ -68,6 +68,20 @@ describe('enqueueDice3d', () => {
     expect(toast.classList.contains('dice3d-toast-visible')).toBe(true)
   })
 
+  it('toast: false anima sem balão (painel aberto já mostra o resultado)', async () => {
+    const res = await enqueueDice3d({ sides: 20, values: [15], label: 'Rolagem livre', total: 15, toast: false })
+    expect(res).toEqual({ animated: true })
+    expect(fake.rollCalls).toEqual(['1d20@15'])
+    expect(document.querySelector('.dice3d-toast')).toBeNull()
+  })
+
+  it('toast: false não apaga um balão que já estava na tela', async () => {
+    await enqueueDice3d({ sides: 20, values: [15], label: 'Atletismo', total: 15 })
+    await enqueueDice3d({ sides: 6, values: [3], label: 'Rolagem livre', total: 3, toast: false })
+    const toast = document.querySelector('.dice3d-toast')
+    expect(toast.textContent).toContain('Atletismo')
+  })
+
   it('FIFO: a segunda rolagem só anima depois da primeira parar', async () => {
     let resolveFirst
     fake.rollBehavior = () => new Promise(r => { resolveFirst = r })
