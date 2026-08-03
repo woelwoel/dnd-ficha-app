@@ -3,6 +3,7 @@ import { useDiceRoller } from '../../../../hooks/useDiceRoller'
 import { Icon } from '../../../../components/ui/Icon'
 import { InfoPopover } from '../../../../components/ui/InfoPopover'
 import { useSrdOptional } from '../../data/SrdProvider'
+import { MANEUVER_TYPES } from './maneuverTypes'
 
 /**
  * Painel rápido de Manobras (Mestre de Combate) — aparece na aba Ficha
@@ -31,29 +32,11 @@ import { useSrdOptional } from '../../data/SrdProvider'
  * e a contagem do cabeçalho mentia.
  */
 
-const TYPE_COLOR = {
-  'passiva':     'bg-gray-100  border-gray-400  text-gray-700',
-  'ação':        'bg-amber-100 border-amber-400 text-amber-800',
-  'ação bônus':  'bg-blue-100  border-blue-400  text-blue-800',
-  'reação':      'bg-purple-100 border-purple-400 text-purple-800',
-  // Sentinela: manobra vinda só do class-choices, que não declara tipo de ação.
-  // Melhor um selo neutro do que afirmar "passiva" (o default) e mentir.
-  'manobra':     'bg-gray-100  border-gray-400  text-gray-600',
-}
-
-const TYPE_ABBR = {
-  'passiva':     'PAS',
-  'ação':        'AÇÃO',
-  'ação bônus':  'BÔNUS',
-  'reação':      'REAÇÃO',
-  'manobra':     'MAN.',
-}
-
 const MANEUVERS_CHOICE_ID = 'martial_archetype_maneuvers'
 
-/** Option de class-choices (`{ value, name, desc }`) → shape do catálogo. */
+/** Option de class-choices (`{ value, name, type, desc }`) → shape do catálogo. */
 function optionToManeuver(opt) {
-  return { index: opt.value, name: opt.name, desc: opt.desc, type: 'manobra' }
+  return { index: opt.value, name: opt.name, desc: opt.desc, type: opt.type ?? 'manobra' }
 }
 
 export function ManeuversPanel({ character, featureUses, onSpend }) {
@@ -140,8 +123,8 @@ export function ManeuversPanel({ character, featureUses, onSpend }) {
         <div className="space-y-1.5">
           {maneuverList.map(m => {
             const typeKey = (m.type ?? 'passiva').toLowerCase()
-            const typeColor = TYPE_COLOR[typeKey] ?? TYPE_COLOR.passiva
-            const typeAbbr  = TYPE_ABBR[typeKey] ?? typeKey.toUpperCase()
+            const typeColor = MANEUVER_TYPES[typeKey]?.color ?? MANEUVER_TYPES.passiva.color
+            const typeAbbr  = MANEUVER_TYPES[typeKey]?.abbr ?? typeKey.toUpperCase()
             return (
               <div
                 key={m.index}

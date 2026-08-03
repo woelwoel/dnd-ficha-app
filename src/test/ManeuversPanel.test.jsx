@@ -159,16 +159,33 @@ describe('<ManeuversPanel>', () => {
       expect(mockRoll).toHaveBeenCalledWith('1d8', expect.stringContaining('Presença Dominante'))
     })
 
-    it('não afirma tipo de ação em manobra suplementar (option não tem `type`)', async () => {
+    it('mostra o tipo de ação curado na option de Tasha', async () => {
       const char = makeChar({ info: {
         chosenFeatures: {
           martial_archetype: 'mestre_combate',
-          martial_archetype_maneuvers: ['presenca-dominante'],
+          // um de cada tipo: bônus, reação, movimento, passiva
+          martial_archetype_maneuvers: ['lancamento-rapido', 'enganchar', 'engodo', 'emboscada'],
         },
       } })
       render(<ManeuversPanel character={char} featureUses={defaultFeatureUses} onSpend={() => {}} />)
-      await screen.findByText('Presença Dominante')
-      // "PAS" (passiva) é o default do painel e seria uma afirmação errada aqui
+      await screen.findByText('Lançamento Rápido')
+      expect(screen.getByText('BÔNUS')).toBeInTheDocument()
+      expect(screen.getByText('REAÇÃO')).toBeInTheDocument()
+      expect(screen.getByText('MOV.')).toBeInTheDocument()
+      expect(screen.getByText('PAS')).toBeInTheDocument()
+    })
+
+    it('option sem `type` cai no selo neutro em vez de afirmar "passiva"', async () => {
+      // Fonte hipotética/nova ainda não curada: melhor não afirmar regra.
+      srdMock.value = { classChoices: { guerreiro: { choices: [{
+        id: 'martial_archetype_maneuvers',
+        options: [{ value: 'manobra-nova', name: 'Manobra Nova', desc: 'Sem tipo declarado.' }],
+      }] } } }
+      const char = makeChar({ info: {
+        chosenFeatures: { martial_archetype: 'mestre_combate', martial_archetype_maneuvers: ['manobra-nova'] },
+      } })
+      render(<ManeuversPanel character={char} featureUses={defaultFeatureUses} onSpend={() => {}} />)
+      await screen.findByText('Manobra Nova')
       expect(screen.queryByText('PAS')).not.toBeInTheDocument()
       expect(screen.getByText('MAN.')).toBeInTheDocument()
     })
