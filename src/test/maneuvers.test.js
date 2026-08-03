@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { defaultClassFeatureUses } from '../systems/dnd5e/domain/rules'
 import { resolveMultiSelect, isChoiceDone } from '../systems/dnd5e/components/CharacterWizardV2/blocks/class-helpers'
-import { MANEUVER_TYPES } from '../systems/dnd5e/components/CharacterSheet/maneuverTypes'
+import { ACTION_BADGES } from '../systems/dnd5e/components/CharacterSheet/actionBadges'
 import tashaChoices from '../../public/srd-data/tasha-class-choices-pt.json'
 
 function fighterChar(level, chosenArchetype = null) {
@@ -71,7 +71,7 @@ describe('manobras de Tasha: tipo de ação curado nas options', () => {
   it('as 7 options declaram um `type` do vocabulário do painel', () => {
     expect(options).toHaveLength(7)
     for (const o of options) {
-      expect(Object.keys(MANEUVER_TYPES), `manobra ${o.value}`).toContain(o.type)
+      expect(Object.keys(ACTION_BADGES), `manobra ${o.value}`).toContain(o.type)
     }
   })
 

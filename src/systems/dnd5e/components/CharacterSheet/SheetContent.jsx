@@ -11,6 +11,7 @@ import { AttributesSection } from './AttributesSection'
 import { RestActions } from './RestActions'
 import { Attacks } from './Attacks'
 import { ManeuversPanel } from './ManeuversPanel'
+import { RunesPanel } from './RunesPanel'
 import { PreparedSpellsList } from './PreparedSpellsList'
 import { CombatClassActions } from './CombatClassActions'
 import { ArtificerInfusionsPanel } from './ArtificerInfusionsPanel'
@@ -185,6 +186,13 @@ export function SheetContent({ activeTab }) {
               character={character}
               featureUses={featureUses}
               onSpend={(id) => spendFeatureUse(id, featureUses)}
+            />
+
+            <RunesPanel
+              character={character}
+              featureUses={featureUses}
+              onSpend={(id) => spendFeatureUse(id, featureUses)}
+              onRegain={(id) => regainFeatureUse(id, featureUses)}
             />
 
             <PreparedSpellsList />

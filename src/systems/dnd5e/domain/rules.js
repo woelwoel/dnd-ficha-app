@@ -8,6 +8,7 @@ import { getModifier, getProficiencyBonus, SKILLS, calculateMaxHpFromHitDice, ra
 import { keyFromName } from './attributes'
 import { CASTER_TYPE } from '../utils/spellcasting'
 import { getSubclassFeatureCards, detectFeatureUses } from './subclassFeatures'
+import { resolveChosenRunes } from './runes'
 import { PACT_FAMILIAR_SPELL, PRIMAL_AWARENESS_LABEL, PRIMAL_AWARENESS_GRANTS } from './grantedSpells'
 
 /* ── Constantes ──────────────────────────────────────────────────── */
@@ -921,6 +922,14 @@ export function defaultClassFeatureUses(character, classChoices = null) {
         if (u) out.push({ id: card.id, name: card.name, max: u.max, used: 0, recharge: u.recharge, source: cls })
       }
     }
+  }
+
+  // Cavaleiro Rúnico (Tasha): a invocação de CADA runa gravada é 1 uso por
+  // descanso curto ou longo — pool por runa, não compartilhado. Fora do loop
+  // porque `resolveChosenRunes` já varre primário + multiclasses. Depende de
+  // `classChoices`: as runas só existem como options do choice, sem catálogo.
+  for (const runa of resolveChosenRunes(character, classChoices)) {
+    out.push({ id: runa.useId, name: runa.name, max: 1, used: 0, recharge: 'short', source: 'guerreiro' })
   }
 
   return out
