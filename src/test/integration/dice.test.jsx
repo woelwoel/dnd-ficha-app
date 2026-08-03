@@ -77,6 +77,36 @@ describe('DiceRoller E2E', () => {
     expect(await screen.findByText('↑VANT')).toBeInTheDocument()
   })
 
+  /* Regressão de affordance: no tema escuro o "Próxima:" ligado precisa ser a
+     superfície MAIS clara do par. Quem garante isso é a primitiva
+     `.ui-btn--selected`; qualquer classe `bg-*`/`border-*` no botão reativa a
+     adoção automática do tokens.css, que vence a primitiva por especificidade e
+     devolve o achatamento (o ligado ficava mais escuro que os desligados).
+     jsdom não computa a cascata da ponte — a invariante testável é a classe. */
+  it('estado ligado do par "Próxima:" usa a primitiva, não utilitário de cor', async () => {
+    const user = userEvent.setup()
+    render(<Harness />)
+    await user.click(screen.getByLabelText(/Abrir histórico/))
+
+    const normal = screen.getByRole('button', { name: 'Normal' })
+    const vant   = screen.getByRole('button', { name: /↑ Vant\./ })
+
+    expect(normal).toHaveAttribute('aria-pressed', 'true')
+    expect(normal.className).toMatch(/\bui-btn--selected\b/)
+    expect(vant.className).not.toMatch(/\bui-btn--selected\b/)
+
+    await user.click(vant)
+    expect(vant).toHaveAttribute('aria-pressed', 'true')
+    expect(vant.className).toMatch(/\bui-btn--selected\b/)
+    expect(normal.className).not.toMatch(/\bui-btn--selected\b/)
+
+    // Nenhuma das três opções pode carregar cor de fundo/borda do Tailwind.
+    for (const b of [normal, vant, screen.getByRole('button', { name: /↓ Desv\./ })]) {
+      expect(b.className).toMatch(/\bui-btn\b/)
+      expect(b.className).not.toMatch(/(^|\s)(bg-|border-)/)
+    }
+  })
+
   it('modo reseta para normal após uma rolagem', async () => {
     const user = userEvent.setup()
     render(<Harness />)
