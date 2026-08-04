@@ -31,4 +31,36 @@ describe('AbilityStrip — edição', () => {
     await user.clear(input)
     expect(screen.getByRole('button', { name: 'Aplicar' })).toBeDisabled()
   })
+
+  it('aceita 30 — o teto absoluto', async () => {
+    const user = userEvent.setup()
+    const updateAttribute = vi.fn()
+    renderWithSheetContext(<AbilityStrip />, { updaters: makeUpdaters({ updateAttribute }) })
+    await user.click(screen.getByRole('button', { name: /Editar FOR/ }))
+    const input = screen.getByLabelText('Valor')
+    await user.clear(input)
+    await user.type(input, '30')
+    await user.click(screen.getByRole('button', { name: 'Aplicar' }))
+    expect(updateAttribute).toHaveBeenCalledWith('str', '30')
+  })
+
+  it('acima de 30 desabilita Aplicar', async () => {
+    const user = userEvent.setup()
+    renderWithSheetContext(<AbilityStrip />, { updaters: makeUpdaters({ updateAttribute: vi.fn() }) })
+    await user.click(screen.getByRole('button', { name: /Editar FOR/ }))
+    const input = screen.getByLabelText('Valor')
+    await user.clear(input)
+    await user.type(input, '31')
+    expect(screen.getByRole('button', { name: 'Aplicar' })).toBeDisabled()
+  })
+
+  it('abaixo de 1 desabilita Aplicar', async () => {
+    const user = userEvent.setup()
+    renderWithSheetContext(<AbilityStrip />, { updaters: makeUpdaters({ updateAttribute: vi.fn() }) })
+    await user.click(screen.getByRole('button', { name: /Editar FOR/ }))
+    const input = screen.getByLabelText('Valor')
+    await user.clear(input)
+    await user.type(input, '0')
+    expect(screen.getByRole('button', { name: 'Aplicar' })).toBeDisabled()
+  })
 })
