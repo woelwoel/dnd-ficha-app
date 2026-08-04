@@ -3,8 +3,6 @@ import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithSheetContext } from './helpers/sheetV2TestContext'
 
-vi.mock('../systems/dnd5e/components/CharacterSheet/SkillsList', () => ({ SkillsList: () => <div /> }))
-
 import { SkillsPanel } from '../systems/dnd5e/components/CharacterSheet/v2/SkillsPanel'
 import { SavesPanel } from '../systems/dnd5e/components/CharacterSheet/v2/SidePanels'
 import { AbilityStrip } from '../systems/dnd5e/components/CharacterSheet/v2/AbilityStrip'

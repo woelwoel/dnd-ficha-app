@@ -25,7 +25,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
  */
 const DRAG_THRESHOLD = 4 // px
 const SUPPRESS_MS    = 200
-// 140px cobre o SheetHeader (linha 1, ~50px) + SheetCombatBar
+// 140px cobre o header da ficha (linha 1, ~50px) + a barra de combate
 // (linha 2, ~50-90px) + uma margem de segurança. Sem isso, FABs
 // dragados pro alto sentavam em cima dos chips da barra de combate.
 const DEFAULT_SAFE_TOP = 140 // px reservados pro header sticky + combat bar

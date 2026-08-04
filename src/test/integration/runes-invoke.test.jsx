@@ -21,7 +21,7 @@ vi.mock('../../systems/dnd5e/data/SrdProvider', () => ({
 /**
  * Fiação REAL da ficha: `featureUses` é derivado do character a cada render e
  * o gasto volta como `spendFeatureUse(id, featureUses)`. É o mesmo caminho que
- * SheetContent/ActionsTab usam — e o mesmo que já mordeu o pool do Paladino.
+ * o ActionsTab usa — e o mesmo que já mordeu o pool do Paladino.
  */
 function WiredRunes({ initial }) {
   const api = useCharacter(initial)

@@ -43,7 +43,7 @@ function clearWizardStorage() {
 }
 
 // Razões de falha ao salvar (upsertCharacter) → mensagem amigável exibida no
-// wizard. Espelha SAVE_ERROR_MESSAGES do SheetHeader. Sem isso, "Inscrever
+// wizard. Sem isso, "Inscrever
 // Herói" falhava em silêncio (só console.error) e o usuário achava que o botão
 // estava travado.
 const FINALIZE_ERROR_MESSAGES = {

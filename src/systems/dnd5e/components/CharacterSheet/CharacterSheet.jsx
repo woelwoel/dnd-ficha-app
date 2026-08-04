@@ -8,10 +8,7 @@ import { useSrd, useClassDataMap } from '../../data/SrdProvider'
 import { loadCharacterByRouteParam, loadCharacterById } from '../../../../utils/storage'
 import { useAuth } from '../../../../auth'
 import { listMyCampaigns } from '../../../../lib/campaigns'
-import { SheetHeader } from './SheetHeader'
-import { SheetTabs, TABS, NavBlockedBanner } from './SheetTabs'
 import { ImportErrorBanner } from './ImportErrorBanner'
-import { SheetContent } from './SheetContent'
 import { CharacterProvider } from './CharacterContext'
 import { useSheetHandlers } from './useSheetHandlers'
 import { isSheetReadOnly } from './sheet-access'
@@ -21,7 +18,6 @@ import { defaultClassFeatureUses, mergeFeatureUses } from '../../domain/rules'
 import { specialCastingUses } from '../../domain/castPolicy'
 import { injectRacialSpells } from '../../domain/racialSpells'
 import { SheetV2 } from './v2/SheetV2'
-import { isSheetV2Enabled } from './v2/flag'
 
 /**
  * Wrapper: carrega a ficha de forma assíncrona e só monta o orquestrador
@@ -124,23 +120,17 @@ export function CharacterSheet({ characterId, adminContext = false, onBack }) {
  * Orquestrador real da ficha. Só monta depois que `initialCharacter` está
  * carregado (ou explicitamente null pra 'new').
  *
- * Layout: header fixo + sidebar de navegação (desktop) + área de conteúdo scrollável.
+ * Monta o contexto da ficha e delega o layout inteiro ao SheetV2 (página única).
  */
 function SheetBody({ initialCharacter, adminContext = false, onBack }) {
   const { races, classes, backgrounds, classChoices, spells: srdSpells } = useSrd()
   const classDataMap = useClassDataMap()
 
-  const [activeTab, setActiveTab] = useState('ficha')
-  const [navBlocked, setNavBlocked] = useState(false)
   const [importError, setImportError] = useState(null)
-  // Magia que deve ter o modal de detalhe auto-aberto ao navegar pra aba Magias.
-  // Setada por PreparedSpellsList ao clicar num chip; consumida e zerada pelo
-  // próprio Spells (que dispara setDetailSpell e depois chama clearFocusSpell).
+  // Magia que deve ter o modal de detalhe auto-aberto ao navegar pra seção
+  // Magias. Setada por quem chama `onNavigateToSpells(spellId)`; consumida e
+  // zerada pelo próprio Spells (dispara setDetailSpell e chama clearFocusSpell).
   const [focusSpellId, setFocusSpellId] = useState(null)
-
-  // Toggle temporário do redesign (spec 2026-07-03). Lido uma vez no mount —
-  // trocar exige reload, o que evita layouts trocando com a ficha suja.
-  const [sheetV2] = useState(() => isSheetV2Enabled())
 
   const { character, setCharacter, ...updaters } = useCharacter(initialCharacter)
 
@@ -177,7 +167,10 @@ function SheetBody({ initialCharacter, adminContext = false, onBack }) {
   const calc = useCharacterCalculations(character, classData, classDataMap)
 
   const validationDeps = useMemo(() => ({ races }), [races])
-  const { getTabErrors, markTouched, hasErrors, focusFirstError } = useTabValidation(character, validationDeps)
+  // Só `getTabErrors` sobrevive: `markTouched`/`hasErrors`/`focusFirstError`
+  // serviam ao gate de troca de aba do layout v1. O v2 lê `fichaErrors` no
+  // HeaderV2 pra marcar os campos inválidos do diálogo Identidade.
+  const { getTabErrors } = useTabValidation(character, validationDeps)
 
   const handlers = useSheetHandlers({ setCharacter, races, classes, backgrounds })
 
@@ -187,20 +180,6 @@ function SheetBody({ initialCharacter, adminContext = false, onBack }) {
     document.title = name ? `${name} — D&D 5e` : 'Grimório de Personagens — D&D 5e'
     return () => { document.title = 'Grimório de Personagens — D&D 5e' }
   }, [character.info.name])
-
-  function handleTabChange(newTabId) {
-    const currentIdx = TABS.findIndex(t => t.id === activeTab)
-    const newIdx = TABS.findIndex(t => t.id === newTabId)
-    const isForward = newIdx > currentIdx
-
-    if (isForward && hasErrors(activeTab)) {
-      markTouched(activeTab)
-      setNavBlocked(true)
-      return
-    }
-    setNavBlocked(false)
-    setActiveTab(newTabId)
-  }
 
   function handleExport() {
     const json = JSON.stringify(character, null, 2)
@@ -219,16 +198,6 @@ function SheetBody({ initialCharacter, adminContext = false, onBack }) {
   }
 
   const fichaErrors = getTabErrors('ficha')
-
-  // Quick stats para o header
-  const quickStats = {
-    currentHp:  character.combat.currentHp,
-    maxHp:      character.combat.maxHp,
-    armorClass: character.combat.armorClass,
-    initiative: calc.initiative,
-    hpPercent:  calc.hpPercent,
-    hpColor:    calc.hpColor,
-  }
 
   // featureUses é derivado de character — memo para evitar recalcular nos filhos.
   // `specialCastingUses` acrescenta os usos 1×/descanso de magia racial e de
@@ -265,11 +234,8 @@ function SheetBody({ initialCharacter, adminContext = false, onBack }) {
     fichaErrors,
     featureUses,
     readOnly,
-    // Quando chamado sem arg, só troca de aba. Com arg (spellId), também
-    // pede pra aba Magias auto-abrir o modal de detalhe daquela magia.
     onNavigateToSpells: (spellId) => {
       if (spellId != null) setFocusSpellId(spellId)
-      setActiveTab('magias')
     },
     focusSpellId,
     clearFocusSpell: () => setFocusSpellId(null),
@@ -289,90 +255,26 @@ function SheetBody({ initialCharacter, adminContext = false, onBack }) {
 
   return (
     <CharacterProvider value={contextValue}>
-      {sheetV2 ? (
-        <SheetV2
-          onBack={onBack}
-          onExport={handleExport}
-          onPrint={() => setPrintOpen(true)}
-          onImport={handleImport}
-          onImportError={setImportError}
-          saving={saving}
-          saved={saved}
-          saveError={saveError}
-          banner={
-            importError ? (
-              <ImportErrorBanner message={importError} onDismiss={() => setImportError(null)} />
-            ) : conflictNotice ? (
-              <ImportErrorBanner
-                message="Esta ficha foi alterada em outro dispositivo. Recarregamos a versão mais recente — confira sua última edição."
-                onDismiss={() => setConflictNotice(false)}
-              />
-            ) : null
-          }
-        />
-      ) : (
-        <div className="min-h-screen flex flex-col">
-
-          {/* ── Header único (navegação + barra de combate integrada) ── */}
-          <div className="sticky top-0 z-30">
-            <SheetHeader
-              characterName={character.info.name}
-              characterId={character?.id ?? null}
-              saving={saving}
-              saved={saved}
-              saveError={saveError}
-              onBack={onBack}
-              onExport={handleExport}
-              onImport={handleImport}
-              onImportError={setImportError}
-              onPrint={() => setPrintOpen(true)}
-              showPrint={true}
-              quickStats={quickStats}
-              readOnly={readOnly}
-              campaignId={character?.campaignId ?? null}
-              onMoved={(newCampaignId) => {
-                setCharacter(prev => ({ ...prev, campaignId: newCampaignId }))
-              }}
+      <SheetV2
+        onBack={onBack}
+        onExport={handleExport}
+        onPrint={() => setPrintOpen(true)}
+        onImport={handleImport}
+        onImportError={setImportError}
+        saving={saving}
+        saved={saved}
+        saveError={saveError}
+        banner={
+          importError ? (
+            <ImportErrorBanner message={importError} onDismiss={() => setImportError(null)} />
+          ) : conflictNotice ? (
+            <ImportErrorBanner
+              message="Esta ficha foi alterada em outro dispositivo. Recarregamos a versão mais recente — confira sua última edição."
+              onDismiss={() => setConflictNotice(false)}
             />
-          </div>
-
-          {/* ── Corpo: sidebar + conteúdo ────────────────────────── */}
-          <div className="flex flex-1">
-
-            {/* Sidebar de navegação (embutida em SheetTabs) */}
-            <SheetTabs activeTab={activeTab} onChange={handleTabChange} />
-
-            {/* Área de conteúdo (sem scroll próprio — flui no documento pra permitir print) */}
-            <main className="flex-1 min-w-0">
-              <div className="max-w-7xl mx-auto px-2 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6 space-y-4">
-
-                {importError && (
-                  <ImportErrorBanner
-                    message={importError}
-                    onDismiss={() => setImportError(null)}
-                  />
-                )}
-
-                {conflictNotice && (
-                  <ImportErrorBanner
-                    message="Esta ficha foi alterada em outro dispositivo. Recarregamos a versão mais recente — confira sua última edição."
-                    onDismiss={() => setConflictNotice(false)}
-                  />
-                )}
-
-                {navBlocked && (
-                  <NavBlockedBanner
-                    onReview={() => focusFirstError(activeTab)}
-                    onDismiss={() => setNavBlocked(false)}
-                  />
-                )}
-
-                <SheetContent activeTab={activeTab} />
-              </div>
-            </main>
-          </div>
-        </div>
-      )}
+          ) : null
+        }
+      />
 
       {/* Ficha para impressão/PDF — invisível na UI, visível apenas em @media print */}
       <PrintView

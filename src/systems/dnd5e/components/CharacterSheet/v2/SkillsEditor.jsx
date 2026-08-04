@@ -11,7 +11,7 @@ import { skillBonus, skillProficiencyState } from './skillBonus'
  *
  * O grid usa auto-fill/minmax em vez de breakpoints do Tailwind de propósito:
  * as colunas precisam sair da largura do DIALOG, não do viewport. Com
- * breakpoints (o que o SkillsList v1 faz) um desktop abre 3 colunas dentro de
+ * breakpoints (o que a lista de perícias do v1 fazia) um desktop abre 3 colunas dentro de
  * 560px e os nomes viram "A.".
  */
 

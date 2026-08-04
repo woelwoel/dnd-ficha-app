@@ -4,9 +4,8 @@ import { memo } from 'react'
  * Aviso dispensável no topo da ficha: erro ao importar JSON, ou conflito de
  * versão (a ficha foi salva por outro dispositivo da mesma conta).
  *
- * Morava dentro do SheetTabs.jsx, do layout v1. Saiu de lá porque o v2 também
- * depende dele — um aviso comum aos dois layouts não tinha por que morar num
- * arquivo de um deles só.
+ * Morava dentro de um arquivo do layout v1 (já apagado). Ganhou módulo próprio
+ * quando o v2 passou a depender dele também.
  */
 export const ImportErrorBanner = memo(function ImportErrorBanner({ message, onDismiss }) {
   return (

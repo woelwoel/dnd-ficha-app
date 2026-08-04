@@ -1,7 +1,7 @@
 /**
  * Condições D&D 5e (PHB p.290–296) + Exaustão (p.291).
  *
- * Fonte única de verdade — consumida por SheetCombatBar, ConditionsTracker,
+ * Fonte única de verdade — consumida pela barra de combate, ConditionsTracker,
  * tooltips, etc. Cada entrada traz `rule` em texto curto compatível com
  * tooltip de UI (1-3 linhas).
  */
