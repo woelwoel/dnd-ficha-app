@@ -16,7 +16,7 @@
 
 **Criados:**
 - `src/systems/dnd5e/components/CharacterSheet/ImportErrorBanner.jsx` — o banner dispensável de erro de importação/conflito de versão. Sai de dentro do `SheetTabs.jsx` (v1) porque o v2 o consome.
-- `src/test/importErrorBanner.test.jsx` — cobertura do componente extraído.
+- `src/test/ImportErrorBanner.test.jsx` — cobertura do componente extraído.
 
 **Modificados:**
 - `src/systems/dnd5e/components/CharacterSheet/CharacterSheet.jsx` — perde a bifurcação v1/v2, o estado de abas do v1 e o `quickStats`; ganha o sinal `spellNav`.
@@ -38,13 +38,13 @@ O `SheetTabs.jsx` é um arquivo do v1 que vai ser apagado, mas o ramo do v2 em `
 
 **Files:**
 - Create: `src/systems/dnd5e/components/CharacterSheet/ImportErrorBanner.jsx`
-- Create: `src/test/importErrorBanner.test.jsx`
+- Create: `src/test/ImportErrorBanner.test.jsx`
 - Modify: `src/systems/dnd5e/components/CharacterSheet/SheetTabs.jsx:157-164`
 - Modify: `src/systems/dnd5e/components/CharacterSheet/CharacterSheet.jsx:12`
 
 - [ ] **Step 1: Escrever o teste que falha**
 
-Crie `src/test/importErrorBanner.test.jsx`:
+Crie `src/test/ImportErrorBanner.test.jsx`:
 
 ```jsx
 import { describe, it, expect, vi } from 'vitest'
@@ -71,7 +71,7 @@ describe('ImportErrorBanner', () => {
 - [ ] **Step 2: Rodar o teste e confirmar que falha**
 
 ```bash
-npx vitest run src/test/importErrorBanner.test.jsx
+npx vitest run src/test/ImportErrorBanner.test.jsx
 ```
 
 Esperado: FAIL. A mensagem é de resolução de módulo — `Failed to resolve import ".../CharacterSheet/ImportErrorBanner"`, porque o arquivo ainda não existe.
@@ -87,8 +87,9 @@ import { memo } from 'react'
  * Aviso dispensável no topo da ficha: erro ao importar JSON, ou conflito de
  * versão (a ficha foi salva por outro dispositivo da mesma conta).
  *
- * Morava dentro do SheetTabs.jsx, que era do layout v1. Saiu de lá quando o v1
- * foi apagado — o v2 é o único consumidor que sobrou.
+ * Morava dentro do SheetTabs.jsx, do layout v1. Saiu de lá porque o v2 também
+ * depende dele e o v1 está sendo removido — o banner não podia ficar preso a
+ * um arquivo condenado.
  */
 export const ImportErrorBanner = memo(function ImportErrorBanner({ message, onDismiss }) {
   return (
@@ -103,7 +104,7 @@ export const ImportErrorBanner = memo(function ImportErrorBanner({ message, onDi
 - [ ] **Step 4: Rodar o teste e confirmar que passa**
 
 ```bash
-npx vitest run src/test/importErrorBanner.test.jsx
+npx vitest run src/test/ImportErrorBanner.test.jsx
 ```
 
 Esperado: PASS, 2 testes.
@@ -138,13 +139,13 @@ Esperado: uma linha só, em `ImportErrorBanner.jsx`.
 - [ ] **Step 7: Rodar os testes tocados e commitar**
 
 ```bash
-npx vitest run src/test/importErrorBanner.test.jsx src/test/sheetV2-SheetV2-banners.test.jsx
+npx vitest run src/test/ImportErrorBanner.test.jsx src/test/sheetV2-SheetV2-banners.test.jsx
 ```
 
 Esperado: PASS.
 
 ```bash
-git add src/systems/dnd5e/components/CharacterSheet/ImportErrorBanner.jsx src/test/importErrorBanner.test.jsx src/systems/dnd5e/components/CharacterSheet/SheetTabs.jsx src/systems/dnd5e/components/CharacterSheet/CharacterSheet.jsx
+git add src/systems/dnd5e/components/CharacterSheet/ImportErrorBanner.jsx src/test/ImportErrorBanner.test.jsx src/systems/dnd5e/components/CharacterSheet/SheetTabs.jsx src/systems/dnd5e/components/CharacterSheet/CharacterSheet.jsx
 git commit -m "refactor(ficha): ImportErrorBanner sai do SheetTabs pro proprio modulo
 
 O SheetTabs e do layout v1 e vai ser apagado, mas o ramo do v2 importa o
