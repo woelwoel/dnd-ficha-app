@@ -31,7 +31,7 @@
     "desc": "Você convoca um espírito aberrante, que se manifesta num espaço desocupado a sua vista dentro do alcance, usando o bloco de estatísticas do Espírito Aberrante. Ao conjurar, escolha Observador, Slaad ou Prole Estelar, o que determina algumas características da criatura. Ela é aliada a você e seus companheiros, age logo após seu turno na sua iniciativa e obedece a seus comandos verbais. Espírito Aberrante (Aberração Média): CA 11 + círculo da magia; PV 40 + 10 por círculo acima do 4º; deslocamento 9m (voo 9m só Observador); imune a dano psíquico. Ataques Múltiplos = metade do círculo. Slaad (Garras, 1d10+3+círculo cortante, impede cura); Observador (Raio Ocular à distância, 1d8+3+círculo psíquico); Prole Estelar (Pancada Psíquica 1d8+3+círculo psíquico, e Aura Sussurrante).",
     "higher_level": "Ao usar um espaço de 5º círculo ou superior, use o círculo mais alto sempre que o bloco de estatísticas referenciar o círculo da magia.",
     "source": "tasha",
-    "classes": ["bruxo", "feiticeiro", "mago"]
+    "classes": ["bruxo", "mago"]
   },
   {
     "index": "invocar-construto",
@@ -48,7 +48,7 @@
     "desc": "Você convoca um espírito mecânico, que se manifesta num espaço desocupado a sua vista dentro do alcance, usando o bloco de estatísticas do Espírito Mecânico. Ao conjurar, escolha Argila, Metal ou Pedra. A criatura é aliada a você e seus companheiros, age logo após seu turno na sua iniciativa e obedece a seus comandos verbais. Espírito Mecânico (Construto Médio): CA 13 + círculo da magia; PV 40 + 15 por círculo acima do 3º; resistência a dano venenoso; imune a várias condições. Ataques Múltiplos = metade do círculo. Pancada (1d8+4+círculo contundente). Metal (Corpo Aquecido, 1d10 de fogo a quem o toca); Pedra (Letargia Pétrea, reduz deslocamento/reações); Argila (Surto Furioso, ataca ao sofrer dano).",
     "higher_level": "Ao usar um espaço de 4º círculo ou superior, use o círculo mais alto sempre que o bloco de estatísticas referenciar o círculo da magia.",
     "source": "tasha",
-    "classes": ["artifice", "mago", "feiticeiro"]
+    "classes": ["artifice", "mago"]
   },
   {
     "index": "chicote-eletrico",

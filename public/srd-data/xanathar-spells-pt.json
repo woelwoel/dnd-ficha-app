@@ -983,6 +983,7 @@
     "source": "xanathar",
     "classes": [
       "bardo",
+      "bruxo",
       "feiticeiro",
       "mago"
     ]
@@ -1043,7 +1044,7 @@
     "higher_level": "Quando você conjura esta magia usando um espaço de magia do 6º ou 7º nível, você convoca duas vezes mais demônios. Se você lançá-lo usando um espaço de magia do 8º ou 9º nível, você invoca três vezes mais demônios.",
     "source": "xanathar",
     "classes": [
-      "bardo",
+      "bruxo",
       "mago"
     ]
   },
@@ -1498,7 +1499,7 @@
     "higher_level": "Quando você conjura esta magia usando um espaço de magia de 4º nível ou superior, o dano aumenta em 1d10 para cada nível do espaço de magia acima de 3º.",
     "source": "xanathar",
     "classes": [
-      "bardo",
+      "bruxo",
       "feiticeiro",
       "mago"
     ]

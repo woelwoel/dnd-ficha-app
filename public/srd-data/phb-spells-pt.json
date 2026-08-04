@@ -35,7 +35,7 @@
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
-      "druida"
+      "clerigo"
     ]
   },
   {
@@ -385,7 +385,6 @@
     "source": "PHB-PT",
     "classes": [
       "paladino",
-      "patrulheiro",
       "artifice"
     ]
   },
@@ -425,7 +424,6 @@
     "source": "PHB-PT",
     "classes": [
       "paladino",
-      "patrulheiro",
       "mago",
       "artifice"
     ]
@@ -1826,7 +1824,6 @@
     "source": "PHB-PT",
     "classes": [
       "clerigo",
-      "druida",
       "paladino"
     ]
   },
@@ -2371,8 +2368,7 @@
     "higher_level": "Quando você conjurar essa magia usando um espaço de magia de 2° nível ou superior, o dano extra inicial causado por esse ataque aumenta em 1d6 para cada nível do espaço acima do 1°.",
     "source": "PHB-PT",
     "classes": [
-      "paladino",
-      "patrulheiro"
+      "paladino"
     ]
   },
   {
@@ -2607,8 +2603,7 @@
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
-      "clerigo",
-      "druida"
+      "clerigo"
     ]
   },
   {
@@ -2628,7 +2623,7 @@
     "source": "PHB-PT",
     "classes": [
       "druida",
-      "patrulheiro"
+      "feiticeiro"
     ]
   },
   {
@@ -3295,10 +3290,10 @@
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
+      "bardo",
       "clerigo",
-      "bruxo",
-      "mago",
-      "bardo"
+      "druida",
+      "mago"
     ]
   },
   {
@@ -4854,7 +4849,6 @@
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
-      "clerigo",
       "mago",
       "artifice"
     ]
@@ -5060,8 +5054,7 @@
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
-      "bardo",
-      "clerigo"
+      "bardo"
     ]
   },
   {
@@ -7398,7 +7391,6 @@
     "source": "PHB-PT",
     "classes": [
       "bardo",
-      "clerigo",
       "mago",
       "artifice"
     ]
@@ -7480,9 +7472,8 @@
     "source": "PHB-PT",
     "classes": [
       "bardo",
-      "clerigo",
-      "mago",
-      "patrulheiro"
+      "patrulheiro",
+      "mago"
     ]
   },
   {
@@ -7544,7 +7535,6 @@
     "higher_level": "Dano aumenta 1d8 por nível acima do 4°.",
     "source": "PHB-PT",
     "classes": [
-      "clerigo",
       "druida",
       "feiticeiro",
       "mago"
@@ -7588,7 +7578,6 @@
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
-      "clerigo",
       "druida",
       "feiticeiro",
       "mago"
