@@ -44,13 +44,10 @@ const LISTAS = [
   ['phb', 'arma-magica', ['paladino', 'mago'], 'Arma Mágica — paladino e mago'],
   ['phb', 'arma-elemental', ['paladino'], 'Arma Elemental — só paladino'],
   ['phb', 'identificar', ['bardo', 'mago'], 'Identificar — bardo e mago, não clérigo'],
-  ['phb', 'identificacao', ['bardo', 'mago'], 'idem, na entrada gêmea'],
   ['phb', 'lufada-de-vento', ['druida', 'feiticeiro', 'mago'], 'Lufada de Vento — não é de clérigo'],
-  ['phb', 'rajada-de-vento', ['druida', 'feiticeiro', 'mago'], 'idem, na entrada gêmea'],
-  ['phb', 'dificultar-deteccao', ['bardo', 'patrulheiro', 'mago'], 'Não Detectar — não é de clérigo'],
-  ['phb', 'nao-detectar', ['bardo', 'patrulheiro', 'mago'], 'idem, na entrada gêmea'],
+  ['phb', 'nao-detectar', ['bardo', 'patrulheiro', 'mago'], 'Não Detectar — não é de clérigo'],
   ['phb', 'muralha-de-fogo', ['druida', 'feiticeiro', 'mago'], 'Muralha de Fogo — não é de clérigo'],
-  ['phb', 'parede-de-fogo', ['druida', 'feiticeiro', 'mago'], 'idem, na entrada gêmea'],
+  ['phb', 'mesclar-se-as-rochas', ['clerigo', 'druida'], 'Meld into Stone — clérigo e druida (o SRD corta druida)'],
 
   // --- Xanathar (cap. 3): as três de 3º nível eram do bruxo, não do bardo ---
   ['xanathar', 'infestar-de-inimigos', ['bardo', 'bruxo', 'feiticeiro', 'mago'], 'XGE — bardo, bruxo, feiticeiro, mago'],
@@ -75,5 +72,69 @@ describe('listas de classe do catálogo de magias', () => {
       .filter(s => new Set(s.classes ?? []).size !== (s.classes ?? []).length)
       .map(s => s.index)
     expect(repetidas).toEqual([])
+  })
+})
+
+/**
+ * O catálogo do PHB nasceu de duas passadas de importação e ficou com 30 magias
+ * repetidas sob dois índices (uma tradução integral e outra condensada). Em 8
+ * pares os gêmeos discordavam em campo de REGRA — alcance, escola, ritual,
+ * tempo de conjuração — então qual das duas o jogador escolhia mudava o efeito
+ * na mesa. Os gêmeos foram apagados em 2026-08-04; esta lista impede que
+ * voltem.
+ */
+const GEMEOS_APAGADOS = [
+  'identificacao', 'auto-disfarce', 'encanto-pessoal', 'nevoa-obscurecente', 'campo-de-espinhos',
+  'passos-sem-pegadas', 'rajada-de-vento', 'barreira-de-vento', 'convocar-relampagos',
+  'ampliar-plantas', 'nevasca', 'manto-do-cruzado', 'sinal-de-esperanca', 'espiritos-guardioes',
+  'dificultar-deteccao', 'controlar-a-agua', 'liberdade-de-movimento', 'polimorfismo',
+  'parede-de-fogo', 'sentinela-da-morte', 'chama-radiante', 'escrutinio', 'segurar-monstro',
+  'parede-de-pedra', 'ressuscitar', 'lenda', 'onda-devastadora', 'vinha-esmagadora', 'reflexos',
+  'favor-divino',
+]
+
+describe('catálogo sem magias duplicadas', () => {
+  it('nenhum gêmeo apagado voltou', () => {
+    const idx = new Set(Object.values(FONTES).flat().map(s => s.index))
+    expect(GEMEOS_APAGADOS.filter(i => idx.has(i))).toEqual([])
+  })
+
+  it('nenhum índice aparece em duas fontes', () => {
+    const vistos = new Map()
+    for (const [fonte, lista] of Object.entries(FONTES)) {
+      for (const s of lista) vistos.set(s.index, [...(vistos.get(s.index) ?? []), fonte])
+    }
+    expect([...vistos].filter(([, f]) => f.length > 1).map(([i]) => i)).toEqual([])
+  })
+
+  it('nenhum nome de magia aparece duas vezes', () => {
+    const nomes = Object.values(FONTES).flat().map(s => s.name.toLowerCase())
+    expect(nomes.filter((n, i) => nomes.indexOf(n) !== i)).toEqual([])
+  })
+})
+
+/**
+ * Lista de magias do Artífice (Caldeirão de Tasha, cap. 1). Ela cruza as três
+ * fontes: 23 truques, 18 de 1º, 21 de 2º, 15 de 3º, 11 de 4º e 7 de 5º círculo.
+ */
+describe('lista de magias do Artífice', () => {
+  const doArtifice = Object.values(FONTES).flat().filter(s => (s.classes ?? []).includes('artifice'))
+
+  it('tem 95 magias, distribuídas como o livro', () => {
+    const porCirculo = doArtifice.reduce((a, s) => ({ ...a, [s.level]: (a[s.level] ?? 0) + 1 }), {})
+    expect(porCirculo).toEqual({ 0: 23, 1: 18, 2: 21, 3: 15, 4: 11, 5: 7 })
+    expect(doArtifice).toHaveLength(95)
+  })
+
+  it('não passa do 5º círculo — o Artífice não tem espaços acima disso', () => {
+    expect(doArtifice.filter(s => s.level > 5).map(s => s.index)).toEqual([])
+  })
+
+  it('inclui as magias do Xanathar que só o Caldeirão concede ao Artífice', () => {
+    const idx = doArtifice.map(s => s.index)
+    for (const i of ['absorver-elementos', 'catapulta', 'laco', 'pirotecnia', 'escrita-celeste',
+      'flechas-flamejantes', 'transmutar-pedra', 'fortalecimento-de-pericia']) {
+      expect(idx, `${i} deveria estar na lista do artífice`).toContain(i)
+    }
   })
 })

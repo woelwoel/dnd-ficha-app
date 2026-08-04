@@ -31,7 +31,7 @@ const PALADIN_OATH_SPELLS = {
     ['protecao-contra-o-bem-e-mal', 'santuario'],          // 3
     ['restauracao-menor',           'zona-da-verdade'],    // 5
     ['farol-de-esperanca',          'dissipar-magia'],     // 9
-    ['liberdade-de-movimento',      'guardiao-da-fe'],     // 13
+    ['movimentacao-livre',      'guardiao-da-fe'],     // 13
     ['comunhao',                    'coluna-de-chamas'],   // 17 (Flame Strike)
   ],
   // Juramento dos Anciões (PHB p.86)
@@ -48,7 +48,7 @@ const PALADIN_OATH_SPELLS = {
     ['imobilizar-pessoa', 'passo-nebuloso'],            // 5 (Hold Person, Misty Step)
     ['velocidade',        'protecao-contra-energia'],   // 9 (Haste)
     ['banimento',         'porta-dimensional'],         // 13
-    ['imobilizar-monstro','escrutinio'],                // 17 (Hold Monster, Scrying)
+    ['imobilizar-monstro','videncia'],                // 17 (Hold Monster, Scrying)
   ],
   // Juramento da Conquista (Xanathar's p.51) — source: xanathar
   conquista: [
@@ -71,7 +71,7 @@ const PALADIN_OATH_SPELLS = {
     ['raio-guiador',         'heroismo'],                  // 3 (Guiding Bolt)
     ['aprimorar-habilidade', 'arma-magica'],               // 5 (Enhance Ability)
     ['velocidade',           'protecao-contra-energia'],   // 9 (Haste)
-    ['compulsao',            'liberdade-de-movimento'],    // 13 (Compulsion, Freedom of Movement)
+    ['compulsao',            'movimentacao-livre'],    // 13 (Compulsion, Freedom of Movement)
     ['comunhao',             'coluna-de-chamas'],          // 17 (Commune, Flame Strike)
   ],
   // Juramento da Vigilância — Watchers (Tasha's p.51) — source: tasha
@@ -90,43 +90,43 @@ const DRUID_LAND_SPELLS = {
   artico: [
     ['imobilizar-pessoa',       'crescer-espinhos'],       // 3 (Hold Person, Spike Growth)
     ['tempestade-de-neve',      'lentidao'],               // 5 (Sleet Storm, Slow)
-    ['liberdade-de-movimento',  'tempestade-de-gelo'],     // 7
+    ['movimentacao-livre',  'tempestade-de-gelo'],     // 7
     ['comunhao-com-a-natureza', 'cone-de-frio'],           // 9
   ],
   costa: [
     ['imagem-espelhada',       'passo-nebuloso'],          // 3 (Mirror Image, Misty Step)
     ['respirar-na-agua',       'andar-na-agua'],           // 5
-    ['controlar-agua',         'liberdade-de-movimento'],  // 7
-    ['conjurar-elemental',     'escrutinio'],              // 9
+    ['controlar-agua',         'movimentacao-livre'],  // 7
+    ['conjurar-elemental',     'videncia'],              // 9
   ],
   deserto: [
     ['nublar',                'silencio'],                 // 3 (Blur, Silence)
     ['criar-alimentos',       'protecao-contra-energia'],  // 5
     ['malogro',               'terreno-alucinogeno'],      // 7 (Blight, Hall. Terrain)
-    ['praga-de-insetos',      'parede-de-pedra'],          // 9
+    ['praga-de-insetos',      'muralha-de-pedra'],          // 9
   ],
   floresta: [
     ['pele-de-arvore',         'patas-de-aranha'],         // 3 (Barkskin, Spider Climb)
     ['chamada-do-relampago',   'crescimento-de-planta'],   // 5
-    ['adivinhacao',            'liberdade-de-movimento'],  // 7
+    ['adivinhacao',            'movimentacao-livre'],  // 7
     ['comunhao-com-a-natureza','caminhar-em-arvores'],     // 9 (Tree Stride)
   ],
   montanha: [
     ['patas-de-aranha',     'crescer-espinhos'],           // 3 (Spider Climb, Spike Growth)
-    ['relampago',           'moldar-rochas'],              // 5 (Lightning Bolt; Meld Into Stone faltando no SRD-PT, usa Stone Shape como proxy)
+    ['relampago',           'mesclar-se-as-rochas'],       // 5 (Lightning Bolt, Meld Into Stone)
     ['moldar-rochas',       'pele-de-pedra'],              // 7 (Stone Shape, Stoneskin)
-    ['criar-passagem',      'parede-de-pedra'],            // 9 (Passwall, Wall of Stone)
+    ['criar-passagem',      'muralha-de-pedra'],            // 9 (Passwall, Wall of Stone)
   ],
   pantano: [
     ['escuridao',                'flecha-acida-de-melf'],  // 3 (Darkness, Melf's Acid Arrow)
     ['andar-na-agua',            'nevoa-fetida'],          // 5 (Water Walk, Stinking Cloud)
-    ['liberdade-de-movimento',   'localizar-criatura'],    // 7
-    ['praga-de-insetos',         'escrutinio'],            // 9
+    ['movimentacao-livre',   'localizar-criatura'],    // 7
+    ['praga-de-insetos',         'videncia'],            // 9
   ],
   pradaria: [
     ['invisibilidade',         'passar-sem-rastro'],       // 3
     ['luz-do-dia',             'velocidade'],              // 5 (Daylight, Haste)
-    ['adivinhacao',            'liberdade-de-movimento'],  // 7
+    ['adivinhacao',            'movimentacao-livre'],  // 7
     ['sonho',                  'praga-de-insetos'],        // 9 (Dream, Insect Plague)
   ],
   submontano: [
@@ -221,7 +221,7 @@ const WARLOCK_PATRON_SPELLS = {
   insondavel: [
     ['criar-ou-destruir-agua', 'onda-trovejante'],   // 1
     ['lufada-de-vento',        'silencio'],           // 3
-    ['nevasca',                'relampago'],          // 5 (Sleet Storm, Lightning Bolt)
+    ['tempestade-de-neve',                'relampago'],          // 5 (Sleet Storm, Lightning Bolt)
     ['controlar-agua',         'conjurar-elemental'], // 7 (Invocar Elemental → Conjure Elemental, água)
     ['cone-de-frio',           'mao-de-bigby'],       // 9 (Cone of Cold, Bigby's Hand)
   ],
@@ -248,7 +248,7 @@ const GENIE_KIND = {
   ifriti: [['maos-flamejantes'], ['raio-ardente'], ['bola-de-fogo'], ['escudo-de-fogo'], ['coluna-de-chamas']],
   // Marid: 1º nublar (Fog Cloud), 2º Embaçar (Blur — OMITIDA, ausente do
   // catálogo PT), 3º nevasca, 4º controlar água, 5º cone de frio.
-  marid:  [['nublar'], [], ['nevasca'], ['controlar-agua'], ['cone-de-frio']],
+  marid:  [['nublar'], [], ['tempestade-de-neve'], ['controlar-agua'], ['cone-de-frio']],
 }
 
 /* ── Origens de Feiticeiro de Tasha (p.46) — tiers 1/3/5/7/9 ────────
@@ -339,7 +339,7 @@ const ARTIFICER_SUBCLASS_SPELLS = {
   // Armeiro (Tasha's p.14-15)
   armeiro: [
     ['misseis-magicos',   'onda-trovejante'],        // 3
-    ['reflexos',          'despedacar'],              // 5
+    ['imagem-espelhada',          'despedacar'],              // 5
     ['padrao-hipnotico',  'relampago'],               // 9
     ['escudo-de-fogo',    'invisibilidade-maior'],    // 13 (Escudo Ardente = Fire Shield)
     ['criar-passagem',    'muralha-de-energia'],      // 17

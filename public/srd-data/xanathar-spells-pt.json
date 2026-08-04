@@ -38,7 +38,8 @@
       "druida",
       "feiticeiro",
       "mago",
-      "patrulheiro"
+      "patrulheiro",
+      "artifice"
     ]
   },
   {
@@ -179,7 +180,8 @@
     "source": "xanathar",
     "classes": [
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -344,7 +346,8 @@
       "bruxo",
       "druida",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -404,7 +407,8 @@
     "classes": [
       "bruxo",
       "druida",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -570,7 +574,8 @@
     "classes": [
       "bardo",
       "druida",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -777,7 +782,8 @@
       "druida",
       "feiticeiro",
       "mago",
-      "patrulheiro"
+      "patrulheiro",
+      "artifice"
     ]
   },
   {
@@ -798,7 +804,8 @@
     "classes": [
       "bardo",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -879,7 +886,8 @@
       "bruxo",
       "druida",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -1105,7 +1113,8 @@
     "classes": [
       "druida",
       "mago",
-      "patrulheiro"
+      "patrulheiro",
+      "artifice"
     ]
   },
   {
@@ -1521,7 +1530,8 @@
     "source": "xanathar",
     "classes": [
       "bruxo",
-      "druida"
+      "druida",
+      "artifice"
     ]
   },
   {
@@ -1540,7 +1550,8 @@
     "higher_level": "Quando você conjura essa magia usando um espaço de magia de 4º nível ou superior, você pode animar dois objetos adicionais para cada nível do espaço de magia acima do 3º.",
     "source": "xanathar",
     "classes": [
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -1562,7 +1573,8 @@
       "bruxo",
       "druida",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -1583,7 +1595,8 @@
     "classes": [
       "bardo",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -1782,7 +1795,8 @@
     "classes": [
       "bardo",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -1860,7 +1874,8 @@
     "source": "xanathar",
     "classes": [
       "druida",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {

@@ -14,7 +14,11 @@
     "desc": "Você direciona um espinho desorientador de energia psíquica para a mente de uma criatura que possa ver dentro do alcance. O alvo deve ser bem-sucedido em uma salvaguarda de Inteligência ou sofre 1d6 de dano psíquico e subtrai 1d4 da próxima salvaguarda que realizar antes do final do seu próximo turno.",
     "higher_level": "O dano aumenta em 1d6 ao alcançar o 5º nível (2d6), o 11º nível (3d6) e o 17º nível (4d6).",
     "source": "tasha",
-    "classes": ["feiticeiro", "bruxo", "mago"]
+    "classes": [
+      "feiticeiro",
+      "bruxo",
+      "mago"
+    ]
   },
   {
     "index": "invocar-aberracao",
@@ -31,7 +35,10 @@
     "desc": "Você convoca um espírito aberrante, que se manifesta num espaço desocupado a sua vista dentro do alcance, usando o bloco de estatísticas do Espírito Aberrante. Ao conjurar, escolha Observador, Slaad ou Prole Estelar, o que determina algumas características da criatura. Ela é aliada a você e seus companheiros, age logo após seu turno na sua iniciativa e obedece a seus comandos verbais. Espírito Aberrante (Aberração Média): CA 11 + círculo da magia; PV 40 + 10 por círculo acima do 4º; deslocamento 9m (voo 9m só Observador); imune a dano psíquico. Ataques Múltiplos = metade do círculo. Slaad (Garras, 1d10+3+círculo cortante, impede cura); Observador (Raio Ocular à distância, 1d8+3+círculo psíquico); Prole Estelar (Pancada Psíquica 1d8+3+círculo psíquico, e Aura Sussurrante).",
     "higher_level": "Ao usar um espaço de 5º círculo ou superior, use o círculo mais alto sempre que o bloco de estatísticas referenciar o círculo da magia.",
     "source": "tasha",
-    "classes": ["bruxo", "mago"]
+    "classes": [
+      "bruxo",
+      "mago"
+    ]
   },
   {
     "index": "invocar-construto",
@@ -48,7 +55,10 @@
     "desc": "Você convoca um espírito mecânico, que se manifesta num espaço desocupado a sua vista dentro do alcance, usando o bloco de estatísticas do Espírito Mecânico. Ao conjurar, escolha Argila, Metal ou Pedra. A criatura é aliada a você e seus companheiros, age logo após seu turno na sua iniciativa e obedece a seus comandos verbais. Espírito Mecânico (Construto Médio): CA 13 + círculo da magia; PV 40 + 15 por círculo acima do 3º; resistência a dano venenoso; imune a várias condições. Ataques Múltiplos = metade do círculo. Pancada (1d8+4+círculo contundente). Metal (Corpo Aquecido, 1d10 de fogo a quem o toca); Pedra (Letargia Pétrea, reduz deslocamento/reações); Argila (Surto Furioso, ataca ao sofrer dano).",
     "higher_level": "Ao usar um espaço de 4º círculo ou superior, use o círculo mais alto sempre que o bloco de estatísticas referenciar o círculo da magia.",
     "source": "tasha",
-    "classes": ["artifice", "mago"]
+    "classes": [
+      "artifice",
+      "mago"
+    ]
   },
   {
     "index": "chicote-eletrico",
@@ -65,7 +75,12 @@
     "desc": "Você cria um chicote de energia elétrica que golpeia uma criatura à sua escolha, à sua vista, a até 4,5m de você. O alvo deve ser bem-sucedido numa salvaguarda de Força ou é puxado até 3m em linha reta na sua direção e, se ficar a até 1,5m de você, sofre 1d8 de dano elétrico.",
     "higher_level": "O dano aumenta em 1d8 ao alcançar o 5º nível (2d8), o 11º nível (3d8) e o 17º nível (4d8).",
     "source": "tasha",
-    "classes": ["artifice", "bruxo", "feiticeiro", "mago"]
+    "classes": [
+      "artifice",
+      "bruxo",
+      "feiticeiro",
+      "mago"
+    ]
   },
   {
     "index": "lamina-da-chama-esverdeada",
@@ -82,7 +97,12 @@
     "desc": "Você brande a arma usada na conjuração e faz um ataque corpo a corpo contra uma criatura a até 1,5m de você. Em um acerto, o alvo sofre os efeitos normais do ataque da arma e uma chama verde salta dele para outra criatura à sua escolha, à sua vista, a até 1,5m do primeiro alvo, causando dano ígneo igual ao seu modificador de atributo de conjuração.",
     "higher_level": "No 5º nível, o ataque com arma causa +1d8 de dano ígneo e o salto vira 1d8 + seu modificador de conjuração. Ambos aumentam em 1d8 no 11º nível (2d8 e 2d8) e no 17º nível (3d8 e 3d8).",
     "source": "tasha",
-    "classes": ["artifice", "bruxo", "feiticeiro", "mago"]
+    "classes": [
+      "artifice",
+      "bruxo",
+      "feiticeiro",
+      "mago"
+    ]
   },
   {
     "index": "lamina-estrondosa",
@@ -99,7 +119,12 @@
     "desc": "Você brande a arma usada na conjuração e faz um ataque corpo a corpo contra uma criatura a até 1,5m de você. Em um acerto, o alvo sofre os efeitos normais do ataque da arma e fica envolto em energia estrondosa até o começo do seu próximo turno. Se o alvo se mover 1,5m ou mais voluntariamente, sofre 1d8 de dano trovejante e o efeito termina.",
     "higher_level": "No 5º nível, o ataque com arma causa +1d8 de dano trovejante e o dano por movimento vira 2d8. Ambos aumentam em 1d8 no 11º nível (2d8 e 3d8) e no 17º nível (3d8 e 4d8).",
     "source": "tasha",
-    "classes": ["artifice", "bruxo", "feiticeiro", "mago"]
+    "classes": [
+      "artifice",
+      "bruxo",
+      "feiticeiro",
+      "mago"
+    ]
   },
   {
     "index": "rompante-de-espadas",
@@ -116,7 +141,12 @@
     "desc": "Você cria um círculo momentâneo de lâminas espectrais que giram ao seu redor. Cada criatura a até 1,5m de você (exceto você) deve ser bem-sucedida numa salvaguarda de Destreza ou sofre 1d6 de dano de energia.",
     "higher_level": "O dano aumenta em 1d6 ao alcançar o 5º nível (2d6), o 11º nível (3d6) e o 17º nível (4d6).",
     "source": "tasha",
-    "classes": ["artifice", "bruxo", "feiticeiro", "mago"]
+    "classes": [
+      "artifice",
+      "bruxo",
+      "feiticeiro",
+      "mago"
+    ]
   },
   {
     "index": "beberagem-caustica",
@@ -133,7 +163,11 @@
     "desc": "Um jorro de ácido emana de você numa linha de 9m de comprimento e 1,5m de largura, numa direção à sua escolha. Cada criatura na linha deve ser bem-sucedida numa salvaguarda de Destreza ou fica coberta de ácido pela duração da magia ou até usar sua ação para removê-lo de si ou de outra criatura. Uma criatura coberta sofre 2d4 de dano ácido no começo de cada turno dela.",
     "higher_level": "Ao usar um espaço de 2º círculo ou superior, o dano inicial aumenta em 2d4 para cada círculo acima do 1º.",
     "source": "tasha",
-    "classes": ["artifice", "feiticeiro", "mago"]
+    "classes": [
+      "artifice",
+      "feiticeiro",
+      "mago"
+    ]
   },
   {
     "index": "chicote-mental",
@@ -150,7 +184,10 @@
     "desc": "Você enlaça psiquicamente uma criatura à sua vista dentro do alcance. Ela deve ser bem-sucedida numa salvaguarda de Inteligência. Em caso de falha, sofre 3d6 de dano psíquico e não pode realizar reações até o fim do próximo turno dela; além disso, no próximo turno dela ela só pode fazer uma coisa entre se mover, realizar uma ação ou uma ação bônus. Num sucesso, sofre metade do dano e nenhum outro efeito.",
     "higher_level": "Ao usar um espaço de 3º círculo ou superior, atinge um alvo adicional para cada círculo acima do 2º (os alvos devem estar a até 9m entre si).",
     "source": "tasha",
-    "classes": ["feiticeiro", "mago"]
+    "classes": [
+      "feiticeiro",
+      "mago"
+    ]
   },
   {
     "index": "fortaleza-intelectual",
@@ -167,7 +204,13 @@
     "desc": "Pela duração da magia, você ou uma criatura voluntária à sua vista dentro do alcance adquire resistência a dano psíquico e vantagem em salvaguardas de Inteligência, Sabedoria e Carisma.",
     "higher_level": "Ao usar um espaço de 4º círculo ou superior, atinge um alvo adicional para cada círculo acima do 3º (os alvos devem estar a até 9m entre si).",
     "source": "tasha",
-    "classes": ["artifice", "bardo", "bruxo", "feiticeiro", "mago"]
+    "classes": [
+      "artifice",
+      "bardo",
+      "bruxo",
+      "feiticeiro",
+      "mago"
+    ]
   },
   {
     "index": "mortalha-espiritual",
@@ -184,7 +227,12 @@
     "desc": "Você convoca espíritos dos mortos, que flutuam ao seu redor pela duração da magia, intangíveis e invulneráveis. Até o fim da magia, qualquer ataque seu causa +1d8 de dano (gélido, necrótico ou radiante, à sua escolha) ao acertar uma criatura a até 3m de você, e essa criatura não pode recuperar PV até o início do seu próximo turno. Além disso, qualquer criatura à sua escolha em seu campo de visão que comece o turno a até 3m de você tem o deslocamento reduzido em 3m.",
     "higher_level": "Ao usar um espaço de 4º círculo ou superior, o dano extra aumenta em 1d8 para cada 2 círculos acima do 3º.",
     "source": "tasha",
-    "classes": ["bruxo", "clerigo", "mago", "paladino"]
+    "classes": [
+      "bruxo",
+      "clerigo",
+      "mago",
+      "paladino"
+    ]
   },
   {
     "index": "disfarce-sobrenatural",
@@ -201,7 +249,11 @@
     "desc": "Você extrai a magia dos Planos Inferiores ou Superiores (à sua escolha) e se transforma, ganhando até o fim da magia: imunidade a dano ígneo e venenoso (Inferiores) ou necrótico e radiante (Superiores); imunidade à condição envenenado (Inferiores) ou enfeitiçado (Superiores); asas espectrais com voo 12m; +2 na CA; todos os ataques com arma viram mágicos e podem usar seu atributo de conjuração no lugar de Força/Destreza; e um ataque adicional na ação de Ataque (não acumula com Ataque Extra).",
     "higher_level": "",
     "source": "tasha",
-    "classes": ["bruxo", "feiticeiro", "mago"]
+    "classes": [
+      "bruxo",
+      "feiticeiro",
+      "mago"
+    ]
   },
   {
     "index": "sonho-do-veu-azul",
@@ -218,7 +270,12 @@
     "desc": "Você e até oito criaturas voluntárias no alcance caem inconscientes pela duração e vivenciam visões de outro mundo do Plano Material (Oerth, Toril, Krynn, Eberron…). Se a magia durar por completo, todos abrem uma misteriosa cortina azul e são teletransportados a um local seguro a até 1,5 km de onde o item de destino foi criado (ou de onde uma criatura afetada nasceu naquele mundo). Conjurá-la exige um item mágico originário do mundo desejado. Se uma criatura sofrer dano, a magia termina para ela (sem teleporte); se você sofrer dano, termina para todos.",
     "higher_level": "",
     "source": "tasha",
-    "classes": ["bardo", "bruxo", "feiticeiro", "mago"]
+    "classes": [
+      "bardo",
+      "bruxo",
+      "feiticeiro",
+      "mago"
+    ]
   },
   {
     "index": "lamina-do-desastre",
@@ -235,7 +292,11 @@
     "desc": "Você cria um rasgo planar em forma de lâmina de ~1,5m num espaço desocupado à vista dentro do alcance. Ao conjurar — e depois com uma ação bônus a cada turno, podendo antes mover a lâmina até 9m — você faz até dois ataques corpo a corpo com magia contra criaturas, objetos soltos ou estruturas a até 1,5m da lâmina. Em um acerto, 4d12 de dano de energia; o ataque é crítico com 18+ no d20, somando mais 8d12 (total 12d12). A lâmina atravessa inofensivamente qualquer barreira, inclusive muralha de energia.",
     "higher_level": "",
     "source": "tasha",
-    "classes": ["bruxo", "feiticeiro", "mago"]
+    "classes": [
+      "bruxo",
+      "feiticeiro",
+      "mago"
+    ]
   },
   {
     "index": "invocar-fera",
@@ -252,7 +313,10 @@
     "desc": "Você convoca um espírito feral, que se manifesta num espaço desocupado à sua vista dentro do alcance, usando o bloco de estatísticas do Espírito Feral. Ao conjurar, escolha um ambiente: Ar, Terra ou Água — define algumas características. A criatura é aliada a você e seus companheiros, age logo após seu turno na sua iniciativa e obedece a seus comandos verbais. Espírito Feral (Fera): CA 11 + círculo da magia; PV 20 (Ar) ou 30 (Terra e Água) + 5 por círculo acima do 2º; deslocamento 9m (voo 18m só Ar, escalada 9m só Terra, natação 9m só Água). Ataques Múltiplos = metade do círculo. Mandíbulas (1d8+4+círculo perfurante). Ar tem Sobrevoo; Terra/Água têm Tática de Matilha.",
     "higher_level": "Ao usar um espaço de 3º círculo ou superior, use o círculo mais alto sempre que o bloco de estatísticas referenciar o círculo da magia.",
     "source": "tasha",
-    "classes": ["druida", "patrulheiro"]
+    "classes": [
+      "druida",
+      "patrulheiro"
+    ]
   },
   {
     "index": "invocar-feerico",
@@ -269,7 +333,12 @@
     "desc": "Você convoca um espírito feérico, que se manifesta num espaço desocupado à sua vista dentro do alcance, usando o bloco de estatísticas do Espírito Feérico. Ao conjurar, escolha um humor: Irritadiço, Jubiloso ou Brincalhão. A criatura é aliada a você e seus companheiros, age logo após seu turno na sua iniciativa e obedece a seus comandos verbais. Espírito Feérico (Feérico Pequeno): CA 12 + círculo da magia; PV 30 + 10 por círculo acima do 3º; deslocamento 12m. Ataques Múltiplos = metade do círculo. Espada Curta (1d6+6+círculo de energia). Ação bônus Passo Feérico (teleporte 9m + efeito do humor: Irritadiço = vantagem no próximo ataque; Jubiloso = enfeitiça um alvo a 3m; Brincalhão = cria escuridão mágica num cubo de 1,5m).",
     "higher_level": "Ao usar um espaço de 4º círculo ou superior, use o círculo mais alto sempre que o bloco de estatísticas referenciar o círculo da magia.",
     "source": "tasha",
-    "classes": ["bruxo", "druida", "patrulheiro", "mago"]
+    "classes": [
+      "bruxo",
+      "druida",
+      "patrulheiro",
+      "mago"
+    ]
   },
   {
     "index": "invocar-morto-vivo",
@@ -286,7 +355,10 @@
     "desc": "Você convoca um espírito morto-vivo, que se manifesta num espaço desocupado à sua vista dentro do alcance, usando o bloco de estatísticas do Espírito Morto-Vivo. Ao conjurar, escolha a forma: Fantasmal, Pútrido ou Esquelético. A criatura é aliada a você e seus companheiros, age logo após seu turno na sua iniciativa e obedece a seus comandos verbais. Espírito Morto-Vivo (Morto-Vivo Médio): CA 11 + círculo da magia; PV 30 (Fantasmal/Pútrido) ou 20 (Esquelético) + 10 por círculo acima do 3º; deslocamento 9m (voo 12m só Fantasmal); imune a necrótico e venenoso. Ataques Múltiplos = metade do círculo. Fantasmal (Toque Mortal 1d10+3+círculo necrótico + medo); Esquelético (Virote do Túmulo à distância 2d4+3+círculo necrótico); Pútrido (Garra Apodrecida 1d6+3+círculo cortante, pode paralisar alvo envenenado).",
     "higher_level": "Ao usar um espaço de 4º círculo ou superior, use o círculo mais alto sempre que o bloco de estatísticas referenciar o círculo da magia.",
     "source": "tasha",
-    "classes": ["bruxo", "mago"]
+    "classes": [
+      "bruxo",
+      "mago"
+    ]
   },
   {
     "index": "invocar-prole-sombria",
@@ -303,7 +375,10 @@
     "desc": "Você convoca um espírito sombrio, que se manifesta num espaço desocupado à sua vista dentro do alcance, usando o bloco de estatísticas do Espírito das Sombras. Ao conjurar, escolha uma emoção: Fúria, Desespero ou Medo. A criatura é aliada a você e seus companheiros, age logo após seu turno na sua iniciativa e obedece a seus comandos verbais. Espírito das Sombras (Monstruosidade Média): CA 11 + círculo da magia; PV 35 + 15 por círculo acima do 3º; deslocamento 12m; imune a necrótico e à condição amedrontado. Ataques Múltiplos = metade do círculo. Rasgo Congelante (1d12+3+círculo gélido); Grito Pavoroso (1/dia, amedronta a 9m). Fúria = vantagem contra amedrontados; Desespero = reduz deslocamento alheio; Medo = Furtividade Sombria.",
     "higher_level": "Ao usar um espaço de 4º círculo ou superior, use o círculo mais alto sempre que o bloco de estatísticas referenciar o círculo da magia.",
     "source": "tasha",
-    "classes": ["bruxo", "mago"]
+    "classes": [
+      "bruxo",
+      "mago"
+    ]
   },
   {
     "index": "invocar-elemental",
@@ -320,7 +395,11 @@
     "desc": "Você convoca um espírito elemental, que se manifesta num espaço desocupado à sua vista dentro do alcance, usando o bloco de estatísticas do Espírito Elemental. Ao conjurar, escolha um elemento: Ar, Água, Terra ou Fogo. A criatura é aliada a você e seus companheiros, age logo após seu turno na sua iniciativa e obedece a seus comandos verbais. Espírito Elemental (Elemental Médio): CA 11 + círculo da magia; PV 50 + 10 por círculo acima do 4º; deslocamento 12m (voo 12m Ar, escavação 12m Terra, natação 12m Água); imune a venenoso (e ígneo só Fogo). Ataques Múltiplos = metade do círculo. Pancada (1d10+4+círculo contundente, ou ígneo se Fogo). Água/Ar/Fogo têm Forma Amorfa.",
     "higher_level": "Ao usar um espaço de 5º círculo ou superior, use o círculo mais alto sempre que o bloco de estatísticas referenciar o círculo da magia.",
     "source": "tasha",
-    "classes": ["druida", "patrulheiro", "mago"]
+    "classes": [
+      "druida",
+      "patrulheiro",
+      "mago"
+    ]
   },
   {
     "index": "invocar-celestial",
@@ -337,7 +416,10 @@
     "desc": "Você convoca um espírito celestial, que se manifesta num espaço desocupado à sua vista dentro do alcance, usando o bloco de estatísticas do Espírito Celestial. Ao conjurar, escolha Vingador ou Defensor — define o ataque da criatura. Ela é aliada a você e seus companheiros, age logo após seu turno na sua iniciativa e obedece a seus comandos verbais. Espírito Celestial (Celestial Grande): CA 11 + círculo da magia (+2 só Defensor); PV 40 + 10 por círculo acima do 5º; deslocamento 9m, voo 12m; resistência a radiante; imune a amedrontado e enfeitiçado. Ataques Múltiplos = metade do círculo. Vingador (Disparo Radiante à distância 2d6+2+círculo radiante); Defensor (Golpe Radiante 1d10+3+círculo radiante + concede PV temporários). Toque Curativo 1/dia (cura 2d8+círculo).",
     "higher_level": "Ao usar um espaço de 6º círculo ou superior, use o círculo mais alto sempre que o bloco de estatísticas referenciar o círculo da magia.",
     "source": "tasha",
-    "classes": ["clerigo", "paladino"]
+    "classes": [
+      "clerigo",
+      "paladino"
+    ]
   },
   {
     "index": "invocar-corruptor",
@@ -354,6 +436,9 @@
     "desc": "Você convoca um espírito corruptivo, que se manifesta num espaço desocupado à sua vista dentro do alcance, usando o bloco de estatísticas do Espírito Corruptivo. Ao conjurar, escolha Diabo, Demônio ou Yugoloth. A criatura é aliada a você e seus companheiros, age logo após seu turno na sua iniciativa e obedece a seus comandos verbais. Espírito Corruptivo (Corruptor Grande): CA 12 + círculo da magia; PV 50 (Demônio) / 40 (Diabo) / 60 (Yugoloth) + 15 por círculo acima do 6º; deslocamento 12m (escalada 12m Demônio, voo 12m Diabo); resistência a ígneo, imune a venenoso; Resistência à Magia. Ataques Múltiplos = metade do círculo. Demônio (Mordida 1d12+3+círculo necrótico, Espasmos de Morte ao morrer); Yugoloth (Garras 1d8+3+círculo cortante + teleporte 9m); Diabo (Arremessar Chamas à distância 2d6+3+círculo ígneo).",
     "higher_level": "Ao usar um espaço de 7º círculo ou superior, use o círculo mais alto sempre que o bloco de estatísticas referenciar o círculo da magia.",
     "source": "tasha",
-    "classes": ["bruxo", "mago"]
+    "classes": [
+      "bruxo",
+      "mago"
+    ]
   }
 ]

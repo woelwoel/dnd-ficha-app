@@ -55,7 +55,8 @@
     "source": "PHB-PT",
     "classes": [
       "clerigo",
-      "paladino"
+      "paladino",
+      "artifice"
     ]
   },
   {
@@ -202,27 +203,6 @@
     ]
   },
   {
-    "index": "ampliar-plantas",
-    "name": "Ampliar Plantas",
-    "level": 3,
-    "school": "transmutação",
-    "ritual": false,
-    "casting_time": "1 ação ou 8 horas",
-    "range": "45 metros",
-    "components": "V, S",
-    "material": "",
-    "duration": "Instantânea",
-    "concentration": false,
-    "desc": "Essa magia canaliza vitalidade nas plantas dentro de uma área especifica. Existem dois usos possíveis para essa magia, concedendo ou benefícios imediatos ou a longo prazo. Se você conjurar essa magia usando 1 ação, escolha um ponto dentro do alcance. Todas as plantas normais num raio de 30 metros centrado no ponto, tornam-se espessas e carregadas. Uma criatura se movendo na área deve gastar 6 metros de movimento para cada 1,5 metro que se mover. Você pode excluir uma ou mais áreas de qualquer tamanho, dentro da área da magia, para não ser afetada. Se você conjurar essa magia ao longo de 8 horas, você fertiliza a terra. Todas as plantas num raio de 800 metros, centrado no ponto dentro do alcance, ficam enriquecidas por 1 ano. As plantas fornecerão o dobro da quantidade normal de comida quando colhidas.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "bardo",
-      "druida",
-      "patrulheiro"
-    ]
-  },
-  {
     "index": "andar-na-agua",
     "name": "Andar Na Água",
     "level": 3,
@@ -241,7 +221,8 @@
       "clerigo",
       "druida",
       "patrulheiro",
-      "feiticeiro"
+      "feiticeiro",
+      "artifice"
     ]
   },
   {
@@ -325,7 +306,8 @@
       "bardo",
       "clerigo",
       "druida",
-      "feiticeiro"
+      "feiticeiro",
+      "artifice"
     ]
   },
   {
@@ -1545,7 +1527,8 @@
       "bardo",
       "druida",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -1628,27 +1611,6 @@
     ]
   },
   {
-    "index": "controlar-a-agua",
-    "name": "Controlar A Água",
-    "level": 4,
-    "school": "transmutação",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "90 metros",
-    "components": "V, S, M",
-    "material": "uma gota de água e uma pitada de poeira",
-    "duration": "Concentração, até 10 minutos",
-    "concentration": true,
-    "desc": "Até o fim da magia, você controla qualquer corpo de água dentro da área que você escolher, que é um cubo de 30 metros quadrados. Você pode escolher dentre quaisquer dos efeitos seguintes, quando você conjurar essa magia. Com uma ação no seu turno, você pode repetir o mesmo efeito ou escolher um diferente. Inundação. Você faz com que o nível da água de toda área afetada suba até 6 metros. Se a área incluir uma margem, a inundação ira transbordar para a terra seca. Se você escolher uma área em um extenso corpo de água, ao invés disso, você cria uma onda com 6 metros de altura que irá de um lado ao outro da área e então desaba. Qualquer veículo Enorme ou menor no caminho da onda será carregado por ela até o outro lado. Qualquer veículo Enorme ou menor atingido pela onda tem uma chance de 25 por cento de emborcar. O nível da água se mantem elevado até a magia acabar ou você escolher um efeito diferente. Se esse efeito produzir uma onda, a onda se repete no início do seu próximo turno enquanto o efeito de inundação durar. Dividir Água. Você faz com que a água na área se divida e crie uma trincheira. A trincheira se estende por toda área da magia e a água separada forma uma parede de cada lado. A trincheira permanece até a magia acabar ou você escolher um efeito diferente. A água, então, lentamente preenche a trincheira ao longo do curso da próxima rodada até o nível normal da água ser restaurado. Redirecionar Fluxo. Você faz com que o fluxo da água na área se mova na direção que você escolher, mesmo que a água tenha que fluir através de obstáculos, subir muros ou em outra direção improvável. A água na área se move na direção ordenada, mas uma vez que tenha se movido além da área da magia, ela conclui seu fluxo baseado nas condições do terreno. A água continua a se mover na direção que você escolheu até a magia acabar ou você escolher um efeito diferente. Redemoinho. Esse efeito requer um corpo de água de, pelo menos, 15 metros quadrados e 7,5 metros de profundidade. Você faz com que um redemoinho se forme no centro da área. O redemoinho forma um vórtice com 1,5 metro de largura na base, chegando a 15 metros de largura no topo e 7,5 metros de altura. Qualquer criatura ou objeto na água a até 7,5 metros do vórtice é puxado 3 metros na direção dele. Uma criatura pode tentar nadar para longe do vórtice com um teste de Força (Atletismo) contra a CD da magia. Quando uma criatura entrar no vórtice pela primeira vez no turno dela ou começar seu turno dentro dele, ela deve realizar um teste de resistência de Força. Se falhar, a criatura sofre 2d8 de dano de concussão e estará presa no vórtice até a magia acabar. Se passar na resistência, a criatura sofre metade do dano e não estará presa no vórtice. Uma criatura presa no vórtice pode usar sua ação para tentar nadar para fora do vórtice como descrito acima, mas terá desvantagem no teste de Força (Atletismo) para fazer isso. A primeira vez a cada turno que um objeto entrar no vórtice, o objeto sofre 2d8 de dano de concussão; esse dano se repete a cada rodada que ele permanecer no vórtice.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "clerigo",
-      "druida",
-      "mago"
-    ]
-  },
-  {
     "index": "controlar-o-clima",
     "name": "Controlar O Clima",
     "level": 8,
@@ -1705,25 +1667,6 @@
     "source": "PHB-PT",
     "classes": [
       "paladino"
-    ]
-  },
-  {
-    "index": "convocar-relampagos",
-    "name": "Convocar Relâmpagos",
-    "level": 3,
-    "school": "conjuração",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "36 metros",
-    "components": "V, S",
-    "material": "",
-    "duration": "Concentração, até 10 minutos",
-    "concentration": true,
-    "desc": "Uma nuvem tempestuosa aparece em formato cilíndrico com 3 metros de altura e 18 metros de raio, centrada num ponto que você possa ver, 30 metros acima de você. A magia falha se você não puder ver um ponto no ar em que a nuvem possa aparecer (por exemplo, se você estiver em uma sala que não possa comportar a nuvem). Quando você conjurar a magia, escolha um ponto que você possa ver dentro do alcance. Um raio de eletricidade é disparado da nuvem no ponto. Cada criatura a 1,5 metro desse ponto deve realizar um teste de resistência de Destreza. Uma criatura sofre 3d10 de dano elétrico se falhar no teste, ou metade desse dano se passar. Em cada um dos seus turnos, até a magia acabar, você pode usar sua ação para convocar um relâmpago dessa forma novamente, afetando o mesmo ponto ou um diferente. Se você estiver a céu aberto em condições tempestuosas quando conjurar essa magia, a magia lhe dá controle sobre a tempestade existente ao invés de criar uma nova. Sob tais condições, o dano da magia aumenta em 1d10.",
-    "higher_level": "Se você conjurar essa magia usando um espaço de magia de 4° nível ou superior, o dano aumenta em 1d10 para cada nível do espaço acima do 3°.",
-    "source": "PHB-PT",
-    "classes": [
-      "druida"
     ]
   },
   {
@@ -1824,7 +1767,8 @@
     "source": "PHB-PT",
     "classes": [
       "clerigo",
-      "paladino"
+      "paladino",
+      "artifice"
     ]
   },
   {
@@ -2480,27 +2424,6 @@
     ]
   },
   {
-    "index": "dificultar-deteccao",
-    "name": "Dificultar Detecção",
-    "level": 3,
-    "school": "abjuração",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "Toque",
-    "components": "V, S, M",
-    "material": "um pouco de pó de diamante valendo 25 po polvilhado sobre o alvo, consumido pela magia",
-    "duration": "8 horas",
-    "concentration": false,
-    "desc": "Pela duração, você esconde um alvo que você tocar de voluntária, um local ou um objeto com não mais de 3 metros em qualquer dimensão. O alvo não pode ser alvo de magias de adivinhação ou percebido através de sensores mágicos de vidência.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "bardo",
-      "patrulheiro",
-      "mago"
-    ]
-  },
-  {
     "index": "disco-flutuante-de-tenser",
     "name": "Disco Flutuante De Tenser",
     "level": 1,
@@ -3031,26 +2954,8 @@
     "source": "PHB-PT",
     "classes": [
       "feiticeiro",
-      "mago"
-    ]
-  },
-  {
-    "index": "espiritos-guardioes",
-    "name": "Espíritos Guardiões",
-    "level": 3,
-    "school": "conjuração",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "Pessoal (4,5 metros de raio)",
-    "components": "V, S, M",
-    "material": "um símbolo sagrado",
-    "duration": "Concentração, até 10 minutos",
-    "concentration": true,
-    "desc": "Você evoca espíritos para protege-lo. Eles flutuam a seu redor, a uma distância de 4,5 metros, pela duração. Se você for bom ou neutro, as formas espectrais deles aparenta ser angelical ou feérica (à sua escolha). Se você for mau, eles pareceram demoníacos. Quando você conjura essa magia, você pode designar qualquer quantidade de criaturas que você possa ver para não serem afetadas por ela. O deslocamento de uma criatura afetada é reduzido à metade na área e, quando a criatura entrar na área pela primeira vez num turno ou começar seu turno nela, ela deve realizar um teste de resistência de Sabedoria. Se falhar na resistência, a criatura sofrerá 3d8 de dano radiante (se você for bom ou neutro) ou 3d8 de dano necrótico (se você for mau). Com um sucesso na resistência, a criatura sofre metade desse dano.",
-    "higher_level": "Quando você conjurar essa magia usando um espaço de magia de 4° nível ou superior, o dano aumenta em 1d8 para cada nível do espaço acima do 3°.",
-    "source": "PHB-PT",
-    "classes": [
-      "clerigo"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -3090,7 +2995,8 @@
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
-      "clerigo"
+      "clerigo",
+      "artifice"
     ]
   },
   {
@@ -3398,7 +3304,8 @@
     "classes": [
       "bardo",
       "clerigo",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -3439,7 +3346,8 @@
     "classes": [
       "bardo",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -3498,26 +3406,6 @@
     "classes": [
       "bardo",
       "paladino"
-    ]
-  },
-  {
-    "index": "identificacao",
-    "name": "Identificação",
-    "level": 1,
-    "school": "adivinhação",
-    "ritual": true,
-    "casting_time": "1 minuto",
-    "range": "Toque",
-    "components": "V, S, M",
-    "material": "uma perola valendo, no mínimo, 100 po e uma pena de coruja",
-    "duration": "Instantânea",
-    "concentration": false,
-    "desc": "Você escolhe um objeto que você deve tocar durante toda a conjuração da magia. Se ele for um item mágico ou algum outro objeto imbuído por magia, você descobre suas propriedades e como usá-lo, se exige sintonia para ser usado e quantas cargas ele tem, se aplicável. Você descobre se quaisquer magias estão afetando o item e quais eles são. Se o item foi criado por magia, você descobre que magia o criou. Se você, ao invés, tocar uma criatura durante toda a conjuração, você descobre quais magias, se houver alguma, estão afetando-a atualmente.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "bardo",
-      "mago"
     ]
   },
   {
@@ -4152,25 +4040,6 @@
     ]
   },
   {
-    "index": "manto-do-cruzado",
-    "name": "Manto Do Cruzado",
-    "level": 3,
-    "school": "evocação",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "Pessoal",
-    "components": "V",
-    "material": "",
-    "duration": "Concentração, até 1 minuto",
-    "concentration": true,
-    "desc": "Poder sagrado irradia de você em uma aura de 9 metros de raio, despertando a audácia nas criaturas amigáveis. Até o final da magia, a aura se move, se mantendo centrada em você. Enquanto estiver na aura, cada criatura não-hostil (incluindo você) causa 1d4 de dano radiante extra quando atingir com ataques com arma.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "paladino"
-    ]
-  },
-  {
     "index": "marca-da-punicao",
     "name": "Marca Da Punição",
     "level": 2,
@@ -4547,7 +4416,7 @@
     "index": "muralha-de-pedra",
     "name": "Muralha De Pedra",
     "level": 5,
-    "school": "conjuração",
+    "school": "evocação",
     "ritual": false,
     "casting_time": "1 ação",
     "range": "36 metros",
@@ -4688,27 +4557,6 @@
     ]
   },
   {
-    "index": "nevasca",
-    "name": "Nevasca",
-    "level": 3,
-    "school": "conjuração",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "45 metros",
-    "components": "V, S, M",
-    "material": "um punhado de poeira e algumas gotas de água",
-    "duration": "Concentração, até 1 minuto",
-    "concentration": true,
-    "desc": "Até a magia acabar, uma chuva congelante e neve caem num cilindro de 6 metros de altura por 12 metros de raio, centrado num ponto, à sua escolha, dentro do alcance. A área é de escuridão densa e, chamas expostas na área são extintas. O solo na área é coberto por gelo escorregadio, tornando-o terreno difícil. Quando uma criatura entrar na área da magia pela primeira vez num turno ou começar seu turno nela, ela deve realizar um teste de resistência de Destreza. Se falhar, cairá no chão. Se um, criatura estiver se concentrando na área da magia, a criatura deve realizar um teste de resistência de Constituição contra a CD da magia, ou perderá a concentração.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "druida",
-      "feiticeiro",
-      "mago"
-    ]
-  },
-  {
     "index": "nublar",
     "name": "Nublar",
     "level": 2,
@@ -4725,7 +4573,8 @@
     "source": "PHB-PT",
     "classes": [
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -4807,28 +4656,6 @@
     "higher_level": "Se você conjurar essa magia usando um espaço de magia de 6° nível ou superior, o dano aumenta em 1d8 para cada nível do espaço acima do 5°.",
     "source": "PHB-PT",
     "classes": [
-      "feiticeiro",
-      "mago"
-    ]
-  },
-  {
-    "index": "nevoa-obscurecente",
-    "name": "Névoa Obscurecente",
-    "level": 1,
-    "school": "conjuração",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "36 metros",
-    "components": "V, S",
-    "material": "",
-    "duration": "Concentração, até 1 hora",
-    "concentration": true,
-    "desc": "Você cria uma esfera de 6 metros de raio de névoa, centrada num ponto, dentro do alcance. A esfera se espalha, dobrando esquinas, e a área dela é de escuridão densa. Ela permanece pela duração ou até um vento moderado ou mais rápido (pelo menos 15 quilômetros por hora) dispersa-la.",
-    "higher_level": "Quando você conjurar essa magia usando um espaço de magia de 2° nível ou superior, o raio da névoa aumenta em 6 metros para cada nível do espaço acima do 1°.",
-    "source": "PHB-PT",
-    "classes": [
-      "druida",
-      "patrulheiro",
       "feiticeiro",
       "mago"
     ]
@@ -5177,27 +5004,8 @@
       "bardo",
       "druida",
       "patrulheiro",
-      "mago"
-    ]
-  },
-  {
-    "index": "passos-sem-pegadas",
-    "name": "Passos Sem Pegadas",
-    "level": 2,
-    "school": "abjuração",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "Pessoal",
-    "components": "V, S, M",
-    "material": "cinzas de uma folha de visco queimada e um ramo de pinheiro",
-    "duration": "Concentração, até 1 hora",
-    "concentration": true,
-    "desc": "Um véu de sombras e silencia irradia de você, encobrindo você e seus companheiros contra detecção. Pela duração, cada criatura, à sua escolha, a até 9 metros de você (incluindo você) recebe +10 de bônus em testes de Destreza (Furtividade) e não pode ser rastreada, exceto por meio mágicos. Uma criatura que receber esse bônus não deixa quaisquer pegadas ou outros vestígios da sua passagem.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "druida",
-      "patrulheiro"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -5218,7 +5026,8 @@
     "classes": [
       "feiticeiro",
       "bruxo",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -5240,7 +5049,8 @@
       "druida",
       "patrulheiro",
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -5682,7 +5492,8 @@
     "classes": [
       "clerigo",
       "druida",
-      "paladino"
+      "paladino",
+      "artifice"
     ]
   },
   {
@@ -5908,7 +5719,8 @@
       "feiticeiro",
       "bruxo",
       "mago",
-      "druida"
+      "druida",
+      "artifice"
     ]
   },
   {
@@ -5987,7 +5799,8 @@
     "classes": [
       "feiticeiro",
       "bruxo",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -6007,27 +5820,6 @@
     "source": "PHB-PT",
     "classes": [
       "druida"
-    ]
-  },
-  {
-    "index": "reflexos",
-    "name": "Reflexos",
-    "level": 2,
-    "school": "ilusão",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "Pessoal",
-    "components": "V, S",
-    "material": "",
-    "duration": "1 minuto",
-    "concentration": false,
-    "desc": "Três duplicatas ilusórias de você aparecem no seu espaço. Até a magia acabar, as duplicatas se movem com você e copiam as suas ações, trocando de posição, tornando impossível rastrear qual imagem é real. Você pode usar sua ação para dissipar as duplicatas ilusórias. Cada vez que uma criatura mirar você com um ataque enquanto a magia durar, role um d20 para determinar se o ataque, em vez de você, mira uma das suas duplicatas. Se você tiver três duplicatas, você deve rolar um 6 ou maior para mudar o alvo do ataque para uma duplicata. Com duas duplicatas, você deve rolar um 8 ou maior. Com uma duplicata, você deve rolar um 11 ou maior. A CA de uma duplicata é igual a 10 + seu modificador de Destreza. Se um ataque atingir uma duplicata, ela é destruída. Uma duplicata só pode ser destruída por um ataque que a atinja. Ela ignora todos os outros danos e efeitos. A magia acaba quando todas as três duplicatas forem destruídas. Uma criatura não pode ser afetada por essa magia se não puder enxergar, se ela contar com outros sentidos além da visão, como percepção às cegas, ou se ela puder perceber ilusões como falsas, como com visão verdadeira.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "feiticeiro",
-      "bruxo",
-      "mago"
     ]
   },
   {
@@ -6572,25 +6364,6 @@
     ]
   },
   {
-    "index": "sinal-de-esperanca",
-    "name": "Sinal De Esperança",
-    "level": 3,
-    "school": "abjuração",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "9 metros",
-    "components": "V, S",
-    "material": "",
-    "duration": "Concentração, até 1 minuto",
-    "concentration": true,
-    "desc": "Essa magia confere esperança e vitalidade. Escolha qualquer quantidade de criaturas dentro do alcance. Pela duração, cada alvo tem vantagem em testes de resistência de Sabedoria e testes de resistência contra a morte e recuperam o máximo de pontos de vida possível em qualquer cura.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "clerigo"
-    ]
-  },
-  {
     "index": "sonho",
     "name": "Sonho",
     "level": 5,
@@ -7056,7 +6829,8 @@
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -7095,7 +6869,8 @@
     "source": "PHB-PT",
     "classes": [
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -7167,26 +6942,6 @@
     ]
   },
   {
-    "index": "vinha-esmagadora",
-    "name": "Vinha Esmagadora",
-    "level": 4,
-    "school": "conjuração",
-    "ritual": false,
-    "casting_time": "1 ação bônus",
-    "range": "9 metros",
-    "components": "V, S",
-    "material": "",
-    "duration": "Concentração, até 1 minuto",
-    "concentration": true,
-    "desc": "Você conjura uma vinha que brota do chão em um espaço desocupado, à sua escolha, que você possa ver dentro do alcance. Quando você conjura essa magia, você pode direcionar a vinha para que ela enlace uma criatura a até 9 metros dela que você possa ver. Essa criatura deve ser bem sucedida num teste de resistência de Destreza ou será arrastada 6 metros na direção da vinha. Até o fim da magia, você pode direcionar a vinha para enlaçar a mesma criatura ou uma diferente, com uma ação bônus, em cada um dos seus turnos.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "druida",
-      "patrulheiro"
-    ]
-  },
-  {
     "index": "visao-da-verdade",
     "name": "Visão Da Verdade",
     "level": 6,
@@ -7249,7 +7004,8 @@
     "source": "PHB-PT",
     "classes": [
       "feiticeiro",
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -7349,7 +7105,8 @@
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
-      "mago"
+      "mago",
+      "artifice"
     ]
   },
   {
@@ -7383,10 +7140,10 @@
     "casting_time": "1 minuto",
     "range": "Toque",
     "components": "V, S, M",
-    "material": "Uma pérola de 100 po e pena de coruja",
+    "material": "uma perola valendo, no mínimo, 100 po e uma pena de coruja",
     "duration": "Instantânea",
     "concentration": false,
-    "desc": "Você aprende as propriedades mágicas de um objeto tocado: como usá-las, se requer sintonização, cargas e se está amaldiçoado.",
+    "desc": "Você escolhe um objeto que você deve tocar durante toda a conjuração da magia. Se ele for um item mágico ou algum outro objeto imbuído por magia, você descobre suas propriedades e como usá-lo, se exige sintonia para ser usado e quantas cargas ele tem, se aplicável. Você descobre se quaisquer magias estão afetando o item e quais eles são. Se o item foi criado por magia, você descobre que magia o criou. Se você, ao invés, tocar uma criatura durante toda a conjuração, você descobre quais magias, se houver alguma, estão afetando-a atualmente.",
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
@@ -7407,52 +7164,11 @@
     "material": "",
     "duration": "Concentração, até 1 minuto",
     "concentration": true,
-    "desc": "Criaturas escolhidas têm vantagem em TR de Sabedoria e contra a morte, e recuperam o máximo de PV de qualquer cura.",
+    "desc": "Essa magia confere esperança e vitalidade. Escolha qualquer quantidade de criaturas dentro do alcance. Pela duração, cada alvo tem vantagem em testes de resistência de Sabedoria e testes de resistência contra a morte e recuperam o máximo de pontos de vida possível em qualquer cura.",
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
       "clerigo"
-    ]
-  },
-  {
-    "index": "sentinela-da-morte",
-    "name": "Sentinela da Morte",
-    "level": 4,
-    "school": "abjuração",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "Toque",
-    "components": "V, S",
-    "material": "",
-    "duration": "8 horas",
-    "concentration": false,
-    "desc": "A primeira vez que o alvo seria reduzido a 0 PV por dano, fica com 1 PV e a magia termina.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "clerigo",
-      "paladino"
-    ]
-  },
-  {
-    "index": "ressuscitar",
-    "name": "Ressuscitar",
-    "level": 5,
-    "school": "necromancia",
-    "ritual": false,
-    "casting_time": "1 hora",
-    "range": "Toque",
-    "components": "V, S, M",
-    "material": "Diamante de 500 po consumido",
-    "duration": "Instantânea",
-    "concentration": false,
-    "desc": "Toca humanoide morto há menos de 10 dias. Restaura o corpo, traz de volta à vida com 1 PV, neutralizando doenças.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "bardo",
-      "clerigo",
-      "paladino"
     ]
   },
   {
@@ -7464,79 +7180,15 @@
     "casting_time": "1 ação",
     "range": "Toque",
     "components": "V, S, M",
-    "material": "Ametista de 25 po pulverizada",
+    "material": "um pouco de pó de diamante valendo 25 po polvilhado sobre o alvo, consumido pela magia",
     "duration": "8 horas",
     "concentration": false,
-    "desc": "O alvo fica escondido de magias de adivinhação e sensores mágicos por 8 horas.",
+    "desc": "Pela duração, você esconde um alvo que você tocar de voluntária, um local ou um objeto com não mais de 3 metros em qualquer dimensão. O alvo não pode ser alvo de magias de adivinhação ou percebido através de sensores mágicos de vidência.",
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
       "bardo",
       "patrulheiro",
-      "mago"
-    ]
-  },
-  {
-    "index": "lenda",
-    "name": "Lenda",
-    "level": 5,
-    "school": "adivinhação",
-    "ritual": false,
-    "casting_time": "10 minutos",
-    "range": "Pessoal",
-    "components": "V, S, M",
-    "material": "Incenso de 250 po consumido",
-    "duration": "Instantânea",
-    "concentration": false,
-    "desc": "Nomeie uma pessoa, lugar ou objeto. A magia traz à mente um resumo do conhecimento lendário sobre o tema.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "bardo",
-      "clerigo",
-      "mago"
-    ]
-  },
-  {
-    "index": "escrutinio",
-    "name": "Escrutínio",
-    "level": 5,
-    "school": "adivinhação",
-    "ritual": true,
-    "casting_time": "10 minutos",
-    "range": "Pessoal",
-    "components": "V, S, M",
-    "material": "Foco de adivinhação de 1.000 po",
-    "duration": "Concentração, até 10 minutos",
-    "concentration": true,
-    "desc": "Você vê e ouve uma criatura no mesmo plano. O alvo faz TR de Sabedoria modificado por sua familiaridade com ele.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "bardo",
-      "clerigo",
-      "druida",
-      "mago"
-    ]
-  },
-  {
-    "index": "parede-de-fogo",
-    "name": "Parede de Fogo",
-    "level": 4,
-    "school": "evocação",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "36 metros",
-    "components": "V, S, M",
-    "material": "Fósforo",
-    "duration": "Concentração, até 1 minuto",
-    "concentration": true,
-    "desc": "Parede de fogo de até 18m de comprimento e 9m de altura. Criaturas que a atravessam sofrem 5d8 de dano de fogo (TR Destreza para metade).",
-    "higher_level": "Dano aumenta 1d8 por nível acima do 4°.",
-    "source": "PHB-PT",
-    "classes": [
-      "druida",
-      "feiticeiro",
       "mago"
     ]
   },
@@ -7552,35 +7204,14 @@
     "material": "",
     "duration": "Concentração, até 1 hora",
     "concentration": true,
-    "desc": "Esfera de névoa de 6m de raio fortemente obscurece a área. Um vento moderado a dispersa.",
-    "higher_level": "Raio aumenta 6m por nível acima do 1°.",
+    "desc": "Você cria uma esfera de 6 metros de raio de névoa, centrada num ponto, dentro do alcance. A esfera se espalha, dobrando esquinas, e a área dela é de escuridão densa. Ela permanece pela duração ou até um vento moderado ou mais rápido (pelo menos 15 quilômetros por hora) dispersa-la.",
+    "higher_level": "Quando você conjurar essa magia usando um espaço de magia de 2° nível ou superior, o raio da névoa aumenta em 6 metros para cada nível do espaço acima do 1°.",
     "source": "PHB-PT",
     "classes": [
       "druida",
       "feiticeiro",
       "mago",
       "patrulheiro"
-    ]
-  },
-  {
-    "index": "rajada-de-vento",
-    "name": "Rajada de Vento",
-    "level": 2,
-    "school": "evocação",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "Pessoal",
-    "components": "V, S, M",
-    "material": "Semente de legume",
-    "duration": "Concentração, até 1 minuto",
-    "concentration": true,
-    "desc": "Linha de vento forte de 18m parte de você. Criaturas no início do turno nessa linha devem ter êxito em TR de Força ou ser empurradas 4,5m.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "druida",
-      "feiticeiro",
-      "mago"
     ]
   },
   {
@@ -7595,8 +7226,8 @@
     "material": "",
     "duration": "Concentração, até 10 minutos",
     "concentration": true,
-    "desc": "Nuvem de tempestade de 18m de raio surge 36m acima. Como ação, chame um raio: criaturas a 1,5m sofrem 3d10 elétrico (TR Destreza para metade).",
-    "higher_level": "Dano aumenta 1d10 por nível acima do 3°.",
+    "desc": "Uma nuvem tempestuosa aparece em formato cilíndrico com 3 metros de altura e 18 metros de raio, centrada num ponto que você possa ver, 30 metros acima de você. A magia falha se você não puder ver um ponto no ar em que a nuvem possa aparecer (por exemplo, se você estiver em uma sala que não possa comportar a nuvem). Quando você conjurar a magia, escolha um ponto que você possa ver dentro do alcance. Um raio de eletricidade é disparado da nuvem no ponto. Cada criatura a 1,5 metro desse ponto deve realizar um teste de resistência de Destreza. Uma criatura sofre 3d10 de dano elétrico se falhar no teste, ou metade desse dano se passar. Em cada um dos seus turnos, até a magia acabar, você pode usar sua ação para convocar um relâmpago dessa forma novamente, afetando o mesmo ponto ou um diferente. Se você estiver a céu aberto em condições tempestuosas quando conjurar essa magia, a magia lhe dá controle sobre a tempestade existente ao invés de criar uma nova. Sob tais condições, o dano da magia aumenta em 1d10.",
+    "higher_level": "Se você conjurar essa magia usando um espaço de magia de 4° nível ou superior, o dano aumenta em 1d10 para cada nível do espaço acima do 3°.",
     "source": "PHB-PT",
     "classes": [
       "druida"
@@ -7611,10 +7242,10 @@
     "casting_time": "1 ação",
     "range": "45 metros",
     "components": "V, S, M",
-    "material": "Pó e lama",
+    "material": "um punhado de poeira e algumas gotas de água",
     "duration": "Concentração, até 1 minuto",
     "concentration": true,
-    "desc": "Granizo cai em esfera de 9m de raio (terreno difícil, fortemente obscurecido). Criaturas que entram ou iniciam o turno lá fazem TR de Constituição ou ficam paralisadas.",
+    "desc": "Até a magia acabar, uma chuva congelante e neve caem num cilindro de 6 metros de altura por 12 metros de raio, centrado num ponto, à sua escolha, dentro do alcance. A área é de escuridão densa e, chamas expostas na área são extintas. O solo na área é coberto por gelo escorregadio, tornando-o terreno difícil. Quando uma criatura entrar na área da magia pela primeira vez num turno ou começar seu turno nela, ela deve realizar um teste de resistência de Destreza. Se falhar, cairá no chão. Se um, criatura estiver se concentrando na área da magia, a criatura deve realizar um teste de resistência de Constituição contra a CD da magia, ou perderá a concentração.",
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
@@ -7632,78 +7263,15 @@
     "casting_time": "1 ação",
     "range": "90 metros",
     "components": "V, S, M",
-    "material": "Cálice de água e areia",
+    "material": "uma gota de água e uma pitada de poeira",
     "duration": "Concentração, até 10 minutos",
     "concentration": true,
-    "desc": "Você controla água livre em 30 metros cúbicos: pode inundar, drenar, criar redemoinho ou redirecionar.",
+    "desc": "Até o fim da magia, você controla qualquer corpo de água dentro da área que você escolher, que é um cubo de 30 metros quadrados. Você pode escolher dentre quaisquer dos efeitos seguintes, quando você conjurar essa magia. Com uma ação no seu turno, você pode repetir o mesmo efeito ou escolher um diferente. Inundação. Você faz com que o nível da água de toda área afetada suba até 6 metros. Se a área incluir uma margem, a inundação ira transbordar para a terra seca. Se você escolher uma área em um extenso corpo de água, ao invés disso, você cria uma onda com 6 metros de altura que irá de um lado ao outro da área e então desaba. Qualquer veículo Enorme ou menor no caminho da onda será carregado por ela até o outro lado. Qualquer veículo Enorme ou menor atingido pela onda tem uma chance de 25 por cento de emborcar. O nível da água se mantem elevado até a magia acabar ou você escolher um efeito diferente. Se esse efeito produzir uma onda, a onda se repete no início do seu próximo turno enquanto o efeito de inundação durar. Dividir Água. Você faz com que a água na área se divida e crie uma trincheira. A trincheira se estende por toda área da magia e a água separada forma uma parede de cada lado. A trincheira permanece até a magia acabar ou você escolher um efeito diferente. A água, então, lentamente preenche a trincheira ao longo do curso da próxima rodada até o nível normal da água ser restaurado. Redirecionar Fluxo. Você faz com que o fluxo da água na área se mova na direção que você escolher, mesmo que a água tenha que fluir através de obstáculos, subir muros ou em outra direção improvável. A água na área se move na direção ordenada, mas uma vez que tenha se movido além da área da magia, ela conclui seu fluxo baseado nas condições do terreno. A água continua a se mover na direção que você escolheu até a magia acabar ou você escolher um efeito diferente. Redemoinho. Esse efeito requer um corpo de água de, pelo menos, 15 metros quadrados e 7,5 metros de profundidade. Você faz com que um redemoinho se forme no centro da área. O redemoinho forma um vórtice com 1,5 metro de largura na base, chegando a 15 metros de largura no topo e 7,5 metros de altura. Qualquer criatura ou objeto na água a até 7,5 metros do vórtice é puxado 3 metros na direção dele. Uma criatura pode tentar nadar para longe do vórtice com um teste de Força (Atletismo) contra a CD da magia. Quando uma criatura entrar no vórtice pela primeira vez no turno dela ou começar seu turno dentro dele, ela deve realizar um teste de resistência de Força. Se falhar, a criatura sofre 2d8 de dano de concussão e estará presa no vórtice até a magia acabar. Se passar na resistência, a criatura sofre metade do dano e não estará presa no vórtice. Uma criatura presa no vórtice pode usar sua ação para tentar nadar para fora do vórtice como descrito acima, mas terá desvantagem no teste de Força (Atletismo) para fazer isso. A primeira vez a cada turno que um objeto entrar no vórtice, o objeto sofre 2d8 de dano de concussão; esse dano se repete a cada rodada que ele permanecer no vórtice.",
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
       "clerigo",
       "druida",
-      "mago"
-    ]
-  },
-  {
-    "index": "onda-devastadora",
-    "name": "Onda Devastadora",
-    "level": 5,
-    "school": "evocação",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "18 metros",
-    "components": "V",
-    "material": "",
-    "duration": "Instantânea",
-    "concentration": false,
-    "desc": "Criaturas escolhidas a até 18m fazem TR de Constituição: falha = 5d6 trovejante + 5d6 radiante e derrubada; sucesso = metade.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "paladino"
-    ]
-  },
-  {
-    "index": "encanto-pessoal",
-    "name": "Encantar Pessoa",
-    "level": 1,
-    "school": "encantamento",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "9 metros",
-    "components": "V, S",
-    "material": "",
-    "duration": "1 hora",
-    "concentration": false,
-    "desc": "Um humanoide visível faz TR de Sabedoria ou é encantado por você (considera você amigo). A magia termina se você lhe causar dano.",
-    "higher_level": "Pode afetar mais criaturas por nível acima do 1°.",
-    "source": "PHB-PT",
-    "classes": [
-      "bardo",
-      "druida",
-      "feiticeiro",
-      "bruxo",
-      "mago"
-    ]
-  },
-  {
-    "index": "auto-disfarce",
-    "name": "Disfarce",
-    "level": 1,
-    "school": "ilusão",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "Pessoal",
-    "components": "V, S",
-    "material": "",
-    "duration": "1 hora",
-    "concentration": false,
-    "desc": "Você altera sua aparência incluindo roupa e equipamento. Pode parecer até 30cm mais alto ou mais baixo.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "bardo",
-      "feiticeiro",
       "mago"
     ]
   },
@@ -7719,7 +7287,7 @@
     "material": "",
     "duration": "1 minuto",
     "concentration": false,
-    "desc": "Três duplicatas ilusórias aparecem no seu espaço. Ataques contra você podem acertar uma duplicata (role 1d20). Duplicatas têm CA 10+DES.",
+    "desc": "Três duplicatas ilusórias de você aparecem no seu espaço. Até a magia acabar, as duplicatas se movem com você e copiam as suas ações, trocando de posição, tornando impossível rastrear qual imagem é real. Você pode usar sua ação para dissipar as duplicatas ilusórias. Cada vez que uma criatura mirar você com um ataque enquanto a magia durar, role um d20 para determinar se o ataque, em vez de você, mira uma das suas duplicatas. Se você tiver três duplicatas, você deve rolar um 6 ou maior para mudar o alvo do ataque para uma duplicata. Com duas duplicatas, você deve rolar um 8 ou maior. Com uma duplicata, você deve rolar um 11 ou maior. A CA de uma duplicata é igual a 10 + seu modificador de Destreza. Se um ataque atingir uma duplicata, ela é destruída. Uma duplicata só pode ser destruída por um ataque que a atinja. Ela ignora todos os outros danos e efeitos. A magia acaba quando todas as três duplicatas forem destruídas. Uma criatura não pode ser afetada por essa magia se não puder enxergar, se ela contar com outros sentidos além da visão, como percepção às cegas, ou se ela puder perceber ilusões como falsas, como com visão verdadeira.",
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
@@ -7737,10 +7305,10 @@
     "casting_time": "1 ação",
     "range": "Pessoal",
     "components": "V, S, M",
-    "material": "Cinzas de pinheiro e ramo de visgo",
+    "material": "cinzas de uma folha de visco queimada e um ramo de pinheiro",
     "duration": "Concentração, até 1 hora",
     "concentration": true,
-    "desc": "Criaturas escolhidas a até 9m ganham +10 nos testes de Furtividade e não podem ser rastreadas por meios não-mágicos.",
+    "desc": "Um véu de sombras e silencia irradia de você, encobrindo você e seus companheiros contra detecção. Pela duração, cada criatura, à sua escolha, a até 9 metros de você (incluindo você) recebe +10 de bônus em testes de Destreza (Furtividade) e não pode ser rastreada, exceto por meio mágicos. Uma criatura que receber esse bônus não deixa quaisquer pegadas ou outros vestígios da sua passagem.",
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
@@ -7749,59 +7317,18 @@
     ]
   },
   {
-    "index": "polimorfismo",
-    "name": "Polimorfismo",
-    "level": 4,
-    "school": "transmutação",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "18 metros",
-    "components": "V, S, M",
-    "material": "Casulo de borboleta",
-    "duration": "Concentração, até 1 hora",
-    "concentration": true,
-    "desc": "Transforma uma criatura em uma besta cujo ND seja igual ou menor. Criatura relutante faz TR de Sabedoria. Assume os atributos físicos da forma.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "bardo",
-      "druida",
-      "feiticeiro",
-      "mago"
-    ]
-  },
-  {
-    "index": "favor-divino",
-    "name": "Favor Divino",
-    "level": 1,
-    "school": "evocação",
-    "ritual": false,
-    "casting_time": "1 ação bônus",
-    "range": "Pessoal",
-    "components": "V, S",
-    "material": "",
-    "duration": "Concentração, até 1 minuto",
-    "concentration": true,
-    "desc": "Seus ataques de arma causam 1d4 a mais de dano radiante a cada acerto enquanto a magia persistir.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "paladino"
-    ]
-  },
-  {
     "index": "manto-de-cruzado",
     "name": "Manto de Cruzado",
     "level": 3,
     "school": "evocação",
     "ritual": false,
-    "casting_time": "1 ação bônus",
+    "casting_time": "1 ação",
     "range": "Pessoal",
     "components": "V",
     "material": "",
     "duration": "Concentração, até 1 minuto",
     "concentration": true,
-    "desc": "Aura de luz sutil em 9m. Criaturas amigas na aura causam 1d4 a mais de dano radiante com ataques de arma bem-sucedidos.",
+    "desc": "Poder sagrado irradia de você em uma aura de 9 metros de raio, despertando a audácia nas criaturas amigáveis. Até o final da magia, a aura se move, se mantendo centrada em você. Enquanto estiver na aura, cada criatura não-hostil (incluindo você) causa 1d4 de dano radiante extra quando atingir com ataques com arma.",
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
@@ -7815,99 +7342,16 @@
     "school": "conjuração",
     "ritual": false,
     "casting_time": "1 ação",
-    "range": "Pessoal",
+    "range": "Pessoal (4,5 metros de raio)",
     "components": "V, S, M",
-    "material": "Símbolo sagrado",
+    "material": "um símbolo sagrado",
     "duration": "Concentração, até 10 minutos",
     "concentration": true,
-    "desc": "Espíritos pairam a 4,5m. Criaturas hostis que entram ou iniciam o turno na área fazem TR de Sabedoria ou sofrem 3d8 radiante ou necrótico.",
-    "higher_level": "Dano aumenta 1d8 por nível acima do 3°.",
+    "desc": "Você evoca espíritos para protege-lo. Eles flutuam a seu redor, a uma distância de 4,5 metros, pela duração. Se você for bom ou neutro, as formas espectrais deles aparenta ser angelical ou feérica (à sua escolha). Se você for mau, eles pareceram demoníacos. Quando você conjura essa magia, você pode designar qualquer quantidade de criaturas que você possa ver para não serem afetadas por ela. O deslocamento de uma criatura afetada é reduzido à metade na área e, quando a criatura entrar na área pela primeira vez num turno ou começar seu turno nela, ela deve realizar um teste de resistência de Sabedoria. Se falhar na resistência, a criatura sofrerá 3d8 de dano radiante (se você for bom ou neutro) ou 3d8 de dano necrótico (se você for mau). Com um sucesso na resistência, a criatura sofre metade desse dano.",
+    "higher_level": "Quando você conjurar essa magia usando um espaço de magia de 4° nível ou superior, o dano aumenta em 1d8 para cada nível do espaço acima do 3°.",
     "source": "PHB-PT",
     "classes": [
       "clerigo"
-    ]
-  },
-  {
-    "index": "liberdade-de-movimento",
-    "name": "Liberdade de Movimento",
-    "level": 4,
-    "school": "abjuração",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "Toque",
-    "components": "V, S, M",
-    "material": "Pedaço de couro curtido",
-    "duration": "1 hora",
-    "concentration": false,
-    "desc": "O movimento do alvo não é prejudicado por terreno difícil, e magias não podem reduzir sua velocidade nem paralisá-lo magicamente.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "bardo",
-      "clerigo",
-      "druida",
-      "patrulheiro"
-    ]
-  },
-  {
-    "index": "chama-radiante",
-    "name": "Chama Radiante",
-    "level": 5,
-    "school": "evocação",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "9 metros",
-    "components": "V, S",
-    "material": "",
-    "duration": "Instantânea",
-    "concentration": false,
-    "desc": "Coluna de chamas divinas num cilindro de 3m de raio e 9m de altura. TR de Destreza: falha = 4d6 fogo + 4d6 radiante; sucesso = metade.",
-    "higher_level": "Dano aumenta 1d6 por nível acima do 5°.",
-    "source": "PHB-PT",
-    "classes": [
-      "clerigo"
-    ]
-  },
-  {
-    "index": "segurar-monstro",
-    "name": "Segurar Monstro",
-    "level": 5,
-    "school": "encantamento",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "27 metros",
-    "components": "V, S, M",
-    "material": "Ferro",
-    "duration": "Concentração, até 1 minuto",
-    "concentration": true,
-    "desc": "Uma criatura visível faz TR de Sabedoria ou fica paralisada. Não afeta mortos-vivos. No fim de cada turno o alvo pode repetir o TR.",
-    "higher_level": "Pode mirar criaturas adicionais por nível acima do 5°.",
-    "source": "PHB-PT",
-    "classes": [
-      "bardo",
-      "bruxo",
-      "feiticeiro",
-      "mago"
-    ]
-  },
-  {
-    "index": "campo-de-espinhos",
-    "name": "Campo de Espinhos",
-    "level": 2,
-    "school": "transmutação",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "45 metros",
-    "components": "V, S",
-    "material": "",
-    "duration": "Concentração, até 10 minutos",
-    "concentration": true,
-    "desc": "Solo em raio de 6m coberto de espinhos (terreno difícil). Criaturas que se movem nessa área sofrem 2d4 de dano penetrante por 1,5m percorrido.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
-      "druida",
-      "patrulheiro"
     ]
   },
   {
@@ -7922,31 +7366,11 @@
     "material": "",
     "duration": "Instantânea",
     "concentration": false,
-    "desc": "Em 1 ação: plantas em raio de 30m tornam-se terreno difícil por 24h. Em 8 horas: fertiliza plantas em raio de 800m para colheitas abundantes por 1 ano.",
+    "desc": "Essa magia canaliza vitalidade nas plantas dentro de uma área especifica. Existem dois usos possíveis para essa magia, concedendo ou benefícios imediatos ou a longo prazo. Se você conjurar essa magia usando 1 ação, escolha um ponto dentro do alcance. Todas as plantas normais num raio de 30 metros centrado no ponto, tornam-se espessas e carregadas. Uma criatura se movendo na área deve gastar 6 metros de movimento para cada 1,5 metro que se mover. Você pode excluir uma ou mais áreas de qualquer tamanho, dentro da área da magia, para não ser afetada. Se você conjurar essa magia ao longo de 8 horas, você fertiliza a terra. Todas as plantas num raio de 800 metros, centrado no ponto dentro do alcance, ficam enriquecidas por 1 ano. As plantas fornecerão o dobro da quantidade normal de comida quando colhidas.",
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
       "bardo",
-      "druida",
-      "patrulheiro"
-    ]
-  },
-  {
-    "index": "barreira-de-vento",
-    "name": "Barreira de Vento",
-    "level": 3,
-    "school": "evocação",
-    "ritual": false,
-    "casting_time": "1 ação",
-    "range": "36 metros",
-    "components": "V, S, M",
-    "material": "Pedaço de tule",
-    "duration": "Concentração, até 1 minuto",
-    "concentration": true,
-    "desc": "Parede de vento de até 15m de comprimento e 4,5m de altura. Projéteis que tentam atravessá-la são automaticamente desviados.",
-    "higher_level": "",
-    "source": "PHB-PT",
-    "classes": [
       "druida",
       "patrulheiro"
     ]
@@ -7963,7 +7387,7 @@
     "material": "",
     "duration": "Concentração, até 1 minuto",
     "concentration": true,
-    "desc": "Uma videira surge do solo. Como ação bônus, pode agarrar uma criatura (TR de Destreza). Criatura agarrada fica imobilizada.",
+    "desc": "Você conjura uma vinha que brota do chão em um espaço desocupado, à sua escolha, que você possa ver dentro do alcance. Quando você conjura essa magia, você pode direcionar a vinha para que ela enlace uma criatura a até 9 metros dela que você possa ver. Essa criatura deve ser bem sucedida num teste de resistência de Destreza ou será arrastada 6 metros na direção da vinha. Até o fim da magia, você pode direcionar a vinha para enlaçar a mesma criatura ou uma diferente, com uma ação bônus, em cada um dos seus turnos.",
     "higher_level": "",
     "source": "PHB-PT",
     "classes": [
@@ -7972,24 +7396,22 @@
     ]
   },
   {
-    "index": "parede-de-pedra",
-    "name": "Parede de Pedra",
-    "level": 5,
-    "school": "evocação",
-    "ritual": false,
+    "index": "mesclar-se-as-rochas",
+    "name": "Mesclar-se às Rochas",
+    "level": 3,
+    "school": "transmutação",
+    "ritual": true,
     "casting_time": "1 ação",
-    "range": "36 metros",
-    "components": "V, S, M",
-    "material": "Granito",
-    "duration": "Concentração, até 10 minutos",
-    "concentration": true,
-    "desc": "Parede de pedra sólida de dez painéis de 3m x 3m e 15cm de espessura. Pode ser de qualquer forma desde que os painéis se conectem.",
+    "range": "Toque",
+    "components": "V, S",
+    "material": "",
+    "duration": "8 horas",
+    "concentration": false,
+    "desc": "Você entra em um objeto ou superfície de pedra grande o suficiente para comportar completamente seu corpo, fundindo-se a todo o equipamento que você carrega para dentro dela até o término da magia. Usando seu movimento, você entra na pedra em um ponto que possa tocar. Nada de sua presença permanece visível ou de outro modo detectável por qualquer sentido não mágico. Enquanto fundido à pedra, você não pode ver o que acontece fora dela, e qualquer teste de Sabedoria (Percepção) que fizer para ouvir sons do lado de fora é feito com desvantagem. Você permanece consciente da passagem do tempo e pode conjurar magias em si mesmo enquanto fundido à pedra. Você pode usar seu movimento para sair da pedra no local onde entrou, o que encerra a magia. Do contrário, você não pode se mover. Um dano físico pequeno feito à pedra não fere você, mas uma destruição parcial ou uma alteração na sua forma (a ponto de não mais comportar seu corpo) expele você da pedra e lhe causa 6d6 de dano de concussão. A completa destruição da pedra (ou a transmutação dela em um tipo diferente de substância) expele você, causando 50 pontos de dano de concussão. Se for expelido, você fica caído em um espaço desocupado mais próximo de onde entrou.",
     "higher_level": "",
-    "source": "PHB-PT",
     "classes": [
-      "druida",
-      "feiticeiro",
-      "mago"
+      "clerigo",
+      "druida"
     ]
   }
 ]

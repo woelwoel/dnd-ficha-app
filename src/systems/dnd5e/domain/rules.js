@@ -442,49 +442,49 @@ const CLERIC_DOMAIN_SPELLS = {
     ['augurio',        'sugestao'],      // nível 3
     ['nao-detectar',   'adivinhacao'],   // nível 5
     ['olho-arcano',    'confusao'],      // nível 7
-    ['lenda',          'escrutinio'],    // nível 9
+    ['conhecimento-lendario',          'videncia'],    // nível 9
   ],
   vida: [
     ['bencao',                   'curar-ferimentos'],
     ['restauracao-menor',        'arma-espiritual'],
     ['farol-de-esperanca',       'oracao-curativa'],
-    ['sentinela-da-morte',       'guardiao-da-fe'],
-    ['curar-ferimentos-em-massa','ressuscitar'],
+    ['protecao-contra-a-morte',       'guardiao-da-fe'],
+    ['curar-ferimentos-em-massa','reviver-os-mortos'],
   ],
   luz: [
     ['maos-flamejantes', 'fogo-das-fadas'],
     ['esfera-flamejante','raio-guiador'],
     ['bola-de-fogo',     'luz-do-dia'],
-    ['guardiao-da-fe',   'parede-de-fogo'],
-    ['chama-radiante',   'escrutinio'],
+    ['guardiao-da-fe',   'muralha-de-fogo'],
+    ['coluna-de-chamas',   'videncia'],
   ],
   natureza: [
     ['amizade-animal',        'falar-com-animais'],
     ['pele-de-arvore',        'crescer-espinhos'],
-    ['crescimento-de-planta', 'barreira-de-vento'],
+    ['crescimento-de-planta', 'muralha-de-vento'],
     ['dominar-besta',         'videira-agarradora'],
-    ['praga-de-insetos',      'parede-de-pedra'],
+    ['praga-de-insetos',      'muralha-de-pedra'],
   ],
   tempestade: [
     ['nebulina',          'onda-trovejante'],
     ['lufada-de-vento',   'destruicao-trovejante'],
     ['chamada-do-relampago','tempestade-de-neve'],
     ['controlar-agua',    'tempestade-de-gelo'],
-    ['onda-devastadora',  'praga-de-insetos'],
+    ['onda-destrutiva',  'praga-de-insetos'],
   ],
   enganacao: [
-    ['encanto-pessoal',  'auto-disfarce'],
+    ['enfeiticar-pessoa',  'disfarcar-se'],
     ['imagem-espelhada', 'passar-sem-rastro'],
     ['dissipar-magia',   'nebulina'],
-    ['porta-dimensional','polimorfismo'],
+    ['porta-dimensional','metamorfose'],
     ['dominar-pessoa',   'modificar-memoria'],
   ],
   guerra: [
-    ['favor-divino',          'escudo-da-fe'],
+    ['auxilio-divino',          'escudo-da-fe'],
     ['arma-magica',           'arma-espiritual'],
     ['manto-de-cruzado',      'guardioes-espirituais'],
-    ['liberdade-de-movimento','pele-de-pedra'],
-    ['chama-radiante',        'segurar-monstro'],
+    ['movimentacao-livre','pele-de-pedra'],
+    ['coluna-de-chamas',        'imobilizar-monstro'],
   ],
   // ── Domínios do Caldeirão de Tasha (source: tasha) ──────────────────
   ordem: [
@@ -497,7 +497,7 @@ const CLERIC_DOMAIN_SPELLS = {
   paz: [
     ['heroismo',          'santuario'],                         // 1
     ['auxilio-divino',    'vinculo-protetor'],                  // 3 (Aid, Warding Bond)
-    ['enviar-mensagem',   'sinal-de-esperanca'],                // 5 (Sending, Beacon of Hope)
+    ['enviar-mensagem',   'farol-de-esperanca'],                // 5 (Sending, Beacon of Hope)
     ['aura-de-pureza',    'esfera-resiliente-de-otiluke'],      // 7
     ['restauracao-maior', 'ligacao-telepatica-de-rary'],        // 9
   ],

@@ -98,7 +98,7 @@ export const FEAT_SPELL_GRANTS = {
     grants: [
       { choose: { count: 1, level: 0, list: 'druida' } },
       { fixed: 'passos-longos',     freeCast: 'long', slots: 'never' },
-      // Índice canônico; 'passos-sem-pegadas' é duplicata a remover (task à parte).
+      // Índice canônico; 'passar-sem-rastro' é duplicata a remover (task à parte).
       { fixed: 'passar-sem-rastro', freeCast: 'long', slots: 'never' },
     ],
   },

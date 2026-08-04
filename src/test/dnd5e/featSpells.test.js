@@ -135,17 +135,17 @@ describe('isFeatSpellChoiceComplete', () => {
 })
 
 describe('resolveFeatSpellOptions', () => {
-  it('tocado-pelas-fadas: 1º círculo de adivinhação/encantamento (21 no catálogo atual)', () => {
+  it('tocado-pelas-fadas: 1º círculo de adivinhação/encantamento (19 no catálogo atual)', () => {
     const opts = resolveFeatSpellOptions('tocado-pelas-fadas', 1, { srdSpells: allSpells })
-    expect(opts.length).toBe(21)
+    expect(opts.length).toBe(19)
     expect(opts.every(s => s.level === 1)).toBe(true)
     expect(opts.every(s => ['adivinhação', 'encantamento'].includes(s.school))).toBe(true)
     expect(opts.some(s => s.index === 'enfeiticar-pessoa')).toBe(true)
   })
 
-  it('tocado-pelas-sombras: ilusão/necromancia (9 no catálogo atual)', () => {
+  it('tocado-pelas-sombras: ilusão/necromancia (8 no catálogo atual)', () => {
     const opts = resolveFeatSpellOptions('tocado-pelas-sombras', 1, { srdSpells: allSpells })
-    expect(opts.length).toBe(9)
+    expect(opts.length).toBe(8)
   })
 
   it('grant sem choose (fixa) → []', () => {
@@ -162,9 +162,9 @@ describe('resolveFeatSpellOptions', () => {
     expect(opts.every(s => s.level === 0 && (s.classes ?? []).includes('mago'))).toBe(true)
   })
 
-  it('iniciado-artifice: list fixa artifice, 14 truques no catálogo atual', () => {
+  it('iniciado-artifice: list fixa artifice, 23 truques no catálogo atual', () => {
     const opts = resolveFeatSpellOptions('iniciado-artifice', 0, { srdSpells: allSpells })
-    expect(opts.length).toBe(14)
+    expect(opts.length).toBe(23)
     expect(opts.every(s => (s.classes ?? []).includes('artifice'))).toBe(true)
   })
 
