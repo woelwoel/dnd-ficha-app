@@ -35,16 +35,24 @@ Mas o corte não é limpo. Três acoplamentos reais:
    (`CharacterSheet.jsx:303` e `:305`, no ramo do v2). Apagar `SheetTabs.jsx`
    inteiro quebra o v2.
 
-2. **O botão "ir para magias" dos espaços fundidos está morto no v2 hoje.**
-   `FusedSpellSlots.jsx:10` chama `onNavigateToSpells()` **sem argumento**. O
-   handler em `CharacterSheet.jsx:269` então só executa `setActiveTab('magias')`,
-   que alimenta as abas do v1 — nenhum componente do v2 lê esse estado. O v2
-   navega para magias por um canal diferente, o `focusSpellId`
-   (`MainBox.jsx:62`), que fica `null` no caminho sem argumento. O
-   `LevelProgression` é compartilhado e alcançável pelo painel de progressão do
-   `HeaderV2`, então o botão quebrado está em produção. Apagar o v1 desenterra
-   isso: o `setActiveTab` deixa de existir e o defeito passa de silencioso a
-   explícito.
+2. **A navegação para magias no v2 funciona por acidente.** O handler em
+   `CharacterSheet.jsx:269` tem dois canais: `setFocusSpellId(spellId)` quando
+   recebe argumento, e `setActiveTab('magias')` sempre. O v2 só lê o primeiro
+   (`MainBox.jsx:62`) — nenhum componente dele lê `activeTab`.
+
+   `FusedSpellSlots.jsx:10` usa `onClick={onNavigateToSpells}` sem arrow
+   function, então o React passa o **SyntheticEvent** como `spellId`. Como o
+   evento é truthy, `setFocusSpellId(event)` roda e o efeito do `MainBox` salta
+   pra aba Magias. Depois `Spells.jsx:147` procura uma magia com `id === event`,
+   não acha nenhuma, e limpa o sinal. O botão funciona — mas só porque um objeto
+   de evento está sendo guardado num estado chamado `focusSpellId` e comparado
+   contra ids de magia.
+
+   O único chamador que dependia mesmo do `setActiveTab` é
+   `PreparedSpellsList.jsx:77` (`onNavigateToSpells()` sem argumento), e esse
+   arquivo é exclusivo do v1. Ao remover o `setActiveTab`, o acidente vira o
+   único mecanismo de navegação — daí ele precisa ser substituído por um sinal
+   explícito nesta mesma mudança.
 
 3. **`portrait.spec.js:21` roda contra o v1 de propósito**, com `?sheetV2=0` e um
    comentário dizendo "reescrito p/ v2 na etapa B". E `a11y.spec.js:63` roda a
@@ -82,21 +90,11 @@ Descartadas duas alternativas:
 `CharacterSheet/ImportErrorBanner.jsx`. `NavBlockedBanner` e `TABS` ficam onde
 estão — morrem com o arquivo.
 
-**Consertar o sinal de navegação para magias.** O `focusSpellId` vira
-`spellNav = { nonce, spellId }`:
-
-- `CharacterSheet.jsx` — `onNavigateToSpells(spellId)` incrementa sempre o
-  `nonce` e grava o `spellId` (podendo ser `null`).
-- `MainBox.jsx:62` — o efeito passa a reagir à mudança de `nonce` em vez de
-  `focusSpellId`, e salta para a aba Magias sempre que ele muda.
-- `Spells.jsx:146` — continua focando a magia só quando `spellId` não é nulo.
-  Nenhuma mudança de comportamento aqui.
-
-Com isso o caminho com magia específica segue funcionando e o caminho sem
-argumento volta a funcionar.
-
 **Portar a asserção do teto 1–30** para `sheetV2-AbilityStrip-edit.test.jsx`,
 enquanto o `AttributeBox.test.jsx` ainda existe para comparar.
+
+**Reescrever os dois e2e acoplados ao flag** (detalhe na seção Testes). Como o
+v2 já é o padrão, os dois passam a valer antes mesmo de o v1 sumir.
 
 ### Remoção
 
@@ -147,6 +145,30 @@ substituir código morto velho.
 `sheet-access.js`, `useSheetHandlers.js`, `CharacterContext.jsx` e os 99
 arquivos compartilhados.
 
+### Depois da remoção
+
+**Tornar explícito o sinal de navegação para magias.** Vem depois e não antes de
+propósito: enquanto o v1 existe, `SheetContent` e `PreparedSpellsList` também
+consomem o `focusSpellId`, e mudar o contrato do contexto obrigaria a tocar em
+dois arquivos que estão prestes a ser apagados. Com o v1 fora, o `MainBox` é o
+único leitor.
+
+O `focusSpellId` vira `spellNav = { nonce, spellId }`:
+
+- `CharacterSheet.jsx` — `onNavigateToSpells(spellId)` incrementa sempre o
+  `nonce` e grava o `spellId`, **normalizando** o argumento: se não for string
+  nem número, vira `null`. É isso que impede um `SyntheticEvent` de entrar no
+  lugar de um id.
+- `MainBox.jsx:62` — o efeito passa a reagir à mudança de `nonce` em vez de
+  `focusSpellId`, e salta para a aba Magias sempre que ele muda.
+- `Spells.jsx:146` — continua focando a magia só quando `spellId` não é nulo.
+  Nenhuma mudança de comportamento aqui.
+- `FusedSpellSlots.jsx:10` — `onClick={onNavigateToSpells}` vira
+  `onClick={() => onNavigateToSpells()}`, para parar de mandar o evento.
+
+Com isso a troca de aba deixa de depender de um objeto de evento ser truthy, e
+os dois caminhos (com e sem magia específica) passam a funcionar por desenho.
+
 ### Testes
 
 Reescritos:
@@ -158,9 +180,14 @@ Reescritos:
   compressão (`data:image/(webp|jpeg)`, `< 60_000`) não mudam.
 - **`a11y.spec.js`** — o loop de dois layouts colapsa numa passada só.
 
-Teste novo: cobrir o `spellNav`. Clicar em "ir para magias" nos espaços fundidos
-troca a aba do `MainBox` para Magias. É a regressão sendo consertada; sem teste
-ela volta na próxima refatoração.
+Testes novos, cobrindo o `spellNav` no `MainBox`:
+
+- Um `nonce` novo **sem** `spellId` troca a aba para Magias. É o caminho que
+  hoje só funciona porque um evento é truthy.
+- Um `nonce` novo **com** `spellId` troca a aba e repassa o id adiante.
+
+Sem esses dois, a normalização do argumento pode ser desfeita sem nada ficar
+vermelho.
 
 ### Limpeza de repo
 
