@@ -11,7 +11,13 @@ vi.mock('../systems/dnd5e/components/CharacterSheet/FeaturesTab', () => ({ Featu
 vi.mock('../systems/dnd5e/components/CharacterSheet/Notes', () => ({ Notes: () => <div /> }))
 vi.mock('../systems/dnd5e/components/CharacterSheet/ArtificerInfusionsPanel', () => ({ ArtificerInfusionsPanel: () => <div /> }))
 vi.mock('../systems/dnd5e/components/CharacterSheet/RestActions', () => ({ RestActions: () => <div /> }))
-vi.mock('../systems/dnd5e/data/SrdProvider', () => ({ useLazySrdDataset: () => ({}), useSrd: () => ({ spells: [] }) }))
+// `useSrdOptional` devolve null fora do provider por contrato — é o que o
+// RunesPanel (folha, montado por dentro daqui) espera quando não há SRD.
+vi.mock('../systems/dnd5e/data/SrdProvider', () => ({
+  useLazySrdDataset: () => ({}),
+  useSrd: () => ({ spells: [] }),
+  useSrdOptional: () => null,
+}))
 
 import { SheetV2 } from '../systems/dnd5e/components/CharacterSheet/v2/SheetV2'
 
