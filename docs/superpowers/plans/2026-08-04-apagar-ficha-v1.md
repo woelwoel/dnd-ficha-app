@@ -791,6 +791,8 @@ Sem tocar em código de aplicação.
 
 Eles vivem em `.claude/worktrees/`. Três estão em HEAD destacado; o quarto segura `claude/relaxed-haibt-0621e7`, e o git recusa apagar uma branch enquanto houver worktree nela.
 
+Juntos ocupam ~1,25 GB (411M + 404M + 404M + 28M), quase tudo `node_modules` duplicado.
+
 ```bash
 git worktree remove --force .claude/worktrees/eager-poincare-6d137e
 git worktree remove --force .claude/worktrees/naughty-kalam-b9eac8
