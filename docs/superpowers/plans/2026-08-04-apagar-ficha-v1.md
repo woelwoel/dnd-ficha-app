@@ -88,8 +88,8 @@ import { memo } from 'react'
  * versão (a ficha foi salva por outro dispositivo da mesma conta).
  *
  * Morava dentro do SheetTabs.jsx, do layout v1. Saiu de lá porque o v2 também
- * depende dele e o v1 está sendo removido — o banner não podia ficar preso a
- * um arquivo condenado.
+ * depende dele — um aviso comum aos dois layouts não tinha por que morar num
+ * arquivo de um deles só.
  */
 export const ImportErrorBanner = memo(function ImportErrorBanner({ message, onDismiss }) {
   return (
