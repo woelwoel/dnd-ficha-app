@@ -175,7 +175,9 @@ Esperado: PASS. Leia a saída e note o nome do caso — `permite aumentar acima 
 
 - [ ] **Step 2: Escrever os casos equivalentes no v2**
 
-Em `src/test/sheetV2-AbilityStrip-edit.test.jsx`, adicione estes três casos dentro do `describe` existente, depois do caso `campo de atributo vazio desabilita Aplicar`:
+Em `src/test/sheetV2-AbilityStrip-edit.test.jsx`, adicione estes quatro casos dentro do `describe` existente, depois do caso `campo de atributo vazio desabilita Aplicar`.
+
+Os dois lados de cada fronteira precisam de caso próprio: sem o "aceita 1", um off-by-one no piso (`n >= 1` virando `n > 1`) passaria por todos os outros sem ficar vermelho.
 
 ```jsx
   it('aceita 30 — o teto absoluto', async () => {
@@ -188,6 +190,18 @@ Em `src/test/sheetV2-AbilityStrip-edit.test.jsx`, adicione estes três casos den
     await user.type(input, '30')
     await user.click(screen.getByRole('button', { name: 'Aplicar' }))
     expect(updateAttribute).toHaveBeenCalledWith('str', '30')
+  })
+
+  it('aceita 1 — o piso', async () => {
+    const user = userEvent.setup()
+    const updateAttribute = vi.fn()
+    renderWithSheetContext(<AbilityStrip />, { updaters: makeUpdaters({ updateAttribute }) })
+    await user.click(screen.getByRole('button', { name: /Editar FOR/ }))
+    const input = screen.getByLabelText('Valor')
+    await user.clear(input)
+    await user.type(input, '1')
+    await user.click(screen.getByRole('button', { name: 'Aplicar' }))
+    expect(updateAttribute).toHaveBeenCalledWith('str', '1')
   })
 
   it('acima de 30 desabilita Aplicar', async () => {
@@ -217,7 +231,7 @@ Em `src/test/sheetV2-AbilityStrip-edit.test.jsx`, adicione estes três casos den
 npx vitest run src/test/sheetV2-AbilityStrip-edit.test.jsx
 ```
 
-Esperado: PASS, 6 testes (3 que já existiam + 3 novos).
+Esperado: PASS, 7 testes (3 que já existiam + 4 novos).
 
 Se algum falhar, **pare**: significa que o v2 não tem o comportamento do v1 e a remoção perderia regra de verdade. Reporte antes de continuar.
 
