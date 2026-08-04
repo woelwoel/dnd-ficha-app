@@ -168,8 +168,13 @@ function SheetBody({ initialCharacter, adminContext = false, onBack }) {
 
   const validationDeps = useMemo(() => ({ races }), [races])
   // Só `getTabErrors` sobrevive: `markTouched`/`hasErrors`/`focusFirstError`
-  // serviam ao gate de troca de aba do layout v1. O v2 lê `fichaErrors` no
-  // HeaderV2 pra marcar os campos inválidos do diálogo Identidade.
+  // serviam ao gate de troca de aba do layout v1, que não existe mais.
+  //
+  // ATENÇÃO: `fichaErrors` chega SEMPRE vazio hoje. `getTabErrors` devolve `{}`
+  // para aba fora de `touchedTabs`, e `markTouched` era o único escritor desse
+  // conjunto — chamado só pelo gate do v1. O HeaderV2 recebe `errors={fichaErrors}`
+  // e portanto nunca marca campo inválido no diálogo Identidade. Isso é ANTERIOR
+  // a este corte (o v2 nunca renderizou as abas do v1), não regressão dele.
   const { getTabErrors } = useTabValidation(character, validationDeps)
 
   const handlers = useSheetHandlers({ setCharacter, races, classes, backgrounds })
