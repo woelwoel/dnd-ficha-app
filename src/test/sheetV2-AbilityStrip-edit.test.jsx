@@ -44,6 +44,18 @@ describe('AbilityStrip — edição', () => {
     expect(updateAttribute).toHaveBeenCalledWith('str', '30')
   })
 
+  it('aceita 1 — o piso', async () => {
+    const user = userEvent.setup()
+    const updateAttribute = vi.fn()
+    renderWithSheetContext(<AbilityStrip />, { updaters: makeUpdaters({ updateAttribute }) })
+    await user.click(screen.getByRole('button', { name: /Editar FOR/ }))
+    const input = screen.getByLabelText('Valor')
+    await user.clear(input)
+    await user.type(input, '1')
+    await user.click(screen.getByRole('button', { name: 'Aplicar' }))
+    expect(updateAttribute).toHaveBeenCalledWith('str', '1')
+  })
+
   it('acima de 30 desabilita Aplicar', async () => {
     const user = userEvent.setup()
     renderWithSheetContext(<AbilityStrip />, { updaters: makeUpdaters({ updateAttribute: vi.fn() }) })
