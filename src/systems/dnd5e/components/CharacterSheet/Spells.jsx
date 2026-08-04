@@ -153,6 +153,18 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   }, [focusSpellId])
   const myCantrips  = mySpells.filter(s => s.level === 0)
   const myLeveled   = mySpells.filter(s => s.level > 0)
+  // Magia CONCEDIDA (domínio/juramento/círculo/patrono/origem, traço racial,
+  // talento) não gasta vaga de nenhum limite — nem de truque, nem de conhecida,
+  // nem de preparada, nem do grimório. `alwaysPrepared` é a marca comum de
+  // todas essas fontes (subclassSpells, racialSpells, featSpells,
+  // grantedSpells). Os contadores e o catálogo têm que usar a MESMA conta:
+  // enquanto o cabeçalho descontava e o catálogo não, a ficha anunciava "5/6"
+  // e travava em "6/6" na hora de escolher a sexta.
+  const isGranted        = s => s.alwaysPrepared === true
+  const grantedCantrips  = myCantrips.filter(isGranted).length
+  const grantedLeveled   = myLeveled.filter(isGranted).length
+  const myCantripsKnown  = myCantrips.length - grantedCantrips
+  const myLeveledKnown   = myLeveled.length - grantedLeveled
   // Níveis (incl. truque=0) que a ficha realmente tem — cada um vira uma sub-aba.
   const presentSpellLevels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].filter(lvl => mySpells.some(s => s.level === lvl))
   // Aba ativa da lista; se a selecionada esvaziou (ex.: removeu a última magia
@@ -287,17 +299,27 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
           <div className="flex flex-wrap gap-4 text-xs text-gray-400 mb-3">
             {cantripsLimit != null && (
               <span>
-                Truques: <span className={myCantrips.length > cantripsLimit ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
-                  {myCantrips.length}/{cantripsLimit}
+                Truques: <span className={myCantripsKnown > cantripsLimit ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
+                  {myCantripsKnown}/{cantripsLimit}
                 </span>
+                {grantedCantrips > 0 && (
+                  <span className="text-amber-500/70 italic ml-1">
+                    (+{grantedCantrips} concedid{grantedCantrips === 1 ? 'o' : 'os'})
+                  </span>
+                )}
               </span>
             )}
             {/* Mago: dois contadores (Grimório + Preparadas) */}
             {isMagoStyle && spellbookSize != null && (
               <span>
-                Grimório: <span className={myLeveled.length > spellbookSize ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
-                  {myLeveled.length}/{spellbookSize}
+                Grimório: <span className={myLeveledKnown > spellbookSize ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
+                  {myLeveledKnown}/{spellbookSize}
                 </span>
+                {grantedLeveled > 0 && (
+                  <span className="text-amber-500/70 italic ml-1">
+                    (+{grantedLeveled} concedida{grantedLeveled === 1 ? '' : 's'})
+                  </span>
+                )}
               </span>
             )}
             {isPrepared && spellsLimit != null && (
@@ -307,28 +329,24 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
                 </span>
                 {myPrepared.length > myPreparedCount && (
                   <span className="text-amber-500/70 italic ml-1">
-                    (+{myPrepared.length - myPreparedCount} subclasse)
+                    (+{myPrepared.length - myPreparedCount} concedida{myPrepared.length - myPreparedCount === 1 ? '' : 's'})
                   </span>
                 )}
               </span>
             )}
-            {/* Conhecidas (bardo/feiticeiro/bruxo/patrulheiro) — exclui alwaysPrepared do contador */}
-            {!isPrepared && spellsLimit != null && (() => {
-              const knownCount = myLeveled.filter(s => s.alwaysPrepared !== true).length
-              const bonusCount = myLeveled.length - knownCount
-              return (
-                <span>
-                  {spellsLabel}: <span className={knownCount > spellsLimit ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
-                    {knownCount}/{spellsLimit}
-                  </span>
-                  {bonusCount > 0 && (
-                    <span className="text-amber-500/70 italic ml-1">
-                      (+{bonusCount} subclasse)
-                    </span>
-                  )}
+            {/* Conhecidas (bardo/feiticeiro/bruxo/patrulheiro) — exclui concedidas */}
+            {!isPrepared && spellsLimit != null && (
+              <span>
+                {spellsLabel}: <span className={myLeveledKnown > spellsLimit ? 'text-red-400 font-bold' : 'text-amber-300 font-semibold'}>
+                  {myLeveledKnown}/{spellsLimit}
                 </span>
-              )
-            })()}
+                {grantedLeveled > 0 && (
+                  <span className="text-amber-500/70 italic ml-1">
+                    (+{grantedLeveled} concedida{grantedLeveled === 1 ? '' : 's'})
+                  </span>
+                )}
+              </span>
+            )}
             {isPrepared && (
               <span className="text-gray-600 italic">
                 {isMagoStyle
@@ -558,8 +576,8 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
           cantripsLimit={cantripsLimit}
           spellsLimit={pickerLimit}
           spellsLabel={pickerLabel}
-          myCantripsCount={myCantrips.length}
-          myLeveledCount={myLeveled.length}
+          myCantripsCount={myCantripsKnown}
+          myLeveledCount={myLeveledKnown}
           filters={filters}
           onFiltersChange={setFilters}
         />
