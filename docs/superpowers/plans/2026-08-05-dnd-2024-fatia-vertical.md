@@ -456,10 +456,20 @@ describe('applyRacialChange — respeita a geração da ficha', () => {
     expect(out.attributes.con).toBe(10)
     expect(out.appliedRacialBonuses).toEqual({})
   })
-  it('trocar de espécie numa ficha 2024 não deixa resíduo de atributo', () => {
-    const um = applyRacialChange(ficha('2024'), { race: 'anao' }, 'anao', null, RACAS)
-    const dois = applyRacialChange(um, { race: null }, null, null, RACAS)
-    expect(dois.attributes.con).toBe(10)
+  // ATENÇÃO: não teste "trocar de espécie em 2024 não deixa resíduo" partindo
+  // de uma ficha limpa — em 2024 o guard zera os bônus, `appliedRacialBonuses`
+  // nunca fica não-vazio, e o laço de reversão nunca itera. O teste passaria
+  // mesmo com a reversão quebrada (verificado por mutação). Parta de um estado
+  // COM resíduo persistido, que é o que exercita o reducer "diff" de verdade.
+  it('ficha 2024 com resíduo persistido reverte ao trocar de espécie', () => {
+    const comResiduo = {
+      ...ficha('2024'),
+      attributes: { str: 10, dex: 10, con: 12, int: 10, wis: 10, cha: 10 },
+      appliedRacialBonuses: { con: 2 }, // ficha adulterada/importada
+    }
+    const out = applyRacialChange(comResiduo, { race: null }, null, null, RACAS)
+    expect(out.attributes.con).toBe(10)
+    expect(out.appliedRacialBonuses).toEqual({})
   })
 })
 ```
