@@ -149,38 +149,58 @@ describe('SpellDetailModal — acessibilidade', () => {
 })
 
 /* ─────────────────────────────────────────────────────────────────────────
-   CharacterView — profBonus com nível total (multiclasse)
-   Testa a lógica de cálculo extraída (sem render do componente inteiro)
-   ──────────────────────────────────────────────────────────────────────── */
-import { getProficiencyBonus } from '../systems/dnd5e/utils/calculations'
+   Bônus de proficiência usa o nível TOTAL (PHB p.163: multiclasse soma os
+   níveis de todas as classes para proficiência).
 
-describe('CharacterView — profBonus usa nível total', () => {
-  function calcProfView(infoLevel, multiclasses = []) {
-    const totalLevel = infoLevel + (multiclasses ?? []).reduce((s, m) => s + (m.level ?? 0), 0)
-    return getProficiencyBonus(totalLevel)
+   Este bloco chamava uma reimplementação local da soma e se dizia teste da
+   CharacterView — um componente que já não tinha importador e foi apagado.
+   Agora bate no caminho real da ficha: useCharacterCalculations, que é quem
+   entrega `calc.profBonus` para salvaguardas, perícias, CD de magia e ataques.
+   ──────────────────────────────────────────────────────────────────────── */
+import { renderHook } from '@testing-library/react'
+import { useCharacterCalculations } from '../systems/dnd5e/hooks/useCharacterCalculations'
+
+describe('profBonus usa o nível total (multiclasse)', () => {
+  function fichaCom(level, multiclasses = []) {
+    return {
+      info: { name: 'M', class: 'guerreiro', level, race: 'humano', multiclasses, chosenFeatures: {} },
+      attributes: { str: 14, dex: 12, con: 14, int: 10, wis: 10, cha: 10 },
+      combat: {
+        maxHp: 20, currentHp: 20, tempHp: 0, armorClass: 12, speed: 9, activeEffects: [],
+        concentrating: { spellIndex: null, spellName: null }, deathSaves: { successes: 0, failures: 0 },
+      },
+      proficiencies: { savingThrows: [], skills: [], expertiseSkills: [], armor: [] },
+      spellcasting: { ability: null, usedSlots: {}, pactSlotsUsed: 0, spells: [] },
+      inventory: { currency: {}, items: [] },
+      traits: {},
+    }
+  }
+
+  function profDe(level, multiclasses = []) {
+    return renderHook(() => useCharacterCalculations(fichaCom(level, multiclasses))).result.current.profBonus
   }
 
   it('monoclasse nível 3 → +2', () => {
-    expect(calcProfView(3, [])).toBe(2)
+    expect(profDe(3, [])).toBe(2)
   })
 
   it('guerreiro 3 / mago 2 (total 5) → +3, não +2 do nível primário', () => {
-    expect(calcProfView(3, [{ level: 2 }])).toBe(3)
+    expect(profDe(3, [{ level: 2 }])).toBe(3)
   })
 
   it('nível primário 1 / multiclasse 8 (total 9) → +4', () => {
-    expect(calcProfView(1, [{ level: 8 }])).toBe(4)
+    expect(profDe(1, [{ level: 8 }])).toBe(4)
   })
 
   it('nível primário 4 sem multiclasse → +2', () => {
-    expect(calcProfView(4)).toBe(2)
+    expect(profDe(4)).toBe(2)
   })
 
   it('nível primário 4 / multiclasse 4 (total 8) → +3', () => {
-    expect(calcProfView(4, [{ level: 4 }])).toBe(3)
+    expect(profDe(4, [{ level: 4 }])).toBe(3)
   })
 
   it('nível primário 10 / multiclasse 7 (total 17) → +6', () => {
-    expect(calcProfView(10, [{ level: 7 }])).toBe(6)
+    expect(profDe(10, [{ level: 7 }])).toBe(6)
   })
 })
