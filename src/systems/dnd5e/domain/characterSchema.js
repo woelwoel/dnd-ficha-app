@@ -28,8 +28,10 @@ import { getMaxAttunement } from './artificerInfusions'
  *  - v4 → corrige bônus racial de atributo que era descartado na criação
  *         (mismatch nome/abreviação): soma os bônus fixos faltantes em
  *         `attributes` para fichas afetadas (meio-orc, anão, elfo, etc.).
+ *  - v5 → `meta.settings.ruleset` ('2014' | '2024') identifica a geração de
+ *         regra da ficha. Fichas anteriores são carimbadas '2014'.
  */
-export const SCHEMA_VERSION = 4
+export const SCHEMA_VERSION = 5
 
 /**
  * Limite máximo absoluto (PHB p.13: "ability score maximum is 20" em criação;
@@ -61,6 +63,14 @@ const settingsSchema = z.object({
    * presente. Ausência (fichas legadas) = só básico. Ver domain/sources.js.
    */
   sources: z.array(z.string()).default(['phb']),
+  /**
+   * Geração de regra da ficha. Ausência = '2014' (ficha legada), resolvido por
+   * domain/rulesets.js — NÃO use .default() aqui: o .partial() abaixo embrulha
+   * o campo em ZodOptional, que curto-circuita antes do default rodar.
+   * Valor desconhecido REPROVA o parse de propósito: cair calado no 2014
+   * renderizaria uma ficha 2024 com números errados sem avisar ninguém.
+   */
+  ruleset: z.enum(['2014', '2024']).optional(),
 }).partial().default({})
 
 const metaSchema = z.object({
@@ -481,6 +491,7 @@ export function migrateCharacter(raw) {
       if (v === 1) doc = migrateV1ToV2(doc)
       if (v === 2) doc = migrateV2ToV3(doc)
       if (v === 3) doc = migrateV3ToV4(doc)
+      if (v === 4) doc = migrateV4ToV5(doc)
     }
     doc = { ...doc, meta: { ...(doc.meta ?? {}), schemaVersion: SCHEMA_VERSION } }
   }
@@ -636,4 +647,17 @@ function migrateV3ToV4(doc) {
 
   if (!changed) return doc
   return { ...doc, attributes: attrs, appliedRacialBonuses: applied }
+}
+
+/**
+ * v4 → v5: carimba a geração de regra. Toda ficha existente é 2014 por
+ * definição — o 2024 só passa a existir depois desta versão.
+ */
+function migrateV4ToV5(doc) {
+  const settings = doc.meta?.settings ?? {}
+  if (settings.ruleset) return doc
+  return {
+    ...doc,
+    meta: { ...(doc.meta ?? {}), settings: { ...settings, ruleset: '2014' } },
+  }
 }
