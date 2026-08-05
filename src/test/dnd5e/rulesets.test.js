@@ -51,4 +51,14 @@ describe('sourcesFor — gating estrito', () => {
     const c = { meta: { settings: { ruleset: '2024' } } }
     expect(sourcesFor(c)).toEqual(['phb2024'])
   })
+  it('sources não-array numa ficha 2024 não lança e cai na fonte base', () => {
+    const c = { meta: { settings: { ruleset: '2024', sources: 'phb' } } }
+    expect(() => sourcesFor(c)).not.toThrow()
+    expect(sourcesFor(c)).toEqual(['phb2024'])
+  })
+  it('sources não-array numa ficha 2014 não lança e cai na fonte base', () => {
+    const c = { meta: { settings: { sources: 'phb' } } }
+    expect(() => sourcesFor(c)).not.toThrow()
+    expect(sourcesFor(c)).toEqual(['phb'])
+  })
 })

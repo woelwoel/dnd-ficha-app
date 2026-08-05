@@ -53,7 +53,8 @@ export function rulesetFor(character) {
 export function sourcesFor(character) {
   const rs = rulesetFor(character)
   const allowed = new Set(rs.sources)
-  const active = character?.meta?.settings?.sources ?? []
+  const raw = character?.meta?.settings?.sources
+  const active = Array.isArray(raw) ? raw : []
   const kept = active.filter(s => allowed.has(s))
   return kept.length ? kept : [rs.sources[0]]
 }
