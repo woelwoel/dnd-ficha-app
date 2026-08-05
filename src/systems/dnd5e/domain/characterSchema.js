@@ -11,6 +11,7 @@
 import { z } from 'zod'
 import { enforceAttunementLimit } from './magicItems'
 import { getMaxAttunement } from './artificerInfusions'
+import { DEFAULT_RULESET } from './rulesets'
 
 /**
  * Versão atual do formato de ficha. Incrementar a cada breaking change.
@@ -71,7 +72,7 @@ const settingsSchema = z.object({
    * renderizaria uma ficha 2024 com números errados sem avisar ninguém.
    */
   ruleset: z.enum(['2014', '2024']).optional(),
-}).partial().default({})
+}).partial().passthrough().default({})
 
 const metaSchema = z.object({
   createdAt: z.string(),
@@ -658,6 +659,6 @@ function migrateV4ToV5(doc) {
   if (settings.ruleset) return doc
   return {
     ...doc,
-    meta: { ...(doc.meta ?? {}), settings: { ...settings, ruleset: '2014' } },
+    meta: { ...(doc.meta ?? {}), settings: { ...settings, ruleset: DEFAULT_RULESET } },
   }
 }

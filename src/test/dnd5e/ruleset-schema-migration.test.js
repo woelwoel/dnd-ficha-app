@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { SCHEMA_VERSION, migrateCharacter, safeParseCharacter } from '../../systems/dnd5e/domain/characterSchema'
-import { rulesetOf } from '../../systems/dnd5e/domain/rulesets'
+import { rulesetOf, DEFAULT_RULESET } from '../../systems/dnd5e/domain/rulesets'
 
 // Inclui todos os campos obrigatórios no nível raiz de `characterSchema`
 // (id, combat, proficiencies, spellcasting, inventory) — sem eles,
@@ -63,6 +63,26 @@ describe('validação do ruleset', () => {
     expect(safeParseCharacter(doc).success).toBe(false)
   })
   it('rulesetOf continua devolvendo 2014 quando o campo está ausente', () => {
-    expect(rulesetOf({ meta: { settings: {} } })).toBe('2014')
+    expect(rulesetOf({ meta: { settings: {} } })).toBe(DEFAULT_RULESET)
+  })
+})
+
+describe('settingsSchema preserva chaves desconhecidas (rollback-safety)', () => {
+  // Cenário: rollback de deploy pra uma versão anterior a este commit (sem
+  // `ruleset` no shape) carrega uma ficha já carimbada '2024'. Se o parse
+  // daquele código antigo descartasse o campo desconhecido e o app
+  // autosalvasse nessa janela, a perda seria permanente — e quando o código
+  // novo voltasse, `rulesetOf` trataria a ausência como '2014' por
+  // definição, fazendo uma ficha 2024 real renderizar com as regras erradas
+  // em silêncio. `settingsSchema` precisa de `.passthrough()` pra não apagar
+  // campos de settings que o código rodando não conhece ainda (o inverso
+  // também vale: uma versão futura de settings sendo lida por este código).
+  it('mantém uma chave desconhecida em meta.settings depois do parse', () => {
+    const doc = fichaV4()
+    doc.meta.schemaVersion = 5
+    doc.meta.settings = { sources: ['phb'], chaveFutura: 'x' }
+    const r = safeParseCharacter(doc)
+    expect(r.success).toBe(true)
+    expect(r.data.meta.settings.chaveFutura).toBe('x')
   })
 })

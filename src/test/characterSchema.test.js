@@ -22,6 +22,9 @@ describe('migração v1 → v2', () => {
     const migrated = migrateCharacter(v1Character())
     expect(migrated.combat.hitDice).toEqual({ pool: { d10: { total: 3, used: 0 } } })
     expect(migrated.meta.schemaVersion).toBe(SCHEMA_VERSION)
+    // Cadeia completa v1 → v5: ficha de meses atrás (o caminho mais comum em
+    // produção) precisa chegar carimbada '2014', não só quem já está em v4.
+    expect(migrated.meta.settings.ruleset).toBe('2014')
   })
 
   it('mantém campo em v2 se já estiver no formato novo (idempotente)', () => {
