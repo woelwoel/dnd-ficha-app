@@ -207,6 +207,58 @@ e uma ficha 2014 existente continua idêntica ao que era.
 **Fora:** as outras 11 classes, magias além das do Mago, maestria de arma,
 exaustão numérica, construção de encontro 2024, trava de geração por mesa.
 
+## Extração do PDF: sondagem (2026-08-05)
+
+PDF: `OneDrive\Área de Trabalho\Conteúdos D&D\D&D 2024\dampd-5e---livro-do-jogador-2024.pdf`
+(35 MB, **397 páginas**, fora do repo como os anteriores).
+
+**Risco de OCR: descartado.** Diferente do Xanathar, a camada de texto é
+**digital**, não OCR de scan: acentuação íntegra, sem corrupção de glifo, sem
+`l`/`1` trocados. A curadoria manual pesada que o Xanathar exigiu **não se
+aplica aqui**.
+
+**GOTCHA principal — versalete em Área de Uso Privado.** Títulos usam
+`MrsEavesOT-Roman` em versalete, e `get_text()` devolve as minúsculas como
+`U+F700 + codepoint`. "Descrições das Espécies" sai da extração como
+`D\uf765\uf773\uf763\uf772\uf769\uf7e7\uf7f5\uf765\uf773 \uf764\uf761\uf773 E\uf773\uf770\uf7e9\uf763\uf769\uf765\uf773` — só a maiúscula inicial de cada
+palavra sobrevive. Num terminal isso imprime como `D  E`, e a ancoragem por
+título quebra **em silêncio**. Decodificação é mecânica:
+
+```python
+def unsmallcaps(s):
+    return "".join(chr(ord(c) - 0xF700) if 0xF700 <= ord(c) <= 0xF7FF else c for c in s)
+```
+
+Validado nas quatro seções da fatia: **zero glifos PUA remanescentes**.
+
+**Âncora por tamanho de fonte, não por texto.** A hierarquia é limpa via
+`get_text("dict")`, mas o limiar **varia por seção** — nome de antecedente é
+18,0 e nome de espécie é 15,0. Os build scripts precisam de limiar por seção,
+não de um global.
+
+**Outros tratamentos mecânicos:** desfazer hifenização de quebra de linha
+(12 ocorrências só na p.182) e deduplicar spans repetidos (título de capítulo
+aparece 2×).
+
+**Paginação:** `get_toc()` devolve páginas 1-based sobre o índice do pymupdf
+(`toc − 1 = índice`); a numeração impressa é `índice − 5`.
+
+**Mapa de páginas da fatia** (índice pymupdf): Mago 152 · magias de Mago 155 ·
+subclasses de Mago 159 · Descrições dos Antecedentes 182 · Descrições das
+Espécies 191 · Talentos de Origem 205.
+
+**Premissas do design validadas contra o livro:**
+
+- Antecedente traz "Valores de Atributo… três dos valores de atributo" (p.182) —
+  confirma `abilityBonusFrom: 'background'`.
+- Espécie é narrativa + "Traços de X", sem valores de atributo (p.191) — confirma
+  que `computeRacialBonuses` deve devolver `{}` no 2024.
+- **"Nível 3: Subclasse de Mago"** (p.154) — confirma `subclassLevel: 3` e a
+  escolha do Mago como caso de teste do descritor.
+- Dez espécies: Aasimar, Anão, Draconato, Elfo, Gnomo, Golias, Humano, Orc,
+  Pequenino, Tiferino. Quatro subclasses de Mago: Abjurador, Adivinhador,
+  Evocador, Ilusionista.
+
 ## Tratamento de erro e casos de borda
 
 1. **Dataset 2024 ausente (404).** `loadDataset` já cai em `[]` e não cacheia
