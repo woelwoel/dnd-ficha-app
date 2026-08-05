@@ -35,8 +35,16 @@ describe('MainBox', () => {
     expect(screen.getByRole('tab', { name: 'Ações' })).toHaveAttribute('aria-selected', 'false')
   })
 
-  it('pula pra aba Magias quando focusSpellId chega', () => {
-    renderWithSheetContext(<MainBox />, { focusSpellId: 'fireball' })
+  it('pula pra aba Magias quando chega um spellNav COM magia', () => {
+    renderWithSheetContext(<MainBox />, { spellNav: { nonce: 1, spellId: 'fireball' } })
+    expect(screen.getByRole('tab', { name: 'Magias' })).toHaveAttribute('aria-selected', 'true')
+  })
+
+  // O botão "Adicionar / Gerenciar Magias" dos espaços fundidos pede a aba sem
+  // magia específica. Antes isso só funcionava porque o SyntheticEvent do clique
+  // ia parar no lugar do id e era truthy.
+  it('pula pra aba Magias quando o spellNav chega SEM magia', () => {
+    renderWithSheetContext(<MainBox />, { spellNav: { nonce: 1, spellId: null } })
     expect(screen.getByRole('tab', { name: 'Magias' })).toHaveAttribute('aria-selected', 'true')
   })
 

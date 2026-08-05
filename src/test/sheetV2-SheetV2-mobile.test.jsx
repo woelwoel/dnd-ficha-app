@@ -14,7 +14,6 @@ vi.mock('../systems/dnd5e/components/CharacterSheet/ArtificerInfusionsPanel', ()
 vi.mock('../systems/dnd5e/components/CharacterSheet/RestActions', () => ({ RestActions: () => <div /> }))
 vi.mock('../systems/dnd5e/components/CharacterSheet/DamageModal', () => ({ DamageModal: () => null }))
 vi.mock('../systems/dnd5e/components/CharacterSheet/CharacterInfo', () => ({ CharacterInfo: () => <div /> }))
-vi.mock('../systems/dnd5e/components/CharacterSheet/SkillsList', () => ({ SkillsList: () => <div /> }))
 vi.mock('../systems/dnd5e/components/CharacterSheet/LevelProgression', () => ({ LevelProgression: () => <div /> }))
 vi.mock('../systems/dnd5e/components/SourcePicker', () => ({ SourcePicker: () => <div /> }))
 // `useSrdOptional` devolve null fora do provider por contrato — é o que o

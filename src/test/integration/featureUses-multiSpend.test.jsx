@@ -8,7 +8,7 @@ import { useCharacter } from '../../systems/dnd5e/hooks/useCharacter'
 import { defaultClassFeatureUses, mergeFeatureUses } from '../../systems/dnd5e/domain/rules'
 
 /**
- * Fiação REAL da ficha (SheetContent/ActionsTab): o painel recebe a lista
+ * Fiação REAL da ficha (ActionsTab): o painel recebe a lista
  * derivada `featureUses` e devolve ela em cada gasto — `spendFeatureUse(id,
  * featureUses)`. É essa fiação que fazia "Gastar 5" tirar 1 ponto só: a lista
  * é a foto do render e não avança entre as N chamadas do mesmo clique.

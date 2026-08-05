@@ -16,7 +16,7 @@
 
 **Criados:**
 - `src/systems/dnd5e/components/CharacterSheet/ImportErrorBanner.jsx` — o banner dispensável de erro de importação/conflito de versão. Sai de dentro do `SheetTabs.jsx` (v1) porque o v2 o consome.
-- `src/test/importErrorBanner.test.jsx` — cobertura do componente extraído.
+- `src/test/ImportErrorBanner.test.jsx` — cobertura do componente extraído.
 
 **Modificados:**
 - `src/systems/dnd5e/components/CharacterSheet/CharacterSheet.jsx` — perde a bifurcação v1/v2, o estado de abas do v1 e o `quickStats`; ganha o sinal `spellNav`.
@@ -38,13 +38,13 @@ O `SheetTabs.jsx` é um arquivo do v1 que vai ser apagado, mas o ramo do v2 em `
 
 **Files:**
 - Create: `src/systems/dnd5e/components/CharacterSheet/ImportErrorBanner.jsx`
-- Create: `src/test/importErrorBanner.test.jsx`
+- Create: `src/test/ImportErrorBanner.test.jsx`
 - Modify: `src/systems/dnd5e/components/CharacterSheet/SheetTabs.jsx:157-164`
 - Modify: `src/systems/dnd5e/components/CharacterSheet/CharacterSheet.jsx:12`
 
 - [ ] **Step 1: Escrever o teste que falha**
 
-Crie `src/test/importErrorBanner.test.jsx`:
+Crie `src/test/ImportErrorBanner.test.jsx`:
 
 ```jsx
 import { describe, it, expect, vi } from 'vitest'
@@ -71,7 +71,7 @@ describe('ImportErrorBanner', () => {
 - [ ] **Step 2: Rodar o teste e confirmar que falha**
 
 ```bash
-npx vitest run src/test/importErrorBanner.test.jsx
+npx vitest run src/test/ImportErrorBanner.test.jsx
 ```
 
 Esperado: FAIL. A mensagem é de resolução de módulo — `Failed to resolve import ".../CharacterSheet/ImportErrorBanner"`, porque o arquivo ainda não existe.
@@ -87,8 +87,9 @@ import { memo } from 'react'
  * Aviso dispensável no topo da ficha: erro ao importar JSON, ou conflito de
  * versão (a ficha foi salva por outro dispositivo da mesma conta).
  *
- * Morava dentro do SheetTabs.jsx, que era do layout v1. Saiu de lá quando o v1
- * foi apagado — o v2 é o único consumidor que sobrou.
+ * Morava dentro do SheetTabs.jsx, do layout v1. Saiu de lá porque o v2 também
+ * depende dele — um aviso comum aos dois layouts não tinha por que morar num
+ * arquivo de um deles só.
  */
 export const ImportErrorBanner = memo(function ImportErrorBanner({ message, onDismiss }) {
   return (
@@ -103,7 +104,7 @@ export const ImportErrorBanner = memo(function ImportErrorBanner({ message, onDi
 - [ ] **Step 4: Rodar o teste e confirmar que passa**
 
 ```bash
-npx vitest run src/test/importErrorBanner.test.jsx
+npx vitest run src/test/ImportErrorBanner.test.jsx
 ```
 
 Esperado: PASS, 2 testes.
@@ -138,13 +139,13 @@ Esperado: uma linha só, em `ImportErrorBanner.jsx`.
 - [ ] **Step 7: Rodar os testes tocados e commitar**
 
 ```bash
-npx vitest run src/test/importErrorBanner.test.jsx src/test/sheetV2-SheetV2-banners.test.jsx
+npx vitest run src/test/ImportErrorBanner.test.jsx src/test/sheetV2-SheetV2-banners.test.jsx
 ```
 
 Esperado: PASS.
 
 ```bash
-git add src/systems/dnd5e/components/CharacterSheet/ImportErrorBanner.jsx src/test/importErrorBanner.test.jsx src/systems/dnd5e/components/CharacterSheet/SheetTabs.jsx src/systems/dnd5e/components/CharacterSheet/CharacterSheet.jsx
+git add src/systems/dnd5e/components/CharacterSheet/ImportErrorBanner.jsx src/test/ImportErrorBanner.test.jsx src/systems/dnd5e/components/CharacterSheet/SheetTabs.jsx src/systems/dnd5e/components/CharacterSheet/CharacterSheet.jsx
 git commit -m "refactor(ficha): ImportErrorBanner sai do SheetTabs pro proprio modulo
 
 O SheetTabs e do layout v1 e vai ser apagado, mas o ramo do v2 importa o
@@ -174,7 +175,9 @@ Esperado: PASS. Leia a saída e note o nome do caso — `permite aumentar acima 
 
 - [ ] **Step 2: Escrever os casos equivalentes no v2**
 
-Em `src/test/sheetV2-AbilityStrip-edit.test.jsx`, adicione estes três casos dentro do `describe` existente, depois do caso `campo de atributo vazio desabilita Aplicar`:
+Em `src/test/sheetV2-AbilityStrip-edit.test.jsx`, adicione estes quatro casos dentro do `describe` existente, depois do caso `campo de atributo vazio desabilita Aplicar`.
+
+Os dois lados de cada fronteira precisam de caso próprio: sem o "aceita 1", um off-by-one no piso (`n >= 1` virando `n > 1`) passaria por todos os outros sem ficar vermelho.
 
 ```jsx
   it('aceita 30 — o teto absoluto', async () => {
@@ -187,6 +190,18 @@ Em `src/test/sheetV2-AbilityStrip-edit.test.jsx`, adicione estes três casos den
     await user.type(input, '30')
     await user.click(screen.getByRole('button', { name: 'Aplicar' }))
     expect(updateAttribute).toHaveBeenCalledWith('str', '30')
+  })
+
+  it('aceita 1 — o piso', async () => {
+    const user = userEvent.setup()
+    const updateAttribute = vi.fn()
+    renderWithSheetContext(<AbilityStrip />, { updaters: makeUpdaters({ updateAttribute }) })
+    await user.click(screen.getByRole('button', { name: /Editar FOR/ }))
+    const input = screen.getByLabelText('Valor')
+    await user.clear(input)
+    await user.type(input, '1')
+    await user.click(screen.getByRole('button', { name: 'Aplicar' }))
+    expect(updateAttribute).toHaveBeenCalledWith('str', '1')
   })
 
   it('acima de 30 desabilita Aplicar', async () => {
@@ -216,7 +231,7 @@ Em `src/test/sheetV2-AbilityStrip-edit.test.jsx`, adicione estes três casos den
 npx vitest run src/test/sheetV2-AbilityStrip-edit.test.jsx
 ```
 
-Esperado: PASS, 6 testes (3 que já existiam + 3 novos).
+Esperado: PASS, 7 testes (3 que já existiam + 4 novos).
 
 Se algum falhar, **pare**: significa que o v2 não tem o comportamento do v1 e a remoção perderia regra de verdade. Reporte antes de continuar.
 
@@ -405,8 +420,13 @@ por:
 
 ```jsx
   // Só `getTabErrors` sobrevive: `markTouched`/`hasErrors`/`focusFirstError`
-  // serviam ao gate de troca de aba do layout v1. O v2 lê `fichaErrors` no
-  // HeaderV2 pra marcar os campos inválidos do diálogo Identidade.
+  // serviam ao gate de troca de aba do layout v1, que não existe mais.
+  //
+  // ATENÇÃO: `fichaErrors` chega SEMPRE vazio hoje. `getTabErrors` devolve `{}`
+  // para aba fora de `touchedTabs`, e `markTouched` era o único escritor desse
+  // conjunto — chamado só pelo gate do v1. O HeaderV2 recebe `errors={fichaErrors}`
+  // e portanto nunca marca campo inválido no diálogo Identidade. Isso é ANTERIOR
+  // a este corte (o v2 nunca renderizou as abas do v1), não regressão dele.
   const { getTabErrors } = useTabValidation(character, validationDeps)
 ```
 

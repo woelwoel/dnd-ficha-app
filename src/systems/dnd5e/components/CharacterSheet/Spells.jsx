@@ -139,8 +139,8 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
   const usedSlots   = character.spellcasting.usedSlots || {}
   const mySpells    = character.spellcasting.spells || []
 
-  // Auto-abre o modal de detalhe quando o usuário navega aqui a partir de
-  // PreparedSpellsList (que passa o id/index da magia via focusSpellId).
+  // Auto-abre o modal de detalhe quando o usuário navega até aqui com um
+  // `focusSpellId` (id/index da magia) vindo do contexto da ficha.
   // Aceita id (interno) OU index (SRD reference) — o que vier primeiro.
   useEffect(() => {
     if (!focusSpellId) return
@@ -257,8 +257,8 @@ export function Spells({ character, attributes, level, profBonus: profBonusProp,
 
   return (
     <div className="space-y-4">
-      {/* Banner de concentração ativa (PHB p.203) — duplica o chip do
-          SheetCombatBar mas com mais contexto (mensagem de regra completa
+      {/* Banner de concentração ativa (PHB p.203) — duplica o chip da
+          barra de combate mas com mais contexto (mensagem de regra completa
           + botão Romper labelado). Aparece só nesta aba. */}
       {concentrating?.spellIndex && (
         <div className="bg-blue-50 border-2 border-blue-600 rounded-sm px-4 py-2 flex items-center gap-3">

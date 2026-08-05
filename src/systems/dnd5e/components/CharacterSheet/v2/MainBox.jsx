@@ -21,7 +21,7 @@ export const MAIN_TABS = [
 export function MainBox({ activeTab, onTabChange, hideTablist = false }) {
   const {
     character, calc, classData, backgrounds,
-    updaters, featureUses, readOnly, focusSpellId, clearFocusSpell,
+    updaters, featureUses, readOnly, spellNav, clearFocusSpell,
   } = useCharacterContext()
   // Controlado (activeTab/onTabChange do pai — usado no mobile) vs não-controlado
   // (estado interno — layout desktop). Padrão clássico.
@@ -55,15 +55,16 @@ export function MainBox({ activeTab, onTabChange, hideTablist = false }) {
     }
   }
 
-  // Sinal one-shot vindo do contexto (ex.: clicar num chip de magia preparada):
-  // ao chegar um focusSpellId, salta pra aba Magias. Precisa de efeito porque é
-  // reação a um sinal externo — não dá pra derivar `tab` (o usuário navega depois).
+  // Sinal one-shot vindo do contexto (botão dos espaços fundidos, chip de magia
+  // preparada): a cada `nonce` novo salta pra aba Magias. Reage ao nonce e não
+  // ao spellId porque o pedido pode vir sem magia específica — e porque o nonce
+  // muda mesmo quando o usuário pede a MESMA magia duas vezes seguidas.
   useEffect(() => {
-    if (focusSpellId == null) return
+    if (!spellNav?.nonce) return
     if (isControlled) onTabChange?.('magias'); else setInternalTab('magias')
     // one-shot: reage só ao sinal; onTabChange/isControlled omitidos de propósito
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [focusSpellId])
+  }, [spellNav?.nonce])
 
   const infusionsCatalog = useLazySrdDataset('infusions')
   const artLevel = artificerLevelOf(character)
@@ -134,7 +135,7 @@ export function MainBox({ activeTab, onTabChange, hideTablist = false }) {
             onSetConcentration={setConcentration}
             onApplyHealing={applyHealing}
             onAddActiveEffect={addActiveEffect}
-            focusSpellId={focusSpellId}
+            focusSpellId={spellNav?.spellId ?? null}
             onClearFocusSpell={clearFocusSpell}
             featureUses={featureUses}
             onSpendFeatureUse={id => spendFeatureUse(id, featureUses)}

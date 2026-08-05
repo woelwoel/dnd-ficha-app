@@ -7,7 +7,7 @@ export function FusedSpellSlots({ fusedSlots, onNavigateToSpells }) {
         <p className="text-xs font-semibold text-blue-300">Espaços de Magia Fundidos (Multiclasse D&D 5e)</p>
         {onNavigateToSpells && (
           <button
-            onClick={onNavigateToSpells}
+            onClick={() => onNavigateToSpells()}
             className="text-xs px-3 py-1.5 rounded bg-blue-900/40 hover:bg-blue-800/50 border border-blue-700/50 text-blue-300 font-semibold transition-colors"
           >
             ✨ Adicionar / Gerenciar Magias →

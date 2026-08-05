@@ -5,7 +5,7 @@ import { Modal } from '../../../../components/ui/Modal'
 
 /**
  * Modal pra mover ficha existente entre "pessoal" e uma mesa.
- * Disparado pelo SheetHeader. Quando confirma, recarrega a ficha
+ * Disparado pelo HeaderV2. Quando confirma, recarrega a ficha
  * pra refletir o novo campaignId.
  */
 export function MoveToCampaignModal({ characterId, currentCampaignId, onClose, onMoved }) {

@@ -43,9 +43,8 @@ function clearWizardStorage() {
 }
 
 // Razões de falha ao salvar (upsertCharacter) → mensagem amigável exibida no
-// wizard. Espelha SAVE_ERROR_MESSAGES do SheetHeader. Sem isso, "Inscrever
-// Herói" falhava em silêncio (só console.error) e o usuário achava que o botão
-// estava travado.
+// wizard. Sem isso, "Inscrever Herói" falhava em silêncio (só console.error) e
+// o usuário achava que o botão estava travado.
 const FINALIZE_ERROR_MESSAGES = {
   limit: 'Você atingiu o limite de 100 fichas por conta.',
   'too-large': 'Ficha grande demais para salvar (limite ~200 KB).',

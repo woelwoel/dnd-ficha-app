@@ -1,9 +1,10 @@
 /**
  * Condições D&D 5e (PHB p.290–296) + Exaustão (p.291).
  *
- * Fonte única de verdade — consumida por SheetCombatBar, ConditionsTracker,
- * tooltips, etc. Cada entrada traz `rule` em texto curto compatível com
- * tooltip de UI (1-3 linhas).
+ * Fonte única de verdade — consumida pelo HeaderV2 (chips e seletor de
+ * condições da ficha) e pela tela de combate (CombatantRow, ConditionPalette).
+ * Cada entrada traz `rule` em texto curto compatível com tooltip de UI
+ * (1-3 linhas).
  */
 export const CONDITIONS = [
   {

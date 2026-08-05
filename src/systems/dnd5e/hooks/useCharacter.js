@@ -17,7 +17,7 @@ import { upsertEffect, removeEffect, pruneOnConcentrationChange } from '../domai
 /**
  * Resolve a lista de feature-uses para spend/regain.
  *
- * A `list` do caller (ex.: SheetContent, que tem `classChoices` no memo) entra
+ * A `list` do caller (ex.: o CharacterSheet, que tem `classChoices` no memo) entra
  * como ESTRUTURA — ids, `max`, `recharge`, e principalmente os trackers de
  * subclasse, que dependem de `classChoices` e não são deriváveis aqui. Sem
  * ela, cai nos defaults.
