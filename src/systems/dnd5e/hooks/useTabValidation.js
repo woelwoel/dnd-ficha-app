@@ -1,26 +1,6 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { ABILITY_SCORES } from '../utils/calculations'
 import { SPELLCASTER_CLASSES } from '../domain/rules'
-
-/**
- * IDs dos campos com erro, em ordem de prioridade.
- * Usados pelo botão "Revisar erros" para focar o primeiro campo inválido.
- */
-export const ERROR_FIELD_IDS = {
-  name:        'field-name',
-  race:        'field-race',
-  subrace:     'field-subrace',
-  class:       'field-class',
-  level:       'field-level',
-  attr_str:    'field-attr-str',
-  attr_dex:    'field-attr-dex',
-  attr_con:    'field-attr-con',
-  attr_int:    'field-attr-int',
-  attr_wis:    'field-attr-wis',
-  attr_cha:    'field-attr-cha',
-  armorClass:  'field-armorClass',
-  currentHp:   'field-currentHp',
-}
 
 /* ── Validadores puros por aba ────────────────────────────────────── */
 
@@ -47,10 +27,13 @@ function validateFicha(character, races = []) {
   if (Number.isNaN(lvl) || lvl < 1 || lvl > 20)
     errors.level = 'Nível deve estar entre 1 e 20'
 
+  // Faixa alinhada ao editor de atributo da ficha v2 (1–30): itens e efeitos
+  // do 5e passam de 20 (Manopla da Força de Ogro, tomos), e o mínimo de 3 só
+  // vale para rolagem de criação, não para uma ficha em jogo.
   for (const { key, name } of ABILITY_SCORES) {
     const v = Number(attributes[key])
-    if (Number.isNaN(v) || v < 3 || v > 20)
-      errors[`attr_${key}`] = `${name}: valor deve estar entre 3 e 20`
+    if (Number.isNaN(v) || v < 1 || v > 30)
+      errors[`attr_${key}`] = `${name}: valor deve estar entre 1 e 30`
   }
 
   // CA pode ser qualquer valor não-negativo. (Antes travava em ≥10, mas no
@@ -86,8 +69,6 @@ const TAB_VALIDATORS = {
  * `character` ou `deps.races` mudam.
  */
 export function useTabValidation(character, deps = {}) {
-  const [touchedTabs, setTouchedTabs] = useState(() => new Set())
-
   const races = deps?.races
   // Extrai apenas o que importa para evitar recomputar quando deps é
   // um objeto novo em cada render com conteúdo equivalente.
@@ -101,44 +82,12 @@ export function useTabValidation(character, deps = {}) {
 
   const validateTab = useCallback(tabId => allErrors[tabId] ?? {}, [allErrors])
 
-  const getTabErrors = useCallback(tabId => {
-    if (!touchedTabs.has(tabId)) return {}
-    return allErrors[tabId] ?? {}
-  }, [touchedTabs, allErrors])
-
-  const markTouched = useCallback(tabId => {
-    setTouchedTabs(prev => {
-      if (prev.has(tabId)) return prev
-      const next = new Set(prev)
-      next.add(tabId)
-      return next
-    })
-  }, [])
-
-  const hasErrors = useCallback(
-    tabId => Object.keys(allErrors[tabId] ?? {}).length > 0,
-    [allErrors]
-  )
-
-  const focusFirstError = useCallback(tabId => {
-    const errors = allErrors[tabId] ?? {}
-    for (const [key, fieldId] of Object.entries(ERROR_FIELD_IDS)) {
-      if (errors[key]) {
-        const el = document.getElementById(fieldId)
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-          el.focus?.()
-          return
-        }
-      }
-    }
-  }, [allErrors])
+  // Alias histórico de `validateTab`. Já filtrou por "abas tocadas", gate que
+  // só o layout v1 alimentava — sem ele os erros nunca apareciam no v2.
+  const getTabErrors = validateTab
 
   return {
     validateTab,
     getTabErrors,
-    markTouched,
-    hasErrors,
-    focusFirstError,
   }
 }
