@@ -48,7 +48,8 @@ function validateFicha(character, races = []) {
   return errors
 }
 
-function validateMagias(character) {
+/** Exportada para teste: conjurador sem atributo de conjuração definido. */
+export function validateMagias(character) {
   const errors = {}
   const cls = character.info.class?.toLowerCase()
   if (cls && SPELLCASTER_CLASSES.has(cls) && !character.spellcasting.ability) {

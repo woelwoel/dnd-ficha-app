@@ -1,16 +1,14 @@
 import { describe, it, expect } from 'vitest'
+import { validateMagias } from '../systems/dnd5e/hooks/useTabValidation'
 
-// Replica da lógica de validateMagias
-function validateMagias(character) {
-  const errors = {}
-  const SPELLCASTERS = ['bardo','clerigo','druida','paladino','patrulheiro','feiticeiro','bruxo','mago']
-  const cls = character.info.class?.toLowerCase()
-  if (cls && SPELLCASTERS.includes(cls) && !character.spellcasting.ability) {
-    errors.spellAbility = 'Defina o atributo de conjuração na aba Magias'
-  }
-  return errors
-}
-
+/**
+ * Conjurador precisa ter o atributo de conjuração definido; não-conjurador não.
+ *
+ * Este arquivo replicava a função E a lista de classes dentro do próprio teste,
+ * então passava verde mesmo que a produção mudasse. Agora importa a real, que
+ * consulta `SPELLCASTER_CLASSES` do domínio — se uma classe entrar ou sair
+ * daquele conjunto, é aqui que aparece.
+ */
 describe('validateMagias — nomes PT-BR', () => {
   const makeChar = (cls, ability = null) => ({
     info: { class: cls },
@@ -46,12 +44,16 @@ describe('validateMagias — nomes PT-BR', () => {
     expect(validateMagias(makeChar('mago', 'int')).spellAbility).toBeUndefined()
   })
 
-  // Garante que nomes em inglês NÃO são reconhecidos (comportamento novo)
+  // O catálogo é PT-BR: índice em inglês não pode casar por acidente.
   it('wizard (inglês) NÃO é reconhecido como conjurador', () => {
     expect(validateMagias(makeChar('wizard')).spellAbility).toBeUndefined()
   })
 
   it('cleric (inglês) NÃO é reconhecido como conjurador', () => {
     expect(validateMagias(makeChar('cleric')).spellAbility).toBeUndefined()
+  })
+
+  it('classe ausente → sem erro', () => {
+    expect(validateMagias(makeChar(undefined)).spellAbility).toBeUndefined()
   })
 })

@@ -65,40 +65,10 @@ describe('getProficiencyBonus', () => {
   })
 })
 
-describe('profBonus baseado em nível total (multiclasse)', () => {
-  function totalLevelProfBonus(primaryLevel, multiclasses) {
-    const total = primaryLevel + multiclasses.reduce((s, m) => s + (m.level ?? 0), 0)
-    return getProficiencyBonus(total)
-  }
-
-  it('monoclasse nível 3 → +2', () => {
-    expect(totalLevelProfBonus(3, [])).toBe(2)
-  })
-
-  it('guerreiro 2 / mago 3 (total 5) → +3', () => {
-    expect(totalLevelProfBonus(2, [{ level: 3 }])).toBe(3)
-  })
-
-  it('paladino 2 / feiticeiro 3 (total 5) → +3', () => {
-    expect(totalLevelProfBonus(2, [{ level: 3 }])).toBe(3)
-  })
-
-  it('patrulheiro 5 / ladino 2 (total 7) → +3', () => {
-    expect(totalLevelProfBonus(5, [{ level: 2 }])).toBe(3)
-  })
-
-  it('bruxo 3 / mago 3 (total 6) → +3', () => {
-    expect(totalLevelProfBonus(3, [{ level: 3 }])).toBe(3)
-  })
-
-  it('multiclasse total 9 → +4', () => {
-    expect(totalLevelProfBonus(5, [{ level: 4 }])).toBe(4)
-  })
-
-  it('nível total 13 → +5', () => {
-    expect(totalLevelProfBonus(7, [{ level: 6 }])).toBe(5)
-  })
-})
+/* A cobertura de "profBonus usa o nível TOTAL em multiclasse" vive em
+   components.test.jsx, batendo no useCharacterCalculations real. O bloco que
+   ficava aqui somava os níveis dentro do próprio teste — passaria verde mesmo
+   se a soma quebrasse em produção. */
 
 describe('getModifier', () => {
   it('10 → 0', () => expect(getModifier(10)).toBe(0))
