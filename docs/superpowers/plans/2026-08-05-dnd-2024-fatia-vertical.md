@@ -665,7 +665,12 @@ export function applyBackgroundChange(character, newBgIndex, backgrounds, parseE
   if (grantsAbility) {
     const next = {}
     for (const b of (bg?.ability_bonuses ?? [])) {
-      const key = keyFromName(b.ability) ?? b.ability?.toLowerCase?.()
+      // `resolveAbilityKey` (não o par keyFromName/toLowerCase de
+      // computeRacialBonuses): o build_backgrounds.py da Task 7 grava
+      // ABREVIAÇÃO em PT ('FOR', 'DES', 'SAB'), e `keyFromName` só indexa nome
+      // completo. O fallback toLowerCase() produziria 'for'/'des'/'sab', que
+      // não são chaves de atributo — o bônus sumiria em silêncio.
+      const key = resolveAbilityKey(b.ability)
       if (key && b.bonus) next[key] = (next[key] ?? 0) + b.bonus
     }
     const draft = { ...character.attributes }
