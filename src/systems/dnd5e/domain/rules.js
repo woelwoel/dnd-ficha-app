@@ -10,6 +10,7 @@ import { CASTER_TYPE } from '../utils/spellcasting'
 import { getSubclassFeatureCards, detectFeatureUses } from './subclassFeatures'
 import { resolveChosenRunes } from './runes'
 import { PACT_FAMILIAR_SPELL, PRIMAL_AWARENESS_LABEL, PRIMAL_AWARENESS_GRANTS } from './grantedSpells'
+import { rulesetFor } from './rulesets'
 
 /* ── Constantes ──────────────────────────────────────────────────── */
 
@@ -232,7 +233,10 @@ export function applyClassChange(character, classData, classDataByIndex = {}) {
  * Tasha's Custom Origin (`flexibleAsi`): se override informado e soma ≤ 3,
  * usa o override no lugar dos bônus do JSON.
  */
-export function computeRacialBonuses(raceIndex, subraceIndex, races, { flexibleAsi = false, override = null } = {}) {
+export function computeRacialBonuses(raceIndex, subraceIndex, races, { flexibleAsi = false, override = null, abilityBonusFrom = 'race' } = {}) {
+  // Geração em que a origem do aumento não é a espécie (D&D 2024): o
+  // antecedente é quem concede. Ver domain/rulesets.js.
+  if (abilityBonusFrom !== 'race') return {}
   if (flexibleAsi && override && Object.keys(override).length) {
     const sum = Object.values(override).reduce((s, v) => s + (Number(v) || 0), 0)
     if (sum <= 3) return { ...override }
@@ -262,7 +266,11 @@ export function applyRacialChange(character, infoPatch, raceIndex, subraceIndex,
   const oldApplied = character.appliedRacialBonuses ?? {}
   const flexibleAsi = character.meta?.settings?.flexibleRacialAsi ?? false
   const override = character.info?.racialAsiOverride ?? null
-  const newBonuses = computeRacialBonuses(raceIndex, subraceIndex, races, { flexibleAsi, override })
+  const newBonuses = computeRacialBonuses(raceIndex, subraceIndex, races, {
+    flexibleAsi,
+    override,
+    abilityBonusFrom: rulesetFor(character).abilityBonusFrom,
+  })
 
   const attrs = { ...character.attributes }
   for (const [k, v] of Object.entries(oldApplied)) {
