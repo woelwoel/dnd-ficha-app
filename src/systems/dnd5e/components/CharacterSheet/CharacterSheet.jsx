@@ -127,10 +127,11 @@ function SheetBody({ initialCharacter, adminContext = false, onBack }) {
   const classDataMap = useClassDataMap()
 
   const [importError, setImportError] = useState(null)
-  // Magia que deve ter o modal de detalhe auto-aberto ao navegar pra seção
-  // Magias. Setada por quem chama `onNavigateToSpells(spellId)`; consumida e
-  // zerada pelo próprio Spells (dispara setDetailSpell e chama clearFocusSpell).
-  const [focusSpellId, setFocusSpellId] = useState(null)
+  // Pedido one-shot de "abra a seção Magias". O `nonce` sobe a cada pedido, então
+  // a troca de aba não depende de haver magia específica; `spellId` é opcional e
+  // só serve pra auto-abrir o modal de detalhe (consumido e zerado pelo próprio
+  // Spells, que dispara setDetailSpell e chama clearFocusSpell).
+  const [spellNav, setSpellNav] = useState({ nonce: 0, spellId: null })
 
   const { character, setCharacter, ...updaters } = useCharacter(initialCharacter)
 
@@ -236,12 +237,17 @@ function SheetBody({ initialCharacter, adminContext = false, onBack }) {
     fichaErrors,
     featureUses,
     readOnly,
+    // Normaliza de propósito: quando este handler é passado direto pro onClick
+    // de um botão, o React entrega o SyntheticEvent aqui — e evento nunca é id
+    // de magia. Sem isso o objeto vazaria pro Spells e seria comparado contra
+    // ids reais.
     onNavigateToSpells: (spellId) => {
-      if (spellId != null) setFocusSpellId(spellId)
+      const id = typeof spellId === 'string' || typeof spellId === 'number' ? spellId : null
+      setSpellNav(prev => ({ nonce: prev.nonce + 1, spellId: id }))
     },
-    focusSpellId,
-    clearFocusSpell: () => setFocusSpellId(null),
-  }), [character, setCharacter, calc, classData, races, classes, backgrounds, updaters, handlers, fichaErrors, featureUses, focusSpellId, readOnly])
+    spellNav,
+    clearFocusSpell: () => setSpellNav(prev => ({ ...prev, spellId: null })),
+  }), [character, setCharacter, calc, classData, races, classes, backgrounds, updaters, handlers, fichaErrors, featureUses, spellNav, readOnly])
 
   // Preview/opções de impressão. Antes o clique em "Imprimir" disparava
   // window.print() na hora — gastando tinta/papel sem chance de revisar.

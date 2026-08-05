@@ -11,8 +11,9 @@ import { createContext, useContext } from 'react'
  *   - handlers (de useSheetHandlers — racial/class/background changes)
  *   - fichaErrors + featureUses
  *   - readOnly (DM lendo ficha de jogador)
- *   - onNavigateToSpells (sinaliza pedido de ir pra aba Magias)
- *   - focusSpellId / clearFocusSpell (magia a destacar ao chegar lá)
+ *   - onNavigateToSpells(spellId?) — pede a aba Magias; o id é opcional
+ *   - spellNav { nonce, spellId } + clearFocusSpell (o nonce troca a aba, o
+ *     spellId opcional abre o detalhe da magia ao chegar lá)
  *
  * Componentes filhos podem consumir via useCharacterContext() em vez de
  * receber 10-15 props diretas — assim um sub-componente focado puxa o que

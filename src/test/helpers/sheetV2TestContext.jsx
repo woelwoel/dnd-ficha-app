@@ -86,7 +86,7 @@ export function renderWithSheetContext(ui, { character, calc, dice, ...rest } = 
     featureUses: [],
     readOnly: false,
     onNavigateToSpells: noop,
-    focusSpellId: null,
+    spellNav: { nonce: 0, spellId: null },
     clearFocusSpell: noop,
     ...rest,
   }

@@ -23,7 +23,7 @@ export function SheetV2({ onBack, onExport, onPrint, onImport, onImportError, sa
   // No mobile roda UM MainBox controlado. 'mais' mapeia pro sub-tab escolhido.
   const mobileMainTab = mobileSection === 'mais' ? maisTab : mobileSection
   // hideTablist esconde os botões de aba, então o único onTabChange que dispara
-  // é o efeito de focusSpellId ('magias') — salta pra seção Magias.
+  // é o efeito do spellNav ('magias') — salta pra seção Magias.
   const handleMobileTabChange = (id) => { if (id === 'magias') setMobileSection('magias') }
 
   return (
