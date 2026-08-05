@@ -10,9 +10,9 @@ import { skillBonus, skillProficiencyState } from './skillBonus'
  * nem <h3> próprios: fazê-lo produziria caixa dentro de caixa.
  *
  * O grid usa auto-fill/minmax em vez de breakpoints do Tailwind de propósito:
- * as colunas precisam sair da largura do DIALOG, não do viewport. Com
- * breakpoints (o que a lista de perícias do v1 fazia) um desktop abre 3 colunas dentro de
- * 560px e os nomes viram "A.".
+ * as colunas precisam sair da largura do DIALOG, não do viewport. Breakpoints
+ * olham o viewport, então um desktop abriria 3 colunas dentro de 560px e os
+ * nomes de perícia virariam "A.".
  */
 
 const ordered = [...SKILLS].sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))

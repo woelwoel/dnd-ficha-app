@@ -25,10 +25,12 @@ import { useCallback, useEffect, useRef, useState } from 'react'
  */
 const DRAG_THRESHOLD = 4 // px
 const SUPPRESS_MS    = 200
-// 140px cobre o header da ficha (linha 1, ~50px) + a barra de combate
-// (linha 2, ~50-90px) + uma margem de segurança. Sem isso, FABs
-// dragados pro alto sentavam em cima dos chips da barra de combate.
-const DEFAULT_SAFE_TOP = 140 // px reservados pro header sticky + combat bar
+// LEGADO: 140px foi calibrado pro chrome sticky do layout v1 da ficha
+// (header ~50px + barra de combate ~50-90px), que impedia FABs dragados pro
+// alto de sentar em cima dos chips. Esse chrome não existe mais desde o corte
+// do v1 — o valor não foi revisado desde então e provavelmente reserva espaço
+// demais.
+const DEFAULT_SAFE_TOP = 140 // px reservados no topo
 
 function clampPos(p, safeTop = DEFAULT_SAFE_TOP, fabSize = 48) {
   if (!p) return null

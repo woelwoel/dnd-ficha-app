@@ -10,12 +10,13 @@ import { createContext, useContext } from 'react'
  *   - updaters (30+ setters/handlers de useCharacter)
  *   - handlers (de useSheetHandlers — racial/class/background changes)
  *   - fichaErrors + featureUses
- *   - onNavigateToSpells (callback de UI)
+ *   - readOnly (DM lendo ficha de jogador)
+ *   - onNavigateToSpells (sinaliza pedido de ir pra aba Magias)
+ *   - focusSpellId / clearFocusSpell (magia a destacar ao chegar lá)
  *
  * Componentes filhos podem consumir via useCharacterContext() em vez de
- * receber 10-15 props diretas. Pré-requisito para o item 9 (quebrar
- * god-components em sub-componentes focados — eles podem puxar do
- * contexto direto sem precisar passar props pela árvore inteira).
+ * receber 10-15 props diretas — assim um sub-componente focado puxa o que
+ * precisa sem que a árvore inteira repasse props.
  */
 const CharacterCtx = createContext(null)
 
