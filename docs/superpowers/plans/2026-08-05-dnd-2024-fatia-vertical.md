@@ -729,13 +729,27 @@ npx vitest run src/test/dnd5e/ruleset-rules-seams.test.js --maxWorkers=2
 
 Esperado: PASS, 10 testes.
 
-- [ ] **Step 6: Rodar a suíte de domínio inteira (não-regressão)**
+- [ ] **Step 6: Rodar a não-regressão EM FATIAS**
+
+A suíte tem 317 arquivos. **Nunca rode `src/test/` inteiro de uma vez**, nem com `--maxWorkers=2`: estoura a memória da máquina e inventa falhas em arquivos sem relação nenhuma. Rode fatia a fatia:
 
 ```bash
-npx vitest run src/test/ --maxWorkers=2
+npx vitest run src/test/dnd5e --maxWorkers=2
 ```
 
-Esperado: PASS. Qualquer falha aqui é regressão real no 2014 — investigar antes de seguir.
+```bash
+npx vitest run src/test/auth src/test/CharacterList src/test/lib src/test/systems --maxWorkers=2
+```
+
+```bash
+npx vitest run src/test/integration src/test/ui src/test/utils --maxWorkers=2
+```
+
+```bash
+npx vitest run "src/test/*.test.*" --maxWorkers=2
+```
+
+Esperado: PASS em todas. Qualquer falha é regressão real no 2014 — investigar antes de seguir.
 
 - [ ] **Step 7: Commit**
 
