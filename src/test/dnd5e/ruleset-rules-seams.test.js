@@ -5,6 +5,15 @@ const RACAS = [
   { index: 'anao', ability_bonuses: [{ ability: 'CON', bonus: 2 }], subraces: [] },
 ]
 
+// Raça que declara o atributo por ABREVIAÇÃO em PT em vez de nome completo.
+// `phb-races-pt.json` usa nome completo hoje, então este formato é dormente —
+// mas o antecedente 2024 usa abreviação e nada impede uma fonte futura de
+// espécie fazer o mesmo. 'SAB' é o caso que expõe o defeito: `toLowerCase()`
+// produziria 'sab', que não é chave de atributo, e o bônus sumiria calado.
+const RACAS_ABREV = [
+  { index: 'aasimar', ability_bonuses: [{ ability: 'SAB', bonus: 2 }], subraces: [] },
+]
+
 const ficha = (ruleset) => ({
   info: { name: 'X' },
   attributes: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
@@ -18,6 +27,9 @@ describe('computeRacialBonuses — origem do aumento de atributo', () => {
   })
   it('quando o aumento não vem da raça, devolve vazio', () => {
     expect(computeRacialBonuses('anao', null, RACAS, { abilityBonusFrom: 'background' })).toEqual({})
+  })
+  it('resolve atributo declarado por abreviação em PT', () => {
+    expect(computeRacialBonuses('aasimar', null, RACAS_ABREV)).toEqual({ wis: 2 })
   })
 })
 

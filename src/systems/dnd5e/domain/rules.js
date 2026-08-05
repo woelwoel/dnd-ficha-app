@@ -249,7 +249,12 @@ export function computeRacialBonuses(raceIndex, subraceIndex, races, { flexibleA
     ...(subrace?.ability_bonuses ?? []),
   ]
   for (const b of bonuses) {
-    const key = keyFromName(b.ability) ?? b.ability?.toLowerCase?.()
+    // `resolveAbilityKey` (abreviação PT/EN e nome completo), não
+    // `keyFromName ?? toLowerCase()`: aquele par só indexa nome completo, e o
+    // fallback produzia 'sab'/'for'/'des' — chaves inválidas que descartavam o
+    // bônus EM SILÊNCIO. É a mesma classe de defeito que obrigou a migração v4
+    // do schema. Mantém esta função consistente com applyBackgroundChange.
+    const key = resolveAbilityKey(b.ability)
     if (key && b.bonus) map[key] = (map[key] ?? 0) + b.bonus
   }
   return map
