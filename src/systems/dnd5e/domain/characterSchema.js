@@ -124,6 +124,8 @@ const infoSchema = z.object({
   multiclasses: z.array(multiclassSchema).default([]),
   chosenFeatures: z.record(z.any()).default({}),
   background: z.string().default(''),
+  /** D&D 2024: talento de origem concedido pelo antecedente. */
+  originFeat: z.string().nullable().optional(),
   alignment: z.string().default(''),
   xp: z.number().int().min(0).default(0),
   scoreMethod: z.string().default('manual'),
@@ -392,6 +394,8 @@ export const characterSchema = z.object({
   info: infoSchema,
   attributes: abilitiesSchema,
   appliedRacialBonuses: z.record(z.number()).default({}),
+  /** D&D 2024: espelho dos bônus de atributo já aplicados pelo antecedente. */
+  appliedBackgroundBonuses: z.record(z.number()).optional(),
   combat: combatSchema,
   proficiencies: proficienciesSchema,
   spellcasting: spellcastingSchema,

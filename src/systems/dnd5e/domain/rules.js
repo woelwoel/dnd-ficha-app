@@ -5,7 +5,7 @@
  */
 
 import { getModifier, getProficiencyBonus, SKILLS, calculateMaxHpFromHitDice, racialHpPerLevel } from '../utils/calculations'
-import { keyFromName } from './attributes'
+import { keyFromName, resolveAbilityKey } from './attributes'
 import { CASTER_TYPE } from '../utils/spellcasting'
 import { getSubclassFeatureCards, detectFeatureUses } from './subclassFeatures'
 import { resolveChosenRunes } from './runes'
@@ -312,9 +312,51 @@ export function applyBackgroundChange(character, newBgIndex, backgrounds, parseE
   const gpWithoutOldBg = Math.max(0, currentGp - prevBgGold)
   const newGp = gpWithoutOldBg + (newBgIndex ? bgGold : 0)
 
+  // D&D 2024: o antecedente é quem concede aumento de atributo e um talento de
+  // origem. São DUAS perguntas distintas no descritor, e cada uma tem seu campo
+  // — mesmo que no LdJ'24 elas coincidam. Mesma estratégia "diff" de
+  // applyRacialChange: reverte o aplicado antes de somar o novo.
+  const rs = rulesetFor(character)
+  const grantsAbility = rs.abilityBonusFrom === 'background'
+  const grantsFeat = rs.backgroundGrantsFeat !== false
+  let attrs = character.attributes
+  let appliedBg = character.appliedBackgroundBonuses ?? {}
+  let originFeat = character.info?.originFeat ?? null
+
+  if (grantsAbility) {
+    // `resolveAbilityKey` (não o par keyFromName/toLowerCase de
+    // computeRacialBonuses) porque o antecedente pode chegar com abreviação
+    // PT ('SAB') ou nome completo ('Sabedoria') dependendo da fonte dos
+    // dados; toLowerCase() sozinho só acerta por coincidência (CON, INT).
+    const next = {}
+    for (const b of (bg?.ability_bonuses ?? [])) {
+      const key = resolveAbilityKey(b.ability)
+      if (key && b.bonus) next[key] = (next[key] ?? 0) + b.bonus
+    }
+    const draft = { ...character.attributes }
+    for (const [k, v] of Object.entries(appliedBg)) {
+      draft[k] = clampAbility((draft[k] ?? 10) - v)
+    }
+    for (const [k, v] of Object.entries(next)) {
+      draft[k] = clampAbility((draft[k] ?? 10) + v, MAX_ATTRIBUTE_VALUE)
+    }
+    attrs = draft
+    appliedBg = next
+  }
+
+  if (grantsFeat) {
+    originFeat = bg?.origin_feat ?? null
+  }
+
   return {
     ...character,
-    info: { ...character.info, background: newBgIndex },
+    info: {
+      ...character.info,
+      background: newBgIndex,
+      ...(grantsFeat ? { originFeat } : {}),
+    },
+    attributes: attrs,
+    ...(grantsAbility ? { appliedBackgroundBonuses: appliedBg } : {}),
     proficiencies: {
       ...character.proficiencies,
       backgroundSkills: bgSkillKeys,
