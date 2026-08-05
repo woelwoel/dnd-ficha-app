@@ -642,9 +642,12 @@ export function applyBackgroundChange(character, newBgIndex, backgrounds, parseE
   const newGp = gpWithoutOldBg + (newBgIndex ? bgGold : 0)
 
   // D&D 2024: o antecedente é quem concede aumento de atributo e um talento de
-  // origem. Mesma estratégia "diff" de applyRacialChange — reverte o aplicado
-  // antes de somar o novo. Ver domain/rulesets.js.
-  const grantsAbility = rulesetFor(character).abilityBonusFrom === 'background'
+  // origem. São DUAS perguntas distintas no descritor, e cada uma tem seu campo
+  // — mesmo que no LdJ'24 elas coincidam. Mesma estratégia "diff" de
+  // applyRacialChange: reverte o aplicado antes de somar o novo.
+  const rs = rulesetFor(character)
+  const grantsAbility = rs.abilityBonusFrom === 'background'
+  const grantsFeat = rs.backgroundGrantsFeat !== false
   let attrs = character.attributes
   let appliedBg = character.appliedBackgroundBonuses ?? {}
   let originFeat = character.info?.originFeat ?? null
@@ -664,6 +667,9 @@ export function applyBackgroundChange(character, newBgIndex, backgrounds, parseE
     }
     attrs = draft
     appliedBg = next
+  }
+
+  if (grantsFeat) {
     originFeat = bg?.origin_feat ?? null
   }
 
@@ -672,7 +678,7 @@ export function applyBackgroundChange(character, newBgIndex, backgrounds, parseE
     info: {
       ...character.info,
       background: newBgIndex,
-      ...(grantsAbility ? { originFeat } : {}),
+      ...(grantsFeat ? { originFeat } : {}),
     },
     attributes: attrs,
     ...(grantsAbility ? { appliedBackgroundBonuses: appliedBg } : {}),
