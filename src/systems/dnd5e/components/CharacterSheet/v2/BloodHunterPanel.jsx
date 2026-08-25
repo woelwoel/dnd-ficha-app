@@ -5,14 +5,22 @@ import {
 } from '../../../domain/bloodHunter'
 
 /**
- * Painel do Ritual Vermelho (Caçador de Sangue, fonte homebrew).
+ * Painel do Caçador de Sangue (fonte homebrew): Ritual Vermelho e Sangue
+ * Maldito.
  *
- * Controlado: props in, `onChange(próximosRitos)` out — sem contexto, pra dar
- * pra testar isolado. Quem grava em `combat.crimsonRites` é o ActionsTab.
+ * As duas features vivem aqui em vez de em `CombatClassActions` porque aquele
+ * arquivo é uma lista fechada, escrita classe a classe, e não tem renderizador
+ * genérico — um tracker novo entra no array derivado e simplesmente não é
+ * desenhado. Mesma solução do `RunesPanel`.
+ *
+ * Controlado: props in, callbacks out — sem contexto, pra dar pra testar
+ * isolado. Quem grava em `combat.crimsonRites` é o ActionsTab.
  *
  * A regra toda vem de `domain/bloodHunter.js`. Este arquivo só desenha.
  */
-export function CrimsonRitePanel({ character, onChange, readOnly = false }) {
+export function BloodHunterPanel({
+  character, onChange, featureUses = [], onSpend, onRegain, readOnly = false,
+}) {
   const nivel = bloodHunterLevel(character)
   const conhecidos = knownRites(character)
   const ativos = activeRites(character)
@@ -43,8 +51,46 @@ export function CrimsonRitePanel({ character, onChange, readOnly = false }) {
     onChange(ativos.filter(r => r.attackId !== attackId))
   }
 
+  const maldito = (featureUses ?? []).find(u => u.id === 'cacador-de-sangue-blood-maledict')
+  const malditoRestantes = maldito ? (maldito.max ?? 0) - (maldito.used ?? 0) : 0
+
   return (
     <div>
+      {maldito && (
+        <>
+          <div className="v2-title" style={{ marginTop: 4 }}>Sangue Maldito</div>
+          <div className="v2-row">
+            <span>
+              Invocar maldição de sangue
+              <span className="v2-mut" style={{ marginLeft: 6, fontSize: 11 }}>
+                descanso curto ou longo
+              </span>
+            </span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span className="v2-chip">{malditoRestantes}/{maldito.max}</span>
+              <button
+                type="button"
+                className="v2-btn"
+                disabled={readOnly || malditoRestantes <= 0}
+                aria-label="Gastar um uso de Sangue Maldito"
+                onClick={() => onSpend?.(maldito.id)}
+              >
+                Usar
+              </button>
+              <button
+                type="button"
+                className="v2-btn"
+                disabled={readOnly || (maldito.used ?? 0) <= 0}
+                aria-label="Recuperar um uso de Sangue Maldito"
+                onClick={() => onRegain?.(maldito.id)}
+              >
+                ↺
+              </button>
+            </span>
+          </div>
+        </>
+      )}
+
       <div className="v2-title" style={{ marginTop: 4 }}>Ritual Vermelho</div>
 
       <div className="v2-mut" style={{ fontSize: 12, padding: '2px 0' }}>
@@ -114,4 +160,4 @@ export function CrimsonRitePanel({ character, onChange, readOnly = false }) {
   )
 }
 
-export default CrimsonRitePanel
+export default BloodHunterPanel

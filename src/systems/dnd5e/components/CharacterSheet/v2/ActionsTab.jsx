@@ -5,7 +5,7 @@ import { Attacks } from '../Attacks'
 import { CombatClassActions } from '../CombatClassActions'
 import { ManeuversPanel } from '../ManeuversPanel'
 import { RunesPanel } from '../RunesPanel'
-import { CrimsonRitePanel } from './CrimsonRitePanel'
+import { BloodHunterPanel } from './BloodHunterPanel'
 import { riteDamageFor } from '../../../domain/bloodHunter'
 import { AttackRollButton } from '../AttackRollButton'
 import { RollButton } from '../../../../../components/DiceRoller/RollButton'
@@ -265,9 +265,12 @@ export function ActionsTab() {
               onSpend={id => spendFeatureUse(id, featureUses)}
               onRegain={id => regainFeatureUse(id, featureUses)}
             />
-            <CrimsonRitePanel
+            <BloodHunterPanel
               character={character}
+              featureUses={featureUses}
               onChange={rites => updateCombat('crimsonRites', rites)}
+              onSpend={id => spendFeatureUse(id, featureUses)}
+              onRegain={id => regainFeatureUse(id, featureUses)}
             />
           </div>
         </>
