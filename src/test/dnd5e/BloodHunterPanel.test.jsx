@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { BloodHunterPanel } from '../../systems/dnd5e/components/CharacterSheet/v2/BloodHunterPanel'
 import { BLOOD_HUNTER, LYCAN, ORDER_CHOICE_ID } from '../../systems/dnd5e/domain/bloodHunter'
 import { MUTANT, FORMULAS_CHOICE_ID } from '../../systems/dnd5e/domain/mutagens'
+import { PROFANE_SOUL, PATRON_CHOICE_ID } from '../../systems/dnd5e/domain/profaneSoul'
 
 function ficha({ level = 5, rites = [], ritosConhecidos = 'chamas', classe = BLOOD_HUNTER } = {}) {
   return {
@@ -236,5 +237,48 @@ describe('BloodHunterPanel — Mutagenicos (Ordem do Mutante)', () => {
   it('avisa quando nao ha formula escolhida', () => {
     montar(mutante({ conhecidas: '' }))
     expect(screen.getByText(/Nenhuma f[óo]rmula conhecida/)).toBeInTheDocument()
+  })
+})
+
+describe('BloodHunterPanel — Magia de Pacto (Ordem da Alma Profana)', () => {
+  function alma({ level = 11, patron = 'corruptor', order = PROFANE_SOUL } = {}) {
+    return {
+      info: {
+        level, class: BLOOD_HUNTER, multiclasses: [],
+        chosenFeatures: {
+          [ORDER_CHOICE_ID]: order, [PATRON_CHOICE_ID]: patron,
+          cacador_de_sangue_primal_rite: 'chamas',
+        },
+      },
+      attributes: { str: 14, dex: 12, con: 14, int: 10, wis: 16, cha: 10 },
+      combat: { maxHp: 80, currentHp: 80, crimsonRites: [], mutagens: [], attacks: [] },
+    }
+  }
+  const montar = char => render(
+    <BloodHunterPanel character={char} featureUses={[]} onChange={vi.fn()} />
+  )
+
+  it('nao mostra Magia de Pacto para outra Ordem', () => {
+    montar(alma({ order: MUTANT }))
+    expect(screen.queryByText(/Magia de Pacto/)).not.toBeInTheDocument()
+  })
+
+  it('mostra CD, ataque e os espacos da tabela da Ordem', () => {
+    montar(alma({ level: 11 }))
+    // nivel 11 -> proficiencia +4; SAB 16 -> +3. CD 8+4+3 = 15, ataque +7.
+    expect(screen.getByText(/CD 15/)).toBeInTheDocument()
+    expect(screen.getByText(/ataque \+7/)).toBeInTheDocument()
+    expect(screen.getByText(/2 espaço\(s\) de 3º/)).toBeInTheDocument()
+  })
+
+  it('mostra o patrono e o reforco do rito', () => {
+    montar(alma({ patron: 'hexblade' }))
+    expect(screen.getByText('O Hexblade')).toBeInTheDocument()
+    expect(screen.getByText(/margem de cr[íi]tico de 19 a 20/)).toBeInTheDocument()
+  })
+
+  it('avisa quando nao ha patrono escolhido', () => {
+    montar(alma({ patron: '' }))
+    expect(screen.getByText(/Nenhum patrono escolhido/)).toBeInTheDocument()
   })
 })

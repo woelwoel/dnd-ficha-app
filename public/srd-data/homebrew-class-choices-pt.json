@@ -137,7 +137,7 @@
           {
             "value": "alma-profana",
             "name": "Ordem da Alma Profana",
-            "desc": "Esta ordem viu os limites da magia de sangue contra os demônios mais antigos e cruéis, e mergulhou no mesmo poço de conhecimento arcano corruptor, fazendo pactos com males menores para combater males maiores.\n\nAs características desta Ordem ainda não foram implementadas no app. Ela conjura com Magia de Pacto do Bruxo e depende de trabalho no motor de conjuração, por isso vem depois das outras três."
+            "desc": "Esta ordem viu os limites da magia de sangue contra as abominações mais antigas e cruéis — as que comandam sombras, se escondem à vista entre os nobres e torcem a mente do guerreiro mais firme com um olhar. Uma pequena seita mergulhou no mesmo poço de conhecimento arcano corruptor e fez pactos com males menores para combater os maiores. Perderam parte de si, mas consideram que o poder valeu o preço: até os demônios estremecem ao saber que chamaram a atenção da Ordem da Alma Profana.\n\nFeatures por nível:\n• Nv 3 — Patrono do Outro Mundo: Você faz uma barganha com um ser de outro mundo à sua escolha. A escolha amplia parte das características desta Ordem, tanto o reforço do Ritual Vermelho quanto as magias raras que você recebe no 7º e no 15º níveis.\n• Nv 3 — Magia de Pacto: Você amplia suas técnicas de combate com a capacidade de conjurar. Você conhece dois truques da lista de bruxo, e um terceiro no 10º nível. Seus espaços de magia são todos do mesmo nível e você os recupera ao terminar um descanso curto ou longo. Seu atributo de conjuração é Sabedoria: a CD dos seus testes de resistência é 8 + seu bônus de proficiência + seu modificador de Sabedoria, e seu bônus de ataque com magia é o bônus de proficiência + o modificador de Sabedoria. Ao subir de nível nesta classe, você pode trocar uma magia conhecida por outra da lista de bruxo de um nível para o qual você tenha espaços.\n• Nv 3 — Foco Ritual: Sua arma se torna um núcleo do pacto com seu patrono. Enquanto você tiver um ritual ativo, pode usar a arma como foco de conjuração, e o pacto escolhido reforça o seu Ritual Vermelho de um jeito próprio.\n• Nv 7 — Frenesi Místico: Quando você usa sua ação para conjurar um truque, pode fazer um ataque com arma como ação bônus.\n• Nv 7 — Arcana Mística: Seu patrono concede o uso raro de um segredo perigoso. Você pode conjurar a magia do seu pacto uma vez, gastando um espaço de magia da alma profana, e precisa terminar um descanso longo para fazê-lo de novo.\n• Nv 11 — Canalização Diabólica: Como ação, você pode imbuir sua arma com ritual ativo com uma magia de bruxo que possa conjurar, ou que já esteja ativa, e fazer um ataque com essa arma, gastando o espaço correspondente. A magia precisa ser de 1º nível ou superior e ter tempo de conjuração de uma ação. Se o ataque acertar, os ataques de magia imbuída acertam automaticamente e contam como um único ataque; o alvo sofre o dano da arma e os efeitos da magia. Se o ataque tinha vantagem, o primeiro teste de resistência do alvo contra a magia tem desvantagem. Se o ataque errar, a magia não tem efeito. Magias de área se originam do espaço do alvo.\n• Nv 15 — Arcana Revelada: Seu patrono concede o uso raro de mais uma magia. Você pode conjurá-la uma vez, gastando um espaço de magia da alma profana, e precisa terminar um descanso longo para fazê-lo de novo.\n• Nv 18 — Sifão de Almas: Você aprende a sacrificar as almas de inimigos poderosos ao seu patrono em troca de poder imediato. Quando você reduz a 0 pontos de vida, com um ataque, uma criatura de Nível de Desafio 15 ou maior, você recupera um espaço de magia gasto."
           }
         ]
       },
@@ -254,6 +254,47 @@
             "value": "cautela",
             "name": "Cautela",
             "desc": "Você ganha um bônus na iniciativa igual ao dobro do seu nível de mutação. Efeito colateral: Você tem desvantagem em testes de Sabedoria (Percepção)."
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "id": "cacador_de_sangue_patron",
+        "featureName": "Patrono do Outro Mundo",
+        "prompt": "Escolha seu patrono",
+        "requires": {
+          "cacador_de_sangue_order": "alma-profana"
+        },
+        "options": [
+          {
+            "value": "arquifada",
+            "name": "O Arquifada",
+            "desc": "Foco Ritual: Se você causar dano de ritual a uma criatura, ela perde qualquer bônus de meia cobertura ou de três quartos, e também invisibilidade, até o início do seu próximo turno. Arcana Mística (7º): Nublar. Arcana Revelada (15º): Lentidão."
+          },
+          {
+            "value": "corruptor",
+            "name": "O Corruptor",
+            "desc": "Foco Ritual: Ao usar o Ritual das Chamas, se você rolar 1 no dado de dano do ritual, pode rolar de novo. Só uma nova rolagem por ataque. Arcana Mística (7º): Raio Ardente. Arcana Revelada (15º): Bola de Fogo."
+          },
+          {
+            "value": "grande-antigo",
+            "name": "O Grande Antigo",
+            "desc": "Foco Ritual: Sempre que você acertar um golpe crítico, a criatura deve passar num teste de resistência de Sabedoria contra a CD das suas magias ou fica amedrontada até o fim do seu próximo turno. Arcana Mística (7º): Detectar Pensamentos. Arcana Revelada (15º): Velocidade."
+          },
+          {
+            "value": "imortal",
+            "name": "O Imortal",
+            "desc": "Foco Ritual: Sempre que você reduzir uma criatura hostil a 0 pontos de vida com um ataque com arma, você recupera pontos de vida iguais ao dado do Ritual Vermelho. Arcana Mística (7º): Cegueira/Surdez. Arcana Revelada (15º): Rogar Maldição."
+          },
+          {
+            "value": "celestial",
+            "name": "O Celestial",
+            "desc": "Foco Ritual: Você pode gastar um uso de Sangue Maldito como ação bônus para curar uma criatura a até 18 metros, que recupera pontos de vida iguais ao seu dado de Ritual Vermelho rolado duas vezes + seu modificador de Sabedoria (mínimo de 1). Arcana Mística (7º): Restauração Menor. Arcana Revelada (15º): Reviver."
+          },
+          {
+            "value": "hexblade",
+            "name": "O Hexblade",
+            "desc": "Foco Ritual: Sempre que você atingir uma criatura com uma maldição de sangue, seu próximo ataque contra ela tem margem de crítico de 19 a 20. Arcana Mística (7º): Marca da Punição. Arcana Revelada (15º): Piscar."
           }
         ]
       }

@@ -7,6 +7,10 @@ import {
 import {
   MUTAGENS, MUTANT, mutationLevel, knownFormulas, activeMutagens,
 } from '../../../domain/mutagens'
+import {
+  PATRONS, PROFANE_SOUL, profaneSoulPatron, profaneSoulPactSlots,
+  profaneSoulSaveDC, profaneSoulAttackBonus, profaneSoulCantrips, profaneSoulSpellsKnown,
+} from '../../../domain/profaneSoul'
 
 /**
  * Painel do Caçador de Sangue (fonte homebrew): Ritual Vermelho e Sangue
@@ -77,6 +81,11 @@ export function BloodHunterPanel({
       : [...ativosMut, chave]
     onChangeMutagens?.(proximos)
   }
+
+  // Ordem da Alma Profana: a unica que conjura.
+  const ehAlmaProfana = bloodHunterOrder(character) === PROFANE_SOUL && nivel >= 3
+  const patrono = profaneSoulPatron(character)
+  const pacto = profaneSoulPactSlots(character)
 
   function transformar() {
     // Transformar consome um uso; reverter não devolve (regra do PDF).
@@ -200,6 +209,33 @@ export function BloodHunterPanel({
               </div>
             )
           })}
+        </>
+      )}
+
+      {ehAlmaProfana && (
+        <>
+          <div className="v2-title" style={{ marginTop: 4 }}>Magia de Pacto</div>
+          <div className="v2-mut" style={{ fontSize: 12, padding: '2px 0' }}>
+            CD {profaneSoulSaveDC(character)} · ataque +{profaneSoulAttackBonus(character)} ·
+            {' '}conjura por Sabedoria · {profaneSoulCantrips(character)} truques e
+            {' '}{profaneSoulSpellsKnown(character)} magias conhecidas
+            {pacto ? ` · ${pacto.qty} espaço(s) de ${pacto.slotLevel}º` : ''}
+          </div>
+          {patrono && PATRONS[patrono] && (
+            <div className="v2-row">
+              <span style={{ minWidth: 0 }}>
+                {PATRONS[patrono].name}
+                <span className="v2-mut" style={{ marginLeft: 6, fontSize: 11 }}>
+                  {PATRONS[patrono].riteFocus}
+                </span>
+              </span>
+            </div>
+          )}
+          {!patrono && (
+            <div className="v2-mut" style={{ fontSize: 13, padding: '4px 0' }}>
+              Nenhum patrono escolhido. Escolha o seu na progressão de nível.
+            </div>
+          )}
         </>
       )}
 

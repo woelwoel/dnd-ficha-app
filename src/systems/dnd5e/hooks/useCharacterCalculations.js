@@ -11,6 +11,7 @@ import {
 import { calculateMaxHpMulticlass, listSpellcastingClasses, getEffectiveSaveProficiencies, effectiveSpeed as domainEffectiveSpeed, effectiveMaxHp as domainEffectiveMaxHp } from '../domain/rules'
 import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
 import { lycanAcBonus } from '../domain/bloodHunter'
+import { profaneSoulPactSlots } from '../domain/profaneSoul'
 import {
   mutagenAttrDeltas, mutagenAcDelta, mutagenSpeedDelta, mutagenInitiativeDelta,
   applyMutagenAttrs,
@@ -150,7 +151,11 @@ export function useCharacterCalculations(character, classData = null, classDataM
       (classIndex === 'bruxo' ? level : 0) +
       mcs.filter(m => m?.class === 'bruxo')
          .reduce((s, m) => s + (m.level ?? 0), 0)
-    const pactSlots = warlockLevel > 0 ? getWarlockPactSlots(warlockLevel) : null
+    // Magia de Pacto: Bruxo pela tabela dele; Ordem da Alma Profana pela
+    // tabela PROPRIA dela, que e mais curta (3 espacos de 4o no 20o).
+    const pactSlots = warlockLevel > 0
+      ? getWarlockPactSlots(warlockLevel)
+      : profaneSoulPactSlots(character)
     const safePactUsed = clampPactSlotsUsed(pactSlotsUsed, warlockLevel)
 
     // Matemática de magia por classe (DC/ataque por classe em multiclasse híbrida).
