@@ -238,6 +238,19 @@ const combatSchema = z.object({
    * vez de invalidar a ficha inteira — mesma postura do resto do schema com
    * dado antigo.
    */
+  /**
+   * Forma híbrida ativa (Ordem do Licantropo, fonte homebrew). Enquanto
+   * ligada, concede +1 de CA sem armadura pesada e bônus de dano corpo a
+   * corpo — tudo derivado em `domain/bloodHunter.js`, nada persistido além
+   * deste booleano.
+   */
+  hybridForm: z.boolean().catch(false).default(false),
+  /**
+   * Mutagênicos em efeito agora (Ordem do Mutante). Cada item é chave de
+   * `domain/mutagens.js MUTAGENS`. Duram até o fim do próximo descanso, curto
+   * ou longo — por isso os dois limpam a lista.
+   */
+  mutagens: z.array(z.string()).catch([]).default([]),
   crimsonRites: z.preprocess(
     v => (Array.isArray(v) ? v.filter(r => r && typeof r.attackId === 'string' && r.attackId) : []),
     z.array(z.object({ attackId: z.string().min(1), rite: z.string().min(1) })),

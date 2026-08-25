@@ -2,7 +2,15 @@ import { useState } from 'react'
 import {
   RITES, knownRites, activeRites, riteDieFor,
   bloodHunterLevel, bloodHunterMaxHpPenalty,
+  LYCAN, bloodHunterOrder, isHybridForm, lycanMeleeDamageBonus, lycanUnarmedDie,
 } from '../../../domain/bloodHunter'
+import {
+  MUTAGENS, MUTANT, mutationLevel, knownFormulas, activeMutagens,
+} from '../../../domain/mutagens'
+import {
+  PATRONS, PROFANE_SOUL, profaneSoulPatron, profaneSoulPactSlots,
+  profaneSoulSaveDC, profaneSoulAttackBonus, profaneSoulCantrips, profaneSoulSpellsKnown,
+} from '../../../domain/profaneSoul'
 
 /**
  * Painel do Caçador de Sangue (fonte homebrew): Ritual Vermelho e Sangue
@@ -19,7 +27,8 @@ import {
  * A regra toda vem de `domain/bloodHunter.js`. Este arquivo só desenha.
  */
 export function BloodHunterPanel({
-  character, onChange, featureUses = [], onSpend, onRegain, readOnly = false,
+  character, onChange, featureUses = [], onSpend, onRegain, onToggleHybrid,
+  onChangeMutagens, readOnly = false,
 }) {
   const nivel = bloodHunterLevel(character)
   const conhecidos = knownRites(character)
@@ -54,8 +63,83 @@ export function BloodHunterPanel({
   const maldito = (featureUses ?? []).find(u => u.id === 'cacador-de-sangue-blood-maledict')
   const malditoRestantes = maldito ? (maldito.max ?? 0) - (maldito.used ?? 0) : 0
 
+  // Forma híbrida: só a Ordem do Licantropo tem.
+  const ehLicano = bloodHunterOrder(character) === LYCAN && nivel >= 3
+  const transformado = isHybridForm(character)
+  const hibrida = (featureUses ?? []).find(u => u.id === 'cacador-de-sangue-hybrid-transformation')
+  const hibridaRestantes = hibrida ? (hibrida.max ?? 0) - (hibrida.used ?? 0) : 0
+
+  // Ordem do Mutante: formulas conhecidas + elixires em efeito agora.
+  const ehMutante = bloodHunterOrder(character) === MUTANT && nivel >= 3
+  const formulas = knownFormulas(character)
+  const ativosMut = activeMutagens(character).map(m => m.key)
+  const nivelMutacao = mutationLevel(character)
+
+  function alternarMutagenico(chave) {
+    const proximos = ativosMut.includes(chave)
+      ? ativosMut.filter(k => k !== chave)
+      : [...ativosMut, chave]
+    onChangeMutagens?.(proximos)
+  }
+
+  // Ordem da Alma Profana: a unica que conjura.
+  const ehAlmaProfana = bloodHunterOrder(character) === PROFANE_SOUL && nivel >= 3
+  const patrono = profaneSoulPatron(character)
+  const pacto = profaneSoulPactSlots(character)
+
+  function transformar() {
+    // Transformar consome um uso; reverter não devolve (regra do PDF).
+    onToggleHybrid?.(true)
+    if (hibrida) onSpend?.(hibrida.id)
+  }
+
   return (
     <div>
+      {ehLicano && (
+        <>
+          <div className="v2-title" style={{ marginTop: 4 }}>Forma Híbrida</div>
+          <div className="v2-row">
+            <span>
+              {transformado ? 'Transformado' : 'Forma normal'}
+              <span className="v2-mut" style={{ marginLeft: 6, fontSize: 11 }}>
+                descanso curto ou longo
+              </span>
+            </span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              {hibrida && <span className="v2-chip">{hibridaRestantes}/{hibrida.max}</span>}
+              {transformado ? (
+                <button
+                  type="button"
+                  className="v2-btn"
+                  disabled={readOnly}
+                  aria-label="Reverter da forma híbrida"
+                  onClick={() => onToggleHybrid?.(false)}
+                >
+                  Reverter
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="v2-btn"
+                  disabled={readOnly || (!!hibrida && hibridaRestantes <= 0)}
+                  aria-label="Transformar em forma híbrida"
+                  onClick={transformar}
+                >
+                  Transformar
+                </button>
+              )}
+            </span>
+          </div>
+          {transformado && (
+            <div className="v2-mut" style={{ fontSize: 12, padding: '2px 0' }}>
+              Ativo: +1 de CA (exceto com armadura pesada), +{lycanMeleeDamageBonus(character)} no
+              dano corpo a corpo, golpe desarmado {lycanUnarmedDie(character)} cortante,
+              resistência a concussão, perfurante e cortante não-mágicos, e vulnerabilidade a prata.
+            </div>
+          )}
+        </>
+      )}
+
       {maldito && (
         <>
           <div className="v2-title" style={{ marginTop: 4 }}>Sangue Maldito</div>
@@ -88,6 +172,70 @@ export function BloodHunterPanel({
               </button>
             </span>
           </div>
+        </>
+      )}
+
+      {ehMutante && (
+        <>
+          <div className="v2-title" style={{ marginTop: 4 }}>Mutagênicos</div>
+          <div className="v2-mut" style={{ fontSize: 12, padding: '2px 0' }}>
+            Nível de mutação {nivelMutacao}. Duram até o fim do próximo descanso.
+          </div>
+          {formulas.length === 0 && (
+            <div className="v2-mut" style={{ fontSize: 13, padding: '4px 0' }}>
+              Nenhuma fórmula conhecida. Escolha suas fórmulas na progressão de nível.
+            </div>
+          )}
+          {formulas.map(chave => {
+            const m = MUTAGENS[chave]
+            const ativo = ativosMut.includes(chave)
+            return (
+              <div className="v2-row" key={chave}>
+                <span style={{ minWidth: 0 }}>
+                  {m.name}
+                  <span className="v2-mut" style={{ marginLeft: 6, fontSize: 11 }}>
+                    {ativo ? m.sideEffect : m.effect}
+                  </span>
+                </span>
+                <button
+                  type="button"
+                  className="v2-btn"
+                  disabled={readOnly}
+                  aria-label={ativo ? `Expelir ${m.name}` : `Beber ${m.name}`}
+                  onClick={() => alternarMutagenico(chave)}
+                >
+                  {ativo ? 'Expelir' : 'Beber'}
+                </button>
+              </div>
+            )
+          })}
+        </>
+      )}
+
+      {ehAlmaProfana && (
+        <>
+          <div className="v2-title" style={{ marginTop: 4 }}>Magia de Pacto</div>
+          <div className="v2-mut" style={{ fontSize: 12, padding: '2px 0' }}>
+            CD {profaneSoulSaveDC(character)} · ataque +{profaneSoulAttackBonus(character)} ·
+            {' '}conjura por Sabedoria · {profaneSoulCantrips(character)} truques e
+            {' '}{profaneSoulSpellsKnown(character)} magias conhecidas
+            {pacto ? ` · ${pacto.qty} espaço(s) de ${pacto.slotLevel}º` : ''}
+          </div>
+          {patrono && PATRONS[patrono] && (
+            <div className="v2-row">
+              <span style={{ minWidth: 0 }}>
+                {PATRONS[patrono].name}
+                <span className="v2-mut" style={{ marginLeft: 6, fontSize: 11 }}>
+                  {PATRONS[patrono].riteFocus}
+                </span>
+              </span>
+            </div>
+          )}
+          {!patrono && (
+            <div className="v2-mut" style={{ fontSize: 13, padding: '4px 0' }}>
+              Nenhum patrono escolhido. Escolha o seu na progressão de nível.
+            </div>
+          )}
         </>
       )}
 

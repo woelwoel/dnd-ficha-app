@@ -922,6 +922,19 @@ export function defaultClassFeatureUses(character, classChoices = null) {
       })
     }
 
+    // Ordem do Licantropo — Transformação Híbrida: 2 usos por descanso curto
+    // ou longo, subindo pra 3 no 18º (Mestria da Transformação Híbrida).
+    // Explícito porque `detectFeatureUses` só entende "uma vez", "bônus de
+    // proficiência" e "modificador de X" — "duas vezes" não casa com nada, e a
+    // escalada do 18º precisaria de lógica própria de qualquer forma.
+    if (cls === BLOOD_HUNTER && level >= 3 && chosen.cacador_de_sangue_order === 'licantropo') {
+      out.push({
+        id: 'cacador-de-sangue-hybrid-transformation',
+        name: 'Transformação Híbrida',
+        max: level >= 18 ? 3 : 2, used: 0, recharge: 'short', source: BLOOD_HUNTER,
+      })
+    }
+
     // Subclasses (genérico, via SRD): só entra quando `classChoices` é
     // fornecido (CharacterSheet, que tem useSrd). Sem isso, comportamento
     // retrocompatível — nenhum tracker de subclasse é emitido.

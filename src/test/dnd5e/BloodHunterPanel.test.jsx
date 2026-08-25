@@ -1,7 +1,9 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { BloodHunterPanel } from '../../systems/dnd5e/components/CharacterSheet/v2/BloodHunterPanel'
-import { BLOOD_HUNTER } from '../../systems/dnd5e/domain/bloodHunter'
+import { BLOOD_HUNTER, LYCAN, ORDER_CHOICE_ID } from '../../systems/dnd5e/domain/bloodHunter'
+import { MUTANT, FORMULAS_CHOICE_ID } from '../../systems/dnd5e/domain/mutagens'
+import { PROFANE_SOUL, PATRON_CHOICE_ID } from '../../systems/dnd5e/domain/profaneSoul'
 
 function ficha({ level = 5, rites = [], ritosConhecidos = 'chamas', classe = BLOOD_HUNTER } = {}) {
   return {
@@ -98,5 +100,185 @@ describe('BloodHunterPanel — Sangue Maldito', () => {
   it('some quando o personagem ainda não tem a feature', () => {
     render(<BloodHunterPanel character={ficha({ level: 1 })} featureUses={[]} onChange={vi.fn()} />)
     expect(screen.queryByText('Sangue Maldito')).not.toBeInTheDocument()
+  })
+})
+
+describe('BloodHunterPanel — Forma Hibrida (Ordem do Licantropo)', () => {
+  const TRACKER = 'cacador-de-sangue-hybrid-transformation'
+
+  function lican({ level = 5, hybrid = false, order = LYCAN, used = 0 } = {}) {
+    return {
+      info: {
+        level, class: BLOOD_HUNTER, multiclasses: [],
+        chosenFeatures: { [ORDER_CHOICE_ID]: order, cacador_de_sangue_primal_rite: 'chamas' },
+      },
+      attributes: { str: 16, dex: 12, con: 14, int: 10, wis: 14, cha: 10 },
+      combat: {
+        maxHp: 44, currentHp: 44, crimsonRites: [], hybridForm: hybrid,
+        attacks: [{ id: 'espada', name: 'Espada Longa', damageDice: '1d8' }],
+      },
+    }
+  }
+  const usos = (used = 0) => [
+    { id: TRACKER, name: 'Transformacao Hibrida', max: 2, used, recharge: 'short' },
+  ]
+
+  function montar(props = {}) {
+    const onToggleHybrid = vi.fn()
+    const onSpend = vi.fn()
+    render(
+      <BloodHunterPanel
+        character={props.character ?? lican()}
+        featureUses={props.featureUses ?? usos()}
+        onChange={vi.fn()}
+        onSpend={onSpend}
+        onRegain={vi.fn()}
+        onToggleHybrid={onToggleHybrid}
+      />
+    )
+    return { onToggleHybrid, onSpend }
+  }
+
+  it('nao mostra a forma hibrida para outra Ordem', () => {
+    render(
+      <BloodHunterPanel
+        character={lican({ order: 'cacador-de-espectros' })}
+        featureUses={[]}
+        onChange={vi.fn()}
+      />
+    )
+    expect(screen.queryByText(/Forma H[ií]brida/i)).not.toBeInTheDocument()
+  })
+
+  it('transformar liga o estado e gasta um uso', () => {
+    const { onToggleHybrid, onSpend } = montar()
+    fireEvent.click(screen.getByRole('button', { name: /transformar em forma h[ií]brida/i }))
+    expect(onToggleHybrid).toHaveBeenCalledWith(true)
+    expect(onSpend).toHaveBeenCalledWith(TRACKER)
+  })
+
+  it('reverter desliga o estado sem devolver o uso', () => {
+    const { onToggleHybrid, onSpend } = montar({ character: lican({ hybrid: true }), featureUses: usos(1) })
+    fireEvent.click(screen.getByRole('button', { name: /reverter da forma h[ií]brida/i }))
+    expect(onToggleHybrid).toHaveBeenCalledWith(false)
+    expect(onSpend).not.toHaveBeenCalled()
+  })
+
+  it('sem usos restantes, nao da pra transformar', () => {
+    montar({ featureUses: usos(2) })
+    expect(screen.getByRole('button', { name: /transformar em forma h[ií]brida/i })).toBeDisabled()
+  })
+
+  it('transformado, mostra os beneficios ativos', () => {
+    montar({ character: lican({ hybrid: true }), featureUses: usos(1) })
+    expect(screen.getByText(/\+1 de CA/)).toBeInTheDocument()
+    expect(screen.getByText(/1d6/)).toBeInTheDocument()
+  })
+})
+
+describe('BloodHunterPanel — Mutagenicos (Ordem do Mutante)', () => {
+  function mutante({ level = 8, ativos = [], conhecidas = 'potencia,sagacidade', order = MUTANT } = {}) {
+    return {
+      info: {
+        level, class: BLOOD_HUNTER, multiclasses: [],
+        chosenFeatures: {
+          [ORDER_CHOICE_ID]: order,
+          [FORMULAS_CHOICE_ID]: conhecidas,
+          cacador_de_sangue_primal_rite: 'chamas',
+        },
+      },
+      attributes: { str: 16, dex: 12, con: 14, int: 10, wis: 12, cha: 10 },
+      combat: { maxHp: 60, currentHp: 60, crimsonRites: [], mutagens: ativos, attacks: [] },
+    }
+  }
+
+  function montar(char) {
+    const onChangeMutagens = vi.fn()
+    render(
+      <BloodHunterPanel
+        character={char}
+        featureUses={[]}
+        onChange={vi.fn()}
+        onChangeMutagens={onChangeMutagens}
+      />
+    )
+    return { onChangeMutagens }
+  }
+
+  it('nao mostra mutagenicos para outra Ordem', () => {
+    montar(mutante({ order: LYCAN }))
+    expect(screen.queryByText(/Mutag[eê]nicos/)).not.toBeInTheDocument()
+  })
+
+  it('lista as formulas conhecidas e o nivel de mutacao', () => {
+    montar(mutante())
+    expect(screen.getByText(/N[ií]vel de muta[çc][ãa]o 2/)).toBeInTheDocument()
+    expect(screen.getByText('Potência')).toBeInTheDocument()
+    expect(screen.getByText('Sagacidade')).toBeInTheDocument()
+  })
+
+  it('beber um mutagenico o acrescenta aos ativos', () => {
+    const { onChangeMutagens } = montar(mutante())
+    fireEvent.click(screen.getByRole('button', { name: /beber pot[eê]ncia/i }))
+    expect(onChangeMutagens).toHaveBeenCalledWith(['potencia'])
+  })
+
+  it('expelir remove so aquele, preservando os outros', () => {
+    const { onChangeMutagens } = montar(mutante({ ativos: ['potencia', 'sagacidade'] }))
+    fireEvent.click(screen.getByRole('button', { name: /expelir pot[eê]ncia/i }))
+    expect(onChangeMutagens).toHaveBeenCalledWith(['sagacidade'])
+  })
+
+  it('mostra o efeito colateral enquanto o mutagenico esta ativo', () => {
+    montar(mutante({ ativos: ['potencia'] }))
+    expect(screen.getByText(/Sua Destreza diminui/)).toBeInTheDocument()
+  })
+
+  it('avisa quando nao ha formula escolhida', () => {
+    montar(mutante({ conhecidas: '' }))
+    expect(screen.getByText(/Nenhuma f[óo]rmula conhecida/)).toBeInTheDocument()
+  })
+})
+
+describe('BloodHunterPanel — Magia de Pacto (Ordem da Alma Profana)', () => {
+  function alma({ level = 11, patron = 'corruptor', order = PROFANE_SOUL } = {}) {
+    return {
+      info: {
+        level, class: BLOOD_HUNTER, multiclasses: [],
+        chosenFeatures: {
+          [ORDER_CHOICE_ID]: order, [PATRON_CHOICE_ID]: patron,
+          cacador_de_sangue_primal_rite: 'chamas',
+        },
+      },
+      attributes: { str: 14, dex: 12, con: 14, int: 10, wis: 16, cha: 10 },
+      combat: { maxHp: 80, currentHp: 80, crimsonRites: [], mutagens: [], attacks: [] },
+    }
+  }
+  const montar = char => render(
+    <BloodHunterPanel character={char} featureUses={[]} onChange={vi.fn()} />
+  )
+
+  it('nao mostra Magia de Pacto para outra Ordem', () => {
+    montar(alma({ order: MUTANT }))
+    expect(screen.queryByText(/Magia de Pacto/)).not.toBeInTheDocument()
+  })
+
+  it('mostra CD, ataque e os espacos da tabela da Ordem', () => {
+    montar(alma({ level: 11 }))
+    // nivel 11 -> proficiencia +4; SAB 16 -> +3. CD 8+4+3 = 15, ataque +7.
+    expect(screen.getByText(/CD 15/)).toBeInTheDocument()
+    expect(screen.getByText(/ataque \+7/)).toBeInTheDocument()
+    expect(screen.getByText(/2 espaço\(s\) de 3º/)).toBeInTheDocument()
+  })
+
+  it('mostra o patrono e o reforco do rito', () => {
+    montar(alma({ patron: 'hexblade' }))
+    expect(screen.getByText('O Hexblade')).toBeInTheDocument()
+    expect(screen.getByText(/margem de cr[íi]tico de 19 a 20/)).toBeInTheDocument()
+  })
+
+  it('avisa quando nao ha patrono escolhido', () => {
+    montar(alma({ patron: '' }))
+    expect(screen.getByText(/Nenhum patrono escolhido/)).toBeInTheDocument()
   })
 })

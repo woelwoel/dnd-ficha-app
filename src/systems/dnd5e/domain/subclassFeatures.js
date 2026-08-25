@@ -78,12 +78,19 @@ export function detectFeatureUses(text = '', { attributes = {}, profBonus = 2 } 
   return null
 }
 
-/** Ids de choices que representam SELEÇÃO de subclasse (PHB + Tasha + Artífice). */
+/**
+ * Ids de choices que representam SELEÇÃO de subclasse (PHB + Tasha + Artífice
+ * + conteúdo de terceiros).
+ *
+ * Lista FECHADA: id que não estiver aqui é ignorado em silêncio — a subclasse
+ * aparece no picker e não gera card por nível nem tracker nenhum.
+ */
 export const SUBCLASS_CHOICE_IDS = new Set([
   'primal_path', 'bard_college', 'divine_domain', 'druid_circle',
   'martial_archetype', 'monastic_tradition', 'sacred_oath', 'ranger_archetype',
   'roguish_archetype', 'sorcerous_origin', 'arcane_tradition', 'patron',
   'artificer_specialization',
+  'cacador_de_sangue_order',
 ])
 
 const slug = s => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')

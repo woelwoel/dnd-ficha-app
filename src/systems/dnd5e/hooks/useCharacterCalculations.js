@@ -10,6 +10,12 @@ import {
 } from '../utils/calculations'
 import { calculateMaxHpMulticlass, listSpellcastingClasses, getEffectiveSaveProficiencies, effectiveSpeed as domainEffectiveSpeed, effectiveMaxHp as domainEffectiveMaxHp } from '../domain/rules'
 import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
+import { lycanAcBonus } from '../domain/bloodHunter'
+import { profaneSoulPactSlots } from '../domain/profaneSoul'
+import {
+  mutagenAttrDeltas, mutagenAcDelta, mutagenSpeedDelta, mutagenInitiativeDelta,
+  applyMutagenAttrs,
+} from '../domain/mutagens'
 import { getFightingStyles } from '../domain/fightingStyles'
 import { resolveAbilityKey } from '../domain/attributes'
 import {
@@ -67,9 +73,11 @@ export function useCharacterCalculations(character, classData = null, classDataM
 
     // Atributos efetivos: base → attrSet → attrBonus (respeita max).
     // A partir daqui, todos os cálculos derivados usam estes valores.
-    const effectiveAttrs = getEffectiveAttributes(
-      { str, dex, con, int: intel, wis, cha },
-      magicEffects
+    // Mutagenicos entram DEPOIS dos itens magicos e antes de tudo que deriva
+    // de atributo: assim modificadores, CA e iniciativa acompanham sozinhos.
+    const effectiveAttrs = applyMutagenAttrs(
+      getEffectiveAttributes({ str, dex, con, int: intel, wis, cha }, magicEffects),
+      mutagenAttrDeltas(character)
     )
 
     const mods = {
@@ -116,7 +124,7 @@ export function useCharacterCalculations(character, classData = null, classDataM
 
     // Iniciativa com Alert (+5) via feats. Usa DES efetiva (itens mágicos
     // que setam/aumentam DES devem refletir na iniciativa).
-    const initiative = calculateInitiative(effectiveAttrs.dex, { feats })
+    const initiative = calculateInitiative(effectiveAttrs.dex, { feats }) + mutagenInitiativeDelta(character)
 
     // Atributo de magia (compat: classe primária). Usa atributo EFETIVO —
     // ex: Tiara da Inteligência muda a CD do Mago.
@@ -143,7 +151,11 @@ export function useCharacterCalculations(character, classData = null, classDataM
       (classIndex === 'bruxo' ? level : 0) +
       mcs.filter(m => m?.class === 'bruxo')
          .reduce((s, m) => s + (m.level ?? 0), 0)
-    const pactSlots = warlockLevel > 0 ? getWarlockPactSlots(warlockLevel) : null
+    // Magia de Pacto: Bruxo pela tabela dele; Ordem da Alma Profana pela
+    // tabela PROPRIA dela, que e mais curta (3 espacos de 4o no 20o).
+    const pactSlots = warlockLevel > 0
+      ? getWarlockPactSlots(warlockLevel)
+      : profaneSoulPactSlots(character)
     const safePactUsed = clampPactSlotsUsed(pactSlotsUsed, warlockLevel)
 
     // Matemática de magia por classe (DC/ataque por classe em multiclasse híbrida).
@@ -185,11 +197,15 @@ export function useCharacterCalculations(character, classData = null, classDataM
 
     // Derivados de efeitos ativos: NÃO contaminam suggestedAC (base editável).
     const baseAC = combat?.armorClass ?? 10
-    const effectiveAC = baseAC + (spellFx.fx.ac ?? 0)
+    // Pele Resistente (Ordem do Licantropo): +1 enquanto na forma híbrida, a
+    // não ser com armadura pesada. É buff temporário, então entra aqui e não
+    // no suggestedAC, igual aos buffs de magia.
+    const effectiveAC = baseAC + (spellFx.fx.ac ?? 0) + lycanAcBonus(character, armor)
+      + mutagenAcDelta(character)
     // Base = deslocamento do domínio (preserva exaustão/penalidades), não o
     // combat.speed cru — alinhado com o que o AbilityStrip exibe.
     const baseSpeed = domainEffectiveSpeed(character)
-    const effectiveSpeed = Math.round((baseSpeed + (spellFx.fx.speed ?? 0)) * (spellFx.fx.speedMultiplier ?? 1) * 2) / 2
+    const effectiveSpeed = Math.round((baseSpeed + (spellFx.fx.speed ?? 0) + mutagenSpeedDelta(character)) * (spellFx.fx.speedMultiplier ?? 1) * 2) / 2
     const effectBreakdown = (activeEffects ?? []).map(e => ({ id: e.id, name: e.name, summary: e.summary }))
     // Ritual Vermelho reduz o TETO enquanto ativo. Como effectiveAC, não
     // contamina o valor armazenado (que continua editável na ficha).

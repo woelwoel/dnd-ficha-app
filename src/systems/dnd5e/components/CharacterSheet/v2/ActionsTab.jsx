@@ -6,7 +6,7 @@ import { CombatClassActions } from '../CombatClassActions'
 import { ManeuversPanel } from '../ManeuversPanel'
 import { RunesPanel } from '../RunesPanel'
 import { BloodHunterPanel } from './BloodHunterPanel'
-import { riteDamageFor } from '../../../domain/bloodHunter'
+import { riteDamageFor, lycanMeleeDamageBonus } from '../../../domain/bloodHunter'
 import { AttackRollButton } from '../AttackRollButton'
 import { RollButton } from '../../../../../components/DiceRoller/RollButton'
 import {
@@ -34,11 +34,11 @@ function SectionTitle({ children }) {
    AttackRollButton (fluxo ataque→crítico→dano) + RollButton pra dano avulso;
    consumo de munição idêntico ao AttackRow v1. A edição completa fica no
    Attacks v1 sob "Gerenciar ataques". */
-function AttackRowV2({ atk: rawAtk, attributes, profBonus, ammoItem, fightingStyles = [], rite = null, onUpdateItem }) {
+function AttackRowV2({ atk: rawAtk, attributes, profBonus, ammoItem, fightingStyles = [], rite = null, lycanMelee = 0, onUpdateItem }) {
   // Estilos de Combate vêm do personagem (calc), não do ataque — ver AttackRow v1.
-  // O Ritual Vermelho segue o mesmo caminho: é estado do personagem, carimbado
-  // por arma aqui, porque só vale na arma imbuída.
-  const atk = { ...rawAtk, fightingStyles, rite }
+  // O Ritual Vermelho e o Poder Selvagem seguem o mesmo caminho: são estado do
+  // personagem, carimbados por arma aqui, porque só valem em parte delas.
+  const atk = { ...rawAtk, fightingStyles, rite, lycanMelee }
   const bonus = calculateWeaponAttackBonus(atk, attributes, profBonus)
   const dmg = calculateWeaponDamage(atk, attributes, {})
   const abbr = abbrOfKey(resolveAttackAbility(atk, attributes))
@@ -170,6 +170,9 @@ export function ActionsTab() {
   } = updaters
 
   const attacks = character.combat?.attacks ?? []
+  // Poder Selvagem: vale pro personagem inteiro, mas só soma nas armas corpo a
+  // corpo — quem decide isso é o motor, em utils/attacks.
+  const lycanMeleeBonus = lycanMeleeDamageBonus(character)
   const nativeType = filter === 'acao' ? 'action'
     : filter === 'bonus' ? 'bonus'
     : filter === 'reacao' ? 'reaction'
@@ -222,6 +225,7 @@ export function ActionsTab() {
                 ammoItem={findAmmoForAttack(atk, character.inventory?.items ?? [])}
                 fightingStyles={calc.fightingStyles}
                 rite={riteDamageFor(atk, character)}
+                lycanMelee={lycanMeleeBonus}
                 onUpdateItem={updateItem}
               />
             ))}
@@ -271,6 +275,8 @@ export function ActionsTab() {
               onChange={rites => updateCombat('crimsonRites', rites)}
               onSpend={id => spendFeatureUse(id, featureUses)}
               onRegain={id => regainFeatureUse(id, featureUses)}
+              onToggleHybrid={on => updateCombat('hybridForm', on)}
+              onChangeMutagens={ativos => updateCombat('mutagens', ativos)}
             />
           </div>
         </>

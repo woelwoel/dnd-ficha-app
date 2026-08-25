@@ -6,7 +6,11 @@
         "id": "cacador_de_sangue_primal_rite",
         "featureName": "Ritual Vermelho",
         "prompt": "Escolha seus Rituais Primais",
-        "multiSelectByLevel": { "1": 1, "6": 2, "11": 3 },
+        "multiSelectByLevel": {
+          "1": 1,
+          "6": 2,
+          "11": 3
+        },
         "options": [
           {
             "value": "chamas",
@@ -58,7 +62,14 @@
         "id": "cacador_de_sangue_blood_curses",
         "featureName": "Sangue Maldito",
         "prompt": "Escolha suas Maldições de Sangue",
-        "multiSelectByLevel": { "2": 1, "5": 2, "9": 3, "13": 4, "16": 5, "20": 6 },
+        "multiSelectByLevel": {
+          "2": 1,
+          "5": 2,
+          "9": 3,
+          "13": 4,
+          "16": 5,
+          "20": 6
+        },
         "options": [
           {
             "value": "amarracao",
@@ -111,22 +122,22 @@
           {
             "value": "cacador-de-espectros",
             "name": "Ordem do Caçador de Espectros",
-            "desc": "A mais antiga e organizada das ordens, que redescobriu os segredos da magia de sangue e a refinou para o combate contra o flagelo dos mortos-vivos. Caçadores de Espectros estudam o momento da morte, obcecados pelos mistérios da transição.\n\nAs características desta Ordem ainda não foram implementadas no app e chegam numa próxima entrega."
+            "desc": "A mais antiga e organizada das ordens, que redescobriu os segredos da magia de sangue e a refinou para o combate contra o flagelo dos mortos-vivos. Caçadores de Espectros procuram e estudam o momento da morte, obcecados pelos mistérios da transição. Alguns se sentam com os doentes terminais para testemunhar sua morte de perto; outros chegam a provocar uma experiência de quase-morte, para sintonizar corpo e sentidos com os reinos etéreos além.\n\nFeatures por nível:\n• Nv 3 — Ritual da Alvorada: Você aprende o esotérico Ritual da Alvorada, cujo dano de ritual é do tipo radiante. Quando você atinge um morto-vivo com o Ritual da Alvorada, ele sofre dano radiante adicional equivalente ao seu modificador de Sabedoria. A partir do 11º nível, qualquer criatura atingida pelo Ritual da Alvorada sofre esse dano radiante adicional.\n• Nv 7 — Veias Sagradas: Suas maldições de sangue tornam-se ainda mais perigosas à essência de uma criatura e agora podem afetar qualquer criatura, independentemente de ter ou não sangue. Além disso, quando você amaldiçoa um morto-vivo com uma maldição de sangue, ele deve passar num teste de resistência de Sabedoria (CD igual a 8 + seu bônus de proficiência + seu modificador de Sabedoria) ou não poderá atacar você até o fim do seu próximo turno.\n• Nv 11 — Elevação Impulsiva: Você aprendeu a entrar brevemente no mundo espiritual, o que lhe permite um ataque rápido e mortal. Quando você usa a ação de Ataque, pode fazer um ataque com arma como ação bônus e se tornar temporariamente um espectro. Até o fim do seu próximo turno, você pode se mover através de criaturas e objetos como se fossem terreno difícil, e sofre 1d10 de dano de força se terminar o turno dentro de um objeto. Se você deixar de ser espectro dentro de um objeto, é empurrado para o espaço desocupado mais próximo e sofre dano de força equivalente ao dobro do número de metros percorridos. Você pode gastar um uso deste recurso como ação bônus em vez de fazer o ataque. Você pode usá-lo um número de vezes igual ao seu modificador de Sabedoria (mínimo de 1) e recupera todos os usos gastos ao terminar um descanso curto ou longo.\n• Nv 15 — Visão da Sepultura: Você enxerga através da escuridão mágica até 9 metros e vê criaturas e objetos invisíveis até 9 metros.\n• Nv 18 — Espírito Vingativo: Você aprende a projetar seu espírito para lutar enquanto está à beira da morte. Sempre que seus pontos de vida caírem a 0, você pode deixar sua alma emergir do corpo para lutar. Seu corpo permanece inconsciente e sujeito a testes de resistência contra a morte normalmente. No início do seu próximo turno, uma forma espiritual se manifesta no seu espaço, pega suas armas e continua lutando sob seu controle. A forma espiritual tem seus atributos físicos e sua classe de armadura, além de suas armas e munições, e pode se mover através de criaturas e objetos como se fossem terreno difícil. Ela é imune a dano de frio, necrótico e de armas não-mágicas, tem acesso a todas as suas habilidades e não sofre dano do Ritual Vermelho. Se a forma espiritual sofrer qualquer dano, se o seu corpo morrer, ou se você recuperar pontos de vida, ela desaparece e larga as armas no espaço que ocupava."
           },
           {
             "value": "licantropo",
             "name": "Ordem do Licantropo",
-            "desc": "Uma orgulhosa ordem de Caçadores de Sangue que passam pela Domesticação, um cerimonial de imposição da licantropia por um membro sênior. Esses caçadores usam suas habilidades para aproveitar o poder do monstro que abrigam sem se perder nele.\n\nAs características desta Ordem ainda não foram implementadas no app e chegam numa próxima entrega."
+            "desc": "Uma orgulhosa ordem de Caçadores de Sangue que passam pela Domesticação, um cerimonial de imposição da licantropia conduzido por um membro sênior. Esses caçadores usam suas habilidades para aproveitar o poder do monstro que abrigam sem se perder nele. Combinando força de vontade treinada com os segredos dos rituais de magia de sangue da ordem, seus membros aprendem a controlar e liberar a forma híbrida por curtos períodos. Ainda assim, nenhum treinamento é perfeito: sem cuidado e foco completo, até o maior dos Caçadores de Sangue pode ser tomado pela sede de sangue.\n\nFeatures por nível:\n• Nv 3 — Sentidos Aguçados: Você começa a adotar as habilidades de um predador natural. Você tem vantagem em testes de Sabedoria (Percepção) relacionados a olfato e audição.\n• Nv 3 — Transformação Híbrida: Com uma ação, você se transforma em sua forma híbrida por 10 minutos. Nela você pode falar, usar equipamentos e vestir armadura, e pode reverter antes usando uma ação. Você reverte automaticamente se ficar inconsciente, cair a 0 pontos de vida ou morrer. Enquanto transformado, você ganha — Poder Selvagem: bônus nas rolagens de dano corpo a corpo equivalente a metade do seu bônus de proficiência (arredondado para baixo), e vantagem em testes e testes de resistência de Força. — Pele Resistente: resistência a dano de concussão, perfurante e cortante de armas não-mágicas que não sejam de prata; sem armadura pesada, você ganha +1 de CA. — Ataque do Predador: seus ataques desarmados contam como arma simples para o Ritual Vermelho, podem usar Destreza no lugar de Força, e ao usar a ação de Ataque com um golpe desarmado você pode fazer outro golpe desarmado como ação bônus; eles causam 1d6 de dano cortante, subindo para 1d8 no 11º nível e 1d10 no 18º. — Fraqueza do Amaldiçoado: você tem vulnerabilidade a dano de armas de prata. — Desejo de Sangue: no início do seu turno, se sofreu dano desde o início do seu último turno, faça um teste de resistência de Sabedoria para manter o controle, com CD 10 ou metade do dano total recebido, o que for maior; numa falha, você se move até a criatura mais próxima e usa a ação de Ataque contra ela, e recupera o controle no restante do turno. Se estiver sob efeito que impeça concentração, você falha automaticamente neste teste.\n• Nv 7 — Proeza do Perseguidor: Seu deslocamento aumenta em 3 metros, seu salto em distância aumenta em 3 metros e seu salto em altura em 1 metro. Além disso, sua forma híbrida ganha Ataque do Predador Aperfeiçoado: enquanto você tiver um ritual ativo na forma híbrida, seus ataques desarmados contam como mágicos para superar resistência e imunidade a ataques e dano não-mágicos.\n• Nv 11 — Transformação Avançada: Você passa a se transformar com uma ação bônus, e a forma híbrida dura até 30 minutos. Ela também ganha — Regeneração Licantrópica: no início de cada turno seu, você recupera pontos de vida equivalentes a 1 + seu modificador de Constituição (mínimo de 1), desde que esteja com metade ou menos dos seus pontos de vida e acima de 0. — Precisão Bestial: bônus nas jogadas de ataque corpo a corpo com golpes desarmados equivalente a metade do seu bônus de proficiência (arredondado para baixo).\n• Nv 15 — Vontade de Ferro: Você faz com vantagem os testes de resistência para manter o controle da forma híbrida. Além disso, a forma híbrida ganha Táticas de Matilha: você tem vantagem nas jogadas de ataque contra uma criatura se ao menos um aliado seu estiver a 1,5 metro dela e não estiver incapacitado.\n• Nv 18 — Mestria da Transformação Híbrida: Você domou seu predador interior e passa a usar a transformação híbrida três vezes entre descansos. Você também acrescenta a Maldição de Sangue do Rugido às suas maldições, sem contar no total conhecido. Rugido: como uma ação, você emite um rugido contra qualquer número de criaturas a até 9 metros; cada uma que puder ouvir você deve passar num teste de resistência de Sabedoria (CD igual a 8 + seu bônus de proficiência + seu modificador de Sabedoria) ou fica amedrontada até o fim do seu próximo turno, e atordoada em vez disso se falhar por 5 ou mais. Quem passar fica imune a esta maldição por 24 horas. Amplifique: atinge qualquer número de criaturas a até 15 metros."
           },
           {
             "value": "mutante",
             "name": "Ordem do Mutante",
-            "desc": "Aqueles que sobrevivem à Perdição do Caçador se descobrem irrevogavelmente alterados. Esta ordem se concentra em fabricar elixires tóxicos que modificam as próprias capacidades em combate, alterando o sangue e, com o tempo, tornando-se algo além do humano.\n\nAs características desta Ordem ainda não foram implementadas no app e chegam numa próxima entrega."
+            "desc": "O processo de assimilação da Perdição do Caçador é doloroso, marcante e às vezes fatal. Quem sobrevive se descobre irrevogavelmente alterado, aperfeiçoado. Alguns consideram a experiência gloriosa e adotam a capacidade de alterar a própria fisiologia combinando hemocracia e alquimia corrompida. Ao longo de gerações de experimentação, surgiu um segmento da ordem voltado a fabricar elixires tóxicos que modificam suas capacidades em combate, alterando o sangue e, com o tempo, tornando-se algo além do humano.\n\nFeatures por nível:\n• Nv 3 — Fórmulas: Você começa a descobrir fórmulas alquímicas proibidas que alteram temporariamente suas capacidades físicas e mentais. Escolha três fórmulas mutagênicas; você ganha mais uma no 7º, 11º, 15º e 18º níveis. Ao aprender uma fórmula nova, você pode trocar uma das que já conhece por outra. O seu nível de mutação, que mede a intensidade dos efeitos, é o seu nível de caçador de sangue dividido por 4, arredondado para cima.\n• Nv 3 — Criação de Mutagênicos: Durante um descanso curto você pode preparar um mutagênico. Com uma ação bônus você pode consumi-lo, e seus efeitos, incluindo os colaterais, duram até o fim do seu próximo descanso, no qual você medita e expele as toxinas do corpo. Mutagênicos são feitos sob medida para você e são fatais para outras criaturas: não afetam criaturas Grandes ou maiores e causam apenas os efeitos colaterais em criaturas Médias ou menores que os bebam. Eles também são instáveis e perdem a potência ao fim do seu próximo descanso caso não sejam usados.\n• Nv 7 — Criação de Mutagênico Avançada: Ao preparar mutagênicos num descanso curto, você pode criar dois, de fórmulas diferentes, que podem ser ingeridos com efeitos sobrepostos. Cada um exige uma ação bônus para ser bebido. A partir do 15º nível, você prepara três por descanso curto.\n• Nv 11 — Metabolismo Estranho: Com uma ação bônus, você incute uma explosão de adrenalina no corpo para resistir temporariamente aos efeitos negativos de um mutagênico, ignorando o efeito colateral de um deles por 1 minuto. Você pode usar este recurso uma vez e precisa terminar um descanso curto ou longo para usá-lo de novo.\n• Nv 15 — Fisiologia Robusta: Seu corpo se adaptou a toxinas e venenos. Você ganha imunidade a dano de veneno e à condição envenenado.\n• Nv 18 — Mutação Exaltada: Seu corpo passa a produzir uma de suas toxinas naturalmente. Escolha uma das fórmulas que você conhece: você ganha os benefícios e os efeitos colaterais dela permanentemente, o tempo todo. Essa escolha não pode ser alterada depois."
           },
           {
             "value": "alma-profana",
             "name": "Ordem da Alma Profana",
-            "desc": "Esta ordem viu os limites da magia de sangue contra os demônios mais antigos e cruéis, e mergulhou no mesmo poço de conhecimento arcano corruptor, fazendo pactos com males menores para combater males maiores.\n\nAs características desta Ordem ainda não foram implementadas no app. Ela conjura com Magia de Pacto do Bruxo e depende de trabalho no motor de conjuração, por isso vem depois das outras três."
+            "desc": "Esta ordem viu os limites da magia de sangue contra as abominações mais antigas e cruéis — as que comandam sombras, se escondem à vista entre os nobres e torcem a mente do guerreiro mais firme com um olhar. Uma pequena seita mergulhou no mesmo poço de conhecimento arcano corruptor e fez pactos com males menores para combater os maiores. Perderam parte de si, mas consideram que o poder valeu o preço: até os demônios estremecem ao saber que chamaram a atenção da Ordem da Alma Profana.\n\nFeatures por nível:\n• Nv 3 — Patrono do Outro Mundo: Você faz uma barganha com um ser de outro mundo à sua escolha. A escolha amplia parte das características desta Ordem, tanto o reforço do Ritual Vermelho quanto as magias raras que você recebe no 7º e no 15º níveis.\n• Nv 3 — Magia de Pacto: Você amplia suas técnicas de combate com a capacidade de conjurar. Você conhece dois truques da lista de bruxo, e um terceiro no 10º nível. Seus espaços de magia são todos do mesmo nível e você os recupera ao terminar um descanso curto ou longo. Seu atributo de conjuração é Sabedoria: a CD dos seus testes de resistência é 8 + seu bônus de proficiência + seu modificador de Sabedoria, e seu bônus de ataque com magia é o bônus de proficiência + o modificador de Sabedoria. Ao subir de nível nesta classe, você pode trocar uma magia conhecida por outra da lista de bruxo de um nível para o qual você tenha espaços.\n• Nv 3 — Foco Ritual: Sua arma se torna um núcleo do pacto com seu patrono. Enquanto você tiver um ritual ativo, pode usar a arma como foco de conjuração, e o pacto escolhido reforça o seu Ritual Vermelho de um jeito próprio.\n• Nv 7 — Frenesi Místico: Quando você usa sua ação para conjurar um truque, pode fazer um ataque com arma como ação bônus.\n• Nv 7 — Arcana Mística: Seu patrono concede o uso raro de um segredo perigoso. Você pode conjurar a magia do seu pacto uma vez, gastando um espaço de magia da alma profana, e precisa terminar um descanso longo para fazê-lo de novo.\n• Nv 11 — Canalização Diabólica: Como ação, você pode imbuir sua arma com ritual ativo com uma magia de bruxo que possa conjurar, ou que já esteja ativa, e fazer um ataque com essa arma, gastando o espaço correspondente. A magia precisa ser de 1º nível ou superior e ter tempo de conjuração de uma ação. Se o ataque acertar, os ataques de magia imbuída acertam automaticamente e contam como um único ataque; o alvo sofre o dano da arma e os efeitos da magia. Se o ataque tinha vantagem, o primeiro teste de resistência do alvo contra a magia tem desvantagem. Se o ataque errar, a magia não tem efeito. Magias de área se originam do espaço do alvo.\n• Nv 15 — Arcana Revelada: Seu patrono concede o uso raro de mais uma magia. Você pode conjurá-la uma vez, gastando um espaço de magia da alma profana, e precisa terminar um descanso longo para fazê-lo de novo.\n• Nv 18 — Sifão de Almas: Você aprende a sacrificar as almas de inimigos poderosos ao seu patrono em troca de poder imediato. Quando você reduz a 0 pontos de vida, com um ataque, uma criatura de Nível de Desafio 15 ou maior, você recupera um espaço de magia gasto."
           }
         ]
       },
@@ -150,6 +161,140 @@
             "value": "morto",
             "name": "Ritual do Morto",
             "desc": "O dano do seu ritual é do tipo necrótico."
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "id": "cacador_de_sangue_mutagen_formulas",
+        "featureName": "Fórmulas",
+        "prompt": "Escolha suas fórmulas mutagênicas",
+        "requires": {
+          "cacador_de_sangue_order": "mutante"
+        },
+        "multiSelectByLevel": {
+          "3": 3,
+          "7": 4,
+          "11": 5,
+          "15": 6,
+          "18": 7
+        },
+        "options": [
+          {
+            "value": "eter",
+            "name": "Éter (nv 11)",
+            "desc": "Você ganha deslocamento de voo de 6 metros. Efeito colateral: Você tem desvantagem em todos os testes de Força e de Destreza."
+          },
+          {
+            "value": "celeridade",
+            "name": "Celeridade",
+            "desc": "Sua Destreza e o teto dela aumentam pelo seu nível de mutação. Efeito colateral: Sua Sabedoria diminui pelo seu nível de mutação."
+          },
+          {
+            "value": "familiarizado",
+            "name": "Familiarizado",
+            "desc": "Você tem vantagem em testes de Inteligência. Efeito colateral: Você tem desvantagem em testes de Carisma."
+          },
+          {
+            "value": "crueldade",
+            "name": "Crueldade (nv 11)",
+            "desc": "Você ganha uma ação bônus no seu turno, utilizável apenas para a ação de Ataque com armas. Efeito colateral: Você tem desvantagem em testes de resistência."
+          },
+          {
+            "value": "impermeavel",
+            "name": "Impermeável",
+            "desc": "Você ganha resistência a dano perfurante. Efeito colateral: Você ganha vulnerabilidade a dano cortante."
+          },
+          {
+            "value": "mobilidade",
+            "name": "Mobilidade",
+            "desc": "Você fica imune às condições agarrado e impedido. No 11º nível, também à condição paralisado. Efeito colateral: Você recebe uma penalidade na iniciativa igual ao dobro do seu nível de mutação."
+          },
+          {
+            "value": "visao-noturna",
+            "name": "Visão Noturna",
+            "desc": "Você ganha visão no escuro até 18 metros. Se já tinha visão no escuro, o alcance aumenta em 18 metros. Efeito colateral: Você ganha Sensibilidade à Luz Solar: desvantagem em jogadas de ataque e em testes de Sabedoria (Percepção) baseados em visão sob luz solar direta."
+          },
+          {
+            "value": "potencia",
+            "name": "Potência",
+            "desc": "Sua Força e o teto dela aumentam pelo seu nível de mutação. Efeito colateral: Sua Destreza diminui pelo seu nível de mutação."
+          },
+          {
+            "value": "precisao",
+            "name": "Precisão (nv 11)",
+            "desc": "Seus ataques com arma causam crítico com 19 ou 20. A partir do 12º nível, com 18 a 20. Efeito colateral: Toda cura que você recebe é reduzida à metade."
+          },
+          {
+            "value": "rapidez",
+            "name": "Rapidez",
+            "desc": "Seu deslocamento aumenta em 4,5 metros. No 15º nível, em 6 metros. Efeito colateral: Você tem desvantagem em testes de Destreza."
+          },
+          {
+            "value": "reconstrucao",
+            "name": "Reconstrução (nv 7)",
+            "desc": "Enquanto consciente e em combate, você regenera pontos de vida iguais ao dobro do seu nível de mutação no início do seu turno, desde que esteja acima de 0. Efeito colateral: Seu deslocamento diminui em 3 metros."
+          },
+          {
+            "value": "sagacidade",
+            "name": "Sagacidade",
+            "desc": "Sua Sabedoria e o teto dela aumentam pelo seu nível de mutação. Efeito colateral: Sua classe de armadura é reduzida pelo seu nível de mutação."
+          },
+          {
+            "value": "protegido",
+            "name": "Protegido",
+            "desc": "Você ganha resistência a dano cortante. Efeito colateral: Você ganha vulnerabilidade a dano de concussão."
+          },
+          {
+            "value": "inquebravel",
+            "name": "Inquebrável",
+            "desc": "Você ganha resistência a dano de concussão. Efeito colateral: Você ganha vulnerabilidade a dano perfurante."
+          },
+          {
+            "value": "cautela",
+            "name": "Cautela",
+            "desc": "Você ganha um bônus na iniciativa igual ao dobro do seu nível de mutação. Efeito colateral: Você tem desvantagem em testes de Sabedoria (Percepção)."
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "id": "cacador_de_sangue_patron",
+        "featureName": "Patrono do Outro Mundo",
+        "prompt": "Escolha seu patrono",
+        "requires": {
+          "cacador_de_sangue_order": "alma-profana"
+        },
+        "options": [
+          {
+            "value": "arquifada",
+            "name": "O Arquifada",
+            "desc": "Foco Ritual: Se você causar dano de ritual a uma criatura, ela perde qualquer bônus de meia cobertura ou de três quartos, e também invisibilidade, até o início do seu próximo turno. Arcana Mística (7º): Nublar. Arcana Revelada (15º): Lentidão."
+          },
+          {
+            "value": "corruptor",
+            "name": "O Corruptor",
+            "desc": "Foco Ritual: Ao usar o Ritual das Chamas, se você rolar 1 no dado de dano do ritual, pode rolar de novo. Só uma nova rolagem por ataque. Arcana Mística (7º): Raio Ardente. Arcana Revelada (15º): Bola de Fogo."
+          },
+          {
+            "value": "grande-antigo",
+            "name": "O Grande Antigo",
+            "desc": "Foco Ritual: Sempre que você acertar um golpe crítico, a criatura deve passar num teste de resistência de Sabedoria contra a CD das suas magias ou fica amedrontada até o fim do seu próximo turno. Arcana Mística (7º): Detectar Pensamentos. Arcana Revelada (15º): Velocidade."
+          },
+          {
+            "value": "imortal",
+            "name": "O Imortal",
+            "desc": "Foco Ritual: Sempre que você reduzir uma criatura hostil a 0 pontos de vida com um ataque com arma, você recupera pontos de vida iguais ao dado do Ritual Vermelho. Arcana Mística (7º): Cegueira/Surdez. Arcana Revelada (15º): Rogar Maldição."
+          },
+          {
+            "value": "celestial",
+            "name": "O Celestial",
+            "desc": "Foco Ritual: Você pode gastar um uso de Sangue Maldito como ação bônus para curar uma criatura a até 18 metros, que recupera pontos de vida iguais ao seu dado de Ritual Vermelho rolado duas vezes + seu modificador de Sabedoria (mínimo de 1). Arcana Mística (7º): Restauração Menor. Arcana Revelada (15º): Reviver."
+          },
+          {
+            "value": "hexblade",
+            "name": "O Hexblade",
+            "desc": "Foco Ritual: Sempre que você atingir uma criatura com uma maldição de sangue, seu próximo ataque contra ela tem margem de crítico de 19 a 20. Arcana Mística (7º): Marca da Punição. Arcana Revelada (15º): Piscar."
           }
         ]
       }
