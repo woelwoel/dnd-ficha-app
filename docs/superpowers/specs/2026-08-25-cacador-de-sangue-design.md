@@ -38,9 +38,27 @@ nenhum caminho para conteúdo fora dos livros oficiais.
 homebrew: { code: 'homebrew', label: 'Conteúdo de Terceiros', abbr: '3P' }
 ```
 
-`RULESETS['2014'].sources` em `domain/rulesets.js` ganha `'homebrew'`.
-`RULESETS['2024'].sources` **não** ganha — a classe é escrita nas regras de
-2014, e `sourcesFor` já faz a interseção sozinho, sem código novo.
+**Pendência conhecida — gating por geração.** `domain/rulesets.js` (o eixo
+2014/2024) **ainda não existe na master**: vive só na branch
+`feat/dnd-2024-eixo-ruleset`, que não terminou. Este projeto sai da master de
+propósito, para ser entregável sem esperar o 2024.
+
+Quando o eixo 2024 for mergeado, acrescente `'homebrew'` a
+`RULESETS['2014'].sources` e **não** a `RULESETS['2024'].sources` — a classe é
+escrita nas regras de 2014, e `sourcesFor` já faz a interseção sozinho. São
+duas linhas, mais o teste correspondente:
+
+```js
+it('é permitida no ruleset 2014 e barrada no 2024', () => {
+  const em2014 = { meta: { settings: { ruleset: '2014', sources: ['homebrew'] } } }
+  const em2024 = { meta: { settings: { ruleset: '2024', sources: ['homebrew'] } } }
+  expect(sourcesFor(em2014)).toContain('homebrew')
+  expect(sourcesFor(em2024)).not.toContain('homebrew')
+})
+```
+
+Até lá o Caçador de Sangue é oferecido em qualquer ficha com a fonte ligada, o
+que é inofensivo enquanto o eixo 2024 não estiver em produção.
 
 ### Arquivos de dado
 

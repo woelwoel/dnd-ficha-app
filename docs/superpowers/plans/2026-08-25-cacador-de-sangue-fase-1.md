@@ -20,7 +20,6 @@
 |---|---|
 | `src/systems/dnd5e/domain/bloodHunter.js` | **criar** — toda a regra da classe, puro, sem React |
 | `src/systems/dnd5e/domain/sources.js` | **modificar** — registrar o código de fonte `homebrew` |
-| `src/systems/dnd5e/domain/rulesets.js` | **modificar** — liberar `homebrew` só no ruleset 2014 |
 | `src/systems/dnd5e/domain/characterSchema.js` | **modificar** — campo `combat.crimsonRites` |
 | `src/systems/dnd5e/domain/rules.js` | **modificar** — tracker de Sangue Maldito; clamp de cura no teto efetivo |
 | `src/systems/dnd5e/utils/attacks.js` | **modificar** — somar o dado de rito ao dano |
@@ -45,15 +44,19 @@ npx vitest run src/test/dnd5e/blood-hunter-rules.test.js --maxWorkers=2
 
 **Files:**
 - Modify: `src/systems/dnd5e/domain/sources.js`
-- Modify: `src/systems/dnd5e/domain/rulesets.js`
 - Test: `src/test/dnd5e/homebrew-source.test.js`
+
+> **Gating por geração fica pendente.** `domain/rulesets.js` (eixo 2014/2024)
+> não existe nesta base — vive só na branch `feat/dnd-2024-eixo-ruleset`, que
+> não terminou. Este projeto sai da master de propósito, para ser entregável
+> sem esperar o 2024. A spec registra as duas linhas a acrescentar quando
+> aquele eixo mergear.
 
 - [ ] **Step 1: Escreva o teste que falha**
 
 ```js
 import { describe, it, expect } from 'vitest'
 import { SOURCES, filterCatalogBySources } from '../../systems/dnd5e/domain/sources'
-import { sourcesFor } from '../../systems/dnd5e/domain/rulesets'
 
 describe('fonte homebrew (conteúdo de terceiros)', () => {
   it('está registrada com rótulo e abreviação próprios', () => {
@@ -74,13 +77,6 @@ describe('fonte homebrew (conteúdo de terceiros)', () => {
     expect(filterCatalogBySources(catalogo, ['homebrew']).map(c => c.index))
       .toEqual(['guerreiro', 'cacador-de-sangue'])
   })
-
-  it('é permitida no ruleset 2014 e barrada no 2024', () => {
-    const em2014 = { meta: { settings: { ruleset: '2014', sources: ['homebrew'] } } }
-    const em2024 = { meta: { settings: { ruleset: '2024', sources: ['homebrew'] } } }
-    expect(sourcesFor(em2014)).toContain('homebrew')
-    expect(sourcesFor(em2024)).not.toContain('homebrew')
-  })
 })
 ```
 
@@ -100,13 +96,6 @@ Em `src/systems/dnd5e/domain/sources.js`, dentro de `SOURCES`, depois de `xanath
   homebrew: { code: 'homebrew', label: 'Conteúdo de Terceiros',            abbr: '3P' },
 ```
 
-Em `src/systems/dnd5e/domain/rulesets.js`, no descritor `'2014'`:
-
-```js
-    sources: ['phb', 'tasha', 'xanathar', 'homebrew'],
-```
-
-Não toque em `RULESETS['2024'].sources`. `sourcesFor` já faz a interseção sozinho — é assim que o terceiro teste passa sem código novo.
 
 - [ ] **Step 4: Rode o teste e confirme que passa**
 
@@ -114,12 +103,12 @@ Não toque em `RULESETS['2024'].sources`. `sourcesFor` já faz a interseção so
 npx vitest run src/test/dnd5e/homebrew-source.test.js --maxWorkers=2
 ```
 
-Esperado: PASS, 3 testes.
+Esperado: PASS, 2 testes.
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/systems/dnd5e/domain/sources.js src/systems/dnd5e/domain/rulesets.js src/test/dnd5e/homebrew-source.test.js
+git add src/systems/dnd5e/domain/sources.js src/test/dnd5e/homebrew-source.test.js
 git commit -m "feat(homebrew): codigo de fonte para conteudo de terceiros"
 ```
 
