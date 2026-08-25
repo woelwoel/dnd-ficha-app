@@ -13,6 +13,7 @@ const DATASETS = {
   races:             { pt: 'phb-races-pt.json',            fallback: '5e-SRD-Races.json',       lazy: false },
   classes:           { pt: 'phb-classes-pt.json',          fallback: '5e-SRD-Classes.json',     lazy: false },
   classesTasha:      { pt: 'tasha-classes-pt.json',        fallback: null,                      lazy: false },
+  classesHomebrew:   { pt: 'homebrew-classes-pt.json',     fallback: null,                      lazy: false },
   backgrounds:       { pt: 'phb-backgrounds-pt.json',      fallback: '5e-SRD-Backgrounds.json', lazy: false },
   spells:            { pt: 'phb-spells-pt.json',           fallback: null,                      lazy: false },
   spellsTasha:       { pt: 'tasha-spells-pt.json',         fallback: null,                      lazy: false },
@@ -46,7 +47,7 @@ const DATASETS = {
 // chave lógica → { strategy: 'array' (concat + tagSource) | 'object' (merge raso por chave), parts: [[parteKey, sourceCode], ...] }
 const COMPOSED = {
   feats:        { strategy: 'array',  parts: [['feats', 'phb'], ['featsTasha', 'tasha'], ['featsXanathar', 'xanathar']] },
-  classes:      { strategy: 'array',  parts: [['classes', 'phb'], ['classesTasha', 'tasha']] },
+  classes:      { strategy: 'array',  parts: [['classes', 'phb'], ['classesTasha', 'tasha'], ['classesHomebrew', 'homebrew']] },
   spells:       { strategy: 'array',  parts: [['spells', 'phb'], ['spellsTasha', 'tasha'], ['spellsXanathar', 'xanathar']] },
   classChoices: { strategy: 'classChoices', parts: [['classChoices', 'phb'], ['classChoicesTasha', 'tasha'], ['classChoicesXanathar', 'xanathar']] },
   progression:  { strategy: 'object', parts: [['progression', 'phb'], ['progressionTasha', 'tasha']] },

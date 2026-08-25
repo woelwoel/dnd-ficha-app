@@ -1,0 +1,18 @@
+[
+  {
+    "index": "cacador-de-sangue",
+    "name": "Caçador de Sangue",
+    "roles": ["DANO CORPO A CORPO", "CONTROLE", "UTILIDADE"],
+    "hit_die": 10,
+    "saving_throws": ["Força", "Sabedoria"],
+    "armor_proficiencies": ["Armaduras leves, armaduras médias, escudos"],
+    "weapon_proficiencies": ["Armas simples", "Armas marciais"],
+    "tool_proficiencies": ["Suprimentos de alquimista"],
+    "skill_choices": {
+      "count": 2,
+      "from": ["Acrobacia", "Arcanismo", "Atletismo", "Intuição", "Investigação", "Sobrevivência"]
+    },
+    "summary": "Guerreiros que sacrificam a própria vitalidade em rituais de sangue proibidos, imbuindo as armas com energia elemental para caçar monstros com as armas do próprio inimigo.",
+    "fullDescription": "Em um território atormentado por todo tipo de bestas, demônios e abominações vindas de além da barreira, a maioria vive com medo da escuridão, da superstição e do desconhecido. Alguns se fortalecem com essa experiência e escolhem se levantar e lutar contra a maré sombria. Essas pessoas são chamadas de heróis.\n\nOutros, porém, são tão fanáticos na vontade de destruir a anátema que infesta os campos que abraçam o conhecimento sombrio e proibido. Sacrificam a própria força vital em rituais de sangue dúbios e há muito esquecidos, para compreender melhor seus inimigos. Seus métodos às vezes borram a linha entre eles e o mal que caçam, deixando a própria humanidade em questão. Essas pessoas são chamadas de Caçadores de Sangue.\n\nTornando-se o inimigo para entender o inimigo\nEsses guerreiros escolheram unir o manejo mortal das armas a elementos de uma magia de sangue perversa, criando técnicas de combate impressionantemente eficazes. Seu conhecimento profundo e sua conexão anormal com criaturas malignas lhes dão vantagem para rastrear, caçar e destruir até o mais resistente dos demônios. Eles abrem mão da própria vitalidade em troca de uma visão dos inimigos e da capacidade de manipulá-los por dentro. Alguns produzem tônicos alquímicos tóxicos a partir de órgãos colhidos de monstros abatidos, transformando o sangue e o corpo para ficarem ainda mais em sintonia com a presa, tornando-se algo diferente de humano. Outros vão além e fazem pacto com entidades sombrias menores, na esperança de usar esses dons contra males maiores. Muitos Caçadores de Sangue vão longe demais em nome de seus objetivos, caem na própria arrogância e se tornam os monstros que escolheram caçar. Esse é o maior medo de um Caçador de Sangue — e das sociedades que costumam evitá-los.\n\nTão temidos quanto suas presas\nA natureza de suas habilidades e de seu treinamento gerou muitos rumores pelas regiões, e nem todos estão longe da verdade. O povo comum os considera amaldiçoados e com frequência os expulsa de suas casas. Nobres os veem como convenientes de vez em quando, mas em geral os tratam como estorvo. Magos os consideram aliados úteis, desde que mantidos à distância, enquanto clérigos devotos e paladinos guardam distância de olhos bem abertos. Ser um Caçador de Sangue é aceitar uma vida de solidão até se provar honesto e confiável."
+  }
+]
