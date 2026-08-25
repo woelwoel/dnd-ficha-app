@@ -6,6 +6,7 @@ export const SOURCES = {
   phb:      { code: 'phb',      label: "Livro do Jogador",                       abbr: 'PHB' },
   tasha:    { code: 'tasha',    label: 'Caldeirão de Tasha para Tudo',           abbr: 'TCE' },
   xanathar: { code: 'xanathar', label: 'Guia de Xanathar para Todas as Coisas',  abbr: 'XGE' },
+  homebrew: { code: 'homebrew', label: 'Conteúdo de Terceiros',                 abbr: '3P' },
 }
 
 /** Código de fonte de um item, com fallback pro básico. */
