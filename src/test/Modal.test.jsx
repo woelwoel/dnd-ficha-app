@@ -40,4 +40,42 @@ describe('Modal — gerenciamento de foco', () => {
       vi.useRealTimers()
     }
   })
+
+  /**
+   * Sem `initialFocusRef`, o Modal foca o "✕" 50 ms depois de abrir. Isso é o
+   * certo quando não há nada pra preencher — mas desfazia o `autoFocus` de
+   * quem tem campo, e o usuário perdia as primeiras teclas em silêncio. Já
+   * mordeu DamageModal e DeleteAccountModal, e levou o SrdSearchModal a
+   * duplicar o timer de 50 ms por fora só pra ganhar a corrida.
+   */
+  it('não rouba o foco de um campo que o conteúdo já focou sozinho', () => {
+    vi.useFakeTimers()
+    try {
+      render(
+        <Modal open onClose={() => {}} title="T">
+          <input aria-label="campo" autoFocus />
+        </Modal>
+      )
+      const input = screen.getByLabelText('campo')
+      act(() => { vi.advanceTimersByTime(200) })
+      expect(input).toHaveFocus()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('ainda foca o botão de fechar quando o conteúdo não foca nada', () => {
+    vi.useFakeTimers()
+    try {
+      render(
+        <Modal open onClose={() => {}} title="T" closeLabel="Fechar modal">
+          <p>Só texto, nada pra preencher.</p>
+        </Modal>
+      )
+      act(() => { vi.advanceTimersByTime(200) })
+      expect(screen.getByRole('button', { name: 'Fechar modal' })).toHaveFocus()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
 })

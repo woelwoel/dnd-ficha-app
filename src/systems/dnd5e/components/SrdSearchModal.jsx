@@ -6,11 +6,10 @@ export function SrdSearchModal({ isOpen, onClose, title, items, onSelect, render
   const [selectedCategory, setSelectedCategory] = useState(null)
   const inputRef = useRef(null)
 
-  useEffect(() => {
-    if (!isOpen) return
-    const t = setTimeout(() => inputRef.current?.focus(), 50)
-    return () => clearTimeout(t)
-  }, [isOpen])
+  // O foco inicial é do Modal, via `initialFocusRef`. Aqui havia um
+  // `setTimeout(…, 50)` próprio que corria contra o do Modal e só vencia por
+  // ordem de execução dos efeitos — além de copiar o número mágico 50 pra fora
+  // de quem é dono dele.
 
   // Reset busca/categoria ao fechar
   useEffect(() => {
@@ -42,6 +41,7 @@ export function SrdSearchModal({ isOpen, onClose, title, items, onSelect, render
       onClose={onClose}
       title={title}
       size="lg"
+      initialFocusRef={inputRef}
       footer={
         (query.length >= 2 || selectedCategory) && filtered.length > 0 ? (
           <span className="text-xs ink-italic text-ink-300">

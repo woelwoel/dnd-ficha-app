@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { SrdSearchModal } from '../systems/dnd5e/components/SrdSearchModal'
 import { SpellDetailModal } from '../systems/dnd5e/components/SpellDetailModal'
@@ -27,6 +27,24 @@ describe('SrdSearchModal — acessibilidade', () => {
       />
     )
   }
+
+  /**
+   * O campo de busca é o motivo do modal existir, então o foco tem de cair
+   * nele. Antes isto era feito com um `setTimeout(…, 50)` local que corria
+   * contra o timer de foco do próprio Modal e vencia só por ordem de execução
+   * dos efeitos; agora é declarado via `initialFocusRef`.
+   */
+  it('foca o campo de busca ao abrir', () => {
+    vi.useFakeTimers()
+    try {
+      renderOpen()
+      const input = screen.getByPlaceholderText(/Buscar pelo nome/i)
+      act(() => { vi.advanceTimersByTime(200) })
+      expect(input).toHaveFocus()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
 
   it('não renderiza nada quando isOpen=false', () => {
     render(

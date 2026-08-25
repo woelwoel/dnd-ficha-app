@@ -58,6 +58,7 @@ export function Modal({
   closeLabel = 'Fechar modal',
 }) {
   const closeRef = useRef(null)
+  const dialogRef = useRef(null)
   const titleId = useRef(`modal-title-${Math.random().toString(36).slice(2, 9)}`).current
 
   // onClose via ref: o pai costuma passar uma arrow inline (referência nova a
@@ -80,7 +81,14 @@ export function Modal({
     }
     document.addEventListener('keydown', onKey)
     const t = setTimeout(() => {
-      (initialFocusRef?.current ?? closeRef.current)?.focus()
+      if (initialFocusRef?.current) { initialFocusRef.current.focus(); return }
+      // Se o conteúdo já colocou o foco em algo seu (o caso típico é um campo
+      // com `autoFocus`), respeite. Focar o "✕" aqui desfazia essa intenção e
+      // comia as primeiras teclas de quem começava a digitar de imediato —
+      // silenciosamente, sem erro nenhum. Sem nada focado dentro, o "✕" segue
+      // sendo o destino certo.
+      if (dialogRef.current?.contains(document.activeElement)) return
+      closeRef.current?.focus()
     }, 50)
     return () => {
       document.removeEventListener('keydown', onKey)
@@ -106,6 +114,7 @@ export function Modal({
       onClick={dismissOnBackdrop ? (e => { if (e.target === e.currentTarget) onClose?.() }) : undefined}
     >
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
