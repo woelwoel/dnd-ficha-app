@@ -25,6 +25,7 @@ const DATASETS = {
   classChoices:      { pt: 'phb-class-choices-pt.json',    fallback: null,                      lazy: false },
   classChoicesTasha: { pt: 'tasha-class-choices-pt.json',  fallback: null,                      lazy: false },
   classChoicesXanathar: { pt: 'xanathar-class-choices-pt.json', fallback: null,                 lazy: false },
+  classChoicesHomebrew: { pt: 'homebrew-class-choices-pt.json', fallback: null,                 lazy: false },
   // Lazy: só são acessados em telas específicas (Wizard, level-up flow).
   // Carregados sob demanda via `requestDataset(name)` ou `useLazySrdDataset(name)`.
   classEquipment:  { pt: 'phb-class-equipment-pt.json',  fallback: null,                      lazy: true },
@@ -50,7 +51,7 @@ const COMPOSED = {
   feats:        { strategy: 'array',  parts: [['feats', 'phb'], ['featsTasha', 'tasha'], ['featsXanathar', 'xanathar']] },
   classes:      { strategy: 'array',  parts: [['classes', 'phb'], ['classesTasha', 'tasha'], ['classesHomebrew', 'homebrew']] },
   spells:       { strategy: 'array',  parts: [['spells', 'phb'], ['spellsTasha', 'tasha'], ['spellsXanathar', 'xanathar']] },
-  classChoices: { strategy: 'classChoices', parts: [['classChoices', 'phb'], ['classChoicesTasha', 'tasha'], ['classChoicesXanathar', 'xanathar']] },
+  classChoices: { strategy: 'classChoices', parts: [['classChoices', 'phb'], ['classChoicesTasha', 'tasha'], ['classChoicesXanathar', 'xanathar'], ['classChoicesHomebrew', 'homebrew']] },
   progression:  { strategy: 'object', parts: [['progression', 'phb'], ['progressionTasha', 'tasha'], ['progressionHomebrew', 'homebrew']] },
   infusions:    { strategy: 'array',  parts: [['infusionsTasha', 'tasha']] },
   magicItems:   { strategy: 'array',  parts: [['magicItems', 'phb'], ['magicItemsTasha', 'tasha'], ['magicItemsXanathar', 'xanathar']] },
