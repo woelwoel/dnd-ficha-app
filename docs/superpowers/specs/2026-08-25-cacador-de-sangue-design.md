@@ -85,14 +85,23 @@ Dono único da regra da classe. Superfície:
 
 ### As duas costuras no núcleo
 
-1. **PV máximo** — `domain/rules.js:753` passa a subtrair
-   `bloodHunterMaxHpPenalty(character)`. Hoje o teto sai de
-   `combat.maxHp + aumentos` e não existe delta temporário.
-2. **Dano por arma** — a montagem do ataque carimba `attack.rite`, e
-   `utils/attacks.js:calculateWeaponDamage` soma o dado. Copia o padrão que já
-   existe no arquivo: `attack.fightingStyles` já é lista carimbada por arma,
-   porque um estilo vale só na arma que se qualifica. O rito é o mesmo formato
-   de problema.
+1. **PV máximo** — `hooks/useCharacterCalculations.js` passa a expor
+   `effectiveMaxHp = (combat.maxHp ?? 0) - bloodHunterMaxHpPenalty(character)`,
+   exatamente como já faz com `effectiveAC` e `effectiveSpeed`.
+
+   Não existe hoje nenhum "teto efetivo" para interceptar: `combat.maxHp` é
+   valor **armazenado**, e `rules.js:681` só o incrementa no level-up. Por
+   isso o assento é o hook, e não `rules.js`. Além do hook, `applyDamage` e
+   `applyHeal` em `rules.js` leem `combat.maxHp` cru para clamp e para a regra
+   de dano massivo — ambos passam a receber o teto efetivo, senão o rito
+   deixaria o personagem curar acima do próprio teto reduzido.
+2. **Dano por arma** — `utils/attacks.js:calculateWeaponDamage` passa a somar
+   `attack.rite`, e `ActionsTab.jsx` carimba o campo no ataque na renderização.
+
+   Copia literalmente o padrão que já existe: `ActionsTab.jsx:37` faz
+   `const atk = { ...rawAtk, fightingStyles }`, injetando o dado vindo de
+   `calc`, porque um estilo vale só na arma que se qualifica. O rito é o mesmo
+   formato de problema e usa o mesmo caminho.
 
 ### UI
 
