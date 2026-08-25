@@ -118,3 +118,53 @@ describe('applyBackgroundChange — antecedente como origem do aumento', () => {
     expect(dois.info.originFeat).toBe(null)
   })
 })
+
+// O mapa de bônus aplicados guarda o delta EFETIVAMENTE absorvido, não o
+// solicitado. Guardar o solicitado causa drift: um atributo em 19 que recebe
+// +2 sobe só 1 (teto 20), e reverter 2 depois roubaria um ponto que não veio
+// deste bônus. Alcançável na prática — antecedente é editável pela ficha em
+// qualquer nível, depois de ASIs já terem subido o atributo.
+describe('teto de 20 não produz drift ao reverter', () => {
+  it('raça: atributo em 19 que recebe +2 volta a 19, não a 18', () => {
+    const quaseNoTeto = {
+      ...ficha(),
+      attributes: { str: 10, dex: 10, con: 19, int: 10, wis: 10, cha: 10 },
+    }
+    const um = applyRacialChange(quaseNoTeto, { race: 'anao' }, 'anao', null, RACAS)
+    expect(um.attributes.con).toBe(20)
+    expect(um.appliedRacialBonuses).toEqual({ con: 1 })
+
+    const dois = applyRacialChange(um, { race: null }, null, null, RACAS)
+    expect(dois.attributes.con).toBe(19)
+  })
+
+  it('antecedente: atributo em 19 que recebe +2 volta a 19, não a 18', () => {
+    const quaseNoTeto = {
+      ...fichaBg('2024'),
+      attributes: { str: 10, dex: 10, con: 10, int: 19, wis: 10, cha: 10 },
+    }
+    const um = applyBackgroundChange(quaseNoTeto, 'acolito', ANTECEDENTES, semEquip, idFake)
+    expect(um.attributes.int).toBe(20)
+    expect(um.appliedBackgroundBonuses).toEqual({ int: 1, wis: 1 })
+
+    const dois = applyBackgroundChange(um, 'artesao', ANTECEDENTES, semEquip, idFake)
+    expect(dois.attributes.int).toBe(19)
+    expect(dois.attributes.wis).toBe(10)
+  })
+})
+
+// O builder da Task 7 ainda não rodou e um primeiro rascunho pode sair sem
+// esses campos. Degradar em silêncio é aceitável aqui; lançar ou gravar NaN
+// na ficha do jogador não é.
+describe('antecedente com dado incompleto', () => {
+  const INCOMPLETO = [
+    { index: 'rascunho', name: 'Rascunho', skill_proficiencies: [], equipment: '' },
+  ]
+
+  it('sem ability_bonuses nem origin_feat: não lança, não produz NaN', () => {
+    const out = applyBackgroundChange(fichaBg('2024'), 'rascunho', INCOMPLETO, semEquip, idFake)
+    expect(out.attributes).toEqual({ str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 })
+    expect(out.appliedBackgroundBonuses).toEqual({})
+    expect(out.info.originFeat).toBe(null)
+  })
+})

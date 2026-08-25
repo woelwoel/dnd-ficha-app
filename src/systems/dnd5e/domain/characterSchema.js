@@ -395,7 +395,7 @@ export const characterSchema = z.object({
   attributes: abilitiesSchema,
   appliedRacialBonuses: z.record(z.number()).default({}),
   /** D&D 2024: espelho dos bônus de atributo já aplicados pelo antecedente. */
-  appliedBackgroundBonuses: z.record(z.number()).optional(),
+  appliedBackgroundBonuses: z.record(z.number()).default({}),
   combat: combatSchema,
   proficiencies: proficienciesSchema,
   spellcasting: spellcastingSchema,

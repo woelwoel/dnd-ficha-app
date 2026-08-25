@@ -37,6 +37,46 @@ export const ASI_LEVELS_BY_CLASS = {
 const clampAbility = (value, max = MAX_ATTRIBUTE_VALUE) =>
   Math.min(max, Math.max(1, value))
 
+/**
+ * Soma uma lista `[{ ability, bonus }]` (raça OU antecedente — mesmo formato)
+ * num mapa `{ chave: total }`. `resolveAbilityKey` aceita abreviação PT/EN
+ * ('SAB') ou nome completo ('Sabedoria'); entrada sem atributo reconhecido ou
+ * sem bônus é ignorada — dado incompleto (ex.: rascunho de builder) não deve
+ * lançar nem produzir NaN.
+ */
+const sumAbilityBonuses = (list = []) => {
+  const map = {}
+  for (const b of (list ?? [])) {
+    const key = resolveAbilityKey(b?.ability)
+    if (key && b.bonus) map[key] = (map[key] ?? 0) + b.bonus
+  }
+  return map
+}
+
+/**
+ * Reaplica um conjunto de bônus de atributo pela estratégia "diff": reverte o
+ * que já estava aplicado e soma o novo, respeitando o teto.
+ *
+ * Devolve `{ attributes, applied }`, onde `applied` guarda o delta
+ * EFETIVAMENTE absorvido — não o solicitado. Guardar o solicitado causa drift:
+ * um atributo em 19 que recebe +2 sobe só 1 (teto 20), e reverter 2 depois
+ * roubaria um ponto que não veio deste bônus. Compartilhado por
+ * applyRacialChange e applyBackgroundChange.
+ */
+const reapplyAbilityBonuses = (attributes, oldApplied = {}, newBonuses = {}) => {
+  const draft = { ...attributes }
+  for (const [k, v] of Object.entries(oldApplied ?? {})) {
+    draft[k] = clampAbility((draft[k] ?? 10) - v)
+  }
+  const applied = {}
+  for (const [k, v] of Object.entries(newBonuses ?? {})) {
+    const before = draft[k] ?? 10
+    draft[k] = clampAbility(before + v, MAX_ATTRIBUTE_VALUE)
+    applied[k] = draft[k] - before
+  }
+  return { attributes: draft, applied }
+}
+
 const uniqueBy = (arr, getKey) => {
   const seen = new Set()
   return arr.filter(item => {
@@ -243,29 +283,22 @@ export function computeRacialBonuses(raceIndex, subraceIndex, races, { flexibleA
   }
   const race = races?.find(r => r.index === raceIndex)
   const subrace = race?.subraces?.find(sr => sr.index === subraceIndex)
-  const map = {}
-  const bonuses = [
+  return sumAbilityBonuses([
     ...(race?.ability_bonuses ?? []),
     ...(subrace?.ability_bonuses ?? []),
-  ]
-  for (const b of bonuses) {
-    // `resolveAbilityKey` (abreviação PT/EN e nome completo), não
-    // `keyFromName ?? toLowerCase()`: aquele par só indexa nome completo, e o
-    // fallback produzia 'sab'/'for'/'des' — chaves inválidas que descartavam o
-    // bônus EM SILÊNCIO. É a mesma classe de defeito que obrigou a migração v4
-    // do schema. Mantém esta função consistente com applyBackgroundChange.
-    const key = resolveAbilityKey(b.ability)
-    if (key && b.bonus) map[key] = (map[key] ?? 0) + b.bonus
-  }
-  return map
+  ])
 }
 
 /**
- * Re-aplica bônus raciais: reverte os antigos e soma os novos.
+ * Re-aplica bônus raciais: reverte os antigos e soma os novos (via
+ * `reapplyAbilityBonuses` — mesmo miolo mecânico de applyBackgroundChange).
  *
  * Estratégia "diff": só é confiável se atributos forem editados exclusivamente
  * por reducers. Edições manuais entre trocas podem causar drift; nesses casos
  * o usuário pode acionar "redefinir bônus" na UI (zera appliedRacialBonuses).
+ * O drift do TETO (bônus parcialmente absorvido por já estar em 20) não entra
+ * nessa categoria — `reapplyAbilityBonuses` grava o delta efetivo, não o
+ * solicitado, então não há nada pra "redefinir" nesse caso.
  */
 export function applyRacialChange(character, infoPatch, raceIndex, subraceIndex, races) {
   const oldApplied = character.appliedRacialBonuses ?? {}
@@ -277,19 +310,13 @@ export function applyRacialChange(character, infoPatch, raceIndex, subraceIndex,
     abilityBonusFrom: rulesetFor(character).abilityBonusFrom,
   })
 
-  const attrs = { ...character.attributes }
-  for (const [k, v] of Object.entries(oldApplied)) {
-    attrs[k] = clampAbility((attrs[k] ?? 10) - v)
-  }
-  for (const [k, v] of Object.entries(newBonuses)) {
-    attrs[k] = clampAbility((attrs[k] ?? 10) + v, MAX_ATTRIBUTE_VALUE)
-  }
+  const { attributes, applied } = reapplyAbilityBonuses(character.attributes, oldApplied, newBonuses)
 
   return {
     ...character,
     info: { ...character.info, ...infoPatch },
-    attributes: attrs,
-    appliedRacialBonuses: newBonuses,
+    attributes,
+    appliedRacialBonuses: applied,
   }
 }
 
@@ -323,30 +350,20 @@ export function applyBackgroundChange(character, newBgIndex, backgrounds, parseE
   // applyRacialChange: reverte o aplicado antes de somar o novo.
   const rs = rulesetFor(character)
   const grantsAbility = rs.abilityBonusFrom === 'background'
-  const grantsFeat = rs.backgroundGrantsFeat !== false
+  const grantsFeat = Boolean(rs.backgroundGrantsFeat)
   let attrs = character.attributes
   let appliedBg = character.appliedBackgroundBonuses ?? {}
   let originFeat = character.info?.originFeat ?? null
 
   if (grantsAbility) {
-    // `resolveAbilityKey` (não o par keyFromName/toLowerCase de
-    // computeRacialBonuses) porque o antecedente pode chegar com abreviação
-    // PT ('SAB') ou nome completo ('Sabedoria') dependendo da fonte dos
-    // dados; toLowerCase() sozinho só acerta por coincidência (CON, INT).
-    const next = {}
-    for (const b of (bg?.ability_bonuses ?? [])) {
-      const key = resolveAbilityKey(b.ability)
-      if (key && b.bonus) next[key] = (next[key] ?? 0) + b.bonus
-    }
-    const draft = { ...character.attributes }
-    for (const [k, v] of Object.entries(appliedBg)) {
-      draft[k] = clampAbility((draft[k] ?? 10) - v)
-    }
-    for (const [k, v] of Object.entries(next)) {
-      draft[k] = clampAbility((draft[k] ?? 10) + v, MAX_ATTRIBUTE_VALUE)
-    }
-    attrs = draft
-    appliedBg = next
+    // Mesmo miolo mecânico de applyRacialChange (sumAbilityBonuses +
+    // reapplyAbilityBonuses) — ver os helpers no topo do arquivo. `bg` pode
+    // vir sem `ability_bonuses` (rascunho de builder incompleto): a lista
+    // vazia resultante não lança nem produz NaN.
+    const newBonuses = sumAbilityBonuses(bg?.ability_bonuses ?? [])
+    const result = reapplyAbilityBonuses(character.attributes, appliedBg, newBonuses)
+    attrs = result.attributes
+    appliedBg = result.applied
   }
 
   if (grantsFeat) {
