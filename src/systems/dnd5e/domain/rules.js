@@ -10,6 +10,7 @@ import { CASTER_TYPE } from '../utils/spellcasting'
 import { getSubclassFeatureCards, detectFeatureUses } from './subclassFeatures'
 import { resolveChosenRunes } from './runes'
 import { PACT_FAMILIAR_SPELL, PRIMAL_AWARENESS_LABEL, PRIMAL_AWARENESS_GRANTS } from './grantedSpells'
+import { bloodHunterMaxHpPenalty, BLOOD_HUNTER } from './bloodHunter'
 
 /* ── Constantes ──────────────────────────────────────────────────── */
 
@@ -908,6 +909,19 @@ export function defaultClassFeatureUses(character, classChoices = null) {
       }
     }
 
+    // Caçador de Sangue (homebrew) — Sangue Maldito: 1 uso no 2º nível, 2 no
+    // 6º, 3 no 11º e 4 no 17º; recupera em descanso curto ou longo.
+    // Atenção: esta é a coluna de USOS por descanso, que escala em níveis
+    // diferentes da coluna de maldições CONHECIDAS (`bloodCursesKnown`).
+    if (cls === BLOOD_HUNTER && level >= 2) {
+      const usos = level >= 17 ? 4 : level >= 11 ? 3 : level >= 6 ? 2 : 1
+      out.push({
+        id: 'cacador-de-sangue-blood-maledict',
+        name: 'Sangue Maldito',
+        max: usos, used: 0, recharge: 'short', source: BLOOD_HUNTER,
+      })
+    }
+
     // Subclasses (genérico, via SRD): só entra quando `classChoices` é
     // fornecido (CharacterSheet, que tem useSrd). Sem isso, comportamento
     // retrocompatível — nenhum tracker de subclasse é emitido.
@@ -1042,6 +1056,17 @@ function clampHp(value, max) {
   return Math.max(0, Math.min(max, value))
 }
 
+/**
+ * Teto de PV efetivo = valor armazenado menos o sacrifício do Ritual Vermelho.
+ * `combat.maxHp` é armazenado (o level-up o incrementa), então o teto efetivo
+ * é derivado aqui, no mesmo espírito de `effectiveSpeed`.
+ * Nunca desce abaixo de 1 — teto zero mataria a ficha por arredondamento.
+ */
+export function effectiveMaxHp(character) {
+  const stored = Number(character?.combat?.maxHp) || 0
+  return Math.max(1, stored - bloodHunterMaxHpPenalty(character))
+}
+
 function emptyDeathSaves() {
   return { successes: 0, failures: 0 }
 }
@@ -1065,7 +1090,7 @@ export function applyDamage(character, amount, opts = {}) {
   if (dmg === 0) return { character, sideEffects }
 
   const combat = character.combat ?? {}
-  const maxHp     = combat.maxHp ?? 0
+  const maxHp     = effectiveMaxHp(character)
   const curHp     = combat.currentHp ?? 0
   const tempHp    = combat.tempHp ?? 0
   const wasAt0    = curHp === 0
@@ -1159,7 +1184,7 @@ export function applyHealing(character, amount) {
   const combat = character.combat ?? {}
   if (combat.isDead) return { character, sideEffects }
 
-  const maxHp = combat.maxHp ?? 0
+  const maxHp = effectiveMaxHp(character)
   const curHp = combat.currentHp ?? 0
   const newHp = clampHp(curHp + heal, maxHp)
   sideEffects.healed = newHp - curHp

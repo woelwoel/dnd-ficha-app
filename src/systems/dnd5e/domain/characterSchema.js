@@ -231,6 +231,17 @@ const combatSchema = z.object({
    * via z.any() nos itens) pois a agregação vive em domain/activeEffects.js.
    */
   activeEffects: z.array(z.any()).default([]),
+  /**
+   * Ritual Vermelho ativo por arma (Caçador de Sangue, fonte homebrew).
+   * `attackId` referencia `combat.attacks[].id`; `rite` é chave de
+   * `domain/bloodHunter.js RITES`. Entradas malformadas são descartadas em
+   * vez de invalidar a ficha inteira — mesma postura do resto do schema com
+   * dado antigo.
+   */
+  crimsonRites: z.preprocess(
+    v => (Array.isArray(v) ? v.filter(r => r && typeof r.attackId === 'string' && r.attackId) : []),
+    z.array(z.object({ attackId: z.string().min(1), rite: z.string().min(1) })),
+  ).default([]),
   /** Usos limitados de class features (Action Surge, Ki, etc.). */
   classFeatureUses: z.array(classFeatureUseSchema).default([]),
   /**

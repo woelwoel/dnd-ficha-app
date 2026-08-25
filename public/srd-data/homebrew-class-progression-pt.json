@@ -1,0 +1,237 @@
+{
+  "cacador-de-sangue": {
+    "index": "cacador-de-sangue",
+    "name": "Caçador de Sangue",
+    "hit_die": 10,
+    "primary_ability": "Força ou Destreza",
+    "saving_throws": ["Força", "Sabedoria"],
+    "armor_proficiencies": ["Leve", "Média", "Escudos"],
+    "weapon_proficiencies": ["Simples", "Marciais"],
+    "tool_proficiencies": ["Suprimentos de alquimista"],
+    "skill_choices": {
+      "count": 2,
+      "from": ["Acrobacia", "Arcanismo", "Atletismo", "Intuição", "Investigação", "Sobrevivência"]
+    },
+    "levels": [
+      {
+        "level": 1,
+        "prof": 2,
+        "features": [
+          {
+            "name": "Perdição do Caçador",
+            "desc": "Você sobreviveu à assimilação da Perdição do Caçador, uma mistura alquímica venenosa que altera a constituição do seu sangue, unindo você para sempre à escuridão e aprimorando seus sentidos contra ela.\n\nVocê tem vantagem em testes de Sabedoria (Sobrevivência) para rastrear criaturas fadas, demônios e mortos-vivos, bem como em testes de Inteligência para recuperar informações sobre eles. Se estiver rastreando ativamente uma criatura de um desses tipos, você não pode ser surpreendido por nenhuma criatura desse tipo. Você só pode rastrear um tipo de criatura por vez.\n\nAo chegar ao 11º nível, você ganha vantagem em testes de Sabedoria (Intuição) e em testes de Carisma (Intimidação), à medida que sua natureza inquietante se desenvolve e lhe dá vantagem ao testar a compostura e a vontade dos outros."
+          },
+          {
+            "name": "Ritual Vermelho",
+            "desc": "Você aprende a invocar um ritual de magia de sangue dentro da sua arma, sacrificando a própria vitalidade. Escolha aprender um ritual da lista de Rituais Primais. Você não pode alterar essa escolha.\n\nCom uma ação bônus, você pode imbuir uma única arma que esteja segurando com sua própria força vital, reduzindo temporariamente seu máximo de pontos de vida em um número igual ao seu nível de personagem. Esses pontos de vida máximos retornam quando o ritual acaba e não podem ser restaurados de outra forma.\n\nAté o ritual se esvair, a arma ativada emana a energia elemental escolhida. Os ataques com essa arma causam 1d4 de dano adicional do tipo correspondente. O dano do ritual é considerado mágico. Esse bônus aumenta conforme você alcança determinados níveis de caçador de sangue, como mostrado na coluna Dado de Dano Ritual de Sangue. Esse dano é cumulativo com encantamentos da arma. Se a arma sair do seu controle, o ritual se desfaz imediatamente. Um ritual ativo em uma arma arremessada se desfaz assim que o ataque termina.\n\nO Ritual Vermelho pode ser usado em várias armas, custando a perda de pontos de vida máximos adicionais. Se usado em uma arma que já possui um ritual ativo, o ritual antigo se desfaz quando o novo entra em vigor. Quando um ritual vermelho é desfeito, ele restaura seu máximo de pontos de vida, mas não os pontos de vida perdidos. Um ritual vermelho pode ser desativado a qualquer momento, sem exigir ação.\n\nRituais Primais: Ritual das Chamas (dano de fogo), Ritual do Congelamento (dano de frio) e Ritual da Tempestade (dano elétrico)."
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "prof": 2,
+        "features": [
+          {
+            "name": "Estilo de Luta",
+            "desc": "Você adota um estilo de combate particular, que será sua especialidade. Escolha entre Arquearia, Duelismo, Combate com Armas Grandes e Combate com Duas Armas. Você não pode escolher o mesmo Estilo de Luta mais de uma vez, mesmo que ganhe a escolha novamente por outra classe."
+          },
+          {
+            "name": "Sangue Maldito",
+            "desc": "Você consegue canalizar e sacrificar parte da sua essência vital para amaldiçoar e manipular seus inimigos. Você ganha uma maldição de sangue à sua escolha. Você aprende uma maldição de sangue adicional no 5º, 9º, 13º, 16º e 20º níveis.\n\nAo usar seu Sangue Maldito, você escolhe qual maldição invocar. Antes que ela afete o alvo, você pode sofrer um dado de dano de Ritual Vermelho para amplificar a maldição, conforme descrito em cada uma. Criaturas que não têm sangue são imunes às maldições de sangue, a critério do Mestre.\n\nVocê só pode usar esse recurso uma vez e precisa terminar um descanso curto ou longo para usá-lo de novo."
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "prof": 2,
+        "features": [
+          {
+            "name": "Ordem do Caçador de Sangue",
+            "desc": "Você se compromete com uma ordem marcial do Caçador de Sangue: Ordem do Caçador de Espectros, Ordem do Licantropo, Ordem do Mutante ou Ordem da Alma Profana. A ordem escolhida concede características neste nível e novamente no 7º, 11º, 15º e 18º níveis."
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "prof": 2,
+        "features": [
+          {
+            "name": "Incremento no Valor de Habilidade",
+            "desc": "Você pode aumentar um valor de habilidade à sua escolha em 2, ou dois valores de habilidade à sua escolha em 1. Como de costume, você não pode elevar um valor de habilidade acima de 20 com essa característica."
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "prof": 3,
+        "features": [
+          {
+            "name": "Ataque Extra",
+            "desc": "Você pode atacar duas vezes, em vez de uma, sempre que usar a ação de Ataque no seu turno."
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "prof": 3,
+        "features": [
+          {
+            "name": "Sangue Maldito (2)",
+            "desc": "Você pode usar seu Sangue Maldito para invocar duas maldições de sangue entre descansos. Você recupera os usos gastos ao terminar um descanso curto ou longo."
+          },
+          {
+            "name": "Ritual Primal Adicional",
+            "desc": "Você ganha acesso a um Ritual Primal adicional, escolhido entre Ritual das Chamas (dano de fogo), Ritual do Congelamento (dano de frio) e Ritual da Tempestade (dano elétrico)."
+          }
+        ]
+      },
+      {
+        "level": 7,
+        "prof": 3,
+        "features": [
+          {
+            "name": "Característica da Ordem",
+            "desc": "Sua Ordem do Caçador de Sangue concede uma característica neste nível. Consulte a ordem escolhida no 3º nível para saber qual."
+          }
+        ]
+      },
+      {
+        "level": 8,
+        "prof": 3,
+        "features": [
+          {
+            "name": "Incremento no Valor de Habilidade",
+            "desc": "Você pode aumentar um valor de habilidade à sua escolha em 2, ou dois valores de habilidade à sua escolha em 1. Como de costume, você não pode elevar um valor de habilidade acima de 20 com essa característica."
+          }
+        ]
+      },
+      {
+        "level": 9,
+        "prof": 4,
+        "features": [
+          {
+            "name": "Psicometria Sinistra",
+            "desc": "Você pode meditar por 10 minutos sobre um objeto para discernir detalhes vagos sobre qualquer mal persistente ou passado perverso que o rodeie. Faça um teste de Sabedoria. Com base no resultado, o Mestre pode revelar informações obscuras sobre eventos sombrios ligados ao objeto, ou que sugiram um propósito sinistro. Esta característica não tem efeito sobre objetos intocados pelo mal."
+          }
+        ]
+      },
+      {
+        "level": 10,
+        "prof": 4,
+        "features": [
+          {
+            "name": "Velocidade Sombria",
+            "desc": "Você invoca as sombras ao seu redor para lhe conceder uma rapidez não natural no campo de batalha. Seu deslocamento aumenta em 3 metros, e os ataques de oportunidade feitos contra você têm desvantagem."
+          }
+        ]
+      },
+      {
+        "level": 11,
+        "prof": 4,
+        "features": [
+          {
+            "name": "Característica da Ordem",
+            "desc": "Sua Ordem do Caçador de Sangue concede uma característica neste nível. Consulte a ordem escolhida no 3º nível para saber qual."
+          },
+          {
+            "name": "Sangue Maldito (3)",
+            "desc": "Você pode usar seu Sangue Maldito para invocar três maldições de sangue entre descansos. Você recupera os usos gastos ao terminar um descanso curto ou longo."
+          },
+          {
+            "name": "Ritual Primal Adicional",
+            "desc": "Você ganha acesso a mais um Ritual Primal, escolhido entre Ritual das Chamas (dano de fogo), Ritual do Congelamento (dano de frio) e Ritual da Tempestade (dano elétrico)."
+          }
+        ]
+      },
+      {
+        "level": 12,
+        "prof": 4,
+        "features": [
+          {
+            "name": "Incremento no Valor de Habilidade",
+            "desc": "Você pode aumentar um valor de habilidade à sua escolha em 2, ou dois valores de habilidade à sua escolha em 1. Como de costume, você não pode elevar um valor de habilidade acima de 20 com essa característica."
+          }
+        ]
+      },
+      {
+        "level": 13,
+        "prof": 5,
+        "features": []
+      },
+      {
+        "level": 14,
+        "prof": 5,
+        "features": [
+          {
+            "name": "Alma Endurecida",
+            "desc": "Você não pode mais ficar amedrontado, e tem vantagem em testes de resistência contra efeitos mágicos de encantamento."
+          },
+          {
+            "name": "Ritual Esotérico",
+            "desc": "Você pode escolher aprender um Ritual Esotérico: Ritual do Rugido (dano trovejante), Ritual do Éter (dano psíquico) ou Ritual do Morto (dano necrótico)."
+          }
+        ]
+      },
+      {
+        "level": 15,
+        "prof": 5,
+        "features": [
+          {
+            "name": "Característica da Ordem",
+            "desc": "Sua Ordem do Caçador de Sangue concede uma característica neste nível. Consulte a ordem escolhida no 3º nível para saber qual."
+          }
+        ]
+      },
+      {
+        "level": 16,
+        "prof": 5,
+        "features": [
+          {
+            "name": "Incremento no Valor de Habilidade",
+            "desc": "Você pode aumentar um valor de habilidade à sua escolha em 2, ou dois valores de habilidade à sua escolha em 1. Como de costume, você não pode elevar um valor de habilidade acima de 20 com essa característica."
+          }
+        ]
+      },
+      {
+        "level": 17,
+        "prof": 6,
+        "features": [
+          {
+            "name": "Sangue Maldito (4)",
+            "desc": "Você pode usar seu Sangue Maldito para invocar quatro maldições de sangue entre descansos. Você recupera os usos gastos ao terminar um descanso curto ou longo."
+          }
+        ]
+      },
+      {
+        "level": 18,
+        "prof": 6,
+        "features": [
+          {
+            "name": "Característica da Ordem",
+            "desc": "Sua Ordem do Caçador de Sangue concede uma característica neste nível. Consulte a ordem escolhida no 3º nível para saber qual."
+          }
+        ]
+      },
+      {
+        "level": 19,
+        "prof": 6,
+        "features": [
+          {
+            "name": "Incremento no Valor de Habilidade",
+            "desc": "Você pode aumentar um valor de habilidade à sua escolha em 2, ou dois valores de habilidade à sua escolha em 1. Como de costume, você não pode elevar um valor de habilidade acima de 20 com essa característica."
+          }
+        ]
+      },
+      {
+        "level": 20,
+        "prof": 6,
+        "features": [
+          {
+            "name": "Maestria Sanguinária",
+            "desc": "Você ficou tão sintonizado com suas armas que seu ritual vermelho se tornou perfeito e não exige mais sacrifício visceral. Ao invocar um ritual vermelho, você não reduz seus pontos de vida máximos. Além disso, enquanto estiver consciente e abaixo de um quarto dos seus pontos de vida máximos, todos os seus dados de dano do ritual vermelho são maximizados."
+          }
+        ]
+      }
+    ]
+  }
+}

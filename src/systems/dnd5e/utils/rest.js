@@ -161,6 +161,10 @@ export function performLongRest(character, { recoverChoices = null } = {}) {
       turnState: { actionUsed: false, bonusUsed: false, reactionUsed: false, movementUsed: 0 },
       // Buffs de magia não sobrevivem a 8h de descanso (spec efeitos ativos).
       activeEffects: [],
+      // Ritual Vermelho também não: sem isso o teto de PV ficaria reduzido
+      // para sempre, e o jogador não teria como descobrir por quê. Limpar
+      // aqui é o que faz `currentHp: maxHp` acima devolver o teto cheio.
+      crimsonRites: [],
     },
     spellcasting: {
       ...(character.spellcasting ?? {}),

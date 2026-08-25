@@ -5,6 +5,8 @@ import { Attacks } from '../Attacks'
 import { CombatClassActions } from '../CombatClassActions'
 import { ManeuversPanel } from '../ManeuversPanel'
 import { RunesPanel } from '../RunesPanel'
+import { BloodHunterPanel } from './BloodHunterPanel'
+import { riteDamageFor } from '../../../domain/bloodHunter'
 import { AttackRollButton } from '../AttackRollButton'
 import { RollButton } from '../../../../../components/DiceRoller/RollButton'
 import {
@@ -32,9 +34,11 @@ function SectionTitle({ children }) {
    AttackRollButton (fluxo ataque→crítico→dano) + RollButton pra dano avulso;
    consumo de munição idêntico ao AttackRow v1. A edição completa fica no
    Attacks v1 sob "Gerenciar ataques". */
-function AttackRowV2({ atk: rawAtk, attributes, profBonus, ammoItem, fightingStyles = [], onUpdateItem }) {
+function AttackRowV2({ atk: rawAtk, attributes, profBonus, ammoItem, fightingStyles = [], rite = null, onUpdateItem }) {
   // Estilos de Combate vêm do personagem (calc), não do ataque — ver AttackRow v1.
-  const atk = { ...rawAtk, fightingStyles }
+  // O Ritual Vermelho segue o mesmo caminho: é estado do personagem, carimbado
+  // por arma aqui, porque só vale na arma imbuída.
+  const atk = { ...rawAtk, fightingStyles, rite }
   const bonus = calculateWeaponAttackBonus(atk, attributes, profBonus)
   const dmg = calculateWeaponDamage(atk, attributes, {})
   const abbr = abbrOfKey(resolveAttackAbility(atk, attributes))
@@ -162,6 +166,7 @@ export function ActionsTab() {
     addAttack, removeAttack, updateAttack, updateItem,
     setRageActive, spendFeatureUse, regainFeatureUse, toggleSlot,
     setWildShape, applyDamage, toggleKnownBeast, setRangerCompanion, updatePortent,
+    updateCombat,
   } = updaters
 
   const attacks = character.combat?.attacks ?? []
@@ -216,6 +221,7 @@ export function ActionsTab() {
                 profBonus={calc.profBonus}
                 ammoItem={findAmmoForAttack(atk, character.inventory?.items ?? [])}
                 fightingStyles={calc.fightingStyles}
+                rite={riteDamageFor(atk, character)}
                 onUpdateItem={updateItem}
               />
             ))}
@@ -256,6 +262,13 @@ export function ActionsTab() {
             <RunesPanel
               character={character}
               featureUses={featureUses}
+              onSpend={id => spendFeatureUse(id, featureUses)}
+              onRegain={id => regainFeatureUse(id, featureUses)}
+            />
+            <BloodHunterPanel
+              character={character}
+              featureUses={featureUses}
+              onChange={rites => updateCombat('crimsonRites', rites)}
               onSpend={id => spendFeatureUse(id, featureUses)}
               onRegain={id => regainFeatureUse(id, featureUses)}
             />

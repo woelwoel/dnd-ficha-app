@@ -1,0 +1,158 @@
+{
+  "cacador-de-sangue": {
+    "choices": [
+      {
+        "level": 1,
+        "id": "cacador_de_sangue_primal_rite",
+        "featureName": "Ritual Vermelho",
+        "prompt": "Escolha seus Rituais Primais",
+        "multiSelectByLevel": { "1": 1, "6": 2, "11": 3 },
+        "options": [
+          {
+            "value": "chamas",
+            "name": "Ritual das Chamas",
+            "desc": "O dano do seu ritual é do tipo fogo."
+          },
+          {
+            "value": "congelamento",
+            "name": "Ritual do Congelamento",
+            "desc": "O dano do seu ritual é do tipo frio."
+          },
+          {
+            "value": "tempestade",
+            "name": "Ritual da Tempestade",
+            "desc": "O dano do seu ritual é do tipo elétrico."
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "id": "cacador_de_sangue_fighting_style",
+        "featureName": "Estilo de Luta",
+        "prompt": "Escolha um Estilo de Luta",
+        "options": [
+          {
+            "value": "arqueiro",
+            "name": "Arquearia",
+            "desc": "Você ganha +2 de bônus nas jogadas de ataque feitas com armas de ataque à distância."
+          },
+          {
+            "value": "duelo",
+            "name": "Duelismo",
+            "desc": "Quando você empunha uma arma de ataque corpo a corpo em uma mão e nenhuma outra arma, você ganha +2 de bônus nas jogadas de dano com essa arma."
+          },
+          {
+            "value": "grande_arma",
+            "name": "Combate com Armas Grandes",
+            "desc": "Quando você rola 1 ou 2 num dado de dano não-ritual de um ataque com arma corpo a corpo que esteja empunhando com as duas mãos, pode rolar o dado de novo e deve usar o novo resultado, mesmo que seja 1 ou 2. A arma precisa ter a propriedade duas mãos ou versátil para você ganhar esse benefício."
+          },
+          {
+            "value": "duas_maos",
+            "name": "Combate com Duas Armas",
+            "desc": "Quando você está lutando com duas armas, pode somar seu modificador de habilidade ao dano do segundo ataque."
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "id": "cacador_de_sangue_blood_curses",
+        "featureName": "Sangue Maldito",
+        "prompt": "Escolha suas Maldições de Sangue",
+        "multiSelectByLevel": { "2": 1, "5": 2, "9": 3, "13": 4, "16": 5, "20": 6 },
+        "options": [
+          {
+            "value": "amarracao",
+            "name": "Maldição de Sangue da Amarração",
+            "desc": "Como uma ação bônus, você pode tentar imobilizar um inimigo de tamanho maior que o seu a até 6 metros. O alvo deve passar num teste de resistência de Força (CD igual a 8 + seu bônus de proficiência + seu modificador de Sabedoria) ou tem o deslocamento reduzido a 0 até o início do seu próximo turno.\n\nAmplifique: você pode afetar criaturas de qualquer tamanho. Ao fim de cada turno do alvo, ele pode repetir o teste de resistência de Força; com um sucesso, a maldição termina. Você pode encerrar a maldição quando quiser, sem exigir ação."
+          },
+          {
+            "value": "sem-olhos",
+            "name": "Maldição de Sangue do Sem Olhos",
+            "desc": "Como uma ação bônus, você pode obscurecer a visão de uma criatura a até 18 metros, impondo ao próximo ataque dela uma penalidade igual ao seu modificador de Sabedoria (mínimo 1). Esta maldição dura até o início do seu próximo turno.\n\nAmplifique: a penalidade se aplica a todas as jogadas de ataque do alvo até o início do seu próximo turno."
+          },
+          {
+            "value": "fantoche-caido",
+            "name": "Maldição de Sangue do Fantoche Caído",
+            "desc": "No momento em que uma criatura cai inconsciente ou morre a até 9 metros de você, você pode usar sua reação para lhe dar um último ato de agressão. Essa criatura faz imediatamente um único ataque com arma contra um alvo à sua escolha dentro do alcance dela. Depois do ataque, a criatura volta a ficar inconsciente ou morta.\n\nAmplifique: o ataque da criatura amaldiçoada ganha um bônus de ataque e de dano igual ao seu modificador de Sabedoria (mínimo 1)."
+          },
+          {
+            "value": "desvio",
+            "name": "Maldição de Sangue do Desvio",
+            "desc": "Quando um inimigo conjura uma magia, você pode usar sua reação para desviá-la com seu ritual vermelho. Você ganha um bônus no teste de resistência contra essa magia igual ao seu modificador de Sabedoria (mínimo 1). Esta maldição é invocada antes do teste de resistência.\n\nAmplifique: todos os aliados a até 1,5 metro de você também ganham esse bônus nos testes de resistência contra a magia desencadeante."
+          },
+          {
+            "value": "marcado",
+            "name": "Maldição de Sangue do Marcado",
+            "desc": "Como uma ação bônus, você pode marcar um inimigo a até 18 metros. Até o fim do seu turno, todo o dano de ritual vermelho que você inflige nesse alvo é dobrado.\n\nAmplifique: o alvo marcado também perde resistência ao tipo de dano do seu ritual até o início do seu próximo turno."
+          },
+          {
+            "value": "sofrimento-mutuo",
+            "name": "Maldição de Sangue do Sofrimento Mútuo",
+            "desc": "Como uma ação bônus, você pode forçar uma criatura a até 9 metros a compartilhar qualquer dor que inflija em você. Cada vez que a criatura amaldiçoada acertar você, ela sofre dano necrótico igual à metade do dano que você sofreu. Esta maldição dura um número de rodadas igual ao seu modificador de Sabedoria (mínimo 1).\n\nAmplifique: a duração passa a ser 1 minuto, e o dano desta maldição ignora resistência a necrótico."
+          },
+          {
+            "value": "quebrador-de-feiticos",
+            "name": "Maldição de Sangue do Quebrador de Feitiços",
+            "desc": "Quando um inimigo a até 9 metros conjura uma magia que exige uma jogada de ataque tendo você como alvo, você pode usar sua reação para quebrar a magia no ar, impondo desvantagem nessa jogada de ataque.\n\nAmplifique: você faz um teste de Sabedoria com CD igual a 10 + o nível da magia. Com um sucesso, a magia da criatura é totalmente dissipada. Numa falha, a jogada de ataque da magia ainda é feita com desvantagem."
+          },
+          {
+            "value": "purgacao",
+            "name": "Maldição de Sangue da Purgação",
+            "desc": "Como uma ação bônus, você pode manipular a vitalidade de uma criatura a até 18 metros para expurgar uma corrupção em seu sangue. A criatura alvo pode imediatamente fazer um teste de resistência contra uma condição de envenenamento que a aflija.\n\nAmplifique: em vez disso, o alvo pode fazer um teste de resistência contra outra condição que o aflija — cego, ensurdecido ou paralisado."
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "id": "cacador_de_sangue_order",
+        "featureName": "Ordem do Caçador de Sangue",
+        "prompt": "Escolha sua Ordem",
+        "options": [
+          {
+            "value": "cacador-de-espectros",
+            "name": "Ordem do Caçador de Espectros",
+            "desc": "A mais antiga e organizada das ordens, que redescobriu os segredos da magia de sangue e a refinou para o combate contra o flagelo dos mortos-vivos. Caçadores de Espectros estudam o momento da morte, obcecados pelos mistérios da transição.\n\nAs características desta Ordem ainda não foram implementadas no app e chegam numa próxima entrega."
+          },
+          {
+            "value": "licantropo",
+            "name": "Ordem do Licantropo",
+            "desc": "Uma orgulhosa ordem de Caçadores de Sangue que passam pela Domesticação, um cerimonial de imposição da licantropia por um membro sênior. Esses caçadores usam suas habilidades para aproveitar o poder do monstro que abrigam sem se perder nele.\n\nAs características desta Ordem ainda não foram implementadas no app e chegam numa próxima entrega."
+          },
+          {
+            "value": "mutante",
+            "name": "Ordem do Mutante",
+            "desc": "Aqueles que sobrevivem à Perdição do Caçador se descobrem irrevogavelmente alterados. Esta ordem se concentra em fabricar elixires tóxicos que modificam as próprias capacidades em combate, alterando o sangue e, com o tempo, tornando-se algo além do humano.\n\nAs características desta Ordem ainda não foram implementadas no app e chegam numa próxima entrega."
+          },
+          {
+            "value": "alma-profana",
+            "name": "Ordem da Alma Profana",
+            "desc": "Esta ordem viu os limites da magia de sangue contra os demônios mais antigos e cruéis, e mergulhou no mesmo poço de conhecimento arcano corruptor, fazendo pactos com males menores para combater males maiores.\n\nAs características desta Ordem ainda não foram implementadas no app. Ela conjura com Magia de Pacto do Bruxo e depende de trabalho no motor de conjuração, por isso vem depois das outras três."
+          }
+        ]
+      },
+      {
+        "level": 14,
+        "id": "cacador_de_sangue_esoteric_rite",
+        "featureName": "Ritual Esotérico",
+        "prompt": "Escolha um Ritual Esotérico",
+        "options": [
+          {
+            "value": "rugido",
+            "name": "Ritual do Rugido",
+            "desc": "O dano do seu ritual é do tipo trovejante."
+          },
+          {
+            "value": "eter",
+            "name": "Ritual do Éter",
+            "desc": "O dano do seu ritual é do tipo psíquico."
+          },
+          {
+            "value": "morto",
+            "name": "Ritual do Morto",
+            "desc": "O dano do seu ritual é do tipo necrótico."
+          }
+        ]
+      }
+    ]
+  }
+}

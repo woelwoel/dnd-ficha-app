@@ -15,6 +15,9 @@
  *     (campo legado por-ataque do schema; ainda respeitado)
  *   - offHand?: boolean — TRUE se o ataque é um golpe off-hand (TWF)
  *   - useThrown?: boolean — força ranged (DEX) para arma com `thrown`
+ *   - rite?: { dice: string, damageType: string } — Ritual Vermelho ativo
+ *     NESTA arma (domain/bloodHunter.js). Carimbado na renderização, como
+ *     `fightingStyles`.
  *
  * Atributo regente: override (validado) → finesse (maior FOR/DES) → ranged (DES)
  *                   → thrown explicit (DES via flag) → FOR.
@@ -153,7 +156,7 @@ export function calculateWeaponAttackBonus(attack, attributes, profBonus) {
  * @param {object} attributes
  * @param {object} [opts]
  * @param {boolean} [opts.versatileTwoHanded=false]
- * @returns {{ expression:string, modifier:number, dice:string }}
+ * @returns {{ expression:string, modifier:number, dice:string, rite: ({dice:string,damageType:string}|null) }}
  */
 export function calculateWeaponDamage(attack, attributes, { versatileTwoHanded = false } = {}) {
   const abilityKey = resolveAttackAbility(attack, attributes)
@@ -172,6 +175,15 @@ export function calculateWeaponDamage(attack, attributes, { versatileTwoHanded =
 
   const sign   = modifier >= 0 ? '+' : '−'
   const absMod = Math.abs(modifier)
-  const expression = modifier === 0 ? dice : `${dice} ${sign} ${absMod}`
-  return { expression, modifier, dice }
+  const base   = modifier === 0 ? dice : `${dice} ${sign} ${absMod}`
+
+  // Ritual Vermelho (Caçador de Sangue): dado inteiro de OUTRO tipo de dano,
+  // carimbado por arma em ActionsTab. Fora de `dice`/`modifier` de propósito —
+  // o rolador lê esses dois e não sabe somar dois tipos de dano na mesma linha.
+  const rite = attack?.rite?.dice
+    ? { dice: attack.rite.dice, damageType: attack.rite.damageType ?? '' }
+    : null
+  const expression = rite ? `${base} + ${rite.dice} ${rite.damageType}`.trimEnd() : base
+
+  return { expression, modifier, dice, rite }
 }
