@@ -10,7 +10,7 @@ import { CASTER_TYPE } from '../utils/spellcasting'
 import { getSubclassFeatureCards, detectFeatureUses } from './subclassFeatures'
 import { resolveChosenRunes } from './runes'
 import { PACT_FAMILIAR_SPELL, PRIMAL_AWARENESS_LABEL, PRIMAL_AWARENESS_GRANTS } from './grantedSpells'
-import { bloodHunterMaxHpPenalty } from './bloodHunter'
+import { bloodHunterMaxHpPenalty, BLOOD_HUNTER } from './bloodHunter'
 
 /* ── Constantes ──────────────────────────────────────────────────── */
 
@@ -907,6 +907,19 @@ export function defaultClassFeatureUses(character, classChoices = null) {
           max: Math.max(1, cha), used: 0, recharge: 'long', source: 'clerigo',
         })
       }
+    }
+
+    // Caçador de Sangue (homebrew) — Sangue Maldito: 1 uso no 2º nível, 2 no
+    // 6º, 3 no 11º e 4 no 17º; recupera em descanso curto ou longo.
+    // Atenção: esta é a coluna de USOS por descanso, que escala em níveis
+    // diferentes da coluna de maldições CONHECIDAS (`bloodCursesKnown`).
+    if (cls === BLOOD_HUNTER && level >= 2) {
+      const usos = level >= 17 ? 4 : level >= 11 ? 3 : level >= 6 ? 2 : 1
+      out.push({
+        id: 'cacador-de-sangue-blood-maledict',
+        name: 'Sangue Maldito',
+        max: usos, used: 0, recharge: 'short', source: BLOOD_HUNTER,
+      })
     }
 
     // Subclasses (genérico, via SRD): só entra quando `classChoices` é

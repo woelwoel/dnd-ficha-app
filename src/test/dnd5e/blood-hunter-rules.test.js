@@ -51,7 +51,7 @@ describe('bloodHunter — tabelas da classe', () => {
 /** Ficha mínima de caçador de sangue para os testes de regra. */
 function ficha({ level = 5, wis = 16, rites = [], multiclasses = [] } = {}) {
   return {
-    info: { level, classIndex: BLOOD_HUNTER, multiclasses },
+    info: { level, class: BLOOD_HUNTER, multiclasses },
     attributes: { wis },
     combat: { maxHp: 44, currentHp: 44, crimsonRites: rites },
   }
@@ -64,13 +64,13 @@ describe('bloodHunter — nível de classe', () => {
 
   it('lê o nível da multiclasse quando a classe principal é outra', () => {
     const char = {
-      info: { level: 3, classIndex: 'guerreiro', multiclasses: [{ classIndex: BLOOD_HUNTER, level: 4 }] },
+      info: { level: 3, class: 'guerreiro', multiclasses: [{ class: BLOOD_HUNTER, level: 4 }] },
     }
     expect(bloodHunterLevel(char)).toBe(4)
   })
 
   it('devolve 0 para quem não é caçador de sangue', () => {
-    expect(bloodHunterLevel({ info: { level: 9, classIndex: 'mago' } })).toBe(0)
+    expect(bloodHunterLevel({ info: { level: 9, class: 'mago' } })).toBe(0)
   })
 })
 
@@ -101,7 +101,7 @@ describe('bloodHunter — redutor de PV máximo', () => {
 
   it('usa o nível de PERSONAGEM, não o de classe, na multiclasse', () => {
     const char = {
-      info: { level: 3, classIndex: 'guerreiro', multiclasses: [{ classIndex: BLOOD_HUNTER, level: 2 }] },
+      info: { level: 3, class: 'guerreiro', multiclasses: [{ class: BLOOD_HUNTER, level: 2 }] },
       attributes: { wis: 14 },
       combat: { crimsonRites: [{ attackId: 'a1', rite: 'chamas' }] },
     }
@@ -145,7 +145,7 @@ describe('bloodHunter — regra ancorada no schema real', () => {
   function fichaReal(wis, rites) {
     return parseCharacter({
       id: 'c1', meta: { createdAt: 'x', updatedAt: 'x' },
-      info: { name: 'Teste', level: 5, classIndex: BLOOD_HUNTER },
+      info: { name: 'Teste', level: 5, class: BLOOD_HUNTER },
       attributes: { str: 10, dex: 10, con: 10, int: 10, wis, cha: 10 },
       combat: { maxHp: 44, currentHp: 44, armorClass: 10, crimsonRites: rites },
       proficiencies: {}, inventory: { currency: { cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 } },
@@ -157,6 +157,22 @@ describe('bloodHunter — regra ancorada no schema real', () => {
     expect(hemocraftDC(fichaReal(18, []))).toBe(15)
     // Se a chave estivesse errada, as duas linhas dariam 11 e o teste cairia.
     expect(hemocraftDC(fichaReal(8, []))).toBe(10)
+  })
+
+  it('escala o dado de rito numa ficha de verdade', () => {
+    // Se `bloodHunterLevel` não achasse a classe, o dado travaria em 1d4.
+    const char = fichaReal(14, [{ attackId: 'espada', rite: 'chamas' }])
+    expect(bloodHunterLevel(char)).toBe(5)
+    expect(riteDamageFor({ id: 'espada' }, char)).toEqual({ dice: '1d4', damageType: 'fogo' })
+
+    const veterano = { ...char, info: { ...char.info, level: 11 } }
+    expect(riteDamageFor({ id: 'espada' }, veterano).dice).toBe('1d8')
+  })
+
+  it('a Maestria Sanguinária do 20º nível zera o sacrifício numa ficha real', () => {
+    const char = fichaReal(14, [{ attackId: 'espada', rite: 'chamas' }])
+    const nv20 = { ...char, info: { ...char.info, level: 20 } }
+    expect(bloodHunterMaxHpPenalty(nv20)).toBe(0)
   })
 
   it('enxerga os ritos que o schema preservou', () => {

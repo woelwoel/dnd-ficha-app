@@ -60,10 +60,13 @@ function characterLevel(character) {
   return base + extra
 }
 
-/** Nível de caçador de sangue, seja como classe principal ou multiclasse. */
+/**
+ * Nível de caçador de sangue, seja como classe principal ou multiclasse.
+ * O campo é `info.class` — `classIndex` não existe no schema da ficha.
+ */
 export function bloodHunterLevel(character) {
-  if (character?.info?.classIndex === BLOOD_HUNTER) return Number(character.info.level) || 0
-  const mc = (character?.info?.multiclasses ?? []).find(m => m?.classIndex === BLOOD_HUNTER)
+  if (character?.info?.class === BLOOD_HUNTER) return Number(character.info.level) || 0
+  const mc = (character?.info?.multiclasses ?? []).find(m => m?.class === BLOOD_HUNTER)
   return Number(mc?.level) || 0
 }
 
