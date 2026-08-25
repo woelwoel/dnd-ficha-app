@@ -3,6 +3,7 @@ import { parseCharacter } from '../../systems/dnd5e/domain/characterSchema'
 import {
   BLOOD_HUNTER, RITES, riteDieFor, bloodCursesKnown,
   bloodHunterLevel, hemocraftDC, activeRites, bloodHunterMaxHpPenalty, riteDamageFor,
+  knownRites,
 } from '../../systems/dnd5e/domain/bloodHunter'
 
 describe('bloodHunter — tabelas da classe', () => {
@@ -179,5 +180,31 @@ describe('bloodHunter — regra ancorada no schema real', () => {
     const char = fichaReal(14, [{ attackId: 'espada', rite: 'chamas' }])
     expect(activeRites(char)).toEqual([{ attackId: 'espada', rite: 'chamas' }])
     expect(bloodHunterMaxHpPenalty(char)).toBe(5)
+  })
+})
+
+describe('bloodHunter — ritos conhecidos', () => {
+  const comEscolhas = chosenFeatures => ({ info: { chosenFeatures } })
+
+  it('lê a escolha única do wizard', () => {
+    expect(knownRites(comEscolhas({ cacador_de_sangue_primal_rite: 'chamas' })))
+      .toEqual(['chamas'])
+  })
+
+  it('lê a lista "a,b" que a ficha grava', () => {
+    expect(knownRites(comEscolhas({ cacador_de_sangue_primal_rite: 'chamas,tempestade' })))
+      .toEqual(['chamas', 'tempestade'])
+  })
+
+  it('junta Primais e Esotéricos e descarta chave desconhecida', () => {
+    const char = comEscolhas({
+      cacador_de_sangue_primal_rite: ['chamas', 'inexistente'],
+      cacador_de_sangue_esoteric_rite: 'morto',
+    })
+    expect(knownRites(char)).toEqual(['chamas', 'morto'])
+  })
+
+  it('devolve lista vazia para ficha sem escolha', () => {
+    expect(knownRites({})).toEqual([])
   })
 })

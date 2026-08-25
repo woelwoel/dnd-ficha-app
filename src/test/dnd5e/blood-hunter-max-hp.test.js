@@ -4,7 +4,7 @@ import { BLOOD_HUNTER } from '../../systems/dnd5e/domain/bloodHunter'
 
 function ficha(rites, { currentHp = 20, maxHp = 44 } = {}) {
   return {
-    info: { level: 5, classIndex: BLOOD_HUNTER, multiclasses: [] },
+    info: { level: 5, class: BLOOD_HUNTER, multiclasses: [] },
     attributes: { wis: 14 },
     combat: { maxHp, currentHp, crimsonRites: rites },
   }

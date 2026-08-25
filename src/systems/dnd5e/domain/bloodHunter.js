@@ -105,3 +105,23 @@ export function riteDamageFor(attack, character) {
   if (!found) return null
   return { dice: riteDieFor(bloodHunterLevel(character)), damageType: RITES[found.rite].damageType }
 }
+
+/** Escolha de rito gravada: aceita string única, "a,b" (ficha) e array (wizard). */
+function pickedValues(raw) {
+  if (Array.isArray(raw)) return raw.filter(Boolean)
+  if (typeof raw === 'string' && raw.length) return raw.split(',').filter(Boolean)
+  return []
+}
+
+/**
+ * Ritos que o personagem conhece, em ordem de catálogo, sem repetidos.
+ * A regra de "quais ritos este personagem conhece" mora aqui, não no painel.
+ */
+export function knownRites(character) {
+  const chosen = character?.info?.chosenFeatures ?? character?.chosenFeatures ?? {}
+  const picked = new Set([
+    ...pickedValues(chosen.cacador_de_sangue_primal_rite),
+    ...pickedValues(chosen.cacador_de_sangue_esoteric_rite),
+  ])
+  return Object.keys(RITES).filter(k => picked.has(k))
+}
