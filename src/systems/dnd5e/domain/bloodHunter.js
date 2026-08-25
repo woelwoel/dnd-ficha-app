@@ -72,9 +72,12 @@ function proficiencyBonus(character) {
   return Math.floor((Math.max(1, characterLevel(character)) - 1) / 4) + 2
 }
 
-/** CD das maldições de sangue = 8 + proficiência + modificador de Sabedoria. */
+/**
+ * CD das maldições de sangue = 8 + proficiência + modificador de Sabedoria.
+ * A chave é `wis` — é assim que `characterSchema` grava os atributos.
+ */
 export function hemocraftDC(character) {
-  return 8 + proficiencyBonus(character) + modOf(character?.attributes?.wisdom)
+  return 8 + proficiencyBonus(character) + modOf(character?.attributes?.wis)
 }
 
 /** Ritos ativos, descartando entradas sem arma ou com rito desconhecido. */

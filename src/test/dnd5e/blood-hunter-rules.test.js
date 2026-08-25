@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import { parseCharacter } from '../../systems/dnd5e/domain/characterSchema'
 import {
   BLOOD_HUNTER, RITES, riteDieFor, bloodCursesKnown,
   bloodHunterLevel, hemocraftDC, activeRites, bloodHunterMaxHpPenalty, riteDamageFor,
@@ -51,7 +52,7 @@ describe('bloodHunter — tabelas da classe', () => {
 function ficha({ level = 5, wis = 16, rites = [], multiclasses = [] } = {}) {
   return {
     info: { level, classIndex: BLOOD_HUNTER, multiclasses },
-    attributes: { wisdom: wis },
+    attributes: { wis },
     combat: { maxHp: 44, currentHp: 44, crimsonRites: rites },
   }
 }
@@ -101,7 +102,7 @@ describe('bloodHunter — redutor de PV máximo', () => {
   it('usa o nível de PERSONAGEM, não o de classe, na multiclasse', () => {
     const char = {
       info: { level: 3, classIndex: 'guerreiro', multiclasses: [{ classIndex: BLOOD_HUNTER, level: 2 }] },
-      attributes: { wisdom: 14 },
+      attributes: { wis: 14 },
       combat: { crimsonRites: [{ attackId: 'a1', rite: 'chamas' }] },
     }
     // 3 de guerreiro + 2 de caçador de sangue = nível de personagem 5
@@ -131,5 +132,36 @@ describe('bloodHunter — dano do rito por arma', () => {
   it('lista os ritos ativos ignorando entradas malformadas', () => {
     const char = ficha({ rites: [{ attackId: 'a1', rite: 'chamas' }, { rite: 'morto' }, null] })
     expect(activeRites(char)).toEqual([{ attackId: 'a1', rite: 'chamas' }])
+  })
+})
+
+/**
+ * Âncora contra teste falso: as fixtures acima escrevem `attributes` na mão, e
+ * uma chave errada (`wisdom` em vez de `wis`) passaria despercebida porque o
+ * módulo leria `undefined` e cairia no modificador 0. Aqui a ficha nasce do
+ * schema de produção, então a forma é a real.
+ */
+describe('bloodHunter — regra ancorada no schema real', () => {
+  function fichaReal(wis, rites) {
+    return parseCharacter({
+      id: 'c1', meta: { createdAt: 'x', updatedAt: 'x' },
+      info: { name: 'Teste', level: 5, classIndex: BLOOD_HUNTER },
+      attributes: { str: 10, dex: 10, con: 10, int: 10, wis, cha: 10 },
+      combat: { maxHp: 44, currentHp: 44, armorClass: 10, crimsonRites: rites },
+      proficiencies: {}, inventory: { currency: { cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 } },
+    })
+  }
+
+  it('lê Sabedoria da ficha de verdade na CD de Hemocraft', () => {
+    // SAB 18 → +4; nível 5 → proficiência +3. 8 + 3 + 4 = 15
+    expect(hemocraftDC(fichaReal(18, []))).toBe(15)
+    // Se a chave estivesse errada, as duas linhas dariam 11 e o teste cairia.
+    expect(hemocraftDC(fichaReal(8, []))).toBe(10)
+  })
+
+  it('enxerga os ritos que o schema preservou', () => {
+    const char = fichaReal(14, [{ attackId: 'espada', rite: 'chamas' }])
+    expect(activeRites(char)).toEqual([{ attackId: 'espada', rite: 'chamas' }])
+    expect(bloodHunterMaxHpPenalty(char)).toBe(5)
   })
 })

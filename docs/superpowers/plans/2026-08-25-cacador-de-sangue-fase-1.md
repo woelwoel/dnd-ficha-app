@@ -32,6 +32,12 @@
 | `public/srd-data/homebrew-class-choices-pt.json` | **criar** — escolhas |
 | `vite.config.js` | **modificar** — bump do `cacheName` do Service Worker |
 
+**Chaves de atributo:** a ficha grava `str`, `dex`, `con`, `int`, `wis`, `cha` —
+nunca `strength`/`wisdom`. Fixture de teste com a chave errada faz o módulo ler
+`undefined`, cair no modificador 0 e **passar mesmo assim**. Quando um cálculo
+depender de atributo, ancore ao menos um teste numa ficha montada por
+`parseCharacter`, para a forma vir do schema de produção e não da fixture.
+
 **Como rodar os testes:** sempre em fatia, nunca a suíte inteira — sem `--maxWorkers=2` o vitest estoura a memória da máquina e finge falhas em arquivos sem relação.
 
 ```bash
@@ -288,7 +294,7 @@ import {
 function ficha({ level = 5, wis = 16, rites = [], multiclasses = [] } = {}) {
   return {
     info: { level, classIndex: BLOOD_HUNTER, multiclasses },
-    attributes: { wisdom: wis },
+    attributes: { wis },
     combat: { maxHp: 44, currentHp: 44, crimsonRites: rites },
   }
 }
@@ -338,7 +344,7 @@ describe('bloodHunter — redutor de PV máximo', () => {
   it('usa o nível de PERSONAGEM, não o de classe, na multiclasse', () => {
     const char = {
       info: { level: 3, classIndex: 'guerreiro', multiclasses: [{ classIndex: BLOOD_HUNTER, level: 2 }] },
-      attributes: { wisdom: 14 },
+      attributes: { wis: 14 },
       combat: { crimsonRites: [{ attackId: 'a1', rite: 'chamas' }] },
     }
     // 3 de guerreiro + 2 de caçador de sangue = nível de personagem 5
@@ -412,7 +418,7 @@ function proficiencyBonus(character) {
 
 /** CD das maldições de sangue = 8 + proficiência + modificador de Sabedoria. */
 export function hemocraftDC(character) {
-  return 8 + proficiencyBonus(character) + modOf(character?.attributes?.wisdom)
+  return 8 + proficiencyBonus(character) + modOf(character?.attributes?.wis)
 }
 
 /** Ritos ativos, descartando entradas sem arma ou com rito desconhecido. */
@@ -575,7 +581,7 @@ O rito soma **um dado inteiro** ao dano da arma imbuída, e o dado é de outro t
 import { describe, it, expect } from 'vitest'
 import { calculateWeaponDamage } from '../../systems/dnd5e/utils/attacks'
 
-const forca16 = { strength: 16, dexterity: 10 }
+const forca16 = { str: 16, dex: 10 }
 
 describe('dano de arma com Ritual Vermelho', () => {
   const espada = { id: 'espada', damageDice: '1d8', damageType: 'cortante', properties: [] }
@@ -610,7 +616,7 @@ describe('dano de arma com Ritual Vermelho', () => {
 
   it('com modificador zero, ainda mostra o dado do rito', () => {
     const adaga = { id: 'adaga', damageDice: '1d4', properties: [], rite: { dice: '1d4', damageType: 'frio' } }
-    const r = calculateWeaponDamage(adaga, { strength: 10, dexterity: 10 })
+    const r = calculateWeaponDamage(adaga, { str: 10, dex: 10 })
     expect(r.expression).toBe('1d4 + 1d4 frio')
   })
 })
@@ -704,7 +710,7 @@ import { BLOOD_HUNTER } from '../../systems/dnd5e/domain/bloodHunter'
 function ficha(rites) {
   return {
     info: { level: 5, classIndex: BLOOD_HUNTER, multiclasses: [] },
-    attributes: { wisdom: 14 },
+    attributes: { wis: 14 },
     combat: { maxHp: 44, currentHp: 20, crimsonRites: rites },
   }
 }
@@ -1452,7 +1458,7 @@ import { BLOOD_HUNTER } from '../../systems/dnd5e/domain/bloodHunter'
 function ficha({ level = 5, rites = [] } = {}) {
   return {
     info: { level, classIndex: BLOOD_HUNTER, multiclasses: [] },
-    attributes: { wisdom: 14 },
+    attributes: { wis: 14 },
     combat: {
       maxHp: 44, currentHp: 44, crimsonRites: rites,
       attacks: [{ id: 'espada', name: 'Espada Longa', damageDice: '1d8' }],
@@ -1654,7 +1660,7 @@ import { BLOOD_HUNTER } from '../../systems/dnd5e/domain/bloodHunter'
 describe('descanso longo e Ritual Vermelho', () => {
   const ficha = {
     info: { level: 5, classIndex: BLOOD_HUNTER, multiclasses: [] },
-    attributes: { wisdom: 14 },
+    attributes: { wis: 14 },
     combat: {
       maxHp: 44, currentHp: 20,
       crimsonRites: [{ attackId: 'espada', rite: 'chamas' }],
