@@ -21,6 +21,7 @@ const DATASETS = {
   levels:            { pt: '5e-SRD-Levels.json',           fallback: null,                      lazy: false },
   progression:       { pt: 'phb-class-progression-pt.json', fallback: null,                     lazy: false },
   progressionTasha:  { pt: 'tasha-class-progression-pt.json', fallback: null,                    lazy: false },
+  progressionHomebrew: { pt: 'homebrew-class-progression-pt.json', fallback: null,               lazy: false },
   classChoices:      { pt: 'phb-class-choices-pt.json',    fallback: null,                      lazy: false },
   classChoicesTasha: { pt: 'tasha-class-choices-pt.json',  fallback: null,                      lazy: false },
   classChoicesXanathar: { pt: 'xanathar-class-choices-pt.json', fallback: null,                 lazy: false },
@@ -50,7 +51,7 @@ const COMPOSED = {
   classes:      { strategy: 'array',  parts: [['classes', 'phb'], ['classesTasha', 'tasha'], ['classesHomebrew', 'homebrew']] },
   spells:       { strategy: 'array',  parts: [['spells', 'phb'], ['spellsTasha', 'tasha'], ['spellsXanathar', 'xanathar']] },
   classChoices: { strategy: 'classChoices', parts: [['classChoices', 'phb'], ['classChoicesTasha', 'tasha'], ['classChoicesXanathar', 'xanathar']] },
-  progression:  { strategy: 'object', parts: [['progression', 'phb'], ['progressionTasha', 'tasha']] },
+  progression:  { strategy: 'object', parts: [['progression', 'phb'], ['progressionTasha', 'tasha'], ['progressionHomebrew', 'homebrew']] },
   infusions:    { strategy: 'array',  parts: [['infusionsTasha', 'tasha']] },
   magicItems:   { strategy: 'array',  parts: [['magicItems', 'phb'], ['magicItemsTasha', 'tasha'], ['magicItemsXanathar', 'xanathar']] },
 }
