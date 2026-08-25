@@ -98,6 +98,9 @@ export function performShortRest(character, { spent = [] } = {}) {
       currentHp,
       hitDice: { pool },
       classFeatureUses: rechargeFeatures(combat.classFeatureUses, ['short']),
+      // Mutagênico dura até o fim do próximo descanso — inclusive este.
+      // O Ritual Vermelho NÃO acaba aqui: só no descanso longo ou por escolha.
+      mutagens: [],
       // Reset da economia de ação (PHB p.189) — descansar zera o turno.
       turnState: { actionUsed: false, bonusUsed: false, reactionUsed: false, movementUsed: 0 },
     },
@@ -167,6 +170,8 @@ export function performLongRest(character, { recoverChoices = null } = {}) {
       crimsonRites: [],
       // Forma híbrida dura 10 minutos (30 no 11º) — não atravessa 8 horas.
       hybridForm: false,
+      // Mutagênico dura até o fim do próximo descanso, e este é ele.
+      mutagens: [],
     },
     spellcasting: {
       ...(character.spellcasting ?? {}),

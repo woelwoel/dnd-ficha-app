@@ -223,4 +223,19 @@ export function mutagenInitiativeDelta(character) {
   return somaEixo(character, 'initiative')
 }
 
+/**
+ * Aplica os deltas de mutagenico sobre os atributos ja efetivos (base + itens
+ * magicos). Nao usa `getEffectiveAttributes` porque aquele so SOBE valores, e
+ * aqui os efeitos colaterais precisam descer. Piso 1: atributo zero quebraria
+ * todo calculo derivado.
+ */
+export function applyMutagenAttrs(attrs, deltas) {
+  if (!deltas || Object.keys(deltas).length === 0) return attrs
+  const out = { ...attrs }
+  for (const [chave, delta] of Object.entries(deltas)) {
+    out[chave] = Math.max(1, (out[chave] ?? 10) + delta)
+  }
+  return out
+}
+
 export { BLOOD_HUNTER }

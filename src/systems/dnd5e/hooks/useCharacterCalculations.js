@@ -11,6 +11,10 @@ import {
 import { calculateMaxHpMulticlass, listSpellcastingClasses, getEffectiveSaveProficiencies, effectiveSpeed as domainEffectiveSpeed, effectiveMaxHp as domainEffectiveMaxHp } from '../domain/rules'
 import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
 import { lycanAcBonus } from '../domain/bloodHunter'
+import {
+  mutagenAttrDeltas, mutagenAcDelta, mutagenSpeedDelta, mutagenInitiativeDelta,
+  applyMutagenAttrs,
+} from '../domain/mutagens'
 import { getFightingStyles } from '../domain/fightingStyles'
 import { resolveAbilityKey } from '../domain/attributes'
 import {
@@ -68,9 +72,11 @@ export function useCharacterCalculations(character, classData = null, classDataM
 
     // Atributos efetivos: base → attrSet → attrBonus (respeita max).
     // A partir daqui, todos os cálculos derivados usam estes valores.
-    const effectiveAttrs = getEffectiveAttributes(
-      { str, dex, con, int: intel, wis, cha },
-      magicEffects
+    // Mutagenicos entram DEPOIS dos itens magicos e antes de tudo que deriva
+    // de atributo: assim modificadores, CA e iniciativa acompanham sozinhos.
+    const effectiveAttrs = applyMutagenAttrs(
+      getEffectiveAttributes({ str, dex, con, int: intel, wis, cha }, magicEffects),
+      mutagenAttrDeltas(character)
     )
 
     const mods = {
@@ -117,7 +123,7 @@ export function useCharacterCalculations(character, classData = null, classDataM
 
     // Iniciativa com Alert (+5) via feats. Usa DES efetiva (itens mágicos
     // que setam/aumentam DES devem refletir na iniciativa).
-    const initiative = calculateInitiative(effectiveAttrs.dex, { feats })
+    const initiative = calculateInitiative(effectiveAttrs.dex, { feats }) + mutagenInitiativeDelta(character)
 
     // Atributo de magia (compat: classe primária). Usa atributo EFETIVO —
     // ex: Tiara da Inteligência muda a CD do Mago.
@@ -190,10 +196,11 @@ export function useCharacterCalculations(character, classData = null, classDataM
     // não ser com armadura pesada. É buff temporário, então entra aqui e não
     // no suggestedAC, igual aos buffs de magia.
     const effectiveAC = baseAC + (spellFx.fx.ac ?? 0) + lycanAcBonus(character, armor)
+      + mutagenAcDelta(character)
     // Base = deslocamento do domínio (preserva exaustão/penalidades), não o
     // combat.speed cru — alinhado com o que o AbilityStrip exibe.
     const baseSpeed = domainEffectiveSpeed(character)
-    const effectiveSpeed = Math.round((baseSpeed + (spellFx.fx.speed ?? 0)) * (spellFx.fx.speedMultiplier ?? 1) * 2) / 2
+    const effectiveSpeed = Math.round((baseSpeed + (spellFx.fx.speed ?? 0) + mutagenSpeedDelta(character)) * (spellFx.fx.speedMultiplier ?? 1) * 2) / 2
     const effectBreakdown = (activeEffects ?? []).map(e => ({ id: e.id, name: e.name, summary: e.summary }))
     // Ritual Vermelho reduz o TETO enquanto ativo. Como effectiveAC, não
     // contamina o valor armazenado (que continua editável na ficha).

@@ -6,7 +6,11 @@
         "id": "cacador_de_sangue_primal_rite",
         "featureName": "Ritual Vermelho",
         "prompt": "Escolha seus Rituais Primais",
-        "multiSelectByLevel": { "1": 1, "6": 2, "11": 3 },
+        "multiSelectByLevel": {
+          "1": 1,
+          "6": 2,
+          "11": 3
+        },
         "options": [
           {
             "value": "chamas",
@@ -58,7 +62,14 @@
         "id": "cacador_de_sangue_blood_curses",
         "featureName": "Sangue Maldito",
         "prompt": "Escolha suas Maldições de Sangue",
-        "multiSelectByLevel": { "2": 1, "5": 2, "9": 3, "13": 4, "16": 5, "20": 6 },
+        "multiSelectByLevel": {
+          "2": 1,
+          "5": 2,
+          "9": 3,
+          "13": 4,
+          "16": 5,
+          "20": 6
+        },
         "options": [
           {
             "value": "amarracao",
@@ -121,7 +132,7 @@
           {
             "value": "mutante",
             "name": "Ordem do Mutante",
-            "desc": "Aqueles que sobrevivem à Perdição do Caçador se descobrem irrevogavelmente alterados. Esta ordem se concentra em fabricar elixires tóxicos que modificam as próprias capacidades em combate, alterando o sangue e, com o tempo, tornando-se algo além do humano.\n\nAs características desta Ordem ainda não foram implementadas no app e chegam numa próxima entrega."
+            "desc": "O processo de assimilação da Perdição do Caçador é doloroso, marcante e às vezes fatal. Quem sobrevive se descobre irrevogavelmente alterado, aperfeiçoado. Alguns consideram a experiência gloriosa e adotam a capacidade de alterar a própria fisiologia combinando hemocracia e alquimia corrompida. Ao longo de gerações de experimentação, surgiu um segmento da ordem voltado a fabricar elixires tóxicos que modificam suas capacidades em combate, alterando o sangue e, com o tempo, tornando-se algo além do humano.\n\nFeatures por nível:\n• Nv 3 — Fórmulas: Você começa a descobrir fórmulas alquímicas proibidas que alteram temporariamente suas capacidades físicas e mentais. Escolha três fórmulas mutagênicas; você ganha mais uma no 7º, 11º, 15º e 18º níveis. Ao aprender uma fórmula nova, você pode trocar uma das que já conhece por outra. O seu nível de mutação, que mede a intensidade dos efeitos, é o seu nível de caçador de sangue dividido por 4, arredondado para cima.\n• Nv 3 — Criação de Mutagênicos: Durante um descanso curto você pode preparar um mutagênico. Com uma ação bônus você pode consumi-lo, e seus efeitos, incluindo os colaterais, duram até o fim do seu próximo descanso, no qual você medita e expele as toxinas do corpo. Mutagênicos são feitos sob medida para você e são fatais para outras criaturas: não afetam criaturas Grandes ou maiores e causam apenas os efeitos colaterais em criaturas Médias ou menores que os bebam. Eles também são instáveis e perdem a potência ao fim do seu próximo descanso caso não sejam usados.\n• Nv 7 — Criação de Mutagênico Avançada: Ao preparar mutagênicos num descanso curto, você pode criar dois, de fórmulas diferentes, que podem ser ingeridos com efeitos sobrepostos. Cada um exige uma ação bônus para ser bebido. A partir do 15º nível, você prepara três por descanso curto.\n• Nv 11 — Metabolismo Estranho: Com uma ação bônus, você incute uma explosão de adrenalina no corpo para resistir temporariamente aos efeitos negativos de um mutagênico, ignorando o efeito colateral de um deles por 1 minuto. Você pode usar este recurso uma vez e precisa terminar um descanso curto ou longo para usá-lo de novo.\n• Nv 15 — Fisiologia Robusta: Seu corpo se adaptou a toxinas e venenos. Você ganha imunidade a dano de veneno e à condição envenenado.\n• Nv 18 — Mutação Exaltada: Seu corpo passa a produzir uma de suas toxinas naturalmente. Escolha uma das fórmulas que você conhece: você ganha os benefícios e os efeitos colaterais dela permanentemente, o tempo todo. Essa escolha não pode ser alterada depois."
           },
           {
             "value": "alma-profana",
@@ -150,6 +161,99 @@
             "value": "morto",
             "name": "Ritual do Morto",
             "desc": "O dano do seu ritual é do tipo necrótico."
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "id": "cacador_de_sangue_mutagen_formulas",
+        "featureName": "Fórmulas",
+        "prompt": "Escolha suas fórmulas mutagênicas",
+        "requires": {
+          "cacador_de_sangue_order": "mutante"
+        },
+        "multiSelectByLevel": {
+          "3": 3,
+          "7": 4,
+          "11": 5,
+          "15": 6,
+          "18": 7
+        },
+        "options": [
+          {
+            "value": "eter",
+            "name": "Éter (nv 11)",
+            "desc": "Você ganha deslocamento de voo de 6 metros. Efeito colateral: Você tem desvantagem em todos os testes de Força e de Destreza."
+          },
+          {
+            "value": "celeridade",
+            "name": "Celeridade",
+            "desc": "Sua Destreza e o teto dela aumentam pelo seu nível de mutação. Efeito colateral: Sua Sabedoria diminui pelo seu nível de mutação."
+          },
+          {
+            "value": "familiarizado",
+            "name": "Familiarizado",
+            "desc": "Você tem vantagem em testes de Inteligência. Efeito colateral: Você tem desvantagem em testes de Carisma."
+          },
+          {
+            "value": "crueldade",
+            "name": "Crueldade (nv 11)",
+            "desc": "Você ganha uma ação bônus no seu turno, utilizável apenas para a ação de Ataque com armas. Efeito colateral: Você tem desvantagem em testes de resistência."
+          },
+          {
+            "value": "impermeavel",
+            "name": "Impermeável",
+            "desc": "Você ganha resistência a dano perfurante. Efeito colateral: Você ganha vulnerabilidade a dano cortante."
+          },
+          {
+            "value": "mobilidade",
+            "name": "Mobilidade",
+            "desc": "Você fica imune às condições agarrado e impedido. No 11º nível, também à condição paralisado. Efeito colateral: Você recebe uma penalidade na iniciativa igual ao dobro do seu nível de mutação."
+          },
+          {
+            "value": "visao-noturna",
+            "name": "Visão Noturna",
+            "desc": "Você ganha visão no escuro até 18 metros. Se já tinha visão no escuro, o alcance aumenta em 18 metros. Efeito colateral: Você ganha Sensibilidade à Luz Solar: desvantagem em jogadas de ataque e em testes de Sabedoria (Percepção) baseados em visão sob luz solar direta."
+          },
+          {
+            "value": "potencia",
+            "name": "Potência",
+            "desc": "Sua Força e o teto dela aumentam pelo seu nível de mutação. Efeito colateral: Sua Destreza diminui pelo seu nível de mutação."
+          },
+          {
+            "value": "precisao",
+            "name": "Precisão (nv 11)",
+            "desc": "Seus ataques com arma causam crítico com 19 ou 20. A partir do 12º nível, com 18 a 20. Efeito colateral: Toda cura que você recebe é reduzida à metade."
+          },
+          {
+            "value": "rapidez",
+            "name": "Rapidez",
+            "desc": "Seu deslocamento aumenta em 4,5 metros. No 15º nível, em 6 metros. Efeito colateral: Você tem desvantagem em testes de Destreza."
+          },
+          {
+            "value": "reconstrucao",
+            "name": "Reconstrução (nv 7)",
+            "desc": "Enquanto consciente e em combate, você regenera pontos de vida iguais ao dobro do seu nível de mutação no início do seu turno, desde que esteja acima de 0. Efeito colateral: Seu deslocamento diminui em 3 metros."
+          },
+          {
+            "value": "sagacidade",
+            "name": "Sagacidade",
+            "desc": "Sua Sabedoria e o teto dela aumentam pelo seu nível de mutação. Efeito colateral: Sua classe de armadura é reduzida pelo seu nível de mutação."
+          },
+          {
+            "value": "protegido",
+            "name": "Protegido",
+            "desc": "Você ganha resistência a dano cortante. Efeito colateral: Você ganha vulnerabilidade a dano de concussão."
+          },
+          {
+            "value": "inquebravel",
+            "name": "Inquebrável",
+            "desc": "Você ganha resistência a dano de concussão. Efeito colateral: Você ganha vulnerabilidade a dano perfurante."
+          },
+          {
+            "value": "cautela",
+            "name": "Cautela",
+            "desc": "Você ganha um bônus na iniciativa igual ao dobro do seu nível de mutação. Efeito colateral: Você tem desvantagem em testes de Sabedoria (Percepção)."
           }
         ]
       }

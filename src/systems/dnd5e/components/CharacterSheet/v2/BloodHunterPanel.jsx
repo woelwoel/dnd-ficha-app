@@ -4,6 +4,9 @@ import {
   bloodHunterLevel, bloodHunterMaxHpPenalty,
   LYCAN, bloodHunterOrder, isHybridForm, lycanMeleeDamageBonus, lycanUnarmedDie,
 } from '../../../domain/bloodHunter'
+import {
+  MUTAGENS, MUTANT, mutationLevel, knownFormulas, activeMutagens,
+} from '../../../domain/mutagens'
 
 /**
  * Painel do Caçador de Sangue (fonte homebrew): Ritual Vermelho e Sangue
@@ -20,7 +23,8 @@ import {
  * A regra toda vem de `domain/bloodHunter.js`. Este arquivo só desenha.
  */
 export function BloodHunterPanel({
-  character, onChange, featureUses = [], onSpend, onRegain, onToggleHybrid, readOnly = false,
+  character, onChange, featureUses = [], onSpend, onRegain, onToggleHybrid,
+  onChangeMutagens, readOnly = false,
 }) {
   const nivel = bloodHunterLevel(character)
   const conhecidos = knownRites(character)
@@ -60,6 +64,19 @@ export function BloodHunterPanel({
   const transformado = isHybridForm(character)
   const hibrida = (featureUses ?? []).find(u => u.id === 'cacador-de-sangue-hybrid-transformation')
   const hibridaRestantes = hibrida ? (hibrida.max ?? 0) - (hibrida.used ?? 0) : 0
+
+  // Ordem do Mutante: formulas conhecidas + elixires em efeito agora.
+  const ehMutante = bloodHunterOrder(character) === MUTANT && nivel >= 3
+  const formulas = knownFormulas(character)
+  const ativosMut = activeMutagens(character).map(m => m.key)
+  const nivelMutacao = mutationLevel(character)
+
+  function alternarMutagenico(chave) {
+    const proximos = ativosMut.includes(chave)
+      ? ativosMut.filter(k => k !== chave)
+      : [...ativosMut, chave]
+    onChangeMutagens?.(proximos)
+  }
 
   function transformar() {
     // Transformar consome um uso; reverter não devolve (regra do PDF).
@@ -146,6 +163,43 @@ export function BloodHunterPanel({
               </button>
             </span>
           </div>
+        </>
+      )}
+
+      {ehMutante && (
+        <>
+          <div className="v2-title" style={{ marginTop: 4 }}>Mutagênicos</div>
+          <div className="v2-mut" style={{ fontSize: 12, padding: '2px 0' }}>
+            Nível de mutação {nivelMutacao}. Duram até o fim do próximo descanso.
+          </div>
+          {formulas.length === 0 && (
+            <div className="v2-mut" style={{ fontSize: 13, padding: '4px 0' }}>
+              Nenhuma fórmula conhecida. Escolha suas fórmulas na progressão de nível.
+            </div>
+          )}
+          {formulas.map(chave => {
+            const m = MUTAGENS[chave]
+            const ativo = ativosMut.includes(chave)
+            return (
+              <div className="v2-row" key={chave}>
+                <span style={{ minWidth: 0 }}>
+                  {m.name}
+                  <span className="v2-mut" style={{ marginLeft: 6, fontSize: 11 }}>
+                    {ativo ? m.sideEffect : m.effect}
+                  </span>
+                </span>
+                <button
+                  type="button"
+                  className="v2-btn"
+                  disabled={readOnly}
+                  aria-label={ativo ? `Expelir ${m.name}` : `Beber ${m.name}`}
+                  onClick={() => alternarMutagenico(chave)}
+                >
+                  {ativo ? 'Expelir' : 'Beber'}
+                </button>
+              </div>
+            )
+          })}
         </>
       )}
 

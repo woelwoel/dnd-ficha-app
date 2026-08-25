@@ -276,6 +276,7 @@ export function ActionsTab() {
               onSpend={id => spendFeatureUse(id, featureUses)}
               onRegain={id => regainFeatureUse(id, featureUses)}
               onToggleHybrid={on => updateCombat('hybridForm', on)}
+              onChangeMutagens={ativos => updateCombat('mutagens', ativos)}
             />
           </div>
         </>

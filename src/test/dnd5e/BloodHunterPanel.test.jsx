@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { BloodHunterPanel } from '../../systems/dnd5e/components/CharacterSheet/v2/BloodHunterPanel'
 import { BLOOD_HUNTER, LYCAN, ORDER_CHOICE_ID } from '../../systems/dnd5e/domain/bloodHunter'
+import { MUTANT, FORMULAS_CHOICE_ID } from '../../systems/dnd5e/domain/mutagens'
 
 function ficha({ level = 5, rites = [], ritosConhecidos = 'chamas', classe = BLOOD_HUNTER } = {}) {
   return {
@@ -171,5 +172,69 @@ describe('BloodHunterPanel — Forma Hibrida (Ordem do Licantropo)', () => {
     montar({ character: lican({ hybrid: true }), featureUses: usos(1) })
     expect(screen.getByText(/\+1 de CA/)).toBeInTheDocument()
     expect(screen.getByText(/1d6/)).toBeInTheDocument()
+  })
+})
+
+describe('BloodHunterPanel — Mutagenicos (Ordem do Mutante)', () => {
+  function mutante({ level = 8, ativos = [], conhecidas = 'potencia,sagacidade', order = MUTANT } = {}) {
+    return {
+      info: {
+        level, class: BLOOD_HUNTER, multiclasses: [],
+        chosenFeatures: {
+          [ORDER_CHOICE_ID]: order,
+          [FORMULAS_CHOICE_ID]: conhecidas,
+          cacador_de_sangue_primal_rite: 'chamas',
+        },
+      },
+      attributes: { str: 16, dex: 12, con: 14, int: 10, wis: 12, cha: 10 },
+      combat: { maxHp: 60, currentHp: 60, crimsonRites: [], mutagens: ativos, attacks: [] },
+    }
+  }
+
+  function montar(char) {
+    const onChangeMutagens = vi.fn()
+    render(
+      <BloodHunterPanel
+        character={char}
+        featureUses={[]}
+        onChange={vi.fn()}
+        onChangeMutagens={onChangeMutagens}
+      />
+    )
+    return { onChangeMutagens }
+  }
+
+  it('nao mostra mutagenicos para outra Ordem', () => {
+    montar(mutante({ order: LYCAN }))
+    expect(screen.queryByText(/Mutag[eê]nicos/)).not.toBeInTheDocument()
+  })
+
+  it('lista as formulas conhecidas e o nivel de mutacao', () => {
+    montar(mutante())
+    expect(screen.getByText(/N[ií]vel de muta[çc][ãa]o 2/)).toBeInTheDocument()
+    expect(screen.getByText('Potência')).toBeInTheDocument()
+    expect(screen.getByText('Sagacidade')).toBeInTheDocument()
+  })
+
+  it('beber um mutagenico o acrescenta aos ativos', () => {
+    const { onChangeMutagens } = montar(mutante())
+    fireEvent.click(screen.getByRole('button', { name: /beber pot[eê]ncia/i }))
+    expect(onChangeMutagens).toHaveBeenCalledWith(['potencia'])
+  })
+
+  it('expelir remove so aquele, preservando os outros', () => {
+    const { onChangeMutagens } = montar(mutante({ ativos: ['potencia', 'sagacidade'] }))
+    fireEvent.click(screen.getByRole('button', { name: /expelir pot[eê]ncia/i }))
+    expect(onChangeMutagens).toHaveBeenCalledWith(['sagacidade'])
+  })
+
+  it('mostra o efeito colateral enquanto o mutagenico esta ativo', () => {
+    montar(mutante({ ativos: ['potencia'] }))
+    expect(screen.getByText(/Sua Destreza diminui/)).toBeInTheDocument()
+  })
+
+  it('avisa quando nao ha formula escolhida', () => {
+    montar(mutante({ conhecidas: '' }))
+    expect(screen.getByText(/Nenhuma f[óo]rmula conhecida/)).toBeInTheDocument()
   })
 })

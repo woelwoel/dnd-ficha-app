@@ -5,6 +5,8 @@ import {
   formulasKnownAt, availableFormulas,
 } from '../../systems/dnd5e/domain/mutagens'
 import { BLOOD_HUNTER, ORDER_CHOICE_ID } from '../../systems/dnd5e/domain/bloodHunter'
+import choices from '../../../public/srd-data/homebrew-class-choices-pt.json'
+import { parseSubclassFeatures } from '../../systems/dnd5e/domain/subclassFeatures'
 
 const MUTANTE = 'mutante'
 const FORMULAS_CHOICE = 'cacador_de_sangue_mutagen_formulas'
@@ -129,5 +131,45 @@ describe('mutagênicos ativos alteram CA, deslocamento e iniciativa', () => {
   it('lista só os mutagênicos ativos válidos', () => {
     const char = ficha({ ativos: ['potencia', 'inexistente', 'eter'] })
     expect(activeMutagens(char).map(m => m.key)).toEqual(['potencia'])
+  })
+})
+
+describe('catalogo do picker x catalogo do dominio', () => {
+  const escolhas = choices[BLOOD_HUNTER].choices
+  const formulas = escolhas.find(c => c.id === FORMULAS_CHOICE)
+
+  it('a escolha de formulas so aparece pra Ordem do Mutante', () => {
+    expect(formulas.requires).toEqual({ [ORDER_CHOICE_ID]: MUTANTE })
+    expect(formulas.level).toBe(3)
+  })
+
+  /** Chave divergente entre JSON e dominio = formula que nao faz nada. */
+  it('as opcoes do picker sao exatamente as chaves do dominio', () => {
+    expect(formulas.options.map(o => o.value).sort()).toEqual(Object.keys(MUTAGENS).sort())
+  })
+
+  it('escala as formulas conhecidas igual ao dominio', () => {
+    for (const [nivel, quantas] of Object.entries(formulas.multiSelectByLevel)) {
+      expect(formulasKnownAt(Number(nivel)), `nivel ${nivel}`).toBe(quantas)
+    }
+  })
+
+  it('toda opcao mostra o efeito colateral', () => {
+    for (const o of formulas.options) {
+      expect(o.desc, o.value).toMatch(/Efeito colateral:/)
+    }
+  })
+
+  it('a Ordem do Mutante concede as features nos niveis do PDF', () => {
+    const mutante = escolhas.find(c => c.id === ORDER_CHOICE_ID).options.find(o => o.value === MUTANTE)
+    const { features } = parseSubclassFeatures(mutante.desc)
+    expect(features.map(f => [f.level, f.name])).toEqual([
+      [3, 'Fórmulas'],
+      [3, 'Criação de Mutagênicos'],
+      [7, 'Criação de Mutagênico Avançada'],
+      [11, 'Metabolismo Estranho'],
+      [15, 'Fisiologia Robusta'],
+      [18, 'Mutação Exaltada'],
+    ])
   })
 })
