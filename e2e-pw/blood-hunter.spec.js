@@ -101,3 +101,60 @@ test('Sangue Maldito aparece como recurso limitado', async ({ context, page }) =
 
   await expect(visivel(page, 'Sangue Maldito')).toBeVisible()
 })
+
+/**
+ * Ordem do Licantropo no navegador real. Na Fase 1 foi o e2e que pegou o
+ * tracker que nenhum teste unitario viu, porque `CombatClassActions` e lista
+ * fechada. Aqui a prova e a forma hibrida: o card por nivel vem do parser de
+ * subclasse, e transformar tem de mexer na CA e no dano da linha de ataque.
+ */
+function licantropo() {
+  const char = cacadorDeSangue()
+  char.shortId = 'CACBESTA22'
+  char.info.chosenFeatures.cacador_de_sangue_order = 'licantropo'
+  char.combat.armorClass = 15
+  char.combat.hybridForm = false
+  return char
+}
+
+test('Ordem do Licantropo: forma hibrida muda CA e dano no navegador', async ({ context, page }) => {
+  await installAuthedApp(context, { characters: [licantropo()] })
+  await page.goto('/c/CACBESTA22')
+  await expect(visivel(page, 'Gilda Corvo')).toBeVisible()
+
+  // Antes: CA 15 e espada em 1d8 + 3 (Forca 16).
+  await expect(page.getByRole('button', { name: 'Editar CA', exact: true })
+    .locator('.v2-ability-mod').first()).toHaveText('15')
+  await expect(visivel(page, '1d8 + 3')).toBeVisible()
+
+  await page.getByRole('button', { name: /transformar em forma h[ií]brida/i }).click()
+
+  // Pele Resistente: +1 de CA com armadura leve ou nenhuma.
+  await expect(page.getByRole('button', { name: 'Editar CA', exact: true })
+    .locator('.v2-ability-mod').first()).toHaveText('16')
+
+  // Poder Selvagem no 5o nivel: metade da proficiencia (+3 -> 1) no dano.
+  await expect(visivel(page, '1d8 + 4')).toBeVisible()
+
+  await page.getByRole('button', { name: /reverter da forma h[ií]brida/i }).click()
+  await expect(visivel(page, '1d8 + 3')).toBeVisible()
+})
+
+/**
+ * Sentidos Agucados e passiva, entao fica em Caracteristicas > Habilidades.
+ *
+ * NAO afirmo aqui onde o CARD da Transformacao Hibrida e desenhado: a ficha
+ * roteia features por `detectActionType`, e a descricao dela comeca com "Com
+ * uma acao", entao sai de Habilidades -- mas nao confirmei em qual aba ela
+ * reaparece. O que importa pro jogador esta coberto pelo teste acima: o
+ * controle da forma hibrida funciona e muda CA e dano de verdade.
+ */
+test('Ordem do Licantropo: feature passiva aparece em Habilidades', async ({ context, page }) => {
+  await installAuthedApp(context, { characters: [licantropo()] })
+  await page.goto('/c/CACBESTA22')
+  await expect(visivel(page, 'Gilda Corvo')).toBeVisible()
+
+  await page.getByRole('tab', { name: 'Características' }).click()
+  await page.getByRole('button', { name: /^Habilidades/ }).click()
+  await expect(visivel(page, /Sentidos Aguçados/i)).toBeVisible()
+})
