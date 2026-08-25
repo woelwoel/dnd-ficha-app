@@ -13,6 +13,13 @@
 
 export const BLOOD_HUNTER = 'cacador-de-sangue'
 
+/** Id da escolha de Ordem. Precisa estar em `SUBCLASS_CHOICE_IDS`, que e uma
+ *  lista FECHADA -- fora dela a Ordem nao gera card nem tracker nenhum. */
+export const ORDER_CHOICE_ID = 'cacador_de_sangue_order'
+
+/** Ordem do Licantropo: a unica com estado de forma (`combat.hybridForm`). */
+export const LYCAN = 'licantropo'
+
 /**
  * Rituais de sangue. `tier` decide onde a escolha é oferecida: Primais no 1º,
  * 6º e 11º níveis; Esotéricos só a partir do 14º.
@@ -124,4 +131,49 @@ export function knownRites(character) {
     ...pickedValues(chosen.cacador_de_sangue_esoteric_rite),
   ])
   return Object.keys(RITES).filter(k => picked.has(k))
+}
+
+/* -- Ordem do Licantropo: forma hibrida ---------------------------------- */
+
+/** Ordem escolhida, ou null pra quem nao e cacador de sangue / nao escolheu. */
+export function bloodHunterOrder(character) {
+  if (bloodHunterLevel(character) < 1) return null
+  const chosen = character?.info?.chosenFeatures ?? character?.chosenFeatures ?? {}
+  return chosen[ORDER_CHOICE_ID] ?? null
+}
+
+/**
+ * Se a forma hibrida esta ativa agora. Exige a Ordem do Licantropo e o 3o
+ * nivel, que e quando a Ordem chega -- ficha com o flag ligado e Ordem trocada
+ * depois nao pode continuar recebendo os beneficios.
+ */
+export function isHybridForm(character) {
+  return bloodHunterLevel(character) >= 3
+    && bloodHunterOrder(character) === LYCAN
+    && !!character?.combat?.hybridForm
+}
+
+/**
+ * Pele Resistente: +1 de CA na forma hibrida, exceto com armadura pesada.
+ * Buff temporario -- entra no `effectiveAC` derivado, nunca no `suggestedAC`,
+ * que e o valor editavel da ficha.
+ */
+export function lycanAcBonus(character, armor) {
+  if (!isHybridForm(character)) return 0
+  return armor?.category === 'heavy' ? 0 : 1
+}
+
+/** Poder Selvagem: metade do bonus de proficiencia no dano corpo a corpo. */
+export function lycanMeleeDamageBonus(character) {
+  if (!isHybridForm(character)) return 0
+  return Math.floor(proficiencyBonus(character) / 2)
+}
+
+/** Ataque do Predador: dado do golpe desarmado na forma hibrida. */
+export function lycanUnarmedDie(character) {
+  if (!isHybridForm(character)) return null
+  const lv = bloodHunterLevel(character)
+  if (lv >= 18) return '1d10'
+  if (lv >= 11) return '1d8'
+  return '1d6'
 }
