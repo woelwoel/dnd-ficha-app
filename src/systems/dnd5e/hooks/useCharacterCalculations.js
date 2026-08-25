@@ -8,7 +8,7 @@ import {
   calculatePassivePerception,
   calculateInitiative,
 } from '../utils/calculations'
-import { calculateMaxHpMulticlass, listSpellcastingClasses, getEffectiveSaveProficiencies, effectiveSpeed as domainEffectiveSpeed } from '../domain/rules'
+import { calculateMaxHpMulticlass, listSpellcastingClasses, getEffectiveSaveProficiencies, effectiveSpeed as domainEffectiveSpeed, effectiveMaxHp as domainEffectiveMaxHp } from '../domain/rules'
 import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
 import { getFightingStyles } from '../domain/fightingStyles'
 import { resolveAbilityKey } from '../domain/attributes'
@@ -191,6 +191,9 @@ export function useCharacterCalculations(character, classData = null, classDataM
     const baseSpeed = domainEffectiveSpeed(character)
     const effectiveSpeed = Math.round((baseSpeed + (spellFx.fx.speed ?? 0)) * (spellFx.fx.speedMultiplier ?? 1) * 2) / 2
     const effectBreakdown = (activeEffects ?? []).map(e => ({ id: e.id, name: e.name, summary: e.summary }))
+    // Ritual Vermelho reduz o TETO enquanto ativo. Como effectiveAC, não
+    // contamina o valor armazenado (que continua editável na ficha).
+    const effectiveMaxHp = domainEffectiveMaxHp(character)
 
     return {
       profBonus,
@@ -219,6 +222,7 @@ export function useCharacterCalculations(character, classData = null, classDataM
       fmt: formatModifier,
       effectiveAC,
       effectiveSpeed,
+      effectiveMaxHp,
       effectBreakdown,
       spellFx,
       fightingStyles,
