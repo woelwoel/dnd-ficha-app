@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { DamageModal } from '../systems/dnd5e/components/CharacterSheet/DamageModal'
 
@@ -72,6 +72,24 @@ describe('DamageModal', () => {
     const dialog = screen.getByRole('dialog')
     fireEvent.click(dialog.parentElement)
     expect(onClose).toHaveBeenCalled()
+  })
+
+  /**
+   * O Modal foca `initialFocusRef ?? botão de fechar` 50 ms depois de abrir.
+   * Sem `initialFocusRef`, esse timer roubava o foco do campo de quantidade e
+   * o jogador perdia os primeiros dígitos que digitasse — e era isso que
+   * flakava o teste de digitação abaixo, que corre contra os mesmos 50 ms.
+   */
+  it('mantém o foco na quantidade depois do timer de foco do Modal', () => {
+    vi.useFakeTimers()
+    try {
+      render(<DamageModal open={true} onClose={() => {}} onConfirm={() => {}} />)
+      const input = screen.getByLabelText(/quantidade/i)
+      act(() => { vi.advanceTimersByTime(200) })
+      expect(document.activeElement).toBe(input)
+    } finally {
+      vi.useRealTimers()
+    }
   })
 
   it('type null quando não selecionado', async () => {

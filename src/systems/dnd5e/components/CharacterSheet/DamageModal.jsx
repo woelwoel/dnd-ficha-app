@@ -1,7 +1,7 @@
 // src/components/CharacterSheet/DamageModal.jsx
 // Modal opcional pra aplicar dano com crítico e tipo de dano.
 // O fluxo padrão (sem modal) continua sendo inline em DamageHealControls.
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Modal } from '../../../../components/ui/Modal'
 import { Icon } from '../../../../components/ui/Icon'
 
@@ -26,6 +26,12 @@ export function DamageModal({ open, onClose, onConfirm }) {
   const [amount, setAmount]     = useState('')
   const [critical, setCritical] = useState(false)
   const [type, setType]         = useState('')
+
+  // O Modal foca `initialFocusRef ?? botão de fechar` 50 ms depois de abrir.
+  // Sem esta ref, o `autoFocus` do campo abaixo durava só esses 50 ms e o foco
+  // pulava para o "✕" — quem digitasse o dano de imediato perdia os primeiros
+  // dígitos. Mesmo padrão que o ConfirmDialog já usa.
+  const amountRef = useRef(null)
 
   if (!open) return null
 
@@ -56,6 +62,7 @@ export function DamageModal({ open, onClose, onConfirm }) {
     <Modal
       open={open}
       onClose={handleClose}
+      initialFocusRef={amountRef}
       title={(
         <span className="inline-flex items-center gap-2">
           <Icon name="sword" size={16} strokeWidth={1.75} />
@@ -92,6 +99,7 @@ export function DamageModal({ open, onClose, onConfirm }) {
           </label>
           <input
             id="damage-modal-amount"
+            ref={amountRef}
             type="number"
             min={1}
             value={amount}
