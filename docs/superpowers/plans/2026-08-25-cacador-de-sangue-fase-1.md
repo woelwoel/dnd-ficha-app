@@ -685,51 +685,89 @@ git commit -m "feat(homebrew): dado do Ritual Vermelho no dano da arma imbuida"
 
 ## Task 6: `effectiveMaxHp` — o rito derruba o teto de PV
 
-`combat.maxHp` é valor **armazenado**, não derivado: `rules.js` só o incrementa no level-up. O teto efetivo entra em `useCharacterCalculations`, no mesmo lugar e no mesmo formato de `effectiveAC` e `effectiveSpeed`.
+`combat.maxHp` é valor **armazenado**, não derivado: `rules.js` só o incrementa
+no level-up. O teto efetivo entra em `useCharacterCalculations`, no mesmo lugar
+e no mesmo formato de `effectiveAC` e `effectiveSpeed`.
 
-Cuidado com a cura: `applyHeal` faz `clampHp(curHp + heal, maxHp)` lendo o teto cru. Sem ajuste, o personagem curaria acima do próprio teto reduzido.
+Duas funções de `rules.js` leem `combat.maxHp` cru e precisam do teto efetivo:
+
+- `applyHealing(character, amount)` — linha ~1162, `clampHp(curHp + heal, maxHp)`.
+  Sem ajuste, o personagem curaria acima do próprio teto reduzido.
+- `applyDamage(character, amount, opts)` — **duas** leituras: morte instantânea
+  com o personagem a 0 PV (`dmg >= maxHp`) e dano massivo (`remaining >= maxHp`).
+  O sacrifício do rito tem de aumentar o risco de morte que ele deveria aumentar.
+
+**Atenção aos nomes reais:** a função de cura chama-se `applyHealing`, não
+`applyHeal`, e as duas devolvem `{ character, sideEffects }` — não o personagem
+direto.
 
 **Files:**
-- Modify: `src/systems/dnd5e/hooks/useCharacterCalculations.js`
 - Modify: `src/systems/dnd5e/domain/rules.js`
+- Modify: `src/systems/dnd5e/hooks/useCharacterCalculations.js`
 - Test: `src/test/dnd5e/blood-hunter-max-hp.test.js`
 
 - [ ] **Step 1: Escreva o teste que falha**
 
-Confirme antes a assinatura de `applyHeal` — ela mudou de forma ao longo do projeto:
-
-```bash
-grep -n "export function applyHeal" -A 12 src/systems/dnd5e/domain/rules.js
-```
-
 ```js
 import { describe, it, expect } from 'vitest'
-import { applyHeal } from '../../systems/dnd5e/domain/rules'
+import { applyHealing, applyDamage, effectiveMaxHp } from '../../systems/dnd5e/domain/rules'
 import { BLOOD_HUNTER } from '../../systems/dnd5e/domain/bloodHunter'
 
-function ficha(rites) {
+function ficha(rites, { currentHp = 20, maxHp = 44 } = {}) {
   return {
     info: { level: 5, classIndex: BLOOD_HUNTER, multiclasses: [] },
     attributes: { wis: 14 },
-    combat: { maxHp: 44, currentHp: 20, crimsonRites: rites },
+    combat: { maxHp, currentHp, crimsonRites: rites },
   }
 }
 
+const umRito = [{ attackId: 'a1', rite: 'chamas' }]
+const doisRitos = [{ attackId: 'a1', rite: 'chamas' }, { attackId: 'a2', rite: 'morto' }]
+
+describe('effectiveMaxHp', () => {
+  it('é o teto armazenado quando não há rito', () => {
+    expect(effectiveMaxHp(ficha([]))).toBe(44)
+  })
+
+  it('desce o nível de personagem por rito ativo', () => {
+    expect(effectiveMaxHp(ficha(umRito))).toBe(39)
+    expect(effectiveMaxHp(ficha(doisRitos))).toBe(34)
+  })
+
+  it('nunca desce abaixo de 1 — teto zero mataria a ficha', () => {
+    expect(effectiveMaxHp(ficha(doisRitos, { maxHp: 4 }))).toBe(1)
+  })
+})
+
 describe('cura respeita o teto reduzido pelo Ritual Vermelho', () => {
   it('cura até o teto cheio sem rito ativo', () => {
-    const out = applyHeal(ficha([]), 100)
-    expect(out.combat.currentHp).toBe(44)
+    expect(applyHealing(ficha([]), 100).character.combat.currentHp).toBe(44)
   })
 
   it('não passa do teto reduzido com um rito ativo', () => {
-    // nível 5, um rito → teto 44 − 5 = 39
-    const out = applyHeal(ficha([{ attackId: 'a1', rite: 'chamas' }]), 100)
-    expect(out.combat.currentHp).toBe(39)
+    expect(applyHealing(ficha(umRito), 100).character.combat.currentHp).toBe(39)
   })
 
   it('não passa do teto reduzido com dois ritos ativos', () => {
-    const rites = [{ attackId: 'a1', rite: 'chamas' }, { attackId: 'a2', rite: 'morto' }]
-    expect(applyHeal(ficha(rites), 100).combat.currentHp).toBe(34)
+    expect(applyHealing(ficha(doisRitos), 100).character.combat.currentHp).toBe(34)
+  })
+})
+
+describe('morte instantânea usa o teto reduzido pelo rito', () => {
+  it('a 0 PV, o dano que alcança o teto REDUZIDO mata na hora', () => {
+    const char = ficha(umRito, { currentHp: 0 })
+    expect(applyDamage(char, 39).sideEffects.instakill).toBe(true)
+  })
+
+  it('a 0 PV, dano abaixo do teto reduzido não mata na hora', () => {
+    const char = ficha(umRito, { currentHp: 0 })
+    expect(applyDamage(char, 38).sideEffects.instakill).toBe(false)
+  })
+
+  it('sem rito, o limiar continua sendo o teto cheio', () => {
+    const char = ficha([], { currentHp: 0 })
+    expect(applyDamage(char, 39).sideEffects.instakill).toBe(false)
+    expect(applyDamage(char, 44).sideEffects.instakill).toBe(true)
   })
 })
 ```
@@ -740,11 +778,13 @@ describe('cura respeita o teto reduzido pelo Ritual Vermelho', () => {
 npx vitest run src/test/dnd5e/blood-hunter-max-hp.test.js --maxWorkers=2
 ```
 
-Esperado: FAIL no segundo teste — `expected 44 to be 39`.
+Esperado: FAIL — `effectiveMaxHp is not a function`.
 
 - [ ] **Step 3: Implemente o teto efetivo no domínio**
 
-Em `src/systems/dnd5e/domain/rules.js`, no topo, acrescente o import:
+Em `src/systems/dnd5e/domain/rules.js`, acrescente ao import já existente de
+`./bloodHunter` (ele já traz `bloodHunterMaxHpPenalty` se a Task 10 tiver
+rodado antes; se ainda não existir import nenhum, crie):
 
 ```js
 import { bloodHunterMaxHpPenalty } from './bloodHunter'
@@ -765,13 +805,23 @@ export function effectiveMaxHp(character) {
 }
 ```
 
-Dentro de `applyHeal`, troque a linha que lê o teto cru:
+Em `applyHealing`, troque `const maxHp = combat.maxHp ?? 0` por:
 
 ```js
   const maxHp = effectiveMaxHp(character)
 ```
 
-`bloodHunter.js` não importa `rules.js` (Task 3 evitou isso de propósito), então este import é de mão única e não cria ciclo.
+Em `applyDamage`, troque `const maxHp     = combat.maxHp ?? 0` por:
+
+```js
+  const maxHp     = effectiveMaxHp(character)
+```
+
+Isso cobre as duas comparações de morte instantânea de uma vez, porque ambas
+leem a mesma variável local.
+
+`bloodHunter.js` não importa `rules.js` (a Task 3 evitou isso de propósito),
+então este import é de mão única e não cria ciclo.
 
 - [ ] **Step 4: Rode o teste e confirme que passa**
 
@@ -779,49 +829,12 @@ Dentro de `applyHeal`, troque a linha que lê o teto cru:
 npx vitest run src/test/dnd5e/blood-hunter-max-hp.test.js --maxWorkers=2
 ```
 
-Esperado: PASS, 3 testes.
+Esperado: PASS, 9 testes.
 
-- [ ] **Step 5: Aplique o teto efetivo também ao dano massivo**
+- [ ] **Step 5: Exponha o teto na ficha**
 
-`applyDamage` usa `combat.maxHp` cru em duas regras de morte instantânea (PHB
-p.197): dano ≥ teto em personagem a 0 PV, e dano remanescente ≥ teto. Com o
-rito ativo o teto real é menor, então o limiar tem de acompanhar — senão o
-sacrifício do rito não aumenta o risco de morte que ele deveria aumentar.
-
-Acrescente ao arquivo de teste:
-
-```js
-import { applyDamage } from '../../systems/dnd5e/domain/rules'
-
-describe('dano massivo usa o teto reduzido pelo rito', () => {
-  it('mata na hora quando o dano alcança o teto REDUZIDO, estando a 0 PV', () => {
-    const char = { ...ficha([{ attackId: 'a1', rite: 'chamas' }]) }
-    char.combat.currentHp = 0
-    // teto efetivo 39: 40 de dano mata na hora, e 38 não
-    expect(applyDamage(char, 40).combat.deathSaves?.failures ?? 3).toBe(3)
-  })
-})
-```
-
-Confirme antes a forma exata do retorno de `applyDamage` (o campo de morte
-instantânea mudou de nome ao longo do projeto) e ajuste a asserção ao que ela
-de fato devolve:
-
-```bash
-grep -n "export function applyDamage" -A 40 src/systems/dnd5e/domain/rules.js
-```
-
-Dentro de `applyDamage`, troque as duas leituras de `combat.maxHp` por
-`effectiveMaxHp(character)`, reaproveitando uma única variável local no topo da
-função.
-
-- [ ] **Step 6: Exponha o teto na ficha**
-
-Em `src/systems/dnd5e/hooks/useCharacterCalculations.js`, acrescente ao import de `domain/rules`:
-
-```js
-import { calculateMaxHpMulticlass, listSpellcastingClasses, getEffectiveSaveProficiencies, effectiveSpeed as domainEffectiveSpeed, effectiveMaxHp as domainEffectiveMaxHp } from '../domain/rules'
-```
+Em `src/systems/dnd5e/hooks/useCharacterCalculations.js`, acrescente
+`effectiveMaxHp as domainEffectiveMaxHp` ao import que já vem de `../domain/rules`.
 
 Junto de `effectiveAC` e `effectiveSpeed`:
 
@@ -831,18 +844,19 @@ Junto de `effectiveAC` e `effectiveSpeed`:
     const effectiveMaxHp = domainEffectiveMaxHp(character)
 ```
 
-E acrescente `effectiveMaxHp,` ao objeto de retorno, na mesma lista de `effectiveAC` e `effectiveSpeed`.
+E acrescente `effectiveMaxHp,` ao objeto de retorno, na mesma lista de
+`effectiveAC` e `effectiveSpeed`.
 
-- [ ] **Step 7: Rode a fatia de PV e de ficha**
+- [ ] **Step 6: Rode as fatias que tocam PV e dano**
 
 ```bash
-npx vitest run src/test/ --maxWorkers=2 -t "HP"
-npx vitest run src/test/dnd5e/blood-hunter-max-hp.test.js --maxWorkers=2
+npx vitest run src/test/dnd5e/ --maxWorkers=2
 ```
 
-Esperado: PASS nas duas.
+Esperado: PASS, sem regressão. `applyDamage` e `applyHealing` são usadas pela
+mesa de combate e pelo painel de dano, então esta fatia é obrigatória.
 
-- [ ] **Step 8: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
 git add src/systems/dnd5e/domain/rules.js src/systems/dnd5e/hooks/useCharacterCalculations.js src/test/dnd5e/blood-hunter-max-hp.test.js
