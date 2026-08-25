@@ -46,3 +46,56 @@ export function bloodCursesKnown(level) {
   const lv = Number(level) || 0
   return CURSE_LEVELS.filter(n => lv >= n).length
 }
+
+/** Modificador de atributo (PHB p.13). Local para não importar `rules.js`. */
+function modOf(score) {
+  return Math.floor(((Number(score) || 10) - 10) / 2)
+}
+
+/** Nível TOTAL de personagem = classe principal + todas as multiclasses. */
+function characterLevel(character) {
+  const base = Number(character?.info?.level) || 0
+  const extra = (character?.info?.multiclasses ?? [])
+    .reduce((sum, mc) => sum + (Number(mc?.level) || 0), 0)
+  return base + extra
+}
+
+/** Nível de caçador de sangue, seja como classe principal ou multiclasse. */
+export function bloodHunterLevel(character) {
+  if (character?.info?.classIndex === BLOOD_HUNTER) return Number(character.info.level) || 0
+  const mc = (character?.info?.multiclasses ?? []).find(m => m?.classIndex === BLOOD_HUNTER)
+  return Number(mc?.level) || 0
+}
+
+/** Bônus de proficiência pelo nível de personagem (PHB p.15). */
+function proficiencyBonus(character) {
+  return Math.floor((Math.max(1, characterLevel(character)) - 1) / 4) + 2
+}
+
+/** CD das maldições de sangue = 8 + proficiência + modificador de Sabedoria. */
+export function hemocraftDC(character) {
+  return 8 + proficiencyBonus(character) + modOf(character?.attributes?.wisdom)
+}
+
+/** Ritos ativos, descartando entradas sem arma ou com rito desconhecido. */
+export function activeRites(character) {
+  return (character?.combat?.crimsonRites ?? [])
+    .filter(r => r && typeof r.attackId === 'string' && r.attackId && RITES[r.rite])
+    .map(r => ({ attackId: r.attackId, rite: r.rite }))
+}
+
+/**
+ * Redução do teto de PV: nível de PERSONAGEM por rito ativo.
+ * Maestria Sanguínea (20º de classe) remove o sacrifício.
+ */
+export function bloodHunterMaxHpPenalty(character) {
+  if (bloodHunterLevel(character) >= 20) return 0
+  return activeRites(character).length * characterLevel(character)
+}
+
+/** Dado e tipo de dano do rito ativo NESTA arma, ou null. */
+export function riteDamageFor(attack, character) {
+  const found = activeRites(character).find(r => r.attackId === attack?.id)
+  if (!found) return null
+  return { dice: riteDieFor(bloodHunterLevel(character)), damageType: RITES[found.rite].damageType }
+}
