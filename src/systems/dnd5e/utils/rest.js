@@ -165,6 +165,8 @@ export function performLongRest(character, { recoverChoices = null } = {}) {
       // para sempre, e o jogador não teria como descobrir por quê. Limpar
       // aqui é o que faz `currentHp: maxHp` acima devolver o teto cheio.
       crimsonRites: [],
+      // Forma híbrida dura 10 minutos (30 no 11º) — não atravessa 8 horas.
+      hybridForm: false,
     },
     spellcasting: {
       ...(character.spellcasting ?? {}),

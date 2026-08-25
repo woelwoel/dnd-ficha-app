@@ -11,12 +11,17 @@ function ficha() {
       currentHp: 20,
       hitDice: { pool: { d10: { total: 5, used: 2 } } },
       crimsonRites: [{ attackId: 'espada', rite: 'chamas' }],
+      hybridForm: true,
       classFeatureUses: [],
     },
   }
 }
 
 describe('descanso longo e Ritual Vermelho', () => {
+  it('reverte a forma hibrida', () => {
+    expect(performLongRest(ficha()).combat.hybridForm).toBe(false)
+  })
+
   it('desfaz os ritos ativos', () => {
     expect(performLongRest(ficha()).combat.crimsonRites).toEqual([])
   })

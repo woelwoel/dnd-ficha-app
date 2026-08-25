@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { BloodHunterPanel } from '../../systems/dnd5e/components/CharacterSheet/v2/BloodHunterPanel'
-import { BLOOD_HUNTER } from '../../systems/dnd5e/domain/bloodHunter'
+import { BLOOD_HUNTER, LYCAN, ORDER_CHOICE_ID } from '../../systems/dnd5e/domain/bloodHunter'
 
 function ficha({ level = 5, rites = [], ritosConhecidos = 'chamas', classe = BLOOD_HUNTER } = {}) {
   return {
@@ -98,5 +98,78 @@ describe('BloodHunterPanel — Sangue Maldito', () => {
   it('some quando o personagem ainda não tem a feature', () => {
     render(<BloodHunterPanel character={ficha({ level: 1 })} featureUses={[]} onChange={vi.fn()} />)
     expect(screen.queryByText('Sangue Maldito')).not.toBeInTheDocument()
+  })
+})
+
+describe('BloodHunterPanel — Forma Hibrida (Ordem do Licantropo)', () => {
+  const TRACKER = 'cacador-de-sangue-hybrid-transformation'
+
+  function lican({ level = 5, hybrid = false, order = LYCAN, used = 0 } = {}) {
+    return {
+      info: {
+        level, class: BLOOD_HUNTER, multiclasses: [],
+        chosenFeatures: { [ORDER_CHOICE_ID]: order, cacador_de_sangue_primal_rite: 'chamas' },
+      },
+      attributes: { str: 16, dex: 12, con: 14, int: 10, wis: 14, cha: 10 },
+      combat: {
+        maxHp: 44, currentHp: 44, crimsonRites: [], hybridForm: hybrid,
+        attacks: [{ id: 'espada', name: 'Espada Longa', damageDice: '1d8' }],
+      },
+    }
+  }
+  const usos = (used = 0) => [
+    { id: TRACKER, name: 'Transformacao Hibrida', max: 2, used, recharge: 'short' },
+  ]
+
+  function montar(props = {}) {
+    const onToggleHybrid = vi.fn()
+    const onSpend = vi.fn()
+    render(
+      <BloodHunterPanel
+        character={props.character ?? lican()}
+        featureUses={props.featureUses ?? usos()}
+        onChange={vi.fn()}
+        onSpend={onSpend}
+        onRegain={vi.fn()}
+        onToggleHybrid={onToggleHybrid}
+      />
+    )
+    return { onToggleHybrid, onSpend }
+  }
+
+  it('nao mostra a forma hibrida para outra Ordem', () => {
+    render(
+      <BloodHunterPanel
+        character={lican({ order: 'cacador-de-espectros' })}
+        featureUses={[]}
+        onChange={vi.fn()}
+      />
+    )
+    expect(screen.queryByText(/Forma H[ií]brida/i)).not.toBeInTheDocument()
+  })
+
+  it('transformar liga o estado e gasta um uso', () => {
+    const { onToggleHybrid, onSpend } = montar()
+    fireEvent.click(screen.getByRole('button', { name: /transformar em forma h[ií]brida/i }))
+    expect(onToggleHybrid).toHaveBeenCalledWith(true)
+    expect(onSpend).toHaveBeenCalledWith(TRACKER)
+  })
+
+  it('reverter desliga o estado sem devolver o uso', () => {
+    const { onToggleHybrid, onSpend } = montar({ character: lican({ hybrid: true }), featureUses: usos(1) })
+    fireEvent.click(screen.getByRole('button', { name: /reverter da forma h[ií]brida/i }))
+    expect(onToggleHybrid).toHaveBeenCalledWith(false)
+    expect(onSpend).not.toHaveBeenCalled()
+  })
+
+  it('sem usos restantes, nao da pra transformar', () => {
+    montar({ featureUses: usos(2) })
+    expect(screen.getByRole('button', { name: /transformar em forma h[ií]brida/i })).toBeDisabled()
+  })
+
+  it('transformado, mostra os beneficios ativos', () => {
+    montar({ character: lican({ hybrid: true }), featureUses: usos(1) })
+    expect(screen.getByText(/\+1 de CA/)).toBeInTheDocument()
+    expect(screen.getByText(/1d6/)).toBeInTheDocument()
   })
 })

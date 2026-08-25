@@ -10,6 +10,7 @@ import {
 } from '../utils/calculations'
 import { calculateMaxHpMulticlass, listSpellcastingClasses, getEffectiveSaveProficiencies, effectiveSpeed as domainEffectiveSpeed, effectiveMaxHp as domainEffectiveMaxHp } from '../domain/rules'
 import { calculateArmorClass, getEquippedArmor } from '../domain/equipment'
+import { lycanAcBonus } from '../domain/bloodHunter'
 import { getFightingStyles } from '../domain/fightingStyles'
 import { resolveAbilityKey } from '../domain/attributes'
 import {
@@ -185,7 +186,10 @@ export function useCharacterCalculations(character, classData = null, classDataM
 
     // Derivados de efeitos ativos: NÃO contaminam suggestedAC (base editável).
     const baseAC = combat?.armorClass ?? 10
-    const effectiveAC = baseAC + (spellFx.fx.ac ?? 0)
+    // Pele Resistente (Ordem do Licantropo): +1 enquanto na forma híbrida, a
+    // não ser com armadura pesada. É buff temporário, então entra aqui e não
+    // no suggestedAC, igual aos buffs de magia.
+    const effectiveAC = baseAC + (spellFx.fx.ac ?? 0) + lycanAcBonus(character, armor)
     // Base = deslocamento do domínio (preserva exaustão/penalidades), não o
     // combat.speed cru — alinhado com o que o AbilityStrip exibe.
     const baseSpeed = domainEffectiveSpeed(character)

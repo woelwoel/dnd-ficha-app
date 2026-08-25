@@ -2,6 +2,7 @@ import { useState } from 'react'
 import {
   RITES, knownRites, activeRites, riteDieFor,
   bloodHunterLevel, bloodHunterMaxHpPenalty,
+  LYCAN, bloodHunterOrder, isHybridForm, lycanMeleeDamageBonus, lycanUnarmedDie,
 } from '../../../domain/bloodHunter'
 
 /**
@@ -19,7 +20,7 @@ import {
  * A regra toda vem de `domain/bloodHunter.js`. Este arquivo só desenha.
  */
 export function BloodHunterPanel({
-  character, onChange, featureUses = [], onSpend, onRegain, readOnly = false,
+  character, onChange, featureUses = [], onSpend, onRegain, onToggleHybrid, readOnly = false,
 }) {
   const nivel = bloodHunterLevel(character)
   const conhecidos = knownRites(character)
@@ -54,8 +55,65 @@ export function BloodHunterPanel({
   const maldito = (featureUses ?? []).find(u => u.id === 'cacador-de-sangue-blood-maledict')
   const malditoRestantes = maldito ? (maldito.max ?? 0) - (maldito.used ?? 0) : 0
 
+  // Forma híbrida: só a Ordem do Licantropo tem.
+  const ehLicano = bloodHunterOrder(character) === LYCAN && nivel >= 3
+  const transformado = isHybridForm(character)
+  const hibrida = (featureUses ?? []).find(u => u.id === 'cacador-de-sangue-hybrid-transformation')
+  const hibridaRestantes = hibrida ? (hibrida.max ?? 0) - (hibrida.used ?? 0) : 0
+
+  function transformar() {
+    // Transformar consome um uso; reverter não devolve (regra do PDF).
+    onToggleHybrid?.(true)
+    if (hibrida) onSpend?.(hibrida.id)
+  }
+
   return (
     <div>
+      {ehLicano && (
+        <>
+          <div className="v2-title" style={{ marginTop: 4 }}>Forma Híbrida</div>
+          <div className="v2-row">
+            <span>
+              {transformado ? 'Transformado' : 'Forma normal'}
+              <span className="v2-mut" style={{ marginLeft: 6, fontSize: 11 }}>
+                descanso curto ou longo
+              </span>
+            </span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              {hibrida && <span className="v2-chip">{hibridaRestantes}/{hibrida.max}</span>}
+              {transformado ? (
+                <button
+                  type="button"
+                  className="v2-btn"
+                  disabled={readOnly}
+                  aria-label="Reverter da forma híbrida"
+                  onClick={() => onToggleHybrid?.(false)}
+                >
+                  Reverter
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="v2-btn"
+                  disabled={readOnly || (!!hibrida && hibridaRestantes <= 0)}
+                  aria-label="Transformar em forma híbrida"
+                  onClick={transformar}
+                >
+                  Transformar
+                </button>
+              )}
+            </span>
+          </div>
+          {transformado && (
+            <div className="v2-mut" style={{ fontSize: 12, padding: '2px 0' }}>
+              Ativo: +1 de CA (exceto com armadura pesada), +{lycanMeleeDamageBonus(character)} no
+              dano corpo a corpo, golpe desarmado {lycanUnarmedDie(character)} cortante,
+              resistência a concussão, perfurante e cortante não-mágicos, e vulnerabilidade a prata.
+            </div>
+          )}
+        </>
+      )}
+
       {maldito && (
         <>
           <div className="v2-title" style={{ marginTop: 4 }}>Sangue Maldito</div>

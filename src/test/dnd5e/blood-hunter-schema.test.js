@@ -34,3 +34,23 @@ describe('schema — combat.crimsonRites', () => {
     expect(doc.combat.crimsonRites).toEqual([])
   })
 })
+
+describe('schema — combat.hybridForm', () => {
+  it('nasce desligada', () => {
+    expect(parseCharacter(minimal()).combat.hybridForm).toBe(false)
+  })
+
+  it('preserva o estado ligado', () => {
+    const doc = parseCharacter(minimal({
+      combat: { maxHp: 10, currentHp: 10, armorClass: 10, hybridForm: true },
+    }))
+    expect(doc.combat.hybridForm).toBe(true)
+  })
+
+  it('valor invalido cai pro padrao em vez de invalidar a ficha', () => {
+    const doc = parseCharacter(minimal({
+      combat: { maxHp: 10, currentHp: 10, armorClass: 10, hybridForm: 'sim' },
+    }))
+    expect(doc.combat.hybridForm).toBe(false)
+  })
+})

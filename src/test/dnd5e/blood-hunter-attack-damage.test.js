@@ -40,3 +40,29 @@ describe('dano de arma com Ritual Vermelho', () => {
     expect(r.expression).toBe('1d4 + 1d4 frio')
   })
 })
+
+describe('Poder Selvagem — dano da forma hibrida', () => {
+  const espada = { id: 'espada', damageDice: '1d8', damageType: 'cortante', properties: [] }
+  const arco = { id: 'arco', damageDice: '1d8', damageType: 'perfurante', properties: ['alcance'] }
+
+  it('soma no dano corpo a corpo', () => {
+    const r = calculateWeaponDamage({ ...espada, lycanMelee: 2 }, forca16)
+    expect(r.modifier).toBe(5)
+    expect(r.expression).toBe('1d8 + 5')
+  })
+
+  it('NAO soma em ataque a distancia', () => {
+    const r = calculateWeaponDamage({ ...arco, lycanMelee: 2 }, forca16)
+    expect(r.modifier).toBe(0)
+  })
+
+  it('convive com o Ritual Vermelho na mesma arma', () => {
+    const atk = { ...espada, lycanMelee: 2, rite: { dice: '1d6', damageType: 'fogo' } }
+    const r = calculateWeaponDamage(atk, forca16)
+    expect(r.expression).toBe('1d8 + 5 + 1d6 fogo')
+  })
+
+  it('ausente, nao muda nada', () => {
+    expect(calculateWeaponDamage(espada, forca16).modifier).toBe(3)
+  })
+})

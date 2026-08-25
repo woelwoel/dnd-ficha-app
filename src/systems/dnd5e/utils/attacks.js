@@ -167,7 +167,15 @@ export function calculateWeaponDamage(attack, attributes, { versatileTwoHanded =
     attack, abilityMod, { versatileTwoHanded }
   )
 
-  const modifier = abilityMod + magic + extraDamageMod
+  // Ordem do Licantropo — Poder Selvagem: metade do bônus de proficiência no
+  // dano CORPO A CORPO enquanto na forma híbrida. Carimbado por ataque, como
+  // `fightingStyles` e `rite`, porque é estado do personagem que só vale em
+  // parte das armas.
+  const lycanMelee = hasProperty(attack?.properties, RANGED_PROPERTIES)
+    ? 0
+    : Number(attack?.lycanMelee ?? 0)
+
+  const modifier = abilityMod + magic + extraDamageMod + lycanMelee
   const dice = diceOverride
     ?? ((versatileTwoHanded && attack?.versatileDice)
       ? attack.versatileDice
