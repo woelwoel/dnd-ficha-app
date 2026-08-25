@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useAuth } from '../../auth/AuthProvider'
 import { Modal } from './Modal'
 
@@ -19,6 +19,12 @@ export function DeleteAccountModal({ onClose }) {
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState(null)
 
+  // O Modal foca `initialFocusRef ?? botão de fechar` 50 ms depois de abrir.
+  // Sem esta ref, o `autoFocus` do campo abaixo durava só esses 50 ms e o foco
+  // pulava pro "✕" — quem digitasse a confirmação de imediato perdia as
+  // primeiras letras e o botão de apagar não habilitava.
+  const confirmRef = useRef(null)
+
   async function onDelete() {
     if (typed !== CONFIRM_WORD) return
     setBusy(true); setErr(null)
@@ -36,6 +42,7 @@ export function DeleteAccountModal({ onClose }) {
       onClose={onClose}
       title="Apagar conta?"
       size="md"
+      initialFocusRef={confirmRef}
       dismissOnBackdrop={!busy}
       footer={
         <>
@@ -68,11 +75,13 @@ export function DeleteAccountModal({ onClose }) {
           <li>Mesas onde você é o Mestre (incluindo fichas dos jogadores nelas)</li>
         </ul>
         <div>
-          <label className="text-xs text-ink-300 block mb-1">
+          <label htmlFor="delete-account-confirm" className="text-xs text-ink-300 block mb-1">
             Para confirmar, digite{' '}
             <code className="text-red-700 font-mono font-bold">{CONFIRM_WORD}</code>:
           </label>
           <input
+            id="delete-account-confirm"
+            ref={confirmRef}
             value={typed}
             onChange={(e) => setTyped(e.target.value)}
             className="w-full px-3 py-2 bg-parchment-100 border-2 border-parchment-600 rounded-sm text-ink-500 focus:outline-none focus:border-ink-300"
