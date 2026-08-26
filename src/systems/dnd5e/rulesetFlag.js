@@ -6,6 +6,11 @@
  * Ao contrário do flag de tema, este NÃO persiste: é ferramenta de
  * desenvolvimento, não preferência de usuário. Quando o pacote 2024 estiver
  * pronto (Fase 2 ou 3), este arquivo morre e o seletor vira público.
+ *
+ * PEGADINHA: use `/new?ruleset=2024` — a URL da tela de CRIAÇÃO. Abrir
+ * `/?ruleset=2024` na lista e clicar em "Recrutar Aventureiro" NÃO funciona:
+ * `ListRoute.onCreate` em App.jsx navega pra '/new' fixo, sem repassar a
+ * query, e o seletor lê `window.location.search` já em '/new'.
  */
 export function isRulesetPickerEnabled(
   search = typeof window !== 'undefined' ? window.location.search : '',
