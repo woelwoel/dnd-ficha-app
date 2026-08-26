@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { CONDITIONS_BY_ID } from '../../domain/conditions'
 import { HpBar } from './HpBar'
+import { RulesetBadge } from '../RulesetBadge'
 
 /**
  * Uma linha da ordem de iniciativa. Não sabe persistir nada: chama de volta o
@@ -95,6 +96,7 @@ export function CombatantRow({
         <span className={`text-sm font-display tracking-wide text-ink-500 ${dead ? 'line-through opacity-60' : ''} ${selected ? 'underline decoration-amber-700 underline-offset-4' : ''}`}>
           {combatant.name}
         </span>
+        {isPc && <RulesetBadge character={doc} />}
         {isPc && combatant.orphaned && (
           <span className="ml-2 text-xs ink-italic text-red-700">fora da mesa</span>
         )}
