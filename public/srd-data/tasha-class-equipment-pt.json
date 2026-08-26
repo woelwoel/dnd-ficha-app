@@ -1,0 +1,34 @@
+{
+  "artifice": {
+    "choices": [
+      {
+        "id": "artifice_armadura",
+        "prompt": "Armadura",
+        "options": [
+          {
+            "value": "a",
+            "label": "Armadura de Couro Batido",
+            "items": [
+              { "name": "Couro Batido", "qty": 1, "desc": "CA 12 + DES" }
+            ]
+          },
+          {
+            "value": "b",
+            "label": "Brunea",
+            "items": [
+              { "name": "Brunea", "qty": 1, "desc": "CA 14 + DES (máx 2) · furtividade ↓" }
+            ]
+          }
+        ]
+      }
+    ],
+    "fixed": [
+      { "name": "Besta Leve", "qty": 1, "desc": "1d8 perfuração · munição · 2 mãos" },
+      { "name": "Virote", "qty": 20, "desc": "munição de besta" },
+      { "name": "Ferramentas de Ladrão", "qty": 1, "desc": "usadas para abrir fechaduras e desarmar armadilhas" },
+      { "name": "Pacote do Explorador", "qty": 1, "desc": "mochila, manta, utensílios, 10 tochas, 10 rações, odre, corda 15m" },
+      { "name": "1ª Arma Simples", "qty": 1, "pick": "simple", "pickLabel": "1ª arma simples" },
+      { "name": "2ª Arma Simples", "qty": 1, "pick": "simple", "pickLabel": "2ª arma simples" }
+    ]
+  }
+}

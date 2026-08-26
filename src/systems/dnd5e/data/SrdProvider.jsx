@@ -29,6 +29,8 @@ const DATASETS = {
   // Lazy: só são acessados em telas específicas (Wizard, level-up flow).
   // Carregados sob demanda via `requestDataset(name)` ou `useLazySrdDataset(name)`.
   classEquipment:  { pt: 'phb-class-equipment-pt.json',  fallback: null,                      lazy: true },
+  classEquipmentTasha: { pt: 'tasha-class-equipment-pt.json', fallback: null,                lazy: true },
+  classEquipmentHomebrew: { pt: 'homebrew-class-equipment-pt.json', fallback: null,           lazy: true },
   weaponsArmor:    { pt: 'phb-weapons-pt.json',          fallback: null,                      lazy: true },
   multiclass:      { pt: 'phb-multiclass-pt.json',       fallback: null,                      lazy: true },
   feats:           { pt: 'phb-feats-pt.json',            fallback: null,                      lazy: true },
@@ -55,6 +57,7 @@ const COMPOSED = {
   progression:  { strategy: 'object', parts: [['progression', 'phb'], ['progressionTasha', 'tasha'], ['progressionHomebrew', 'homebrew']] },
   infusions:    { strategy: 'array',  parts: [['infusionsTasha', 'tasha']] },
   magicItems:   { strategy: 'array',  parts: [['magicItems', 'phb'], ['magicItemsTasha', 'tasha'], ['magicItemsXanathar', 'xanathar']] },
+  classEquipment: { strategy: 'object', parts: [['classEquipment', 'phb'], ['classEquipmentTasha', 'tasha'], ['classEquipmentHomebrew', 'homebrew']] },
 }
 
 // Chaves lógicas não-lazy carregadas no boot. Partes de composição (ex.:

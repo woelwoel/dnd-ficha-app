@@ -1,0 +1,71 @@
+{
+  "cacador-de-sangue": {
+    "choices": [
+      {
+        "id": "cacador_de_sangue_arma",
+        "prompt": "Arma principal",
+        "options": [
+          {
+            "value": "a",
+            "label": "Uma Arma Marcial",
+            "items": [
+              { "name": "Arma Marcial", "qty": 1, "pick": "martial", "pickLabel": "Arma marcial" }
+            ]
+          },
+          {
+            "value": "b",
+            "label": "Duas Armas Simples",
+            "items": [
+              { "name": "Arma Simples", "qty": 1, "pick": "simple", "pickLabel": "1ª arma simples" },
+              { "name": "Arma Simples", "qty": 1, "pick": "simple", "pickLabel": "2ª arma simples" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cacador_de_sangue_secundaria",
+        "prompt": "Arma secundária",
+        "options": [
+          {
+            "value": "a",
+            "label": "Besta Leve e 20 Virotes",
+            "items": [
+              { "name": "Besta Leve", "qty": 1, "desc": "1d8 perfurante · munição · 2 mãos" },
+              { "name": "Virote", "qty": 20, "desc": "munição de besta" }
+            ]
+          },
+          {
+            "value": "b",
+            "label": "Besta de Mão",
+            "items": [
+              { "name": "Besta de Mão", "qty": 1, "desc": "1d6 perfurante · munição · leve" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cacador_de_sangue_armadura",
+        "prompt": "Armadura",
+        "options": [
+          {
+            "value": "a",
+            "label": "Couro Batido",
+            "items": [
+              { "name": "Couro Batido", "qty": 1, "desc": "CA 12 + DES" }
+            ]
+          },
+          {
+            "value": "b",
+            "label": "Brunea",
+            "items": [
+              { "name": "Brunea", "qty": 1, "desc": "CA 14 + DES (máx 2) · furtividade ↓" }
+            ]
+          }
+        ]
+      }
+    ],
+    "fixed": [
+      { "name": "Pacote de Explorador", "qty": 1, "desc": "mochila, saco de dormir, kit de jantar, isqueiro, 10 tochas, 10 dias de ração, cantil e 15 m de corda" }
+    ]
+  }
+}
