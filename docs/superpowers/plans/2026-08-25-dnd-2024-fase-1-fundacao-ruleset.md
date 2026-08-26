@@ -1328,10 +1328,12 @@ Em `HeaderV2.jsx`, acrescente aos imports:
 
 ```jsx
 import { exhaustionLevelsText } from '../../../domain/exhaustion'
-import { rulesetOf } from '../../../domain/ruleset'
 ```
 
 (confira a profundidade relativa contra os imports que já existem no arquivo).
+
+`exhaustionLevelsText` recebe a FICHA, não o código do ruleset — ela resolve o
+ruleset internamente, igual a `exhaustionEffects`.
 
 Troque o chip de exaustão por:
 
@@ -1340,7 +1342,7 @@ Troque o chip de exaustão por:
           <span
             className="v2-chip"
             style={{ color: 'var(--v2-warning)' }}
-            title={exhaustionLevelsText(rulesetOf(character))[combat.exhaustion]}
+            title={exhaustionLevelsText(character)[combat.exhaustion]}
           >
             Exaustão {combat.exhaustion}
           </span>
@@ -1355,7 +1357,7 @@ linha `<span>Exaustão</span>` por:
           Exaustão
           {exhaustion > 0 && (
             <span className="ink-italic" style={{ display: 'block', fontSize: '0.75em' }}>
-              {exhaustionLevelsText(rulesetOf(character))[exhaustion]}
+              {exhaustionLevelsText(character)[exhaustion]}
             </span>
           )}
         </span>
