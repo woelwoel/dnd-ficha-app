@@ -7,6 +7,7 @@ import { CharacterInfo } from '../CharacterInfo'
 import { SourcePicker } from '../../SourcePicker'
 import { LevelProgression } from '../LevelProgression'
 import { safeParseCharacter } from '../../../domain/characterSchema'
+import { exhaustionLevelsText } from '../../../domain/exhaustion'
 import { EditDialog } from './EditDialog'
 import { useLazySrdDataset, useSrd } from '../../../data/SrdProvider'
 import { ActiveEffectsChips } from './ActiveEffectsChips'
@@ -102,7 +103,13 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
           <span className="v2-chip" style={{ color: 'var(--v2-warning)' }}>Inspiração</span>
         )}
         {(combat?.exhaustion ?? 0) > 0 && (
-          <span className="v2-chip" style={{ color: 'var(--v2-warning)' }}>Exaustão {combat.exhaustion}</span>
+          <span
+            className="v2-chip"
+            style={{ color: 'var(--v2-warning)' }}
+            title={exhaustionLevelsText(character)[combat.exhaustion]}
+          >
+            Exaustão {combat.exhaustion}
+          </span>
         )}
         {conditions.map(id => (
           <span key={id} className="v2-chip" style={{ color: 'var(--v2-danger)' }}>
@@ -370,7 +377,14 @@ function ConditionsPanel({ open, onClose }) {
         ))}
       </div>
       <div className="v2-row" style={{ justifyContent: 'space-between', marginTop: 12 }}>
-        <span>Exaustão</span>
+        <span>
+          Exaustão
+          {exhaustion > 0 && (
+            <span className="ink-italic" style={{ display: 'block', fontSize: '0.75em' }}>
+              {exhaustionLevelsText(character)[exhaustion]}
+            </span>
+          )}
+        </span>
         <div className="v2-row" style={{ gap: 8 }}>
           <button type="button" className="v2-btn" aria-label="Diminuir exaustão" onClick={() => updaters.setExhaustion(exhaustion - 1)}>−</button>
           <span>{exhaustion}</span>
