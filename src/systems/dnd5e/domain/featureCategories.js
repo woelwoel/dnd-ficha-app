@@ -44,9 +44,25 @@ export function actionTypeOf(feature) {
   return detectActionType(feature?.desc ?? '') ?? 'passiva'
 }
 
-/** "Aumento de Atributo" é tratado no sistema de atributos — some das Habilidades. */
+/**
+ * Incremento de Habilidade, sob QUALQUER redação. É tratado no sistema de
+ * atributos, então some da lista de Habilidades.
+ *
+ * Cada fonte escreveu o nome do seu jeito — "Aumento de Atributo" (PHB),
+ * "Aumento no Valor de Atributo" (Tasha) e "Incremento no Valor de Habilidade"
+ * (Caçador de Sangue). Comparação exata com uma delas deixa o jogador sem
+ * conseguir escolher o aumento, e sem erro nenhum na tela.
+ *
+ * NÃO casa "Melhoria …" (Intervenção Divina do Clérigo nv 20, Auras do
+ * Paladino nv 18): são features normais, não aumento de atributo.
+ *
+ * Fonte única: o wizard, o painel de subir de nível e a aba Características
+ * leem daqui. Se divergirem, alguma tela para de oferecer o aumento.
+ */
+const ASI_NAME = /^\s*(aumento|incremento)\s+(de|no)\s+(valor\s+de\s+)?(atributo|habilidade)/i
+
 export function isAttributeIncrease(feature) {
-  return (feature?.name ?? '').trim().toLowerCase().startsWith('aumento de atributo')
+  return ASI_NAME.test(feature?.name ?? '')
 }
 
 /* ──────────────────────────────────────────────────────────────────

@@ -4,12 +4,29 @@ import {
 } from '../systems/dnd5e/components/CharacterSheet/levelProgression/helpers'
 
 describe('levelProgression/helpers', () => {
+  /**
+   * Cada fonte escreveu o nome do Incremento de Habilidade do seu jeito, e a
+   * deteccao precisa aceitar as tres redacoes que existem na base.
+   *
+   * Este bloco ja afirmou que "Melhoria de Atributo" era ASI. Aquele nome nao
+   * existe em nenhum JSON de progressao -- era fixture inventada --, e casar
+   * "Melhoria" fazia Clerigo nv 20 ("Melhoria da Intervencao Divina") e
+   * Paladino nv 18 ("Melhoria das Auras") oferecerem um aumento que a regra
+   * nao da. As assercoes agora usam so redacoes que existem de verdade.
+   */
   describe('isASIEntry', () => {
-    it('retorna true quando feature contém "Aumento"', () => {
-      expect(isASIEntry({ features: [{ name: 'Aumento de Habilidade' }] })).toBe(true)
+    it('aceita a redacao do PHB', () => {
+      expect(isASIEntry({ features: [{ name: 'Aumento de Atributo' }] })).toBe(true)
     })
-    it('retorna true quando feature contém "Melhoria"', () => {
-      expect(isASIEntry({ features: [{ name: 'Melhoria de Atributo' }] })).toBe(true)
+    it('aceita a redacao do Tasha', () => {
+      expect(isASIEntry({ features: [{ name: 'Aumento no Valor de Atributo' }] })).toBe(true)
+    })
+    it('aceita a redacao do Cacador de Sangue', () => {
+      expect(isASIEntry({ features: [{ name: 'Incremento no Valor de Habilidade' }] })).toBe(true)
+    })
+    it('NAO casa "Melhoria ..." -- sao features normais, nao aumento', () => {
+      expect(isASIEntry({ features: [{ name: 'Melhoria da Intervenção Divina' }] })).toBe(false)
+      expect(isASIEntry({ features: [{ name: 'Melhoria das Auras' }] })).toBe(false)
     })
     it('retorna false quando nenhuma feature é ASI', () => {
       expect(isASIEntry({ features: [{ name: 'Ataque Extra' }] })).toBe(false)

@@ -1,6 +1,7 @@
 import { ASIOrFeatPicker } from './ASIOrFeatPicker'
 import { ChosenFeaturePicker } from './ChosenFeaturePicker'
 import { isASIChoiceComplete, isChoiceDone, resolveMultiSelect, currentAttributesForASI } from '../class-helpers'
+import { isAttributeIncrease } from '../../../../domain/featureCategories'
 
 export function LevelProgressionList({
   level, progressionLevels, leveledChoices,
@@ -13,7 +14,7 @@ export function LevelProgressionList({
         const lvlData = progressionLevels.find(l => l.level === lvl)
         const features = lvlData?.features ?? []
         const lvlChoices = leveledChoices.filter(c => c.level === lvl)
-        const hasASI = features.some(f => f.name === 'Aumento de Atributo')
+        const hasASI = features.some(isAttributeIncrease)
         const asiChoice = draft.asiChoices?.[lvl]
         const asiDone = hasASI && isASIChoiceComplete(asiChoice)
         const asiPending = hasASI && !asiDone
@@ -50,9 +51,9 @@ export function LevelProgressionList({
               {lvlDone && <span className="text-xs text-emerald-700 font-display">✓ Feito</span>}
             </div>
 
-            {features.filter(f => f.name !== 'Aumento de Atributo' && !lvlChoices.some(c => c.featureName === f.name)).length > 0 && (
+            {features.filter(f => !isAttributeIncrease(f) && !lvlChoices.some(c => c.featureName === f.name)).length > 0 && (
               <div className="flex flex-wrap gap-1">
-                {features.filter(f => f.name !== 'Aumento de Atributo' && !lvlChoices.some(c => c.featureName === f.name)).map((f, fi) => (
+                {features.filter(f => !isAttributeIncrease(f) && !lvlChoices.some(c => c.featureName === f.name)).map((f, fi) => (
                   <span key={fi} className="text-xs bg-parchment-100 border-2 border-parchment-600 px-2 py-0.5 rounded-sm text-ink-300">
                     {f.name}
                   </span>

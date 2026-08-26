@@ -1,9 +1,10 @@
+import { isAttributeIncrease } from '../../../domain/featureCategories'
 // src/components/CharacterSheet/levelProgression/helpers.js
 // Helpers puros do fluxo de level-up. Mantidos fora dos componentes para
 // permitir testes unitários e reutilização.
 
 export function isASIEntry(entry) {
-  return entry?.features?.some(f => f.name?.includes('Aumento') || f.name?.includes('Melhoria'))
+  return !!entry?.features?.some(isAttributeIncrease)
 }
 
 export function calcHpAverage(hitDie, conMod) {

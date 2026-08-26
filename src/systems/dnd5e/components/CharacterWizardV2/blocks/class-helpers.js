@@ -1,4 +1,5 @@
 import { filterChoiceBySources } from '../../../domain/sources'
+import { isAttributeIncrease } from '../../../domain/featureCategories'
 
 /**
  * Resolve `multiSelect` efetivo de uma choice considerando level scaling.
@@ -154,6 +155,6 @@ export function getProgressionLevels(progressionData, level) {
 
 export function getASILevels(progressionData, level) {
   return getProgressionLevels(progressionData, level)
-    .filter(l => l.features?.some(f => f.name === 'Aumento de Atributo'))
+    .filter(l => l.features?.some(isAttributeIncrease))
     .map(l => l.level)
 }
