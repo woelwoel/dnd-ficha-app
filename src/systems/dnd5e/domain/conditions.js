@@ -1,5 +1,8 @@
 /**
- * Condições D&D 5e (PHB p.290–296) + Exaustão (p.291).
+ * Condições D&D 5e (PHB p.290–296).
+ *
+ * Exaustão NÃO mora aqui: ela diverge entre rulesets (tabela de 6 degraus no
+ * 2014, −2 acumulativo no 2024) e vive em `domain/exhaustion.js`.
  *
  * Fonte única de verdade — consumida pelo HeaderV2 (chips e seletor de
  * condições da ficha) e pela tela de combate (CombatantRow, ConditionPalette).
@@ -95,14 +98,3 @@ export const CONDITIONS = [
 
 /** Lookup por id — útil pra chips a partir do array `combat.conditions`. */
 export const CONDITIONS_BY_ID = Object.fromEntries(CONDITIONS.map(c => [c.id, c]))
-
-/** Descrições de exaustão por nível (PHB p.291). */
-export const EXHAUSTION_EFFECTS = [
-  'Sem efeito',
-  'Desvantagem em testes de habilidade',
-  'Velocidade reduzida à metade',
-  'Desv. em ataques e testes de resistência',
-  'Máximo de PV reduzido à metade',
-  'Velocidade reduzida a 0',
-  'Morte',
-]
