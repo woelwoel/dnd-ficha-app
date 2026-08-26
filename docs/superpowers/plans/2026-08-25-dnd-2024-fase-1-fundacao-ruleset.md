@@ -51,9 +51,15 @@ Cinco fatos do código atual que não são óbvios e mudam o que se escreve:
    aritmética manual. Cuidado só com o ramo de número puro (`"5"`), que não é
    notação de dado.
 
-**Rodar testes:** `npx vitest run <arquivo>` para um arquivo. Para a suíte
-cheia, **sempre em fatias com `--maxWorkers=2`** — `npx vitest run` sem flags
-estoura a memória da máquina e finge falhas aleatórias em arquivos sem relação.
+**Rodar testes:** `npx vitest run <arquivo> [<arquivo>...]` — sempre nomeando
+os arquivos. Para a suíte cheia, **em fatias por diretório com
+`--maxWorkers=2`**: `npx vitest run` sem flags estoura a memória da máquina e
+finge falhas aleatórias em arquivos sem relação.
+
+**Nunca use `-t <padrão>` para restringir o escopo.** O `-t` filtra o NOME do
+teste mas ainda carrega e transforma os 333 arquivos da suíte — leva ~10
+minutos e é o mesmo caminho que estoura a memória. Para rodar um subconjunto,
+liste os arquivos.
 
 **Não bumpar `srd-data-vN`** em `vite.config.js`: nenhum JSON de
 `public/srd-data` muda nesta fase.
@@ -797,7 +803,7 @@ Rode: `npx vitest run src/test/dnd5e/exhaustion-rulesets.test.js src/test/dnd5e/
 Esperado: PASS
 
 Rode também, para pegar qualquer importador esquecido:
-`npx vitest run src/test --maxWorkers=2 -t exaust`
+`npx vitest run src/test/dnd5e/exhaustion-rulesets.test.js src/test/dnd5e/ruleset.test.js src/test/sheetV2-HeaderV2-conditions.test.jsx --maxWorkers=2`
 Esperado: nenhum erro de import.
 
 - [ ] **Step 6: Commit**
@@ -897,7 +903,7 @@ Rode: `npx vitest run src/test/dnd5e/exhaustion-rulesets.test.js`
 Esperado: PASS
 
 Rode a suíte de regras, que já cobre deslocamento:
-`npx vitest run src/test --maxWorkers=2 -t "deslocamento"`
+`npx vitest run src/test/dnd5e/exhaustion-rulesets.test.js src/test/sheetV2-AbilityStrip.test.jsx src/test/sheetV2-HeaderV2-conditions.test.jsx --maxWorkers=2`
 Esperado: PASS
 
 - [ ] **Step 5: Commit**
@@ -983,7 +989,7 @@ Rode: `npx vitest run src/test/dnd5e/exhaustion-rulesets.test.js`
 Esperado: PASS
 
 Rode as suítes que tocam PV e Caçador de Sangue, para pegar regressão:
-`npx vitest run src/test --maxWorkers=2 -t "PV"`
+`npx vitest run src/test/dnd5e/exhaustion-rulesets.test.js src/test/sheetV2-HeaderV2-hp.test.jsx --maxWorkers=2`
 `npx vitest run src/test/dnd5e/blood-hunter-mutagens-sheet.test.js`
 Esperado: PASS nas duas. Se algum teste de Caçador de Sangue quebrar, verifique
 a **ordem**: exaustão multiplica primeiro, penalidade subtrai depois.
@@ -1361,7 +1367,7 @@ Rode: `npx vitest run src/test/sheetV2-header-exhaustion.test.jsx`
 Esperado: PASS
 
 Rode a suíte do header, para pegar regressão:
-`npx vitest run src/test --maxWorkers=2 -t HeaderV2`
+`npx vitest run src/test/sheetV2-HeaderV2.test.jsx src/test/sheetV2-HeaderV2-conditions.test.jsx src/test/sheetV2-HeaderV2-hp.test.jsx src/test/sheetV2-HeaderV2-identity.test.jsx src/test/sheetV2-HeaderV2-progression.test.jsx src/test/sheetV2-HeaderV2-settings.test.jsx --maxWorkers=2`
 Esperado: PASS
 
 - [ ] **Step 5: Commit**
@@ -1909,7 +1915,7 @@ Rode: `npx vitest run src/test/dnd5e/RulesetBadge.test.jsx`
 Esperado: PASS — 4 testes
 
 Rode a suíte do header, para confirmar que a ficha 2014 não mudou:
-`npx vitest run src/test --maxWorkers=2 -t HeaderV2`
+`npx vitest run src/test/sheetV2-HeaderV2.test.jsx src/test/sheetV2-HeaderV2-conditions.test.jsx src/test/sheetV2-HeaderV2-hp.test.jsx src/test/sheetV2-HeaderV2-identity.test.jsx src/test/sheetV2-HeaderV2-progression.test.jsx src/test/sheetV2-HeaderV2-settings.test.jsx --maxWorkers=2`
 Esperado: PASS
 
 - [ ] **Step 5: Commit**
@@ -2008,7 +2014,7 @@ Rode: `npx vitest run src/test/dnd5e/RulesetBadge.test.jsx`
 Esperado: PASS — 7 testes
 
 Rode a suíte de encontro:
-`npx vitest run src/test --maxWorkers=2 -t Combatant`
+`npx vitest run src/test/CombatantRow.test.jsx --maxWorkers=2`
 Esperado: PASS
 
 - [ ] **Step 5: Commit**
