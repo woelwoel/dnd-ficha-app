@@ -20,6 +20,10 @@ export const INITIAL_DRAFT_V2 = {
     startLevel: 1,
     flexibleRacialAsi: false,
   },
+  // Conjunto de regras da ficha. FORA de `settings` de propósito: settings é
+  // o que o jogador liga e desliga a qualquer momento; o ruleset é escolhido
+  // uma vez e é definitivo. Ver domain/ruleset.js.
+  ruleset: '2014',
   name: '', playerName: '', alignment: '', appearance: '',
   race: '', subrace: '', racialBonuses: {},
   racialAbilityChoices: [], racialSkills: [], draconicAncestry: '', racialCantrip: '',
@@ -44,7 +48,7 @@ function shallowEqualDraft(a, b) {
   return JSON.stringify(a) === JSON.stringify(b)
 }
 
-export function useDraft({ initialSettings = null, resume = false } = {}) {
+export function useDraft({ initialSettings = null, initialRuleset = null, resume = false } = {}) {
   const [draft, setDraft] = useState(() => {
     if (resume) {
       const saved = sessionStorage.getItem(STORAGE_KEY)
@@ -60,6 +64,11 @@ export function useDraft({ initialSettings = null, resume = false } = {}) {
       // startLevel da campanha → nível inicial do personagem
       if (typeof initialSettings.startLevel === 'number' && initialSettings.startLevel > 0) {
         merged.level = initialSettings.startLevel
+      }
+      // Ruleset escolhido no setup. Fora de `settings` de propósito — ver
+      // domain/ruleset.js. Valor inválido cai no default do draft ('2014').
+      if (initialRuleset === '2014' || initialRuleset === '2024') {
+        merged.ruleset = initialRuleset
       }
       return merged
     }

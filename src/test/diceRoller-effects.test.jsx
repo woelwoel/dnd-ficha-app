@@ -67,4 +67,51 @@ describe('roll() com resolver de efeitos', () => {
     act(() => { result.current.roll('1d20', 'X', { category: 'attack' }) })
     expect(resolver).not.toHaveBeenCalled()
   })
+
+  it('aplica flatMod negativo na notação', () => {
+    const { result } = renderHook(() => useDiceRoller(), { wrapper })
+    act(() => result.current.setRollEffectsResolver(() => ({ flatMod: -4 })))
+    let out
+    act(() => { out = result.current.roll('1d20+5', 'Teste', { category: 'check' }) })
+    expect(out.modifier).toBe(1)
+  })
+
+  it('soma flatMod COM os riders de dado, sem substituir', () => {
+    const { result } = renderHook(() => useDiceRoller(), { wrapper })
+    act(() => result.current.setRollEffectsResolver(() => ({
+      extraDice: ['1d4'], flatMod: -2,
+    })))
+    let out
+    act(() => { out = result.current.roll('1d20+5', 'Teste', { category: 'check' }) })
+    expect(out.modifier).toBe(3)
+    expect(out.groups).toHaveLength(2)
+    expect(out.groups[1].sides).toBe(4)
+  })
+
+  it('flatMod 0 não muda a notação', () => {
+    const { result } = renderHook(() => useDiceRoller(), { wrapper })
+    act(() => result.current.setRollEffectsResolver(() => ({ flatMod: 0 })))
+    let out
+    act(() => { out = result.current.roll('1d20+5', 'Teste', { category: 'check' }) })
+    expect(out.modifier).toBe(5)
+  })
+
+  it('ignora flatMod em notação sem dado (número puro)', () => {
+    const { result } = renderHook(() => useDiceRoller(), { wrapper })
+    act(() => result.current.setRollEffectsResolver(() => ({ flatMod: -4 })))
+    let out
+    act(() => { out = result.current.roll('7', 'Fixo', { category: 'check' }) })
+    expect(out.total).toBe(7)
+  })
+
+  it('ignora flatMod que não seja número finito, em vez de quebrar a rolagem', () => {
+    const { result } = renderHook(() => useDiceRoller(), { wrapper })
+    for (const ruim of ['−4', '-4', NaN, Infinity, null, undefined]) {
+      act(() => result.current.setRollEffectsResolver(() => ({ flatMod: ruim })))
+      let out
+      act(() => { out = result.current.roll('1d20+5', 'Teste', { category: 'check' }) })
+      expect(out).not.toBeNull()
+      expect(out.modifier).toBe(5)
+    }
+  })
 })

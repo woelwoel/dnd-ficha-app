@@ -1,7 +1,39 @@
 # D&D 2024 — Fase 1: fundação do eixo `ruleset`
 
 Data: 2026-08-25
-Estado: **APROVADO, não implementado.**
+Estado: **ENTREGUE em 2026-08-26** (branch `feat/dnd-2024-fase-1-ruleset`).
+
+## O que a execução mudou em relação a esta spec
+
+Cinco desvios, todos por defeito encontrado durante a implementação:
+
+1. **`exhaustionLevelsText` recebe a FICHA, não o código do ruleset.** A spec
+   previa `exhaustionLevelsText(ruleset)`, o que deixava duas funções do mesmo
+   módulo pedindo tipos diferentes de argumento. Uniformizado com
+   `exhaustionEffects(character)`.
+2. **A matriz de vantagem virou `domain/advantage.js`.** A spec colapsava buff
+   e exaustão com `adv ? adv.mode : (exhaustionDis ? 'dis' : null)`, o que
+   **descartava em silêncio** a desvantagem quando havia buff — Bênção +
+   exaustão 3 entregava vantagem onde o PHB manda cancelar. `combineAdvantage`
+   é agora a fonte única da regra, para a Fase 6 reusar.
+3. **`effectiveMaxHp` corrigiu um bug de 2014.** Exaustão nível 4 (PV máximo
+   pela metade) nunca foi aplicada no app. Ficha 2014 com exaustão ≥ 4 muda de
+   comportamento — correção aprovada, não regressão.
+4. **`PcTacticalCard` perdia o ruleset.** Chamava `effectiveSpeed({ combat })`,
+   reconstruindo um objeto sem `meta`. Uma ficha 2024 mostrava deslocamento
+   pela regra 2014 na tela do Mestre. Corrigido e coberto.
+5. **O elo `WizardGrid` → `useDraft` quebrou uma vez e nenhum teste pegou.**
+   Um mutation test provou que remover o repasse de `initialRuleset` mantinha
+   49 testes verdes. Coberto agora por teste de integração sobre o
+   `CharacterWizardV2` real.
+
+**Pegadinha do escape hatch:** use `/new?ruleset=2024`. Abrir `/?ruleset=2024`
+e clicar em "Recrutar Aventureiro" não funciona — `App.jsx` navega para
+`/new` fixo, sem repassar a query.
+
+**Não fica pronto nesta fase:** `currentHp` não é limitado quando o teto de PV
+encolhe (defeito pré-existente que a exaustão 4 torna mais alcançável), e o
+índice de `exhaustionLevelsText` não é clampado.
 
 Primeira de seis fases do sub-projeto D&D 2024. Esta fase não entrega
 conteúdo 2024 nenhum: entrega o eixo em que as outras cinco vão se pendurar,

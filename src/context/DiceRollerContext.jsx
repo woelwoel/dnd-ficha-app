@@ -58,6 +58,15 @@ export function DiceRollerProvider({ children }) {
    *   - clássico: entrada imediata + painel abre.
    * Aceita override por opts.mode/opts.crit; caso contrário usa o `mode`
    * pendente do contexto, que reseta pra 'normal' após a rolagem.
+   *
+   * O resolver de efeitos (setRollEffectsResolver) pode devolver:
+   *   - extraDice: string[] — dados extras concatenados na notação (`+1d4`)
+   *   - flatMod: number — modificador plano concatenado na notação
+   *     (penalidade de exaustão 2024, por exemplo); ignorado em notação
+   *     sem dado (número puro) e quando 0
+   *   - advantage: 'adv' | 'dis' | null — combinado com o gesto do usuário
+   *   - labelSuffix: string — anexado ao label da rolagem
+   *   - onApplied: () => void — chamado uma vez após a rolagem ser montada
    */
   const roll = useCallback((notation, label = '', opts = {}) => {
     let effNotation = notation
@@ -69,6 +78,14 @@ export function DiceRollerProvider({ children }) {
       const eff = effectsResolverRef.current(opts.category, opts.ability ?? null)
       if (eff) {
         for (const d of eff.extraDice ?? []) effNotation += `+${d}`
+        // Modificador plano (penalidade de exaustão 2024, por exemplo).
+        // `parseAndRoll` aceita multi-termo com flat negativo — "1d20+5+1d4-4"
+        // casa e `modifier` soma tudo. O ramo de número puro ("7") não é
+        // notação de dado e não aceita concatenação, então fica de fora.
+        if (typeof eff.flatMod === 'number' && Number.isFinite(eff.flatMod)
+            && eff.flatMod !== 0 && /d\d/.test(effNotation)) {
+          effNotation += eff.flatMod > 0 ? `+${eff.flatMod}` : `${eff.flatMod}`
+        }
         if (eff.labelSuffix) effLabel += eff.labelSuffix
         userMode = combineMode(opts.mode ?? state.mode ?? null, eff.advantage)
         onApplied = eff.onApplied ?? null

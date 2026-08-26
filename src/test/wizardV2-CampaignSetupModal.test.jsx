@@ -25,13 +25,18 @@ describe('CampaignSetupModal', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /começar/i }))
 
+    // Contrato novo: o ruleset viaja AO LADO de settings, nunca dentro dele
+    // (settings vira meta.settings; o ruleset mora em meta.ruleset).
     expect(onConfirm).toHaveBeenCalledWith({
-      abilityScoreMethod: 'point-buy',
-      allowFeats: true,
-      allowMulticlass: true,
-      sources: ['phb'],
-      startLevel: 5,
-      flexibleRacialAsi: false,
+      settings: {
+        abilityScoreMethod: 'point-buy',
+        allowFeats: true,
+        allowMulticlass: true,
+        sources: ['phb'],
+        startLevel: 5,
+        flexibleRacialAsi: false,
+      },
+      ruleset: '2014',
     })
   })
 
@@ -52,7 +57,9 @@ describe('CampaignSetupModal', () => {
     fireEvent.change(input, { target: { value: '99' } })
     await userEvent.click(screen.getByRole('button', { name: /começar/i }))
 
-    expect(onConfirm).toHaveBeenCalledWith(expect.objectContaining({ startLevel: 20 }))
+    expect(onConfirm).toHaveBeenCalledWith(
+      expect.objectContaining({ settings: expect.objectContaining({ startLevel: 20 }) })
+    )
   })
 
   it('sem Tasha ativo (default), checkbox "Customizando sua Origem" não aparece', () => {
@@ -74,7 +81,9 @@ describe('CampaignSetupModal', () => {
     await userEvent.click(screen.getByRole('button', { name: /começar/i }))
 
     expect(onConfirm).toHaveBeenCalledWith(
-      expect.objectContaining({ flexibleRacialAsi: true, sources: ['phb', 'tasha'] })
+      expect.objectContaining({
+        settings: expect.objectContaining({ flexibleRacialAsi: true, sources: ['phb', 'tasha'] }),
+      })
     )
   })
 })

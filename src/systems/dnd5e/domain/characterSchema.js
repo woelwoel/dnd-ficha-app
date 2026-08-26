@@ -28,8 +28,13 @@ import { getMaxAttunement } from './artificerInfusions'
  *  - v4 → corrige bônus racial de atributo que era descartado na criação
  *         (mismatch nome/abreviação): soma os bônus fixos faltantes em
  *         `attributes` para fichas afetadas (meio-orc, anão, elfo, etc.).
+ *  - v5 → `meta.ruleset` ('2014' | '2024') escolhe QUAL CONJUNTO DE REGRAS a
+ *         ficha usa. Imutável após a criação. Ficha legada = '2014'. Ver
+ *         domain/ruleset.js. A migração só carimba quando o campo está
+ *         AUSENTE: `build-character.js` grava schemaVersion 2 hard-coded, e
+ *         sobrescrever apagaria o ruleset escolhido no wizard.
  */
-export const SCHEMA_VERSION = 4
+export const SCHEMA_VERSION = 5
 
 /**
  * Limite máximo absoluto (PHB p.13: "ability score maximum is 20" em criação;
@@ -74,6 +79,11 @@ const metaSchema = z.object({
   schemaVersion: z.number().int().min(1).default(SCHEMA_VERSION),
   settings: settingsSchema.default({ sources: ['phb'] }),
   creationMethod: z.string().optional(),
+  /**
+   * Conjunto de regras da ficha. Imutável após a criação — trocar não é um
+   * toggle, é uma conversão. Ver domain/ruleset.js.
+   */
+  ruleset: z.enum(['2014', '2024']).default('2014'),
 }).passthrough()
 
 const multiclassSchema = z.object({
@@ -505,6 +515,7 @@ export function migrateCharacter(raw) {
       if (v === 1) doc = migrateV1ToV2(doc)
       if (v === 2) doc = migrateV2ToV3(doc)
       if (v === 3) doc = migrateV3ToV4(doc)
+      if (v === 4) doc = migrateV4ToV5(doc)
     }
     doc = { ...doc, meta: { ...(doc.meta ?? {}), schemaVersion: SCHEMA_VERSION } }
   }
@@ -660,4 +671,17 @@ function migrateV3ToV4(doc) {
 
   if (!changed) return doc
   return { ...doc, attributes: attrs, appliedRacialBonuses: applied }
+}
+
+/**
+ * v4 → v5: carimba o eixo `ruleset` nas fichas que nasceram antes dele.
+ *
+ * SÓ carimba quando ausente. `build-character.js` grava `schemaVersion: 2`
+ * hard-coded, então toda ficha criada pelo wizard — inclusive as 2024 — sobe
+ * a escada inteira no primeiro parse. Sobrescrever aqui apagaria a escolha do
+ * jogador.
+ */
+function migrateV4ToV5(doc) {
+  if (doc.meta?.ruleset === '2014' || doc.meta?.ruleset === '2024') return doc
+  return { ...doc, meta: { ...(doc.meta ?? {}), ruleset: '2014' } }
 }

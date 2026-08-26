@@ -11,6 +11,7 @@ import { getSubclassFeatureCards, detectFeatureUses } from './subclassFeatures'
 import { resolveChosenRunes } from './runes'
 import { PACT_FAMILIAR_SPELL, PRIMAL_AWARENESS_LABEL, PRIMAL_AWARENESS_GRANTS } from './grantedSpells'
 import { bloodHunterMaxHpPenalty, BLOOD_HUNTER } from './bloodHunter'
+import { exhaustionEffects } from './exhaustion'
 
 /* ── Constantes ──────────────────────────────────────────────────── */
 
@@ -998,16 +999,16 @@ export const SPEED_ZERO_CONDITIONS = new Set([
 
 /**
  * Deslocamento efetivo em metros, derivado das condições ativas e da
- * exaustão. Exaustão nível 2+ reduz à metade; nível 5+ zera (PHB p.291).
- * Não altera `combat.speed` — é derivação de leitura, como a CA.
+ * exaustão. A exaustão diverge por ruleset (2014 multiplica, 2024 subtrai
+ * metros) — ver domain/exhaustion.js. Não altera `combat.speed`: é derivação
+ * de leitura, como a CA.
  */
 export function effectiveSpeed(character) {
   const base = character.combat?.speed ?? 9
-  const exhaustion = character.combat?.exhaustion ?? 0
   const conditions = character.combat?.conditions ?? []
-  if (exhaustion >= 5) return 0
   if (conditions.some(c => SPEED_ZERO_CONDITIONS.has(c))) return 0
-  return exhaustion >= 2 ? base / 2 : base
+  const fx = exhaustionEffects(character)
+  return Math.max(0, base * fx.speedMultiplier - fx.speedPenaltyMeters)
 }
 
 /* ── Concentração ────────────────────────────────────────────────── */
@@ -1070,14 +1071,15 @@ function clampHp(value, max) {
 }
 
 /**
- * Teto de PV efetivo = valor armazenado menos o sacrifício do Ritual Vermelho.
- * `combat.maxHp` é armazenado (o level-up o incrementa), então o teto efetivo
- * é derivado aqui, no mesmo espírito de `effectiveSpeed`.
- * Nunca desce abaixo de 1 — teto zero mataria a ficha por arredondamento.
+ * PV máximo efetivo. Aplica a exaustão (só o 2014 mexe em PV — nível 4 corta
+ * pela metade, PHB p.291) e depois a penalidade do Caçador de Sangue, nessa
+ * ordem. Piso 1: uma ficha nunca fica com PV máximo 0 por derivação.
  */
 export function effectiveMaxHp(character) {
   const stored = Number(character?.combat?.maxHp) || 0
-  return Math.max(1, stored - bloodHunterMaxHpPenalty(character))
+  const fx = exhaustionEffects(character)
+  const afterExhaustion = Math.floor(stored * fx.maxHpMultiplier)
+  return Math.max(1, afterExhaustion - bloodHunterMaxHpPenalty(character))
 }
 
 function emptyDeathSaves() {

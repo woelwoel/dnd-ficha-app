@@ -105,3 +105,55 @@ describe('defaults de concentração e attacks', () => {
     }
   })
 })
+
+describe('migração v4 → v5 (eixo ruleset)', () => {
+  it('carimba 2014 em ficha legada sem o campo', () => {
+    const doc = {
+      meta: { schemaVersion: 4, createdAt: '', updatedAt: '', version: '1.0' },
+      info: { name: 'Legada', race: 'humano', subrace: '', class: 'mago', level: 1 },
+      attributes: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+      combat: { maxHp: 6, currentHp: 6, armorClass: 10 },
+    }
+    const m = migrateCharacter(doc)
+    expect(m.meta.ruleset).toBe('2014')
+    expect(m.meta.schemaVersion).toBe(SCHEMA_VERSION)
+  })
+
+  it('PRESERVA um ruleset já escolhido ao subir a escada de migração', () => {
+    // build-character.js grava schemaVersion: 2 hard-coded, então TODA ficha
+    // criada pelo wizard sobe a escada inteira no primeiro parse. Se a
+    // migração sobrescrevesse, apagaria a escolha do jogador.
+    const doc = {
+      meta: { schemaVersion: 2, ruleset: '2024', createdAt: '', updatedAt: '', version: '1.0' },
+      info: { name: 'Nova', race: '', subrace: '', class: 'mago', level: 1 },
+      attributes: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+      combat: { maxHp: 6, currentHp: 6, armorClass: 10, hitDice: '1d6' },
+    }
+    expect(migrateCharacter(doc).meta.ruleset).toBe('2024')
+  })
+
+  it('migrar uma ficha já na versão atual é no-op', () => {
+    const doc = {
+      meta: { schemaVersion: 4, createdAt: '', updatedAt: '', version: '1.0' },
+      info: { name: 'X', race: 'humano', subrace: '', class: 'mago', level: 1 },
+      attributes: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+      combat: { maxHp: 6, currentHp: 6, armorClass: 10 },
+    }
+    const once = migrateCharacter(doc)
+    expect(migrateCharacter(once)).toEqual(once)
+  })
+
+  it('schema rejeita ruleset fora do enum', () => {
+    const bad = {
+      meta: { schemaVersion: 5, ruleset: '2077', createdAt: '', updatedAt: '', version: '1.0' },
+      info: { name: 'X', race: '', subrace: '', class: 'mago', level: 1 },
+      attributes: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+      combat: { maxHp: 6, currentHp: 6, armorClass: 10 },
+    }
+    const res = safeParseCharacter(bad)
+    expect(res.success).toBe(false)
+    // Sem checar o CAMINHO do erro, este teste passaria mesmo sem o enum:
+    // o fixture já é inválido por outros campos obrigatórios que faltam.
+    expect(res.error.issues.some(i => i.path.join('.') === 'meta.ruleset')).toBe(true)
+  })
+})

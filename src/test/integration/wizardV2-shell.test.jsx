@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { render, screen, within, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { CharacterWizardV2 } from '../../systems/dnd5e/components/CharacterWizardV2/CharacterWizardV2'
 import { SrdProvider } from '../../systems/dnd5e/data/SrdProvider'
@@ -74,5 +74,69 @@ describe('E2E — CharacterWizardV2 shell', () => {
     await userEvent.click(screen.getByRole('button', { name: /começar/i }))
     await userEvent.click(screen.getByRole('button', { name: /personagens/i }))
     expect(onBack).toHaveBeenCalled()
+  })
+})
+
+// Cobre o elo de plumbing setup→WizardGrid→useDraft que, uma vez, deixou o
+// ruleset escolhido no modal cair no void: CampaignSetupModal.onConfirm
+// entrega { settings, ruleset }, CharacterWizardV2 guarda em pendingRuleset e
+// PRECISA repassar via prop `initialRuleset` pro WizardGrid, que por sua vez
+// PRECISA repassar pro useDraft. Um vazamento em qualquer um desses 2 hops
+// faz toda ficha nascer '2014' mesmo com "D&D 5e (2024)" selecionado — e os
+// testes de useDraft isolado (que chamam o hook direto) nunca pegariam isso.
+describe('E2E — CharacterWizardV2 propaga ruleset do setup até o draft', () => {
+  beforeEach(() => {
+    sessionStorage.clear()
+  })
+
+  afterEach(() => {
+    window.history.replaceState({}, '', '/')
+  })
+
+  it('escolher "D&D 5e (2024)" no setup persiste ruleset=2024 no draft', async () => {
+    window.history.replaceState({}, '', '/?ruleset=2024')
+    renderWithSrd(<CharacterWizardV2 onBack={() => {}} onComplete={() => {}} />)
+
+    // Garante que estamos na fase de setup, não "resume" (sem draft salvo).
+    expect(screen.getByRole('dialog', { name: /configuração da campanha/i })).toBeInTheDocument()
+
+    await userEvent.click(screen.getByLabelText(/D&D 5e \(2024\)/))
+    await userEvent.click(screen.getByRole('button', { name: /começar/i }))
+
+    // Chegamos no grid (setup fechou).
+    expect(screen.getByText('Raça')).toBeInTheDocument()
+
+    // useDraft não autosalva no mount inicial (isFirstRender guard) — só a
+    // partir da 1a mudança real do draft. Provoca uma mudança mínima
+    // (digitar o nome) pra disparar o debounce de 500ms e conseguir
+    // inspecionar o que foi de fato persistido.
+    await userEvent.click(screen.getByRole('button', { name: /conceito/i }))
+    await userEvent.type(screen.getByLabelText(/nome do personagem/i), 'Aria')
+
+    await waitFor(() => {
+      const saved = sessionStorage.getItem('wizard-v2-draft')
+      expect(saved).not.toBeNull()
+      const draft = JSON.parse(saved)
+      expect(draft.ruleset).toBe('2024')
+    }, { timeout: 2000 })
+  })
+
+  it('sem ?ruleset=2024 na URL, o seletor não aparece e o draft fica em 2014', async () => {
+    renderWithSrd(<CharacterWizardV2 onBack={() => {}} onComplete={() => {}} />)
+
+    expect(screen.queryByLabelText(/D&D 5e \(2024\)/)).not.toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: /começar/i }))
+    expect(screen.getByText('Raça')).toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: /conceito/i }))
+    await userEvent.type(screen.getByLabelText(/nome do personagem/i), 'Aria')
+
+    await waitFor(() => {
+      const saved = sessionStorage.getItem('wizard-v2-draft')
+      expect(saved).not.toBeNull()
+      const draft = JSON.parse(saved)
+      expect(draft.ruleset).toBe('2014')
+    }, { timeout: 2000 })
   })
 })
