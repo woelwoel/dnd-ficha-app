@@ -38,7 +38,21 @@ Tasha e Xanathar. Cobre 12 classes × 4 subclasses, 10 espécies, 16
 antecedentes, talentos em 4 categorias, equipamento, magias e o glossário de
 regras do Apêndice C.
 
-Nesta fase o PDF é usado só para o texto de Exaustão (Ap. C, p. 368).
+**Offset de paginação — vale para toda a esteira das Fases 2 a 5.** O PDF tem
+397 páginas físicas, e a numeração impressa no livro está **6 atrás** da do
+PDF:
+
+```
+página do PDF = página do livro + 6
+```
+
+Ou seja, `pdftotext -f 374 -l 374` entrega a página 368 do livro. O sumário do
+livro (Cap. 3 em 48, Cap. 5 em 198, Ap. C em 360) precisa desse ajuste antes de
+virar argumento de linha de comando. Todas as citações desta spec usam a
+numeração **do livro**.
+
+Nesta fase o PDF é usado só para o texto de Exaustão (Ap. C, p. 368 do livro =
+374 do PDF).
 
 ## Decisões tomadas
 
