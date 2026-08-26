@@ -84,8 +84,8 @@ const LABEL_BY_ID = Object.fromEntries(BLOCKS.map(b => [b.id, b.label]))
 
 // Sub-componente que monta apenas quando phase='grid'.
 // Isso garante que useDraft receba as options corretas na montagem inicial.
-function WizardGrid({ initialSettings, resume, campaignId, onBack, onComplete }) {
-  const { draft, updateDraft, hasChanges, resetDraft, saveStatus } = useDraft({ initialSettings, resume })
+function WizardGrid({ initialSettings, initialRuleset, resume, campaignId, onBack, onComplete }) {
+  const { draft, updateDraft, hasChanges, resetDraft, saveStatus } = useDraft({ initialSettings, initialRuleset, resume })
   const { races, classes, classChoices, progression: classProgression, backgrounds, spells: srdSpells } = useSrd()
   // Datasets só usados no wizard — carregados sob demanda.
   const rawFeats       = useLazySrdDataset('feats')
@@ -413,6 +413,7 @@ export function CharacterWizardV2({ onBack, onComplete, initialCampaignId }) {
   //               não decidido; só settings se já veio decidido por URL/prop)
   const [phase, setPhase] = useState(hasSavedDraft ? 'resume' : 'setup')
   const [pendingSettings, setPendingSettings] = useState(null)
+  const [pendingRuleset, setPendingRuleset] = useState(null)
   const [resumeRequested, setResumeRequested] = useState(false)
 
   if (phase === 'resume') {
@@ -433,14 +434,10 @@ export function CharacterWizardV2({ onBack, onComplete, initialCampaignId }) {
         showDestination={showDestination}
         onCancel={onBack}
         onConfirm={payload => {
-          if (showDestination) {
-            // payload = { settings, campaignId }
-            setCampaignId(payload.campaignId)
-            setPendingSettings(payload.settings)
-          } else {
-            // payload = settings (legado)
-            setPendingSettings(payload)
-          }
+          // payload = { settings, ruleset } e, com destino, também campaignId.
+          if (showDestination) setCampaignId(payload.campaignId)
+          setPendingSettings(payload.settings)
+          setPendingRuleset(payload.ruleset ?? '2014')
           setPhase('grid')
         }}
       />
@@ -451,6 +448,7 @@ export function CharacterWizardV2({ onBack, onComplete, initialCampaignId }) {
   return (
     <WizardGrid
       initialSettings={pendingSettings}
+      initialRuleset={pendingRuleset}
       resume={resumeRequested}
       campaignId={campaignId}
       onBack={onBack}

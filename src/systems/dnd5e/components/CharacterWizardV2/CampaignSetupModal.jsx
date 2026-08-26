@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { listMyCampaigns } from '../../../../lib/campaigns'
 import { SourcePicker } from '../SourcePicker'
+import { RulesetPicker } from '../RulesetPicker'
+import { isRulesetPickerEnabled } from '../../rulesetFlag'
 
 const METHODS = [
   {
@@ -118,9 +120,9 @@ function SelectableCard({ selected, children, inputProps, kind = 'radio' }) {
  *
  * - Quando `showDestination` é true (criação nova sem campaignId definido),
  *   adiciona uma seção "Destino" no topo: pessoal vs mesa em que sou membro.
- *   onConfirm recebe `{ settings, campaignId }`.
+ *   onConfirm recebe `{ settings, ruleset, campaignId }`.
  * - Quando false (compatibilidade com testes / chamadas legadas), o modal
- *   funciona como antes — só configurações, onConfirm recebe `{ settings }`.
+ *   funciona como antes — só configurações, onConfirm recebe `{ settings, ruleset }`.
  *
  * #19 do super review: fundir DestinationModal + CampaignSetupModal num único
  * passo, eliminando a cadeia de 2 modais consecutivos pra usuário novo.
@@ -139,6 +141,8 @@ export function CampaignSetupModal({
   // Tasha's só existe como regra opcional quando a fonte está ativa no picker.
   const tashaActive = sources.includes('tasha')
   const [startLevel, setStartLevel] = useState(1)
+  const [ruleset, setRuleset] = useState('2014')
+  const rulesetPickerOn = isRulesetPickerEnabled()
   // null = pessoal; uuid = mesa. Default null (pessoal).
   const [campaignId, setCampaignId] = useState(null)
   const [campaigns, setCampaigns] = useState([])
@@ -169,8 +173,10 @@ export function CampaignSetupModal({
       // marcado antes de desligar a fonte (estado local não é resetado).
       flexibleRacialAsi: tashaActive && flexibleRacialAsi,
     }
-    if (showDestination) onConfirm({ settings, campaignId })
-    else onConfirm(settings)
+    // `ruleset` viaja ao lado de `settings`, não dentro: settings vira
+    // meta.settings, e o ruleset mora em meta.ruleset. Ver domain/ruleset.js.
+    if (showDestination) onConfirm({ settings, ruleset, campaignId })
+    else onConfirm({ settings, ruleset })
   }
 
   return (
@@ -358,6 +364,8 @@ export function CampaignSetupModal({
             </SelectableCard>
           )}
         </fieldset>
+
+        {rulesetPickerOn && <RulesetPicker value={ruleset} onChange={setRuleset} />}
 
         <SourcePicker value={sources} onChange={setSources} />
 

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { INITIAL_DRAFT_V2 } from '../../systems/dnd5e/components/CharacterWizardV2/hooks/useDraft'
+import { renderHook } from '@testing-library/react'
+import { INITIAL_DRAFT_V2, useDraft } from '../../systems/dnd5e/components/CharacterWizardV2/hooks/useDraft'
 import { buildCharacter } from '../../systems/dnd5e/components/CharacterWizardV2/blocks/build-character'
 import { parseCharacter } from '../../systems/dnd5e/domain/characterSchema'
 
@@ -42,5 +43,31 @@ describe('buildCharacter carimba o ruleset', () => {
     const char = buildCharacter(draft({ ruleset: '2024' }), classData, [])
     expect(char.meta.schemaVersion).toBeLessThan(5)
     expect(parseCharacter(char).meta.ruleset).toBe('2024')
+  })
+})
+
+describe('useDraft carrega o ruleset escolhido no setup', () => {
+  // Este é o elo que liga o CampaignSetupModal ao documento final. Sem ele o
+  // seletor funciona, o payload sai certo, e mesmo assim a ficha nasce 2014.
+  const settings = { ...INITIAL_DRAFT_V2.settings }
+
+  it('aplica initialRuleset 2024 no draft', () => {
+    const { result } = renderHook(() => useDraft({ initialSettings: settings, initialRuleset: '2024' }))
+    expect(result.current.draft.ruleset).toBe('2024')
+  })
+
+  it('sem initialRuleset, o draft fica em 2014', () => {
+    const { result } = renderHook(() => useDraft({ initialSettings: settings }))
+    expect(result.current.draft.ruleset).toBe('2014')
+  })
+
+  it('ignora valor inválido em vez de gravá-lo', () => {
+    const { result } = renderHook(() => useDraft({ initialSettings: settings, initialRuleset: '2077' }))
+    expect(result.current.draft.ruleset).toBe('2014')
+  })
+
+  it('o ruleset do draft não vaza para settings', () => {
+    const { result } = renderHook(() => useDraft({ initialSettings: settings, initialRuleset: '2024' }))
+    expect(result.current.draft.settings.ruleset).toBeUndefined()
   })
 })
