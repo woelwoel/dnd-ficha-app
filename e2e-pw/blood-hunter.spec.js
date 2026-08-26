@@ -141,20 +141,20 @@ test('Ordem do Licantropo: forma hibrida muda CA e dano no navegador', async ({ 
 })
 
 /**
- * Sentidos Agucados e passiva, entao fica em Caracteristicas > Habilidades.
- *
- * NAO afirmo aqui onde o CARD da Transformacao Hibrida e desenhado: a ficha
- * roteia features por `detectActionType`, e a descricao dela comeca com "Com
- * uma acao", entao sai de Habilidades -- mas nao confirmei em qual aba ela
- * reaparece. O que importa pro jogador esta coberto pelo teste acima: o
- * controle da forma hibrida funciona e muda CA e dano de verdade.
+ * As duas features de 3o nivel do Licantropo caem em filtros DIFERENTES da aba
+ * Caracteristicas, e isso e correto: `FeaturesTab` separa por custo de acao.
+ * Sentidos Agucados e passiva e fica em Habilidades; a Transformacao Hibrida
+ * comeca com "Com uma acao", entao vai pro balde de Combate.
  */
-test('Ordem do Licantropo: feature passiva aparece em Habilidades', async ({ context, page }) => {
+test('Ordem do Licantropo: cada feature de 3o nivel cai no filtro certo', async ({ context, page }) => {
   await installAuthedApp(context, { characters: [licantropo()] })
   await page.goto('/c/CACBESTA22')
   await expect(visivel(page, 'Gilda Corvo')).toBeVisible()
-
   await page.getByRole('tab', { name: 'Características' }).click()
-  await page.getByRole('button', { name: /^Habilidades/ }).click()
+
+  await page.getByRole('button', { name: /^Habilidades/ }).filter({ visible: true }).first().click()
   await expect(visivel(page, /Sentidos Aguçados/i)).toBeVisible()
+
+  await page.getByRole('button', { name: /^Combate/ }).filter({ visible: true }).first().click()
+  await expect(visivel(page, /Transformação Híbrida/i)).toBeVisible()
 })

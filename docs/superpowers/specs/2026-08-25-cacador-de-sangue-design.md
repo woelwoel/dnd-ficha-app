@@ -1,7 +1,9 @@
 # Caçador de Sangue — conteúdo de terceiros no eixo `source`
 
 Data: 2026-08-25
-Estado: aprovado, pronto para virar plano de implementação
+Estado: **ENTREGUE**. Classe completa do 1º ao 20º com as 4 Ordens, mergeada
+em ea9c575. As decisões abaixo ficam como registro do porquê; onde o que foi
+construído divergiu do previsto, está anotado na própria linha.
 
 ## Problema
 
@@ -17,12 +19,12 @@ nenhum caminho para conteúdo fora dos livros oficiais.
 | Rótulo | Categoria genérica "Conteúdo de Terceiros" | Balde para material fora dos livros oficiais, não uma fonte por editora. |
 | Versão | 2016 oficial, em português | Já traduzida e é o texto do Mercer. A alternativa (revisão de fã de 2020, em inglês) exigiria traduzir ~11 páginas e nos amarraria à revisão de um terceiro em cima do 2020. |
 | Profundidade | Integração mecânica completa | Padrão que Runas, Manobras e Infusões já estabeleceram. Classe "burra" destoaria das 13 existentes. |
-| Alma Profana | Adiada para projeto separado | Conjuradora de pacto de um terço — encosta em espaços de magia, multiclasse e CD. Mesmo caminho do Hexblade, que deu certo aqui. |
+| Alma Profana | ~~Adiada~~ → **entregue** | Foi adiada no plano original; o dono pediu a classe completa e ela entrou na mesma rodada das outras Ordens. Tabela de pacto PRÓPRIA (3 espaços de 4º no 20º, contra 4 de 5º do Bruxo) e conjuração por **Sabedoria**. |
 | Assento da mecânica | Módulo de domínio dedicado + duas costuras nomeadas no núcleo | Generalizar `activeEffects` para "efeito de arma" antes de existir o caso concreto inverte a ordem e respinga em conteúdo já em produção. |
 
 ## Fora de escopo
 
-- Ordem da Alma Profana e a conjuração de pacto de um terço.
+- ~~Ordem da Alma Profana~~ — entrou depois, ver acima.
 - Generalizar `activeEffects` para efeitos ligados a item. Fica para quando
   houver dois ou três casos reais (Arma de Pacto, venenos, óleos) sobre os
   quais generalizar.
@@ -84,9 +86,9 @@ Entram como `options` no class-choices no formato `• Nv N — ` já parseado p
 `domain/subclassFeatures.js`. Os cards por nível e os trackers nascem daí, sem
 código novo. Invariante existente a respeitar: id do card == id do tracker.
 
-A Ordem da Alma Profana **existe no dado, marcada como indisponível**, com o
-motivo à vista. Não some da lista: um jogador não pode criar a ficha e
-descobrir depois que falta um quarto da classe.
+Na Fase 1 as quatro Ordens existiam no dado com o motivo à vista de não
+estarem implementadas. Hoje todas são jogáveis, e um teste garante que nenhuma
+continua marcada como pendente.
 
 ### Módulo de domínio
 
@@ -151,7 +153,8 @@ texto limpo e não vamos regredir nisso.
    Nenhuma Ordem ainda.
 2. **Ordem do Caçador de Espectros e Ordem do Licantropo.** Ambas cabem no
    parser de subclasse e nos trackers existentes.
-3. **Ordem do Mutante e os 14 mutagênicos.**
+3. **Ordem do Mutante e os 15 mutagênicos.** (São 15, não 14: a leitura
+   original do PDF perdeu Inquebrável e Cautela.)
 
 A fase 3 é isolada de propósito. Os mutagênicos mexem em **valor de atributo e
 no teto do atributo** (Potência: +Força igual ao nível de mutação, teto
@@ -180,3 +183,19 @@ em vez de segurar a classe inteira refém da parte mais cara.
 
 A suíte roda em fatias com `--maxWorkers=2` — sem flags ela estoura a memória
 da máquina e finge falhas em arquivos sem relação.
+
+## O que ficou fora do motor, e por quê
+
+Entregue como TEXTO no card e no painel, não como mecânica viva:
+
+- **Resistências e vulnerabilidades** (Licantropo, 3 mutagênicos) — o app não
+  modela resistência de personagem.
+- **Faixa de crítico** (mutagênico Precisão, Foco Ritual do Hexblade) — o
+  rolador não tem esse conceito.
+- **Visão no escuro, regeneração, imunidade a condição, ação bônus extra.**
+- **Arcanas de patrono (7º/15º) e Canalização Diabólica** — dependem de
+  rastrear magia concedida com uso por descanso longo, que é o sistema de
+  magias concedidas, não o da classe.
+
+Cada um desses exigiria um subsistema novo para atender uma fórmula ou uma
+feature. Se algum incomodar na mesa, dá para atacar isolado depois.
