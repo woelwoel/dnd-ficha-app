@@ -37,7 +37,7 @@ export function PcTacticalCard({ doc }) {
   const passiva = calculatePassivePerception(
     attrs.wis ?? 10, prof, perceptionProf, perceptionExpert, { feats: doc.info?.feats ?? [] },
   )
-  const desloc = effectiveSpeed({ combat })
+  const desloc = effectiveSpeed(doc)
 
   return (
     <div className="flex flex-col gap-3">
