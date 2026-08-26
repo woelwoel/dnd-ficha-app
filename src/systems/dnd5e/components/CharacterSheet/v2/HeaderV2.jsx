@@ -12,6 +12,7 @@ import { EditDialog } from './EditDialog'
 import { useLazySrdDataset, useSrd } from '../../../data/SrdProvider'
 import { ActiveEffectsChips } from './ActiveEffectsChips'
 import { MoveToCampaignModal } from '../MoveToCampaignModal'
+import { RulesetBadge } from '../../RulesetBadge'
 
 export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, saving, saved, saveError }) {
   const { character, setCharacter, calc, readOnly, updaters, handlers, races, classes, backgrounds, fichaErrors, classData, onNavigateToSpells } = useCharacterContext()
@@ -99,6 +100,7 @@ export function HeaderV2({ onBack, onExport, onPrint, onImport, onImportError, s
       </div>
 
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+        <RulesetBadge character={character} />
         {combat?.inspiration && (
           <span className="v2-chip" style={{ color: 'var(--v2-warning)' }}>Inspiração</span>
         )}
