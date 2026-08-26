@@ -20,6 +20,10 @@ export const INITIAL_DRAFT_V2 = {
     startLevel: 1,
     flexibleRacialAsi: false,
   },
+  // Conjunto de regras da ficha. FORA de `settings` de propósito: settings é
+  // o que o jogador liga e desliga a qualquer momento; o ruleset é escolhido
+  // uma vez e é definitivo. Ver domain/ruleset.js.
+  ruleset: '2014',
   name: '', playerName: '', alignment: '', appearance: '',
   race: '', subrace: '', racialBonuses: {},
   racialAbilityChoices: [], racialSkills: [], draconicAncestry: '', racialCantrip: '',

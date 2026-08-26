@@ -166,6 +166,7 @@ export function buildCharacter(draft, classData, classEquipment, srdSpells = nul
       version: '1.0',
       schemaVersion: 2,
       creationMethod: 'wizard-v2',
+      ruleset: draft.ruleset ?? '2014',
       settings: draft.settings,
     },
     info: {
