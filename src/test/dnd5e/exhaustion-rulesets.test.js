@@ -103,17 +103,22 @@ describe('clamp e entradas malformadas', () => {
     expect(exhaustionEffects({}).level).toBe(0)
     expect(exhaustionEffects(null).level).toBe(0)
   })
+
+  it('exaustão não numérica vira nível 0', () => {
+    expect(exhaustionEffects({ meta: { ruleset: '2014' }, combat: { exhaustion: 'abc' } }).level).toBe(0)
+    expect(exhaustionEffects({ meta: { ruleset: '2024' }, combat: { exhaustion: null } }).level).toBe(0)
+  })
 })
 
 describe('exhaustionLevelsText', () => {
   it('2014 devolve 7 entradas (níveis 0 a 6)', () => {
-    const t = exhaustionLevelsText('2014')
+    const t = exhaustionLevelsText({ meta: { ruleset: '2014' } })
     expect(t).toHaveLength(7)
     expect(t[6]).toMatch(/[Mm]orte/)
   })
 
   it('2024 descreve a regra acumulativa, não a tabela', () => {
-    const t = exhaustionLevelsText('2024')
+    const t = exhaustionLevelsText({ meta: { ruleset: '2024' } })
     expect(t).toHaveLength(7)
     expect(t[1]).toMatch(/-2|−2/)
     expect(t[6]).toMatch(/[Mm]orte/)

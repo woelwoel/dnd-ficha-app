@@ -15,7 +15,7 @@
  * Assim o consumidor aplica tudo sem nunca perguntar o ruleset — se cada tela
  * ramificasse por conta própria, o dispatch se espalharia pela UI toda.
  */
-import { byRuleset } from './ruleset'
+import { byRuleset, is2024 } from './ruleset'
 
 export const MAX_EXHAUSTION = 6
 
@@ -24,7 +24,7 @@ function levelOf(character) {
   return Math.max(0, Math.min(MAX_EXHAUSTION, Math.floor(raw)))
 }
 
-const NEUTRO = {
+const NEUTRO = Object.freeze({
   abilityCheckDisadvantage: false,
   attackDisadvantage: false,
   saveDisadvantage: false,
@@ -32,7 +32,7 @@ const NEUTRO = {
   maxHpMultiplier: 1,
   d20Penalty: 0,
   speedPenaltyMeters: 0,
-}
+})
 
 function effects2014(lvl) {
   return {
@@ -48,6 +48,9 @@ function effects2014(lvl) {
 function effects2024(lvl) {
   return {
     ...NEUTRO,
+    // `-2 * 0` é -0 em JavaScript, e -0 reprova num toEqual contra 0. O
+    // `speedPenaltyMeters` abaixo não precisa do mesmo cuidado: o sinal vem
+    // do coeficiente -2, então `1.5 * 0` é +0.
     d20Penalty: lvl === 0 ? 0 : -2 * lvl,
     speedPenaltyMeters: 1.5 * lvl,
   }
@@ -80,7 +83,7 @@ const TEXTO_2024 = [
   'Morte',
 ]
 
-/** Descrição por nível (índices 0 a 6) do ruleset dado. */
-export function exhaustionLevelsText(ruleset) {
-  return ruleset === '2024' ? TEXTO_2024 : TEXTO_2014
+/** Descrição por nível (índices 0 a 6) do ruleset da ficha. */
+export function exhaustionLevelsText(character) {
+  return is2024(character) ? TEXTO_2024 : TEXTO_2014
 }
