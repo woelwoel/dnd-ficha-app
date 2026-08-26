@@ -1071,14 +1071,15 @@ function clampHp(value, max) {
 }
 
 /**
- * Teto de PV efetivo = valor armazenado menos o sacrifício do Ritual Vermelho.
- * `combat.maxHp` é armazenado (o level-up o incrementa), então o teto efetivo
- * é derivado aqui, no mesmo espírito de `effectiveSpeed`.
- * Nunca desce abaixo de 1 — teto zero mataria a ficha por arredondamento.
+ * PV máximo efetivo. Aplica a exaustão (só o 2014 mexe em PV — nível 4 corta
+ * pela metade, PHB p.291) e depois a penalidade do Caçador de Sangue, nessa
+ * ordem. Piso 1: uma ficha nunca fica com PV máximo 0 por derivação.
  */
 export function effectiveMaxHp(character) {
   const stored = Number(character?.combat?.maxHp) || 0
-  return Math.max(1, stored - bloodHunterMaxHpPenalty(character))
+  const fx = exhaustionEffects(character)
+  const afterExhaustion = Math.floor(stored * fx.maxHpMultiplier)
+  return Math.max(1, afterExhaustion - bloodHunterMaxHpPenalty(character))
 }
 
 function emptyDeathSaves() {

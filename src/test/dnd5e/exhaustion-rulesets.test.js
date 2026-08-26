@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { exhaustionEffects, exhaustionLevelsText } from '../../systems/dnd5e/domain/exhaustion'
-import { effectiveSpeed } from '../../systems/dnd5e/domain/rules'
+import { effectiveSpeed, effectiveMaxHp } from '../../systems/dnd5e/domain/rules'
 
 const ficha = (level, ruleset = '2014') => ({
   meta: { ruleset },
@@ -156,5 +156,33 @@ describe('effectiveSpeed com exaustão', () => {
 
   it('ficha legada sem meta continua sob a regra 2014', () => {
     expect(effectiveSpeed({ combat: { speed: 9, exhaustion: 2 } })).toBe(4.5)
+  })
+})
+
+describe('effectiveMaxHp com exaustão', () => {
+  const pv = (exhaustion, ruleset, maxHp = 40) =>
+    effectiveMaxHp({ meta: { ruleset }, combat: { maxHp, exhaustion } })
+
+  it('2014: nível 4 corta o PV máximo pela metade (regra que nunca funcionou)', () => {
+    expect(pv(3, '2014')).toBe(40)
+    expect(pv(4, '2014')).toBe(20)
+    expect(pv(5, '2014')).toBe(20)
+  })
+
+  it('2024: exaustão não mexe no PV máximo', () => {
+    expect(pv(4, '2024')).toBe(40)
+    expect(pv(5, '2024')).toBe(40)
+  })
+
+  it('piso 1: nunca devolve 0 ou negativo', () => {
+    expect(pv(4, '2014', 1)).toBe(1)
+  })
+
+  it('arredonda para baixo, como toda divisão de PV no PHB', () => {
+    expect(pv(4, '2014', 41)).toBe(20)
+  })
+
+  it('ficha legada sem meta segue a regra 2014', () => {
+    expect(effectiveMaxHp({ combat: { maxHp: 40, exhaustion: 4 } })).toBe(20)
   })
 })
