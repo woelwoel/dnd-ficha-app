@@ -103,4 +103,15 @@ describe('roll() com resolver de efeitos', () => {
     act(() => { out = result.current.roll('7', 'Fixo', { category: 'check' }) })
     expect(out.total).toBe(7)
   })
+
+  it('ignora flatMod que não seja número finito, em vez de quebrar a rolagem', () => {
+    const { result } = renderHook(() => useDiceRoller(), { wrapper })
+    for (const ruim of ['−4', '-4', NaN, Infinity, null, undefined]) {
+      act(() => result.current.setRollEffectsResolver(() => ({ flatMod: ruim })))
+      let out
+      act(() => { out = result.current.roll('1d20+5', 'Teste', { category: 'check' }) })
+      expect(out).not.toBeNull()
+      expect(out.modifier).toBe(5)
+    }
+  })
 })

@@ -82,7 +82,8 @@ export function DiceRollerProvider({ children }) {
         // `parseAndRoll` aceita multi-termo com flat negativo — "1d20+5+1d4-4"
         // casa e `modifier` soma tudo. O ramo de número puro ("7") não é
         // notação de dado e não aceita concatenação, então fica de fora.
-        if (eff.flatMod && /d\d/.test(effNotation)) {
+        if (typeof eff.flatMod === 'number' && Number.isFinite(eff.flatMod)
+            && eff.flatMod !== 0 && /d\d/.test(effNotation)) {
           effNotation += eff.flatMod > 0 ? `+${eff.flatMod}` : `${eff.flatMod}`
         }
         if (eff.labelSuffix) effLabel += eff.labelSuffix
