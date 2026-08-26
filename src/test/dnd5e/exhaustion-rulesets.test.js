@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { exhaustionEffects, exhaustionLevelsText } from '../../systems/dnd5e/domain/exhaustion'
+import { effectiveSpeed } from '../../systems/dnd5e/domain/rules'
 
 const ficha = (level, ruleset = '2014') => ({
   meta: { ruleset },
@@ -122,5 +123,38 @@ describe('exhaustionLevelsText', () => {
     expect(t).toHaveLength(7)
     expect(t[1]).toMatch(/-2|−2/)
     expect(t[6]).toMatch(/[Mm]orte/)
+  })
+})
+
+describe('effectiveSpeed com exaustão', () => {
+  const anda = (exhaustion, ruleset, speed = 9, conditions = []) =>
+    effectiveSpeed({ meta: { ruleset }, combat: { speed, exhaustion, conditions } })
+
+  it('2014: metade no nível 2, zero no 5', () => {
+    expect(anda(0, '2014')).toBe(9)
+    expect(anda(1, '2014')).toBe(9)
+    expect(anda(2, '2014')).toBe(4.5)
+    expect(anda(4, '2014')).toBe(4.5)
+    expect(anda(5, '2014')).toBe(0)
+  })
+
+  it('2024: subtrai 1,5 m por nível', () => {
+    expect(anda(0, '2024')).toBe(9)
+    expect(anda(1, '2024')).toBe(7.5)
+    expect(anda(4, '2024')).toBe(3)
+  })
+
+  it('2024: piso 0, nunca negativo', () => {
+    expect(anda(5, '2024', 6)).toBe(0)
+    expect(anda(6, '2024', 9)).toBe(0)
+  })
+
+  it('condição que zera o deslocamento vence nos dois rulesets', () => {
+    expect(anda(0, '2014', 9, ['grappled'])).toBe(0)
+    expect(anda(0, '2024', 9, ['grappled'])).toBe(0)
+  })
+
+  it('ficha legada sem meta continua sob a regra 2014', () => {
+    expect(effectiveSpeed({ combat: { speed: 9, exhaustion: 2 } })).toBe(4.5)
   })
 })
