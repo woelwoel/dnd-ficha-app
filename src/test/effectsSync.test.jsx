@@ -118,4 +118,25 @@ describe('EffectsSync', () => {
     })
     expect(resolver).toBeNull()
   })
+
+  it('buff com vantagem e exaustão com desvantagem se ANULAM (PHB)', () => {
+    const BUFF_VANTAGEM_ATAQUE = {
+      id: 'bencao-vantagem', name: 'Bênção do Testador', source: 'manual', concentration: true,
+      advantages: [{ categories: ['attack'] }],
+    }
+    const resolver = montarResolver({
+      meta: { ruleset: '2014' },
+      combat: { exhaustion: 3, activeEffects: [BUFF_VANTAGEM_ATAQUE] },
+    })
+    expect(resolver).not.toBeNull()
+    expect(resolver('attack', null).advantage).toBeNull()
+  })
+
+  it('exaustão sozinha continua dando desvantagem', () => {
+    const resolver = montarResolver({
+      meta: { ruleset: '2014' },
+      combat: { exhaustion: 3, activeEffects: [] },
+    })
+    expect(resolver('attack', null).advantage).toBe('dis')
+  })
 })

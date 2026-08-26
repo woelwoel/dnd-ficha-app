@@ -3,6 +3,7 @@ import { useCharacterContext } from '../CharacterContext'
 import { useDiceRoller } from '../../../../../hooks/useDiceRoller'
 import { aggregateSpellEffects } from '../../../domain/activeEffects'
 import { exhaustionEffects } from '../../../domain/exhaustion'
+import { combineAdvantage } from '../../../domain/advantage'
 
 /** Categorias de rolagem que são teste de d20 (dano não é). */
 const D20_CATEGORIES = ['attack', 'check', 'save']
@@ -15,7 +16,8 @@ const D20_CATEGORIES = ['attack', 'check', 'save']
  *
  * Exaustão e buffs SOMAM: a penalidade 2024 se junta aos riders, e a
  * desvantagem 2014 se combina com a vantagem de um buff pela matriz do PHB
- * (que `combineMode` aplica do lado do provider).
+ * — combinação feita AQUI, via `combineAdvantage`, antes de o valor chegar
+ * ao provider (o `combineMode` do provider nunca vê as duas fontes juntas).
  */
 export function EffectsSync() {
   const { character, updaters } = useCharacterContext()
@@ -53,11 +55,17 @@ export function EffectsSync() {
 
       if (applicable.length === 0 && !adv && !flatMod && !exhaustionDis) return null
 
+      const buffMode = adv ? adv.mode : null
+      const exhaustionMode = exhaustionDis ? 'dis' : null
+
       return {
         extraDice: applicable.map(r => r.dice),
-        // A desvantagem da exaustão entra como se fosse mais um efeito: o
-        // provider combina com o modo do usuário pela matriz do PHB.
-        advantage: adv ? adv.mode : (exhaustionDis ? 'dis' : null),
+        // Buff e exaustão são fontes DIFERENTES: vantagem e desvantagem se
+        // anulam pela matriz do PHB antes de chegar ao motor de dados. Não
+        // dá pra reusar o `combineMode` do provider aqui, porque ele já
+        // aplica o default 'normal' — e 'normal' vindo daqui sobrescreveria
+        // o clique explícito do jogador.
+        advantage: combineAdvantage(buffMode, exhaustionMode),
         flatMod,
         labelSuffix: applicable.map(r => ` · ${r.effectName} +${r.dice}`).join(''),
         onApplied: () => {
